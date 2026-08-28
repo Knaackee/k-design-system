@@ -12,6 +12,8 @@ the final approved Button design.
 - Loading retains its label and exposes progress visually.
 - Web supports keyboard focus, hover, pressed and reduced motion.
 - Flutter uses native Material focus, hover, pressed and semantics behavior.
+- Flutter suppresses the Material ripple; token-driven state colors are the
+  shared visual feedback on both platforms.
 
 ## Shared fixtures
 

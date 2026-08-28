@@ -47,4 +47,12 @@ void main() {
     expect(kWindowClassForWidth(1200), KWindowClass.large);
     expect(kWindowClassForWidth(1600), KWindowClass.extraLarge);
   });
+
+  test('theme disables platform ripple feedback for Web parity', () {
+    final theme = kDesignTheme();
+
+    expect(theme.splashFactory, same(NoSplash.splashFactory));
+    expect(theme.splashColor, Colors.transparent);
+    expect(theme.highlightColor, Colors.transparent);
+  });
 }

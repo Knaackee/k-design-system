@@ -55,7 +55,22 @@ small helper without changing the CSS token contract.
 - `tokens/modes/*.tokens.json` owns bounded overrides for each axis value.
 - The generator validates every mode against the semantic contract and emits
   CSS selectors plus typed Flutter variant constants.
+- Web emits brand themes and adaptive modes into ordered cascade layers, so a
+  selected mode always overrides its semantic defaults regardless of selector
+  specificity.
 - Brand and color mode remain orthogonal to all adaptive axes.
+
+## Cross-platform interaction feedback
+
+Platform-native visual effects are disabled when they would make equivalent Web
+and Flutter components look materially different. Flutter therefore disables
+the Material ripple and highlight globally; components communicate hover,
+pressed, focus and disabled states through shared semantic tokens instead.
+
+This rule applies to visual feedback only. Native semantics, keyboard behavior,
+touch handling and accessibility must remain intact. Future effects such as
+haptics, sound or custom press animations require an explicit cross-platform
+contract rather than appearing implicitly from an underlying UI toolkit.
 
 ## Visual iteration agreement
 

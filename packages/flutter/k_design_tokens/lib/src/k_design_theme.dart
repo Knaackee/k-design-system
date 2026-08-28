@@ -148,6 +148,9 @@ ThemeData kDesignTheme({
       KInputMode.pointer => MaterialTapTargetSize.shrinkWrap,
       KInputMode.touch => MaterialTapTargetSize.padded,
     },
+    splashFactory: NoSplash.splashFactory,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
     colorScheme: ColorScheme.fromSeed(
       seedColor: tokens.colorActionPrimaryBackground,
       brightness: brightness,

@@ -1,4 +1,7 @@
 /* GENERATED FILE. DO NOT EDIT. */
+@layer k-design-theme, k-design-mode;
+
+@layer k-design-theme {
 :root, [data-brand="orbit"][data-theme="light"] {
   --k-color-surface-canvas: #f7f8fa;
   --k-color-surface-raised: #ffffff;
@@ -94,7 +97,9 @@
   --k-font-weight: 500;
   --k-motion-fast: 80ms;
 }
+}
 
+@layer k-design-mode {
 [data-presentation="productive"] {
   --k-space-layout-section-gap: 32px;
 }
@@ -155,4 +160,5 @@
 
 [data-window-class="extra-large"] {
   --k-space-layout-gutter: 64px;
+}
 }

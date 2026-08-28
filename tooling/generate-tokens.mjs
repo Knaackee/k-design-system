@@ -302,7 +302,8 @@ export async function generate() {
   const variantCss = Object.entries(variants)
     .map(([name, tokens]) => cssBlock(variantFiles[name][1], tokens))
     .join("\n\n");
-  const css = `/* GENERATED FILE. DO NOT EDIT. */\n${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark)}\n\n${variantCss}\n`;
+  const themeCss = `${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark)}`;
+  const css = `/* GENERATED FILE. DO NOT EDIT. */\n@layer k-design-theme, k-design-mode;\n\n@layer k-design-theme {\n${themeCss}\n}\n\n@layer k-design-mode {\n${variantCss}\n}\n`;
   const names = [...semantic.keys()];
   const typescript = `// GENERATED FILE. DO NOT EDIT.\nexport const tokenNames = ${JSON.stringify(names, null, 2)} as const;\nexport type KTokenName = (typeof tokenNames)[number];\nexport const cssVariable = (token: KTokenName): string => \`--k-\${token.replace(/\\./g, "-").replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}\`;\n`;
   const flat = `${JSON.stringify(

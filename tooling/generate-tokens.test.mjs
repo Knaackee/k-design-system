@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
   flattenTokens,
   resolveToken,
@@ -94,4 +95,18 @@ test("resolves only the semantic fields changed by a runtime variant", () => {
     [...resolvedVariant(foundation, semantic, variant)],
     [["size.control", { type: "dimension", value: { value: 32, unit: "px" } }]],
   );
+});
+
+test("emits runtime modes in a higher cascade layer than brand themes", async () => {
+  const css = await readFile(
+    new URL("../packages/web/tokens/src/generated/tokens.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(css, /@layer k-design-theme, k-design-mode;/);
+  assert.ok(
+    css.indexOf("@layer k-design-theme {") <
+      css.indexOf("@layer k-design-mode {"),
+  );
+  assert.match(css, /\[data-density="dense"\][\s\S]*--k-size-control: 32px/);
 });
