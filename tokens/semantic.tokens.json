@@ -1,0 +1,42 @@
+{
+  "color": {
+    "surface": {
+      "canvas": { "$type": "color", "$value": "{color.neutral.50}" },
+      "raised": { "$type": "color", "$value": "{color.neutral.0}" }
+    },
+    "text": {
+      "primary": { "$type": "color", "$value": "{color.neutral.900}" },
+      "muted": { "$type": "color", "$value": "{color.neutral.600}" }
+    },
+    "border": {
+      "default": { "$type": "color", "$value": "{color.neutral.300}" },
+      "focus": { "$type": "color", "$value": "{color.indigo.400}" }
+    },
+    "action": {
+      "primary": {
+        "background": { "$type": "color", "$value": "{color.indigo.600}" },
+        "hover": { "$type": "color", "$value": "{color.indigo.700}" },
+        "pressed": { "$type": "color", "$value": "{color.indigo.700}" },
+        "foreground": { "$type": "color", "$value": "{color.neutral.0}" }
+      }
+    }
+  },
+  "space": {
+    "controlGap": { "$type": "dimension", "$value": "{space.2}" },
+    "controlInsetInline": { "$type": "dimension", "$value": "{space.3}" }
+  },
+  "size": {
+    "control": { "$type": "dimension", "$value": "{size.control.md}" }
+  },
+  "radius": {
+    "control": { "$type": "dimension", "$value": "{radius.md}" }
+  },
+  "font": {
+    "family": { "$type": "fontFamily", "$value": "{font.family.sans}" },
+    "size": { "$type": "dimension", "$value": "{font.size.body}" },
+    "weight": { "$type": "fontWeight", "$value": "{font.weight.medium}" }
+  },
+  "motion": {
+    "fast": { "$type": "duration", "$value": "{motion.duration.fast}" }
+  }
+}

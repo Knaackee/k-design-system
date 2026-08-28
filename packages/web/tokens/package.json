@@ -9,10 +9,12 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./tokens.css": "./src/generated/tokens.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/generated/tokens.css"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

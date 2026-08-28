@@ -10,8 +10,9 @@ time with a shared visual review.
 
 ## Current state
 
-Repository baseline only. Storybook, Widgetbook, token generation and production
-components are deliberately deferred to the next approved slices.
+The repository baseline, minimal token pipeline, Storybook and Widgetbook are
+operational. A generic Button proves the complete path from platform-neutral
+tokens to both galleries; its visual acceptance is still pending.
 
 The active plan is [docs/plans/0001-incremental-bootstrap.md](docs/plans/0001-incremental-bootstrap.md).
 The complete strategic design is preserved in
@@ -19,14 +20,14 @@ The complete strategic design is preserved in
 
 ## Packages
 
-| Path                               | Purpose                             | Current state               |
-| ---------------------------------- | ----------------------------------- | --------------------------- |
-| `packages/web/tokens`              | Generated and typed Web tokens      | Empty package baseline      |
-| `packages/web/ui`                  | React/Web primitives and components | Empty package baseline      |
-| `packages/flutter/k_design_tokens` | Generated Flutter tokens and themes | Empty package baseline      |
-| `packages/flutter/k_design_ui`     | Flutter primitives and components   | Empty package baseline      |
-| `apps/storybook`                   | Web component gallery               | Reserved for the next slice |
-| `apps/widgetbook`                  | Flutter component gallery           | Reserved for the next slice |
+| Path                               | Purpose                             | Current state            |
+| ---------------------------------- | ----------------------------------- | ------------------------ |
+| `packages/web/tokens`              | Generated CSS and typed Web tokens  | Operational              |
+| `packages/web/ui`                  | React/Web primitives and components | Generic Button           |
+| `packages/flutter/k_design_tokens` | Generated Flutter tokens and themes | Operational              |
+| `packages/flutter/k_design_ui`     | Flutter primitives and components   | Generic Button           |
+| `apps/storybook`                   | Web component gallery               | Operational on port 6006 |
+| `apps/widgetbook`                  | Flutter component gallery           | Operational on port 6007 |
 
 ## Prerequisites
 
@@ -46,6 +47,17 @@ pnpm verify
 
 Run `pnpm verify` before every commit. It builds and type-checks the Web packages,
 analyzes and tests the Flutter packages, and checks Markdown/JSON/YAML formatting.
+
+## Galleries
+
+```bash
+pnpm storybook
+pnpm widgetbook
+```
+
+Storybook runs at `http://localhost:6006`; Widgetbook runs as Flutter Web at
+`http://localhost:6007`. Both expose Orbit/Reference and Light/Dark theme
+selection and use the fixture IDs `button-primary` and `button-states`.
 
 ## Working agreement
 

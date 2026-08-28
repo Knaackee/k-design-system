@@ -36,7 +36,7 @@ Git commit.
 
 ## Slice 2 — Minimal token pipeline
 
-**Status:** pending  
+**Status:** completed (28 August 2026)  
 **Outcome:** Foundation and semantic token sources generate typed Web and Flutter
 outputs for Orbit Light/Dark and a visibly different Reference theme.  
 **Dependencies:** Slice 1 accepted.  
@@ -45,7 +45,7 @@ outputs for Orbit Light/Dark and a visibly different Reference theme.
 
 ## Slice 3 — Storybook and Widgetbook
 
-**Status:** pending  
+**Status:** completed (28 August 2026)  
 **Outcome:** Both galleries start independently and display matching token-driven
 fixtures.  
 **Dependencies:** Slice 2 accepted.  

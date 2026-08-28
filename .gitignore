@@ -1,6 +1,8 @@
 node_modules/
 .pnpm-store/
-dist/
+.runtime/
+packages/web/*/dist/
+apps/storybook/storybook-static/
 coverage/
 .dart_tool/
 .flutter-plugins

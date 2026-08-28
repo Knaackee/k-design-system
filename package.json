@@ -7,12 +7,19 @@
     "node": ">=22"
   },
   "scripts": {
+    "generate": "node tooling/generate-tokens.mjs",
+    "generate:check": "node tooling/generate-tokens.mjs --check",
+    "test:tooling": "node --test tooling/*.test.mjs",
     "build:web": "pnpm --filter @k-design-system/tokens build && pnpm --filter @k-design-system/ui build",
+    "storybook": "pnpm --filter @k-design-system/storybook storybook",
+    "build:storybook": "pnpm --filter @k-design-system/storybook build",
+    "widgetbook": "dart run melos exec --scope k_design_widgetbook -- \"flutter run -d web-server --web-port 6007\"",
+    "build:widgetbook": "dart run melos exec --scope k_design_widgetbook -- \"flutter build web --release\"",
     "typecheck:web": "pnpm --filter @k-design-system/tokens typecheck && pnpm --filter @k-design-system/ui typecheck",
     "analyze:flutter": "dart run melos exec --concurrency 1 -- \"flutter analyze\"",
     "test:flutter": "dart run melos exec --concurrency 1 -- \"flutter test\"",
     "format:check": "prettier --check .",
-    "verify": "pnpm format:check && pnpm build:web && pnpm typecheck:web && pnpm analyze:flutter && pnpm test:flutter"
+    "verify": "pnpm format:check && pnpm generate:check && pnpm test:tooling && pnpm build:web && pnpm typecheck:web && pnpm analyze:flutter && pnpm test:flutter && pnpm build:storybook && pnpm build:widgetbook"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

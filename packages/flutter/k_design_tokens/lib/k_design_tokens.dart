@@ -1,2 +1,4 @@
-/// Baseline marker. Generated token APIs are introduced in the token slice.
-const bool kTokenPackageReady = true;
+library;
+
+export 'src/generated/k_design_tokens.g.dart';
+export 'src/k_design_theme.dart';

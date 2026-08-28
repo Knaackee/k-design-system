@@ -5,6 +5,7 @@ environment:
   sdk: ^3.12.0
 
 workspace:
+  - apps/widgetbook
   - packages/flutter/k_design_tokens
   - packages/flutter/k_design_ui
 

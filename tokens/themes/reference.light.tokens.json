@@ -1,0 +1,24 @@
+{
+  "color": {
+    "surface": {
+      "canvas": { "$type": "color", "$value": "#f0fdfa" },
+      "raised": { "$type": "color", "$value": "#ffffff" }
+    },
+    "text": {
+      "primary": { "$type": "color", "$value": "#134e4a" },
+      "muted": { "$type": "color", "$value": "#52706d" }
+    },
+    "border": {
+      "default": { "$type": "color", "$value": "#99d5cd" },
+      "focus": { "$type": "color", "$value": "#2dd4bf" }
+    },
+    "action": {
+      "primary": {
+        "background": { "$type": "color", "$value": "#0d9488" },
+        "hover": { "$type": "color", "$value": "#0f766e" },
+        "pressed": { "$type": "color", "$value": "#115e59" },
+        "foreground": { "$type": "color", "$value": "#ffffff" }
+      }
+    }
+  }
+}

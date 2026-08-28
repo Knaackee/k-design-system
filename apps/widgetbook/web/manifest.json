@@ -1,0 +1,9 @@
+{
+  "name": "K Design System Widgetbook",
+  "short_name": "K Widgetbook",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d0f12",
+  "theme_color": "#5556d9",
+  "description": "Flutter component gallery for K Design System"
+}

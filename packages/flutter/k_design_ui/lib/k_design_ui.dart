@@ -1,4 +1,3 @@
-import 'package:k_design_tokens/k_design_tokens.dart';
+library;
 
-/// Baseline marker. UI APIs are introduced one approved primitive at a time.
-const bool kUiPackageReady = kTokenPackageReady;
+export 'src/primitives/k_button.dart';

@@ -1,6 +1,8 @@
 .dart_tool/
 build/
 dist/
+packages/web/tokens/src/generated/
+packages/flutter/k_design_tokens/lib/src/generated/
 node_modules/
 pnpm-lock.yaml
 pubspec.lock
