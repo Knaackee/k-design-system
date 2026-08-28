@@ -12,7 +12,8 @@ time with a shared visual review.
 
 The repository baseline, minimal token pipeline, Storybook and Widgetbook are
 operational. A generic Button proves the complete path from platform-neutral
-tokens to both galleries; its visual acceptance is still pending.
+tokens to both galleries. The adaptive presentation foundation is available in
+both galleries for visual iteration.
 
 The active plan is [docs/plans/0001-incremental-bootstrap.md](docs/plans/0001-incremental-bootstrap.md).
 The complete strategic design is preserved in
@@ -58,6 +59,10 @@ pnpm widgetbook
 Storybook runs at `http://localhost:6006`; Widgetbook runs as Flutter Web at
 `http://localhost:6007`. Both expose Orbit/Reference and Light/Dark theme
 selection and use the fixture IDs `button-primary` and `button-states`.
+Presentation, density, type scale, input mode, window size and accessibility
+text scaling can be reviewed independently. The contract and working agreement
+are recorded in
+[Decision 0001](docs/decisions/0001-adaptive-foundation.md).
 
 ## Working agreement
 

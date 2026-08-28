@@ -54,10 +54,31 @@
         "unit": "px"
       }
     },
+    "space.layoutGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "space.layoutSectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
         "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.hitTarget": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -146,10 +167,31 @@
         "unit": "px"
       }
     },
+    "space.layoutGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "space.layoutSectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
         "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.hitTarget": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -238,10 +280,31 @@
         "unit": "px"
       }
     },
+    "space.layoutGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "space.layoutSectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
         "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.hitTarget": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -330,10 +393,31 @@
         "unit": "px"
       }
     },
+    "space.layoutGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "space.layoutSectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
         "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.hitTarget": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -364,6 +448,176 @@
       "value": {
         "value": 80,
         "unit": "ms"
+      }
+    }
+  },
+  "variants": {
+    "presentationProductive": {
+      "space.layoutSectionGap": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      }
+    },
+    "presentationExpressive": {
+      "space.layoutSectionGap": {
+        "type": "dimension",
+        "value": {
+          "value": 64,
+          "unit": "px"
+        }
+      }
+    },
+    "typeScaleCompact": {
+      "font.size": {
+        "type": "dimension",
+        "value": {
+          "value": 14,
+          "unit": "px"
+        }
+      }
+    },
+    "typeScaleStandard": {
+      "font.size": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      }
+    },
+    "densityDense": {
+      "space.controlGap": {
+        "type": "dimension",
+        "value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "space.controlInsetInline": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "size.control": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      }
+    },
+    "densityStandard": {
+      "space.controlGap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "space.controlInsetInline": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "size.control": {
+        "type": "dimension",
+        "value": {
+          "value": 36,
+          "unit": "px"
+        }
+      }
+    },
+    "densitySpacious": {
+      "space.controlGap": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "space.controlInsetInline": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "size.control": {
+        "type": "dimension",
+        "value": {
+          "value": 44,
+          "unit": "px"
+        }
+      }
+    },
+    "inputModePointer": {
+      "size.hitTarget": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    },
+    "inputModeTouch": {
+      "size.hitTarget": {
+        "type": "dimension",
+        "value": {
+          "value": 48,
+          "unit": "px"
+        }
+      }
+    },
+    "windowCompact": {
+      "space.layoutGutter": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      }
+    },
+    "windowMedium": {
+      "space.layoutGutter": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    },
+    "windowExpanded": {
+      "space.layoutGutter": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      }
+    },
+    "windowLarge": {
+      "space.layoutGutter": {
+        "type": "dimension",
+        "value": {
+          "value": 48,
+          "unit": "px"
+        }
+      }
+    },
+    "windowExtraLarge": {
+      "space.layoutGutter": {
+        "type": "dimension",
+        "value": {
+          "value": 64,
+          "unit": "px"
+        }
       }
     }
   }

@@ -23,17 +23,20 @@
   },
   "space": {
     "controlGap": { "$type": "dimension", "$value": "{space.2}" },
-    "controlInsetInline": { "$type": "dimension", "$value": "{space.3}" }
+    "controlInsetInline": { "$type": "dimension", "$value": "{space.3}" },
+    "layoutGutter": { "$type": "dimension", "$value": "{space.4}" },
+    "layoutSectionGap": { "$type": "dimension", "$value": "{space.8}" }
   },
   "size": {
-    "control": { "$type": "dimension", "$value": "{size.control.md}" }
+    "control": { "$type": "dimension", "$value": "{size.control.md}" },
+    "hitTarget": { "$type": "dimension", "$value": "{size.hitTarget.pointer}" }
   },
   "radius": {
     "control": { "$type": "dimension", "$value": "{radius.md}" }
   },
   "font": {
     "family": { "$type": "fontFamily", "$value": "{font.family.sans}" },
-    "size": { "$type": "dimension", "$value": "{font.size.body}" },
+    "size": { "$type": "dimension", "$value": "{font.size.bodyCompact}" },
     "weight": { "$type": "fontWeight", "$value": "{font.weight.medium}" }
   },
   "motion": {

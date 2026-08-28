@@ -14,6 +14,65 @@ const sourceFiles = {
   referenceDark: "tokens/themes/reference.dark.tokens.json",
 };
 
+const variantFiles = {
+  presentationProductive: [
+    "tokens/modes/presentation.productive.tokens.json",
+    '[data-presentation="productive"]',
+  ],
+  presentationExpressive: [
+    "tokens/modes/presentation.expressive.tokens.json",
+    '[data-presentation="expressive"]',
+  ],
+  typeScaleCompact: [
+    "tokens/modes/type-scale.compact.tokens.json",
+    '[data-type-scale="compact"]',
+  ],
+  typeScaleStandard: [
+    "tokens/modes/type-scale.standard.tokens.json",
+    '[data-type-scale="standard"]',
+  ],
+  densityDense: [
+    "tokens/modes/density.dense.tokens.json",
+    '[data-density="dense"]',
+  ],
+  densityStandard: [
+    "tokens/modes/density.standard.tokens.json",
+    '[data-density="standard"]',
+  ],
+  densitySpacious: [
+    "tokens/modes/density.spacious.tokens.json",
+    '[data-density="spacious"]',
+  ],
+  inputModePointer: [
+    "tokens/modes/input-mode.pointer.tokens.json",
+    '[data-input-mode="pointer"]',
+  ],
+  inputModeTouch: [
+    "tokens/modes/input-mode.touch.tokens.json",
+    '[data-input-mode="touch"]',
+  ],
+  windowCompact: [
+    "tokens/modes/window.compact.tokens.json",
+    '[data-window-class="compact"]',
+  ],
+  windowMedium: [
+    "tokens/modes/window.medium.tokens.json",
+    '[data-window-class="medium"]',
+  ],
+  windowExpanded: [
+    "tokens/modes/window.expanded.tokens.json",
+    '[data-window-class="expanded"]',
+  ],
+  windowLarge: [
+    "tokens/modes/window.large.tokens.json",
+    '[data-window-class="large"]',
+  ],
+  windowExtraLarge: [
+    "tokens/modes/window.extra-large.tokens.json",
+    '[data-window-class="extra-large"]',
+  ],
+};
+
 const outputFiles = {
   css: "packages/web/tokens/src/generated/tokens.css",
   typescript: "packages/web/tokens/src/generated/tokens.ts",
@@ -66,6 +125,13 @@ export function resolvedSemantic(foundation, semantic, overrides) {
   const all = new Map([...foundation, ...semantic, ...overrides]);
   return new Map(
     [...semantic.keys()].map((path) => [path, resolveToken(path, all)]),
+  );
+}
+
+export function resolvedVariant(foundation, semantic, overrides) {
+  const resolved = resolvedSemantic(foundation, semantic, overrides);
+  return new Map(
+    [...overrides.keys()].map((path) => [path, resolved.get(path)]),
   );
 }
 
@@ -126,7 +192,7 @@ function dartTheme(name, tokens) {
   return `  static const ${name} = KDesignTokens(\n${values.join("\n")}\n  );`;
 }
 
-function generateDart(themes, semantic) {
+function generateDart(themes, semantic, variants) {
   const fields = [...semantic].map(
     ([path, token]) => `  final ${dartType(token)} ${camel(path)};`,
   );
@@ -152,7 +218,14 @@ function generateDart(themes, semantic) {
     return `      ${name}: t < 0.5 ? ${name} : other.${name},`;
   });
 
-  return `// GENERATED FILE. DO NOT EDIT.\nimport 'dart:ui' show lerpDouble;\nimport 'package:flutter/material.dart';\n\n@immutable\nclass KDesignTokens extends ThemeExtension<KDesignTokens> {\n  const KDesignTokens({\n${constructor.join("\n")}\n  });\n\n${fields.join("\n")}\n\n${Object.entries(
+  const variantFields = Object.entries(variants).flatMap(([variant, tokens]) =>
+    [...tokens].map(
+      ([path, token]) =>
+        `  static const ${camel(`${variant}.${path}`)} = ${dartValue(token)};`,
+    ),
+  );
+
+  return `// GENERATED FILE. DO NOT EDIT.\nimport 'dart:ui' show lerpDouble;\nimport 'package:flutter/material.dart';\n\nabstract final class KDesignTokenVariants {\n${variantFields.join("\n")}\n}\n\n@immutable\nclass KDesignTokens extends ThemeExtension<KDesignTokens> {\n  const KDesignTokens({\n${constructor.join("\n")}\n  });\n\n${fields.join("\n")}\n\n${Object.entries(
     themes,
   )
     .map(([name, tokens]) => dartTheme(name, tokens))
@@ -187,6 +260,14 @@ export async function generate() {
       ]),
     ),
   );
+  const variantSources = Object.fromEntries(
+    await Promise.all(
+      Object.entries(variantFiles).map(async ([name, [path]]) => [
+        name,
+        await readJson(path),
+      ]),
+    ),
+  );
   const foundation = flattenTokens(sources.foundation);
   const semantic = flattenTokens(sources.semantic);
   const themes = {
@@ -211,29 +292,51 @@ export async function generate() {
       flattenTokens(sources.referenceDark),
     ),
   };
+  const variants = Object.fromEntries(
+    Object.entries(variantSources).map(([name, source]) => [
+      name,
+      resolvedVariant(foundation, semantic, flattenTokens(source)),
+    ]),
+  );
 
-  const css = `/* GENERATED FILE. DO NOT EDIT. */\n${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark)}\n`;
+  const variantCss = Object.entries(variants)
+    .map(([name, tokens]) => cssBlock(variantFiles[name][1], tokens))
+    .join("\n\n");
+  const css = `/* GENERATED FILE. DO NOT EDIT. */\n${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark)}\n\n${variantCss}\n`;
   const names = [...semantic.keys()];
   const typescript = `// GENERATED FILE. DO NOT EDIT.\nexport const tokenNames = ${JSON.stringify(names, null, 2)} as const;\nexport type KTokenName = (typeof tokenNames)[number];\nexport const cssVariable = (token: KTokenName): string => \`--k-\${token.replace(/\\./g, "-").replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}\`;\n`;
   const flat = `${JSON.stringify(
-    Object.fromEntries(
-      Object.entries(themes).map(([theme, values]) => [
-        theme,
-        Object.fromEntries(
-          [...values].map(([path, token]) => [
-            path,
-            { type: token.type, value: token.value },
-          ]),
-        ),
-      ]),
-    ),
+    {
+      ...Object.fromEntries(
+        Object.entries(themes).map(([theme, values]) => [
+          theme,
+          Object.fromEntries(
+            [...values].map(([path, token]) => [
+              path,
+              { type: token.type, value: token.value },
+            ]),
+          ),
+        ]),
+      ),
+      variants: Object.fromEntries(
+        Object.entries(variants).map(([variant, values]) => [
+          variant,
+          Object.fromEntries(
+            [...values].map(([path, token]) => [
+              path,
+              { type: token.type, value: token.value },
+            ]),
+          ),
+        ]),
+      ),
+    },
     null,
     2,
   )}\n`;
 
   await emit(outputFiles.css, css);
   await emit(outputFiles.typescript, typescript);
-  await emit(outputFiles.dart, generateDart(themes, semantic));
+  await emit(outputFiles.dart, generateDart(themes, semantic, variants));
   await emit(outputFiles.flat, flat);
   console.log(
     check

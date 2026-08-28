@@ -4,6 +4,7 @@ import {
   flattenTokens,
   resolveToken,
   resolvedSemantic,
+  resolvedVariant,
 } from "./generate-tokens.mjs";
 
 test("rejects tokens without a DTCG type", () => {
@@ -71,5 +72,26 @@ test("rejects theme keys and types outside the semantic contract", () => {
         ]),
       ),
     /expected color/,
+  );
+});
+
+test("resolves only the semantic fields changed by a runtime variant", () => {
+  const foundation = new Map([
+    [
+      "size.control.sm",
+      { type: "dimension", value: { value: 32, unit: "px" } },
+    ],
+  ]);
+  const semantic = new Map([
+    ["size.control", { type: "dimension", value: { value: 36, unit: "px" } }],
+    ["color.text", { type: "color", value: "#000000" }],
+  ]);
+  const variant = new Map([
+    ["size.control", { type: "dimension", value: "{size.control.sm}" }],
+  ]);
+
+  assert.deepEqual(
+    [...resolvedVariant(foundation, semantic, variant)],
+    [["size.control", { type: "dimension", value: { value: 32, unit: "px" } }]],
   );
 });

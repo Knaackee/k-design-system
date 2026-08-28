@@ -15,6 +15,36 @@ void main() {
       brand: KBrand.reference,
       brightness: Brightness.dark,
     );
-    expect(theme.extension<KDesignTokens>(), same(KDesignTokens.referenceDark));
+    final tokens = theme.extension<KDesignTokens>()!;
+    expect(
+      tokens.colorActionPrimaryBackground,
+      KDesignTokens.referenceDark.colorActionPrimaryBackground,
+    );
+  });
+
+  test('adaptive axes resolve independently', () {
+    final tokens = kDesignTokens(
+      configuration: const KDesignConfiguration(
+        presentation: KPresentation.expressive,
+        density: KDensity.dense,
+        typeScale: KTypeScale.standard,
+        inputMode: KInputMode.touch,
+        windowClass: KWindowClass.large,
+      ),
+    );
+
+    expect(tokens.sizeControl, 32);
+    expect(tokens.fontSize, 16);
+    expect(tokens.sizeHitTarget, 48);
+    expect(tokens.spaceLayoutSectionGap, 64);
+    expect(tokens.spaceLayoutGutter, 48);
+  });
+
+  test('window classes are derived from available width boundaries', () {
+    expect(kWindowClassForWidth(599), KWindowClass.compact);
+    expect(kWindowClassForWidth(600), KWindowClass.medium);
+    expect(kWindowClassForWidth(840), KWindowClass.expanded);
+    expect(kWindowClassForWidth(1200), KWindowClass.large);
+    expect(kWindowClassForWidth(1600), KWindowClass.extraLarge);
   });
 }

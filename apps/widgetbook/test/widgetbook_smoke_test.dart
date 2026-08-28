@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_widgetbook/main.dart';
 
 void main() {
@@ -16,5 +17,34 @@ void main() {
 
     expect(find.text('K Design System'), findsOneWidget);
     expect(find.text('Primitives'), findsOneWidget);
+  });
+
+  testWidgets('configuration addon applies the selected adaptive axes', (
+    tester,
+  ) async {
+    late KDesignTokens resolved;
+    final addon = KDesignConfigurationAddon();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Builder(
+          builder: (context) => addon.buildUseCase(
+            context,
+            Builder(
+              builder: (context) {
+                resolved = Theme.of(context).extension<KDesignTokens>()!;
+                return const SizedBox();
+              },
+            ),
+            KDesignConfiguration.mobileApp,
+          ),
+        ),
+      ),
+    );
+
+    expect(resolved.sizeControl, 44);
+    expect(resolved.fontSize, 16);
+    expect(resolved.sizeHitTarget, 48);
   });
 }

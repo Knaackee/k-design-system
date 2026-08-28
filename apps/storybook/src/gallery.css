@@ -15,12 +15,38 @@ body {
   min-width: 320px;
   min-height: 180px;
   box-sizing: border-box;
-  padding: 32px;
+  padding: var(--k-space-layout-gutter);
   display: grid;
   place-items: center;
   background: var(--k-color-surface-raised);
   border: 1px solid var(--k-color-border-default);
   border-radius: 10px;
+}
+
+.k-foundation-preview {
+  display: grid;
+  gap: var(--k-space-layout-section-gap);
+  max-width: 640px;
+}
+
+.k-foundation-preview__copy {
+  display: grid;
+  gap: var(--k-space-control-gap);
+}
+
+.k-foundation-preview__copy h2,
+.k-foundation-preview__copy p {
+  margin: 0;
+}
+
+.k-foundation-preview__copy h2 {
+  font-size: calc(var(--k-font-size) * var(--k-text-scale, 1) * 1.5);
+}
+
+.k-foundation-preview__copy p {
+  color: var(--k-color-text-muted);
+  font-size: calc(var(--k-font-size) * var(--k-text-scale, 1));
+  line-height: 1.5;
 }
 
 .k-button-grid {

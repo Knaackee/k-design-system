@@ -1,4 +1,5 @@
 .k-button {
+  position: relative;
   min-height: var(--k-size-control);
   padding: 0 var(--k-space-control-inset-inline);
   display: inline-flex;
@@ -10,7 +11,7 @@
   background: var(--k-color-action-primary-background);
   color: var(--k-color-action-primary-foreground);
   font-family: var(--k-font-family);
-  font-size: var(--k-font-size);
+  font-size: calc(var(--k-font-size) * var(--k-text-scale, 1));
   font-weight: var(--k-font-weight);
   line-height: 1;
   cursor: pointer;
@@ -18,6 +19,12 @@
     background var(--k-motion-fast) ease,
     opacity var(--k-motion-fast) ease,
     box-shadow var(--k-motion-fast) ease;
+}
+
+.k-button::after {
+  content: "";
+  position: absolute;
+  inset: min(0px, calc((var(--k-size-control) - var(--k-size-hit-target)) / 2));
 }
 
 .k-button:hover:not(:disabled) {

@@ -65,6 +65,11 @@ Light/Dark, Reference theme and visual review.
 **Evidence:** accepted side-by-side screenshots and one green commit per
 primitive.
 
+Before Slice 4, the approved adaptive-foundation checkpoint established the
+independent presentation, density, typography, input and window axes. Its
+durable contract and gallery workflow are recorded in
+[`docs/decisions/0001-adaptive-foundation.md`](../decisions/0001-adaptive-foundation.md).
+
 ## Slice 5 — Components one at a time
 
 **Status:** pending  

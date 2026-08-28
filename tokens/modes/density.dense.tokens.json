@@ -1,0 +1,9 @@
+{
+  "space": {
+    "controlGap": { "$type": "dimension", "$value": "{space.1}" },
+    "controlInsetInline": { "$type": "dimension", "$value": "{space.2}" }
+  },
+  "size": {
+    "control": { "$type": "dimension", "$value": "{size.control.sm}" }
+  }
+}

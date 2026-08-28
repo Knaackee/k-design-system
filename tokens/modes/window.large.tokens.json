@@ -1,0 +1,5 @@
+{
+  "space": {
+    "layoutGutter": { "$type": "dimension", "$value": "{space.12}" }
+  }
+}

@@ -2,6 +2,29 @@
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
+abstract final class KDesignTokenVariants {
+  static const presentationProductiveSpaceLayoutSectionGap = 32.0;
+  static const presentationExpressiveSpaceLayoutSectionGap = 64.0;
+  static const typeScaleCompactFontSize = 14.0;
+  static const typeScaleStandardFontSize = 16.0;
+  static const densityDenseSpaceControlGap = 4.0;
+  static const densityDenseSpaceControlInsetInline = 8.0;
+  static const densityDenseSizeControl = 32.0;
+  static const densityStandardSpaceControlGap = 8.0;
+  static const densityStandardSpaceControlInsetInline = 12.0;
+  static const densityStandardSizeControl = 36.0;
+  static const densitySpaciousSpaceControlGap = 12.0;
+  static const densitySpaciousSpaceControlInsetInline = 16.0;
+  static const densitySpaciousSizeControl = 44.0;
+  static const inputModePointerSizeHitTarget = 24.0;
+  static const inputModeTouchSizeHitTarget = 48.0;
+  static const windowCompactSpaceLayoutGutter = 16.0;
+  static const windowMediumSpaceLayoutGutter = 24.0;
+  static const windowExpandedSpaceLayoutGutter = 32.0;
+  static const windowLargeSpaceLayoutGutter = 48.0;
+  static const windowExtraLargeSpaceLayoutGutter = 64.0;
+}
+
 @immutable
 class KDesignTokens extends ThemeExtension<KDesignTokens> {
   const KDesignTokens({
@@ -17,7 +40,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.colorActionPrimaryForeground,
     required this.spaceControlGap,
     required this.spaceControlInsetInline,
+    required this.spaceLayoutGutter,
+    required this.spaceLayoutSectionGap,
     required this.sizeControl,
+    required this.sizeHitTarget,
     required this.radiusControl,
     required this.fontFamily,
     required this.fontSize,
@@ -37,7 +63,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final Color colorActionPrimaryForeground;
   final double spaceControlGap;
   final double spaceControlInsetInline;
+  final double spaceLayoutGutter;
+  final double spaceLayoutSectionGap;
   final double sizeControl;
+  final double sizeHitTarget;
   final double radiusControl;
   final String fontFamily;
   final double fontSize;
@@ -57,7 +86,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionPrimaryForeground: Color(0xFFFFFFFF),
     spaceControlGap: 8.0,
     spaceControlInsetInline: 12.0,
+    spaceLayoutGutter: 16.0,
+    spaceLayoutSectionGap: 32.0,
     sizeControl: 36.0,
+    sizeHitTarget: 24.0,
     radiusControl: 6.0,
     fontFamily: "Inter",
     fontSize: 14.0,
@@ -78,7 +110,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionPrimaryForeground: Color(0xFFFFFFFF),
     spaceControlGap: 8.0,
     spaceControlInsetInline: 12.0,
+    spaceLayoutGutter: 16.0,
+    spaceLayoutSectionGap: 32.0,
     sizeControl: 36.0,
+    sizeHitTarget: 24.0,
     radiusControl: 6.0,
     fontFamily: "Inter",
     fontSize: 14.0,
@@ -99,7 +134,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionPrimaryForeground: Color(0xFFFFFFFF),
     spaceControlGap: 8.0,
     spaceControlInsetInline: 12.0,
+    spaceLayoutGutter: 16.0,
+    spaceLayoutSectionGap: 32.0,
     sizeControl: 36.0,
+    sizeHitTarget: 24.0,
     radiusControl: 6.0,
     fontFamily: "Inter",
     fontSize: 14.0,
@@ -120,7 +158,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionPrimaryForeground: Color(0xFF042F2E),
     spaceControlGap: 8.0,
     spaceControlInsetInline: 12.0,
+    spaceLayoutGutter: 16.0,
+    spaceLayoutSectionGap: 32.0,
     sizeControl: 36.0,
+    sizeHitTarget: 24.0,
     radiusControl: 6.0,
     fontFamily: "Inter",
     fontSize: 14.0,
@@ -142,7 +183,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     Color? colorActionPrimaryForeground,
     double? spaceControlGap,
     double? spaceControlInsetInline,
+    double? spaceLayoutGutter,
+    double? spaceLayoutSectionGap,
     double? sizeControl,
+    double? sizeHitTarget,
     double? radiusControl,
     String? fontFamily,
     double? fontSize,
@@ -162,7 +206,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       colorActionPrimaryForeground: colorActionPrimaryForeground ?? this.colorActionPrimaryForeground,
       spaceControlGap: spaceControlGap ?? this.spaceControlGap,
       spaceControlInsetInline: spaceControlInsetInline ?? this.spaceControlInsetInline,
+      spaceLayoutGutter: spaceLayoutGutter ?? this.spaceLayoutGutter,
+      spaceLayoutSectionGap: spaceLayoutSectionGap ?? this.spaceLayoutSectionGap,
       sizeControl: sizeControl ?? this.sizeControl,
+      sizeHitTarget: sizeHitTarget ?? this.sizeHitTarget,
       radiusControl: radiusControl ?? this.radiusControl,
       fontFamily: fontFamily ?? this.fontFamily,
       fontSize: fontSize ?? this.fontSize,
@@ -187,7 +234,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       colorActionPrimaryForeground: Color.lerp(colorActionPrimaryForeground, other.colorActionPrimaryForeground, t)!,
       spaceControlGap: lerpDouble(spaceControlGap, other.spaceControlGap, t)!,
       spaceControlInsetInline: lerpDouble(spaceControlInsetInline, other.spaceControlInsetInline, t)!,
+      spaceLayoutGutter: lerpDouble(spaceLayoutGutter, other.spaceLayoutGutter, t)!,
+      spaceLayoutSectionGap: lerpDouble(spaceLayoutSectionGap, other.spaceLayoutSectionGap, t)!,
       sizeControl: lerpDouble(sizeControl, other.sizeControl, t)!,
+      sizeHitTarget: lerpDouble(sizeHitTarget, other.sizeHitTarget, t)!,
       radiusControl: lerpDouble(radiusControl, other.radiusControl, t)!,
       fontFamily: t < 0.5 ? fontFamily : other.fontFamily,
       fontSize: lerpDouble(fontSize, other.fontSize, t)!,

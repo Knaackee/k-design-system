@@ -23,6 +23,7 @@ the final approved Button design.
 - `color.action.primary.{background,hover,pressed,foreground}`
 - `color.border.focus`
 - `size.control`
+- `size.hitTarget`
 - `space.{controlGap,controlInsetInline}`
 - `radius.control`
 - `font.{family,size,weight}`
@@ -32,3 +33,5 @@ the final approved Button design.
 
 The next visual review may change Button styling and token values, but must not
 bypass the generated token packages or diverge the shared fixture intent.
+The `button-states` fixture is also the reference surface for independently
+reviewing adaptive token axes before additional primitives are introduced.

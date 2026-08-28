@@ -1,0 +1,5 @@
+{
+  "size": {
+    "hitTarget": { "$type": "dimension", "$value": "{size.hitTarget.touch}" }
+  }
+}

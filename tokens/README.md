@@ -8,6 +8,8 @@ package is allowed to become the token source.
 - `foundation.tokens.json`: raw scales.
 - `semantic.tokens.json`: roles consumed by components.
 - `themes/*.tokens.json`: brand and color-mode overrides.
+- `modes/*.tokens.json`: presentation, density, typography, input and window
+  overrides. Each file may change existing semantic roles only.
 
 ## Generated projections
 
@@ -18,3 +20,7 @@ package is allowed to become the token source.
 
 Run `pnpm generate` after changing sources. CI uses `pnpm generate:check` and
 fails when committed projections no longer match their sources.
+
+See
+[the adaptive foundation decision](../docs/decisions/0001-adaptive-foundation.md)
+for axis ownership, preset mappings and responsive boundaries.

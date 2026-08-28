@@ -23,10 +23,19 @@ export const States: Story = {
     fixtureId: "button-states",
   },
   render: () => (
-    <div className="k-button-grid">
-      <KButton>Continue</KButton>
-      <KButton disabled>Disabled</KButton>
-      <KButton loading>Saving</KButton>
+    <div className="k-foundation-preview">
+      <div className="k-foundation-preview__copy">
+        <h2>Adaptive foundation</h2>
+        <p>
+          Compare density, typography, presentation, input target and window
+          spacing with the toolbar controls.
+        </p>
+      </div>
+      <div className="k-button-grid">
+        <KButton>Continue</KButton>
+        <KButton disabled>Disabled</KButton>
+        <KButton loading>Saving</KButton>
+      </div>
     </div>
   ),
 };
