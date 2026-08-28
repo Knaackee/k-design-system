@@ -1,3 +1,182 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./assets/fonts/InterVariable.woff2") format("woff2-variations");
+}
+
+.k-text {
+  margin: 0;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  font-optical-sizing: auto;
+  font-size: calc(var(--k-text-font-size) * var(--k-text-scale, 1));
+  font-weight: var(--k-text-font-weight);
+  letter-spacing: var(--k-text-letter-spacing);
+  line-height: calc(var(--k-text-line-height) * var(--k-text-scale, 1));
+}
+
+.k-text--heading1 {
+  --k-text-font-size: var(--k-font-heading1-size);
+  --k-text-line-height: var(--k-font-heading1-line-height);
+  --k-text-letter-spacing: var(--k-font-heading1-letter-spacing);
+  --k-text-font-weight: var(--k-font-heading-weight);
+}
+
+.k-text--heading2 {
+  --k-text-font-size: var(--k-font-heading2-size);
+  --k-text-line-height: var(--k-font-heading2-line-height);
+  --k-text-letter-spacing: var(--k-font-heading2-letter-spacing);
+  --k-text-font-weight: var(--k-font-heading-weight);
+}
+
+.k-text--heading3 {
+  --k-text-font-size: var(--k-font-heading3-size);
+  --k-text-line-height: var(--k-font-heading3-line-height);
+  --k-text-letter-spacing: var(--k-font-heading3-letter-spacing);
+  --k-text-font-weight: var(--k-font-heading-weight);
+}
+
+.k-text--heading4 {
+  --k-text-font-size: var(--k-font-heading4-size);
+  --k-text-line-height: var(--k-font-heading4-line-height);
+  --k-text-letter-spacing: var(--k-font-heading4-letter-spacing);
+  --k-text-font-weight: var(--k-font-heading-weight);
+}
+
+.k-text--heading5 {
+  --k-text-font-size: var(--k-font-heading5-size);
+  --k-text-line-height: var(--k-font-heading5-line-height);
+  --k-text-letter-spacing: var(--k-font-heading5-letter-spacing);
+  --k-text-font-weight: var(--k-font-heading-weight);
+}
+
+.k-text--heading6 {
+  --k-text-font-size: var(--k-font-heading6-size);
+  --k-text-line-height: var(--k-font-heading6-line-height);
+  --k-text-letter-spacing: var(--k-font-heading6-letter-spacing);
+  --k-text-font-weight: var(--k-font-heading-weight);
+}
+
+.k-text--body {
+  --k-text-font-size: var(--k-font-body-size);
+  --k-text-line-height: var(--k-font-body-line-height);
+  --k-text-letter-spacing: var(--k-font-body-letter-spacing);
+  --k-text-font-weight: var(--k-font-body-weight);
+}
+
+.k-text--body-small {
+  --k-text-font-size: var(--k-font-body-small-size);
+  --k-text-line-height: var(--k-font-body-small-line-height);
+  --k-text-letter-spacing: var(--k-font-body-small-letter-spacing);
+  --k-text-font-weight: var(--k-font-body-weight);
+}
+
+.k-text--label {
+  --k-text-font-size: var(--k-font-label-size);
+  --k-text-line-height: var(--k-font-label-line-height);
+  --k-text-letter-spacing: var(--k-font-label-letter-spacing);
+  --k-text-font-weight: var(--k-font-label-weight);
+}
+
+.k-text--caption {
+  --k-text-font-size: var(--k-font-caption-size);
+  --k-text-line-height: var(--k-font-caption-line-height);
+  --k-text-letter-spacing: var(--k-font-caption-letter-spacing);
+  --k-text-font-weight: var(--k-font-body-weight);
+}
+
+.k-surface {
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: var(--k-surface-border-width);
+  border-color: var(--k-surface-border-color);
+  border-radius: var(--k-surface-radius);
+  background: var(--k-surface-background);
+  color: var(--k-color-text-primary);
+  box-shadow: var(--k-surface-elevation);
+}
+
+.k-surface--tone-canvas {
+  --k-surface-background: var(--k-color-surface-canvas);
+}
+
+.k-surface--tone-raised {
+  --k-surface-background: var(--k-color-surface-raised);
+}
+
+.k-surface--tone-subtle {
+  --k-surface-background: var(--k-color-surface-subtle);
+}
+
+.k-surface--border-none {
+  --k-surface-border-width: var(--k-border-width-none);
+  --k-surface-border-color: transparent;
+}
+
+.k-surface--border-default {
+  --k-surface-border-width: var(--k-border-width-default);
+  --k-surface-border-color: var(--k-color-border-default);
+}
+
+.k-surface--border-strong {
+  --k-surface-border-width: var(--k-border-width-default);
+  --k-surface-border-color: var(--k-color-border-strong);
+}
+
+.k-surface--radius-none {
+  --k-surface-radius: var(--k-radius-none);
+}
+
+.k-surface--radius-small {
+  --k-surface-radius: var(--k-radius-small);
+}
+
+.k-surface--radius-medium {
+  --k-surface-radius: var(--k-radius-medium);
+}
+
+.k-surface--radius-large {
+  --k-surface-radius: var(--k-radius-large);
+}
+
+.k-surface--radius-extra-large {
+  --k-surface-radius: var(--k-radius-extra-large);
+}
+
+.k-surface--radius-card {
+  --k-surface-radius: var(--k-radius-card);
+}
+
+.k-surface--radius-overlay {
+  --k-surface-radius: var(--k-radius-overlay);
+}
+
+.k-surface--radius-full {
+  --k-surface-radius: var(--k-radius-full);
+}
+
+.k-surface--elevation-none {
+  --k-surface-elevation: var(--k-elevation-none);
+}
+
+.k-surface--elevation-low {
+  --k-surface-elevation: var(--k-elevation-low);
+}
+
+.k-surface--elevation-medium {
+  --k-surface-elevation: var(--k-elevation-medium);
+}
+
+.k-surface--elevation-overlay {
+  --k-surface-elevation: var(--k-elevation-overlay);
+}
+
+.k-card {
+  padding: var(--k-space-card-padding);
+}
+
 .k-button {
   position: relative;
   min-height: var(--k-size-control);
@@ -6,13 +185,15 @@
   align-items: center;
   justify-content: center;
   gap: var(--k-space-control-gap);
-  border: 1px solid transparent;
+  border: 1px solid var(--k-button-border);
   border-radius: var(--k-radius-control);
-  background: var(--k-color-action-primary-background);
-  color: var(--k-color-action-primary-foreground);
+  background: var(--k-button-background);
+  color: var(--k-button-foreground);
   font-family: var(--k-font-family);
-  font-size: calc(var(--k-font-size) * var(--k-text-scale, 1));
-  font-weight: var(--k-font-weight);
+  font-optical-sizing: auto;
+  font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
+  font-weight: var(--k-font-control-weight);
+  letter-spacing: -0.01em;
   line-height: 1;
   cursor: pointer;
   transition:
@@ -27,12 +208,36 @@
   inset: min(0px, calc((var(--k-size-control) - var(--k-size-hit-target)) / 2));
 }
 
+.k-button--primary {
+  --k-button-background: var(--k-color-action-primary-background);
+  --k-button-background-hover: var(--k-color-action-primary-hover);
+  --k-button-background-pressed: var(--k-color-action-primary-pressed);
+  --k-button-foreground: var(--k-color-action-primary-foreground);
+  --k-button-border: transparent;
+}
+
+.k-button--secondary {
+  --k-button-background: var(--k-color-action-secondary-background);
+  --k-button-background-hover: var(--k-color-action-secondary-hover);
+  --k-button-background-pressed: var(--k-color-action-secondary-pressed);
+  --k-button-foreground: var(--k-color-action-secondary-foreground);
+  --k-button-border: var(--k-color-action-secondary-border);
+}
+
+.k-button--ghost {
+  --k-button-background: var(--k-color-action-ghost-background);
+  --k-button-background-hover: var(--k-color-action-ghost-hover);
+  --k-button-background-pressed: var(--k-color-action-ghost-pressed);
+  --k-button-foreground: var(--k-color-action-ghost-foreground);
+  --k-button-border: var(--k-color-action-ghost-border);
+}
+
 .k-button:hover:not(:disabled) {
-  background: var(--k-color-action-primary-hover);
+  background: var(--k-button-background-hover);
 }
 
 .k-button:active:not(:disabled) {
-  background: var(--k-color-action-primary-pressed);
+  background: var(--k-button-background-pressed);
 }
 
 .k-button:focus-visible {

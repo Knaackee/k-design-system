@@ -2,7 +2,8 @@
   "color": {
     "surface": {
       "canvas": { "$type": "color", "$value": "#071b19" },
-      "raised": { "$type": "color", "$value": "#0b2925" }
+      "raised": { "$type": "color", "$value": "#0b2925" },
+      "subtle": { "$type": "color", "$value": "#123b36" }
     },
     "text": {
       "primary": { "$type": "color", "$value": "#ecfdf5" },
@@ -10,7 +11,48 @@
     },
     "border": {
       "default": { "$type": "color", "$value": "#23544e" },
+      "strong": { "$type": "color", "$value": "#39766e" },
       "focus": { "$type": "color", "$value": "#5eead4" }
+    },
+    "brand": {
+      "primary": {
+        "accent": { "$type": "color", "$value": "#2dd4bf" },
+        "background": { "$type": "color", "$value": "#123b36" },
+        "foreground": { "$type": "color", "$value": "#ccfbf1" },
+        "border": { "$type": "color", "$value": "#28766d" }
+      },
+      "secondary": {
+        "accent": { "$type": "color", "$value": "#22d3ee" },
+        "background": { "$type": "color", "$value": "#12343b" },
+        "foreground": { "$type": "color", "$value": "#cffafe" },
+        "border": { "$type": "color", "$value": "#286575" }
+      }
+    },
+    "status": {
+      "info": {
+        "accent": { "$type": "color", "$value": "#38bdf8" },
+        "background": { "$type": "color", "$value": "#102f42" },
+        "foreground": { "$type": "color", "$value": "#e0f2fe" },
+        "border": { "$type": "color", "$value": "#25617e" }
+      },
+      "success": {
+        "accent": { "$type": "color", "$value": "#34d399" },
+        "background": { "$type": "color", "$value": "#12392e" },
+        "foreground": { "$type": "color", "$value": "#d1fae5" },
+        "border": { "$type": "color", "$value": "#276b55" }
+      },
+      "warning": {
+        "accent": { "$type": "color", "$value": "#fbbf24" },
+        "background": { "$type": "color", "$value": "#3b3217" },
+        "foreground": { "$type": "color", "$value": "#fef3c7" },
+        "border": { "$type": "color", "$value": "#766225" }
+      },
+      "error": {
+        "accent": { "$type": "color", "$value": "#fb7185" },
+        "background": { "$type": "color", "$value": "#3c2027" },
+        "foreground": { "$type": "color", "$value": "#ffe4e6" },
+        "border": { "$type": "color", "$value": "#793743" }
+      }
     },
     "action": {
       "primary": {
@@ -20,5 +62,10 @@
         "foreground": { "$type": "color", "$value": "#042f2e" }
       }
     }
+  },
+  "elevation": {
+    "low": { "$type": "shadow", "$value": "{shadow.darkLow}" },
+    "medium": { "$type": "shadow", "$value": "{shadow.darkMedium}" },
+    "overlay": { "$type": "shadow", "$value": "{shadow.darkOverlay}" }
   }
 }

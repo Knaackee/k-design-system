@@ -148,8 +148,19 @@ function cssValue(token) {
     return `${token.value.value}${token.value.unit}`;
   if (token.type === "duration")
     return `${token.value.value}${token.value.unit}`;
+  if (token.type === "shadow") {
+    return shadowLayers(token.value)
+      .map(
+        (shadow) =>
+          `${cssDimension(shadow.offsetX)} ${cssDimension(shadow.offsetY)} ${cssDimension(shadow.blur)} ${cssDimension(shadow.spread)} ${shadow.color}`,
+      )
+      .join(", ");
+  }
   return String(token.value);
 }
+
+const shadowLayers = (value) => (Array.isArray(value) ? value : [value]);
+const cssDimension = (value) => `${value.value}${value.unit}`;
 
 function cssBlock(selector, tokens) {
   const lines = [...tokens].map(
@@ -165,21 +176,39 @@ function dartType(token) {
     duration: "Duration",
     fontFamily: "String",
     fontWeight: "FontWeight",
+    shadow: "List<BoxShadow>",
   }[token.type];
+}
+
+function dartColor(value) {
+  const hex = value.slice(1).toUpperCase();
+  const argb =
+    hex.length === 8 ? `${hex.slice(6)}${hex.slice(0, 6)}` : `FF${hex}`;
+  return `Color(0x${argb})`;
 }
 
 function dartValue(token) {
   switch (token.type) {
-    case "color":
-      return `Color(0xFF${token.value.slice(1).toUpperCase()})`;
+    case "color": {
+      return dartColor(token.value);
+    }
     case "dimension":
       return `${Number(token.value.value).toFixed(1)}`;
     case "duration":
       return `Duration(${token.value.unit === "ms" ? "milliseconds" : "seconds"}: ${token.value.value})`;
     case "fontFamily":
-      return JSON.stringify(String(token.value).split(",")[0].trim());
+      return JSON.stringify(
+        `packages/k_design_tokens/${String(token.value).split(",")[0].trim()}`,
+      );
     case "fontWeight":
       return `FontWeight.w${token.value}`;
+    case "shadow":
+      return `<BoxShadow>[${shadowLayers(token.value)
+        .map(
+          (shadow) =>
+            `BoxShadow(color: ${dartColor(shadow.color)}, offset: Offset(${Number(shadow.offsetX.value).toFixed(1)}, ${Number(shadow.offsetY.value).toFixed(1)}), blurRadius: ${Number(shadow.blur.value).toFixed(1)}, spreadRadius: ${Number(shadow.spread.value).toFixed(1)})`,
+        )
+        .join(", ")}]`;
     default:
       throw new Error(`Unsupported Dart token type: ${token.type}`);
   }
@@ -215,6 +244,8 @@ function generateDart(themes, semantic, variants) {
       return `      ${name}: t < 0.5 ? ${name} : other.${name},`;
     if (token.type === "fontWeight")
       return `      ${name}: FontWeight.lerp(${name}, other.${name}, t)!,`;
+    if (token.type === "shadow")
+      return `      ${name}: BoxShadow.lerpList(${name}, other.${name}, t)!,`;
     return `      ${name}: t < 0.5 ? ${name} : other.${name},`;
   });
 

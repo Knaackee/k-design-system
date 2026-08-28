@@ -1,5 +1,93 @@
 {
   "font": {
-    "size": { "$type": "dimension", "$value": "{font.size.bodyStandard}" }
+    "size": { "$type": "dimension", "$value": "{font.size.bodyStandard}" },
+    "controlSize": {
+      "$type": "dimension",
+      "$value": "{font.size.controlStandard}"
+    },
+    "heading1": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading1Standard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading1Standard}"
+      }
+    },
+    "heading2": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading2Standard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading2Standard}"
+      }
+    },
+    "heading3": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading3Standard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading3Standard}"
+      }
+    },
+    "heading4": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading4Standard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading4Standard}"
+      }
+    },
+    "heading5": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading5Standard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading5Standard}"
+      }
+    },
+    "heading6": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading6Standard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading6Standard}"
+      }
+    },
+    "body": {
+      "size": { "$type": "dimension", "$value": "{font.size.bodyStandard}" },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.bodyStandard}"
+      }
+    },
+    "bodySmall": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.bodySmallStandard}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.bodySmallStandard}"
+      }
+    },
+    "label": {
+      "size": { "$type": "dimension", "$value": "{font.size.labelStandard}" },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.labelStandard}"
+      }
+    }
   }
 }

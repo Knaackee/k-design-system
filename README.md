@@ -11,9 +11,10 @@ time with a shared visual review.
 ## Current state
 
 The repository baseline, minimal token pipeline, Storybook and Widgetbook are
-operational. A generic Button proves the complete path from platform-neutral
-tokens to both galleries. The adaptive presentation foundation is available in
-both galleries for visual iteration.
+operational. Button, Typography, Surface and Card prove the complete path from
+platform-neutral tokens to both galleries. The adaptive presentation foundation,
+semantic color roles, radius scale and restrained elevation hierarchy are
+available in both galleries for visual iteration.
 
 The active plan is [docs/plans/0001-incremental-bootstrap.md](docs/plans/0001-incremental-bootstrap.md).
 The complete strategic design is preserved in
@@ -24,9 +25,9 @@ The complete strategic design is preserved in
 | Path                               | Purpose                             | Current state            |
 | ---------------------------------- | ----------------------------------- | ------------------------ |
 | `packages/web/tokens`              | Generated CSS and typed Web tokens  | Operational              |
-| `packages/web/ui`                  | React/Web primitives and components | Generic Button           |
+| `packages/web/ui`                  | React/Web primitives and components | Core primitives          |
 | `packages/flutter/k_design_tokens` | Generated Flutter tokens and themes | Operational              |
-| `packages/flutter/k_design_ui`     | Flutter primitives and components   | Generic Button           |
+| `packages/flutter/k_design_ui`     | Flutter primitives and components   | Core primitives          |
 | `apps/storybook`                   | Web component gallery               | Operational on port 6006 |
 | `apps/widgetbook`                  | Flutter component gallery           | Operational on port 6007 |
 
@@ -63,6 +64,14 @@ Presentation, density, type scale, input mode, window size and accessibility
 text scaling can be reviewed independently. The contract and working agreement
 are recorded in
 [Decision 0001](docs/decisions/0001-adaptive-foundation.md).
+The component-by-component Linear calibration and visual acceptance workflow is
+recorded in
+[Decision 0002](docs/decisions/0002-linear-default-and-visual-review-flow.md).
+The primitive contracts are documented under
+[Button](docs/components/button.md),
+[Typography](docs/components/typography.md),
+[Semantic colors](docs/components/colors.md), and
+[Shape, elevation, Surface, and Card](docs/components/surface-card.md).
 
 ## Working agreement
 

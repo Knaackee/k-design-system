@@ -80,7 +80,7 @@ KDesignTokens resolveKDesignTokens(
     ),
   };
 
-  return base.copyWith(
+  final resolved = base.copyWith(
     spaceControlGap: controlGap,
     spaceControlInsetInline: controlInsetInline,
     sizeControl: controlSize,
@@ -89,10 +89,6 @@ KDesignTokens resolveKDesignTokens(
         KDesignTokenVariants.presentationProductiveSpaceLayoutSectionGap,
       KPresentation.expressive =>
         KDesignTokenVariants.presentationExpressiveSpaceLayoutSectionGap,
-    },
-    fontSize: switch (configuration.typeScale) {
-      KTypeScale.compact => KDesignTokenVariants.typeScaleCompactFontSize,
-      KTypeScale.standard => KDesignTokenVariants.typeScaleStandardFontSize,
     },
     sizeHitTarget: switch (configuration.inputMode) {
       KInputMode.pointer => KDesignTokenVariants.inputModePointerSizeHitTarget,
@@ -109,6 +105,72 @@ KDesignTokens resolveKDesignTokens(
         KDesignTokenVariants.windowExtraLargeSpaceLayoutGutter,
     },
   );
+
+  return switch (configuration.typeScale) {
+    KTypeScale.compact => resolved.copyWith(
+      fontSize: KDesignTokenVariants.typeScaleCompactFontSize,
+      fontControlSize: KDesignTokenVariants.typeScaleCompactFontControlSize,
+      fontHeading1Size: KDesignTokenVariants.typeScaleCompactFontHeading1Size,
+      fontHeading1LineHeight:
+          KDesignTokenVariants.typeScaleCompactFontHeading1LineHeight,
+      fontHeading2Size: KDesignTokenVariants.typeScaleCompactFontHeading2Size,
+      fontHeading2LineHeight:
+          KDesignTokenVariants.typeScaleCompactFontHeading2LineHeight,
+      fontHeading3Size: KDesignTokenVariants.typeScaleCompactFontHeading3Size,
+      fontHeading3LineHeight:
+          KDesignTokenVariants.typeScaleCompactFontHeading3LineHeight,
+      fontHeading4Size: KDesignTokenVariants.typeScaleCompactFontHeading4Size,
+      fontHeading4LineHeight:
+          KDesignTokenVariants.typeScaleCompactFontHeading4LineHeight,
+      fontHeading5Size: KDesignTokenVariants.typeScaleCompactFontHeading5Size,
+      fontHeading5LineHeight:
+          KDesignTokenVariants.typeScaleCompactFontHeading5LineHeight,
+      fontHeading6Size: KDesignTokenVariants.typeScaleCompactFontHeading6Size,
+      fontHeading6LineHeight:
+          KDesignTokenVariants.typeScaleCompactFontHeading6LineHeight,
+      fontBodySize: KDesignTokenVariants.typeScaleCompactFontBodySize,
+      fontBodyLineHeight:
+          KDesignTokenVariants.typeScaleCompactFontBodyLineHeight,
+      fontBodySmallSize: KDesignTokenVariants.typeScaleCompactFontBodySmallSize,
+      fontBodySmallLineHeight:
+          KDesignTokenVariants.typeScaleCompactFontBodySmallLineHeight,
+      fontLabelSize: KDesignTokenVariants.typeScaleCompactFontLabelSize,
+      fontLabelLineHeight:
+          KDesignTokenVariants.typeScaleCompactFontLabelLineHeight,
+    ),
+    KTypeScale.standard => resolved.copyWith(
+      fontSize: KDesignTokenVariants.typeScaleStandardFontSize,
+      fontControlSize: KDesignTokenVariants.typeScaleStandardFontControlSize,
+      fontHeading1Size: KDesignTokenVariants.typeScaleStandardFontHeading1Size,
+      fontHeading1LineHeight:
+          KDesignTokenVariants.typeScaleStandardFontHeading1LineHeight,
+      fontHeading2Size: KDesignTokenVariants.typeScaleStandardFontHeading2Size,
+      fontHeading2LineHeight:
+          KDesignTokenVariants.typeScaleStandardFontHeading2LineHeight,
+      fontHeading3Size: KDesignTokenVariants.typeScaleStandardFontHeading3Size,
+      fontHeading3LineHeight:
+          KDesignTokenVariants.typeScaleStandardFontHeading3LineHeight,
+      fontHeading4Size: KDesignTokenVariants.typeScaleStandardFontHeading4Size,
+      fontHeading4LineHeight:
+          KDesignTokenVariants.typeScaleStandardFontHeading4LineHeight,
+      fontHeading5Size: KDesignTokenVariants.typeScaleStandardFontHeading5Size,
+      fontHeading5LineHeight:
+          KDesignTokenVariants.typeScaleStandardFontHeading5LineHeight,
+      fontHeading6Size: KDesignTokenVariants.typeScaleStandardFontHeading6Size,
+      fontHeading6LineHeight:
+          KDesignTokenVariants.typeScaleStandardFontHeading6LineHeight,
+      fontBodySize: KDesignTokenVariants.typeScaleStandardFontBodySize,
+      fontBodyLineHeight:
+          KDesignTokenVariants.typeScaleStandardFontBodyLineHeight,
+      fontBodySmallSize:
+          KDesignTokenVariants.typeScaleStandardFontBodySmallSize,
+      fontBodySmallLineHeight:
+          KDesignTokenVariants.typeScaleStandardFontBodySmallLineHeight,
+      fontLabelSize: KDesignTokenVariants.typeScaleStandardFontLabelSize,
+      fontLabelLineHeight:
+          KDesignTokenVariants.typeScaleStandardFontLabelLineHeight,
+    ),
+  };
 }
 
 KDesignTokens kDesignTokens({

@@ -1,6 +1,6 @@
 # Button
 
-> Status: technical baseline complete; visual acceptance pending
+> Status: Linear-oriented token baseline; visual acceptance pending
 
 The generic Button proves the vertical token and gallery pipeline. It is not yet
 the final approved Button design.
@@ -14,21 +14,27 @@ the final approved Button design.
 - Flutter uses native Material focus, hover, pressed and semantics behavior.
 - Flutter suppresses the Material ripple; token-driven state colors are the
   shared visual feedback on both platforms.
+- `primary`, `secondary` and `ghost` expose semantic intent without embedding a
+  brand palette in either component package.
 
 ## Shared fixtures
 
 - `button-primary`
+- `button-variants`
 - `button-states`
 
 ## Semantic tokens
 
 - `color.action.primary.{background,hover,pressed,foreground}`
+- `color.action.secondary.{background,hover,pressed,foreground,border}`
+- `color.action.ghost.{background,hover,pressed,foreground,border}`
 - `color.border.focus`
 - `size.control`
 - `size.hitTarget`
 - `space.{controlGap,controlInsetInline}`
 - `radius.control`
 - `font.{family,size,weight}`
+- `font.{controlSize,controlWeight}`
 - `motion.fast`
 
 ## Review boundary

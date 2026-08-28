@@ -35,6 +35,9 @@ void main() {
 
     expect(tokens.sizeControl, 32);
     expect(tokens.fontSize, 16);
+    expect(tokens.fontControlSize, 14);
+    expect(tokens.fontHeading1Size, 36);
+    expect(tokens.fontHeading1LineHeight, 44);
     expect(tokens.sizeHitTarget, 48);
     expect(tokens.spaceLayoutSectionGap, 64);
     expect(tokens.spaceLayoutGutter, 48);
@@ -54,5 +57,54 @@ void main() {
     expect(theme.splashFactory, same(NoSplash.splashFactory));
     expect(theme.splashColor, Colors.transparent);
     expect(theme.highlightColor, Colors.transparent);
+  });
+
+  test('reference theme overrides flow through secondary button roles', () {
+    expect(
+      KDesignTokens.referenceLight.colorActionSecondaryHover,
+      KDesignTokens.referenceLight.colorSurfaceSubtle,
+    );
+    expect(
+      KDesignTokens.referenceLight.colorActionSecondaryHover,
+      isNot(KDesignTokens.orbitLight.colorActionSecondaryHover),
+    );
+  });
+
+  test('both platforms resolve the bundled Inter font asset', () {
+    final theme = kDesignTheme();
+
+    expect(
+      KDesignTokens.orbitLight.fontFamily,
+      'packages/k_design_tokens/Inter',
+    );
+    expect(theme.textTheme.bodyMedium!.fontFamily, contains('Inter'));
+  });
+
+  test('brand and status roles remain theme-overridable', () {
+    expect(
+      KDesignTokens.referenceLight.colorBrandPrimaryAccent,
+      isNot(KDesignTokens.orbitLight.colorBrandPrimaryAccent),
+    );
+    expect(
+      KDesignTokens.referenceDark.colorStatusInfoBackground,
+      isNot(KDesignTokens.orbitDark.colorStatusInfoBackground),
+    );
+  });
+
+  test('shape and elevation roles expose the shared foundation contract', () {
+    final tokens = KDesignTokens.orbitLight;
+
+    expect(tokens.radiusSmall, 4);
+    expect(tokens.radiusCard, 6);
+    expect(tokens.radiusOverlay, 8);
+    expect(tokens.borderWidthDefault, 1);
+    expect(tokens.elevationNone.single.color, Colors.transparent);
+    expect(tokens.elevationLow, hasLength(1));
+    expect(tokens.elevationMedium, hasLength(2));
+    expect(tokens.elevationOverlay, hasLength(2));
+    expect(
+      KDesignTokens.orbitDark.elevationOverlay.first.color,
+      isNot(tokens.elevationOverlay.first.color),
+    );
   });
 }

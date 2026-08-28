@@ -2,7 +2,8 @@
   "color": {
     "surface": {
       "canvas": { "$type": "color", "$value": "#f0fdfa" },
-      "raised": { "$type": "color", "$value": "#ffffff" }
+      "raised": { "$type": "color", "$value": "#ffffff" },
+      "subtle": { "$type": "color", "$value": "#ccfbf1" }
     },
     "text": {
       "primary": { "$type": "color", "$value": "#134e4a" },
@@ -10,7 +11,48 @@
     },
     "border": {
       "default": { "$type": "color", "$value": "#99d5cd" },
+      "strong": { "$type": "color", "$value": "#5ba99f" },
       "focus": { "$type": "color", "$value": "#2dd4bf" }
+    },
+    "brand": {
+      "primary": {
+        "accent": { "$type": "color", "$value": "#0d9488" },
+        "background": { "$type": "color", "$value": "#ccfbf1" },
+        "foreground": { "$type": "color", "$value": "#115e59" },
+        "border": { "$type": "color", "$value": "#5eead4" }
+      },
+      "secondary": {
+        "accent": { "$type": "color", "$value": "#0891b2" },
+        "background": { "$type": "color", "$value": "#ecfeff" },
+        "foreground": { "$type": "color", "$value": "#155e75" },
+        "border": { "$type": "color", "$value": "#a5f3fc" }
+      }
+    },
+    "status": {
+      "info": {
+        "accent": { "$type": "color", "$value": "#0284c7" },
+        "background": { "$type": "color", "$value": "#f0f9ff" },
+        "foreground": { "$type": "color", "$value": "#075985" },
+        "border": { "$type": "color", "$value": "#bae6fd" }
+      },
+      "success": {
+        "accent": { "$type": "color", "$value": "#059669" },
+        "background": { "$type": "color", "$value": "#ecfdf5" },
+        "foreground": { "$type": "color", "$value": "#065f46" },
+        "border": { "$type": "color", "$value": "#a7f3d0" }
+      },
+      "warning": {
+        "accent": { "$type": "color", "$value": "#d97706" },
+        "background": { "$type": "color", "$value": "#fffbeb" },
+        "foreground": { "$type": "color", "$value": "#92400e" },
+        "border": { "$type": "color", "$value": "#fde68a" }
+      },
+      "error": {
+        "accent": { "$type": "color", "$value": "#dc2626" },
+        "background": { "$type": "color", "$value": "#fef2f2" },
+        "foreground": { "$type": "color", "$value": "#991b1b" },
+        "border": { "$type": "color", "$value": "#fecaca" }
+      }
     },
     "action": {
       "primary": {

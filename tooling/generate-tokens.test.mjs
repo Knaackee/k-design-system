@@ -110,3 +110,102 @@ test("emits runtime modes in a higher cascade layer than brand themes", async ()
   );
   assert.match(css, /\[data-density="dense"\][\s\S]*--k-size-control: 32px/);
 });
+
+test("generates transparent DTCG colors for Flutter", async () => {
+  const dart = await readFile(
+    new URL(
+      "../packages/flutter/k_design_tokens/lib/src/generated/k_design_tokens.g.dart",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+
+  assert.match(dart, /colorActionGhostBackground: Color\(0x00000000\)/);
+});
+
+test("bundles the shared Inter family for Flutter consumers", async () => {
+  const dart = await readFile(
+    new URL(
+      "../packages/flutter/k_design_tokens/lib/src/generated/k_design_tokens.g.dart",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+
+  assert.match(dart, /fontFamily: "packages\/k_design_tokens\/Inter"/);
+});
+
+test("semantic text pairs meet WCAG AA contrast", async () => {
+  const themes = JSON.parse(
+    await readFile(
+      new URL("../dist/tokens.flat.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const roleGroups = [
+    "color.brand.primary",
+    "color.brand.secondary",
+    "color.status.info",
+    "color.status.success",
+    "color.status.warning",
+    "color.status.error",
+  ];
+
+  for (const [themeName, theme] of Object.entries(themes)) {
+    if (themeName === "variants") continue;
+    assert.ok(
+      contrast(
+        theme["color.text.primary"].value,
+        theme["color.surface.canvas"].value,
+      ) >= 4.5,
+      `${themeName} primary text must meet 4.5:1`,
+    );
+    for (const role of roleGroups) {
+      assert.ok(
+        contrast(
+          theme[`${role}.foreground`].value,
+          theme[`${role}.background`].value,
+        ) >= 4.5,
+        `${themeName} ${role} text must meet 4.5:1`,
+      );
+    }
+  }
+});
+
+test("projects DTCG shadow tokens to CSS and Flutter", async () => {
+  const css = await readFile(
+    new URL("../packages/web/tokens/src/generated/tokens.css", import.meta.url),
+    "utf8",
+  );
+  const dart = await readFile(
+    new URL(
+      "../packages/flutter/k_design_tokens/lib/src/generated/k_design_tokens.g.dart",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+
+  assert.match(css, /--k-elevation-low: 0px 1px 2px 0px #[a-f\d]{8}/i);
+  assert.match(
+    dart,
+    /final List<BoxShadow> elevationLow;[\s\S]*BoxShadow\(color: Color\(0x[\dA-F]{8}\)/,
+  );
+});
+
+function contrast(first, second) {
+  const [lighter, darker] = [luminance(first), luminance(second)].sort(
+    (a, b) => b - a,
+  );
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function luminance(hex) {
+  const channels = hex
+    .slice(1, 7)
+    .match(/.{2}/g)
+    .map((value) => Number.parseInt(value, 16) / 255)
+    .map((value) =>
+      value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4,
+    );
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
