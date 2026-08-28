@@ -41,6 +41,10 @@ class KButton extends StatelessWidget {
         foregroundColor: WidgetStatePropertyAll(
           tokens.colorActionPrimaryForeground,
         ),
+        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+        elevation: const WidgetStatePropertyAll(0),
+        shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+        surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
         textStyle: WidgetStatePropertyAll(
           TextStyle(
             fontFamily: tokens.fontFamily,

@@ -39,4 +39,36 @@ void main() {
     expect(activated, isFalse);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
+
+  testWidgets('button states use tokens without Material overlays', (
+    tester,
+  ) async {
+    final tokens = kDesignTokens();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: KButton(label: 'Continue', onPressed: () {}),
+      ),
+    );
+
+    final style = tester.widget<FilledButton>(find.byType(FilledButton)).style!;
+
+    expect(
+      style.backgroundColor!.resolve({WidgetState.hovered}),
+      tokens.colorActionPrimaryHover,
+    );
+    expect(
+      style.backgroundColor!.resolve({WidgetState.pressed}),
+      tokens.colorActionPrimaryPressed,
+    );
+    expect(
+      style.overlayColor!.resolve({WidgetState.hovered}),
+      Colors.transparent,
+    );
+    expect(style.elevation!.resolve({WidgetState.pressed}), 0);
+    expect(
+      style.surfaceTintColor!.resolve({WidgetState.pressed}),
+      Colors.transparent,
+    );
+  });
 }
