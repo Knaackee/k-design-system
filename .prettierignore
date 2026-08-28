@@ -1,0 +1,7 @@
+.dart_tool/
+build/
+dist/
+node_modules/
+pnpm-lock.yaml
+pubspec.lock
+docs/plans/orbit-ds2-strategic-master-plan.md

@@ -1,0 +1,21 @@
+{
+  "name": "k-design-system-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build:web": "pnpm --filter @k-design-system/tokens build && pnpm --filter @k-design-system/ui build",
+    "typecheck:web": "pnpm --filter @k-design-system/tokens typecheck && pnpm --filter @k-design-system/ui typecheck",
+    "analyze:flutter": "dart run melos exec --concurrency 1 -- \"flutter analyze\"",
+    "test:flutter": "dart run melos exec --concurrency 1 -- \"flutter test\"",
+    "format:check": "prettier --check .",
+    "verify": "pnpm format:check && pnpm build:web && pnpm typecheck:web && pnpm analyze:flutter && pnpm test:flutter"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
+  }
+}

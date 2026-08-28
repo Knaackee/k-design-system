@@ -1,0 +1,12 @@
+name: k_design_system_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.12.0
+
+workspace:
+  - packages/flutter/k_design_tokens
+  - packages/flutter/k_design_ui
+
+dev_dependencies:
+  melos: ^7.1.1
