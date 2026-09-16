@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   k_design_tokens: any
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:

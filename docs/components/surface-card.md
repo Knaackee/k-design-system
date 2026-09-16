@@ -44,10 +44,18 @@ The galleries expose matching fixtures:
 - `elevation-levels`
 - `surface-tones`
 - `card-variants`
+- `layout-composition`
 
-Review all fixtures in light and dark themes. Surface and Card must also respond
-to the existing presentation, density, type-scale, input-mode, and window-class
-configuration through their child content and semantic spacing tokens.
+Review Light/Dark and Orbit/Reference at each density. Card inset and sibling
+gaps resolve from density; typography, input mode and window class remain
+independent. Card content uses a control-gap KStack inside an action-gap KStack.
+Text and Button contribute no external margins.
+
+Card and Surface fixtures share a 760 px maximum content width, token gutters,
+and one column below a 600 px fixture viewport or two columns at/above it.
+The section gap is subtracted before dividing column width. Viewport size and
+window-class selection must both match when comparing platforms.
+See [composition](composition.md) for the shared layout contract.
 
 ## References
 

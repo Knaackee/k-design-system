@@ -7,9 +7,6 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
-  docs: {
-    autodocs: "tag",
-  },
   features: {
     sidebarOnboardingChecklist: false,
     menuOnboardingChecklist: false,

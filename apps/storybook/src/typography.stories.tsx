@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KText } from "@k-design-system/ui";
+import { KText, KStack } from "@k-design-system/ui";
 
 const meta = {
   title: "Primitives/Typography",
@@ -41,7 +41,7 @@ export const Scale: Story = {
     fixtureId: "typography-scale",
   },
   render: () => (
-    <div className="k-type-specimen">
+    <KStack gap="section" className="k-type-specimen">
       <KText variant="heading1">H1 · Product direction</KText>
       <KText variant="heading2">H2 · Planning and strategy</KText>
       <KText variant="heading3">H3 · Project overview</KText>
@@ -58,6 +58,6 @@ export const Scale: Story = {
       </KText>
       <KText variant="label">Label · ASSIGNEE</KText>
       <KText variant="caption">Caption · Updated moments ago</KText>
-    </div>
+    </KStack>
   ),
 };

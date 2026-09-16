@@ -57,21 +57,23 @@ pnpm storybook
 pnpm widgetbook
 ```
 
-Storybook runs at `http://localhost:6006`; Widgetbook runs as Flutter Web at
-`http://localhost:6007`. Both expose Orbit/Reference and Light/Dark theme
-selection and use the fixture IDs `button-primary` and `button-states`.
-Presentation, density, type scale, input mode, window size and accessibility
-text scaling can be reviewed independently. The contract and working agreement
-are recorded in
-[Decision 0001](docs/decisions/0001-adaptive-foundation.md).
-The component-by-component Linear calibration and visual acceptance workflow is
-recorded in
-[Decision 0002](docs/decisions/0002-linear-default-and-visual-review-flow.md).
-The primitive contracts are documented under
-[Button](docs/components/button.md),
-[Typography](docs/components/typography.md),
+Storybook runs at `http://localhost:6006`; Widgetbook runs at
+`http://localhost:6007`. Both offer Orbit/Reference, Light/Dark, and matching
+`card-variants`, `surface-tones`, and `layout-composition` fixtures.
+
+Dense, Standard (default), and Spacious control spacing. Type scale, input mode,
+window class, and accessibility text scaling remain independent. Presentation
+has been removed; Productive/Expressive URL parameters have no effect.
+See [Decision 0003](docs/decisions/0003-unified-density-composition.md) for the
+replacement contract and [composition](docs/components/composition.md) for
+consumer usage and migration.
+
+[Decision 0001](docs/decisions/0001-adaptive-foundation.md) still governs the
+other adaptive axes. [Decision 0002](docs/decisions/0002-linear-default-and-visual-review-flow.md)
+governs visual acceptance. Component contracts:
+[Button](docs/components/button.md), [Typography](docs/components/typography.md),
 [Semantic colors](docs/components/colors.md), and
-[Shape, elevation, Surface, and Card](docs/components/surface-card.md).
+[Surface and Card](docs/components/surface-card.md).
 
 ## Working agreement
 

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { KInline, KStack, KText } from "@k-design-system/ui";
 
 const ColorGallery = () => (
-  <div className="k-color-grid">
+  <KInline wrap className="k-color-grid">
     {[
       ["primary", "Primary", "Brand and principal actions"],
       ["secondary", "Secondary", "Supporting brand emphasis"],
@@ -10,15 +11,19 @@ const ColorGallery = () => (
       ["warning", "Warning", "Attention without failure"],
       ["error", "Error", "Failure or destructive state"],
     ].map(([role, name, description]) => (
-      <section className={`k-color-card k-color-card--${role}`} key={role}>
+      <KInline
+        align="center"
+        className={`k-color-card k-color-card--${role}`}
+        key={role}
+      >
         <span className="k-color-card__accent" aria-hidden="true" />
-        <div>
-          <strong>{name}</strong>
-          <span>{description}</span>
-        </div>
-      </section>
+        <KStack className="k-color-card__copy">
+          <KText variant="label">{name}</KText>
+          <KText variant="bodySmall">{description}</KText>
+        </KStack>
+      </KInline>
     ))}
-  </div>
+  </KInline>
 );
 
 const meta = {

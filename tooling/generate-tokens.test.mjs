@@ -192,6 +192,36 @@ test("projects DTCG shadow tokens to CSS and Flutter", async () => {
   );
 });
 
+test("density owns the complete composition rhythm without presentation", async () => {
+  const flat = JSON.parse(
+    await readFile(
+      new URL("../dist/tokens.flat.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  for (const [mode, values] of Object.entries({
+    densityDense: [4, 8, 8, 12, 16, 32],
+    densityStandard: [8, 16, 12, 16, 32, 36],
+    densitySpacious: [12, 24, 16, 24, 48, 44],
+  })) {
+    const keys = [
+      "space.controlGap",
+      "space.contentActionGap",
+      "space.controlInsetInline",
+      "space.cardPadding",
+      "space.layoutSectionGap",
+      "size.control",
+    ];
+    assert.deepEqual(
+      keys.map((key) => flat.variants[mode][key]?.value.value),
+      values,
+    );
+  }
+  assert.ok(
+    Object.keys(flat.variants).every((key) => !key.startsWith("presentation")),
+  );
+});
+
 function contrast(first, second) {
   const [lighter, darker] = [luminance(first), luminance(second)].sort(
     (a, b) => b - a,

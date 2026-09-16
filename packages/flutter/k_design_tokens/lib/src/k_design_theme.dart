@@ -4,8 +4,6 @@ import 'generated/k_design_tokens.g.dart';
 
 enum KBrand { orbit, reference }
 
-enum KPresentation { productive, expressive }
-
 enum KDensity { dense, standard, spacious }
 
 enum KTypeScale { compact, standard }
@@ -17,14 +15,12 @@ enum KWindowClass { compact, medium, expanded, large, extraLarge }
 @immutable
 class KDesignConfiguration {
   const KDesignConfiguration({
-    this.presentation = KPresentation.productive,
     this.density = KDensity.standard,
     this.typeScale = KTypeScale.compact,
     this.inputMode = KInputMode.pointer,
     this.windowClass = KWindowClass.compact,
   });
 
-  final KPresentation presentation;
   final KDensity density;
   final KTypeScale typeScale;
   final KInputMode inputMode;
@@ -41,7 +37,7 @@ class KDesignConfiguration {
   );
 
   static const marketing = KDesignConfiguration(
-    presentation: KPresentation.expressive,
+    density: KDensity.spacious,
     typeScale: KTypeScale.standard,
   );
 }
@@ -62,21 +58,33 @@ KDesignTokens resolveKDesignTokens(
     controlGap,
     controlInsetInline,
     controlSize,
+    actionGap,
+    cardPadding,
+    sectionGap,
   ) = switch (configuration.density) {
     KDensity.dense => (
       KDesignTokenVariants.densityDenseSpaceControlGap,
       KDesignTokenVariants.densityDenseSpaceControlInsetInline,
       KDesignTokenVariants.densityDenseSizeControl,
+      KDesignTokenVariants.densityDenseSpaceContentActionGap,
+      KDesignTokenVariants.densityDenseSpaceCardPadding,
+      KDesignTokenVariants.densityDenseSpaceLayoutSectionGap,
     ),
     KDensity.standard => (
       KDesignTokenVariants.densityStandardSpaceControlGap,
       KDesignTokenVariants.densityStandardSpaceControlInsetInline,
       KDesignTokenVariants.densityStandardSizeControl,
+      KDesignTokenVariants.densityStandardSpaceContentActionGap,
+      KDesignTokenVariants.densityStandardSpaceCardPadding,
+      KDesignTokenVariants.densityStandardSpaceLayoutSectionGap,
     ),
     KDensity.spacious => (
       KDesignTokenVariants.densitySpaciousSpaceControlGap,
       KDesignTokenVariants.densitySpaciousSpaceControlInsetInline,
       KDesignTokenVariants.densitySpaciousSizeControl,
+      KDesignTokenVariants.densitySpaciousSpaceContentActionGap,
+      KDesignTokenVariants.densitySpaciousSpaceCardPadding,
+      KDesignTokenVariants.densitySpaciousSpaceLayoutSectionGap,
     ),
   };
 
@@ -84,12 +92,9 @@ KDesignTokens resolveKDesignTokens(
     spaceControlGap: controlGap,
     spaceControlInsetInline: controlInsetInline,
     sizeControl: controlSize,
-    spaceLayoutSectionGap: switch (configuration.presentation) {
-      KPresentation.productive =>
-        KDesignTokenVariants.presentationProductiveSpaceLayoutSectionGap,
-      KPresentation.expressive =>
-        KDesignTokenVariants.presentationExpressiveSpaceLayoutSectionGap,
-    },
+    spaceContentActionGap: actionGap,
+    spaceCardPadding: cardPadding,
+    spaceLayoutSectionGap: sectionGap,
     sizeHitTarget: switch (configuration.inputMode) {
       KInputMode.pointer => KDesignTokenVariants.inputModePointerSizeHitTarget,
       KInputMode.touch => KDesignTokenVariants.inputModeTouchSizeHitTarget,

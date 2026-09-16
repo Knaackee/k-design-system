@@ -200,7 +200,15 @@ void main() {
     expect(decoration.borderRadius, BorderRadius.circular(tokens.radiusCard));
     expect(decoration.boxShadow, tokens.elevationNone);
     expect(
-      tester.widget<Padding>(find.byType(Padding)).padding,
+      tester
+          .widget<Padding>(
+            find.byWidgetPredicate(
+              (widget) =>
+                  widget is Padding &&
+                  widget.padding == EdgeInsets.all(tokens.spaceCardPadding),
+            ),
+          )
+          .padding,
       EdgeInsets.all(tokens.spaceCardPadding),
     );
   });

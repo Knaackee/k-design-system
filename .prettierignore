@@ -7,3 +7,9 @@ node_modules/
 pnpm-lock.yaml
 pubspec.lock
 docs/plans/orbit-ds2-strategic-master-plan.md
+
+# Canonical index generated and validated by Skillset.
+docs/plans/index.md
+
+packages/web/ui/src/generated/
+packages/flutter/k_design_ui/lib/src/generated/

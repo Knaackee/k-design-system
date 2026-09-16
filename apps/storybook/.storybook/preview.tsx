@@ -1,4 +1,5 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
+import type { StoryIndexEntry } from "storybook/internal/types";
 import "@k-design-system/tokens/tokens.css";
 import "@k-design-system/ui/styles.css";
 import "../src/gallery.css";
@@ -6,7 +7,6 @@ import "../src/gallery.css";
 const withDesignTokens: Decorator = (Story, context) => {
   const brand = String(context.globals.brand ?? "orbit");
   const theme = String(context.globals.theme ?? "light");
-  const presentation = String(context.globals.presentation ?? "productive");
   const density = String(context.globals.density ?? "standard");
   const typeScale = String(context.globals.typeScale ?? "compact");
   const inputMode = String(context.globals.inputMode ?? "pointer");
@@ -14,7 +14,6 @@ const withDesignTokens: Decorator = (Story, context) => {
   const textScale = Number(context.globals.textScale ?? 1);
   document.documentElement.dataset.brand = brand;
   document.documentElement.dataset.theme = theme;
-  document.documentElement.dataset.presentation = presentation;
   document.documentElement.dataset.density = density;
   document.documentElement.dataset.typeScale = typeScale;
   document.documentElement.dataset.inputMode = inputMode;
@@ -29,7 +28,6 @@ const withDesignTokens: Decorator = (Story, context) => {
       className="k-gallery"
       data-brand={brand}
       data-theme={theme}
-      data-presentation={presentation}
       data-density={density}
       data-type-scale={typeScale}
       data-input-mode={inputMode}
@@ -40,12 +38,18 @@ const withDesignTokens: Decorator = (Story, context) => {
   );
 };
 
-const preview: Preview = {
+// Storybook evaluates storySort as plain JavaScript; type it through its context.
+const preview: Preview & {
+  parameters: {
+    options: {
+      storySort: (a: StoryIndexEntry, b: StoryIndexEntry) => number;
+    };
+  };
+} = {
   decorators: [withDesignTokens],
   initialGlobals: {
     brand: "orbit",
     theme: "light",
-    presentation: "productive",
     density: "standard",
     typeScale: "compact",
     inputMode: "pointer",
@@ -70,16 +74,6 @@ const preview: Preview = {
         items: [
           { value: "light", title: "Light" },
           { value: "dark", title: "Dark" },
-        ],
-      },
-    },
-    presentation: {
-      description: "Product or editorial presentation",
-      toolbar: {
-        icon: "component",
-        items: [
-          { value: "productive", title: "Productive" },
-          { value: "expressive", title: "Expressive" },
         ],
       },
     },
@@ -132,16 +126,24 @@ const preview: Preview = {
       toolbar: {
         icon: "zoom",
         items: [
-          { value: 1, title: "Text 100%" },
-          { value: 1.25, title: "Text 125%" },
-          { value: 1.5, title: "Text 150%" },
-          { value: 2, title: "Text 200%" },
+          { value: "1", title: "Text 100%" },
+          { value: "1.25", title: "Text 125%" },
+          { value: "1.5", title: "Text 150%" },
+          { value: "2", title: "Text 200%" },
         ],
       },
     },
   },
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
+    options: {
+      // Match Widgetbook at every level, independent of file/registration order.
+      storySort: (a, b) => {
+        const left = `${a.title}/${a.name}`.toLowerCase();
+        const right = `${b.title}/${b.name}`.toLowerCase();
+        return left < right ? -1 : left > right ? 1 : 0;
+      },
+    },
     a11y: {
       test: "error",
     },

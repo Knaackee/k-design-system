@@ -1,5 +1,0 @@
-{
-  "space": {
-    "layoutSectionGap": { "$type": "dimension", "$value": "{space.16}" }
-  }
-}

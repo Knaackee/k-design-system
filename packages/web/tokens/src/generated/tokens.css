@@ -50,6 +50,7 @@
   --k-color-action-ghost-foreground: #727278;
   --k-color-action-ghost-border: #00000000;
   --k-space-control-gap: 8px;
+  --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
@@ -160,6 +161,7 @@
   --k-color-action-ghost-foreground: #99999f;
   --k-color-action-ghost-border: #00000000;
   --k-space-control-gap: 8px;
+  --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
@@ -270,6 +272,7 @@
   --k-color-action-ghost-foreground: #52706d;
   --k-color-action-ghost-border: #00000000;
   --k-space-control-gap: 8px;
+  --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
@@ -380,6 +383,7 @@
   --k-color-action-ghost-foreground: #91b8b2;
   --k-color-action-ghost-border: #00000000;
   --k-space-control-gap: 8px;
+  --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
@@ -444,14 +448,6 @@
 }
 
 @layer k-design-mode {
-[data-presentation="productive"] {
-  --k-space-layout-section-gap: 32px;
-}
-
-[data-presentation="expressive"] {
-  --k-space-layout-section-gap: 64px;
-}
-
 [data-type-scale="compact"] {
   --k-font-size: 14px;
   --k-font-control-size: 13px;
@@ -500,18 +496,27 @@
 
 [data-density="dense"] {
   --k-space-control-gap: 4px;
+  --k-space-content-action-gap: 8px;
+  --k-space-card-padding: 12px;
+  --k-space-layout-section-gap: 16px;
   --k-space-control-inset-inline: 8px;
   --k-size-control: 32px;
 }
 
 [data-density="standard"] {
   --k-space-control-gap: 8px;
+  --k-space-content-action-gap: 16px;
+  --k-space-card-padding: 16px;
+  --k-space-layout-section-gap: 32px;
   --k-space-control-inset-inline: 12px;
   --k-size-control: 36px;
 }
 
 [data-density="spacious"] {
   --k-space-control-gap: 12px;
+  --k-space-content-action-gap: 24px;
+  --k-space-card-padding: 24px;
+  --k-space-layout-section-gap: 48px;
   --k-space-control-inset-inline: 16px;
   --k-size-control: 44px;
 }

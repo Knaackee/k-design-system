@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KSurface, KText, type KSurfaceElevation } from "@k-design-system/ui";
+import {
+  KSurface,
+  KText,
+  KStack,
+  KInline,
+  type KSurfaceElevation,
+} from "@k-design-system/ui";
 
 const meta = {
   title: "Primitives/Elevation",
@@ -18,7 +24,7 @@ const levels: Array<[KSurfaceElevation, string, string]> = [
 
 export const Levels: Story = {
   render: () => (
-    <div className="k-elevation-grid">
+    <KInline wrap gap="section" className="k-fixture-grid">
       {levels.map(([elevation, name, purpose]) => (
         <KSurface
           border={elevation === "none" ? "default" : "none"}
@@ -27,10 +33,12 @@ export const Levels: Story = {
           key={elevation}
           radius={elevation === "overlay" ? "overlay" : "medium"}
         >
-          <KText variant="label">{name}</KText>
-          <KText variant="bodySmall">{purpose}</KText>
+          <KStack>
+            <KText variant="label">{name}</KText>
+            <KText variant="bodySmall">{purpose}</KText>
+          </KStack>
         </KSurface>
       ))}
-    </div>
+    </KInline>
   ),
 };

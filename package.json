@@ -7,8 +7,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "generate": "node tooling/generate-tokens.mjs",
-    "generate:check": "node tooling/generate-tokens.mjs --check",
+    "generate": "node tooling/generate-tokens.mjs && node tooling/generate-icons.mjs",
+    "generate:check": "node tooling/generate-tokens.mjs --check && node tooling/generate-icons.mjs --check",
     "test:tooling": "node --test tooling/*.test.mjs",
     "build:web": "pnpm --filter @k-design-system/tokens build && pnpm --filter @k-design-system/ui build",
     "storybook": "pnpm --filter @k-design-system/storybook storybook",

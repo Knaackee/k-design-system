@@ -28,20 +28,22 @@ export const KButton = forwardRef<HTMLButtonElement, KButtonProps>(
       .join(" ");
 
     return (
-      <button
-        {...props}
-        ref={ref}
-        type={type}
-        className={classes}
-        data-variant={variant}
-        disabled={disabled || loading}
-        aria-busy={loading || undefined}
-      >
-        {loading ? (
-          <span className="k-button__spinner" aria-hidden="true" />
-        ) : null}
-        <span>{children}</span>
-      </button>
+      <span className="k-button-target">
+        <button
+          {...props}
+          ref={ref}
+          type={type}
+          className={classes}
+          data-variant={variant}
+          disabled={disabled || loading}
+          aria-busy={loading || undefined}
+        >
+          {loading ? (
+            <span className="k-button__spinner" aria-hidden="true" />
+          ) : null}
+          <span>{children}</span>
+        </button>
+      </span>
     );
   },
 );

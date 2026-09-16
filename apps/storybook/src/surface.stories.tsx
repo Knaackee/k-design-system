@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KSurface, KText } from "@k-design-system/ui";
+import { KSurface, KText, KStack, KInline } from "@k-design-system/ui";
 
 const meta = {
   title: "Primitives/Surface",
@@ -14,19 +14,25 @@ type Story = StoryObj<typeof meta>;
 
 export const Tones: Story = {
   render: () => (
-    <div className="k-surface-grid">
+    <KInline wrap gap="section" className="k-fixture-grid">
       <KSurface className="k-surface-sample" tone="canvas">
-        <KText variant="label">Canvas</KText>
-        <KText variant="bodySmall">Application background</KText>
+        <KStack>
+          <KText variant="label">Canvas</KText>
+          <KText variant="bodySmall">Application background</KText>
+        </KStack>
       </KSurface>
       <KSurface className="k-surface-sample" tone="raised">
-        <KText variant="label">Raised</KText>
-        <KText variant="bodySmall">Cards and panels</KText>
+        <KStack>
+          <KText variant="label">Raised</KText>
+          <KText variant="bodySmall">Cards and panels</KText>
+        </KStack>
       </KSurface>
       <KSurface className="k-surface-sample" tone="subtle">
-        <KText variant="label">Subtle</KText>
-        <KText variant="bodySmall">Quiet grouping and selection</KText>
+        <KStack>
+          <KText variant="label">Subtle</KText>
+          <KText variant="bodySmall">Quiet grouping and selection</KText>
+        </KStack>
       </KSurface>
-    </div>
+    </KInline>
   ),
 };

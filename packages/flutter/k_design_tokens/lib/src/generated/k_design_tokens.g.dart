@@ -3,8 +3,6 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
 abstract final class KDesignTokenVariants {
-  static const presentationProductiveSpaceLayoutSectionGap = 32.0;
-  static const presentationExpressiveSpaceLayoutSectionGap = 64.0;
   static const typeScaleCompactFontSize = 14.0;
   static const typeScaleCompactFontControlSize = 13.0;
   static const typeScaleCompactFontHeading1Size = 28.0;
@@ -46,12 +44,21 @@ abstract final class KDesignTokenVariants {
   static const typeScaleStandardFontLabelSize = 14.0;
   static const typeScaleStandardFontLabelLineHeight = 20.0;
   static const densityDenseSpaceControlGap = 4.0;
+  static const densityDenseSpaceContentActionGap = 8.0;
+  static const densityDenseSpaceCardPadding = 12.0;
+  static const densityDenseSpaceLayoutSectionGap = 16.0;
   static const densityDenseSpaceControlInsetInline = 8.0;
   static const densityDenseSizeControl = 32.0;
   static const densityStandardSpaceControlGap = 8.0;
+  static const densityStandardSpaceContentActionGap = 16.0;
+  static const densityStandardSpaceCardPadding = 16.0;
+  static const densityStandardSpaceLayoutSectionGap = 32.0;
   static const densityStandardSpaceControlInsetInline = 12.0;
   static const densityStandardSizeControl = 36.0;
   static const densitySpaciousSpaceControlGap = 12.0;
+  static const densitySpaciousSpaceContentActionGap = 24.0;
+  static const densitySpaciousSpaceCardPadding = 24.0;
+  static const densitySpaciousSpaceLayoutSectionGap = 48.0;
   static const densitySpaciousSpaceControlInsetInline = 16.0;
   static const densitySpaciousSizeControl = 44.0;
   static const inputModePointerSizeHitTarget = 24.0;
@@ -113,6 +120,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.colorActionGhostForeground,
     required this.colorActionGhostBorder,
     required this.spaceControlGap,
+    required this.spaceContentActionGap,
     required this.spaceControlInsetInline,
     required this.spaceLayoutGutter,
     required this.spaceLayoutSectionGap,
@@ -222,6 +230,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final Color colorActionGhostForeground;
   final Color colorActionGhostBorder;
   final double spaceControlGap;
+  final double spaceContentActionGap;
   final double spaceControlInsetInline;
   final double spaceLayoutGutter;
   final double spaceLayoutSectionGap;
@@ -331,6 +340,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionGhostForeground: Color(0xFF727278),
     colorActionGhostBorder: Color(0x00000000),
     spaceControlGap: 8.0,
+    spaceContentActionGap: 16.0,
     spaceControlInsetInline: 12.0,
     spaceLayoutGutter: 16.0,
     spaceLayoutSectionGap: 32.0,
@@ -441,6 +451,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionGhostForeground: Color(0xFF99999F),
     colorActionGhostBorder: Color(0x00000000),
     spaceControlGap: 8.0,
+    spaceContentActionGap: 16.0,
     spaceControlInsetInline: 12.0,
     spaceLayoutGutter: 16.0,
     spaceLayoutSectionGap: 32.0,
@@ -551,6 +562,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionGhostForeground: Color(0xFF52706D),
     colorActionGhostBorder: Color(0x00000000),
     spaceControlGap: 8.0,
+    spaceContentActionGap: 16.0,
     spaceControlInsetInline: 12.0,
     spaceLayoutGutter: 16.0,
     spaceLayoutSectionGap: 32.0,
@@ -661,6 +673,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     colorActionGhostForeground: Color(0xFF91B8B2),
     colorActionGhostBorder: Color(0x00000000),
     spaceControlGap: 8.0,
+    spaceContentActionGap: 16.0,
     spaceControlInsetInline: 12.0,
     spaceLayoutGutter: 16.0,
     spaceLayoutSectionGap: 32.0,
@@ -772,6 +785,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     Color? colorActionGhostForeground,
     Color? colorActionGhostBorder,
     double? spaceControlGap,
+    double? spaceContentActionGap,
     double? spaceControlInsetInline,
     double? spaceLayoutGutter,
     double? spaceLayoutSectionGap,
@@ -881,6 +895,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       colorActionGhostForeground: colorActionGhostForeground ?? this.colorActionGhostForeground,
       colorActionGhostBorder: colorActionGhostBorder ?? this.colorActionGhostBorder,
       spaceControlGap: spaceControlGap ?? this.spaceControlGap,
+      spaceContentActionGap: spaceContentActionGap ?? this.spaceContentActionGap,
       spaceControlInsetInline: spaceControlInsetInline ?? this.spaceControlInsetInline,
       spaceLayoutGutter: spaceLayoutGutter ?? this.spaceLayoutGutter,
       spaceLayoutSectionGap: spaceLayoutSectionGap ?? this.spaceLayoutSectionGap,
@@ -995,6 +1010,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       colorActionGhostForeground: Color.lerp(colorActionGhostForeground, other.colorActionGhostForeground, t)!,
       colorActionGhostBorder: Color.lerp(colorActionGhostBorder, other.colorActionGhostBorder, t)!,
       spaceControlGap: lerpDouble(spaceControlGap, other.spaceControlGap, t)!,
+      spaceContentActionGap: lerpDouble(spaceContentActionGap, other.spaceContentActionGap, t)!,
       spaceControlInsetInline: lerpDouble(spaceControlInsetInline, other.spaceControlInsetInline, t)!,
       spaceLayoutGutter: lerpDouble(spaceLayoutGutter, other.spaceLayoutGutter, t)!,
       spaceLayoutSectionGap: lerpDouble(spaceLayoutSectionGap, other.spaceLayoutSectionGap, t)!,

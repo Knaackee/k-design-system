@@ -47,6 +47,7 @@ export const tokenNames = [
   "color.action.ghost.foreground",
   "color.action.ghost.border",
   "space.controlGap",
+  "space.contentActionGap",
   "space.controlInsetInline",
   "space.layoutGutter",
   "space.layoutSectionGap",

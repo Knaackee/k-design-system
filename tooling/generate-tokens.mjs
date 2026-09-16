@@ -15,14 +15,6 @@ const sourceFiles = {
 };
 
 const variantFiles = {
-  presentationProductive: [
-    "tokens/modes/presentation.productive.tokens.json",
-    '[data-presentation="productive"]',
-  ],
-  presentationExpressive: [
-    "tokens/modes/presentation.expressive.tokens.json",
-    '[data-presentation="expressive"]',
-  ],
   typeScaleCompact: [
     "tokens/modes/type-scale.compact.tokens.json",
     '[data-type-scale="compact"]',
@@ -80,8 +72,14 @@ const outputFiles = {
   flat: "dist/tokens.flat.json",
 };
 
-const readJson = async (path) =>
-  JSON.parse(await readFile(resolve(root, path), "utf8"));
+const readJson = async (path) => {
+  const source = await readFile(resolve(root, path), "utf8");
+  try {
+    return JSON.parse(source);
+  } catch (cause) {
+    throw new Error(`Invalid token JSON: ${path}`, { cause });
+  }
+};
 
 export function flattenTokens(node, prefix = "", output = new Map()) {
   for (const [key, value] of Object.entries(node)) {

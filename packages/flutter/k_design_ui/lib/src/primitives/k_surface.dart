@@ -73,7 +73,13 @@ class KSurface extends StatelessWidget {
         borderRadius: BorderRadius.circular(radiusValue),
         boxShadow: shadows,
       ),
-      child: child,
+      // Like a CSS border-box, the border consumes layout space.
+      child: borderColor == null
+          ? child
+          : Padding(
+              padding: EdgeInsets.all(tokens.borderWidthDefault),
+              child: child,
+            ),
     );
   }
 }

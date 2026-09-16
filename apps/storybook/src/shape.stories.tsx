@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KSurface, KText, type KSurfaceRadius } from "@k-design-system/ui";
+import {
+  KSurface,
+  KText,
+  KStack,
+  KInline,
+  type KSurfaceRadius,
+} from "@k-design-system/ui";
 
 const meta = {
   title: "Primitives/Shape",
@@ -20,13 +26,15 @@ const radii: Array<[KSurfaceRadius, string]> = [
 
 export const RadiusScale: Story = {
   render: () => (
-    <div className="k-shape-grid">
+    <KInline wrap gap="section" className="k-fixture-grid">
       {radii.map(([radius, label]) => (
-        <div className="k-foundation-swatch" key={radius}>
-          <KSurface className="k-radius-sample" radius={radius} />
+        <KStack align="stretch" key={radius}>
+          <KSurface className="k-radius-sample" radius={radius}>
+            {null}
+          </KSurface>
           <KText variant="caption">{label}</KText>
-        </div>
+        </KStack>
       ))}
-    </div>
+    </KInline>
   ),
 };

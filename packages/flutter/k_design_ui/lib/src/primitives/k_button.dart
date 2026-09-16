@@ -51,9 +51,15 @@ class KButton extends StatelessWidget {
       child: FilledButton(
         onPressed: loading ? null : onPressed,
         style: ButtonStyle(
+          // Density is already resolved by the tokens; do not compact twice.
+          visualDensity: VisualDensity.standard,
           minimumSize: WidgetStatePropertyAll(Size(0, tokens.sizeControl)),
           padding: WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: tokens.spaceControlInsetInline),
+            EdgeInsets.symmetric(
+              // Material paints its 1px border inside; CSS includes it in layout.
+              horizontal: tokens.spaceControlInsetInline + 1,
+              vertical: 1,
+            ),
           ),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.pressed)) {
@@ -74,12 +80,22 @@ class KButton extends StatelessWidget {
             TextStyle(
               fontFamily: tokens.fontFamily,
               fontSize: tokens.fontControlSize,
+              // Match the Web control line box while allowing scaled text growth.
+              height: 1,
               fontWeight: tokens.fontControlWeight,
               fontVariations: [
                 FontVariation.weight(tokens.fontControlWeight.value.toDouble()),
-                FontVariation.opticalSize(tokens.fontControlSize.clamp(14, 32)),
+                FontVariation.opticalSize(
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale(tokens.fontControlSize).clamp(14, 32),
+                ),
               ],
-              letterSpacing: -0.13,
+              letterSpacing:
+                  -.01 *
+                  MediaQuery.textScalerOf(
+                    context,
+                  ).scale(tokens.fontControlSize),
             ),
           ),
           shape: WidgetStatePropertyAll(

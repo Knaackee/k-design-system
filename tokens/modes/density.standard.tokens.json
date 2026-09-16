@@ -1,6 +1,9 @@
 {
   "space": {
     "controlGap": { "$type": "dimension", "$value": "{space.2}" },
+    "contentActionGap": { "$type": "dimension", "$value": "{space.4}" },
+    "cardPadding": { "$type": "dimension", "$value": "{space.4}" },
+    "layoutSectionGap": { "$type": "dimension", "$value": "{space.8}" },
     "controlInsetInline": { "$type": "dimension", "$value": "{space.3}" }
   },
   "size": {

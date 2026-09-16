@@ -25,7 +25,6 @@ void main() {
   test('adaptive axes resolve independently', () {
     final tokens = kDesignTokens(
       configuration: const KDesignConfiguration(
-        presentation: KPresentation.expressive,
         density: KDensity.dense,
         typeScale: KTypeScale.standard,
         inputMode: KInputMode.touch,
@@ -39,8 +38,28 @@ void main() {
     expect(tokens.fontHeading1Size, 36);
     expect(tokens.fontHeading1LineHeight, 44);
     expect(tokens.sizeHitTarget, 48);
-    expect(tokens.spaceLayoutSectionGap, 64);
+    expect(tokens.spaceLayoutSectionGap, 16);
+    expect(tokens.spaceContentActionGap, 8);
+    expect(tokens.spaceCardPadding, 12);
     expect(tokens.spaceLayoutGutter, 48);
+  });
+
+  test('all densities resolve the complete rhythm and presets', () {
+    for (final (density, gap, action, inset, section, control) in [
+      (KDensity.dense, 4, 8, 12, 16, 32),
+      (KDensity.standard, 8, 16, 16, 32, 36),
+      (KDensity.spacious, 12, 24, 24, 48, 44),
+    ]) {
+      final tokens = kDesignTokens(
+        configuration: KDesignConfiguration(density: density),
+      );
+      expect(tokens.spaceControlGap, gap);
+      expect(tokens.spaceContentActionGap, action);
+      expect(tokens.spaceCardPadding, inset);
+      expect(tokens.spaceLayoutSectionGap, section);
+      expect(tokens.sizeControl, control);
+    }
+    expect(KDesignConfiguration.marketing.density, KDensity.spacious);
   });
 
   test('window classes are derived from available width boundaries', () {
