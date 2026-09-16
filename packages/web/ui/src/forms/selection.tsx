@@ -1,0 +1,300 @@
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useField } from "./field.js";
+import { KIcon, type KIconName } from "../primitives/icon.js";
+import { OptionMedia } from "./option-media.js";
+import { ClearButton } from "./clear-button.js";
+export interface KSelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  icon?: KIconName;
+  imageSrc?: string;
+}
+export interface KSelectProps {
+  options: readonly KSelectOption[];
+  value: string | null;
+  onValueChange: (value: string) => void;
+  label?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  clearable?: boolean;
+  clearLabel?: string;
+  onClear?: () => void;
+}
+export function KSelect(props: KSelectProps) {
+  return <Selection {...props} searchable={false} />;
+}
+export function KCombobox(props: KSelectProps) {
+  return <Selection {...props} searchable />;
+}
+function Selection({
+  options,
+  value,
+  onValueChange,
+  label,
+  placeholder = "Choose…",
+  disabled = false,
+  clearable = false,
+  clearLabel = "Clear",
+  onClear,
+  searchable,
+}: KSelectProps & { searchable: boolean }) {
+  const field = useField();
+  const generated = useId();
+  const id = field.id ?? generated;
+  const input = useRef<HTMLInputElement>(null);
+  const popup = useRef<HTMLDivElement>(null);
+  const target = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [active, setActive] = useState<string | null>(null);
+  const selectedOption = options.find((option) => option.value === value);
+  const showMedia =
+    !!(selectedOption?.icon || selectedOption?.imageSrc) &&
+    !(searchable && open);
+  const canClear =
+    clearable && !!onClear && !disabled && (value !== null || query.length > 0);
+  const selected =
+    options.find((option) => option.value === value)?.label ?? "";
+  const filtered = options.filter(
+    (option) =>
+      !searchable ||
+      !open ||
+      option.label.toLowerCase().includes(query.toLowerCase()),
+  );
+  const enabled = filtered.filter((option) => !option.disabled);
+  const close = () => {
+    setOpen(false);
+    setQuery("");
+    setActive(null);
+  };
+  function show() {
+    if (!disabled) {
+      setQuery("");
+      setOpen(true);
+      setActive(
+        options.find((option) => option.value === value && !option.disabled)
+          ?.value ??
+          options.find((option) => !option.disabled)?.value ??
+          null,
+      );
+    }
+  }
+  function choose(next: string) {
+    onValueChange(next);
+    close();
+    input.current?.focus();
+  }
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
+  useEffect(() => {
+    const panel = popup.current;
+    if (!open || !panel || !target.current) return;
+    panel.showPopover();
+    function position() {
+      const rect = target.current!.getBoundingClientRect();
+      panel!.style.width = `${Math.min(rect.width, innerWidth - 16)}px`;
+      panel!.style.left = `${Math.max(8, Math.min(rect.left, innerWidth - rect.width - 8))}px`;
+      const gap = parseFloat(
+        getComputedStyle(target.current!).getPropertyValue(
+          "--k-space-control-gap",
+        ),
+      );
+      const below = innerHeight - rect.bottom - gap - 8;
+      const above = rect.top - gap - 8;
+      const opensAbove = below < 120 && above > below;
+      panel!.style.maxHeight = `${Math.max(0, Math.min(280, opensAbove ? above : below))}px`;
+      const height = panel!.getBoundingClientRect().height;
+      panel!.style.top = `${opensAbove ? rect.top - gap - height : rect.bottom + gap}px`;
+    }
+    position();
+    const observer = new ResizeObserver(position);
+    observer.observe(panel);
+    const outside = (event: PointerEvent) => {
+      if (
+        !target.current?.contains(event.target as Node) &&
+        !panel.contains(event.target as Node)
+      )
+        close();
+    };
+    document.addEventListener("pointerdown", outside);
+    window.addEventListener("resize", position);
+    const onScroll = (event: Event) => {
+      if (!panel.contains(event.target as Node)) close();
+    };
+    window.addEventListener("scroll", onScroll, true);
+    return () => {
+      observer.disconnect();
+      if (panel.matches(":popover-open")) panel.hidePopover();
+      document.removeEventListener("pointerdown", outside);
+      window.removeEventListener("resize", position);
+      window.removeEventListener("scroll", onScroll, true);
+    };
+  }, [open]);
+  useEffect(() => {
+    if (open)
+      document
+        .getElementById(`${id}-option-${active}`)
+        ?.scrollIntoView({ block: "nearest" });
+  }, [active, id, open]);
+  function keyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Escape" && open) {
+      event.preventDefault();
+      event.stopPropagation();
+      close();
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        show();
+        return;
+      }
+      const index = enabled.findIndex((option) => option.value === active);
+      const next =
+        enabled[
+          (index + (event.key === "ArrowDown" ? 1 : -1) + enabled.length) %
+            enabled.length
+        ];
+      setActive(next?.value ?? null);
+    } else if (event.key === "Enter" || (!searchable && event.key === " ")) {
+      event.preventDefault();
+      if (!open) show();
+      else if (
+        active !== null &&
+        enabled.some((option) => option.value === active)
+      )
+        choose(active);
+    } else if (!searchable && (event.key === "Home" || event.key === "End")) {
+      event.preventDefault();
+      if (!open) show();
+      setActive(
+        (event.key === "Home" ? enabled[0] : enabled.at(-1))?.value ?? null,
+      );
+    } else if (!searchable && event.key.length === 1) {
+      const match = options.find(
+        (option) =>
+          !option.disabled &&
+          option.label.toLowerCase().startsWith(event.key.toLowerCase()),
+      );
+      if (match) {
+        event.preventDefault();
+        if (!open) show();
+        setActive(match.value);
+      }
+    }
+  }
+  return (
+    <div
+      className="k-selection"
+      ref={target}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) close();
+      }}
+      data-media={showMedia || undefined}
+      data-clearable={canClear || undefined}
+    >
+      <span className="k-input-target">
+        <input
+          ref={input}
+          className="k-input"
+          id={id}
+          role="combobox"
+          aria-label={label}
+          aria-describedby={field.description}
+          aria-invalid={field.invalid || undefined}
+          aria-required={field.required || undefined}
+          aria-expanded={open}
+          aria-controls={open ? `${id}-list` : undefined}
+          aria-activedescendant={
+            open &&
+            active !== null &&
+            filtered.some((option) => option.value === active)
+              ? `${id}-option-${active}`
+              : undefined
+          }
+          aria-autocomplete={searchable ? "list" : "none"}
+          readOnly={!searchable}
+          disabled={disabled}
+          placeholder={placeholder}
+          value={searchable && open ? query : selected}
+          onClick={() => {
+            if (!open) show();
+          }}
+
+          onChange={(event) => {
+            setOpen(true);
+            setQuery(event.target.value);
+            setActive(
+              options.find(
+                (option) =>
+                  !option.disabled &&
+                  option.label
+                    .toLowerCase()
+                    .includes(event.target.value.toLowerCase()),
+              )?.value ?? null,
+            );
+          }}
+          onKeyDown={keyDown}
+        />
+      </span>
+      {showMedia && (
+        <span className="k-selection__media">
+          <OptionMedia {...selectedOption} />
+        </span>
+      )}
+      {canClear && (
+        <ClearButton
+          label={clearLabel}
+          onClear={() => {
+            onClear?.();
+            close();
+            input.current?.focus();
+          }}
+        />
+      )}
+      <span className="k-selection__arrow">
+        <KIcon name="chevron-down" />
+      </span>
+      {open && (
+        <div
+          ref={popup}
+          popover="manual"
+          className="k-select-list"
+          id={`${id}-list`}
+          role="listbox"
+          aria-label={label ?? "Options"}
+          onPointerDown={(event) => event.preventDefault()}
+        >
+          {filtered.map((option) => (
+            <div
+              id={`${id}-option-${option.value}`}
+              key={option.value}
+              role="option"
+              aria-selected={value === option.value}
+              aria-disabled={option.disabled || undefined}
+              data-active={active === option.value || undefined}
+              className="k-select-option"
+              onPointerMove={() => {
+                if (!option.disabled) setActive(option.value);
+              }}
+              onClick={() => {
+                if (!option.disabled) choose(option.value);
+              }}
+            >
+              <span className="k-select-option__label">
+                <OptionMedia {...option} />
+                <span>{option.label}</span>
+              </span>
+              {value === option.value && <KIcon name="check" />}
+            </div>
+          ))}
+          {!filtered.length && (
+            <div className="k-select-empty" role="status">
+              No results
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,392 @@
+import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
+import '../primitives/k_icon.dart';
+import '../primitives/k_surface.dart';
+import 'action_control.dart';
+import '../patterns/k_toolbar.dart';
+
+class KMenuAction {
+  const KMenuAction({
+    required this.id,
+    required this.label,
+    required this.onSelect,
+    this.icon,
+    this.disabled = false,
+    this.destructive = false,
+    this.separatorBefore = false,
+  });
+  final String id;
+  final String label;
+  final VoidCallback onSelect;
+  final KIconName? icon;
+  final bool disabled;
+  final bool destructive;
+  final bool separatorBefore;
+}
+
+class KMenuButton extends StatefulWidget {
+  const KMenuButton({
+    required this.label,
+    required this.actions,
+    this.disabled = false,
+    this.overflow = false,
+    super.key,
+  });
+  final String label;
+  final List<KMenuAction> actions;
+  final bool disabled;
+  final bool overflow;
+  @override
+  State<KMenuButton> createState() => _KMenuButtonState();
+}
+
+class _KMenuButtonState extends State<KMenuButton> {
+  final _controller = MenuController();
+  final _anchorKey = GlobalKey();
+  final _trigger = FocusNode();
+  final Map<String, FocusNode> _items = {};
+  String _search = '';
+  DateTime _typedAt = DateTime(0);
+  bool get _disabled => widget.disabled || widget.actions.isEmpty;
+  @override
+  void initState() {
+    super.initState();
+    _trigger.onKeyEvent = (_, event) {
+      final navigation = KToolbar.handleNavigation(context, event);
+      if (navigation == KeyEventResult.handled) return navigation;
+      if (event is KeyDownEvent &&
+          !_controller.isOpen &&
+          (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+              event.logicalKey == LogicalKeyboardKey.arrowUp)) {
+        _open(last: event.logicalKey == LogicalKeyboardKey.arrowUp);
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    };
+  }
+
+  @override
+  void dispose() {
+    _trigger.dispose();
+    for (final node in _items.values) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(KMenuButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    for (final id in _items.keys.toList()) {
+      if (!widget.actions.any((a) => a.id == id)) {
+        _items.remove(id)!.dispose();
+      }
+    }
+    if (_disabled && _controller.isOpen) _controller.close();
+  }
+
+  List<FocusNode> get _enabled => [
+    for (final action in widget.actions)
+      if (!action.disabled) _items[action.id]!,
+  ];
+  void _open({bool last = false}) {
+    if (_disabled) return;
+    final box = _anchorKey.currentContext?.findRenderObject() as RenderBox?;
+    final t =
+        Theme.of(context).extension<KDesignTokens>() ??
+        KDesignTokens.orbitLight;
+    final screen = MediaQuery.sizeOf(context);
+    final width = math.min(240.0, math.max(0.0, screen.width - 16));
+    final origin = box?.localToGlobal(Offset.zero) ?? Offset.zero;
+    final x = origin.dx.clamp(8.0, math.max(8.0, screen.width - width - 8));
+    _controller.open(
+      position: Offset(
+        x - origin.dx,
+        (box?.size.height ?? t.sizeControl) + t.spaceControlGap,
+      ),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _controller.isOpen && _enabled.isNotEmpty) {
+        (last ? _enabled.last : _enabled.first).requestFocus();
+      }
+    });
+  }
+
+  void _close() {
+    _controller.close();
+    _trigger.requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t =
+        Theme.of(context).extension<KDesignTokens>() ??
+        KDesignTokens.orbitLight;
+    final scaled = MediaQuery.textScalerOf(context).scale(t.fontControlSize);
+    final width = math.min(
+      240.0,
+      math.max(0.0, MediaQuery.sizeOf(context).width - 16),
+    );
+    final textStyle = TextStyle(
+      fontFamily: t.fontFamily,
+      fontSize: t.fontControlSize,
+      fontWeight: t.fontControlWeight,
+      height: 1,
+      // CSS centers leading evenly above and below the font metrics.
+      leadingDistribution: TextLeadingDistribution.even,
+      letterSpacing: -.01 * scaled,
+      fontVariations: [
+        FontVariation.weight(t.fontControlWeight.value.toDouble()),
+        FontVariation.opticalSize(scaled.clamp(14, 32)),
+      ],
+    );
+    for (final action in widget.actions) {
+      _items.putIfAbsent(action.id, () => FocusNode(debugLabel: action.label));
+    }
+    return Focus(
+      onKeyEvent: (_, event) {
+        if (event is! KeyDownEvent || _controller.isOpen) {
+          return KeyEventResult.ignored;
+        }
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+            event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          _open(last: event.logicalKey == LogicalKeyboardKey.arrowUp);
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      canRequestFocus: false,
+      skipTraversal: true,
+      child: MenuAnchor(
+        key: _anchorKey,
+        controller: _controller,
+        childFocusNode: _trigger,
+        alignmentOffset: Offset(0, t.spaceControlGap),
+        reservedPadding: const EdgeInsets.all(8),
+        clipBehavior: Clip.none,
+        style: MenuStyle(
+          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+          minimumSize: WidgetStatePropertyAll(Size(width, 0)),
+          maximumSize: WidgetStatePropertyAll(Size(width, double.infinity)),
+          backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+          surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+          elevation: const WidgetStatePropertyAll(0),
+          side: const WidgetStatePropertyAll(BorderSide.none),
+          shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
+        ),
+        menuChildren: [
+          SizedBox(
+            width: width,
+            child: KSurface(
+              radius: KSurfaceRadius.overlay,
+              elevation: KSurfaceElevation.overlay,
+              child: Padding(
+                padding: EdgeInsets.all(t.spaceControlGap),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final (index, action) in widget.actions.indexed) ...[
+                      if (index > 0 && action.separatorBefore)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: t.spaceControlGap,
+                          ),
+                          child: SizedBox(
+                            height: t.borderWidthDefault,
+                            child: ColoredBox(color: t.colorBorderDefault),
+                          ),
+                        ),
+                      Focus(
+                        canRequestFocus: false,
+                        skipTraversal: true,
+                        onKeyEvent: (_, event) {
+                          if (event is! KeyDownEvent) {
+                            return KeyEventResult.ignored;
+                          }
+                          final nodes = _enabled;
+                          final current = nodes.indexWhere((n) => n.hasFocus);
+                          final key = event.logicalKey;
+                          if (key == LogicalKeyboardKey.escape) {
+                            _close();
+                            return KeyEventResult.handled;
+                          }
+                          if (key == LogicalKeyboardKey.tab) {
+                            _close();
+                            return KeyEventResult.ignored;
+                          }
+                          if (nodes.isNotEmpty) {
+                            int? next;
+                            if (key == LogicalKeyboardKey.home) next = 0;
+                            if (key == LogicalKeyboardKey.end) {
+                              next = nodes.length - 1;
+                            }
+                            if (key == LogicalKeyboardKey.arrowDown) {
+                              next = (current + 1) % nodes.length;
+                            }
+                            if (key == LogicalKeyboardKey.arrowUp) {
+                              next =
+                                  (current - 1 + nodes.length) % nodes.length;
+                            }
+                            if (next != null) {
+                              nodes[next].requestFocus();
+                              return KeyEventResult.handled;
+                            }
+                            final char = event.character;
+                            if (char != null &&
+                                char.trim().isNotEmpty &&
+                                !HardwareKeyboard.instance.isControlPressed &&
+                                !HardwareKeyboard.instance.isMetaPressed) {
+                              final now = DateTime.now();
+                              _search =
+                                  now.difference(_typedAt).inMilliseconds > 700
+                                  ? char
+                                  : _search + char;
+                              _typedAt = now;
+                              final enabled = widget.actions
+                                  .where((a) => !a.disabled)
+                                  .toList();
+                              for (
+                                var offset = 1;
+                                offset <= enabled.length;
+                                offset++
+                              ) {
+                                final candidate =
+                                    enabled[(current + offset) %
+                                        enabled.length];
+                                if (candidate.label.toLowerCase().startsWith(
+                                  _search.toLowerCase(),
+                                )) {
+                                  _items[candidate.id]!.requestFocus();
+                                  break;
+                                }
+                              }
+                              return KeyEventResult.handled;
+                            }
+                          }
+                          return KeyEventResult.ignored;
+                        },
+                        child: MenuItemButton(
+                          key: ValueKey(action.id),
+                          focusNode: _items[action.id],
+                          onPressed: action.disabled
+                              ? null
+                              : () {
+                                  _close();
+                                  action.onSelect();
+                                },
+                          style: ButtonStyle(
+                            visualDensity: VisualDensity.standard,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            minimumSize: WidgetStatePropertyAll(
+                              Size(0, math.max(t.sizeControl, t.sizeHitTarget)),
+                            ),
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.symmetric(
+                                horizontal: t.spaceControlInsetInline,
+                                vertical: t.spaceControlGap,
+                              ),
+                            ),
+                            textStyle: WidgetStatePropertyAll(textStyle),
+                            foregroundColor: WidgetStatePropertyAll(
+                              action.destructive
+                                  ? t.colorStatusErrorForeground
+                                  : t.colorTextPrimary,
+                            ),
+                            backgroundColor: WidgetStateProperty.resolveWith(
+                              (states) => states.contains(WidgetState.pressed)
+                                  ? t.colorActionGhostPressed
+                                  : states.contains(WidgetState.hovered) ||
+                                        states.contains(WidgetState.focused)
+                                  ? t.colorActionGhostHover
+                                  : Colors.transparent,
+                            ),
+                            overlayColor: const WidgetStatePropertyAll(
+                              Colors.transparent,
+                            ),
+                            side: WidgetStateProperty.resolveWith(
+                              (states) => BorderSide(
+                                color: states.contains(WidgetState.focused)
+                                    ? t.colorBorderFocus
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            shape: WidgetStatePropertyAll(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  t.radiusControl,
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Opacity(
+                            opacity: action.disabled ? .48 : 1,
+                            child: SizedBox(
+                              width: math.max(
+                                0,
+                                width -
+                                    2 *
+                                        (t.spaceControlGap +
+                                            1 +
+                                            t.spaceControlInsetInline),
+                              ),
+                              child: Row(
+                                children: [
+                                  if (action.icon != null) ...[
+                                    KIcon(
+                                      action.icon!,
+                                      color: action.destructive
+                                          ? t.colorStatusErrorForeground
+                                          : t.colorTextPrimary,
+                                    ),
+                                    SizedBox(width: t.spaceControlGap),
+                                  ],
+                                  Expanded(child: Text(action.label)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+        builder: (context, controller, child) => KActionControl(
+          label: widget.label,
+          icon: widget.overflow ? KIconName.ellipsis : KIconName.chevronDown,
+          iconOnly: widget.overflow,
+          focusNode: _trigger,
+          onPressed: _disabled
+              ? null
+              : () => controller.isOpen ? _close() : _open(),
+        ),
+      ),
+    );
+  }
+}
+
+class KOverflowMenu extends StatelessWidget {
+  const KOverflowMenu({
+    required this.label,
+    required this.actions,
+    this.disabled = false,
+    super.key,
+  });
+  final String label;
+  final List<KMenuAction> actions;
+  final bool disabled;
+  @override
+  Widget build(BuildContext context) => KMenuButton(
+    label: label,
+    actions: actions,
+    disabled: disabled,
+    overflow: true,
+  );
+}

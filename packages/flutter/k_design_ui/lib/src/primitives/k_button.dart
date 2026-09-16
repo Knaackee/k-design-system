@@ -82,6 +82,8 @@ class KButton extends StatelessWidget {
               fontSize: tokens.fontControlSize,
               // Match the Web control line box while allowing scaled text growth.
               height: 1,
+              // CSS centers leading evenly above and below the font metrics.
+              leadingDistribution: TextLeadingDistribution.even,
               fontWeight: tokens.fontControlWeight,
               fontVariations: [
                 FontVariation.weight(tokens.fontControlWeight.value.toDouble()),

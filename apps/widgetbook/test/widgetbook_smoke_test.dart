@@ -16,7 +16,17 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('K Design System'), findsOneWidget);
-    expect(find.text('Primitives'), findsOneWidget);
+    expect(find.text('Forms'), findsOneWidget);
+    final navigation = find
+        .ancestor(of: find.text('Forms'), matching: find.byType(Scrollable))
+        .first;
+    await tester.scrollUntilVisible(
+      find.text('Primitives'),
+      200,
+      scrollable: navigation,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Primitives').hitTestable(), findsOneWidget);
   });
 
   testWidgets('configuration addon applies the selected adaptive axes', (

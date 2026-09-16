@@ -3,6 +3,8 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
+import 'action_fixtures.dart';
+import 'form_fixtures.dart';
 import 'typography_fixtures.dart';
 import 'color_fixtures.dart';
 import 'foundation_fixtures.dart';
@@ -89,6 +91,120 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        WidgetbookCategory(
+          name: 'Actions',
+          children: [
+            WidgetbookFolder(
+              name: 'IconButton',
+              children: [
+                WidgetbookUseCase(
+                  name: 'icon-button-actions',
+                  builder: (context) => const ActionFixture(kind: 'icon'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'MenuButton',
+              children: [
+                WidgetbookUseCase(
+                  name: 'menu-button-actions',
+                  builder: (context) => const ActionFixture(kind: 'menu'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookCategory(
+          name: 'Forms',
+          children: [
+            WidgetbookFolder(
+              name: 'Field',
+              children: [
+                WidgetbookUseCase(
+                  name: 'field-states',
+                  builder: (context) => const FormFixture(kind: 'field'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Input',
+              children: [
+                WidgetbookUseCase(
+                  name: 'input-states',
+                  builder: (context) => const FormFixture(kind: 'input'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'SearchField',
+              children: [
+                WidgetbookUseCase(
+                  name: 'search-field-states',
+                  builder: (context) => const FormFixture(kind: 'search-field'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Checkbox',
+              children: [
+                WidgetbookUseCase(
+                  name: 'checkbox-states',
+                  builder: (context) => const FormFixture(kind: 'checkbox'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Select',
+              children: [
+                WidgetbookUseCase(
+                  name: 'select-states',
+                  builder: (context) => const FormFixture(kind: 'select'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Combobox',
+              children: [
+                WidgetbookUseCase(
+                  name: 'combobox-states',
+                  builder: (context) => const FormFixture(kind: 'combobox'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'FilterChip',
+              children: [
+                WidgetbookUseCase(
+                  name: 'filter-chip-states',
+                  builder: (context) => const FormFixture(kind: 'filter-chip'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookCategory(
+          name: 'Patterns',
+          children: [
+            WidgetbookFolder(
+              name: 'FilterBar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'filter-bar-filters',
+                  builder: (context) => const FormFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Toolbar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'toolbar-actions',
+                  builder: (context) => const ActionFixture(),
+                ),
+              ],
+            ),
+          ],
+        ),
         WidgetbookCategory(
           name: 'Primitives',
           children: [
