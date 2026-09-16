@@ -1,3 +1,4 @@
+import { useKLocalization } from "../localization/provider.js";
 import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
 import { KIcon } from "../primitives/icon.js";
 import { useField } from "./field.js";
@@ -14,13 +15,14 @@ export interface KInputProps extends Omit<
 export function KInput({
   className = "",
   clearable = false,
-  clearLabel = "Clear",
+  clearLabel,
   onClear,
   value,
   defaultValue,
   onChange,
   ...props
 }: KInputProps) {
+  const { messages } = useKLocalization();
   const field = useField();
   const input = useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState(defaultValue ?? "");
@@ -60,7 +62,7 @@ export function KInput({
       />
       {canClear && (
         <ClearButton
-          label={clearLabel}
+          label={clearLabel ?? messages.clear}
           onClear={() => {
             if (value === undefined && input.current) input.current.value = "";
             setLocalValue("");

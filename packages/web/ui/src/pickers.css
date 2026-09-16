@@ -1,0 +1,200 @@
+.k-picker {
+  min-width: 0;
+  width: 100%;
+}
+.k-picker-control {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-picker-control > .k-input-target {
+  flex: 1;
+}
+.k-picker-error {
+  display: block;
+  color: var(--k-color-status-error-foreground);
+  font: inherit;
+  margin-top: var(--k-space-control-gap);
+}
+.k-picker-dialog {
+  box-sizing: border-box;
+  width: 400px;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100dvh - 16px);
+  padding: 8px;
+  border: 1px solid var(--k-color-border-default);
+  border-radius: var(--k-radius-overlay);
+  background: var(--k-color-surface-raised);
+  color: var(--k-color-text-primary);
+  box-shadow: var(--k-elevation-overlay);
+  font-family: var(--k-font-family);
+  font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
+  font-weight: var(--k-font-control-weight);
+  line-height: round(
+    nearest,
+    calc(var(--k-font-control-size) * var(--k-text-scale, 1)),
+    1px
+  );
+  letter-spacing: -0.01em;
+  font-optical-sizing: auto;
+}
+.k-picker-dialog::backdrop {
+  background: rgb(0 0 0 / 32%);
+}
+.k-picker-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.k-picker-draft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+}
+.k-picker-month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.k-picker-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.k-picker-week > [role="columnheader"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: max(
+    24px,
+    calc(var(--k-font-control-size) * var(--k-text-scale, 1) + 8px)
+  );
+  color: var(--k-color-text-muted);
+  font-weight: 400;
+}
+.k-picker-day {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: max(
+    var(--k-size-control),
+    var(--k-size-hit-target),
+    calc(var(--k-font-control-size) * var(--k-text-scale, 1) + 16px)
+  );
+  border: 0;
+  border-radius: var(--k-radius-control);
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.k-picker-day[data-outside] {
+  color: var(--k-color-text-muted);
+}
+.k-picker-day:hover {
+  background: var(--k-color-action-ghost-hover);
+}
+.k-picker-day[data-selected] {
+  background: var(--k-color-action-primary-background);
+  color: var(--k-color-action-primary-foreground);
+}
+.k-picker-day:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+.k-picker-day:focus {
+  outline: 2px solid var(--k-color-border-focus);
+  outline-offset: -2px;
+}
+.k-picker-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.k-picker-footer-space {
+  flex: 1;
+}
+.k-picker-body {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+.k-picker-body-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.k-picker-time {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+.k-picker-time-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+}
+.k-picker-time-scroll {
+  position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+  height: calc(
+    5 *
+      max(
+        var(--k-size-control),
+        var(--k-size-hit-target),
+        calc(var(--k-font-control-size) * var(--k-text-scale, 1) + 16px)
+      )
+  );
+}
+.k-picker-time-scroll .k-picker-day {
+  display: block;
+}
+.k-picker-month-name {
+  flex: 1;
+  min-width: 0;
+}
+.k-picker-month-name .k-button-target,
+.k-picker-month-name .k-button {
+  width: 100%;
+}
+.k-picker-month-name .k-button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.k-picker-month-range {
+  flex: 1;
+  text-align: center;
+}
+.k-picker-period-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (min-width: 736px) {
+  .k-picker-dialog[data-kind="datetime"] {
+    width: 720px;
+  }
+  .k-picker-dialog[data-kind="datetime"] .k-picker-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+.k-picker-control[data-select-only] .k-input:not(:disabled) {
+  cursor: pointer;
+}
+.k-picker-time-column > span {
+  overflow-wrap: anywhere;
+}
+
+.k-picker-time-scroll:active {
+  cursor: grabbing;
+}

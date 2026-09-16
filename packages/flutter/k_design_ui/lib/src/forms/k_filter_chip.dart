@@ -1,10 +1,17 @@
+import '../localization/k_localization.dart';
 import 'package:flutter/material.dart';
 import '../actions/action_control.dart';
 import '../primitives/k_icon.dart';
 
 class KFilterChip extends StatefulWidget {
-  const KFilterChip({required this.label, required this.onRemove, super.key});
+  const KFilterChip({
+    required this.label,
+    required this.onRemove,
+    this.removeLabel,
+    super.key,
+  });
   final String label;
+  final String? removeLabel;
   final VoidCallback? onRemove;
   @override
   State<KFilterChip> createState() => _KFilterChipState();
@@ -31,7 +38,11 @@ class _KFilterChipState extends State<KFilterChip> {
 
   @override
   Widget build(BuildContext context) => Semantics(
-    label: 'Remove ${widget.label}',
+    label:
+        widget.removeLabel ??
+        KLocalization.of(
+          context,
+        ).text('remove').replaceAll('{label}', widget.label),
     excludeSemantics: true,
     button: true,
     focusable: widget.onRemove != null,

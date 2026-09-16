@@ -19,3 +19,6 @@ export 'src/forms/k_checkbox.dart';
 export 'src/forms/k_select.dart';
 export 'src/forms/k_filter_chip.dart';
 export 'src/patterns/k_filter_bar.dart';
+export 'src/pickers/k_date_picker.dart';
+
+export 'src/localization/k_localization.dart';

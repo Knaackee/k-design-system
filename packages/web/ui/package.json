@@ -17,6 +17,7 @@
     "src/styles.css",
     "src/actions.css",
     "src/forms.css",
+    "src/pickers.css",
     "src/assets"
   ],
   "scripts": {

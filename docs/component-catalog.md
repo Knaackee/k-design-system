@@ -7,21 +7,21 @@ FilterBar, with matching Web and Flutter fixtures and tests.
 
 ## Categories and scope
 
-| Category     | Families                                                                                                           | Delivery                                                                                             |
-| ------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| Foundations  | Color, typography, density/spacing, radius, elevation, icon overview                                               | Existing foundations; showcases, not additional components                                           |
-| Primitives   | Text, Icon, Surface, Stack, Inline, Container, Grid, Separator                                                     | Existing                                                                                             |
-| Actions      | Button, IconButton, ButtonGroup, MenuButton, SplitButton                                                           | Button, IconButton and MenuButton implemented                                                        |
-| Menus        | Menu, OverflowMenu, ContextMenu; groups and submenus                                                               | Flat action menu and overflow implemented; context/submenus later                                    |
-| Forms        | Field, Input, Textarea, SearchField, Checkbox, RadioGroup, Switch, Select, Combobox, MultiSelect, SegmentedControl | Field, Input, SearchField, Checkbox, Select and Combobox in current slice                            |
-| Overlays     | Tooltip, Popover, Dialog, Drawer, BottomSheet                                                                      | Independent contracts required; internal action-menu surface does not establish a public Popover API |
-| Navigation   | Link, Tabs, Breadcrumb, Sidebar, NavigationItem/Section, BottomNavigation, Pagination                              | After table foundations                                                                              |
-| Data Display | Card, Badge, Avatar, List/ListItem, DescriptionList, Table, Accordion                                              | Card exists; Table after inputs                                                                      |
-| Feedback     | InlineNotice, Toast, Progress, Spinner, Skeleton, EmptyState                                                       | Deliver alongside consumers that need them                                                           |
-| Patterns     | Toolbar, FilterBar/FilterChip, DataTable, PageHeader, AppShell, DetailInspector                                    | Toolbar implemented; FilterBar/FilterChip in current slice                                           |
+| Category     | Families                                                                                                                                                   | Delivery                                                                                                                  |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Foundations  | Color, typography, density/spacing, radius, elevation, icon overview                                                                                       | Existing foundations; showcases, not additional components                                                                |
+| Primitives   | Text, Icon, Surface, Stack, Inline, Container, Grid, Separator                                                                                             | Existing                                                                                                                  |
+| Actions      | Button, IconButton, ButtonGroup, MenuButton, SplitButton                                                                                                   | Button, IconButton and MenuButton implemented                                                                             |
+| Menus        | Menu, OverflowMenu, ContextMenu; groups and submenus                                                                                                       | Flat action menu and overflow implemented; context/submenus later                                                         |
+| Forms        | Field, Input, Textarea, SearchField, Checkbox, RadioGroup, Switch, Select, Combobox, MultiSelect, SegmentedControl, DatePicker, TimePicker, DateTimePicker | Field, Input, SearchField, Checkbox, Select, Combobox and the three pickers implemented; picker visual acceptance pending |
+| Overlays     | Tooltip, Popover, Dialog, Drawer, BottomSheet                                                                                                              | Independent contracts required; internal menu/picker surfaces do not establish public Popover/Dialog APIs                 |
+| Navigation   | Link, Tabs, Breadcrumb, Sidebar, NavigationItem/Section, BottomNavigation, Pagination                                                                      | After table foundations                                                                                                   |
+| Data Display | Card, Badge, Avatar, List/ListItem, DescriptionList, Table, Accordion                                                                                      | Card exists; Table after inputs                                                                                           |
+| Feedback     | InlineNotice, Toast, Progress, Spinner, Skeleton, EmptyState                                                                                               | Deliver alongside consumers that need them                                                                                |
+| Patterns     | Toolbar, FilterBar/FilterChip, DataTable, PageHeader, AppShell, DetailInspector                                                                            | Toolbar, FilterBar and FilterChip implemented                                                                             |
 
-Date/TimePicker, NumberInput, Slider, FileUpload, TreeView and CommandPalette are
-deferred candidates. Rich-text editing, Kanban, charts, virtualization and advanced
+NumberInput, Slider, FileUpload, TreeView and CommandPalette are deferred
+candidates. Rich-text editing, Kanban, charts, virtualization and advanced
 editable data grids require their own scope. KGrid is a layout primitive, not a
 data grid. Menu items and icon glyphs are not separate component families.
 
@@ -44,11 +44,14 @@ coordinated migration; this document does not silently relocate existing stories
    group boundaries and callbacks. Explicit overflow actions remain available at
    every width; no implicit removal of actions into an automatic overflow menu.
 2. Field, Input/SearchField, Checkbox, Select/Combobox, then filter chips and bar.
-3. Table and composed DataTable: sorting, selection, toolbar, filters, pagination,
+3. DatePicker, TimePicker and DateTimePicker with configurable formats, locale,
+   IANA time zone, bounds and clearing. DateTime values are UTC instants; local
+   DST gaps and overlaps have explicit handling. See [picker contract](components/pickers.md).
+4. Table and composed DataTable: sorting, selection, toolbar, filters, pagination,
    loading/error/empty states. Application owns fetching, domain queries and saved
    views. Advanced cell editing and virtualization follow demonstrated needs.
-4. Sidebar/AppShell and adaptive Dialog/Drawer/BottomSheet/Inspector.
-5. Remaining families according to actual consumer requirements.
+5. Sidebar/AppShell and adaptive Dialog/Drawer/BottomSheet/Inspector.
+6. Remaining families according to actual consumer requirements.
 
 For equal viewport, density, input mode, theme and text scale, match geometry and
 appearance across platforms. Test phone, tablet and desktop, including mobile Web.

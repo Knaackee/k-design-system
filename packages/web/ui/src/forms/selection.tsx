@@ -1,3 +1,4 @@
+import { useKLocalization } from "../localization/provider.js";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { useField } from "./field.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
@@ -19,6 +20,8 @@ export interface KSelectProps {
   disabled?: boolean;
   clearable?: boolean;
   clearLabel?: string;
+  optionsLabel?: string;
+  noResultsLabel?: string;
   onClear?: () => void;
 }
 export function KSelect(props: KSelectProps) {
@@ -32,13 +35,16 @@ function Selection({
   value,
   onValueChange,
   label,
-  placeholder = "Choose…",
+  placeholder,
   disabled = false,
   clearable = false,
-  clearLabel = "Clear",
+  clearLabel,
+  optionsLabel,
+  noResultsLabel,
   onClear,
   searchable,
 }: KSelectProps & { searchable: boolean }) {
+  const { messages } = useKLocalization();
   const field = useField();
   const generated = useId();
   const id = field.id ?? generated;
@@ -215,7 +221,7 @@ function Selection({
           aria-autocomplete={searchable ? "list" : "none"}
           readOnly={!searchable}
           disabled={disabled}
-          placeholder={placeholder}
+          placeholder={placeholder ?? messages.choose}
           value={searchable && open ? query : selected}
           onClick={() => {
             if (!open) show();
@@ -244,7 +250,7 @@ function Selection({
       )}
       {canClear && (
         <ClearButton
-          label={clearLabel}
+          label={clearLabel ?? messages.clear}
           onClear={() => {
             onClear?.();
             close();
@@ -262,7 +268,7 @@ function Selection({
           className="k-select-list"
           id={`${id}-list`}
           role="listbox"
-          aria-label={label ?? "Options"}
+          aria-label={optionsLabel ?? label ?? messages.options}
           onPointerDown={(event) => event.preventDefault()}
         >
           {filtered.map((option) => (
@@ -290,7 +296,7 @@ function Selection({
           ))}
           {!filtered.length && (
             <div className="k-select-empty" role="status">
-              No results
+              {noResultsLabel ?? messages.noResults}
             </div>
           )}
         </div>

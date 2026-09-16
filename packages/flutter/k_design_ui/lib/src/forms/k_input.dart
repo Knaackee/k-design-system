@@ -1,3 +1,4 @@
+import '../localization/k_localization.dart';
 import 'dart:ui' show SemanticsValidationResult;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class KInput extends StatefulWidget {
     this.focusNode,
     this.label,
     this.clearable = false,
-    this.clearLabel = 'Clear',
+    this.clearLabel,
     super.key,
   });
   final TextEditingController? controller;
@@ -27,7 +28,7 @@ class KInput extends StatefulWidget {
   final FocusNode? focusNode;
   final String? label;
   final bool clearable;
-  final String clearLabel;
+  final String? clearLabel;
   Widget? prefix(BuildContext context) => null;
   @override
   State<KInput> createState() => _KInputState();
@@ -91,7 +92,7 @@ class _KInputState extends State<KInput> {
           : null,
     );
     return KFormClearOverlay(
-      label: widget.clearLabel,
+      label: widget.clearLabel ?? KLocalization.of(context).text('clear'),
       onPressed: canClear
           ? () {
               _controller.clear();

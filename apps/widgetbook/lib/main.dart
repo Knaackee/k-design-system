@@ -5,6 +5,7 @@ import 'package:widgetbook/widgetbook.dart';
 import 'button_fixtures.dart';
 import 'action_fixtures.dart';
 import 'form_fixtures.dart';
+import 'picker_fixtures.dart';
 import 'typography_fixtures.dart';
 import 'color_fixtures.dart';
 import 'foundation_fixtures.dart';
@@ -88,6 +89,7 @@ class KDesignWidgetbook extends StatelessWidget {
           ),
         ]),
         KDesignConfigurationAddon(),
+        KLanguageAddon(),
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
@@ -117,6 +119,34 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Forms',
           children: [
+            WidgetbookFolder(
+              name: 'DatePicker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'date-picker-states',
+                  builder: (context) => buildPickerFixture(context, 'date'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'TimePicker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'time-picker-states',
+                  builder: (context) => buildPickerFixture(context, 'time'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'DateTimePicker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'date-time-picker-states',
+                  builder: (context) =>
+                      buildPickerFixture(context, 'date-time'),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Field',
               children: [

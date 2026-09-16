@@ -1,3 +1,4 @@
+import '../localization/k_localization.dart';
 import 'dart:ui' show SemanticsValidationResult;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -31,18 +32,21 @@ class KSelect extends StatefulWidget {
     required this.value,
     required this.onChanged,
     this.label,
-    this.placeholder = 'Choose…',
+    this.placeholder,
     this.clearable = false,
-    this.clearLabel = 'Clear',
+    this.clearLabel,
+    this.optionsLabel,
+    this.noResultsLabel,
     super.key,
   });
   final List<KSelectOption> options;
   final String? value;
   final ValueChanged<String?>? onChanged;
   final String? label;
-  final String placeholder;
+  final String? placeholder;
   final bool clearable;
-  final String clearLabel;
+  final String? clearLabel;
+  final String? optionsLabel, noResultsLabel;
   bool get editable => false;
   @override
   State<KSelect> createState() => _KSelectState();
@@ -57,6 +61,8 @@ class KCombobox extends KSelect {
     super.placeholder,
     super.clearable,
     super.clearLabel,
+    super.optionsLabel,
+    super.noResultsLabel,
     super.key,
   });
   @override
@@ -268,7 +274,8 @@ class _KSelectState extends State<KSelect> {
         .firstOrNull;
     final appearance = formDecoration(
       context,
-      placeholder: widget.placeholder,
+      placeholder:
+          widget.placeholder ?? KLocalization.of(context).text('choose'),
       invalid: field?.invalid ?? false,
       prefix: selected?.hasMedia == true && (!widget.editable || !_open)
           ? Padding(
@@ -305,7 +312,7 @@ class _KSelectState extends State<KSelect> {
           if (!focused && _open) _close();
         },
         child: KFormClearOverlay(
-          label: widget.clearLabel,
+          label: widget.clearLabel ?? KLocalization.of(context).text('clear'),
           onPressed: canClear ? _clear : null,
           right: t.spaceControlInsetInline + 1 + 16 + t.spaceControlGap,
           child: Semantics(
@@ -381,6 +388,8 @@ class _KSelectState extends State<KSelect> {
       top: opensAbove ? null : origin.dy + box.size.height + t.spaceControlGap,
       bottom: opensAbove ? screen.height - origin.dy + t.spaceControlGap : null,
       child: KSelectionPopup(
+        optionsLabel: widget.optionsLabel,
+        noResultsLabel: widget.noResultsLabel,
         options: options,
         active: _active,
         value: widget.value,

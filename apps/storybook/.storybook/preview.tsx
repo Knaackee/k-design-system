@@ -1,10 +1,13 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
+import { KLocalizationProvider } from "@k-design-system/ui";
 import type { StoryIndexEntry } from "storybook/internal/types";
 import "@k-design-system/tokens/tokens.css";
 import "@k-design-system/ui/styles.css";
 import "../src/gallery.css";
 
 const withDesignTokens: Decorator = (Story, context) => {
+  const language = String(context.globals.language ?? "en");
+  document.documentElement.lang = language;
   const brand = String(context.globals.brand ?? "orbit");
   const theme = String(context.globals.theme ?? "light");
   const density = String(context.globals.density ?? "standard");
@@ -33,7 +36,9 @@ const withDesignTokens: Decorator = (Story, context) => {
       data-input-mode={inputMode}
       data-window-class={windowClass}
     >
-      <Story />
+      <KLocalizationProvider locale={language}>
+        <Story />
+      </KLocalizationProvider>
     </main>
   );
 };
@@ -48,6 +53,7 @@ const preview: Preview & {
 } = {
   decorators: [withDesignTokens],
   initialGlobals: {
+    language: "en",
     brand: "orbit",
     theme: "light",
     density: "standard",
@@ -57,6 +63,30 @@ const preview: Preview & {
     textScale: 1,
   },
   globalTypes: {
+    language: {
+      description:
+        "Component language (gallery example content stays unchanged)",
+      toolbar: {
+        icon: "globe",
+        dynamicTitle: true,
+        items: [
+          "en",
+          "de",
+          "fr",
+          "es",
+          "it",
+          "pt",
+          "nl",
+          "pl",
+          "cs",
+          "sv",
+          "da",
+          "nb",
+          "fi",
+          "tr",
+        ],
+      },
+    },
     brand: {
       description: "Token brand",
       toolbar: {

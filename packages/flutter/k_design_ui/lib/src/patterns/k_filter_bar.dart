@@ -1,3 +1,4 @@
+import '../localization/k_localization.dart';
 import 'package:flutter/material.dart';
 import '../forms/form_style.dart';
 import '../primitives/k_button.dart';
@@ -7,14 +8,14 @@ class KFilterBar extends StatelessWidget {
     required this.label,
     required this.children,
     this.onReset,
-    this.resetLabel = 'Reset all',
+    this.resetLabel,
     this.resetEnabled = true,
     super.key,
   });
   final String label;
   final List<Widget> children;
   final VoidCallback? onReset;
-  final String resetLabel;
+  final String? resetLabel;
   final bool resetEnabled;
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class KFilterBar extends StatelessWidget {
           ...children,
           if (onReset != null)
             KButton(
-              label: resetLabel,
+              label: resetLabel ?? KLocalization.of(context).text('resetAll'),
               onPressed: resetEnabled ? onReset : null,
               variant: KButtonVariant.ghost,
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import 'package:k_design_ui/k_design_ui.dart';
 
 import 'package:widgetbook/widgetbook.dart';
 
@@ -70,4 +71,39 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KDesignConfiguration> {
       child: child,
     );
   }
+}
+
+/// Component messages only; the gallery shell and example data keep their labels.
+class KLanguageAddon extends WidgetbookAddon<String> {
+  KLanguageAddon() : super(name: 'Language');
+  static const supportedLocales = [
+    'en',
+    'de',
+    'fr',
+    'es',
+    'it',
+    'pt',
+    'nl',
+    'pl',
+    'cs',
+    'sv',
+    'da',
+    'nb',
+    'fi',
+    'tr',
+  ];
+  @override
+  List<Field> get fields => [
+    ObjectDropdownField<String>(
+      name: 'locale',
+      values: supportedLocales,
+      initialValue: 'en',
+    ),
+  ];
+  @override
+  String valueFromQueryGroup(Map<String, String> group) =>
+      valueOf<String>('locale', group)!;
+  @override
+  Widget buildUseCase(BuildContext context, Widget child, String setting) =>
+      KLocalization(locale: setting, child: child);
 }

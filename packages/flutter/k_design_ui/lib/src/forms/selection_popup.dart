@@ -1,3 +1,4 @@
+import '../localization/k_localization.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../primitives/k_icon.dart';
@@ -14,8 +15,11 @@ class KSelectionPopup extends StatelessWidget {
     required this.onActive,
     required this.onSelected,
     required this.optionKeys,
+    this.optionsLabel,
+    this.noResultsLabel,
     super.key,
   });
+  final String? optionsLabel, noResultsLabel;
   final List<KSelectOption> options;
   final int active;
   final String? value;
@@ -27,107 +31,112 @@ class KSelectionPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = formTokens(context);
     final target = math.max(t.sizeControl, t.sizeHitTarget);
-    return TextFieldTapRegion(
-      child: Material(
-        type: MaterialType.transparency,
-        child: Container(
-          constraints: BoxConstraints(maxHeight: maxHeight),
-          padding: EdgeInsets.all(t.spaceControlGap),
-          decoration: BoxDecoration(
-            color: t.colorSurfaceRaised,
-            border: Border.all(color: t.colorBorderDefault),
-            borderRadius: BorderRadius.circular(t.radiusOverlay),
-            boxShadow: t.elevationOverlay,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (options.isEmpty)
-                  Container(
-                    constraints: BoxConstraints(minHeight: target),
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: t.spaceControlInsetInline,
-                      vertical: t.spaceControlGap,
+    return Semantics(
+      container: true,
+      label: optionsLabel ?? KLocalization.of(context).text('options'),
+      child: TextFieldTapRegion(
+        child: Material(
+          type: MaterialType.transparency,
+          child: Container(
+            constraints: BoxConstraints(maxHeight: maxHeight),
+            padding: EdgeInsets.all(t.spaceControlGap),
+            decoration: BoxDecoration(
+              color: t.colorSurfaceRaised,
+              border: Border.all(color: t.colorBorderDefault),
+              borderRadius: BorderRadius.circular(t.radiusOverlay),
+              boxShadow: t.elevationOverlay,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (options.isEmpty)
+                    Container(
+                      constraints: BoxConstraints(minHeight: target),
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: t.spaceControlInsetInline,
+                        vertical: t.spaceControlGap,
+                      ),
+                      child: Text(
+                        noResultsLabel ??
+                            KLocalization.of(context).text('noResults'),
+                        style: formTextStyle(context, color: t.colorTextMuted),
+                      ),
                     ),
-                    child: Text(
-                      'No results',
-                      style: formTextStyle(context, color: t.colorTextMuted),
-                    ),
-                  ),
-                for (var i = 0; i < options.length; i++)
-                  Semantics(
-                    key: optionKeys.putIfAbsent(
-                      options[i].value,
-                      GlobalKey.new,
-                    ),
-                    selected: options[i].value == value,
-                    enabled: !options[i].disabled,
-                    onTap: options[i].disabled
-                        ? null
-                        : () => onSelected(options[i]),
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
+                  for (var i = 0; i < options.length; i++)
+                    Semantics(
+                      key: optionKeys.putIfAbsent(
+                        options[i].value,
+                        GlobalKey.new,
+                      ),
+                      selected: options[i].value == value,
+                      enabled: !options[i].disabled,
                       onTap: options[i].disabled
                           ? null
                           : () => onSelected(options[i]),
-                      child: MouseRegion(
-                        onEnter: options[i].disabled
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: options[i].disabled
                             ? null
-                            : (_) => onActive(i),
-                        child: Opacity(
-                          opacity: options[i].disabled ? .48 : 1,
-                          child: Container(
-                            constraints: BoxConstraints(minHeight: target),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: t.spaceControlInsetInline,
-                              vertical: t.spaceControlGap,
-                            ),
-                            decoration: BoxDecoration(
-                              color: i == active
-                                  ? t.colorActionGhostHover
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                t.radiusControl,
+                            : () => onSelected(options[i]),
+                        child: MouseRegion(
+                          onEnter: options[i].disabled
+                              ? null
+                              : (_) => onActive(i),
+                          child: Opacity(
+                            opacity: options[i].disabled ? .48 : 1,
+                            child: Container(
+                              constraints: BoxConstraints(minHeight: target),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: t.spaceControlInsetInline,
+                                vertical: t.spaceControlGap,
                               ),
-                            ),
-                            foregroundDecoration: i == active
-                                ? BoxDecoration(
-                                    border: Border.all(
-                                      color: t.colorBorderFocus,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(
-                                      t.radiusControl,
-                                    ),
-                                  )
-                                : null,
-                            child: Row(
-                              children: [
-                                if (options[i].hasMedia) ...[
-                                  KOptionMedia(options[i]),
-                                  SizedBox(width: t.spaceControlGap),
-                                ],
-                                Expanded(
-                                  child: Text(
-                                    options[i].label,
-                                    style: formTextStyle(context),
-                                  ),
+                              decoration: BoxDecoration(
+                                color: i == active
+                                    ? t.colorActionGhostHover
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(
+                                  t.radiusControl,
                                 ),
-                                if (options[i].value == value) ...[
-                                  SizedBox(width: t.spaceControlGap),
-                                  const KIcon(KIconName.check),
+                              ),
+                              foregroundDecoration: i == active
+                                  ? BoxDecoration(
+                                      border: Border.all(
+                                        color: t.colorBorderFocus,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        t.radiusControl,
+                                      ),
+                                    )
+                                  : null,
+                              child: Row(
+                                children: [
+                                  if (options[i].hasMedia) ...[
+                                    KOptionMedia(options[i]),
+                                    SizedBox(width: t.spaceControlGap),
+                                  ],
+                                  Expanded(
+                                    child: Text(
+                                      options[i].label,
+                                      style: formTextStyle(context),
+                                    ),
+                                  ),
+                                  if (options[i].value == value) ...[
+                                    SizedBox(width: t.spaceControlGap),
+                                    const KIcon(KIconName.check),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
