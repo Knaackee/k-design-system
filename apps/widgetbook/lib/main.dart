@@ -8,6 +8,8 @@ import 'form_fixtures.dart';
 import 'table_fixtures.dart';
 import 'data_table_fixtures.dart';
 import 'data_table_cells_fixture.dart';
+import 'disclosure_fixtures.dart';
+import 'overlay_fixtures.dart';
 import 'currency_fixtures.dart';
 import 'data_table_virtual_fixture.dart';
 import 'picker_fixtures.dart';
@@ -98,6 +100,29 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        WidgetbookCategory(
+          name: 'Overlays',
+          children: [
+            WidgetbookFolder(
+              name: 'BottomSheet',
+              children: [
+                WidgetbookUseCase(
+                  name: 'bottom-sheet-modal',
+                  builder: (_) => const OverlayFixture(sheet: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Dialog',
+              children: [
+                WidgetbookUseCase(
+                  name: 'dialog-modal',
+                  builder: (_) => const OverlayFixture(),
+                ),
+              ],
+            ),
+          ],
+        ),
         WidgetbookCategory(
           name: 'Data display',
           children: [
@@ -305,6 +330,24 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Primitives',
           children: [
+            WidgetbookFolder(
+              name: 'Accordion',
+              children: [
+                WidgetbookUseCase(
+                  name: 'accordion-sections',
+                  builder: (_) => const DisclosureFixture(accordion: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Disclosure',
+              children: [
+                WidgetbookUseCase(
+                  name: 'disclosure-states',
+                  builder: (_) => const DisclosureFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Container',
               children: [

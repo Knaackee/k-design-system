@@ -1,0 +1,98 @@
+.k-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgb(0 0 0 / 48%);
+}
+
+.k-dialog,
+.k-bottom-sheet {
+  box-sizing: border-box;
+  color: var(--k-color-text-primary);
+  background: var(--k-color-surface-raised);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  box-shadow: var(--k-elevation-overlay);
+  font-family: var(--k-font-family);
+}
+
+.k-dialog {
+  position: fixed;
+  z-index: 1001;
+  top: 50%;
+  left: 50%;
+  width: min(520px, calc(100vw - 32px));
+  max-height: min(80vh, 760px);
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  border-radius: var(--k-radius-overlay);
+}
+
+.k-bottom-sheet {
+  z-index: 1001;
+  max-width: 640px;
+  margin-inline-start: max(0px, calc((100% - 640px) / 2));
+  border-radius: var(--k-radius-overlay) var(--k-radius-overlay) 0 0;
+}
+
+.k-bottom-sheet-content {
+  overflow: auto;
+}
+.k-overlay-header,
+.k-overlay-body,
+.k-overlay-actions {
+  padding: var(--k-space-layout-gutter);
+}
+.k-overlay-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.k-overlay-heading {
+  flex: 1;
+  min-width: 0;
+}
+.k-overlay-title {
+  margin: 0;
+  font-size: var(--k-font-heading5-size);
+  line-height: var(--k-font-heading5-line-height);
+  font-weight: var(--k-font-heading-weight);
+}
+.k-overlay-description {
+  margin: 4px 0 0;
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-body-small-size);
+}
+.k-overlay-body {
+  padding-top: 0;
+}
+.k-overlay-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--k-space-control-gap);
+  padding-top: 0;
+}
+.k-overlay-close {
+  min-width: 40px;
+  min-height: 40px;
+  border: 0;
+  border-radius: var(--k-radius-control);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 24px;
+}
+.k-overlay-close:hover {
+  background: var(--k-color-surface-subtle);
+}
+.k-bottom-sheet-handle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20px;
+}
+.k-bottom-sheet-grip {
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--k-color-border-strong);
+}

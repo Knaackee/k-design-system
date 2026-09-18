@@ -196,12 +196,13 @@ ThemeData kDesignTheme({
   KBrand brand = KBrand.orbit,
   Brightness brightness = Brightness.light,
   KDesignConfiguration configuration = const KDesignConfiguration(),
+  String? fontFamily,
 }) {
   final tokens = kDesignTokens(
     brand: brand,
     brightness: brightness,
     configuration: configuration,
-  );
+  ).copyWith(fontFamily: fontFamily);
 
   return ThemeData(
     brightness: brightness,

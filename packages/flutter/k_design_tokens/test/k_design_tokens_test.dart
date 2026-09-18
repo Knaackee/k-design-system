@@ -99,6 +99,12 @@ void main() {
     expect(theme.textTheme.bodyMedium!.fontFamily, contains('Inter'));
   });
 
+  test('consumer font override reaches theme and component tokens', () {
+    final theme = kDesignTheme(fontFamily: 'Consumer Sans');
+    expect(theme.textTheme.bodyMedium!.fontFamily, 'Consumer Sans');
+    expect(theme.extension<KDesignTokens>()!.fontFamily, 'Consumer Sans');
+  });
+
   test('brand and status roles remain theme-overridable', () {
     expect(
       KDesignTokens.referenceLight.colorBrandPrimaryAccent,

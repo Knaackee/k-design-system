@@ -23,7 +23,15 @@ export type {
   KLayoutAlign,
 } from "./primitives/layout.js";
 export { KCard } from "./primitives/card.js";
+export { KDialog, KBottomSheet } from "./overlays/overlay.js";
+export type { KOverlayProps, KBottomSheetProps } from "./overlays/overlay.js";
 export type { KCardProps } from "./primitives/card.js";
+export { KDisclosure, KAccordion } from "./primitives/disclosure.js";
+export type {
+  KDisclosureProps,
+  KAccordionProps,
+  KAccordionItem,
+} from "./primitives/disclosure.js";
 export { KContainer } from "./primitives/container.js";
 export type { KContainerProps } from "./primitives/container.js";
 export { KGrid } from "./primitives/grid.js";
