@@ -11,6 +11,8 @@ class KInput extends StatefulWidget {
   const KInput({
     this.controller,
     this.onChanged,
+    this.onSubmitted,
+    this.autofocus = false,
     this.placeholder,
     this.enabled = true,
     this.readOnly = false,
@@ -22,6 +24,8 @@ class KInput extends StatefulWidget {
   });
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final bool autofocus;
   final String? placeholder;
   final bool enabled;
   final bool readOnly;
@@ -119,6 +123,8 @@ class _KInputState extends State<KInput> {
                 controller: _controller,
                 focusNode: _focus,
                 onChanged: widget.onChanged,
+                onSubmitted: widget.onSubmitted,
+                autofocus: widget.autofocus,
                 enabled: widget.enabled,
                 readOnly: widget.readOnly,
                 textAlignVertical: formInputAlignment(appearance),

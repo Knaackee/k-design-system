@@ -82,6 +82,9 @@ class KSelectionPopup extends StatelessWidget {
                             ? null
                             : () => onSelected(options[i]),
                         child: MouseRegion(
+                          cursor: options[i].disabled
+                              ? SystemMouseCursors.basic
+                              : SystemMouseCursors.click,
                           onEnter: options[i].disabled
                               ? null
                               : (_) => onActive(i),

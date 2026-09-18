@@ -26,6 +26,8 @@ class KSelectOption {
   bool get hasMedia => icon != null || imageSrc != null;
 }
 
+enum KSelectPresentation { standard, inline }
+
 class KSelect extends StatefulWidget {
   const KSelect({
     required this.options,
@@ -37,8 +39,10 @@ class KSelect extends StatefulWidget {
     this.clearLabel,
     this.optionsLabel,
     this.noResultsLabel,
+    this.presentation = KSelectPresentation.standard,
     super.key,
   });
+  final KSelectPresentation presentation;
   final List<KSelectOption> options;
   final String? value;
   final ValueChanged<String?>? onChanged;
@@ -58,6 +62,7 @@ class KCombobox extends KSelect {
     required super.value,
     required super.onChanged,
     super.label,
+    super.presentation,
     super.placeholder,
     super.clearable,
     super.clearLabel,
@@ -272,7 +277,11 @@ class _KSelectState extends State<KSelect> {
     final selected = widget.options
         .where((o) => o.value == widget.value)
         .firstOrNull;
-    final appearance = formDecoration(
+    final inlineResting =
+        widget.presentation == KSelectPresentation.inline &&
+        !_focus.hasFocus &&
+        !_open;
+    var appearance = formDecoration(
       context,
       placeholder:
           widget.placeholder ?? KLocalization.of(context).text('choose'),
@@ -298,11 +307,26 @@ class _KSelectState extends State<KSelect> {
               SizedBox(width: math.max(24, t.sizeHitTarget), height: 16),
               SizedBox(width: t.spaceControlGap),
             ],
-            KIcon(KIconName.chevronDown, color: t.colorTextMuted),
+            Opacity(
+              opacity: inlineResting ? 0 : 1,
+              child: KIcon(KIconName.chevronDown, color: t.colorTextMuted),
+            ),
           ],
         ),
       ),
     );
+    if (inlineResting) {
+      final hiddenBorder = OutlineInputBorder(
+        gapPadding: 0,
+        borderRadius: BorderRadius.circular(t.radiusControl),
+        borderSide: const BorderSide(color: Colors.transparent),
+      );
+      appearance = appearance.copyWith(
+        fillColor: Colors.transparent,
+        enabledBorder: hiddenBorder,
+        disabledBorder: hiddenBorder,
+      );
+    }
     return OverlayPortal(
       controller: _portal,
       overlayChildBuilder: _popup,
@@ -310,6 +334,7 @@ class _KSelectState extends State<KSelect> {
         onKeyEvent: _key,
         onFocusChange: (focused) {
           if (!focused && _open) _close();
+          setState(() {});
         },
         child: KFormClearOverlay(
           label: widget.clearLabel ?? KLocalization.of(context).text('clear'),
@@ -337,6 +362,13 @@ class _KSelectState extends State<KSelect> {
                     focusNode: _focus,
                     enabled: widget.onChanged != null,
                     readOnly: !widget.editable,
+                    enableInteractiveSelection: widget.editable,
+                    showCursor: widget.editable,
+                    mouseCursor: widget.onChanged == null
+                        ? SystemMouseCursors.basic
+                        : widget.editable
+                        ? SystemMouseCursors.text
+                        : SystemMouseCursors.click,
                     textAlignVertical: formInputAlignment(appearance),
                     style: formTextStyle(context),
                     cursorColor: t.colorBorderFocus,
@@ -369,8 +401,10 @@ class _KSelectState extends State<KSelect> {
   Widget _popup(BuildContext context) {
     final t = formTokens(context);
     final box = _anchor.currentContext!.findRenderObject()! as RenderBox;
-    final origin = box.localToGlobal(Offset.zero);
-    final screen = MediaQuery.sizeOf(context);
+    final overlay =
+        Overlay.of(this.context).context.findRenderObject()! as RenderBox;
+    final origin = box.localToGlobal(Offset.zero, ancestor: overlay);
+    final screen = overlay.size;
     final width = math.min(box.size.width, screen.width - 16.0);
     final left = origin.dx.clamp(8.0, math.max(8.0, screen.width - width - 8));
     final below =

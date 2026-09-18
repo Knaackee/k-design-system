@@ -73,3 +73,56 @@ export type {
   KMessageKey,
   KLocalizationOptions,
 } from "./localization/data.js";
+
+export { KTable } from "./data/table.js";
+export type {
+  KTableProps,
+  KTableColumn,
+  KTableRow,
+  KTableAlign,
+} from "./data/table.js";
+
+export { KDataTable } from "./data/data-table.js";
+export type {
+  KDataTableProps,
+  KDataTableSection,
+  KDataTableGroupValue,
+  KDataTableColumn,
+  KDataTableDisplayMode,
+  KDataTableSingleColumn,
+  KDataTableGroup,
+  KDataTableSort,
+  KDataTableSortDirection,
+} from "./data/data-table.js";
+
+export { KEditableCell } from "./data/editable-cell.js";
+export type { KEditableCellProps } from "./data/editable-cell.js";
+export { KCurrencyInput } from "./forms/currency-input.js";
+export type { KCurrencyInputProps } from "./forms/currency-input.js";
+export {
+  formatCurrencyMinorUnits,
+  parseCurrencyMinorUnits,
+} from "./forms/currency-value.js";
+export type {
+  KCurrencyFormat,
+  KCurrencyParseResult,
+} from "./forms/currency-value.js";
+
+export type {
+  KDataTableViewport,
+  KDataTableEntry,
+  KDataTableWindow,
+  KDataTableRange,
+  KDataTableCellIdentity,
+} from "./data/data-table.js";
+
+export { KDataTableDraftController } from "./data/data-table-draft.js";
+export type {
+  KDataTableDraftStatus,
+  KDataTableDraftReason,
+  KDataTableDraftRow,
+  KDataTableDraftSnapshot,
+  KDataTableDraftEvent,
+  KDataTableDraftOptions,
+} from "./data/data-table-draft.js";
+export { KDataTableDraftInteraction } from "./data/data-table-draft-interaction.js";

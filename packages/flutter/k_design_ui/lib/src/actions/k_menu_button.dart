@@ -47,6 +47,7 @@ class _KMenuButtonState extends State<KMenuButton> {
   final _anchorKey = GlobalKey();
   final _trigger = FocusNode();
   final Map<String, FocusNode> _items = {};
+  double? _menuWidth;
   String _search = '';
   DateTime _typedAt = DateTime(0);
   bool get _disabled => widget.disabled || widget.actions.isEmpty;
@@ -97,9 +98,13 @@ class _KMenuButtonState extends State<KMenuButton> {
     final t =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
-    final screen = MediaQuery.sizeOf(context);
+    final overlay =
+        Overlay.of(context).context.findRenderObject()! as RenderBox;
+    final screen = overlay.size;
     final width = math.min(240.0, math.max(0.0, screen.width - 16));
-    final origin = box?.localToGlobal(Offset.zero) ?? Offset.zero;
+    final origin =
+        box?.localToGlobal(Offset.zero, ancestor: overlay) ?? Offset.zero;
+    setState(() => _menuWidth = width);
     final x = origin.dx.clamp(8.0, math.max(8.0, screen.width - width - 8));
     _controller.open(
       position: Offset(
@@ -125,10 +130,9 @@ class _KMenuButtonState extends State<KMenuButton> {
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
     final scaled = MediaQuery.textScalerOf(context).scale(t.fontControlSize);
-    final width = math.min(
-      240.0,
-      math.max(0.0, MediaQuery.sizeOf(context).width - 16),
-    );
+    final width =
+        _menuWidth ??
+        math.min(240.0, math.max(0.0, MediaQuery.sizeOf(context).width - 16));
     final textStyle = TextStyle(
       fontFamily: t.fontFamily,
       fontSize: t.fontControlSize,

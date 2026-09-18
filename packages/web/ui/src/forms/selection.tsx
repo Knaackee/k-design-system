@@ -12,6 +12,7 @@ export interface KSelectOption {
   imageSrc?: string;
 }
 export interface KSelectProps {
+  presentation?: "standard" | "inline";
   options: readonly KSelectOption[];
   value: string | null;
   onValueChange: (value: string) => void;
@@ -42,6 +43,7 @@ function Selection({
   optionsLabel,
   noResultsLabel,
   onClear,
+  presentation = "standard",
   searchable,
 }: KSelectProps & { searchable: boolean }) {
   const { messages } = useKLocalization();
@@ -127,7 +129,11 @@ function Selection({
     document.addEventListener("pointerdown", outside);
     window.addEventListener("resize", position);
     const onScroll = (event: Event) => {
-      if (!panel.contains(event.target as Node)) close();
+      if (
+        event.target !== input.current &&
+        !panel.contains(event.target as Node)
+      )
+        close();
     };
     window.addEventListener("scroll", onScroll, true);
     return () => {
@@ -145,6 +151,14 @@ function Selection({
         ?.scrollIntoView({ block: "nearest" });
   }, [active, id, open]);
   function keyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (
+      !searchable &&
+      (event.ctrlKey || event.metaKey) &&
+      event.key.toLowerCase() === "a"
+    ) {
+      event.preventDefault();
+      return;
+    }
     if (event.key === "Escape" && open) {
       event.preventDefault();
       event.stopPropagation();
@@ -192,6 +206,8 @@ function Selection({
   return (
     <div
       className="k-selection"
+      data-presentation={presentation}
+      data-open={open || undefined}
       ref={target}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) close();
@@ -223,6 +239,24 @@ function Selection({
           disabled={disabled}
           placeholder={placeholder ?? messages.choose}
           value={searchable && open ? query : selected}
+          onFocus={(event) => {
+            if (!searchable) event.currentTarget.setSelectionRange(0, 0);
+          }}
+          onPointerDown={(event) => {
+            if (!searchable && !disabled) {
+              event.preventDefault();
+              input.current?.focus();
+              if (!open) show();
+            }
+          }}
+          onSelect={(event) => {
+            if (
+              !searchable &&
+              (event.currentTarget.selectionStart !== 0 ||
+                event.currentTarget.selectionEnd !== 0)
+            )
+              event.currentTarget.setSelectionRange(0, 0);
+          }}
           onClick={() => {
             if (!open) show();
           }}

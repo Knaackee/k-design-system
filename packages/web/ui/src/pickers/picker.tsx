@@ -25,8 +25,12 @@ import {
 } from "./date-values.js";
 type PickerError = "invalid" | "outOfRange" | "nonexistent" | "ambiguous";
 export interface KPickerProps {
+  /** Compact value trigger for table composition. */
+  presentation?: "standard" | "inline";
   value: string | null;
   onValueChange: (value: string | null) => void;
+  /** Balanced modal ownership notification; closing follows value/focus updates. */
+  onOpenChange?: (open: boolean) => void;
   label?: string;
   timeZone?: string;
   locale?: KPickerLocale;
@@ -53,9 +57,11 @@ export function KDateTimePicker(props: KPickerProps) {
   return <Picker {...props} kind="datetime" />;
 }
 function Picker({
+  presentation = "standard",
   kind,
   value,
   onValueChange,
+  onOpenChange,
   label,
   timeZone: explicitTimeZone,
   locale: explicitLocale,
@@ -107,6 +113,16 @@ function Picker({
   const [calendarDate, setCalendarDate] = useState(
     valueParts(value, kind, timeZone, now ?? new Date()).date,
   );
+  const opened = useRef(false);
+  const openListener = useRef<KPickerProps["onOpenChange"]>(undefined);
+  function releaseOwnership() {
+    if (!opened.current) return;
+    opened.current = false;
+    const listener = openListener.current;
+    openListener.current = undefined;
+    listener?.(false);
+  }
+  useEffect(() => () => releaseOwnership(), []);
   const dialog = useRef<HTMLDialogElement>(null),
     trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -161,7 +177,7 @@ function Picker({
     }
   }
   function show() {
-    if (disabled || readOnly) return;
+    if (disabled || readOnly || opened.current) return;
     const parts = valueParts(value, kind, timeZone, now ?? new Date());
     const date =
       dateMin && parts.date < dateMin
@@ -173,12 +189,16 @@ function Picker({
     setDateDraft(formatDate(date, dateFormat));
     setTimeDraft(formatTime(parts.time, timeFormat));
     setPanelError(null);
+    opened.current = true;
+    openListener.current = onOpenChange;
+    onOpenChange?.(true);
     setOpen(true);
   }
   function close() {
     dialog.current?.close();
     setOpen(false);
     trigger.current?.focus();
+    releaseOwnership();
   }
   useEffect(() => {
     if (open) {
@@ -194,6 +214,7 @@ function Picker({
     if ((disabled || readOnly) && open) {
       dialog.current?.close();
       setOpen(false);
+      releaseOwnership();
     }
   }, [disabled, readOnly, open]);
   const placeholder =
@@ -210,59 +231,74 @@ function Picker({
         : `${dateFormat === "iso" ? "YYYY-MM-DD" : dateFormat === "dayMonthYear" ? "DD.MM.YYYY" : "MM/DD/YYYY"} ${timeFormat === "h24" ? "HH:mm" : "hh:mm AM/PM"}`;
   return (
     <div className="k-picker">
-      <div
-        className="k-picker-control"
-        onClick={(e) => {
-          if (!allowTextInput && !(e.target as HTMLElement).closest("button"))
-            show();
-        }}
-        data-select-only={
-          (!allowTextInput && !readOnly && !disabled) || undefined
-        }
-      >
-        <KInput
-          aria-label={label}
-          aria-describedby={
-            [field.description, error ? `${id}-error` : undefined]
-              .filter(Boolean)
-              .join(" ") || undefined
-          }
-          aria-invalid={!!error || field.invalid || undefined}
-          value={text}
-          placeholder={placeholder}
-          disabled={disabled}
-          readOnly={readOnly || !allowTextInput}
-
-          onChange={(e) => setText(e.target.value)}
-          onBlur={(e) => {
-            if (e.relatedTarget !== trigger.current) commitText();
-          }}
-          onKeyDown={(e) => {
-            if (!allowTextInput && (e.key === "Enter" || e.key === " ")) {
-              e.preventDefault();
-              show();
-              return;
-            }
-            if (e.key === "Enter") {
-              e.preventDefault();
-              commitText();
-            }
-            if (e.key === "ArrowDown" && e.altKey) {
-              e.preventDefault();
-              show();
-            }
-          }}
-        />
-        <KIconButton
+      {presentation === "inline" ? (
+        <button
+          type="button"
           ref={trigger}
-          label={title}
-          icon={kind === "time" ? "clock" : "calendar"}
-          disabled={disabled || readOnly}
+          className="k-editable-cell"
+          aria-label={label ?? title}
           aria-haspopup="dialog"
           aria-expanded={open}
+          disabled={disabled || readOnly}
           onClick={show}
-        />
-      </div>
+        >
+          {formatted || placeholder}
+        </button>
+      ) : (
+        <div
+          className="k-picker-control"
+          onClick={(e) => {
+            if (!allowTextInput && !(e.target as HTMLElement).closest("button"))
+              show();
+          }}
+          data-select-only={
+            (!allowTextInput && !readOnly && !disabled) || undefined
+          }
+        >
+          <KInput
+            aria-label={label}
+            aria-describedby={
+              [field.description, error ? `${id}-error` : undefined]
+                .filter(Boolean)
+                .join(" ") || undefined
+            }
+            aria-invalid={!!error || field.invalid || undefined}
+            value={text}
+            placeholder={placeholder}
+            disabled={disabled}
+            readOnly={readOnly || !allowTextInput}
+
+            onChange={(e) => setText(e.target.value)}
+            onBlur={(e) => {
+              if (e.relatedTarget !== trigger.current) commitText();
+            }}
+            onKeyDown={(e) => {
+              if (!allowTextInput && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                show();
+                return;
+              }
+              if (e.key === "Enter") {
+                e.preventDefault();
+                commitText();
+              }
+              if (e.key === "ArrowDown" && e.altKey) {
+                e.preventDefault();
+                show();
+              }
+            }}
+          />
+          <KIconButton
+            ref={trigger}
+            label={title}
+            icon={kind === "time" ? "clock" : "calendar"}
+            disabled={disabled || readOnly}
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            onClick={show}
+          />
+        </div>
+      )}
       {error && (
         <span id={`${id}-error`} className="k-picker-error" role="alert">
           {labels[error]}
@@ -273,6 +309,9 @@ function Picker({
         className="k-picker-dialog"
         data-kind={kind}
         aria-labelledby={`${id}-title`}
+        onClose={() => {
+          if (opened.current) close();
+        }}
         onCancel={(e) => {
           e.preventDefault();
           close();

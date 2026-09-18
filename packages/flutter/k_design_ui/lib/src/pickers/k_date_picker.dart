@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../actions/action_control.dart';
 import '../forms/form_style.dart';
 import '../forms/k_input.dart';
+import '../data/k_editable_cell.dart';
 import '../primitives/k_icon.dart';
 import 'picker_model.dart';
 import 'picker_panel.dart';
@@ -17,11 +18,15 @@ export 'picker_types.dart'
         KTimeDisambiguation,
         KPickerLabels;
 
+enum KPickerPresentation { standard, inline }
+
 class KDatePicker extends StatefulWidget {
   const KDatePicker({
     required this.value,
     required this.onChanged,
+    this.onOpenChange,
     this.label,
+    this.presentation = KPickerPresentation.standard,
     this.min,
     this.max,
     this.enabled = true,
@@ -39,7 +44,11 @@ class KDatePicker extends StatefulWidget {
     super.key,
   });
   final String? value, label, min, max;
+  final KPickerPresentation presentation;
   final ValueChanged<String?>? onChanged;
+
+  /// Modal ownership: true before opening, false after value/focus updates.
+  final ValueChanged<bool>? onOpenChange;
   final bool enabled, readOnly, clearable, allowTextInput;
   final int minuteStep;
   final String? timeZone;
@@ -58,7 +67,9 @@ class KTimePicker extends KDatePicker {
   const KTimePicker({
     required super.value,
     required super.onChanged,
+    super.onOpenChange,
     super.label,
+    super.presentation,
     super.min,
     super.max,
     super.enabled,
@@ -83,7 +94,9 @@ class KDateTimePicker extends KDatePicker {
   const KDateTimePicker({
     required super.value,
     required super.onChanged,
+    super.onOpenChange,
     super.label,
+    super.presentation,
     super.min,
     super.max,
     super.enabled,
@@ -109,6 +122,8 @@ class _KDatePickerState extends State<KDatePicker> {
   final _inputFocus = FocusNode(), _triggerFocus = FocusNode();
   String? _error;
   bool _opening = false;
+  ValueChanged<bool>? _openListener;
+  RawDialogRoute<PickerCommit>? _dialogRoute;
   bool _initialized = false;
   final _dialogLocale = ValueNotifier(const KLocalizationData());
   bool get _enabled => widget.enabled && widget.onChanged != null;
@@ -171,6 +186,14 @@ class _KDatePickerState extends State<KDatePicker> {
 
   @override
   void dispose() {
+    _releaseOwnership();
+    final route = _dialogRoute;
+    final navigator = route?.navigator;
+    if (route != null && navigator != null) {
+      Future.microtask(() {
+        if (navigator.mounted && route.isActive) navigator.removeRoute(route);
+      });
+    }
     _inputFocus.removeListener(_blur);
     _inputFocus.dispose();
     _triggerFocus.dispose();
@@ -198,9 +221,20 @@ class _KDatePickerState extends State<KDatePicker> {
     }
   }
 
+  void _releaseOwnership() {
+    if (!_opening) return;
+    _opening = false;
+    final listener = _openListener;
+    _openListener = null;
+    listener?.call(false);
+  }
+
   Future<void> _open() async {
     if (!_enabled || widget.readOnly || _opening) return;
+    final previousFocus = FocusManager.instance.primaryFocus;
     _opening = true;
+    _openListener = widget.onOpenChange;
+    _openListener?.call(true);
     _dialogLocale.value = _localization;
     final model = _model;
     final themes = InheritedTheme.capture(
@@ -208,9 +242,7 @@ class _KDatePickerState extends State<KDatePicker> {
       to: Navigator.of(context).context,
     );
     final textScaler = MediaQuery.textScalerOf(context);
-    final result = await showGeneralDialog<PickerCommit>(
-      context: context,
-      useRootNavigator: false,
+    final route = RawDialogRoute<PickerCommit>(
       barrierDismissible: true,
       barrierLabel: _label('cancel'),
       barrierColor: const Color(0x52000000),
@@ -238,14 +270,24 @@ class _KDatePickerState extends State<KDatePicker> {
         ),
       ),
     );
-    if (!mounted) return;
-    _opening = false;
-    if (result != null) {
-      setState(() => _error = null);
-      _text.text = _model.display(result.value);
-      widget.onChanged?.call(result.value);
+    _dialogRoute = route;
+    try {
+      final result = await Navigator.of(context).push(route);
+      if (!mounted) return;
+      if (result != null) {
+        setState(() => _error = null);
+        _text.text = _model.display(result.value);
+        widget.onChanged?.call(result.value);
+      }
+      if (widget.presentation == KPickerPresentation.inline) {
+        if (previousFocus?.context != null) previousFocus?.requestFocus();
+      } else {
+        _triggerFocus.requestFocus();
+      }
+    } finally {
+      _dialogRoute = null;
+      _releaseOwnership();
     }
-    _triggerFocus.requestFocus();
   }
 
   @override
@@ -276,6 +318,18 @@ class _KDatePickerState extends State<KDatePicker> {
       PickerKind.time => 'chooseTime',
       PickerKind.dateTime => 'chooseDateTime',
     });
+    if (widget.presentation == KPickerPresentation.inline) {
+      return KEditableCell(
+        label: widget.label ?? title,
+        display: Text(
+          widget.value == null ? placeholder : model.display(widget.value),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        editor: const SizedBox.shrink(),
+        onEdit: _enabled && !widget.readOnly ? _open : null,
+      );
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,

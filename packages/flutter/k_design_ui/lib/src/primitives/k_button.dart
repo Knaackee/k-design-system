@@ -8,6 +8,9 @@ class KButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.loading = false,
+    this.fullWidth = false,
+    this.leading,
+    this.paddingInline,
     this.variant = KButtonVariant.primary,
     super.key,
   });
@@ -15,6 +18,12 @@ class KButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool loading;
+  final bool fullWidth;
+  final Widget? leading;
+
+  /// Overrides the density-based horizontal content inset when alignment is
+  /// controlled by a parent layout, such as a table column.
+  final double? paddingInline;
   final KButtonVariant variant;
 
   @override
@@ -46,81 +55,94 @@ class KButton extends StatelessWidget {
       ),
     };
 
-    return Opacity(
-      opacity: loading || onPressed == null ? 0.48 : 1,
-      child: FilledButton(
-        onPressed: loading ? null : onPressed,
-        style: ButtonStyle(
-          // Density is already resolved by the tokens; do not compact twice.
-          visualDensity: VisualDensity.standard,
-          minimumSize: WidgetStatePropertyAll(Size(0, tokens.sizeControl)),
-          padding: WidgetStatePropertyAll(
-            EdgeInsets.symmetric(
-              // Material paints its 1px border inside; CSS includes it in layout.
-              horizontal: tokens.spaceControlInsetInline + 1,
-              vertical: 1,
-            ),
-          ),
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return pressed;
-            }
-            if (states.contains(WidgetState.hovered)) {
-              return hover;
-            }
-            return background;
-          }),
-          foregroundColor: WidgetStatePropertyAll(foreground),
-          side: WidgetStatePropertyAll(BorderSide(color: border)),
-          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-          elevation: const WidgetStatePropertyAll(0),
-          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-          surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-          textStyle: WidgetStatePropertyAll(
-            TextStyle(
-              fontFamily: tokens.fontFamily,
-              fontSize: tokens.fontControlSize,
-              // Match the Web control line box while allowing scaled text growth.
-              height: 1,
-              // CSS centers leading evenly above and below the font metrics.
-              leadingDistribution: TextLeadingDistribution.even,
-              fontWeight: tokens.fontControlWeight,
-              fontVariations: [
-                FontVariation.weight(tokens.fontControlWeight.value.toDouble()),
-                FontVariation.opticalSize(
-                  MediaQuery.textScalerOf(
-                    context,
-                  ).scale(tokens.fontControlSize).clamp(14, 32),
-                ),
-              ],
-              letterSpacing:
-                  -.01 *
-                  MediaQuery.textScalerOf(
-                    context,
-                  ).scale(tokens.fontControlSize),
-            ),
-          ),
-          shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(tokens.radiusControl),
-            ),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (loading) ...[
-              SizedBox.square(
-                dimension: 14,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: foreground,
-                ),
+    return SizedBox(
+      width: fullWidth ? double.infinity : null,
+      child: Opacity(
+        opacity: loading || onPressed == null ? 0.48 : 1,
+        child: FilledButton(
+          onPressed: loading ? null : onPressed,
+          style: ButtonStyle(
+            // Density is already resolved by the tokens; do not compact twice.
+            visualDensity: VisualDensity.standard,
+            alignment: fullWidth ? AlignmentDirectional.centerStart : null,
+            minimumSize: WidgetStatePropertyAll(Size(0, tokens.sizeControl)),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.symmetric(
+                // Material paints its 1px border inside; CSS includes it in layout.
+                horizontal: paddingInline ?? tokens.spaceControlInsetInline + 1,
+                vertical: 1,
               ),
-              SizedBox(width: tokens.spaceControlGap),
+            ),
+            backgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.pressed)) {
+                return pressed;
+              }
+              if (states.contains(WidgetState.hovered)) {
+                return hover;
+              }
+              return background;
+            }),
+            foregroundColor: WidgetStatePropertyAll(foreground),
+            side: WidgetStatePropertyAll(BorderSide(color: border)),
+            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            elevation: const WidgetStatePropertyAll(0),
+            shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+            surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
+            textStyle: WidgetStatePropertyAll(
+              TextStyle(
+                fontFamily: tokens.fontFamily,
+                fontSize: tokens.fontControlSize,
+                // Match the Web control line box while allowing scaled text growth.
+                height: 1,
+                // CSS centers leading evenly above and below the font metrics.
+                leadingDistribution: TextLeadingDistribution.even,
+                fontWeight: tokens.fontControlWeight,
+                fontVariations: [
+                  FontVariation.weight(
+                    tokens.fontControlWeight.value.toDouble(),
+                  ),
+                  FontVariation.opticalSize(
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(tokens.fontControlSize).clamp(14, 32),
+                  ),
+                ],
+                letterSpacing:
+                    -.01 *
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).scale(tokens.fontControlSize),
+              ),
+            ),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(tokens.radiusControl),
+              ),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (loading) ...[
+                SizedBox.square(
+                  dimension: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: foreground,
+                  ),
+                ),
+                SizedBox(width: tokens.spaceControlGap),
+              ],
+              if (leading != null) ...[
+                leading!,
+                SizedBox(width: tokens.spaceControlGap),
+              ],
+              if (leading != null)
+                Flexible(child: Text(label))
+              else
+                Text(label),
             ],
-            Text(label),
-          ],
+          ),
         ),
       ),
     );

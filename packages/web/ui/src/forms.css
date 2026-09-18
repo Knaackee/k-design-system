@@ -139,12 +139,18 @@
   border-radius: var(--k-radius-control);
   overflow-wrap: anywhere;
 }
+.k-select-option {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
 .k-select-option[data-active] {
   background: var(--k-color-action-ghost-hover);
   outline: 2px solid var(--k-color-border-focus);
   outline-offset: -2px;
 }
 .k-select-option[aria-disabled] {
+  cursor: not-allowed;
   opacity: 0.48;
 }
 .k-select-empty {
@@ -279,6 +285,8 @@
   );
 }
 .k-selection__media {
+  display: flex;
+  align-items: center;
   position: absolute;
   left: calc(var(--k-space-control-inset-inline) + 1px);
   top: 50%;
@@ -316,4 +324,25 @@
 .k-selection:has(input:disabled) .k-selection__media,
 .k-selection:has(input:disabled) .k-selection__arrow {
   opacity: 0.48;
+}
+
+/* Inline selection keeps its existing trigger geometry and option behavior. */
+.k-selection[data-presentation="inline"]:not(:focus-within):not([data-open])
+  .k-input {
+  background: transparent;
+  border-color: transparent;
+}
+.k-selection[data-presentation="inline"]:not(:focus-within):not([data-open])
+  .k-selection__arrow {
+  visibility: hidden;
+}
+
+.k-selection .k-input[readonly] {
+  cursor: pointer;
+  caret-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.k-selection .k-input[readonly]:disabled {
+  cursor: not-allowed;
 }

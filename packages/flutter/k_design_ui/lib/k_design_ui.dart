@@ -22,3 +22,13 @@ export 'src/patterns/k_filter_bar.dart';
 export 'src/pickers/k_date_picker.dart';
 
 export 'src/localization/k_localization.dart';
+export 'src/data/k_table.dart';
+export 'src/data/k_data_table.dart';
+export 'src/data/k_data_table_single_column.dart';
+export 'src/data/k_editable_cell.dart';
+export 'src/forms/k_currency_input.dart';
+export 'src/forms/currency_value.dart';
+export 'src/data/k_data_table_virtual_types.dart';
+
+export 'src/data/k_data_table_draft.dart';
+export 'src/data/k_data_table_draft_boundary.dart';

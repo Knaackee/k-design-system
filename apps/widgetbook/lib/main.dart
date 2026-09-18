@@ -5,6 +5,11 @@ import 'package:widgetbook/widgetbook.dart';
 import 'button_fixtures.dart';
 import 'action_fixtures.dart';
 import 'form_fixtures.dart';
+import 'table_fixtures.dart';
+import 'data_table_fixtures.dart';
+import 'data_table_cells_fixture.dart';
+import 'currency_fixtures.dart';
+import 'data_table_virtual_fixture.dart';
 import 'picker_fixtures.dart';
 import 'typography_fixtures.dart';
 import 'color_fixtures.dart';
@@ -94,6 +99,24 @@ class KDesignWidgetbook extends StatelessWidget {
       ],
       directories: sortGalleryNodes([
         WidgetbookCategory(
+          name: 'Data display',
+          children: [
+            WidgetbookFolder(
+              name: 'Table',
+              children: [
+                WidgetbookUseCase(
+                  name: 'table-basic',
+                  builder: (context) => const TableFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'table-cells',
+                  builder: (context) => const TableFixture(cells: true),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookCategory(
           name: 'Actions',
           children: [
             WidgetbookFolder(
@@ -119,6 +142,15 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Forms',
           children: [
+            WidgetbookFolder(
+              name: 'CurrencyInput',
+              children: [
+                WidgetbookUseCase(
+                  name: 'currency-input-states',
+                  builder: (_) => const CurrencyFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'DatePicker',
               children: [
@@ -215,6 +247,41 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'DataTableVirtual',
+              children: [
+                WidgetbookUseCase(
+                  name: 'data-table-virtual',
+                  builder: (_) => const DataTableVirtualFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-external',
+                  builder: (_) => const DataTableVirtualFixture(external: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'DataTable',
+              children: [
+                WidgetbookUseCase(
+                  name: 'data-table-cells',
+                  builder: (_) => const DataTableCellsFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-rows',
+                  builder: (context) => const DataTableFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-groups',
+                  builder: (context) => const DataTableFixture(grouped: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-single-column',
+                  builder: (context) =>
+                      const DataTableFixture(grouped: true, singleColumn: true),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'FilterBar',
               children: [
