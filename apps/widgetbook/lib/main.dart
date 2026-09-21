@@ -12,6 +12,7 @@ import 'disclosure_fixtures.dart';
 import 'overlay_fixtures.dart';
 import 'currency_fixtures.dart';
 import 'data_table_virtual_fixture.dart';
+import 'kanban_fixtures.dart';
 import 'picker_fixtures.dart';
 import 'typography_fixtures.dart';
 import 'color_fixtures.dart';
@@ -272,6 +273,23 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'Kanban',
+              children: [
+                WidgetbookUseCase(
+                  name: 'kanban-board',
+                  builder: (_) => const KanbanFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'kanban-selection',
+                  builder: (_) => const KanbanFixture(selection: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'kanban-mobile',
+                  builder: (_) => const KanbanFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'DataTableVirtual',
               children: [

@@ -127,6 +127,10 @@ body {
 .k-gallery:has(.k-primitive-fixture) {
   padding-inline: 0;
 }
+.k-gallery:has(.k-kanban-fixture) {
+  padding: 0;
+  justify-items: stretch;
+}
 .k-primitive-fixture {
   width: 100%;
   min-width: 0;

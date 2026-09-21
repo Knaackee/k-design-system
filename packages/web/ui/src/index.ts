@@ -47,6 +47,13 @@ export { KMenuButton, KOverflowMenu } from "./actions/menu-button.js";
 export type { KMenuAction, KMenuButtonProps } from "./actions/menu-button.js";
 export { KToolbar } from "./patterns/toolbar.js";
 export type { KToolbarProps } from "./patterns/toolbar.js";
+export { KKanban } from "./patterns/kanban.js";
+export type {
+  KKanbanProps,
+  KKanbanColumn,
+  KKanbanCardContext,
+  KKanbanMove,
+} from "./patterns/kanban.js";
 export { KField } from "./forms/field.js";
 export type { KFieldProps } from "./forms/field.js";
 export { KInput, KSearchField } from "./forms/input.js";

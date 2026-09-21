@@ -4,6 +4,7 @@
 @import "./actions.css";
 @import "./disclosure.css";
 @import "./overlays.css";
+@import "./kanban.css";
 
 @font-face {
   font-family: "Inter";
