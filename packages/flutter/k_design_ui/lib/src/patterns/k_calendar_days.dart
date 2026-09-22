@@ -184,10 +184,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                   .firstOrNull);
     final previewFirst = preview == null
         ? 0
-        : calendarDay(DateTime.parse(preview.start.date))
-              .difference(calendarDay(widget.days.first))
-              .inDays
-              .clamp(0, widget.days.length);
+        : calendarDay(
+            DateTime.parse(preview.start.date),
+          ).difference(calendarDay(widget.days.first)).inDays;
     final previewLast = preview == null
         ? 0
         : math.min(
@@ -195,10 +194,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
             math.max(
               previewFirst + 1,
               (calendarDay(
-                        DateTime.parse(preview.end.date),
-                      ).difference(calendarDay(widget.days.first)).inDays +
-                      (preview.end.minutes > 0 ? 1 : 0))
-                  .clamp(0, widget.days.length),
+                    DateTime.parse(preview.end.date),
+                  ).difference(calendarDay(widget.days.first)).inDays +
+                  (preview.end.minutes > 0 ? 1 : 0)),
             ),
           );
     final visiblePreviewFirst = previewFirst.clamp(0, widget.days.length);

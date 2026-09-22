@@ -265,10 +265,14 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
               for (final edge in KCalendarResizeEdge.values)
                 Positioned(
                   left: allDay
-                      ? (edge == KCalendarResizeEdge.start ? leading - 5 : null)
+                      ? (edge == KCalendarResizeEdge.start
+                            ? leading - 10
+                            : null)
                       : 24,
                   right: allDay
-                      ? (edge == KCalendarResizeEdge.end ? -trailing - 1 : null)
+                      ? (edge == KCalendarResizeEdge.end
+                            ? -trailing - 10
+                            : null)
                       : 24,
                   top: allDay
                       ? 0
