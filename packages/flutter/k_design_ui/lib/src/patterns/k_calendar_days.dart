@@ -25,6 +25,7 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
     required this.requestCreate,
     required this.previewMove,
     required this.previewMoveId,
+    this.previewEvent,
     super.key,
   });
   final KCalendar<T> calendar;
@@ -41,6 +42,7 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
   final ValueChanged<KCalendarSelection> requestCreate;
   final KCalendarSelection? previewMove;
   final String? previewMoveId;
+  final T? previewEvent;
   @override
   State<KCalendarDays<T>> createState() => _KCalendarDaysState<T>();
 }
@@ -151,9 +153,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
       segments.add((event: event, first: a, last: b, lane: lane));
     }
     final preview = widget.previewMove;
-    final active = widget.events
-        .where((e) => c.eventId(e) == widget.previewMoveId)
-        .firstOrNull;
+    final active = widget.previewEvent;
     final previewFirst = preview == null
         ? 0
         : DateTime.parse(
@@ -166,6 +166,8 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                   ).difference(widget.days.first).inDays +
                   (preview.end.minutes > 0 ? 1 : 0))
               .clamp(0, widget.days.length);
+    final visiblePreviewFirst = previewFirst.clamp(0, widget.days.length);
+    final visiblePreviewLast = previewLast.clamp(0, widget.days.length);
     final top = widget.month ? 28.0 : 4.0;
     final height = math.max(
       widget.month ? 112.0 : 40.0,
@@ -199,23 +201,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
           final width = size.maxWidth / widget.days.length;
           int at(double x) =>
               (x / width).floor().clamp(0, widget.days.length - 1);
-          int target(Offset global) => at(
-            (context.findRenderObject() as RenderBox).globalToLocal(global).dx,
-          );
-          return DragTarget<T>(
-            onWillAcceptWithDetails: (d) => c.onEventMove != null,
-            onMove: (d) {
-              final i = target(d.offset);
-              final allowed = widget.move(d.data, slot(i), preview: true);
-              setState(() => _hover = allowed ? i : null);
-              widget.scrollAt(d.offset);
-            },
-            onLeave: (_) => setState(() => _hover = null),
-            onAcceptWithDetails: (d) {
-              widget.move(d.data, slot(target(d.offset)));
-              setState(() => _hover = null);
-            },
-            builder: (context, candidates, rejected) => SizedBox(
+          return SizedBox(
               height: height,
               child: Stack(
                 children: [
@@ -407,10 +393,12 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                   if (active != null &&
                       preview != null &&
                       (widget.month || preview.start.allDay) &&
-                      previewLast > previewFirst)
+                      visiblePreviewLast > visiblePreviewFirst)
                     Positioned(
-                      left: previewFirst * width + 4,
-                      width: (previewLast - previewFirst) * width - 8,
+                      left: visiblePreviewFirst * width + 4,
+                      width:
+                          (visiblePreviewLast - visiblePreviewFirst) * width -
+                              8,
                       top: top,
                       height: 26,
                       child: IgnorePointer(
@@ -422,7 +410,6 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                     ),
                 ],
               ),
-            ),
           );
         },
       ),

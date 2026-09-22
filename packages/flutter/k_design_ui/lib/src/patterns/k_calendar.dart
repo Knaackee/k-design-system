@@ -253,6 +253,10 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
         cancelMove: () => _moveCancelled = true,
         key: ValueKey(widget.eventId(value)),
       );
+
+  T? get previewEvent => _previewMoveId == null
+      ? null
+      : widget.events.where((e) => widget.eventId(e) == _previewMoveId).firstOrNull;
   String dayLabel(DateTime day, {bool weekdayOnly = false}) {
     if (!weekdayOnly && widget.dayLabelBuilder != null) {
       return widget.dayLabelBuilder!(day);
@@ -361,6 +365,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                 requestCreate: requestCreate,
                                 previewMove: _previewMove,
                                 previewMoveId: _previewMoveId,
+                                previewEvent: previewEvent,
                               ),
                             ),
                           )
@@ -401,6 +406,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                   requestCreate: requestCreate,
                                   previewMove: _previewMove,
                                   previewMoveId: _previewMoveId,
+                                  previewEvent: previewEvent,
                                 ),
                               ),
                             ],
@@ -462,6 +468,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                           requestCreate: requestCreate,
                                           previewMove: _previewMove,
                                           previewMoveId: _previewMoveId,
+                                          previewEvent: previewEvent,
                                         ),
                                       ),
                                   ],

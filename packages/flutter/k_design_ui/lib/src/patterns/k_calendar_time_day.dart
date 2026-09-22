@@ -23,6 +23,7 @@ class KCalendarTimeDay<T extends Object> extends StatefulWidget {
     required this.requestCreate,
     required this.previewMove,
     required this.previewMoveId,
+    this.previewEvent,
     super.key,
   });
   final KCalendar<T> calendar;
@@ -38,6 +39,7 @@ class KCalendarTimeDay<T extends Object> extends StatefulWidget {
   final ValueChanged<KCalendarSelection> requestCreate;
   final KCalendarSelection? previewMove;
   final String? previewMoveId;
+  final T? previewEvent;
   @override
   State<KCalendarTimeDay<T>> createState() => _KCalendarTimeDayState<T>();
 }
@@ -208,19 +210,27 @@ class _KCalendarTimeDayState<T extends Object>
     }).toList();
     final shownSelection = selection ?? widget.pendingSelection;
     final preview = widget.previewMove;
-    final active = widget.events
-        .where((e) => c.eventId(e) == widget.previewMoveId)
-        .firstOrNull;
+    final active = widget.previewEvent;
     int previewMinutes(KCalendarSlot value) =>
         DateTime.parse(value.date).difference(calendarDay(widget.day)).inDays *
             1440 +
         value.minutes;
-    final previewStart = preview == null
-        ? 0
-        : math.max(c.startHour * 60, previewMinutes(preview.start));
-    final previewEnd = preview == null
-        ? 0
-        : math.min(c.endHour * 60, previewMinutes(preview.end));
+    final rawPreviewStart = preview == null ? 0 : previewMinutes(preview.start);
+    final rawPreviewEnd = preview == null ? 0 : previewMinutes(preview.end);
+    final previewSpansDays = rawPreviewEnd - rawPreviewStart >= 1440;
+    final previewStartsOnThisDay =
+        preview != null && preview.start.date == calendarDateKey(widget.day);
+    final previewIntersects =
+        preview != null &&
+        rawPreviewStart < c.endHour * 60 &&
+        rawPreviewEnd > c.startHour * 60 &&
+        (previewSpansDays || previewStartsOnThisDay);
+    final previewStart = previewIntersects
+        ? math.max(c.startHour * 60, rawPreviewStart)
+        : 0;
+    final previewEnd = previewIntersects
+        ? math.min(c.endHour * 60, rawPreviewEnd)
+        : 0;
     // The move overlay never participates in the committed event layout.
     final shownHover = widget.previewMove == null ? _hover : null;
     return Focus(
@@ -363,7 +373,7 @@ class _KCalendarTimeDayState<T extends Object>
                     ),
                   ),
                 if (active != null &&
-                    preview != null &&
+                    previewIntersects &&
                     !preview.start.allDay &&
                     previewEnd > previewStart)
                   Positioned(
