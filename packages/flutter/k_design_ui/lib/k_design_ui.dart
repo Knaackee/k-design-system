@@ -15,6 +15,9 @@ export 'src/actions/k_icon_button.dart';
 export 'src/actions/k_menu_button.dart';
 export 'src/patterns/k_toolbar.dart';
 export 'src/patterns/k_kanban.dart';
+export 'src/patterns/k_calendar.dart';
+export 'src/patterns/k_calendar_types.dart';
+export 'src/patterns/k_calendar_model.dart' show kCalendarSlotToDate;
 
 export 'src/forms/k_field.dart';
 export 'src/forms/k_input.dart';

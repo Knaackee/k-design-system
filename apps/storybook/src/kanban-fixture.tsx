@@ -130,7 +130,7 @@ export function KanbanFixture({ selection = false }: { selection?: boolean }) {
         getItemId={(item) => item.id}
         getItemLabel={(item) => item.title}
         selectedItemIds={selected}
-        onSelectionChange={setSelected}
+        onSelectionChange={(ids) => setSelected([...ids])}
         onCardOpen={(item) => setMessage(`Opened ${item.id}`)}
         onAddCard={(columnId) => setMessage(`Add requested for ${columnId}`)}
         onCardMove={(move) => {

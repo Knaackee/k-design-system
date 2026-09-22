@@ -5,6 +5,7 @@
 @import "./disclosure.css";
 @import "./overlays.css";
 @import "./kanban.css";
+@import "./calendar.css";
 
 @font-face {
   font-family: "Inter";

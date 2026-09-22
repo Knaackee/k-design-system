@@ -54,6 +54,18 @@ export type {
   KKanbanCardContext,
   KKanbanMove,
 } from "./patterns/kanban.js";
+export { KCalendar, kCalendarSlotToDate } from "./patterns/calendar.js";
+export type {
+  KCalendarProps,
+  KCalendarView,
+  KCalendarSlot,
+  KCalendarMove,
+  KCalendarResize,
+  KCalendarSelection,
+  KCalendarInteraction,
+  KCalendarLabels,
+  KCalendarEventContext,
+} from "./patterns/calendar.js";
 export { KField } from "./forms/field.js";
 export type { KFieldProps } from "./forms/field.js";
 export { KInput, KSearchField } from "./forms/input.js";

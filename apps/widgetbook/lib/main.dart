@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
@@ -13,6 +14,7 @@ import 'overlay_fixtures.dart';
 import 'currency_fixtures.dart';
 import 'data_table_virtual_fixture.dart';
 import 'kanban_fixtures.dart';
+import 'calendar_fixtures.dart';
 import 'picker_fixtures.dart';
 import 'typography_fixtures.dart';
 import 'color_fixtures.dart';
@@ -273,6 +275,31 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'Calendar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'calendar-day',
+                  builder: (_) =>
+                      const CalendarFixture(initialView: KCalendarView.day),
+                ),
+                WidgetbookUseCase(
+                  name: 'calendar-three-day',
+                  builder: (_) => const CalendarFixture(
+                    initialView: KCalendarView.threeDay,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'calendar-week',
+                  builder: (_) => const CalendarFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'calendar-month',
+                  builder: (_) =>
+                      const CalendarFixture(initialView: KCalendarView.month),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Kanban',
               children: [
