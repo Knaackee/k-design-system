@@ -84,12 +84,15 @@ class KCalendar<T extends Object> extends StatefulWidget {
 class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   final _horizontal = ScrollController(), _vertical = ScrollController();
   final _viewport = GlobalKey();
+  final _allDayLayout = GlobalKey();
   Timer? _autoScroll;
   Offset? _pointer;
   bool _moveCancelled = false;
   KCalendarSelection? _pendingSelection;
   KCalendarSelection? _previewMove;
   String? _previewMoveId;
+  KCalendarSelection? _previewResize;
+  String? _previewResizeId;
   String get zone => widget.timeZone ?? KLocalization.of(context).timeZone;
   @override
   void didUpdateWidget(covariant KCalendar<T> oldWidget) {
@@ -185,13 +188,90 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
     }
   }
 
+  void clearMovePreview() {
+    if (_previewMove == null && _previewMoveId == null) return;
+    if (!mounted) return;
+    setState(() {
+      _previewMove = null;
+      _previewMoveId = null;
+    });
+  }
+
+  void beginResizePreview(String eventId) {
+    if (!mounted) return;
+    final event = widget.events
+        .where((value) => widget.eventId(value) == eventId)
+        .firstOrNull;
+    final selection = event == null ? null : selectionForEvent(event);
+    setState(() {
+      _previewMove = null;
+      _previewMoveId = null;
+      _previewResizeId = eventId;
+      _previewResize = selection;
+    });
+  }
+
+  void updateResizePreview(KCalendarResize<T> resize) {
+    if (!mounted) return;
+    setState(() {
+      _previewResizeId = resize.eventId;
+      _previewResize = KCalendarSelection(start: resize.start, end: resize.end);
+    });
+  }
+
+  void clearResizePreview() {
+    if (_previewResize == null && _previewResizeId == null) return;
+    if (!mounted) return;
+    setState(() {
+      _previewResize = null;
+      _previewResizeId = null;
+    });
+  }
+
+  void beginMovePreview(String eventId) {
+    if (!mounted) return;
+    final event = widget.events
+        .where((value) => widget.eventId(value) == eventId)
+        .firstOrNull;
+    final selection = event == null ? null : selectionForEvent(event);
+    setState(() {
+      _previewResize = null;
+      _previewResizeId = null;
+      _previewMoveId = eventId;
+      _previewMove = selection;
+    });
+  }
+
+  KCalendarSelection? selectionForEvent(T event) {
+    final start = localStart(event), end = localEnd(event);
+    if (start == null || end == null) return null;
+    final allDayValue = allDay(event);
+    return KCalendarSelection(
+      start: calendarSlot(
+        start,
+        allDayValue ? 0 : start.hour * 60 + start.minute,
+        allDayValue,
+        zone,
+      ),
+      end: calendarSlot(
+        end,
+        allDayValue ? 0 : end.hour * 60 + end.minute,
+        allDayValue,
+        zone,
+      ),
+    );
+  }
+
   KCalendarMove<T> movement(T event, KCalendarSlot target) {
     final start = widget.eventStart(event), end = widget.eventEnd(event);
+    final changingToTimed = allDay(event) && !target.allDay;
     return KCalendarMove(
       event: event,
       eventId: widget.eventId(event),
       target: target,
-      durationMinutes: start != null && end != null
+      durationMinutes: changingToTimed
+          ? widget.defaultDurationMinutes
+          : start != null && end != null
           ? math.max(widget.stepMinutes, end.difference(start).inMinutes)
           : widget.defaultDurationMinutes,
     );
@@ -226,7 +306,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
         _previewMoveId = change.eventId;
         _previewMove = KCalendarSelection(start: slot, end: end);
       });
-    } else if (_previewMove != null) {
+    } else if (_previewMove != null || _previewMoveId != null) {
       setState(() {
         _previewMove = null;
         _previewMoveId = null;
@@ -239,6 +319,45 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
     return allowed;
   }
 
+  void moveAtAllDay(T event, Offset global) {
+    final context = _allDayLayout.currentContext;
+    if (context == null) return;
+    final render = context.findRenderObject();
+    if (render is! RenderBox) return;
+    final local = render.globalToLocal(global);
+    if (local.dy < 0 || local.dy >= render.size.height) {
+      return;
+    }
+    final currentDays = days;
+    final width = render.size.width / currentDays.length;
+    final index = (local.dx / width).floor().clamp(0, currentDays.length - 1);
+    move(
+      event,
+      calendarSlot(currentDays.first.add(Duration(days: index)), 0, true, zone),
+      preview: true,
+    );
+  }
+
+  int? resizeUnitsAtAllDay(T event, KCalendarResizeEdge edge, Offset global) {
+    if (!allDay(event)) return null;
+    final context = _allDayLayout.currentContext;
+    if (context == null) return null;
+    final render = context.findRenderObject();
+    if (render is! RenderBox || render.size.width <= 0) return null;
+    final local = render.globalToLocal(global);
+    final currentDays = days;
+    final width = render.size.width / currentDays.length;
+    final index = (local.dx / width).floor().clamp(0, currentDays.length - 1);
+    final targetDay = currentDays.first.add(Duration(days: index));
+    final start = localStart(event), end = localEnd(event);
+    if (start == null || end == null) return null;
+    final boundary = edge == KCalendarResizeEdge.end
+        ? targetDay.add(const Duration(days: 1))
+        : targetDay;
+    final original = edge == KCalendarResizeEdge.end ? end : start;
+    return boundary.difference(original).inDays * 1440;
+  }
+
   Widget event(T value, {required bool compact, double dayWidth = 160}) =>
       KCalendarEvent<T>(
         calendar: widget,
@@ -249,14 +368,31 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
         end: localEnd(value),
         zone: zone,
         scrollAt: scrollAt,
-        startMove: () => _moveCancelled = false,
-        cancelMove: () => _moveCancelled = true,
+        startMove: () {
+          // A drag that is interrupted before Flutter delivers its end event
+          // must not leak its preview into the next interaction.
+          beginMovePreview(widget.eventId(value));
+          _moveCancelled = false;
+        },
+        cancelMove: () {
+          _moveCancelled = true;
+          clearMovePreview();
+        },
+        moveUpdate: (global) => moveAtAllDay(value, global),
+        startResize: () => beginResizePreview(widget.eventId(value)),
+        previewResize: updateResizePreview,
+        endResize: clearResizePreview,
+        resizeUnits: (edge, global) => resizeUnitsAtAllDay(value, edge, global),
+        previewMoveId: _previewMoveId,
         key: ValueKey(widget.eventId(value)),
       );
 
   T? get previewEvent => _previewMoveId == null
       ? null
-      : widget.events.where((e) => widget.eventId(e) == _previewMoveId).firstOrNull;
+      : widget.events
+            .where((e) => widget.eventId(e) == _previewMoveId)
+            .firstOrNull;
+
   String dayLabel(DateTime day, {bool weekdayOnly = false}) {
     if (!weekdayOnly && widget.dayLabelBuilder != null) {
       return widget.dayLabelBuilder!(day);
@@ -365,6 +501,8 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                 requestCreate: requestCreate,
                                 previewMove: _previewMove,
                                 previewMoveId: _previewMoveId,
+                                previewResize: _previewResize,
+                                previewResizeId: _previewResizeId,
                                 previewEvent: previewEvent,
                               ),
                             ),
@@ -387,6 +525,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                               ),
                               Expanded(
                                 child: KCalendarDays<T>(
+                                  key: _allDayLayout,
                                   calendar: widget,
                                   days: days,
                                   month: false,
@@ -406,6 +545,8 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                   requestCreate: requestCreate,
                                   previewMove: _previewMove,
                                   previewMoveId: _previewMoveId,
+                                  previewResize: _previewResize,
+                                  previewResizeId: _previewResizeId,
                                   previewEvent: previewEvent,
                                 ),
                               ),

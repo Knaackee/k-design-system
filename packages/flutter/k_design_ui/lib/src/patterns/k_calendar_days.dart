@@ -25,6 +25,8 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
     required this.requestCreate,
     required this.previewMove,
     required this.previewMoveId,
+    required this.previewResize,
+    required this.previewResizeId,
     this.previewEvent,
     super.key,
   });
@@ -42,6 +44,8 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
   final ValueChanged<KCalendarSelection> requestCreate;
   final KCalendarSelection? previewMove;
   final String? previewMoveId;
+  final KCalendarSelection? previewResize;
+  final String? previewResizeId;
   final T? previewEvent;
   @override
   State<KCalendarDays<T>> createState() => _KCalendarDaysState<T>();
@@ -54,8 +58,14 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
   Offset? _tapPosition;
   Offset? _touchOrigin;
   bool _touchCancelled = false;
+  final _layoutKey = GlobalKey();
   final _focus = FocusNode();
   KCalendar<T> get c => widget.calendar;
+
+  double localX(Offset global) =>
+      (_layoutKey.currentContext!.findRenderObject() as RenderBox)
+          .globalToLocal(global)
+          .dx;
 
   @override
   void dispose() {
@@ -128,32 +138,50 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final segments = <({T event, int first, int last, int lane})>[];
-    final occupied = <int>[];
-    for (final event in widget.events) {
+    final orderedEvents = widget.events.toList()
+      ..sort((a, b) {
+        final aStart = widget.start(a);
+        final bStart = widget.start(b);
+        if (aStart == null || bStart == null) {
+          return c.eventId(a).compareTo(c.eventId(b));
+        }
+        final byStart = aStart.compareTo(bStart);
+        if (byStart != 0) return byStart;
+        final aEnd = widget.end(a) ?? aStart.add(const Duration(days: 1));
+        final bEnd = widget.end(b) ?? bStart.add(const Duration(days: 1));
+        final byEnd = bEnd.compareTo(aEnd);
+        return byEnd != 0 ? byEnd : c.eventId(a).compareTo(c.eventId(b));
+      });
+    final laneEnds = <int>[];
+    for (final event in orderedEvents) {
       final start = widget.start(event);
       if (start == null) continue;
       final end = widget.end(event) ?? start.add(const Duration(days: 1));
       final first = calendarDay(start).difference(widget.days.first).inDays;
-      final endDay =
-          calendarDay(end).difference(widget.days.first).inDays +
-          ((c.eventAllDay?.call(event) == true ||
-                  end.hour == 0 && end.minute == 0)
-              ? 0
-              : 1);
-      final a = first.clamp(0, widget.days.length),
-          b = endDay.clamp(0, widget.days.length);
+      final rawEnd =
+          end.difference(widget.days.first).inMinutes / Duration.minutesPerDay;
+      final endDay = math.max(first + 1, rawEnd.ceil());
+      final a = first.clamp(0, widget.days.length);
+      final b = endDay.clamp(0, widget.days.length);
       if (a >= b) continue;
-      var lane = occupied.indexWhere((last) => last <= a);
-      if (lane < 0) {
-        lane = occupied.length;
-        occupied.add(b);
+      var lane = laneEnds.indexWhere((last) => last <= a);
+      if (lane < 0) lane = laneEnds.length;
+      if (lane == laneEnds.length) {
+        laneEnds.add(b);
       } else {
-        occupied[lane] = b;
+        laneEnds[lane] = b;
       }
       segments.add((event: event, first: a, last: b, lane: lane));
     }
-    final preview = widget.previewMove;
-    final active = widget.previewEvent;
+    final preview = widget.previewResize ?? widget.previewMove;
+    final previewId = widget.previewResizeId ?? widget.previewMoveId;
+    final active =
+        widget.previewEvent ??
+        (previewId == null
+            ? null
+            : widget.events
+                  .where((event) => c.eventId(event) == previewId)
+                  .firstOrNull);
     final previewFirst = preview == null
         ? 0
         : DateTime.parse(
@@ -161,17 +189,41 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
           ).difference(widget.days.first).inDays.clamp(0, widget.days.length);
     final previewLast = preview == null
         ? 0
-        : (DateTime.parse(
-                    preview.end.date,
-                  ).difference(widget.days.first).inDays +
-                  (preview.end.minutes > 0 ? 1 : 0))
-              .clamp(0, widget.days.length);
+        : math.min(
+            widget.days.length,
+            math.max(
+              previewFirst + 1,
+              (DateTime.parse(
+                        preview.end.date,
+                      ).difference(widget.days.first).inDays +
+                      (preview.end.minutes > 0 ? 1 : 0))
+                  .clamp(0, widget.days.length),
+            ),
+          );
     final visiblePreviewFirst = previewFirst.clamp(0, widget.days.length);
     final visiblePreviewLast = previewLast.clamp(0, widget.days.length);
+    int? previewLane;
+    if (active != null &&
+        preview != null &&
+        preview.start.allDay &&
+        visiblePreviewLast > visiblePreviewFirst) {
+      var lane = 0;
+      while (segments.any(
+        (segment) =>
+            c.eventId(segment.event) != previewId &&
+            segment.lane == lane &&
+            segment.first < visiblePreviewLast &&
+            segment.last > visiblePreviewFirst,
+      )) {
+        lane++;
+      }
+      previewLane = lane;
+    }
     final top = widget.month ? 28.0 : 4.0;
+    final laneCount = math.max(laneEnds.length, (previewLane ?? -1) + 1);
     final height = math.max(
       widget.month ? 112.0 : 40.0,
-      top + occupied.length * 32 + 8,
+      top + laneCount * 32 + 9,
     );
     final pendingStart = widget.pendingSelection == null
         ? 0
@@ -179,6 +231,19 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
               .difference(calendarDay(widget.days.first))
               .inDays
               .clamp(0, widget.days.length - 1);
+    final pendingAlreadyMaterialized =
+        widget.pendingSelection != null &&
+        widget.events.any((event) {
+          final start = widget.start(event);
+          final end = widget.end(event);
+          if (start == null || end == null) return false;
+          return calendarDateKey(calendarDay(start)) ==
+                  widget.pendingSelection!.start.date &&
+              calendarDateKey(calendarDay(end)) ==
+                  widget.pendingSelection!.end.date &&
+              (c.eventAllDay?.call(event) ?? false) ==
+                  widget.pendingSelection!.start.allDay;
+        });
     final pendingDays = widget.pendingSelection == null
         ? 1
         : (DateTime.parse(widget.pendingSelection!.end.date)
@@ -202,7 +267,22 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
           int at(double x) =>
               (x / width).floor().clamp(0, widget.days.length - 1);
           return SizedBox(
-              height: height,
+            key: _layoutKey,
+            height: height,
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerMove: (d) {
+                final previewId = widget.previewMoveId;
+                if (previewId == null) return;
+                final event =
+                    widget.previewEvent ??
+                    widget.events
+                        .where((value) => c.eventId(value) == previewId)
+                        .firstOrNull;
+                if (event == null) return;
+                widget.move(event, slot(at(localX(d.position))), preview: true);
+                widget.scrollAt(d.position);
+              },
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -343,7 +423,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                         ),
                       ),
                     ),
-                  if (_anchor != null || widget.pendingSelection != null)
+                  if (_anchor != null ||
+                      (widget.pendingSelection != null &&
+                          !pendingAlreadyMaterialized))
                     Positioned(
                       left:
                           (widget.pendingSelection == null
@@ -382,34 +464,39 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                       width: (segment.last - segment.first) * width - 8,
                       top: top + segment.lane * 32,
                       height: 28,
-                      child: Opacity(
-                        opacity:
-                            c.eventId(segment.event) == widget.previewMoveId
-                            ? 0
-                            : 1,
-                        child: widget.eventWidget(segment.event),
+                      child: IgnorePointer(
+                        ignoring: previewId != null,
+                        child: Opacity(
+                          opacity: c.eventId(segment.event) == previewId
+                              ? 0
+                              : 1,
+                          child: widget.eventWidget(segment.event),
+                        ),
                       ),
                     ),
                   if (active != null &&
                       preview != null &&
-                      (widget.month || preview.start.allDay) &&
+                      preview.start.allDay &&
                       visiblePreviewLast > visiblePreviewFirst)
                     Positioned(
                       left: visiblePreviewFirst * width + 4,
                       width:
                           (visiblePreviewLast - visiblePreviewFirst) * width -
-                              8,
-                      top: top,
-                      height: 26,
+                          8,
+                      top: top + (previewLane ?? 0) * 32,
+                      height: 28,
                       child: IgnorePointer(
-                        child: Opacity(
-                          opacity: .78,
-                          child: widget.eventWidget(active),
+                        child: SizedBox.expand(
+                          child: Opacity(
+                            opacity: .78,
+                            child: widget.eventWidget(active),
+                          ),
                         ),
                       ),
                     ),
                 ],
               ),
+            ),
           );
         },
       ),

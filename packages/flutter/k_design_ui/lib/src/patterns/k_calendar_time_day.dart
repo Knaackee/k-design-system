@@ -258,7 +258,7 @@ class _KCalendarTimeDayState<T extends Object>
           setState(() => _hover = null);
         },
         builder: (context, candidates, rejected) => LayoutBuilder(
-          builder: (context, size) => SizedBox(
+        builder: (context, size) => SizedBox(
             key: _key,
             height: (c.endHour - c.startHour) * c.hourHeight,
             child: Stack(
@@ -385,9 +385,11 @@ class _KCalendarTimeDayState<T extends Object>
                       (previewEnd - previewStart) / 60 * c.hourHeight,
                     ),
                     child: IgnorePointer(
-                      child: Opacity(
-                        opacity: .78,
-                        child: widget.eventWidget(active, compact: false),
+                      child: SizedBox.expand(
+                        child: Opacity(
+                          opacity: .78,
+                          child: widget.eventWidget(active, compact: false),
+                        ),
                       ),
                     ),
                   ),

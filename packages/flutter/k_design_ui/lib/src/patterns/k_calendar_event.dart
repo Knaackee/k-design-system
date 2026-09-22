@@ -17,6 +17,12 @@ class KCalendarEvent<T extends Object> extends StatefulWidget {
     required this.scrollAt,
     required this.startMove,
     required this.cancelMove,
+    required this.moveUpdate,
+    required this.startResize,
+    required this.previewResize,
+    required this.endResize,
+    this.resizeUnits,
+    required this.previewMoveId,
     super.key,
   });
   final KCalendar<T> calendar;
@@ -27,6 +33,11 @@ class KCalendarEvent<T extends Object> extends StatefulWidget {
   final double dayWidth;
   final ValueChanged<Offset?> scrollAt;
   final VoidCallback startMove, cancelMove;
+  final ValueChanged<Offset> moveUpdate;
+  final VoidCallback startResize, endResize;
+  final ValueChanged<KCalendarResize<T>> previewResize;
+  final int? Function(KCalendarResizeEdge edge, Offset global)? resizeUnits;
+  final String? previewMoveId;
   @override
   State<KCalendarEvent<T>> createState() => _KCalendarEventState<T>();
 }
@@ -36,6 +47,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
   KCalendarResizeEdge? _edge;
   bool _cancelled = false;
   bool _moving = false;
+  bool _resizePointerDown = false;
   final _focus = FocusNode();
   @override
   void dispose() {
@@ -84,12 +96,22 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       _delta = 0;
       _cancelled = false;
     });
+    widget.startResize();
     notify(KCalendarInteractionPhase.start, resize: change);
   }
 
   void update(double delta, Offset global) {
-    setState(() => _delta += delta);
+    final snapped = _edge == null
+        ? null
+        : widget.resizeUnits?.call(_edge!, global);
+    setState(
+      () => _delta = snapped == null
+          ? _delta + delta
+          : snapped * widget.dayWidth / 1440,
+    );
     widget.scrollAt(global);
+    final value = change;
+    if (value != null) widget.previewResize(value);
     notify(KCalendarInteractionPhase.preview, resize: change);
   }
 
@@ -106,6 +128,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       _edge = null;
       _delta = 0;
     });
+    widget.endResize();
   }
 
   void cancel() {
@@ -127,6 +150,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
         _edge = null;
         _delta = 0;
       });
+      widget.endResize();
     }
   }
 
@@ -158,12 +182,69 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
         ),
       ),
     );
-    Widget content = base;
-    if (c.onEventResize != null &&
+    // Keep the draggable at the same tree location throughout the gesture.
+    // Removing the resize wrapper here disposes the active recognizer.
+    final canResize =
+        c.onEventResize != null &&
         widget.start != null &&
         widget.end != null &&
         (!allDay || c.view != KCalendarView.day) &&
-        (!widget.compact || allDay)) {
+        (!widget.compact || allDay);
+    Widget movable = base;
+    if (c.onEventMove != null) {
+      void start() {
+        if (_resizePointerDown) return;
+        _cancelled = false;
+        _moving = true;
+        _focus.requestFocus();
+        widget.startMove();
+        c.onInteraction?.call(
+          KCalendarInteraction(
+            kind: KCalendarInteractionKind.move,
+            phase: KCalendarInteractionPhase.start,
+            event: widget.event,
+          ),
+        );
+      }
+
+      void end(DraggableDetails details) {
+        _moving = false;
+        widget.scrollAt(null);
+        if (!details.wasAccepted || _cancelled) {
+          widget.cancelMove();
+        }
+        if (!details.wasAccepted && !_cancelled) {
+          c.onInteraction?.call(
+            KCalendarInteraction(
+              kind: KCalendarInteractionKind.move,
+              phase: KCalendarInteractionPhase.cancel,
+              event: widget.event,
+            ),
+          );
+        }
+      }
+
+      movable = Listener(
+        onPointerDown: (_) {},
+        child: LayoutBuilder(
+          builder: (context, _) => _PointerDrag<T>(
+            data: widget.event,
+            // The calendar owns the snapped, full-width preview. Keeping the
+            // platform drag feedback empty avoids a second free-floating card.
+            onStart: start,
+            onUpdate: (d) {
+              widget.scrollAt(d.globalPosition);
+              widget.moveUpdate(d.globalPosition);
+            },
+            onEnd: end,
+            axis: _resizePointerDown ? Axis.vertical : null,
+            child: base,
+          ),
+        ),
+      );
+    }
+    Widget content = movable;
+    if (canResize) {
       content = LayoutBuilder(
         builder: (context, size) {
           final preview = change != null
@@ -179,7 +260,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
                 right: allDay ? -trailing : 0,
                 top: allDay ? 0 : leading,
                 bottom: allDay ? 0 : -trailing,
-                child: base,
+                child: movable,
               ),
               for (final edge in KCalendarResizeEdge.values)
                 Positioned(
@@ -199,7 +280,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
                       : edge == KCalendarResizeEdge.end
                       ? -trailing
                       : null,
-                  width: allDay ? 12 : null,
+                  width: allDay ? 24 : null,
                   height: allDay ? null : 12,
                   child: Semantics(
                     label: edge == KCalendarResizeEdge.start
@@ -225,16 +306,33 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
                         onVerticalDragEnd: allDay ? null : (_) => finish(),
                         onHorizontalDragCancel: allDay ? cancel : null,
                         onVerticalDragCancel: allDay ? null : cancel,
-                        child: Align(
-                          alignment: allDay
-                              ? Alignment.center
-                              : edge == KCalendarResizeEdge.start
-                              ? Alignment.topCenter
-                              : Alignment.bottomCenter,
-                          child: Container(
-                            width: allDay ? 3 : 24,
-                            height: allDay ? 16 : 3,
-                            color: t.colorBorderFocus,
+                        child: Listener(
+                          onPointerDown: (_) {
+                            if (allDay) {
+                              setState(() => _resizePointerDown = true);
+                            }
+                          },
+                          onPointerUp: (_) {
+                            if (allDay) {
+                              setState(() => _resizePointerDown = false);
+                            }
+                          },
+                          onPointerCancel: (_) {
+                            if (allDay) {
+                              setState(() => _resizePointerDown = false);
+                            }
+                          },
+                          child: Align(
+                            alignment: allDay
+                                ? Alignment.center
+                                : edge == KCalendarResizeEdge.start
+                                ? Alignment.topCenter
+                                : Alignment.bottomCenter,
+                            child: Container(
+                              width: allDay ? 3 : 24,
+                              height: allDay ? 16 : 3,
+                              color: t.colorBorderFocus,
+                            ),
                           ),
                         ),
                       ),
@@ -244,51 +342,6 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
             ],
           );
         },
-      );
-    }
-    if (c.onEventMove != null) {
-      final child = content;
-      void start() {
-        _cancelled = false;
-        _moving = true;
-        _focus.requestFocus();
-        widget.startMove();
-        c.onInteraction?.call(
-          KCalendarInteraction(
-            kind: KCalendarInteractionKind.move,
-            phase: KCalendarInteractionPhase.start,
-            event: widget.event,
-          ),
-        );
-      }
-
-      void end(DraggableDetails details) {
-        _moving = false;
-        widget.scrollAt(null);
-        if (!details.wasAccepted && !_cancelled) {
-          c.onInteraction?.call(
-            KCalendarInteraction(
-              kind: KCalendarInteractionKind.move,
-              phase: KCalendarInteractionPhase.cancel,
-              event: widget.event,
-            ),
-          );
-        }
-      }
-
-      content = Listener(
-        onPointerDown: (d) {},
-        child: LayoutBuilder(
-          builder: (context, _) => _PointerDrag<T>(
-            data: widget.event,
-            // The calendar owns the snapped, full-width preview. Keeping the
-            // platform drag feedback empty avoids a second free-floating card.
-            onStart: start,
-            onUpdate: (d) => widget.scrollAt(d.globalPosition),
-            onEnd: end,
-            child: child,
-          ),
-        ),
       );
     }
     return Focus(
@@ -311,6 +364,7 @@ class _PointerDrag<T extends Object> extends StatefulWidget {
     required this.onStart,
     required this.onUpdate,
     required this.onEnd,
+    required this.axis,
     required this.child,
   });
   final T data;
@@ -318,34 +372,48 @@ class _PointerDrag<T extends Object> extends StatefulWidget {
   final VoidCallback onStart;
   final ValueChanged<DragUpdateDetails> onUpdate;
   final ValueChanged<DraggableDetails> onEnd;
+  final Axis? axis;
   @override
   State<_PointerDrag<T>> createState() => _PointerDragState<T>();
 }
 
 class _PointerDragState<T extends Object> extends State<_PointerDrag<T>> {
   bool _mouse = false;
+  bool _inside = false;
+  bool _dragging = false;
 
   void startDrag() {
+    _dragging = true;
     widget.onStart();
   }
 
   void endDrag(DraggableDetails details) {
+    _dragging = false;
     widget.onEnd(details);
+    if (!_inside && mounted && _mouse) {
+      setState(() => _mouse = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) => MouseRegion(
     onEnter: (_) {
+      _inside = true;
       if (!_mouse) setState(() => _mouse = true);
     },
     onExit: (_) {
-      if (_mouse) setState(() => _mouse = false);
+      _inside = false;
+      // Keep the selected drag recognizer mounted until Flutter delivers the
+      // drag end event. Rebuilding here switches Draggable to
+      // LongPressDraggable mid-gesture and loses the preview state.
+      if (_mouse && !_dragging) setState(() => _mouse = false);
     },
     child: _mouse
         ? Draggable<T>(
             data: widget.data,
+            axis: widget.axis,
             feedback: const SizedBox.shrink(),
-            dragAnchorStrategy: childDragAnchorStrategy,
+            dragAnchorStrategy: pointerDragAnchorStrategy,
             onDragStarted: startDrag,
             onDragUpdate: widget.onUpdate,
             onDragEnd: endDrag,
@@ -358,8 +426,9 @@ class _PointerDragState<T extends Object> extends State<_PointerDrag<T>> {
           )
         : LongPressDraggable<T>(
             data: widget.data,
+            axis: widget.axis,
             feedback: const SizedBox.shrink(),
-            dragAnchorStrategy: childDragAnchorStrategy,
+            dragAnchorStrategy: pointerDragAnchorStrategy,
             onDragStarted: startDrag,
             onDragUpdate: widget.onUpdate,
             onDragEnd: endDrag,
