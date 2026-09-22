@@ -62,6 +62,7 @@ export function CalendarEvent<T>({
         })}
       </div>
       {props.onEventResize &&
+        !(entry.start.allDay && props.view === "day") &&
         (["start", "end"] as const).map((edge) => (
           <span
             key={edge}

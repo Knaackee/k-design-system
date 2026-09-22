@@ -128,16 +128,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
     final segments = <({T event, int first, int last, int lane})>[];
     final occupied = <int>[];
     for (final event in widget.events) {
-      final isPreview =
-          widget.previewMove != null &&
-          widget.previewMoveId == c.eventId(event);
-      final start = isPreview
-          ? kCalendarSlotToDate(widget.previewMove!.start)
-          : widget.start(event);
+      final start = widget.start(event);
       if (start == null) continue;
-      final end = isPreview
-          ? kCalendarSlotToDate(widget.previewMove!.end)
-          : (widget.end(event) ?? start.add(const Duration(days: 1)));
+      final end = widget.end(event) ?? start.add(const Duration(days: 1));
       final first = calendarDay(start).difference(widget.days.first).inDays;
       final endDay =
           calendarDay(end).difference(widget.days.first).inDays +
@@ -157,6 +150,22 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
       }
       segments.add((event: event, first: a, last: b, lane: lane));
     }
+    final preview = widget.previewMove;
+    final active = widget.events
+        .where((e) => c.eventId(e) == widget.previewMoveId)
+        .firstOrNull;
+    final previewFirst = preview == null
+        ? 0
+        : DateTime.parse(
+            preview.start.date,
+          ).difference(widget.days.first).inDays.clamp(0, widget.days.length);
+    final previewLast = preview == null
+        ? 0
+        : (DateTime.parse(
+                    preview.end.date,
+                  ).difference(widget.days.first).inDays +
+                  (preview.end.minutes > 0 ? 1 : 0))
+              .clamp(0, widget.days.length);
     final top = widget.month ? 28.0 : 4.0;
     final height = math.max(
       widget.month ? 112.0 : 40.0,
@@ -382,15 +391,35 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                       ),
                     ),
                   for (final segment in segments)
-                    if (widget.previewMoveId == null ||
-                        c.eventId(segment.event) != widget.previewMoveId)
-                      Positioned(
-                        left: segment.first * width + 4,
-                        width: (segment.last - segment.first) * width - 8,
-                        top: top + segment.lane * 32,
-                        height: 28,
+                    Positioned(
+                      left: segment.first * width + 4,
+                      width: (segment.last - segment.first) * width - 8,
+                      top: top + segment.lane * 32,
+                      height: 28,
+                      child: Opacity(
+                        opacity:
+                            c.eventId(segment.event) == widget.previewMoveId
+                            ? 0
+                            : 1,
                         child: widget.eventWidget(segment.event),
                       ),
+                    ),
+                  if (active != null &&
+                      preview != null &&
+                      (widget.month || preview.start.allDay) &&
+                      previewLast > previewFirst)
+                    Positioned(
+                      left: previewFirst * width + 4,
+                      width: (previewLast - previewFirst) * width - 8,
+                      top: top,
+                      height: 26,
+                      child: IgnorePointer(
+                        child: Opacity(
+                          opacity: .78,
+                          child: widget.eventWidget(active),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

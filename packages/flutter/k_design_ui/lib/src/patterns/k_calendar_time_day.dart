@@ -146,14 +146,8 @@ class _KCalendarTimeDayState<T extends Object>
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final visible = widget.events.where((e) {
-      final isPreview =
-          widget.previewMove != null && widget.previewMoveId == c.eventId(e);
-      final a = isPreview
-          ? kCalendarSlotToDate(widget.previewMove!.start)
-          : widget.start(e);
-      final b = isPreview
-          ? kCalendarSlotToDate(widget.previewMove!.end)
-          : widget.end(e);
+      final a = widget.start(e);
+      final b = widget.end(e);
       return a != null &&
           dayMinutes(a) < c.endHour * 60 &&
           (b == null
@@ -161,28 +155,13 @@ class _KCalendarTimeDayState<T extends Object>
                   : dayMinutes(b)) >
               c.startHour * 60;
     }).toList();
-    DateTime startFor(T event) {
-      if (widget.previewMove != null &&
-          widget.previewMoveId == c.eventId(event)) {
-        return kCalendarSlotToDate(widget.previewMove!.start);
-      }
-      return widget.start(event)!;
-    }
-
-    visible.sort((a, b) => startFor(a).compareTo(startFor(b)));
+    visible.sort((a, b) => widget.start(a)!.compareTo(widget.start(b)!));
     final rects = <({T event, int start, int end, int lane, int lanes})>[];
     final ends = <int>[];
     for (final e in visible) {
-      final isPreview =
-          widget.previewMove != null && widget.previewMoveId == c.eventId(e);
-      final start = isPreview
-          ? kCalendarSlotToDate(widget.previewMove!.start)
-          : widget.start(e);
-      final end = isPreview
-          ? kCalendarSlotToDate(widget.previewMove!.end)
-          : widget.end(e);
-      final a = dayMinutes(start!),
-          b = end == null ? a + c.defaultDurationMinutes : dayMinutes(end);
+      final a = dayMinutes(widget.start(e)!);
+      final end = widget.end(e);
+      final b = end == null ? a + c.defaultDurationMinutes : dayMinutes(end);
       var lane = ends.indexWhere((end) => end <= a);
       if (lane < 0) {
         lane = ends.length;
@@ -228,8 +207,21 @@ class _KCalendarTimeDayState<T extends Object>
       );
     }).toList();
     final shownSelection = selection ?? widget.pendingSelection;
-    // A move preview is represented by the relaid-out event itself. The
-    // full-width hover selection is reserved for creating a new range.
+    final preview = widget.previewMove;
+    final active = widget.events
+        .where((e) => c.eventId(e) == widget.previewMoveId)
+        .firstOrNull;
+    int previewMinutes(KCalendarSlot value) =>
+        DateTime.parse(value.date).difference(calendarDay(widget.day)).inDays *
+            1440 +
+        value.minutes;
+    final previewStart = preview == null
+        ? 0
+        : math.max(c.startHour * 60, previewMinutes(preview.start));
+    final previewEnd = preview == null
+        ? 0
+        : math.min(c.endHour * 60, previewMinutes(preview.end));
+    // The move overlay never participates in the committed event layout.
     final shownHover = widget.previewMove == null ? _hover : null;
     return Focus(
       focusNode: _focus,
@@ -368,6 +360,25 @@ class _KCalendarTimeDayState<T extends Object>
                           ? 0
                           : 1,
                       child: widget.eventWidget(rect.event, compact: false),
+                    ),
+                  ),
+                if (active != null &&
+                    preview != null &&
+                    !preview.start.allDay &&
+                    previewEnd > previewStart)
+                  Positioned(
+                    left: 4,
+                    right: 4,
+                    top: (previewStart - c.startHour * 60) / 60 * c.hourHeight,
+                    height: math.max(
+                      24,
+                      (previewEnd - previewStart) / 60 * c.hourHeight,
+                    ),
+                    child: IgnorePointer(
+                      child: Opacity(
+                        opacity: .78,
+                        child: widget.eventWidget(active, compact: false),
+                      ),
                     ),
                   ),
                 if (shownSelection != null || shownHover != null)

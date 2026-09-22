@@ -162,6 +162,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
     if (c.onEventResize != null &&
         widget.start != null &&
         widget.end != null &&
+        (!allDay || c.view != KCalendarView.day) &&
         (!widget.compact || allDay)) {
       content = LayoutBuilder(
         builder: (context, size) {
@@ -183,10 +184,10 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
               for (final edge in KCalendarResizeEdge.values)
                 Positioned(
                   left: allDay
-                      ? (edge == KCalendarResizeEdge.start ? leading : null)
+                      ? (edge == KCalendarResizeEdge.start ? leading - 5 : null)
                       : 24,
                   right: allDay
-                      ? (edge == KCalendarResizeEdge.end ? -trailing : null)
+                      ? (edge == KCalendarResizeEdge.end ? -trailing - 1 : null)
                       : 24,
                   top: allDay
                       ? 0
@@ -278,19 +279,10 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       content = Listener(
         onPointerDown: (d) {},
         child: LayoutBuilder(
-          builder: (context, constraints) => _PointerDrag<T>(
+          builder: (context, _) => _PointerDrag<T>(
             data: widget.event,
-            // Keep the drag feedback the same width as the rendered event.
-            // A fixed feedback width changes Flutter's drag anchor while the
-            // pointer is held, even though the final drop position is correct.
-            feedback: Material(
-              color: Colors.transparent,
-              child: SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                child: base,
-              ),
-            ),
+            // The calendar owns the snapped, full-width preview. Keeping the
+            // platform drag feedback empty avoids a second free-floating card.
             onStart: start,
             onUpdate: (d) => widget.scrollAt(d.globalPosition),
             onEnd: end,
@@ -316,14 +308,13 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
 class _PointerDrag<T extends Object> extends StatefulWidget {
   const _PointerDrag({
     required this.data,
-    required this.feedback,
     required this.onStart,
     required this.onUpdate,
     required this.onEnd,
     required this.child,
   });
   final T data;
-  final Widget feedback, child;
+  final Widget child;
   final VoidCallback onStart;
   final ValueChanged<DragUpdateDetails> onUpdate;
   final ValueChanged<DraggableDetails> onEnd;
@@ -333,16 +324,13 @@ class _PointerDrag<T extends Object> extends StatefulWidget {
 
 class _PointerDragState<T extends Object> extends State<_PointerDrag<T>> {
   bool _mouse = false;
-  Widget? _activeFeedback;
 
   void startDrag() {
-    setState(() => _activeFeedback = widget.feedback);
     widget.onStart();
   }
 
   void endDrag(DraggableDetails details) {
     widget.onEnd(details);
-    if (mounted) setState(() => _activeFeedback = null);
   }
 
   @override
@@ -356,7 +344,7 @@ class _PointerDragState<T extends Object> extends State<_PointerDrag<T>> {
     child: _mouse
         ? Draggable<T>(
             data: widget.data,
-            feedback: _activeFeedback ?? widget.feedback,
+            feedback: const SizedBox.shrink(),
             dragAnchorStrategy: childDragAnchorStrategy,
             onDragStarted: startDrag,
             onDragUpdate: widget.onUpdate,
@@ -370,7 +358,7 @@ class _PointerDragState<T extends Object> extends State<_PointerDrag<T>> {
           )
         : LongPressDraggable<T>(
             data: widget.data,
-            feedback: _activeFeedback ?? widget.feedback,
+            feedback: const SizedBox.shrink(),
             dragAnchorStrategy: childDragAnchorStrategy,
             onDragStarted: startDrag,
             onDragUpdate: widget.onUpdate,

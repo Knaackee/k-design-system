@@ -298,6 +298,9 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
         {preview &&
           interaction.previewEntryId &&
           entries.find((entry) => entry.id === interaction.previewEntryId) &&
+          (!allDayOnly ||
+            entries.find((entry) => entry.id === interaction.previewEntryId)
+              ?.start.allDay) &&
           (() => {
             const entry = entries.find(
               (item) => item.id === interaction.previewEntryId,
