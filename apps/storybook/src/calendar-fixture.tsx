@@ -395,6 +395,21 @@ export function CalendarFixture({
               {selectionDescription(selection, calendarLocale, labels.allDay)}
             </span>
           )}
+          {!selection && editing?.start && editing.end && (
+            <span>
+              {new Intl.DateTimeFormat(calendarLocale, {
+                dateStyle: "medium",
+                ...(editing.allDay ? {} : { timeStyle: "short" as const }),
+                timeZone: editing.allDay ? "UTC" : timeZone,
+              }).formatRange(
+                editing.start,
+                editing.allDay
+                  ? new Date(editing.end.getTime() - 86400000)
+                  : editing.end,
+              )}
+              {editing.allDay ? ` · ${labels.allDay}` : ""}
+            </span>
+          )}
         </div>
       </Editor>
     </div>

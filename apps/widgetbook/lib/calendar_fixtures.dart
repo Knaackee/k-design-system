@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'calendar_fixture_data.dart';
 
 class CalendarFixture extends StatefulWidget {
@@ -96,10 +97,21 @@ class _CalendarFixtureState extends State<CalendarFixture> {
     }
     final controller = TextEditingController(text: event?.title ?? '');
     final title = Text(label('Create issue', 'Issue erstellen'));
-    final child = KInput(
-      controller: controller,
-      autofocus: true,
-      label: label('Title', 'Titel'),
+    final range = selection ?? eventSelection(event);
+    final child = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        KInput(
+          controller: controller,
+          autofocus: true,
+          label: label('Title', 'Titel'),
+        ),
+        if (range != null) ...[
+          const SizedBox(height: 12),
+          Text(selectionDescription(range)),
+        ],
+      ],
     );
     if (selection != null) {
       setState(
@@ -161,6 +173,47 @@ class _CalendarFixtureState extends State<CalendarFixture> {
     // Route transitions may still read the controller after the pop future.
     await Future<void>.delayed(const Duration(milliseconds: 300));
     controller.dispose();
+  }
+
+  KCalendarSelection? eventSelection(CalendarDemoEvent? event) {
+    if (event == null || event.start == null || event.end == null) return null;
+    KCalendarSlot slot(DateTime instant) {
+      final date = event.allDay
+          ? instant.toUtc()
+          : tz.TZDateTime.from(instant, tz.getLocation('Europe/Berlin'));
+      return KCalendarSlot(
+        date:
+            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
+        minutes: date.hour * 60 + date.minute,
+        allDay: event.allDay,
+        timeZone: 'Europe/Berlin',
+      );
+    }
+
+    return KCalendarSelection(start: slot(event.start!), end: slot(event.end!));
+  }
+
+  String selectionDescription(KCalendarSelection selection) {
+    final l = MaterialLocalizations.of(context);
+    final allDay = selection.start.allDay;
+    final start = DateTime.parse(selection.start.date);
+    final end = DateTime.parse(
+      selection.end.date,
+    ).subtract(Duration(days: allDay ? 1 : 0));
+    String format(DateTime date, int minutes) {
+      final day = l.formatMediumDate(date);
+      if (allDay) return day;
+      final time = l.formatTimeOfDay(
+        TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60),
+        alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
+      );
+      return '$day, $time';
+    }
+
+    final first = format(start, selection.start.minutes);
+    final last = format(end, selection.end.minutes);
+    final range = first == last ? first : '$first – $last';
+    return allDay ? '$range · ${label('All day', 'Ganztägig')}' : range;
   }
 
   Widget unplannedContent({bool sheet = false}) => Column(

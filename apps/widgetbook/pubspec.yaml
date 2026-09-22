@@ -15,6 +15,7 @@ dependencies:
   k_design_tokens: any
   k_design_ui: any
   widgetbook: ^3.25.0
+  timezone: 0.11.1
 
 dev_dependencies:
   flutter_test:
