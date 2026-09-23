@@ -64,27 +64,13 @@
   height: 44px;
 }
 .k-symbol-footer {
+  justify-content: flex-end;
   border-top: 1px solid var(--k-color-border-default);
   min-height: 56px;
   padding: 8px 12px;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-.k-symbol-preview {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  flex: 1;
-}
-.k-symbol-preview > span:last-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.k-symbol-preview img {
-  flex: none;
 }
 .k-symbol-footer select {
   max-width: 112px;

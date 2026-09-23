@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent, MatrixUtils;
-import 'package:flutter/foundation.dart' show SynchronousFuture;
 import 'dart:convert';
 
 import 'dart:math' as math;
 
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../forms/k_input.dart';
@@ -14,7 +13,7 @@ import '../primitives/k_icon.dart';
 import '../primitives/k_surface.dart';
 import '../primitives/k_text.dart';
 import '../generated/k_emoji.g.dart' as data;
-import '../generated/k_emoji_vectors.g.dart' as vectors;
+import '../generated/k_emoji_rasters.g.dart' as rasters;
 part 'symbol_picker_vector.dart';
 part 'symbol_picker_panel.dart';
 part 'symbol_picker_anchor.dart';
@@ -91,6 +90,8 @@ final kEmojiCatalog = List<KSymbolItem>.unmodifiable(
 class KSymbolPickerLabels {
   const KSymbolPickerLabels({
     this.search = 'Search',
+    this.searchPlaceholder,
+    this.clearSearch,
     this.all = 'All',
     this.recent = 'Recent',
     this.empty = 'No matches',
@@ -106,6 +107,7 @@ class KSymbolPickerLabels {
     ],
   });
   final String search, all, recent, empty, hint, skinTone;
+  final String? searchPlaceholder, clearSearch;
   final List<String> tones;
 }
 

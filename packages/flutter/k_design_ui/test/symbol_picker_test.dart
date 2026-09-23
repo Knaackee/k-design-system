@@ -13,6 +13,21 @@ void main() {
         home: Scaffold(
           body: KEmojiPicker(
             onSelect: (_) {},
+            triggerLabel: 'Reaktion wählen',
+            triggerContent: const Text('Reaktion'),
+            labels: const KSymbolPickerLabels(
+              search: 'Emoji suchen',
+              searchPlaceholder: 'Suchbegriff',
+              clearSearch: 'Suche leeren',
+              tones: [
+                'Standard',
+                'Hell',
+                'Mittelhell',
+                'Mittel',
+                'Mitteldunkel',
+                'Dunkel',
+              ],
+            ),
             itemBuilder: (_, item) {
               built.add(item.id);
               return const SizedBox(width: 24, height: 24);
@@ -28,9 +43,12 @@ void main() {
     );
     expect(prepared.focusNode!.hasFocus, isFalse);
     expect(built, isNotEmpty);
-    await tester.tap(find.bySemanticsLabel('Choose emoji').first);
+    await tester.tap(find.bySemanticsLabel('Reaktion wählen').first);
     await tester.pumpAndSettle();
     expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.text('Choose a symbol'), findsNothing);
+    expect(find.text('Standard'), findsOneWidget);
+    expect(find.text('Suchbegriff'), findsOneWidget);
     // Six visible rows of seven cells plus the category thumbnails.
     expect(built.length, lessThanOrEqualTo(55));
     await tester.enterText(find.byType(TextField), 'smile');
@@ -38,7 +56,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(TextField), findsNothing);
     expect(prepared.focusNode!.hasFocus, isFalse);
-    await tester.tap(find.bySemanticsLabel('Choose emoji').first);
+    await tester.tap(find.bySemanticsLabel('Reaktion wählen').first);
     await tester.pumpAndSettle();
     final reopened = tester.widget<TextField>(find.byType(TextField));
     expect(identical(prepared.controller, reopened.controller), isTrue);

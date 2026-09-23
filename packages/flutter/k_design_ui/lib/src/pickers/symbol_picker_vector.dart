@@ -8,13 +8,16 @@ final _builtInEmojiSvg = <String, String>{
   },
 };
 
+final _rasterBytes = <String, Uint8List>{};
+
 Widget _emojiPicture(KSymbolItem item) {
-  final compiled = vectors.kEmojiVectors[item.value];
-  if (compiled != null && _builtInEmojiSvg[item.value] == item.svg) {
-    return SvgPicture(
-      _EmojiBytesLoader(item.value!, compiled),
+  final raster = rasters.kEmojiRasters[item.value];
+  if (raster != null && _builtInEmojiSvg[item.value] == item.svg) {
+    return Image.memory(
+      _rasterBytes.putIfAbsent(item.value!, () => base64Decode(raster)),
       width: 24,
       height: 24,
+      filterQuality: FilterQuality.medium,
       excludeFromSemantics: true,
     );
   }
@@ -24,23 +27,4 @@ Widget _emojiPicture(KSymbolItem item) {
     height: 24,
     excludeFromSemantics: true,
   );
-}
-
-class _EmojiBytesLoader extends BytesLoader {
-  const _EmojiBytesLoader(this.value, this.encoded);
-  final String value, encoded;
-  // Bound decoded-byte memory; mounted visible pictures keep their own data.
-  static final _cache = <String, ByteData>{};
-
-  @override
-  Future<ByteData> loadBytes(BuildContext? context) {
-    final bytes =
-        _cache.remove(value) ?? base64Decode(encoded).buffer.asByteData();
-    _cache[value] = bytes;
-    if (_cache.length > 128) _cache.remove(_cache.keys.first);
-    return SynchronousFuture(bytes);
-  }
-
-  @override
-  Object cacheKey(BuildContext? context) => (_EmojiBytesLoader, value);
 }

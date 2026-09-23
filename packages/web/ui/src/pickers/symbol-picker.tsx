@@ -26,9 +26,12 @@ export interface KIconItem extends KSymbolItem {
 }
 export interface KSymbolPickerLabels {
   search: string;
+  searchPlaceholder?: string;
+  clearSearch?: string;
   all: string;
   recent: string;
   empty: string;
+  /** @deprecated The descriptive footer has been removed. */
   hint: string;
   skinTone: string;
   tones: readonly string[];
@@ -89,7 +92,6 @@ function Picker<T extends KSymbolItem>({
   const text = { ...defaults, ...labels };
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
-  const [hovered, setHovered] = useState<T | null>(null);
   const [focusedId, setFocusedId] = useState<string | null>(null);
   const grid = useRef<HTMLDivElement>(null);
   const categories = useMemo(
@@ -129,12 +131,12 @@ function Picker<T extends KSymbolItem>({
       <div className="k-symbol-search">
         <KInput
           aria-label={text.search}
-          placeholder={text.search}
+          placeholder={text.searchPlaceholder ?? text.search}
+          clearLabel={text.clearSearch}
           value={query}
           disabled={disabled}
           onChange={(e) => {
             setQuery(e.target.value);
-            setHovered(null);
           }}
           clearable
           onClear={() => setQuery("")}
@@ -152,7 +154,6 @@ function Picker<T extends KSymbolItem>({
             onClick={() => {
               setCategory(id);
               setQuery("");
-              setHovered(null);
               grid.current?.scrollTo(0, 0);
             }}
           >
@@ -225,10 +226,8 @@ function Picker<T extends KSymbolItem>({
             }
             disabled={disabled || item.disabled}
             onFocus={() => {
-              setHovered(item);
               setFocusedId(item.id);
             }}
-            onMouseEnter={() => setHovered(item)}
             onClick={() => onSelect(item)}
           >
             {renderItem(item)}
@@ -240,13 +239,7 @@ function Picker<T extends KSymbolItem>({
           </span>
         )}
       </div>
-      <div className="k-symbol-footer">
-        <span className="k-symbol-preview">
-          {hovered && renderItem(hovered)}
-          <span>{hovered?.label ?? text.hint}</span>
-        </span>
-        {accessory}
-      </div>
+      {accessory && <div className="k-symbol-footer">{accessory}</div>}
     </KSurface>
   );
 }

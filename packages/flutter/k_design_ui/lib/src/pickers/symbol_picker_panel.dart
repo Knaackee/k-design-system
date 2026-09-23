@@ -36,7 +36,6 @@ class _SymbolPickerState extends State<_SymbolPicker> {
   final _search = TextEditingController();
   final _scroll = ScrollController();
   String _query = '', _category = '';
-  KSymbolItem? _hovered;
   @override
   void dispose() {
     _search.dispose();
@@ -78,12 +77,10 @@ class _SymbolPickerState extends State<_SymbolPicker> {
       Widget child,
       VoidCallback? action, {
       bool selected = false,
-      VoidCallback? hover,
     }) => _SymbolPickerCell(
       label: label,
       selected: selected,
       onPressed: action,
-      onHighlight: hover,
       child: child,
     );
     return Focus(
@@ -107,12 +104,12 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                   focusNode: widget.searchFocus,
                   controller: _search,
                   label: labels.search,
-                  placeholder: labels.search,
+                  placeholder: labels.searchPlaceholder ?? labels.search,
+                  clearLabel: labels.clearSearch,
                   enabled: widget.enabled,
                   clearable: true,
                   onChanged: (value) => setState(() {
                     _query = value;
-                    _hovered = null;
                   }),
                 ),
               ),
@@ -150,7 +147,6 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                                   _category = tab.key;
                                   _search.clear();
                                   _query = '';
-                                  _hovered = null;
                                   if (_scroll.hasClients) _scroll.jumpTo(0);
                                 })
                               : null,
@@ -217,11 +213,6 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                                       ? () => widget.onSelect(item)
                                       : null,
                                   selected: widget.value == item.id,
-                                  hover: () {
-                                    if (_hovered != item) {
-                                      setState(() => _hovered = item);
-                                    }
-                                  },
                                 ),
                               );
                             },
@@ -229,38 +220,20 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                         ),
                       ),
               ),
-              Container(
-                height: 56,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: tokens.colorBorderDefault),
+              if (widget.accessory != null)
+                Container(
+                  height: 56,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
                   ),
-                ),
-                child: Row(
-                  children: [
-                    if (_hovered != null) ...[
-                      widget.itemBuilder(context, _hovered!),
-                      const SizedBox(width: 8),
-                    ],
-                    Expanded(
-                      child: KText(
-                        _hovered?.label ?? labels.hint,
-                        variant: KTextVariant.bodySmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(color: tokens.colorBorderDefault),
                     ),
-                    if (widget.accessory != null) ...[
-                      const SizedBox(width: 8),
-                      widget.accessory!,
-                    ],
-                  ],
+                  ),
+                  child: Row(children: [const Spacer(), widget.accessory!]),
                 ),
-              ),
             ],
           ),
         ),
@@ -277,12 +250,11 @@ class _SymbolPickerCell extends StatefulWidget {
     required this.child,
     required this.selected,
     this.onPressed,
-    this.onHighlight,
   });
   final String label;
   final Widget child;
   final bool selected;
-  final VoidCallback? onPressed, onHighlight;
+  final VoidCallback? onPressed;
 
   @override
   State<_SymbolPickerCell> createState() => _SymbolPickerCellState();
@@ -322,12 +294,8 @@ class _SymbolPickerCellState extends State<_SymbolPickerCell> {
           },
           onShowHoverHighlight: (value) {
             setState(() => _hovered = value);
-            if (value) widget.onHighlight?.call();
           },
           onShowFocusHighlight: (value) => setState(() => _focused = value),
-          onFocusChange: (value) {
-            if (value) widget.onHighlight?.call();
-          },
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             excludeFromSemantics: true,

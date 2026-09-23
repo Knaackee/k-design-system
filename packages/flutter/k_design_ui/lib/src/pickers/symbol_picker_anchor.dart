@@ -184,6 +184,7 @@ class _SymbolPickerAnchorState extends State<_SymbolPickerAnchor> {
                 onPressed: widget.enabled ? () => _change(!_open) : null,
                 child: Semantics(
                   label: widget.label,
+                  excludeSemantics: true,
                   child: widget.triggerContent,
                 ),
               ),

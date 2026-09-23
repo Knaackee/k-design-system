@@ -16,14 +16,13 @@ for (const [file, content] of Object.entries(outputs)) {
       throw new Error(`Emoji catalog drift: ${file}`);
   } else await writeFile(target, content);
 }
-const compiled = spawnSync(
-  process.platform === "win32" ? "dart.bat" : "dart",
+const raster = spawnSync(
+  process.execPath,
   [
-    "run",
-    "tooling/compile_emoji.dart",
+    "tooling/rasterize-emoji.mjs",
     ...(process.argv.includes("--check") ? ["--check"] : []),
   ],
-  { cwd: root, stdio: "inherit", shell: process.platform === "win32" },
+  { cwd: root, stdio: "inherit" },
 );
-if (compiled.error) throw compiled.error;
-if (compiled.status !== 0) process.exit(compiled.status ?? 1);
+if (raster.error) throw raster.error;
+if (raster.status !== 0) process.exit(raster.status ?? 1);

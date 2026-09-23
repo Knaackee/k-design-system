@@ -10,11 +10,11 @@ class SymbolPickerFixture extends StatefulWidget {
 
 class _SymbolPickerFixtureState extends State<SymbolPickerFixture> {
   String? selected;
-  String label = '';
-  List<String> recent = [];
+  late List<String> recent = widget.emoji
+      ? ['1f600', '1f603', '1f604', '1f601']
+      : ['heart', 'star', 'search', 'clock'];
   void select(KSymbolItem item) => setState(() {
     selected = item.id;
-    label = item.label;
     recent = [
       item.id,
       ...recent.where((id) => id != item.id),
@@ -41,15 +41,7 @@ class _SymbolPickerFixtureState extends State<SymbolPickerFixture> {
     padding: const EdgeInsets.all(16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        picker(),
-        const SizedBox(height: 16),
-        KText(
-          label.isEmpty ? 'Choose a reaction or an icon' : 'Selected: $label',
-          variant: KTextVariant.bodySmall,
-        ),
-        const SizedBox(height: 16),
-      ],
+      children: [picker()],
     ),
   );
 }
