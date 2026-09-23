@@ -375,13 +375,20 @@
 }
 .k-dialog.k-responsive-drawer {
   position: fixed;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   top: 0;
   bottom: 0;
   width: min(420px, 90vw);
   max-height: none;
+  overflow: hidden;
   margin: 0;
   border-radius: 0;
   transform: none;
+}
+.k-dialog.k-responsive-drawer > .k-overlay-body {
+  min-height: 0;
+  overflow: auto;
 }
 .k-dialog.k-responsive-drawer--right {
   right: 0;

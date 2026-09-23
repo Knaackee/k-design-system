@@ -47,6 +47,27 @@ export { KMenuButton, KOverflowMenu } from "./actions/menu-button.js";
 export type { KMenuAction, KMenuButtonProps } from "./actions/menu-button.js";
 export { KContextMenu } from "./actions/context-menu.js";
 export type { KContextMenuProps } from "./actions/context-menu.js";
+export {
+  KSidebar,
+  KSidebarHeader,
+  KSidebarBody,
+  KSidebarFooter,
+  KSidebarExpandedContent,
+  KSidebarRailContent,
+  KSidebarGroup,
+  KSidebarItem,
+  KSidebarSeparator,
+  KSidebarSubgroup,
+  KSidebarToggle,
+} from "./navigation/sidebar.js";
+export type {
+  KSidebarMode,
+  KSidebarProps,
+  KSidebarGroupProps,
+  KSidebarItemProps,
+  KSidebarSubgroupProps,
+  KSidebarToggleProps,
+} from "./navigation/sidebar.js";
 export { KToolbar } from "./patterns/toolbar.js";
 export type { KToolbarProps } from "./patterns/toolbar.js";
 export { KKanban } from "./patterns/kanban.js";

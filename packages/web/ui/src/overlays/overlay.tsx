@@ -13,6 +13,8 @@ export type KOverlayProps = {
   dismissible?: boolean;
   closeLabel?: string;
   className?: string;
+  /** Removes the standard body inset for edge-to-edge compositions. */
+  contentInset?: boolean;
 };
 
 export function KDialog({
@@ -25,6 +27,7 @@ export function KDialog({
   dismissible = true,
   closeLabel = "Close",
   className,
+  contentInset = true,
 }: KOverlayProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -59,7 +62,16 @@ export function KDialog({
               </Dialog.Close>
             )}
           </header>
-          <div className="k-overlay-body">{children}</div>
+          <div
+            className={[
+              "k-overlay-body",
+              contentInset ? null : "k-overlay-body--flush",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {children}
+          </div>
           {actions && <footer className="k-overlay-actions">{actions}</footer>}
         </Dialog.Content>
       </Dialog.Portal>
@@ -79,6 +91,7 @@ export function KBottomSheet({
   dismissible = true,
   closeLabel = "Close",
   className,
+  contentInset = true,
 }: KBottomSheetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -144,7 +157,16 @@ export function KBottomSheet({
                   </Dialog.Close>
                 )}
               </header>
-              <div className="k-overlay-body">{children}</div>
+              <div
+                className={[
+                  "k-overlay-body",
+                  contentInset ? null : "k-overlay-body--flush",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {children}
+              </div>
               {actions && (
                 <footer className="k-overlay-actions">{actions}</footer>
               )}

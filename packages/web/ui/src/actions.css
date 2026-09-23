@@ -60,10 +60,15 @@
   color: var(--k-color-status-error-foreground);
 }
 .k-menu__item:hover:not(:disabled),
-.k-menu__item:focus {
+.k-menu__item:focus-visible {
   background: var(--k-color-action-ghost-hover);
+}
+.k-menu__item:focus-visible {
   outline: 2px solid var(--k-color-border-focus);
   outline-offset: -2px;
+}
+.k-menu__item:focus:not(:focus-visible) {
+  outline: 0;
 }
 .k-menu__item:active:not(:disabled) {
   background: var(--k-color-action-ghost-pressed);

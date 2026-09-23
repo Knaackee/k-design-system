@@ -1,5 +1,12 @@
-import { Fragment, useEffect, useId, useRef, useState } from "react";
-import { KButton } from "../primitives/button.js";
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { KButton, type KButtonVariant } from "../primitives/button.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 
 export interface KMenuAction {
@@ -18,6 +25,11 @@ export interface KMenuButtonProps {
   disabled?: boolean;
   /** Compact overflow trigger, with the same labelled action menu. */
   overflow?: boolean;
+  /** Consumer-owned trigger composition; the accessible name still comes from label. */
+  triggerContent?: ReactNode;
+  triggerVariant?: KButtonVariant;
+  triggerClassName?: string;
+  fullWidth?: boolean;
 }
 
 export function KMenuButton({
@@ -25,6 +37,10 @@ export function KMenuButton({
   actions,
   disabled = false,
   overflow = false,
+  triggerContent,
+  triggerVariant,
+  triggerClassName,
+  fullWidth = false,
 }: KMenuButtonProps) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
@@ -87,8 +103,14 @@ export function KMenuButton({
     <>
       <KButton
         ref={trigger}
-        variant={overflow ? "ghost" : "secondary"}
-        className={overflow ? "k-icon-button" : "k-menu-trigger"}
+        variant={triggerVariant ?? (overflow ? "ghost" : "secondary")}
+        className={[
+          overflow ? "k-icon-button" : "k-menu-trigger",
+          triggerClassName,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        fullWidth={fullWidth}
         disabled={disabled || actions.length === 0}
         aria-label={label}
         title={overflow ? label : undefined}
@@ -104,14 +126,15 @@ export function KMenuButton({
           }
         }}
       >
-        {overflow ? (
-          <KIcon name="ellipsis" color="currentColor" />
-        ) : (
-          <span className="k-menu-trigger__content">
-            {label}
-            <KIcon name="chevron-down" color="currentColor" />
-          </span>
-        )}
+        {triggerContent ??
+          (overflow ? (
+            <KIcon name="ellipsis" color="currentColor" />
+          ) : (
+            <span className="k-menu-trigger__content">
+              {label}
+              <KIcon name="chevron-down" color="currentColor" />
+            </span>
+          ))}
       </KButton>
       <div
         id={id}

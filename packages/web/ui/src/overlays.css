@@ -65,6 +65,9 @@
 .k-overlay-body {
   padding-top: 0;
 }
+.k-overlay-body--flush {
+  padding: 0;
+}
 .k-overlay-actions {
   display: flex;
   justify-content: flex-end;

@@ -464,8 +464,14 @@ export function KPopover({
       if (!anchor || !content) return;
       const gutter = 16;
       const gap = 8;
-      const width = Math.min(content.offsetWidth, window.innerWidth - gutter * 2);
-      const height = Math.min(content.offsetHeight, window.innerHeight - gutter * 2);
+      const width = Math.min(
+        content.offsetWidth,
+        window.innerWidth - gutter * 2,
+      );
+      const height = Math.min(
+        content.offsetHeight,
+        window.innerHeight - gutter * 2,
+      );
       const preferredLeft =
         align === "start"
           ? anchor.left
@@ -596,7 +602,10 @@ export function KNavigationMenu({
               ? event.deltaX
               : event.deltaY;
           const maximum = element.scrollWidth - element.clientWidth;
-          const next = Math.max(0, Math.min(maximum, element.scrollLeft + delta));
+          const next = Math.max(
+            0,
+            Math.min(maximum, element.scrollLeft + delta),
+          );
           if (next === element.scrollLeft) return;
           event.preventDefault();
           element.scrollLeft = next;
