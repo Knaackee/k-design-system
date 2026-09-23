@@ -35,11 +35,13 @@ class _SymbolPicker extends StatefulWidget {
 class _SymbolPickerState extends State<_SymbolPicker> {
   final _search = TextEditingController();
   final _scroll = ScrollController();
+  final _categoryScroll = ScrollController();
   String _query = '', _category = '';
   @override
   void dispose() {
     _search.dispose();
     _scroll.dispose();
+    _categoryScroll.dispose();
     super.dispose();
   }
 
@@ -72,6 +74,16 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                     item.category == _category,
         )
         .toList();
+    final scrollBehavior = ScrollConfiguration.of(context).copyWith(
+      dragDevices: {
+        ...ScrollConfiguration.of(context).dragDevices,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.touch,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.invertedStylus,
+        PointerDeviceKind.trackpad,
+      },
+    );
     Widget button(
       String label,
       Widget child,
@@ -114,46 +126,55 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                 ),
               ),
               Container(
-                height: 53,
+                height: 57,
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(color: tokens.colorBorderDefault),
                   ),
                 ),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                  children: [
-                    for (final tab in tabs.entries)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: button(
-                          tab.value,
-                          SizedBox(
-                            width: 44,
-                            child: tab.key.isEmpty
-                                ? const KIcon(KIconName.search)
-                                : tab.key == '__recent'
-                                ? const KIcon(KIconName.clock)
-                                : widget.itemBuilder(
-                                    context,
-                                    widget.items.firstWhere(
-                                      (item) => item.category == tab.key,
-                                    ),
-                                  ),
+                child: ScrollConfiguration(
+                  behavior: scrollBehavior,
+                  child: Scrollbar(
+                    controller: _categoryScroll,
+                    thumbVisibility: true,
+                    scrollbarOrientation: ScrollbarOrientation.bottom,
+                    child: ListView(
+                      controller: _categoryScroll,
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                      children: [
+                        for (final tab in tabs.entries)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: button(
+                              tab.value,
+                              SizedBox(
+                                width: 44,
+                                child: tab.key.isEmpty
+                                    ? const KIcon(KIconName.search)
+                                    : tab.key == '__recent'
+                                    ? const KIcon(KIconName.clock)
+                                    : widget.itemBuilder(
+                                        context,
+                                        widget.items.firstWhere(
+                                          (item) => item.category == tab.key,
+                                        ),
+                                      ),
+                              ),
+                              widget.enabled
+                                  ? () => setState(() {
+                                      _category = tab.key;
+                                      _search.clear();
+                                      _query = '';
+                                      if (_scroll.hasClients) _scroll.jumpTo(0);
+                                    })
+                                  : null,
+                              selected: _category == tab.key,
+                            ),
                           ),
-                          widget.enabled
-                              ? () => setState(() {
-                                  _category = tab.key;
-                                  _search.clear();
-                                  _query = '';
-                                  if (_scroll.hasClients) _scroll.jumpTo(0);
-                                })
-                              : null,
-                          selected: _category == tab.key,
-                        ),
-                      ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
               Expanded(
@@ -161,61 +182,66 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                     ? Center(child: KText(labels.empty))
                     : LayoutBuilder(
                         builder: (context, constraints) => FocusTraversalGroup(
-                          child: GridView.builder(
-                            controller: _scroll,
-                            // SVG decoding is comparatively expensive. Build
-                            // glyphs as they enter this small menu viewport.
-                            scrollCacheExtent: const ScrollCacheExtent.pixels(
-                              0,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount:
-                                      ((constraints.maxWidth - 24) / 44)
-                                          .floor()
-                                          .clamp(1, 100),
-                                  mainAxisExtent: 44,
+                          child: ScrollConfiguration(
+                            behavior: scrollBehavior,
+                            child: Scrollbar(
+                              controller: _scroll,
+                              child: GridView.builder(
+                                controller: _scroll,
+                                // SVG decoding is comparatively expensive. Build
+                                // glyphs as they enter this small menu viewport.
+                                scrollCacheExtent:
+                                    const ScrollCacheExtent.pixels(0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
                                 ),
-                            itemCount: visible.length,
-                            itemBuilder: (context, index) {
-                              final item = visible[index];
-                              return Focus(
-                                onKeyEvent: (_, event) {
-                                  if (event is! KeyDownEvent) {
-                                    return KeyEventResult.ignored;
-                                  }
-                                  final direction = {
-                                    LogicalKeyboardKey.arrowLeft:
-                                        TraversalDirection.left,
-                                    LogicalKeyboardKey.arrowRight:
-                                        TraversalDirection.right,
-                                    LogicalKeyboardKey.arrowUp:
-                                        TraversalDirection.up,
-                                    LogicalKeyboardKey.arrowDown:
-                                        TraversalDirection.down,
-                                  }[event.logicalKey];
-                                  if (direction == null) {
-                                    return KeyEventResult.ignored;
-                                  }
-                                  FocusScope.of(
-                                    context,
-                                  ).focusInDirection(direction);
-                                  return KeyEventResult.handled;
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount:
+                                          ((constraints.maxWidth - 24) / 44)
+                                              .floor()
+                                              .clamp(1, 100),
+                                      mainAxisExtent: 44,
+                                    ),
+                                itemCount: visible.length,
+                                itemBuilder: (context, index) {
+                                  final item = visible[index];
+                                  return Focus(
+                                    onKeyEvent: (_, event) {
+                                      if (event is! KeyDownEvent) {
+                                        return KeyEventResult.ignored;
+                                      }
+                                      final direction = {
+                                        LogicalKeyboardKey.arrowLeft:
+                                            TraversalDirection.left,
+                                        LogicalKeyboardKey.arrowRight:
+                                            TraversalDirection.right,
+                                        LogicalKeyboardKey.arrowUp:
+                                            TraversalDirection.up,
+                                        LogicalKeyboardKey.arrowDown:
+                                            TraversalDirection.down,
+                                      }[event.logicalKey];
+                                      if (direction == null) {
+                                        return KeyEventResult.ignored;
+                                      }
+                                      FocusScope.of(
+                                        context,
+                                      ).focusInDirection(direction);
+                                      return KeyEventResult.handled;
+                                    },
+                                    child: button(
+                                      item.label,
+                                      widget.itemBuilder(context, item),
+                                      widget.enabled && !item.disabled
+                                          ? () => widget.onSelect(item)
+                                          : null,
+                                      selected: widget.value == item.id,
+                                    ),
+                                  );
                                 },
-                                child: button(
-                                  item.label,
-                                  widget.itemBuilder(context, item),
-                                  widget.enabled && !item.disabled
-                                      ? () => widget.onSelect(item)
-                                      : null,
-                                  selected: widget.value == item.id,
-                                ),
-                              );
-                            },
+                              ),
+                            ),
                           ),
                         ),
                       ),

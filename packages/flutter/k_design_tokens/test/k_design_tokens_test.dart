@@ -78,6 +78,32 @@ void main() {
     expect(theme.highlightColor, Colors.transparent);
   });
 
+  test('scrollbars derive from tokens and remain consumer-overridable', () {
+    final theme = kDesignTheme(brightness: Brightness.dark);
+    final tokens = theme.extension<KDesignTokens>()!;
+    expect(
+      theme.scrollbarTheme.thumbColor!.resolve({}),
+      tokens.colorBorderStrong,
+    );
+    expect(
+      theme.scrollbarTheme.thumbColor!.resolve({WidgetState.hovered}),
+      Color.lerp(tokens.colorBorderStrong, tokens.colorTextMuted, 0.45),
+    );
+    expect(theme.scrollbarTheme.thickness!.resolve({}), 6);
+    expect(theme.scrollbarTheme.thickness!.resolve({WidgetState.dragged}), 6);
+    expect(theme.scrollbarTheme.interactive, isTrue);
+    expect(theme.scrollbarTheme.thumbVisibility!.resolve({}), isTrue);
+
+    final touchTheme = kDesignTheme(
+      configuration: KDesignConfiguration.mobileApp,
+    ).scrollbarTheme;
+    expect(touchTheme.interactive, isFalse);
+    expect(touchTheme.thumbVisibility!.resolve({}), isFalse);
+
+    const override = ScrollbarThemeData(thickness: WidgetStatePropertyAll(12));
+    expect(kDesignTheme(scrollbarTheme: override).scrollbarTheme, override);
+  });
+
   test('reference theme overrides flow through secondary button roles', () {
     expect(
       KDesignTokens.referenceLight.colorActionSecondaryHover,

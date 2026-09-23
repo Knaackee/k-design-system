@@ -199,38 +199,40 @@ class _PickerTimeColumnState extends State<PickerTimeColumn> {
             height: _height * 5,
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
-                scrollbars: false,
                 dragDevices: {
                   ...ScrollConfiguration.of(context).dragDevices,
                   PointerDeviceKind.mouse,
                 },
               ),
-              child: ListView(
+              child: Scrollbar(
                 controller: _scroll,
-                padding: EdgeInsets.zero,
-                itemExtent: _height,
-                children: [
-                  for (final value in widget.values)
-                    Builder(
-                      builder: (context) {
-                        final node = _nodes.putIfAbsent(
-                          value,
-                          () => FocusNode(),
-                        );
-                        node.skipTraversal = value != widget.selected;
-                        return PickerAction(
-                          label: value,
-                          semanticLabel: value,
-                          height: _height,
-                          width: double.infinity,
-                          selected: value == widget.selected,
-                          focusNode: node,
-                          onKeyEvent: _key,
-                          onPressed: () => _choose(value),
-                        );
-                      },
-                    ),
-                ],
+                child: ListView(
+                  controller: _scroll,
+                  padding: EdgeInsets.zero,
+                  itemExtent: _height,
+                  children: [
+                    for (final value in widget.values)
+                      Builder(
+                        builder: (context) {
+                          final node = _nodes.putIfAbsent(
+                            value,
+                            () => FocusNode(),
+                          );
+                          node.skipTraversal = value != widget.selected;
+                          return PickerAction(
+                            label: value,
+                            semanticLabel: value,
+                            height: _height,
+                            width: double.infinity,
+                            selected: value == widget.selected,
+                            focusNode: node,
+                            onKeyEvent: _key,
+                            onPressed: () => _choose(value),
+                          );
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

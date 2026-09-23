@@ -105,12 +105,6 @@
   padding: 12px;
   color: var(--k-color-text-muted);
 }
-.k-symbol-categories {
-  scrollbar-width: none;
-}
-.k-symbol-categories::-webkit-scrollbar {
-  display: none;
-}
 .k-symbol-categories button {
   flex: 0 0 44px;
   padding: 0;

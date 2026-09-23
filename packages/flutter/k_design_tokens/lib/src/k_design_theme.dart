@@ -197,6 +197,7 @@ ThemeData kDesignTheme({
   Brightness brightness = Brightness.light,
   KDesignConfiguration configuration = const KDesignConfiguration(),
   String? fontFamily,
+  ScrollbarThemeData? scrollbarTheme,
 }) {
   final tokens = kDesignTokens(
     brand: brand,
@@ -219,6 +220,32 @@ ThemeData kDesignTheme({
     splashFactory: NoSplash.splashFactory,
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
+    scrollbarTheme:
+        scrollbarTheme ??
+        ScrollbarThemeData(
+          interactive: configuration.inputMode == KInputMode.pointer,
+          thumbVisibility: WidgetStatePropertyAll(
+            configuration.inputMode == KInputMode.pointer,
+          ),
+          trackVisibility: const WidgetStatePropertyAll(false),
+          minThumbLength: 48,
+          mainAxisMargin: 4,
+          crossAxisMargin: 2,
+          radius: Radius.circular(tokens.radiusFull),
+          thickness: const WidgetStatePropertyAll(6),
+          thumbColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.hovered)) {
+              return Color.lerp(
+                tokens.colorBorderStrong,
+                tokens.colorTextMuted,
+                0.45,
+              );
+            }
+            return tokens.colorBorderStrong;
+          }),
+          trackColor: const WidgetStatePropertyAll(Colors.transparent),
+          trackBorderColor: const WidgetStatePropertyAll(Colors.transparent),
+        ),
     colorScheme: ColorScheme.fromSeed(
       seedColor: tokens.colorActionPrimaryBackground,
       brightness: brightness,

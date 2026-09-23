@@ -144,7 +144,6 @@
   position: relative;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-width: none;
   user-select: none;
   touch-action: pan-y;
   cursor: grab;

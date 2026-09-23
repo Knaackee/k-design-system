@@ -1,10 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets('emoji grid scrolls by mouse and touch drag', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(body: KEmojiPicker(onSelect: (_) {})),
+      ),
+    );
+    await tester.tap(find.bySemanticsLabel('Choose emoji').first);
+    await tester.pumpAndSettle();
+
+    final grid = tester.widget<GridView>(find.byType(GridView));
+    final controller = grid.controller!;
+    await tester.drag(
+      find.byType(GridView),
+      const Offset(0, -160),
+      kind: PointerDeviceKind.mouse,
+    );
+    await tester.pumpAndSettle();
+    expect(controller.offset, greaterThan(0));
+
+    controller.jumpTo(0);
+    await tester.pump();
+    await tester.drag(
+      find.byType(GridView),
+      const Offset(0, -160),
+      kind: PointerDeviceKind.touch,
+    );
+    await tester.pumpAndSettle();
+    expect(controller.offset, greaterThan(0));
+  });
+
   testWidgets('opening builds only the visible emoji rows', (tester) async {
     final built = <String>{};
     await tester.pumpWidget(

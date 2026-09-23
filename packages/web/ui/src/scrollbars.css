@@ -1,0 +1,138 @@
+:root,
+:where(
+  .k-scrollbar,
+  .k-calendar,
+  .k-dialog,
+  .k-bottom-sheet-content,
+  .k-kanban,
+  .k-kanban-column-items,
+  .k-menu,
+  .k-picker-time-scroll,
+  .k-select-list,
+  .k-symbol-categories,
+  .k-symbol-grid,
+  .k-table-viewport,
+  .k-virtual-table
+) {
+  --k-scrollbar-size: 10px;
+  --k-scrollbar-thumb-size: 6px;
+  --k-scrollbar-thumb: var(--k-color-border-strong);
+  --k-scrollbar-thumb-hover: color-mix(
+    in srgb,
+    var(--k-color-border-strong) 55%,
+    var(--k-color-text-muted) 45%
+  );
+  --k-scrollbar-track: transparent;
+  scrollbar-color: var(--k-scrollbar-thumb) var(--k-scrollbar-track);
+  scrollbar-width: thin;
+}
+
+:where(
+  html,
+  .k-scrollbar,
+  .k-calendar,
+  .k-dialog,
+  .k-bottom-sheet-content,
+  .k-kanban,
+  .k-kanban-column-items,
+  .k-menu,
+  .k-picker-time-scroll,
+  .k-select-list,
+  .k-symbol-categories,
+  .k-symbol-grid,
+  .k-table-viewport,
+  .k-virtual-table
+)::-webkit-scrollbar {
+  width: var(--k-scrollbar-size);
+  height: var(--k-scrollbar-size);
+}
+
+:where(
+  html,
+  .k-scrollbar,
+  .k-calendar,
+  .k-dialog,
+  .k-bottom-sheet-content,
+  .k-kanban,
+  .k-kanban-column-items,
+  .k-menu,
+  .k-picker-time-scroll,
+  .k-select-list,
+  .k-symbol-categories,
+  .k-symbol-grid,
+  .k-table-viewport,
+  .k-virtual-table
+)::-webkit-scrollbar-track {
+  background: var(--k-scrollbar-track);
+}
+
+:where(
+  html,
+  .k-scrollbar,
+  .k-calendar,
+  .k-dialog,
+  .k-bottom-sheet-content,
+  .k-kanban,
+  .k-kanban-column-items,
+  .k-menu,
+  .k-picker-time-scroll,
+  .k-select-list,
+  .k-symbol-categories,
+  .k-symbol-grid,
+  .k-table-viewport,
+  .k-virtual-table
+)::-webkit-scrollbar-thumb {
+  min-width: 48px;
+  min-height: 48px;
+  border: calc((var(--k-scrollbar-size) - var(--k-scrollbar-thumb-size)) / 2)
+    solid transparent;
+  border-radius: var(--k-radius-full);
+  background: var(--k-scrollbar-thumb);
+  background-clip: padding-box;
+}
+
+:where(
+    html,
+    .k-scrollbar,
+    .k-calendar,
+    .k-dialog,
+    .k-bottom-sheet-content,
+    .k-kanban,
+    .k-kanban-column-items,
+    .k-menu,
+    .k-picker-time-scroll,
+    .k-select-list,
+    .k-symbol-categories,
+    .k-symbol-grid,
+    .k-table-viewport,
+    .k-virtual-table
+  )::-webkit-scrollbar-thumb:hover {
+  background: var(--k-scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
+
+:where(
+  html,
+  .k-scrollbar,
+  .k-calendar,
+  .k-dialog,
+  .k-bottom-sheet-content,
+  .k-kanban,
+  .k-kanban-column-items,
+  .k-menu,
+  .k-picker-time-scroll,
+  .k-select-list,
+  .k-symbol-categories,
+  .k-symbol-grid,
+  .k-table-viewport,
+  .k-virtual-table
+)::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@media (forced-colors: active) {
+  :root,
+  .k-scrollbar {
+    scrollbar-color: auto;
+  }
+}
