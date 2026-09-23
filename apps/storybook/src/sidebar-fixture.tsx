@@ -164,7 +164,7 @@ function DemoSidebar({
       <KSidebarBody>
         <KSidebarGroup>
           {item("Inbox", "mail", {
-            badge: <KBadge variant="primary">3</KBadge>,
+            badge: <KBadge variant="primary">9</KBadge>,
             action: true,
           })}
           {item("My issues", "user")}
@@ -181,7 +181,10 @@ function DemoSidebar({
             />
           }
         >
-          {item("Projects", "folder", { badge: "12", action: true })}
+          {item("Projects", "folder", {
+            badge: <KBadge variant="secondary">99+</KBadge>,
+            action: true,
+          })}
           {item("Views", "sliders-horizontal")}
         </KSidebarGroup>
         <KSidebarGroup
@@ -204,7 +207,7 @@ function DemoSidebar({
             {item("Projects", "folder", { depth: 1 })}
             {item("Members", "users", {
               depth: 1,
-              badge: <KBadge variant="secondary">8</KBadge>,
+              badge: <KBadge variant="secondary">99</KBadge>,
               action: true,
             })}
           </KSidebarSubgroup>
