@@ -47,7 +47,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CircularProgressIndicator), findsNothing);
     expect(find.text('Choose a symbol'), findsNothing);
-    expect(find.text('Standard'), findsOneWidget);
+    expect(find.byTooltip('Skin tone'), findsOneWidget);
+    await tester.tap(find.byTooltip('Skin tone'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Standard'), findsOneWidget);
+    await tester.tap(find.byTooltip('Standard'));
+    await tester.pumpAndSettle();
     expect(find.text('Suchbegriff'), findsOneWidget);
     // Six visible rows of seven cells plus the category thumbnails.
     expect(built.length, lessThanOrEqualTo(55));

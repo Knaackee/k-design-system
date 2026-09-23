@@ -200,6 +200,7 @@ class KEmojiPicker extends StatefulWidget {
     this.onOpenChange,
     this.skinTone,
     this.onSkinToneChange,
+    this.showSkinTonePicker = true,
     super.key,
   });
   final ValueChanged<KSymbolItem> onSelect;
@@ -218,6 +219,7 @@ class KEmojiPicker extends StatefulWidget {
   final ValueChanged<bool>? onOpenChange;
   final int? skinTone;
   final ValueChanged<int>? onSkinToneChange;
+  final bool showSkinTonePicker;
   @override
   State<KEmojiPicker> createState() => _KEmojiPickerState();
 }
@@ -227,7 +229,7 @@ class _KEmojiPickerState extends State<KEmojiPicker> {
   @override
   Widget build(BuildContext context) {
     final tone = (widget.skinTone ?? _tone).clamp(0, 5);
-    final tokens = Theme.of(context).extension<KDesignTokens>()!;
+    final hand = kEmojiCatalog.firstWhere((item) => item.id == '270b');
     return _SymbolPickerAnchor(
       label: widget.triggerLabel ?? 'Choose emoji',
       icon: KIconName.heart,
@@ -261,46 +263,91 @@ class _KEmojiPickerState extends State<KEmojiPicker> {
         itemBuilder: (context, item) =>
             widget.itemBuilder?.call(context, item.withTone(tone)) ??
             _emojiPicture(item.withTone(tone)),
-        accessory: Container(
-          width: 112,
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: tokens.colorSurfaceSubtle,
-            border: Border.all(color: tokens.colorBorderDefault),
-            borderRadius: BorderRadius.circular(tokens.radiusSmall),
-          ),
-          child: Semantics(
-            label: widget.labels.skinTone,
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<int>(
-                value: tone,
-                isExpanded: true,
-                hint: Text(widget.labels.skinTone),
-                items: List.generate(
-                  6,
-                  (i) => DropdownMenuItem(
-                    value: i,
-                    child: KText(
-                      widget.labels.tones[i],
-                      variant: KTextVariant.bodySmall,
-                      maxLines: 1,
+        accessory: widget.showSkinTonePicker
+            ? _SkinToneControl(
+                hand: hand,
+                tone: tone,
+                labels: widget.labels,
+                enabled: widget.enabled,
+                onChanged: (next) {
+                  if (widget.skinTone == null) setState(() => _tone = next);
+                  widget.onSkinToneChange?.call(next);
+                },
+              )
+            : null,
+      ),
+    );
+  }
+}
+
+class _SkinToneControl extends StatelessWidget {
+  const _SkinToneControl({
+    required this.hand,
+    required this.tone,
+    required this.labels,
+    required this.enabled,
+    required this.onChanged,
+  });
+  final KSymbolItem hand;
+  final int tone;
+  final KSymbolPickerLabels labels;
+  final bool enabled;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = Theme.of(context).extension<KDesignTokens>()!;
+    return MenuAnchor(
+      alignmentOffset: const Offset(0, -96),
+      style: MenuStyle(
+        alignment: AlignmentDirectional.topEnd,
+        backgroundColor: WidgetStatePropertyAll(tokens.colorSurfaceRaised),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(4)),
+      ),
+      menuChildren: [
+        SizedBox(
+          width: 132,
+          child: Wrap(
+            children: [
+              for (var index = 0; index < 6; index++)
+                SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: Tooltip(
+                    message: labels.tones[index],
+                    child: Semantics(
+                      label: labels.tones[index],
+                      selected: tone == index,
+                      child: MenuItemButton(
+                        onPressed: enabled ? () => onChanged(index) : null,
+                        style: ButtonStyle(
+                          padding: const WidgetStatePropertyAll(
+                            EdgeInsets.zero,
+                          ),
+                          side: WidgetStatePropertyAll(
+                            tone == index
+                                ? BorderSide(
+                                    color: tokens.colorBorderFocus,
+                                    width: 2,
+                                  )
+                                : BorderSide.none,
+                          ),
+                        ),
+                        child: _emojiPicture(hand.withTone(index)),
+                      ),
                     ),
                   ),
                 ),
-                onChanged: widget.enabled
-                    ? (next) {
-                        if (next == null) return;
-                        if (widget.skinTone == null) {
-                          setState(() => _tone = next);
-                        }
-                        widget.onSkinToneChange?.call(next);
-                      }
-                    : null,
-              ),
-            ),
+            ],
           ),
         ),
+      ],
+      builder: (context, controller, child) => IconButton(
+        tooltip: labels.skinTone,
+        onPressed: enabled
+            ? () => controller.isOpen ? controller.close() : controller.open()
+            : null,
+        icon: _emojiPicture(hand.withTone(tone)),
       ),
     );
   }

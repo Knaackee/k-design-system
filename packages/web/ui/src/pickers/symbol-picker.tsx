@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { KInput } from "../forms/input.js";
 import { KSurface } from "../primitives/surface.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
@@ -273,10 +273,102 @@ export function KIconPicker(props: KSymbolPickerProps<KIconItem>) {
 export interface KEmojiPickerProps extends KSymbolPickerProps<KEmojiItem> {
   skinTone?: number;
   onSkinToneChange?: (tone: number) => void;
+  showSkinTonePicker?: boolean;
 }
+
+const skinToneHand = kEmojiCatalog.find((item) => item.id === "270b")!;
+
+function SkinToneControl({
+  tone,
+  labels,
+  disabled,
+  onChange,
+}: {
+  tone: number;
+  labels: KSymbolPickerLabels;
+  disabled?: boolean;
+  onChange: (tone: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", dismiss);
+    return () => document.removeEventListener("pointerdown", dismiss);
+  }, [open]);
+  const hand = (index: number) =>
+    skinToneHand.tones?.[index - 1] ?? skinToneHand;
+  const image = (index: number) => (
+    <img
+      src={`data:image/svg+xml,${encodeURIComponent(hand(index).svg)}`}
+      width={24}
+      height={24}
+      draggable={false}
+      alt=""
+    />
+  );
+  return (
+    <div
+      className="k-emoji-tone-control"
+      ref={root}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && open) {
+          event.stopPropagation();
+          setOpen(false);
+          trigger.current?.focus();
+        }
+      }}
+    >
+      <button
+        ref={trigger}
+        type="button"
+        className="k-emoji-tone-trigger"
+        aria-label={`${labels.skinTone}: ${labels.tones[tone]}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        title={labels.skinTone}
+        disabled={disabled}
+        onClick={() => setOpen(!open)}
+      >
+        {image(tone)}
+      </button>
+      {open && (
+        <div
+          className="k-emoji-tone-menu"
+          role="menu"
+          aria-label={labels.skinTone}
+        >
+          {labels.tones.map((label, index) => (
+            <button
+              type="button"
+              role="menuitemradio"
+              key={index}
+              aria-label={label}
+              aria-checked={tone === index}
+              title={label}
+              onClick={() => {
+                onChange(index);
+                setOpen(false);
+                trigger.current?.focus();
+              }}
+            >
+              {image(index)}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function KEmojiPicker({
   skinTone,
   onSkinToneChange,
+  showSkinTonePicker = true,
   ...props
 }: KEmojiPickerProps) {
   const [localTone, setTone] = useState(0);
@@ -318,23 +410,17 @@ export function KEmojiPicker({
             )
           }
           accessory={
-            <select
-              aria-label={text.skinTone}
-              title={text.skinTone}
-              disabled={props.disabled}
-              value={tone}
-              onChange={(e) => {
-                const next = Number(e.target.value);
-                if (skinTone === undefined) setTone(next);
-                onSkinToneChange?.(next);
-              }}
-            >
-              {text.tones.map((label, index) => (
-                <option key={index} value={index}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            showSkinTonePicker && (
+              <SkinToneControl
+                tone={tone}
+                labels={text}
+                disabled={props.disabled}
+                onChange={(next) => {
+                  if (skinTone === undefined) setTone(next);
+                  onSkinToneChange?.(next);
+                }}
+              />
+            )
           }
         />
       )}
