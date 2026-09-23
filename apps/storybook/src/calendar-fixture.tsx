@@ -415,4 +415,3 @@ export function CalendarFixture({
     </div>
   );
 }
-

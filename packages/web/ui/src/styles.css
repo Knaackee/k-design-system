@@ -6,6 +6,7 @@
 @import "./overlays.css";
 @import "./kanban.css";
 @import "./calendar.css";
+@import "./symbol-picker.css";
 
 @font-face {
   font-family: "Inter";

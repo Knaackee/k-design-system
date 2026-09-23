@@ -153,3 +153,17 @@ export type {
   KDataTableDraftOptions,
 } from "./data/data-table-draft.js";
 export { KDataTableDraftInteraction } from "./data/data-table-draft-interaction.js";
+export {
+  KIconPicker,
+  KEmojiPicker,
+  kDefaultIconItems,
+  kEmojiCatalog,
+} from "./pickers/symbol-picker.js";
+export type {
+  KSymbolItem,
+  KIconItem,
+  KEmojiItem,
+  KSymbolPickerProps,
+  KEmojiPickerProps,
+  KSymbolPickerLabels,
+} from "./pickers/symbol-picker.js";

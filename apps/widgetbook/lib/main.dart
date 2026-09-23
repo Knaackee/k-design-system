@@ -16,6 +16,7 @@ import 'data_table_virtual_fixture.dart';
 import 'kanban_fixtures.dart';
 import 'calendar_fixtures.dart';
 import 'picker_fixtures.dart';
+import 'symbol_picker_fixtures.dart';
 import 'typography_fixtures.dart';
 import 'color_fixtures.dart';
 import 'foundation_fixtures.dart';
@@ -170,6 +171,24 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Forms',
           children: [
+            WidgetbookFolder(
+              name: 'EmojiPicker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'emoji-picker-reactions',
+                  builder: (_) => const SymbolPickerFixture(emoji: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'IconPicker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'icon-picker-icons',
+                  builder: (_) => const SymbolPickerFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'CurrencyInput',
               children: [

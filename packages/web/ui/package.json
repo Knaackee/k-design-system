@@ -22,7 +22,10 @@
     "src/overlays.css",
     "src/kanban.css",
     "src/table.css",
-    "src/assets"
+    "src/assets",
+    "src/symbol-picker.css",
+    "LICENSE.twemoji",
+    "LICENSE.gemoji"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
