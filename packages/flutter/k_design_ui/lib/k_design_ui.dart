@@ -13,6 +13,7 @@ export 'src/primitives/k_icon.dart';
 export 'src/primitives/k_separator.dart';
 export 'src/actions/k_icon_button.dart';
 export 'src/actions/k_menu_button.dart';
+export 'src/actions/k_context_menu.dart';
 export 'src/patterns/k_toolbar.dart';
 export 'src/patterns/k_kanban.dart';
 export 'src/patterns/k_calendar.dart';

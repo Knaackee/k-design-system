@@ -41,6 +41,13 @@ body {
   width: calc((100% - var(--k-space-layout-section-gap)) / 2);
   min-width: 0;
 }
+.k-context-menu-fixture__target {
+  min-height: 112px;
+  box-sizing: border-box;
+  padding: var(--k-space-card-padding);
+  cursor: context-menu;
+  user-select: none;
+}
 .k-radius-sample {
   height: 72px;
   background: var(--k-color-surface-subtle);

@@ -11,7 +11,8 @@ class KMenuAction {
   const KMenuAction({
     required this.id,
     required this.label,
-    required this.onSelect,
+    this.onSelect,
+    this.children = const [],
     this.icon,
     this.disabled = false,
     this.destructive = false,
@@ -19,7 +20,8 @@ class KMenuAction {
   });
   final String id;
   final String label;
-  final VoidCallback onSelect;
+  final VoidCallback? onSelect;
+  final List<KMenuAction> children;
   final KIconName? icon;
   final bool disabled;
   final bool destructive;
@@ -279,7 +281,7 @@ class _KMenuButtonState extends State<KMenuButton> {
                               ? null
                               : () {
                                   _close();
-                                  action.onSelect();
+                                  action.onSelect?.call();
                                 },
                           style: ButtonStyle(
                             visualDensity: VisualDensity.standard,

@@ -45,6 +45,8 @@ export { KIconButton } from "./actions/icon-button.js";
 export type { KIconButtonProps } from "./actions/icon-button.js";
 export { KMenuButton, KOverflowMenu } from "./actions/menu-button.js";
 export type { KMenuAction, KMenuButtonProps } from "./actions/menu-button.js";
+export { KContextMenu } from "./actions/context-menu.js";
+export type { KContextMenuProps } from "./actions/context-menu.js";
 export { KToolbar } from "./patterns/toolbar.js";
 export type { KToolbarProps } from "./patterns/toolbar.js";
 export { KKanban } from "./patterns/kanban.js";

@@ -9,7 +9,8 @@ export interface KMenuAction {
   disabled?: boolean;
   destructive?: boolean;
   separatorBefore?: boolean;
-  onSelect: () => void;
+  onSelect?: () => void;
+  children?: readonly KMenuAction[];
 }
 export interface KMenuButtonProps {
   label: string;
@@ -195,7 +196,7 @@ export function KMenuButton({
               data-destructive={action.destructive || undefined}
               onClick={() => {
                 close();
-                action.onSelect();
+                action.onSelect?.();
               }}
             >
               {action.icon ? (

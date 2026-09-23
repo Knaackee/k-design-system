@@ -5,6 +5,7 @@ import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
 import 'action_fixtures.dart';
+import 'context_menu_fixture.dart';
 import 'form_fixtures.dart';
 import 'table_fixtures.dart';
 import 'data_table_fixtures.dart';
@@ -148,6 +149,15 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Actions',
           children: [
+            WidgetbookFolder(
+              name: 'ContextMenu',
+              children: [
+                WidgetbookUseCase(
+                  name: 'context-menu-actions',
+                  builder: (_) => const ContextMenuFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'IconButton',
               children: [

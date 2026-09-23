@@ -1,7 +1,7 @@
 # Actions and toolbar
 
-The Rapid slice provides `KIconButton`, `KMenuButton`, `KOverflowMenu` and
-`KToolbar` for Web and Flutter. It follows Bullets' compact action layout while
+The Rapid slices provide `KIconButton`, `KMenuButton`, `KOverflowMenu`,
+`KContextMenu` and `KToolbar` for Web and Flutter. They follow Bullets' compact action layout while
 keeping product-specific commands and query state outside the component package.
 Human visual acceptance remains separate from automated verification.
 
@@ -10,8 +10,12 @@ Human visual acceptance remains separate from automated verification.
 - Icon buttons require an accessible label and use shared 16px Lucide vectors.
 - Menu actions have a stable unique ID, label, callback, optional icon, disabled
   state, destructive tone and optional group separator before the item.
-- These are commands, not value selectors. Select/Combobox, checkable entries,
-  submenus and context menus are outside this slice.
+- These are commands, not value selectors. `KContextMenu` supports nested
+  command groups through `children`; checkable value selection remains outside
+  this contract.
+- Context menus open at the invocation point through secondary click or long
+  press and through Shift+F10/the Context Menu key. The consumer supplies the
+  target content and owns every command callback.
 - Overflow is an icon-only presentation of the same action menu. Applications
   explicitly supply overflow actions; viewport changes do not hide commands.
 - Toolbars contain action buttons/menu triggers, wrapping in source order with
@@ -55,6 +59,7 @@ overflow redistribution and advanced menu interaction are outside this slice.
 | ------------------------ | --------------------------- |
 | Actions / IconButton     | icon-button-actions         |
 | Actions / MenuButton     | menu-button-actions         |
+| Actions / ContextMenu    | context-menu-actions        |
 | Patterns / Toolbar       | toolbar-actions             |
 
 Both trees use the same case-insensitive alphabetical sorting. Existing gallery
