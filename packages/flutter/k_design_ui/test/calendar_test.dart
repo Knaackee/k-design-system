@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
@@ -70,7 +71,11 @@ void main() {
       final handle = find.byWidgetPredicate(
         (w) => w is Semantics && w.properties.label == 'Change end',
       );
-      await tester.drag(handle, const Offset(0, 56));
+      await tester.drag(
+        handle,
+        const Offset(0, 56),
+        kind: PointerDeviceKind.mouse,
+      );
       await tester.pump();
       expect(resized?.edge, KCalendarResizeEdge.end);
       expect(resized?.start.minutes, 540);

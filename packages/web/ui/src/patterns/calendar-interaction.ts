@@ -34,6 +34,7 @@ interface Gesture<T> {
   active: boolean;
   moved: boolean;
   touch: boolean;
+  held?: boolean;
 }
 export function useCalendarInteraction<T>(
   root: RefObject<HTMLDivElement | null>,
@@ -44,9 +45,56 @@ export function useCalendarInteraction<T>(
   current.current = props;
   const [preview, setPreview] = useState<KCalendarSelection | null>(null);
   const [previewEntryId, setPreviewEntryId] = useState<string | null>(null);
-  const [previewPoint, setPreviewPoint] = useState<{ x: number; y: number } | null>(null);
+  const [previewPoint, setPreviewPoint] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const gesture = useRef<Gesture<T> | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [portrait, setPortrait] = useState(false);
+  const portraitRef = useRef(false);
+  const [localSelected, setLocalSelected] = useState<string | null>(null);
+  const selected = props.onSelectedEventChange
+    ? (props.selectedEventId ?? null)
+    : localSelected;
+  const selectedRef = useRef(selected);
+  selectedRef.current = selected;
+  function select(id: string | null) {
+    if (current.current.onSelectedEventChange)
+      current.current.onSelectedEventChange(id);
+    else {
+      selectedRef.current = id;
+      setLocalSelected(id);
+    }
+  }
+  const selectRef = useRef(select);
+  selectRef.current = select;
+  useEffect(() => {
+    const node = root.current;
+    if (!node) return;
+    const measure = () => {
+      portraitRef.current =
+        window.innerWidth < 600 && window.innerWidth < window.innerHeight;
+      setPortrait(portraitRef.current);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    window.addEventListener("resize", measure);
+    const dismiss = (event: PointerEvent) => {
+      if (
+        !(event.target instanceof Element) ||
+        !event.target.closest("[data-calendar-event-id]")
+      )
+        selectRef.current(null);
+    };
+    window.addEventListener("pointerdown", dismiss);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("pointerdown", dismiss);
+    };
+  }, [root]);
   const step = props.stepMinutes ?? 30;
   function hit(x: number, y: number): KCalendarSlot | null {
     for (const node of root.current?.querySelectorAll<HTMLElement>(
@@ -208,6 +256,7 @@ export function useCalendarInteraction<T>(
         g.selection = { start: selection.start, end: selection.end };
       }
       setPreview(g.selection);
+      setPreviewEntryId(g.entry?.id ?? null);
       setPreviewPoint({ x: g.x, y: g.y });
       handlers.current.emit(g, "preview");
     }
@@ -237,13 +286,17 @@ export function useCalendarInteraction<T>(
       g.y = e.clientY;
       const distance = Math.hypot(g.x - g.initialX, g.y - g.initialY);
       if (distance > 4) g.moved = true;
-      if (!g.active && current.current.requireLongPress && g.moved) {
+      if (
+        !g.active &&
+        (portraitRef.current || current.current.requireLongPress) &&
+        g.moved
+      ) {
         clearTimeout(timer.current);
         root.current?.scrollBy(previousX - g.x, previousY - g.y);
         e.preventDefault();
         return;
       }
-      if (!g.active) return;
+      if (!g.active || !g.moved) return;
       e.preventDefault();
       update(g);
     }
@@ -257,7 +310,7 @@ export function useCalendarInteraction<T>(
       const p = current.current;
       const keepCreatePreview =
         g.kind === "create" &&
-        p.requireLongPress &&
+        (p.requireLongPress || portraitRef.current) &&
         !g.moved &&
         !g.active;
       if (!keepCreatePreview) setPreview(null);
@@ -267,7 +320,7 @@ export function useCalendarInteraction<T>(
       }
       if (!g.moved && g.entry && g.kind === "move") {
         if (g.active) handlers.current.emit(g, "cancel");
-        current.current.onEventOpen?.(g.entry.event);
+        if (!g.held) current.current.onEventOpen?.(g.entry.event);
         return;
       }
       if (g.kind === "resize" && !g.moved) {
@@ -275,7 +328,11 @@ export function useCalendarInteraction<T>(
         return;
       }
       if (!g.active) {
-        if (g.kind === "create" && p.requireLongPress && !g.moved) {
+        if (
+          g.kind === "create" &&
+          (p.requireLongPress || portraitRef.current) &&
+          !g.moved
+        ) {
           handlers.current.commit(g);
           return;
         }
@@ -283,13 +340,18 @@ export function useCalendarInteraction<T>(
         return;
       }
       handlers.current.commit(g);
+      if (g.kind === "move" && g.moved) selectRef.current(null);
     }
     function escape(e: KeyboardEvent) {
-      if (e.key !== "Escape" || !gesture.current) return;
+      if (e.key !== "Escape") return;
+      selectRef.current(null);
+      if (!gesture.current) return;
       handlers.current.emit(gesture.current, "cancel");
       gesture.current = null;
       clearTimeout(timer.current);
       setPreview(null);
+      setPreviewEntryId(null);
+      setPreviewPoint(null);
     }
     function touchMove(e: TouchEvent) {
       if (gesture.current?.active) e.preventDefault();
@@ -326,11 +388,13 @@ export function useCalendarInteraction<T>(
     const origin = hit(e.clientX, e.clientY);
     if (!origin) return;
     e.stopPropagation();
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    // The source event is replaced by its preview during a drag. Capture on
+    // the stable calendar root so removing that source cannot end the gesture.
+    root.current?.setPointerCapture?.(e.pointerId);
     const kind = edge ? "resize" : entry ? "move" : "create";
     if (kind === "create" && !p.onCreate) return;
     setPreview(null);
-    setPreviewEntryId(entry?.id ?? null);
+    setPreviewEntryId(null);
     setPreviewPoint({ x: e.clientX, y: e.clientY });
     const selection = entry
       ? { start: entry.start, end: entry.end }
@@ -351,13 +415,11 @@ export function useCalendarInteraction<T>(
       y: e.clientY,
       initialX: e.clientX,
       initialY: e.clientY,
-      // Existing events remain draggable with a mouse in compact/mobile
-      // layouts. Long-press is only needed for creating a new range there;
-      // otherwise a mouse drag would never become active because the compact
-      // scrolling gesture intentionally does not arm a creation timer.
       active:
-        e.pointerType !== "touch" &&
-        (kind !== "create" || !p.requireLongPress),
+        entry && portraitRef.current
+          ? selectedRef.current === entry.id
+          : e.pointerType !== "touch" &&
+            (kind !== "create" || !(p.requireLongPress || portraitRef.current)),
       moved: false,
       touch: e.pointerType === "touch",
     };
@@ -367,17 +429,22 @@ export function useCalendarInteraction<T>(
       emit(g, "start");
       if (kind === "create") setPreview(selection);
     } else if (
+      (entry && portraitRef.current) ||
       g.touch ||
       (kind === "create" && p.requireLongPress) ||
       !p.requireLongPress
     )
       timer.current = setTimeout(() => {
-        if (gesture.current === g) {
+        if (gesture.current === g && !g.moved) {
+          if (entry && portraitRef.current) {
+            g.held = true;
+            selectRef.current(entry.id);
+          }
           g.active = true;
           emit(g, "start");
-          setPreview(g.selection);
+          if (!entry) setPreview(g.selection);
         }
-      }, 400);
+      }, 500);
   }
   function create(selection: KCalendarSelection) {
     const g = { kind: "create", selection } as Gesture<T>;
@@ -395,7 +462,16 @@ export function useCalendarInteraction<T>(
     emit(g, "start");
     commit(g);
   }
-  return { preview, previewEntryId, previewPoint, begin, create, change };
+  return {
+    preview,
+    previewEntryId,
+    previewPoint,
+    begin,
+    create,
+    change,
+    portrait,
+    selected,
+  };
 }
 
 function duration(selection: KCalendarSelection) {

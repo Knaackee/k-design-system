@@ -27,6 +27,8 @@ class KCalendar<T extends Object> extends StatefulWidget {
     this.onEventResize,
     this.onCreate,
     this.onInteraction,
+    this.selectedEventId,
+    this.onSelectedEventChange,
     this.canMove,
     this.canResize,
     this.canCreate,
@@ -60,6 +62,13 @@ class KCalendar<T extends Object> extends StatefulWidget {
   final ValueChanged<KCalendarResize<T>>? onEventResize;
   final ValueChanged<KCalendarSelection>? onCreate;
   final ValueChanged<KCalendarInteraction<T>>? onInteraction;
+
+  /// With [onSelectedEventChange], controls the touch editing selection.
+  final String? selectedEventId;
+
+  /// Receives the selected event ID, or null when editing is dismissed.
+  /// When omitted, the calendar manages touch selection internally.
+  final ValueChanged<String?>? onSelectedEventChange;
   final bool Function(KCalendarMove<T>)? canMove;
   final bool Function(KCalendarResize<T>)? canResize;
   final bool Function(KCalendarSelection)? canCreate;
@@ -93,6 +102,20 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   String? _previewMoveId;
   KCalendarSelection? _previewResize;
   String? _previewResizeId;
+  String? _selectedEventId;
+  String? _touchArmedId;
+  String? get selectedEventId => widget.onSelectedEventChange != null
+      ? widget.selectedEventId
+      : _selectedEventId;
+  void selectEvent(String? id) {
+    if (selectedEventId == id) return;
+    if (widget.onSelectedEventChange != null) {
+      widget.onSelectedEventChange!(id);
+    } else {
+      setState(() => _selectedEventId = id);
+    }
+  }
+
   String get zone => widget.timeZone ?? KLocalization.of(context).timeZone;
   @override
   void didUpdateWidget(covariant KCalendar<T> oldWidget) {
@@ -278,6 +301,8 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   }
 
   bool move(T event, KCalendarSlot slot, {bool preview = false}) {
+    // Holding selects an event; only actual movement starts a move request.
+    if (_touchArmedId == widget.eventId(event)) return false;
     final change = movement(event, slot);
     final allowed =
         !_moveCancelled &&
@@ -360,6 +385,13 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
 
   Widget event(T value, {required bool compact, double dayWidth = 160}) =>
       KCalendarEvent<T>(
+        touchSelected: selectedEventId == widget.eventId(value),
+        select: () {
+          _touchArmedId = widget.eventId(value);
+          clearMovePreview();
+          selectEvent(widget.eventId(value));
+        },
+        deselect: () => selectEvent(null),
         calendar: widget,
         event: value,
         compact: compact,
@@ -369,6 +401,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
         zone: zone,
         scrollAt: scrollAt,
         startMove: () {
+          _touchArmedId = null;
           // A drag that is interrupted before Flutter delivers its end event
           // must not leak its preview into the next interaction.
           beginMovePreview(widget.eventId(value));
@@ -384,6 +417,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
         endResize: clearResizePreview,
         resizeUnits: (edge, global) => resizeUnitsAtAllDay(value, edge, global),
         previewMoveId: _previewMoveId,
+        previewResizeId: _previewResizeId,
         key: ValueKey(widget.eventId(value)),
       );
 

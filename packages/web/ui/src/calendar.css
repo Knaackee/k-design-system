@@ -229,3 +229,67 @@
   font-weight: 600;
   white-space: nowrap;
 }
+/* Portrait editing exposes finger-sized targets for mouse and touch alike. */
+.k-calendar-event[data-touch-mode]:not([data-touch-editing])
+  .k-calendar-resize {
+  visibility: hidden;
+  pointer-events: none;
+}
+.k-calendar-event[data-touch-editing] {
+  z-index: 6;
+}
+.k-calendar-positioned-event:has([data-touch-editing]) {
+  z-index: 6;
+}
+.k-calendar-time-column:has([data-touch-editing]) {
+  overflow: visible;
+  z-index: 6;
+}
+.k-calendar-event[data-touch-editing] .k-calendar-resize {
+  width: 48px;
+  height: 48px;
+  inset-inline: auto;
+  left: calc(50% - 24px);
+  right: auto;
+}
+.k-calendar-event[data-touch-editing] .k-calendar-resize-start {
+  top: -24px;
+  bottom: auto;
+  transform: none;
+}
+.k-calendar-event[data-touch-editing] .k-calendar-resize-end {
+  bottom: -24px;
+  top: auto;
+  transform: none;
+}
+.k-calendar-event[data-touch-editing] .k-calendar-resize-horizontal {
+  top: calc(50% - 24px);
+  bottom: auto;
+  transform: none;
+}
+.k-calendar-event[data-touch-editing]
+  .k-calendar-resize-horizontal.k-calendar-resize-start {
+  left: -24px;
+  right: auto;
+}
+.k-calendar-event[data-touch-editing]
+  .k-calendar-resize-horizontal.k-calendar-resize-end {
+  right: -24px;
+  left: auto;
+}
+.k-calendar-event[data-touch-editing] .k-calendar-resize::after {
+  inset: 15px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--k-color-surface-canvas);
+  box-sizing: border-box;
+}
+
+.k-calendar-event[data-touch-editing][data-short-event]
+  .k-calendar-resize-start {
+  transform: translateX(-24px);
+}
+.k-calendar-event[data-touch-editing][data-short-event] .k-calendar-resize-end {
+  transform: translateX(24px);
+}

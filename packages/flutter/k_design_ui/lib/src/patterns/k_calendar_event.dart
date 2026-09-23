@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'k_calendar.dart';
 import 'k_calendar_types.dart';
 import 'k_calendar_model.dart';
+import 'k_calendar_pointer_drag.dart';
+import 'k_calendar_touch_handles.dart';
 
 class KCalendarEvent<T extends Object> extends StatefulWidget {
   const KCalendarEvent({
@@ -23,6 +26,10 @@ class KCalendarEvent<T extends Object> extends StatefulWidget {
     required this.endResize,
     this.resizeUnits,
     required this.previewMoveId,
+    required this.previewResizeId,
+    required this.touchSelected,
+    required this.select,
+    required this.deselect,
     super.key,
   });
   final KCalendar<T> calendar;
@@ -38,6 +45,9 @@ class KCalendarEvent<T extends Object> extends StatefulWidget {
   final ValueChanged<KCalendarResize<T>> previewResize;
   final int? Function(KCalendarResizeEdge edge, Offset global)? resizeUnits;
   final String? previewMoveId;
+  final String? previewResizeId;
+  final bool touchSelected;
+  final VoidCallback select, deselect;
   @override
   State<KCalendarEvent<T>> createState() => _KCalendarEventState<T>();
 }
@@ -190,7 +200,10 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
         widget.end != null &&
         (!allDay || c.view != KCalendarView.day) &&
         (!widget.compact || allDay);
-    Widget movable = base;
+    Widget movable = GestureDetector(
+      onLongPress: c.onEventResize != null ? widget.select : null,
+      child: base,
+    );
     if (c.onEventMove != null) {
       void start() {
         if (_resizePointerDown) return;
@@ -227,7 +240,9 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       movable = Listener(
         onPointerDown: (_) {},
         child: LayoutBuilder(
-          builder: (context, _) => _PointerDrag<T>(
+          builder: (context, _) => KCalendarPointerDrag<T>(
+            touchSelected: widget.touchSelected,
+            onTouchSelect: widget.select,
             data: widget.event,
             // The calendar owns the snapped, full-width preview. Keeping the
             // platform drag feedback empty avoids a second free-floating card.
@@ -295,6 +310,10 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
                           ? SystemMouseCursors.resizeLeftRight
                           : SystemMouseCursors.resizeUpDown,
                       child: GestureDetector(
+                        supportedDevices: const {
+                          PointerDeviceKind.mouse,
+                          PointerDeviceKind.trackpad,
+                        },
                         behavior: HitTestBehavior.opaque,
                         onHorizontalDragStart: allDay
                             ? (_) => begin(edge)
@@ -348,96 +367,39 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
         },
       );
     }
-    return Focus(
-      focusNode: _focus,
-      onKeyEvent: (_, e) {
-        if (e is KeyDownEvent && e.logicalKey == LogicalKeyboardKey.escape) {
-          cancel();
-          return KeyEventResult.handled;
-        }
-        return KeyEventResult.ignored;
-      },
-      child: content,
+    return KCalendarTouchHandles(
+      selected:
+          widget.touchSelected &&
+          canResize &&
+          widget.previewMoveId == null &&
+          (widget.previewResizeId != c.eventId(widget.event) || _edge != null),
+      moving: _moving,
+      horizontal: allDay,
+      startOffset: _edge == KCalendarResizeEdge.start
+          ? units * (allDay ? widget.dayWidth / 1440 : c.hourHeight / 60)
+          : 0,
+      endOffset: _edge == KCalendarResizeEdge.end
+          ? units * (allDay ? widget.dayWidth / 1440 : c.hourHeight / 60)
+          : 0,
+      startLabel: c.labels.resizeStart,
+      endLabel: c.labels.resizeEnd,
+      onDismiss: widget.deselect,
+      onStart: begin,
+      onUpdate: update,
+      onEnd: finish,
+      onCancel: cancel,
+      child: Focus(
+        focusNode: _focus,
+        onKeyEvent: (_, e) {
+          if (e is KeyDownEvent && e.logicalKey == LogicalKeyboardKey.escape) {
+            cancel();
+            widget.deselect();
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
+        child: content,
+      ),
     );
   }
-}
-
-class _PointerDrag<T extends Object> extends StatefulWidget {
-  const _PointerDrag({
-    required this.data,
-    required this.onStart,
-    required this.onUpdate,
-    required this.onEnd,
-    required this.axis,
-    required this.child,
-  });
-  final T data;
-  final Widget child;
-  final VoidCallback onStart;
-  final ValueChanged<DragUpdateDetails> onUpdate;
-  final ValueChanged<DraggableDetails> onEnd;
-  final Axis? axis;
-  @override
-  State<_PointerDrag<T>> createState() => _PointerDragState<T>();
-}
-
-class _PointerDragState<T extends Object> extends State<_PointerDrag<T>> {
-  bool _mouse = false;
-  bool _inside = false;
-  bool _dragging = false;
-
-  void startDrag() {
-    _dragging = true;
-    widget.onStart();
-  }
-
-  void endDrag(DraggableDetails details) {
-    _dragging = false;
-    widget.onEnd(details);
-    if (!_inside && mounted && _mouse) {
-      setState(() => _mouse = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => MouseRegion(
-    onEnter: (_) {
-      _inside = true;
-      if (!_mouse) setState(() => _mouse = true);
-    },
-    onExit: (_) {
-      _inside = false;
-      // Keep the selected drag recognizer mounted until Flutter delivers the
-      // drag end event. Rebuilding here switches Draggable to
-      // LongPressDraggable mid-gesture and loses the preview state.
-      if (_mouse && !_dragging) setState(() => _mouse = false);
-    },
-    child: _mouse
-        ? Draggable<T>(
-            data: widget.data,
-            axis: widget.axis,
-            feedback: const SizedBox.shrink(),
-            dragAnchorStrategy: pointerDragAnchorStrategy,
-            onDragStarted: startDrag,
-            onDragUpdate: widget.onUpdate,
-            onDragEnd: endDrag,
-            // The calendar relays out the active event into its preview lane;
-            // keep that layout slot but let the visible feedback follow the
-            // pointer. The stable event key prevents the drag state from
-            // restarting when lanes are recalculated.
-            childWhenDragging: Opacity(opacity: 0, child: widget.child),
-            child: widget.child,
-          )
-        : LongPressDraggable<T>(
-            data: widget.data,
-            axis: widget.axis,
-            feedback: const SizedBox.shrink(),
-            dragAnchorStrategy: pointerDragAnchorStrategy,
-            onDragStarted: startDrag,
-            onDragUpdate: widget.onUpdate,
-            onDragEnd: endDrag,
-            childWhenDragging: Opacity(opacity: 0, child: widget.child),
-            child: widget.child,
-          ),
-  );
 }

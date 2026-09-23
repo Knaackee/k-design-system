@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import type { KCalendarProps, KCalendarLabels } from "./calendar-types.js";
 import { shiftSlot, slotNumber, type CalendarEntry } from "./calendar-model.js";
 import type { useCalendarInteraction } from "./calendar-interaction.js";
@@ -16,10 +17,32 @@ export function CalendarEvent<T>({
   interaction: ReturnType<typeof useCalendarInteraction<T>>;
   dragging?: boolean;
 }) {
+  const element = useRef<HTMLDivElement>(null);
+  const [short, setShort] = useState(false);
+  useLayoutEffect(() => {
+    const node = element.current;
+    if (!node) return;
+    const update = () =>
+      setShort(!compact && node.getBoundingClientRect().height < 48);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [compact]);
   const { renderEvent, getEventStart, getEventEnd } = props;
   const step = entry.start.allDay ? 1440 : (props.stepMinutes ?? 30);
   return (
     <div
+      ref={element}
+      data-short-event={short || undefined}
+      data-calendar-event-id={entry.id}
+      data-touch-editing={
+        (interaction.portrait &&
+          interaction.selected === entry.id &&
+          !dragging) ||
+        undefined
+      }
+      data-touch-mode={interaction.portrait || undefined}
       className={`k-calendar-event${compact ? " k-calendar-event-compact" : ""}${dragging ? " k-calendar-event-dragging" : ""}`}
       onPointerDown={(e) => interaction.begin(e, entry)}
     >

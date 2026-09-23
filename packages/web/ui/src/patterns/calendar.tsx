@@ -340,7 +340,8 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
       ref={root}
       className={[
         "k-calendar",
-        props.requireLongPress && "k-calendar-compact-interaction",
+        (props.requireLongPress || interaction.portrait) &&
+          "k-calendar-compact-interaction",
         props.className,
       ]
         .filter(Boolean)

@@ -51,6 +51,7 @@ void main() {
         await gesture.addPointer(location: origin);
         await tester.pump();
         await gesture.down(origin);
+        await tester.pump(const Duration(milliseconds: 600));
         await gesture.moveBy(const Offset(20, 0));
         await tester.pump();
         await gesture.moveTo(target);

@@ -467,7 +467,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                         ignoring: previewId != null,
                         child: Opacity(
                           opacity: c.eventId(segment.event) == previewId
-                              ? 0
+                              ? (widget.previewResizeId != null ? .001 : 0)
                               : 1,
                           child: widget.eventWidget(segment.event),
                         ),

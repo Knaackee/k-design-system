@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
@@ -39,7 +40,10 @@ void main() {
           extendStart ? 'Change start' : 'Change end',
         );
         expect(handle, findsOneWidget);
-        final g = await tester.startGesture(tester.getCenter(handle));
+        final g = await tester.startGesture(
+          tester.getCenter(handle),
+          kind: PointerDeviceKind.mouse,
+        );
         await g.moveBy(const Offset(-160, 0));
         await g.moveBy(const Offset(-1, 0));
         await tester.pump();

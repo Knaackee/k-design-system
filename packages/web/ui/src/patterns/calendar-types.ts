@@ -68,6 +68,9 @@ export interface KCalendarProps<T> {
   defaultDurationMinutes?: number;
   /** Use tap-to-create and reserve drag gestures for scrolling in compact layouts. */
   requireLongPress?: boolean;
+  /** Controlled portrait editing selection when onSelectedEventChange is supplied. */
+  selectedEventId?: string | null;
+  onSelectedEventChange?: (eventId: string | null) => void;
   hourHeight?: number;
   height?: number;
   minDayWidth?: number;
