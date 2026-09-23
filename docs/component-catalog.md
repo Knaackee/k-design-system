@@ -1,26 +1,26 @@
 # Component catalog
 
-Status: target catalog, 2026-09-16. This is a roadmap, not approval to implement
-every entry. Actions and Toolbar are implemented. The current authorized Rapid
-slice is Field, Input, SearchField, Checkbox, Select, Combobox, FilterChip and
-FilterBar, with matching Web and Flutter fixtures and tests.
+Status: target catalog, updated 2026-09-23. This is a roadmap, not approval to
+implement every entry. The current authorized Rapid slice is Alert, AlertDialog,
+Attachment, Avatar, Badge, Breadcrumb and Carousel, with matching Web and Flutter
+fixtures and focused checks.
 
 ## Categories and scope
 
-| Category     | Families                                                                                                                                                   | Delivery                                                                                                                  |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Foundations  | Color, typography, density/spacing, radius, elevation, icon overview                                                                                       | Existing foundations; showcases, not additional components                                                                |
-| Primitives   | Text, Icon, Surface, Stack, Inline, Container, Grid, Separator                                                                                             | Existing                                                                                                                  |
-| Actions      | Button, IconButton, ButtonGroup, MenuButton, SplitButton                                                                                                   | Button, IconButton and MenuButton implemented                                                                             |
-| Menus        | Menu, OverflowMenu, ContextMenu; groups and submenus                                                                                                       | Flat action menu, overflow and context menu with submenus implemented                                                     |
-| Forms        | Field, Input, Textarea, SearchField, Checkbox, RadioGroup, Switch, Select, Combobox, MultiSelect, SegmentedControl, DatePicker, TimePicker, DateTimePicker | Field, Input, SearchField, Checkbox, Select, Combobox and the three pickers implemented; picker visual acceptance pending |
-| Overlays     | Tooltip, Popover, Dialog, Drawer, BottomSheet                                                                                                              | Independent contracts required; internal menu/picker surfaces do not establish public Popover/Dialog APIs                 |
-| Navigation   | Link, Tabs, Breadcrumb, Sidebar, NavigationItem/Section, BottomNavigation, Pagination                                                                      | After table foundations                                                                                                   |
-| Data Display | Card, Badge, Avatar, List/ListItem, DescriptionList, Table, Accordion                                                                                      | Card exists; Table after inputs                                                                                           |
-| Feedback     | InlineNotice, Toast, Progress, Spinner, Skeleton, EmptyState                                                                                               | Deliver alongside consumers that need them                                                                                |
-| Patterns     | Toolbar, FilterBar/FilterChip, DataTable, PageHeader, AppShell, DetailInspector                                                                            | Toolbar, FilterBar and FilterChip implemented                                                                             |
+| Category     | Families                                                                                                                                                                     | Delivery                                                                                                                                            |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundations  | Color, typography, density/spacing, radius, elevation, icon overview                                                                                                         | Existing foundations; showcases, not additional components                                                                                          |
+| Primitives   | Text, Icon, Surface, Stack, Inline, Container, Grid, Separator                                                                                                               | Existing                                                                                                                                            |
+| Actions      | Button, IconButton, ButtonGroup, MenuButton, SplitButton                                                                                                                     | Button, IconButton and MenuButton implemented                                                                                                       |
+| Menus        | Menu, OverflowMenu, ContextMenu; groups and submenus                                                                                                                         | Flat action menu, overflow and context menu with submenus implemented                                                                               |
+| Forms        | Field, Input, Textarea, SearchField, Checkbox, RadioGroup, Switch, Select, Combobox, MultiSelect, SegmentedControl, Slider, InputOTP, DatePicker, TimePicker, DateTimePicker | Field, Input, SearchField, Checkbox, Switch, Slider, InputOTP, Select, Combobox and the three pickers implemented; picker visual acceptance pending |
+| Overlays     | Tooltip, Popover, Dialog, AlertDialog, Drawer, BottomSheet                                                                                                                   | Popover, Dialog, AlertDialog, responsive Drawer and BottomSheet implemented                                                                         |
+| Navigation   | Link, Tabs, Breadcrumb, NavigationMenu, Sidebar, NavigationItem/Section, BottomNavigation, Pagination                                                                        | Tabs, Breadcrumb, NavigationMenu and Pagination implemented                                                                                         |
+| Data Display | Card, Badge, Avatar, Attachment, Carousel, Kbd, List/ListItem, DescriptionList, Table, Accordion                                                                             | Card, Badge, Avatar, Attachment, Carousel, Kbd, Table and Accordion implemented                                                                     |
+| Feedback     | Alert, Toast, Progress, Spinner, Skeleton, EmptyState                                                                                                                        | Alert, Toast, Progress, Spinner and Skeleton implemented                                                                                            |
+| Patterns     | Toolbar, FilterBar/FilterChip, DataTable, Questionnaire, PageHeader, AppShell, DetailInspector                                                                               | Toolbar, FilterBar, FilterChip, DataTable and Questionnaire implemented                                                                             |
 
-NumberInput, Slider, FileUpload, TreeView and CommandPalette are deferred
+NumberInput, FileUpload, TreeView and CommandPalette are deferred
 candidates. Rich-text editing, Kanban, charts, virtualization and advanced
 editable data grids require their own scope. KGrid is a layout primitive, not a
 data grid. Menu items and icon glyphs are not separate component families.
@@ -99,13 +99,7 @@ Allowed paths: Web/Flutter UI packages, both gallery applications, component
 documentation and affected test tooling. Reuse existing tokens and icon vectors;
 no token axes, protected Plan/ADR body edits, dependency adoption or commits.
 
-The actions slice is implemented and the control typography correction was
-visually accepted by the user. The next authorized Rapid slice comprises Field,
-Input, SearchField, Checkbox, Select, Combobox, FilterChip and FilterBar. Table and
-DataTable remain for a separate joint review. See [forms contract](components/forms.md).
-
-Verify input labels, errors, read-only and disabled states, mixed checkbox,
-keyboard selection, local search and cancellation, filter removal and reset.
-Compare matching fixtures at phone/tablet/desktop widths, densities, themes and
-200% text. Run affected native/browser tests and finish with `pnpm verify`.
-Record omissions explicitly before human visual acceptance.
+The current Rapid slice delivers the basic component families documented in
+[basic components](components/basic-components.md). Compare matching fixtures at
+phone/tablet/desktop widths, densities, themes and 200% text. Run affected
+native/browser checks and record omissions before human visual acceptance.

@@ -24,6 +24,8 @@ import 'foundation_fixtures.dart';
 import 'configuration_addon.dart';
 import 'gallery_navigation.dart';
 import 'additional_primitive_fixtures.dart';
+import 'basic_component_fixtures.dart';
+import 'extended_component_fixtures.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -109,6 +111,36 @@ class KDesignWidgetbook extends StatelessWidget {
           name: 'Overlays',
           children: [
             WidgetbookFolder(
+              name: 'Drawer',
+              children: [
+                WidgetbookUseCase(
+                  name: 'drawer-responsive',
+                  builder: (_) =>
+                      const ExtendedComponentFixture(kind: 'drawer'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Popover',
+              children: [
+                WidgetbookUseCase(
+                  name: 'popover-content',
+                  builder: (_) =>
+                      const ExtendedComponentFixture(kind: 'popover'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'AlertDialog',
+              children: [
+                WidgetbookUseCase(
+                  name: 'alert-dialog-confirmation',
+                  builder: (_) =>
+                      const BasicComponentFixture(kind: 'alert-dialog'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
               name: 'BottomSheet',
               children: [
                 WidgetbookUseCase(
@@ -131,6 +163,30 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Data display',
           children: [
+            WidgetbookFolder(
+              name: 'Kbd',
+              children: [
+                WidgetbookUseCase(
+                  name: 'kbd-shortcuts',
+                  builder: (_) => const ExtendedComponentFixture(kind: 'kbd'),
+                ),
+              ],
+            ),
+            for (final entry in const [
+              ('Attachment', 'attachment-states', 'attachment'),
+              ('Avatar', 'avatar-variants', 'avatar'),
+              ('Badge', 'badge-variants', 'badge'),
+              ('Carousel', 'carousel-slides', 'carousel'),
+            ])
+              WidgetbookFolder(
+                name: entry.$1,
+                children: [
+                  WidgetbookUseCase(
+                    name: entry.$2,
+                    builder: (_) => BasicComponentFixture(kind: entry.$3),
+                  ),
+                ],
+              ),
             WidgetbookFolder(
               name: 'Table',
               children: [
@@ -179,8 +235,80 @@ class KDesignWidgetbook extends StatelessWidget {
           ],
         ),
         WidgetbookCategory(
+          name: 'Feedback',
+          children: [
+            for (final entry in const [
+              ('Progress', 'progress-states', 'progress'),
+              ('Skeleton', 'skeleton-loading', 'skeleton'),
+              ('Spinner', 'spinner-loading', 'spinner'),
+              ('Toast', 'toast-notification', 'toast'),
+            ])
+              WidgetbookFolder(
+                name: entry.$1,
+                children: [
+                  WidgetbookUseCase(
+                    name: entry.$2,
+                    builder: (_) => ExtendedComponentFixture(kind: entry.$3),
+                  ),
+                ],
+              ),
+            WidgetbookFolder(
+              name: 'Alert',
+              children: [
+                WidgetbookUseCase(
+                  name: 'alert-states',
+                  builder: (_) => const BasicComponentFixture(kind: 'alert'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookCategory(
+          name: 'Navigation',
+          children: [
+            for (final entry in const [
+              ('NavigationMenu', 'navigation-menu-links', 'navigation-menu'),
+              ('Pagination', 'pagination-pages', 'pagination'),
+              ('Tabs', 'tabs-panels', 'tabs'),
+            ])
+              WidgetbookFolder(
+                name: entry.$1,
+                children: [
+                  WidgetbookUseCase(
+                    name: entry.$2,
+                    builder: (_) => ExtendedComponentFixture(kind: entry.$3),
+                  ),
+                ],
+              ),
+            WidgetbookFolder(
+              name: 'Breadcrumb',
+              children: [
+                WidgetbookUseCase(
+                  name: 'breadcrumb-navigation',
+                  builder: (_) =>
+                      const BasicComponentFixture(kind: 'breadcrumb'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookCategory(
           name: 'Forms',
           children: [
+            for (final entry in const [
+              ('InputOTP', 'input-otp-code', 'otp'),
+              ('Slider', 'slider-range', 'slider'),
+              ('Switch', 'switch-toggle', 'switch'),
+            ])
+              WidgetbookFolder(
+                name: entry.$1,
+                children: [
+                  WidgetbookUseCase(
+                    name: entry.$2,
+                    builder: (_) => ExtendedComponentFixture(kind: entry.$3),
+                  ),
+                ],
+              ),
             WidgetbookFolder(
               name: 'EmojiPicker',
               children: [
@@ -304,6 +432,16 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'Questionnaire',
+              children: [
+                WidgetbookUseCase(
+                  name: 'questionnaire-steps',
+                  builder: (_) =>
+                      const ExtendedComponentFixture(kind: 'questionnaire'),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Calendar',
               children: [

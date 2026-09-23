@@ -15,6 +15,7 @@
   "files": [
     "dist",
     "src/styles.css",
+    "src/basic-components.css",
     "src/actions.css",
     "src/forms.css",
     "src/pickers.css",

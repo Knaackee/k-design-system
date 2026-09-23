@@ -38,7 +38,11 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('Content'), findsOneWidget);
-      await tester.binding.handlePopRoute();
+      if (sheet) {
+        await tester.tapAt(const Offset(10, 10));
+      } else {
+        await tester.binding.handlePopRoute();
+      }
       await tester.pumpAndSettle();
       expect(find.text('Content'), findsNothing);
     });

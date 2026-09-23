@@ -136,6 +136,7 @@ class KBottomSheet extends StatelessWidget {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return Align(
       alignment: Alignment.bottomCenter,
+      heightFactor: 1,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: maxWidth,

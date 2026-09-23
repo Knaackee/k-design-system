@@ -8,6 +8,7 @@
 @import "./calendar.css";
 @import "./symbol-picker.css";
 @import "./scrollbars.css";
+@import "./basic-components.css";
 
 @font-face {
   font-family: "Inter";
