@@ -34,12 +34,16 @@ class KMenuButton extends StatefulWidget {
     required this.actions,
     this.disabled = false,
     this.overflow = false,
+    this.triggerContent,
+    this.fullWidth = false,
     super.key,
   });
   final String label;
   final List<KMenuAction> actions;
   final bool disabled;
   final bool overflow;
+  final Widget? triggerContent;
+  final bool fullWidth;
   @override
   State<KMenuButton> createState() => _KMenuButtonState();
 }
@@ -364,15 +368,42 @@ class _KMenuButtonState extends State<KMenuButton> {
             ),
           ),
         ],
-        builder: (context, controller, child) => KActionControl(
-          label: widget.label,
-          icon: widget.overflow ? KIconName.ellipsis : KIconName.chevronDown,
-          iconOnly: widget.overflow,
-          focusNode: _trigger,
-          onPressed: _disabled
+        builder: (context, controller, child) {
+          final onPressed = _disabled
               ? null
-              : () => controller.isOpen ? _close() : _open(),
-        ),
+              : () => controller.isOpen ? _close() : _open();
+          if (widget.triggerContent == null) {
+            return KActionControl(
+              label: widget.label,
+              icon: widget.overflow
+                  ? KIconName.ellipsis
+                  : KIconName.chevronDown,
+              iconOnly: widget.overflow,
+              focusNode: _trigger,
+              onPressed: onPressed,
+            );
+          }
+          return Semantics(
+            label: widget.label,
+            button: true,
+            enabled: onPressed != null,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                focusNode: _trigger,
+                onTap: onPressed,
+                borderRadius: BorderRadius.circular(t.radiusControl),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: math.max(t.sizeControl, t.sizeHitTarget),
+                    minWidth: widget.fullWidth ? double.infinity : 0,
+                  ),
+                  child: widget.triggerContent,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

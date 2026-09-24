@@ -26,6 +26,7 @@ import 'gallery_navigation.dart';
 import 'additional_primitive_fixtures.dart';
 import 'basic_component_fixtures.dart';
 import 'extended_component_fixtures.dart';
+import 'sidebar_fixtures.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -266,6 +267,28 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Navigation',
           children: [
+            WidgetbookFolder(
+              name: 'Sidebar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'sidebar-expanded',
+                  builder: (_) => const SidebarFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'sidebar-rail',
+                  builder: (_) =>
+                      const SidebarFixture(initialMode: KSidebarMode.rail),
+                ),
+                WidgetbookUseCase(
+                  name: 'sidebar-settings',
+                  builder: (_) => const SidebarFixture(settings: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'sidebar-in-drawer',
+                  builder: (_) => const SidebarFixture(drawer: true),
+                ),
+              ],
+            ),
             for (final entry in const [
               ('NavigationMenu', 'navigation-menu-links', 'navigation-menu'),
               ('Pagination', 'pagination-pages', 'pagination'),
