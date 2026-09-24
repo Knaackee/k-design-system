@@ -161,14 +161,14 @@ class KBottomSheet extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 20,
+                  height: t.componentBottomSheetGripAreaMinHeight,
                   child: Center(
                     child: Container(
-                      width: 32,
-                      height: 4,
+                      width: t.componentBottomSheetGripWidth,
+                      height: t.componentBottomSheetGripHeight,
                       decoration: BoxDecoration(
                         color: t.colorBorderStrong,
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(t.radiusExtraSmall),
                       ),
                     ),
                   ),
@@ -246,7 +246,7 @@ class _OverlayBody extends StatelessWidget {
               ],
             ),
             if (description != null) ...[
-              const SizedBox(height: 4),
+              SizedBox(height: t.spaceTight),
               DefaultTextStyle(
                 style: TextStyle(
                   fontFamily: t.fontFamily,

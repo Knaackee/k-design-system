@@ -61,7 +61,7 @@
   min-height: 56px;
   padding: 0;
   border: 0;
-  border-radius: 18px;
+  border-radius: var(--k-component-mobile-app-bar-primary-action-radius);
   color: var(--k-color-action-primary-foreground);
   background: var(--k-color-action-primary-background);
   cursor: pointer;

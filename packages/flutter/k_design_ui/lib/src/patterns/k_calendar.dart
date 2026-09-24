@@ -555,7 +555,10 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                             height: t.sizeHitTarget,
                             child: Row(
                               children: [
-                                if (!month) const SizedBox(width: 56),
+                                if (!month)
+                                  SizedBox(
+                                    width: t.componentCalendarTimeLabelWidth,
+                                  ),
                                 for (final day in days.take(count))
                                   Expanded(
                                     child: Center(
@@ -620,9 +623,11 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
-                                  width: 56,
+                                  width: t.componentCalendarTimeLabelWidth,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 8),
+                                    padding: EdgeInsets.only(
+                                      top: t.spaceControlGap,
+                                    ),
                                     child: Text(
                                       widget.labels.allDay,
                                       style: TextStyle(
@@ -675,7 +680,8 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
-                                        width: 56,
+                                        width:
+                                            t.componentCalendarTimeLabelWidth,
                                         child: Column(
                                           children: [
                                             for (

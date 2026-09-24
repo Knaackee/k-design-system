@@ -58,7 +58,9 @@ class KButton extends StatelessWidget {
     return SizedBox(
       width: fullWidth ? double.infinity : null,
       child: Opacity(
-        opacity: loading || onPressed == null ? 0.48 : 1,
+        opacity: loading || onPressed == null
+            ? tokens.componentButtonDisabledOpacity
+            : 1,
         child: FilledButton(
           onPressed: loading ? null : onPressed,
           style: ButtonStyle(
@@ -70,7 +72,7 @@ class KButton extends StatelessWidget {
               EdgeInsets.symmetric(
                 // Material paints its 1px border inside; CSS includes it in layout.
                 horizontal: paddingInline ?? tokens.spaceControlInsetInline + 1,
-                vertical: 1,
+                vertical: tokens.borderWidthDefault,
               ),
             ),
             backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -93,7 +95,7 @@ class KButton extends StatelessWidget {
                 fontFamily: tokens.fontFamily,
                 fontSize: tokens.fontControlSize,
                 // Match the Web control line box while allowing scaled text growth.
-                height: 1,
+                height: tokens.fontTightHeight,
                 // CSS centers leading evenly above and below the font metrics.
                 leadingDistribution: TextLeadingDistribution.even,
                 fontWeight: tokens.fontControlWeight,
@@ -125,9 +127,10 @@ class KButton extends StatelessWidget {
             children: [
               if (loading) ...[
                 SizedBox.square(
-                  dimension: 14,
+                  dimension: tokens.componentButtonLoadingIndicatorSize,
                   child: CircularProgressIndicator(
-                    strokeWidth: 2,
+                    strokeWidth:
+                        tokens.componentButtonLoadingIndicatorStrokeWidth,
                     color: foreground,
                   ),
                 ),

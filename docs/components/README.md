@@ -7,3 +7,4 @@ review evidence.
 ## Current entries
 
 - [Button](button.md) — technical baseline complete, visual acceptance pending.
+- [Consumer theming](theming.md) — tiered token overrides for Web and Flutter.

@@ -307,7 +307,8 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                                       color: candidates.isEmpty
                                           ? null
                                           : t.colorBorderFocus.withValues(
-                                              alpha: .1,
+                                              alpha: t
+                                                  .componentCalendarPreviewOpacitySubtle,
                                             ),
                                       border: Border(
                                         left: BorderSide(
@@ -322,7 +323,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                                       alignment: Alignment.topLeft,
                                       child: widget.month
                                           ? Padding(
-                                              padding: const EdgeInsets.all(6),
+                                              padding: EdgeInsets.all(
+                                                t.spaceSmallInset,
+                                              ),
                                               child: Text(
                                                 '${widget.days[i].day}',
                                               ),
@@ -421,7 +424,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                       bottom: 0,
                       child: IgnorePointer(
                         child: Container(
-                          color: t.colorBorderFocus.withValues(alpha: .12),
+                          color: t.colorBorderFocus.withValues(
+                            alpha: t.componentCalendarPreviewOpacityFaint,
+                          ),
                         ),
                       ),
                     ),
@@ -444,11 +449,13 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                       child: IgnorePointer(
                         child: Container(
                           decoration: BoxDecoration(
-                            color: t.colorBorderFocus.withValues(alpha: .28),
+                            color: t.colorBorderFocus.withValues(
+                              alpha: t.componentCalendarPreviewOpacityStrong,
+                            ),
                             border: Border.all(color: t.colorBorderFocus),
                           ),
                           alignment: Alignment.topLeft,
-                          padding: const EdgeInsets.all(4),
+                          padding: EdgeInsets.all(t.spaceTight),
                           child: Text(
                             c.labels.create,
                             style: TextStyle(
@@ -474,8 +481,8 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                           return Positioned(
                             left: day * width,
                             width: width,
-                            top: 28,
-                            height: 24,
+                            top: t.componentCalendarMonthIndicatorTop,
+                            height: t.componentCalendarEventMinHeight,
                             child: Semantics(
                               button: dayEvents.isNotEmpty,
                               label:
@@ -499,24 +506,29 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                                   children: [
                                     for (final _ in dayEvents.take(3))
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 5,
-                                          left: 1.5,
-                                          right: 1.5,
+                                        padding: EdgeInsets.only(
+                                          top: t
+                                              .componentCalendarMonthIndicatorPaddingBlock,
+                                          left: t.spaceBadgeOffset / 2,
+                                          right: t.spaceBadgeOffset / 2,
                                         ),
                                         child: DecoratedBox(
                                           decoration: BoxDecoration(
                                             color: t.colorBorderFocus,
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const SizedBox.square(
-                                            dimension: 6,
+                                          child: SizedBox.square(
+                                            dimension: t
+                                                .componentCalendarMonthIndicatorSize,
                                           ),
                                         ),
                                       ),
                                     if (dayEvents.length > 3)
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 2),
+                                        padding: EdgeInsets.only(
+                                          left: t
+                                              .componentCalendarMonthIndicatorPaddingInline,
+                                        ),
                                         child: Text(
                                           '+${dayEvents.length - 3}',
                                           style: TextStyle(
@@ -535,10 +547,14 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                   if (!widget.indicators)
                     for (final segment in segments)
                       Positioned(
-                        left: segment.first * width + 4,
-                        width: (segment.last - segment.first) * width - 8,
-                        top: top + segment.lane * 32,
-                        height: 28,
+                        left: segment.first * width + t.spaceTight,
+                        width:
+                            (segment.last - segment.first) * width -
+                            t.spaceControlGap,
+                        top:
+                            top +
+                            segment.lane * t.componentCalendarAllDayLaneStep,
+                        height: t.sizeAvatarSmall,
                         child: IgnorePointer(
                           ignoring: previewId != null,
                           child: Opacity(
@@ -555,16 +571,19 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                       preview.start.allDay &&
                       visiblePreviewLast > visiblePreviewFirst)
                     Positioned(
-                      left: visiblePreviewFirst * width + 4,
+                      left: visiblePreviewFirst * width + t.spaceTight,
                       width:
                           (visiblePreviewLast - visiblePreviewFirst) * width -
-                          8,
-                      top: top + (previewLane ?? 0) * 32,
-                      height: 28,
+                          t.spaceControlGap,
+                      top:
+                          top +
+                          (previewLane ?? 0) *
+                              t.componentCalendarAllDayLaneStep,
+                      height: t.sizeAvatarSmall,
                       child: IgnorePointer(
                         child: SizedBox.expand(
                           child: Opacity(
-                            opacity: .78,
+                            opacity: t.componentCalendarDragOpacity,
                             child: widget.eventWidget(active),
                           ),
                         ),

@@ -58,7 +58,7 @@ class PickerTime extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: formTokens(context).componentPickerSectionGap),
         Expanded(
           child: PickerTimeColumn(
             label: labels.text(
@@ -72,7 +72,7 @@ class PickerTime extends StatelessWidget {
           ),
         ),
         if (h12) ...[
-          const SizedBox(width: 8),
+          SizedBox(width: formTokens(context).componentPickerSectionGap),
           Expanded(
             child: PickerTimeColumn(
               label: labels.text(

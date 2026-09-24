@@ -126,7 +126,9 @@ class _KCarouselState extends State<KCarousel> {
     final next = value.clamp(0, widget.children.length - 1).toInt();
     controller.animateToPage(
       next,
-      duration: const Duration(milliseconds: 180),
+      duration: (Theme.of(
+        context,
+      ).extension<KDesignTokens>()!).componentCarouselTransitionDuration,
       curve: Curves.easeOut,
     );
   }
@@ -164,7 +166,7 @@ class _KCarouselState extends State<KCarousel> {
                 SizedBox(width: t.spaceControlGap),
                 Expanded(
                   child: SizedBox(
-                    height: 180,
+                    height: t.componentCarouselSlideHeight,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(t.radiusCard),
                       child: ScrollConfiguration(
@@ -210,9 +212,11 @@ class _KCarouselState extends State<KCarousel> {
               children: [
                 for (var dot = 0; dot < widget.children.length; dot++)
                   Container(
-                    width: 6,
-                    height: 6,
-                    margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                    width: t.componentCarouselDotSize,
+                    height: t.componentCarouselDotSize,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: t.componentCarouselDotGap / 2,
+                    ),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: dot == index
@@ -239,7 +243,7 @@ TextStyle _textStyle(
   fontFamily: t.fontFamily,
   fontSize: size,
   fontWeight: weight,
-  height: 1.2,
+  height: t.fontRelaxedHeight,
   leadingDistribution: TextLeadingDistribution.even,
   fontVariations: [
     FontVariation.weight(weight.value.toDouble()),

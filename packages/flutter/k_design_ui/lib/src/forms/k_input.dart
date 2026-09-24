@@ -90,8 +90,11 @@ class _KInputState extends State<KInput> {
       prefix: widget.prefix(context),
       suffix: canClear
           ? SizedBox(
-              width: math.max(24, t.sizeHitTarget) + t.spaceControlGap - 3,
-              height: 16,
+              width:
+                  math.max(t.sizeIconDefault, t.sizeHitTarget) +
+                  t.spaceControlGap -
+                  t.spaceBadgeOffset,
+              height: t.sizeContent,
             )
           : null,
     );

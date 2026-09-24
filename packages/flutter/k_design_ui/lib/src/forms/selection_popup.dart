@@ -108,7 +108,7 @@ class KSelectionPopup extends StatelessWidget {
                                   ? BoxDecoration(
                                       border: Border.all(
                                         color: t.colorBorderFocus,
-                                        width: 2,
+                                        width: t.borderWidthStrong,
                                       ),
                                       borderRadius: BorderRadius.circular(
                                         t.radiusControl,

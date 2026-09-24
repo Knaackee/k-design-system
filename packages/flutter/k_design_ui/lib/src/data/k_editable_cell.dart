@@ -115,7 +115,7 @@ class _KEditableCellState extends State<KEditableCell> {
               ),
               padding: EdgeInsets.symmetric(
                 horizontal: widget.paddingInline ?? t.spaceControlInsetInline,
-                vertical: 1,
+                vertical: t.borderWidthDefault,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(t.radiusControl),

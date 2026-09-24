@@ -309,7 +309,11 @@ class _KVirtualDataTableState<T> extends State<KVirtualDataTable<T>> {
                   }
                   final base = visibleColumns.fold(
                     0.0,
-                    (s, c) => s + (c.width ?? c.minWidth),
+                    (s, c) =>
+                        s +
+                        (c.width ??
+                            c.minWidth ??
+                            t.componentDataTableDefaultColumnMinWidth),
                   );
                   final flex = visibleColumns
                       .where((c) => c.width == null)
@@ -321,7 +325,9 @@ class _KVirtualDataTableState<T> extends State<KVirtualDataTable<T>> {
                   final widths = [
                     for (final c in visibleColumns)
                       c.width ??
-                          c.minWidth + (flex == 0 ? 0 : extra * c.flex / flex),
+                          (c.minWidth ??
+                                  t.componentDataTableDefaultColumnMinWidth) +
+                              (flex == 0 ? 0 : extra * c.flex / flex),
                   ];
                   _viewportWidth = constraints.maxWidth;
                   _columnOffsets = [gutter];

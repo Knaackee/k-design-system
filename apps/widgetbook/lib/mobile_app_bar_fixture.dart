@@ -204,7 +204,9 @@ class _MobileAppBarFixtureState extends State<MobileAppBarFixture> {
                         label: 'Create issue',
                         child: Material(
                           color: tokens.colorActionPrimaryBackground,
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(
+                            tokens.componentMobileAppBarPrimaryActionRadius,
+                          ),
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
                             onTap: () =>

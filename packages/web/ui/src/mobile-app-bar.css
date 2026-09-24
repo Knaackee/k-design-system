@@ -1,8 +1,11 @@
 .k-mobile-app-bar {
   position: fixed;
   z-index: 40;
-  inset-inline: var(--k-space-layout-gutter);
-  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  inset-inline: var(--k-component-mobile-app-bar-container-floating-inset);
+  bottom: calc(
+    var(--k-component-mobile-app-bar-container-bottom-inset) +
+      env(safe-area-inset-bottom, 0px)
+  );
   display: flex;
   justify-content: center;
   pointer-events: none;
@@ -15,12 +18,18 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  width: min(100%, 430px);
-  min-height: 72px;
-  padding: 7px 10px;
-  border: 1px solid
-    color-mix(in srgb, var(--k-color-border-strong) 62%, white 12%);
-  border-radius: var(--k-radius-full);
+  width: min(100%, var(--k-component-mobile-app-bar-container-max-width));
+  min-height: var(--k-component-mobile-app-bar-container-min-height);
+  padding: var(--k-component-mobile-app-bar-container-padding-block)
+    var(--k-component-mobile-app-bar-container-padding-inline);
+  border: var(--k-border-width-default) solid
+    color-mix(
+      in srgb,
+      var(--k-color-border-strong)
+        calc(var(--k-component-mobile-app-bar-opacity-border) * 100%),
+      white calc(var(--k-opacity-faint) * 100%)
+    );
+  border-radius: var(--k-component-mobile-app-bar-container-radius-floating);
   box-shadow: var(--k-elevation-overlay);
   pointer-events: auto;
   transition:
@@ -47,10 +56,14 @@
 .k-mobile-app-bar[data-variant="contextual"] .k-mobile-app-bar__surface {
   width: 100%;
   max-width: none;
-  padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px));
-  border-width: 1px 0 0;
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -12px 30px color-mix(in srgb, black 24%, transparent);
+  padding-bottom: calc(
+    var(--k-component-mobile-app-bar-container-padding-block) +
+      env(safe-area-inset-bottom, 0px)
+  );
+  border-width: var(--k-border-width-default) 0 0;
+  border-radius: var(--k-component-mobile-app-bar-container-radius-fixed)
+    var(--k-component-mobile-app-bar-container-radius-fixed) 0 0;
+  box-shadow: var(--k-component-mobile-app-bar-container-elevation);
 }
 
 .k-mobile-app-bar[data-variant="floating-dock"] {
@@ -61,12 +74,12 @@
 
 .k-mobile-app-bar[data-variant="floating-dock"] .k-mobile-app-bar__surface {
   width: auto;
-  min-height: 64px;
-  padding: 5px 8px;
+  min-height: var(--k-size-app-bar-fixed);
+  padding: var(--k-space-compact) var(--k-space-control-gap);
 }
 
 .k-mobile-app-bar[data-variant="floating-dock"] .k-mobile-app-bar__group {
-  grid-auto-columns: 52px;
+  grid-auto-columns: var(--k-component-mobile-app-bar-destination-column-width);
 }
 
 .k-mobile-app-bar[data-collapsed] .k-mobile-app-bar__surface {
@@ -78,7 +91,8 @@
 .k-mobile-app-bar__surface[data-quality="liquid"] {
   background: color-mix(
     in srgb,
-    var(--k-color-surface-raised) 20%,
+    var(--k-color-surface-raised)
+      calc(var(--k-component-mobile-app-bar-opacity-glass-liquid) * 100%),
     transparent
   );
 }
@@ -86,11 +100,16 @@
 .k-mobile-app-bar__surface[data-quality="frosted"] {
   background: color-mix(
     in srgb,
-    var(--k-color-surface-raised) 74%,
+    var(--k-color-surface-raised)
+      calc(var(--k-component-mobile-app-bar-opacity-glass-frosted) * 100%),
     transparent
   );
-  -webkit-backdrop-filter: blur(22px) saturate(145%);
-  backdrop-filter: blur(22px) saturate(145%);
+  -webkit-backdrop-filter: blur(
+      var(--k-component-mobile-app-bar-glass-web-blur)
+    )
+    saturate(var(--k-component-mobile-app-bar-glass-web-saturation));
+  backdrop-filter: blur(var(--k-component-mobile-app-bar-glass-web-blur))
+    saturate(var(--k-component-mobile-app-bar-glass-web-saturation));
 }
 
 .k-mobile-app-bar__surface[data-quality="solid"] {
@@ -109,11 +128,11 @@
   box-sizing: border-box;
   display: grid;
   place-items: center;
-  min-width: 48px;
-  min-height: 56px;
+  min-width: var(--k-component-mobile-app-bar-destination-min-width);
+  min-height: var(--k-component-mobile-app-bar-destination-min-height);
   padding: 0;
   border: 0;
-  border-radius: var(--k-radius-full);
+  border-radius: var(--k-component-mobile-app-bar-destination-radius-default);
   color: var(--k-color-text-muted);
   background: transparent;
   cursor: pointer;
@@ -126,17 +145,18 @@
 }
 
 .k-mobile-app-bar[data-variant="labeled"] .k-mobile-app-bar__destination {
-  min-height: 64px;
+  min-height: var(--k-component-mobile-app-bar-destination-labeled-min-height);
   align-content: center;
-  gap: 4px;
-  border-radius: var(--k-radius-large);
+  gap: var(--k-component-mobile-app-bar-destination-label-gap);
+  border-radius: var(--k-component-mobile-app-bar-destination-radius-labeled);
 }
 
 .k-mobile-app-bar__destination:hover:not(:disabled) {
   color: var(--k-color-text-primary);
   background: color-mix(
     in srgb,
-    var(--k-color-surface-subtle) 54%,
+    var(--k-color-surface-subtle)
+      calc(var(--k-component-mobile-app-bar-opacity-hover) * 100%),
     transparent
   );
 }
@@ -145,23 +165,25 @@
   color: var(--k-color-text-primary);
   background: color-mix(
     in srgb,
-    var(--k-color-surface-subtle) 82%,
+    var(--k-color-surface-subtle)
+      calc(var(--k-component-mobile-app-bar-opacity-raised) * 100%),
     transparent
   );
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, white 10%, transparent);
+  box-shadow: inset 0 0 0 var(--k-border-width-default)
+    var(--k-color-glass-border);
 }
 
 .k-mobile-app-bar__destination:active:not(:disabled) {
-  transform: scale(0.94);
+  transform: scale(var(--k-component-mobile-app-bar-opacity-pressed-scale));
 }
 
 .k-mobile-app-bar__destination:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: 1px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-default);
 }
 
 .k-mobile-app-bar__destination:disabled {
-  opacity: 0.45;
+  opacity: var(--k-component-mobile-app-bar-opacity-inactive);
   cursor: not-allowed;
 }
 
@@ -172,26 +194,27 @@
 }
 
 .k-mobile-app-bar__icon .k-icon {
-  width: 24px;
-  height: 24px;
+  width: var(--k-component-mobile-app-bar-destination-icon-size);
+  height: var(--k-component-mobile-app-bar-destination-icon-size);
   color: currentColor;
 }
 
 .k-mobile-app-bar__badge {
   position: absolute;
-  top: 3px;
-  left: calc(50% + 6px);
+  top: var(--k-component-mobile-app-bar-badge-offset-block);
+  left: calc(50% + var(--k-component-mobile-app-bar-badge-offset-inline));
   display: grid;
   place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding-inline: 4px;
-  border: 2px solid var(--k-color-surface-raised);
-  border-radius: var(--k-radius-full);
+  min-width: var(--k-component-mobile-app-bar-badge-size);
+  height: var(--k-component-mobile-app-bar-badge-size);
+  padding-inline: var(--k-component-mobile-app-bar-badge-padding-inline);
+  border: var(--k-component-mobile-app-bar-badge-stroke-width) solid
+    var(--k-color-surface-raised);
+  border-radius: var(--k-component-mobile-app-bar-badge-radius);
   color: var(--k-color-status-error-foreground);
   background: var(--k-color-status-error-accent);
   font-family: var(--k-font-family);
-  font-size: 11px;
+  font-size: var(--k-component-mobile-app-bar-label-font-size);
   font-weight: 700;
   line-height: 1;
 }
@@ -201,7 +224,7 @@
   max-width: 100%;
   color: currentColor;
   font-family: var(--k-font-family);
-  font-size: 11px;
+  font-size: var(--k-component-mobile-app-bar-label-font-size);
   font-weight: 600;
   line-height: 1;
   text-overflow: ellipsis;
@@ -211,13 +234,13 @@
 .k-mobile-app-bar__primary {
   display: grid;
   place-items: center;
-  padding-inline: 7px;
+  padding-inline: var(--k-component-mobile-app-bar-container-padding-block);
 }
 
 .k-mobile-app-bar__primary > * {
-  min-width: 56px;
-  min-height: 56px;
-  border-radius: 18px;
+  min-width: var(--k-component-mobile-app-bar-destination-min-height);
+  min-height: var(--k-component-mobile-app-bar-destination-min-height);
+  border-radius: var(--k-component-mobile-app-bar-primary-action-radius);
   box-shadow: var(--k-elevation-medium);
 }
 
@@ -226,7 +249,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 56px;
+  min-height: var(--k-component-mobile-app-bar-destination-min-height);
 }
 
 @media (min-width: 768px), (orientation: landscape) {

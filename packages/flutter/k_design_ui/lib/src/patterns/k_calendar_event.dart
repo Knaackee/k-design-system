@@ -177,7 +177,10 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       child: InkWell(
         onTap: () => c.onEventOpen?.call(widget.event),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          padding: EdgeInsets.symmetric(
+            horizontal: t.spaceSmallInset,
+            vertical: t.spaceTight,
+          ),
           child: c.eventBuilder(
             context,
             KCalendarEventContext(

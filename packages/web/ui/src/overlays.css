@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgb(0 0 0 / 48%);
+  background: var(--k-color-scrim-modal);
 }
 
 .k-dialog,
@@ -20,8 +20,11 @@
   z-index: 1001;
   top: 50%;
   left: 50%;
-  width: min(520px, calc(100vw - 32px));
-  max-height: min(80vh, 760px);
+  width: min(
+    var(--k-component-dialog-width),
+    calc(100vw - 2 * var(--k-component-dialog-viewport-inset))
+  );
+  max-height: min(80vh, var(--k-component-dialog-max-height));
   overflow: auto;
   transform: translate(-50%, -50%);
   border-radius: var(--k-radius-overlay);
@@ -29,8 +32,11 @@
 
 .k-bottom-sheet {
   z-index: 1001;
-  max-width: 640px;
-  margin-inline-start: max(0px, calc((100% - 640px) / 2));
+  max-width: var(--k-component-bottom-sheet-max-width);
+  margin-inline-start: max(
+    0px,
+    calc((100% - var(--k-component-bottom-sheet-max-width)) / 2)
+  );
   border-radius: var(--k-radius-overlay) var(--k-radius-overlay) 0 0;
 }
 
@@ -45,7 +51,7 @@
 .k-overlay-header {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--k-space-layout-gutter);
 }
 .k-overlay-heading {
   flex: 1;
@@ -58,7 +64,7 @@
   font-weight: var(--k-font-heading-weight);
 }
 .k-overlay-description {
-  margin: 4px 0 0;
+  margin: var(--k-space-tight) 0 0;
   color: var(--k-color-text-muted);
   font-size: var(--k-font-body-small-size);
 }
@@ -75,14 +81,14 @@
   padding-top: 0;
 }
 .k-overlay-close {
-  min-width: 40px;
-  min-height: 40px;
+  min-width: var(--k-component-dialog-close-size);
+  min-height: var(--k-component-dialog-close-size);
   border: 0;
   border-radius: var(--k-radius-control);
   background: transparent;
   color: inherit;
   cursor: pointer;
-  font-size: 24px;
+  font-size: var(--k-font-heading2-size);
 }
 .k-overlay-close:hover {
   background: var(--k-color-surface-subtle);
@@ -91,11 +97,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 20px;
+  min-height: var(--k-component-bottom-sheet-grip-area-min-height);
 }
 .k-bottom-sheet-grip {
-  width: 32px;
-  height: 4px;
-  border-radius: 2px;
+  width: var(--k-component-bottom-sheet-grip-width);
+  height: var(--k-component-bottom-sheet-grip-height);
+  border-radius: var(--k-radius-extra-small);
   background: var(--k-color-border-strong);
 }

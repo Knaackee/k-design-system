@@ -77,10 +77,10 @@ class _KCheckboxState extends State<KCheckbox> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 16,
-                    height: 16,
+                    width: t.sizeContent,
+                    height: t.sizeContent,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(t.radiusSmall),
                       color: widget.value == false
                           ? t.colorSurfaceRaised
                           : t.colorActionPrimaryBackground,

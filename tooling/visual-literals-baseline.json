@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "entries": {
+    "packages/flutter/k_design_ui/lib/src/extended_components.dart|opacity|opacity: .001,": {
+      "count": 1,
+      "reason": "Structural hidden-input opacity keeps the native OTP field focusable without rendering it as component chrome."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_calendar_pointer_drag.dart|motion|: const Duration(milliseconds: 500),": {
+      "count": 1,
+      "reason": "Long-press recognition threshold is interaction behavior, not an appearance animation."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_calendar.dart|motion|_autoScroll ??= Timer.periodic(const Duration(milliseconds: 30), (_) {": {
+      "count": 1,
+      "reason": "Calendar drag auto-scroll polling cadence is algorithm timing rather than rendered motion."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_kanban.dart|motion|static const _tick = Duration(milliseconds: 16);": {
+      "count": 1,
+      "reason": "Kanban auto-scroll polling cadence is algorithm timing rather than rendered motion."
+    },
+    "packages/web/ui/src/table.css|dimension|height: 1em;": {
+      "count": 1,
+      "reason": "The virtual placeholder follows the consumer font size by design; a fixed visual token would break relative text geometry."
+    },
+    "packages/web/ui/src/table.css|dimension|height: 1px;": {
+      "count": 1,
+      "reason": "The visually hidden table header uses the standard one-pixel clipping technique for assistive-technology structure."
+    },
+    "packages/web/ui/src/table.css|dimension|width: 1px;": {
+      "count": 2,
+      "reason": "The visually hidden header and invisible virtual-row ruler require one-pixel structural measurement boxes, not rendered component geometry."
+    }
+  }
+}

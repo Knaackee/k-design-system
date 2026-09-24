@@ -83,7 +83,7 @@ class _KContextMenuState extends State<KContextMenu> {
         fontFamily: t.fontFamily,
         fontSize: t.fontControlSize,
         fontWeight: t.fontControlWeight,
-        height: 1,
+        height: t.fontTightHeight,
         leadingDistribution: TextLeadingDistribution.even,
         letterSpacing: -.01 * t.fontControlSize,
         fontVariations: [
@@ -109,7 +109,7 @@ class _KContextMenuState extends State<KContextMenu> {
         color: states.contains(WidgetState.focused)
             ? t.colorBorderFocus
             : Colors.transparent,
-        width: 2,
+        width: t.borderWidthStrong,
       ),
     ),
     shape: WidgetStatePropertyAll(
@@ -124,12 +124,16 @@ class _KContextMenuState extends State<KContextMenu> {
     child: SizedBox(
       width: math.max(
         0,
-        width - 2 * (t.spaceControlGap + t.spaceControlInsetInline + 1),
+        width -
+            2 *
+                (t.spaceControlGap +
+                    t.spaceControlInsetInline +
+                    t.borderWidthDefault),
       ),
       child: Row(
         children: [
           SizedBox(
-            width: 16,
+            width: t.componentContextMenuIconSize,
             child: action.icon == null
                 ? null
                 : KIcon(
@@ -243,12 +247,18 @@ class _KContextMenuState extends State<KContextMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final width = math.min(240.0, MediaQuery.sizeOf(context).width - 16);
+    final t =
+        Theme.of(context).extension<KDesignTokens>() ??
+        KDesignTokens.orbitLight;
+    final width = math.min(
+      t.componentContextMenuWidth,
+      MediaQuery.sizeOf(context).width - t.componentContextMenuViewportInset,
+    );
     return MenuAnchor(
       key: _anchor,
       controller: _controller,
       childFocusNode: _focus,
-      reservedPadding: const EdgeInsets.all(8),
+      reservedPadding: EdgeInsets.all(t.spaceControlGap),
       style: _menuStyle(width),
       onClose: _closeSubmenusExcept,
       menuChildren: [_surface(context, widget.actions, width)],

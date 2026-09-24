@@ -37,7 +37,7 @@ class KSidebar extends StatelessWidget {
         label: semanticLabel,
         container: true,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
+          duration: tokens.componentSidebarTransitionDuration,
           curve: Curves.easeOutCubic,
           width: width,
           clipBehavior: Clip.hardEdge,
@@ -183,13 +183,13 @@ class _KSidebarGroupState extends State<KSidebarGroup> {
             widget.labelContent != null ||
             widget.action != null);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: t.spaceControlGap),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (showHeading)
             SizedBox(
-              height: 32,
+              height: t.componentSidebarGroupHeaderHeight,
               child: Row(
                 children: [
                   Expanded(
@@ -197,7 +197,9 @@ class _KSidebarGroupState extends State<KSidebarGroup> {
                       borderRadius: BorderRadius.circular(t.radiusControl),
                       onTap: widget.collapsible ? toggle : null,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: t.spaceControlGap,
+                        ),
                         child: Row(
                           children: [
                             if (widget.collapsible) ...[
@@ -208,7 +210,7 @@ class _KSidebarGroupState extends State<KSidebarGroup> {
                                 size: 12,
                                 color: t.colorTextMuted,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: t.spaceTight),
                             ],
                             Expanded(
                               child:
@@ -314,10 +316,10 @@ class _KSidebarItemState extends State<KSidebarItem> {
                     : Row(
                         children: [
                           SizedBox(
-                            width: 24,
+                            width: t.componentSidebarLeadingWidth,
                             child: Center(child: widget.leading),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: t.spaceControlGap),
                           Expanded(
                             child:
                                 widget.labelContent ??
@@ -341,13 +343,13 @@ class _KSidebarItemState extends State<KSidebarItem> {
                           ),
                           if (showAction)
                             SizedBox(
-                              width: 40,
+                              width: t.componentSidebarActionWidth,
                               child: Center(child: widget.action),
                             )
                           else ...[
                             if (widget.badge != null) widget.badge!,
                             if (widget.trailing != null) ...[
-                              const SizedBox(width: 6),
+                              SizedBox(width: t.spaceSmallInset),
                               widget.trailing!,
                             ],
                           ],
@@ -455,7 +457,11 @@ class KSidebarSeparator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    return Divider(height: 9, thickness: 1, color: t.colorBorderDefault);
+    return Divider(
+      height: t.componentSidebarSeparatorHeight,
+      thickness: t.borderWidthDefault,
+      color: t.colorBorderDefault,
+    );
   }
 }
 

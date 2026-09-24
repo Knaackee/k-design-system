@@ -304,7 +304,10 @@ class _KSelectState extends State<KSelect> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (canClear) ...[
-              SizedBox(width: math.max(24, t.sizeHitTarget), height: 16),
+              SizedBox(
+                width: math.max(t.sizeIconDefault, t.sizeHitTarget),
+                height: t.sizeContent,
+              ),
               SizedBox(width: t.spaceControlGap),
             ],
             Opacity(

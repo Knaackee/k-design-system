@@ -117,13 +117,14 @@ class _PickerPanelState extends State<PickerPanel> {
           width:
               widget.model.kind == PickerKind.dateTime &&
                   MediaQuery.sizeOf(context).width >= 736
-              ? 720
-              : 400,
+              ? t.layoutPickerWideWidth
+              : t.layoutPickerWidth,
           constraints: BoxConstraints(
-            maxWidth: MediaQuery.sizeOf(context).width - 16,
-            maxHeight: MediaQuery.sizeOf(context).height - 16,
+            maxWidth: MediaQuery.sizeOf(context).width - t.layoutViewportInset,
+            maxHeight:
+                MediaQuery.sizeOf(context).height - t.layoutViewportInset,
           ),
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(t.componentPickerPanelPadding),
           decoration: BoxDecoration(
             color: t.colorSurfaceRaised,
             border: Border.all(color: t.colorBorderDefault),
@@ -134,7 +135,7 @@ class _PickerPanelState extends State<PickerPanel> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 8,
+              spacing: t.componentPickerSectionGap,
               children: [
                 Semantics(
                   header: true,
@@ -165,7 +166,7 @@ class _PickerPanelState extends State<PickerPanel> {
     final calendar = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 8,
+      spacing: formTokens(context).componentPickerSectionGap,
       children: [
         if (widget.allowTextInput)
           KField(
@@ -202,7 +203,7 @@ class _PickerPanelState extends State<PickerPanel> {
     final time = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 8,
+      spacing: formTokens(context).componentPickerSectionGap,
       children: [
         if (widget.allowTextInput)
           KField(
@@ -236,7 +237,7 @@ class _PickerPanelState extends State<PickerPanel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: calendar),
-          const SizedBox(width: 16),
+          SizedBox(width: formTokens(context).componentPickerColumnGap),
           Expanded(child: _timeVisible ? time : const SizedBox.shrink()),
         ],
       );
@@ -244,7 +245,7 @@ class _PickerPanelState extends State<PickerPanel> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 16,
+      spacing: formTokens(context).componentPickerColumnGap,
       children: [calendar, if (_timeVisible) time],
     );
   }

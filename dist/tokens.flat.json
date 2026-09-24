@@ -184,6 +184,68 @@
       "type": "color",
       "value": "#00000000"
     },
+    "color.scrim.picker": {
+      "type": "color",
+      "value": "#00000052"
+    },
+    "color.scrim.modal": {
+      "type": "color",
+      "value": "#0000007a"
+    },
+    "color.scrim.drawer": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "color.glass.highlight": {
+      "type": "color",
+      "value": "#ffffff14"
+    },
+    "color.glass.border": {
+      "type": "color",
+      "value": "#ffffff1a"
+    },
+    "space.hairline": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "space.micro": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "space.badgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "space.tight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "space.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "space.smallInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "space.controlGap": {
       "type": "dimension",
       "value": {
@@ -226,6 +288,41 @@
         "unit": "px"
       }
     },
+    "space.barVertical": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "space.resizeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "space.barInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "space.mediumInset": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "space.touchInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
@@ -240,10 +337,256 @@
         "unit": "px"
       }
     },
+    "size.indicator.tiny": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "size.indicator.small": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "size.indicator.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "size.dot": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "size.progressThin": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "size.smallControl": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "size.calendarRow": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "size.content": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "size.iconDefault": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "size.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "size.avatarSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "size.avatarStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "size.avatarMedium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.switch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.otpWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "size.otpHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "size.avatarLarge": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "size.carousel": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "size.appBarRail": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "size.appBarDestination": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "size.appBarFixed": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloating": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "size.appBarLabeled": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "size.appBarDockMax": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloatingMax": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "opacity.disabled": {
+      "type": "number",
+      "value": 0.48
+    },
+    "opacity.inactive": {
+      "type": "number",
+      "value": 0.38
+    },
+    "opacity.quiet": {
+      "type": "number",
+      "value": 0.4
+    },
+    "opacity.subtle": {
+      "type": "number",
+      "value": 0.45
+    },
+    "opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "opacity.drag": {
+      "type": "number",
+      "value": 0.78
+    },
+    "opacity.prominent": {
+      "type": "number",
+      "value": 0.82
+    },
+    "opacity.preview": {
+      "type": "number",
+      "value": 0.1
+    },
+    "opacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "opacity.medium": {
+      "type": "number",
+      "value": 0.28
+    },
+    "opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "opacity.interactiveHover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "opacity.strong": {
+      "type": "number",
+      "value": 0.62
+    },
+    "opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
     "radius.none": {
       "type": "dimension",
       "value": {
         "value": 0,
+        "unit": "px"
+      }
+    },
+    "radius.extraSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -272,6 +615,20 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "radius.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "radius.sheet": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -314,6 +671,13 @@
       "type": "dimension",
       "value": {
         "value": 1,
+        "unit": "px"
+      }
+    },
+    "border.width.strong": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -447,6 +811,160 @@
         }
       ]
     },
+    "elevation.popover": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.calendarDrag": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.mobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeMobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeSwitchThumb": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeToast": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeKanbanCard": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
     "font.family": {
       "type": "fontFamily",
       "value": "Inter, ui-sans-serif, system-ui, sans-serif"
@@ -457,6 +975,35 @@
         "value": 14,
         "unit": "px"
       }
+    },
+    "font.microSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "font.microLabelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "font.avatarSmallSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "font.tightHeight": {
+      "type": "number",
+      "value": 1
+    },
+    "font.relaxedHeight": {
+      "type": "number",
+      "value": 1.2
     },
     "font.weight": {
       "type": "fontWeight",
@@ -701,6 +1248,1624 @@
         "value": 80,
         "unit": "ms"
       }
+    },
+    "motion.responsive": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "motion.entry": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "motion.quick": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "motion.long": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.spinner": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "motion.progress": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "motion.skeleton": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "blur.mobileAppBarWeb": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "blur.mobileAppBarNative": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "saturation.mobileAppBarWeb": {
+      "type": "number",
+      "value": 1.45
+    },
+    "layout.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "layout.menuWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "layout.tableColumnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "layout.sidebarWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "layout.panelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "layout.compactWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "layout.toastWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "layout.drawerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "layout.alertWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "layout.dialogWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "layout.questionnaireWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "layout.contentWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "layout.overlayMaxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.button.disabled.opacity": {
+      "type": "number",
+      "value": 0.48
+    },
+    "component.button.loadingIndicator.size": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.kbd.minSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.kbd.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.kbd.groupGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.progress.metaGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.progress.indeterminateDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.skeleton.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.skeleton.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "component.spinner.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.spinner.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.spinner.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "component.switch.trackWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.switch.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.switch.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "component.switch.disabledOpacity": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.switch.nativeThumbElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.slider.inputSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.slider.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlaySize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlayOpacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.avatar.size.small": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.large": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.small": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.large": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.avatar.groupStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.badge.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.badge.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.badge.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.carousel.slideHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "component.carousel.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.carousel.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.carousel.dotGap": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.carousel.controlIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.carousel.disabledOpacity": {
+      "type": "number",
+      "value": 0.38
+    },
+    "component.contextMenu.width": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dataTable.defaultColumnMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "component.otp.separatorWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.pagination.pagePaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pagination.ellipsisWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.popover.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.popover.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "component.popover.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.navigationMenu.panelMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.responsiveDrawer.width": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "component.dialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "component.dialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dialog.maxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.dialog.closeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripAreaMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.picker.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.picker.wideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.picker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.picker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.columnGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.emptyOpacity": {
+      "type": "number",
+      "value": 0.4
+    },
+    "component.symbolPicker.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "component.symbolPicker.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.symbolPicker.cellSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.footerMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneMenuOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.sidebar.width": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupLabelMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupHeaderHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.leadingWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.actionWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.separatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.badgeMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railBadgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.nestingIndent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.questionnaire.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.attachment.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.attachment.compactPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.dragOpacity": {
+      "type": "number",
+      "value": 0.78
+    },
+    "component.calendar.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.calendar.previewOpacity.subtle": {
+      "type": "number",
+      "value": 0.1
+    },
+    "component.calendar.previewOpacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.calendar.previewOpacity.strong": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.calendar.settleDuration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "component.calendar.timeLabelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorTop": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthOverflowLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.calendar.spanEventHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "component.calendar.allDayLaneStep": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.calendar.eventMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetInsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripThickness": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeTargetWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeEndOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dragOpacity": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.kanban.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "component.kanban.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorEdgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.kanban.nativeCardElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.messageOpacity": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.toast.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.toast.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.viewportWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "component.toast.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.toast.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingLeading": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.toast.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.drawer.scrimColor": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "component.drawer.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.container.radius.floating": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.radius.fixed": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.dockMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.floatingInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.bottomInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.default": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.labeled": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labelGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.primaryAction.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.size": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.label.fontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "component.mobileAppBar.opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "component.mobileAppBar.opacity.hover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "component.mobileAppBar.opacity.inactive": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.mobileAppBar.opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "component.mobileAppBar.opacity.raised": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.mobileAppBar.opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.mobileAppBar.opacity.border": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.mobileAppBar.opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
+    "component.mobileAppBar.motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.glass.webBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.nativeBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.webSaturation": {
+      "type": "number",
+      "value": 1.45
     }
   },
   "orbitDark": {
@@ -888,6 +3053,68 @@
       "type": "color",
       "value": "#00000000"
     },
+    "color.scrim.picker": {
+      "type": "color",
+      "value": "#00000052"
+    },
+    "color.scrim.modal": {
+      "type": "color",
+      "value": "#0000007a"
+    },
+    "color.scrim.drawer": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "color.glass.highlight": {
+      "type": "color",
+      "value": "#ffffff14"
+    },
+    "color.glass.border": {
+      "type": "color",
+      "value": "#ffffff1a"
+    },
+    "space.hairline": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "space.micro": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "space.badgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "space.tight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "space.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "space.smallInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "space.controlGap": {
       "type": "dimension",
       "value": {
@@ -930,6 +3157,41 @@
         "unit": "px"
       }
     },
+    "space.barVertical": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "space.resizeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "space.barInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "space.mediumInset": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "space.touchInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
@@ -944,10 +3206,256 @@
         "unit": "px"
       }
     },
+    "size.indicator.tiny": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "size.indicator.small": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "size.indicator.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "size.dot": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "size.progressThin": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "size.smallControl": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "size.calendarRow": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "size.content": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "size.iconDefault": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "size.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "size.avatarSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "size.avatarStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "size.avatarMedium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.switch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.otpWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "size.otpHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "size.avatarLarge": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "size.carousel": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "size.appBarRail": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "size.appBarDestination": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "size.appBarFixed": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloating": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "size.appBarLabeled": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "size.appBarDockMax": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloatingMax": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "opacity.disabled": {
+      "type": "number",
+      "value": 0.48
+    },
+    "opacity.inactive": {
+      "type": "number",
+      "value": 0.38
+    },
+    "opacity.quiet": {
+      "type": "number",
+      "value": 0.4
+    },
+    "opacity.subtle": {
+      "type": "number",
+      "value": 0.45
+    },
+    "opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "opacity.drag": {
+      "type": "number",
+      "value": 0.78
+    },
+    "opacity.prominent": {
+      "type": "number",
+      "value": 0.82
+    },
+    "opacity.preview": {
+      "type": "number",
+      "value": 0.1
+    },
+    "opacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "opacity.medium": {
+      "type": "number",
+      "value": 0.28
+    },
+    "opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "opacity.interactiveHover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "opacity.strong": {
+      "type": "number",
+      "value": 0.62
+    },
+    "opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
     "radius.none": {
       "type": "dimension",
       "value": {
         "value": 0,
+        "unit": "px"
+      }
+    },
+    "radius.extraSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -976,6 +3484,20 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "radius.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "radius.sheet": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -1018,6 +3540,13 @@
       "type": "dimension",
       "value": {
         "value": 1,
+        "unit": "px"
+      }
+    },
+    "border.width.strong": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -1151,6 +3680,160 @@
         }
       ]
     },
+    "elevation.popover": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.calendarDrag": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.mobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeMobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeSwitchThumb": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeToast": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeKanbanCard": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
     "font.family": {
       "type": "fontFamily",
       "value": "Inter, ui-sans-serif, system-ui, sans-serif"
@@ -1161,6 +3844,35 @@
         "value": 14,
         "unit": "px"
       }
+    },
+    "font.microSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "font.microLabelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "font.avatarSmallSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "font.tightHeight": {
+      "type": "number",
+      "value": 1
+    },
+    "font.relaxedHeight": {
+      "type": "number",
+      "value": 1.2
     },
     "font.weight": {
       "type": "fontWeight",
@@ -1405,6 +4117,1624 @@
         "value": 80,
         "unit": "ms"
       }
+    },
+    "motion.responsive": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "motion.entry": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "motion.quick": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "motion.long": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.spinner": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "motion.progress": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "motion.skeleton": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "blur.mobileAppBarWeb": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "blur.mobileAppBarNative": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "saturation.mobileAppBarWeb": {
+      "type": "number",
+      "value": 1.45
+    },
+    "layout.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "layout.menuWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "layout.tableColumnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "layout.sidebarWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "layout.panelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "layout.compactWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "layout.toastWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "layout.drawerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "layout.alertWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "layout.dialogWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "layout.questionnaireWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "layout.contentWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "layout.overlayMaxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.button.disabled.opacity": {
+      "type": "number",
+      "value": 0.48
+    },
+    "component.button.loadingIndicator.size": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.kbd.minSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.kbd.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.kbd.groupGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.progress.metaGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.progress.indeterminateDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.skeleton.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.skeleton.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "component.spinner.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.spinner.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.spinner.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "component.switch.trackWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.switch.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.switch.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "component.switch.disabledOpacity": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.switch.nativeThumbElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.slider.inputSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.slider.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlaySize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlayOpacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.avatar.size.small": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.large": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.small": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.large": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.avatar.groupStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.badge.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.badge.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.badge.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.carousel.slideHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "component.carousel.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.carousel.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.carousel.dotGap": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.carousel.controlIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.carousel.disabledOpacity": {
+      "type": "number",
+      "value": 0.38
+    },
+    "component.contextMenu.width": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dataTable.defaultColumnMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "component.otp.separatorWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.pagination.pagePaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pagination.ellipsisWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.popover.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.popover.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "component.popover.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.navigationMenu.panelMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.responsiveDrawer.width": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "component.dialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "component.dialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dialog.maxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.dialog.closeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripAreaMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.picker.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.picker.wideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.picker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.picker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.columnGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.emptyOpacity": {
+      "type": "number",
+      "value": 0.4
+    },
+    "component.symbolPicker.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "component.symbolPicker.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.symbolPicker.cellSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.footerMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneMenuOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.sidebar.width": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupLabelMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupHeaderHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.leadingWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.actionWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.separatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.badgeMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railBadgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.nestingIndent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.questionnaire.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.attachment.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.attachment.compactPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.dragOpacity": {
+      "type": "number",
+      "value": 0.78
+    },
+    "component.calendar.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.calendar.previewOpacity.subtle": {
+      "type": "number",
+      "value": 0.1
+    },
+    "component.calendar.previewOpacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.calendar.previewOpacity.strong": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.calendar.settleDuration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "component.calendar.timeLabelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorTop": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthOverflowLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.calendar.spanEventHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "component.calendar.allDayLaneStep": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.calendar.eventMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetInsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripThickness": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeTargetWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeEndOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dragOpacity": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.kanban.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "component.kanban.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorEdgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.kanban.nativeCardElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.messageOpacity": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.toast.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.toast.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.viewportWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "component.toast.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.toast.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingLeading": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.toast.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.drawer.scrimColor": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "component.drawer.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.container.radius.floating": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.radius.fixed": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.dockMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.floatingInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.bottomInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.default": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.labeled": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labelGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.primaryAction.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.size": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.label.fontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "component.mobileAppBar.opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "component.mobileAppBar.opacity.hover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "component.mobileAppBar.opacity.inactive": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.mobileAppBar.opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "component.mobileAppBar.opacity.raised": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.mobileAppBar.opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.mobileAppBar.opacity.border": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.mobileAppBar.opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
+    "component.mobileAppBar.motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.glass.webBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.nativeBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.webSaturation": {
+      "type": "number",
+      "value": 1.45
     }
   },
   "referenceLight": {
@@ -1592,6 +5922,68 @@
       "type": "color",
       "value": "#00000000"
     },
+    "color.scrim.picker": {
+      "type": "color",
+      "value": "#00000052"
+    },
+    "color.scrim.modal": {
+      "type": "color",
+      "value": "#0000007a"
+    },
+    "color.scrim.drawer": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "color.glass.highlight": {
+      "type": "color",
+      "value": "#ffffff14"
+    },
+    "color.glass.border": {
+      "type": "color",
+      "value": "#ffffff1a"
+    },
+    "space.hairline": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "space.micro": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "space.badgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "space.tight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "space.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "space.smallInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "space.controlGap": {
       "type": "dimension",
       "value": {
@@ -1634,6 +6026,41 @@
         "unit": "px"
       }
     },
+    "space.barVertical": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "space.resizeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "space.barInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "space.mediumInset": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "space.touchInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
@@ -1648,10 +6075,256 @@
         "unit": "px"
       }
     },
+    "size.indicator.tiny": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "size.indicator.small": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "size.indicator.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "size.dot": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "size.progressThin": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "size.smallControl": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "size.calendarRow": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "size.content": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "size.iconDefault": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "size.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "size.avatarSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "size.avatarStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "size.avatarMedium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.switch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.otpWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "size.otpHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "size.avatarLarge": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "size.carousel": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "size.appBarRail": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "size.appBarDestination": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "size.appBarFixed": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloating": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "size.appBarLabeled": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "size.appBarDockMax": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloatingMax": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "opacity.disabled": {
+      "type": "number",
+      "value": 0.48
+    },
+    "opacity.inactive": {
+      "type": "number",
+      "value": 0.38
+    },
+    "opacity.quiet": {
+      "type": "number",
+      "value": 0.4
+    },
+    "opacity.subtle": {
+      "type": "number",
+      "value": 0.45
+    },
+    "opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "opacity.drag": {
+      "type": "number",
+      "value": 0.78
+    },
+    "opacity.prominent": {
+      "type": "number",
+      "value": 0.82
+    },
+    "opacity.preview": {
+      "type": "number",
+      "value": 0.1
+    },
+    "opacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "opacity.medium": {
+      "type": "number",
+      "value": 0.28
+    },
+    "opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "opacity.interactiveHover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "opacity.strong": {
+      "type": "number",
+      "value": 0.62
+    },
+    "opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
     "radius.none": {
       "type": "dimension",
       "value": {
         "value": 0,
+        "unit": "px"
+      }
+    },
+    "radius.extraSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -1680,6 +6353,20 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "radius.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "radius.sheet": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -1722,6 +6409,13 @@
       "type": "dimension",
       "value": {
         "value": 1,
+        "unit": "px"
+      }
+    },
+    "border.width.strong": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -1855,6 +6549,160 @@
         }
       ]
     },
+    "elevation.popover": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.calendarDrag": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.mobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeMobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeSwitchThumb": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeToast": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeKanbanCard": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
     "font.family": {
       "type": "fontFamily",
       "value": "Inter, ui-sans-serif, system-ui, sans-serif"
@@ -1865,6 +6713,35 @@
         "value": 14,
         "unit": "px"
       }
+    },
+    "font.microSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "font.microLabelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "font.avatarSmallSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "font.tightHeight": {
+      "type": "number",
+      "value": 1
+    },
+    "font.relaxedHeight": {
+      "type": "number",
+      "value": 1.2
     },
     "font.weight": {
       "type": "fontWeight",
@@ -2109,6 +6986,1624 @@
         "value": 80,
         "unit": "ms"
       }
+    },
+    "motion.responsive": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "motion.entry": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "motion.quick": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "motion.long": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.spinner": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "motion.progress": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "motion.skeleton": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "blur.mobileAppBarWeb": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "blur.mobileAppBarNative": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "saturation.mobileAppBarWeb": {
+      "type": "number",
+      "value": 1.45
+    },
+    "layout.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "layout.menuWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "layout.tableColumnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "layout.sidebarWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "layout.panelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "layout.compactWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "layout.toastWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "layout.drawerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "layout.alertWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "layout.dialogWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "layout.questionnaireWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "layout.contentWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "layout.overlayMaxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.button.disabled.opacity": {
+      "type": "number",
+      "value": 0.48
+    },
+    "component.button.loadingIndicator.size": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.kbd.minSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.kbd.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.kbd.groupGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.progress.metaGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.progress.indeterminateDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.skeleton.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.skeleton.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "component.spinner.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.spinner.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.spinner.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "component.switch.trackWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.switch.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.switch.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "component.switch.disabledOpacity": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.switch.nativeThumbElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.slider.inputSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.slider.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlaySize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlayOpacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.avatar.size.small": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.large": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.small": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.large": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.avatar.groupStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.badge.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.badge.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.badge.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.carousel.slideHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "component.carousel.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.carousel.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.carousel.dotGap": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.carousel.controlIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.carousel.disabledOpacity": {
+      "type": "number",
+      "value": 0.38
+    },
+    "component.contextMenu.width": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dataTable.defaultColumnMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "component.otp.separatorWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.pagination.pagePaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pagination.ellipsisWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.popover.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.popover.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "component.popover.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.navigationMenu.panelMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.responsiveDrawer.width": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "component.dialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "component.dialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dialog.maxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.dialog.closeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripAreaMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.picker.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.picker.wideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.picker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.picker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.columnGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.emptyOpacity": {
+      "type": "number",
+      "value": 0.4
+    },
+    "component.symbolPicker.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "component.symbolPicker.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.symbolPicker.cellSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.footerMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneMenuOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.sidebar.width": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupLabelMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupHeaderHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.leadingWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.actionWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.separatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.badgeMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railBadgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.nestingIndent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.questionnaire.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.attachment.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.attachment.compactPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.dragOpacity": {
+      "type": "number",
+      "value": 0.78
+    },
+    "component.calendar.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.calendar.previewOpacity.subtle": {
+      "type": "number",
+      "value": 0.1
+    },
+    "component.calendar.previewOpacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.calendar.previewOpacity.strong": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.calendar.settleDuration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "component.calendar.timeLabelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorTop": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthOverflowLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.calendar.spanEventHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "component.calendar.allDayLaneStep": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.calendar.eventMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetInsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripThickness": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeTargetWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeEndOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dragOpacity": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.kanban.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "component.kanban.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorEdgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.kanban.nativeCardElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.messageOpacity": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.toast.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.toast.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.viewportWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "component.toast.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.toast.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingLeading": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.toast.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.drawer.scrimColor": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "component.drawer.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.container.radius.floating": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.radius.fixed": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.dockMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.floatingInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.bottomInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.default": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.labeled": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labelGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.primaryAction.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.size": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.label.fontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "component.mobileAppBar.opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "component.mobileAppBar.opacity.hover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "component.mobileAppBar.opacity.inactive": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.mobileAppBar.opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "component.mobileAppBar.opacity.raised": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.mobileAppBar.opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.mobileAppBar.opacity.border": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.mobileAppBar.opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
+    "component.mobileAppBar.motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.glass.webBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.nativeBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.webSaturation": {
+      "type": "number",
+      "value": 1.45
     }
   },
   "referenceDark": {
@@ -2296,6 +8791,68 @@
       "type": "color",
       "value": "#00000000"
     },
+    "color.scrim.picker": {
+      "type": "color",
+      "value": "#00000052"
+    },
+    "color.scrim.modal": {
+      "type": "color",
+      "value": "#0000007a"
+    },
+    "color.scrim.drawer": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "color.glass.highlight": {
+      "type": "color",
+      "value": "#ffffff14"
+    },
+    "color.glass.border": {
+      "type": "color",
+      "value": "#ffffff1a"
+    },
+    "space.hairline": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "space.micro": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "space.badgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "space.tight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "space.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "space.smallInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "space.controlGap": {
       "type": "dimension",
       "value": {
@@ -2338,6 +8895,41 @@
         "unit": "px"
       }
     },
+    "space.barVertical": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "space.resizeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "space.barInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "space.mediumInset": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "space.touchInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
     "size.control": {
       "type": "dimension",
       "value": {
@@ -2352,10 +8944,256 @@
         "unit": "px"
       }
     },
+    "size.indicator.tiny": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "size.indicator.small": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "size.indicator.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "size.dot": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "size.progressThin": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "size.smallControl": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "size.calendarRow": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "size.content": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "size.iconDefault": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "size.compact": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "size.avatarSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "size.avatarStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "size.avatarMedium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.switch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.otpWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "size.otpHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "size.avatarLarge": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "size.carousel": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "size.appBarRail": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "size.appBarDestination": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "size.appBarFixed": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloating": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "size.appBarLabeled": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "size.appBarDockMax": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "size.appBarFloatingMax": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "opacity.disabled": {
+      "type": "number",
+      "value": 0.48
+    },
+    "opacity.inactive": {
+      "type": "number",
+      "value": 0.38
+    },
+    "opacity.quiet": {
+      "type": "number",
+      "value": 0.4
+    },
+    "opacity.subtle": {
+      "type": "number",
+      "value": 0.45
+    },
+    "opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "opacity.drag": {
+      "type": "number",
+      "value": 0.78
+    },
+    "opacity.prominent": {
+      "type": "number",
+      "value": 0.82
+    },
+    "opacity.preview": {
+      "type": "number",
+      "value": 0.1
+    },
+    "opacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "opacity.medium": {
+      "type": "number",
+      "value": 0.28
+    },
+    "opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "opacity.interactiveHover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "opacity.strong": {
+      "type": "number",
+      "value": 0.62
+    },
+    "opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
     "radius.none": {
       "type": "dimension",
       "value": {
         "value": 0,
+        "unit": "px"
+      }
+    },
+    "radius.extraSmall": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -2384,6 +9222,20 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "radius.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "radius.sheet": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
         "unit": "px"
       }
     },
@@ -2426,6 +9278,13 @@
       "type": "dimension",
       "value": {
         "value": 1,
+        "unit": "px"
+      }
+    },
+    "border.width.strong": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
         "unit": "px"
       }
     },
@@ -2559,6 +9418,160 @@
         }
       ]
     },
+    "elevation.popover": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.calendarDrag": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.mobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeMobileAppBar": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeSwitchThumb": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeToast": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "elevation.nativeKanbanCard": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
     "font.family": {
       "type": "fontFamily",
       "value": "Inter, ui-sans-serif, system-ui, sans-serif"
@@ -2569,6 +9582,35 @@
         "value": 14,
         "unit": "px"
       }
+    },
+    "font.microSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "font.microLabelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "font.avatarSmallSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "font.tightHeight": {
+      "type": "number",
+      "value": 1
+    },
+    "font.relaxedHeight": {
+      "type": "number",
+      "value": 1.2
     },
     "font.weight": {
       "type": "fontWeight",
@@ -2813,6 +9855,1624 @@
         "value": 80,
         "unit": "ms"
       }
+    },
+    "motion.responsive": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "motion.entry": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "motion.quick": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "motion.long": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.spinner": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "motion.progress": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "motion.skeleton": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "blur.mobileAppBarWeb": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "blur.mobileAppBarNative": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "saturation.mobileAppBarWeb": {
+      "type": "number",
+      "value": 1.45
+    },
+    "layout.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "layout.menuWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "layout.tableColumnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "layout.sidebarWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "layout.panelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "layout.compactWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "layout.toastWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "layout.drawerWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "layout.alertWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "layout.dialogWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "layout.questionnaireWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "layout.contentWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "layout.pickerWideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "layout.overlayMaxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.button.disabled.opacity": {
+      "type": "number",
+      "value": 0.48
+    },
+    "component.button.loadingIndicator.size": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.button.loadingIndicator.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.kbd.minSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.kbd.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.kbd.groupGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.progress.metaGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.progress.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.progress.indeterminateDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.skeleton.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.skeleton.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1400,
+        "unit": "ms"
+      }
+    },
+    "component.spinner.defaultSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.spinner.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.spinner.animationDuration": {
+      "type": "duration",
+      "value": {
+        "value": 700,
+        "unit": "ms"
+      }
+    },
+    "component.switch.trackWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.switch.trackInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.switch.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.switch.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 150,
+        "unit": "ms"
+      }
+    },
+    "component.switch.disabledOpacity": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.switch.nativeThumbElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000029",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 2,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.slider.inputSize": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.slider.trackSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.slider.thumbStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlaySize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.slider.overlayOpacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.avatar.size.small": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.medium": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.avatar.size.large": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeInset": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeStrokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.small": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.avatar.fallbackFontSize.large": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.avatar.badgeFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.avatar.groupStep": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.badge.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.badge.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.badge.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.carousel.slideHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 180,
+        "unit": "px"
+      }
+    },
+    "component.carousel.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.carousel.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.carousel.dotGap": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.carousel.controlIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.carousel.disabledOpacity": {
+      "type": "number",
+      "value": 0.38
+    },
+    "component.contextMenu.width": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.contextMenu.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dataTable.defaultColumnMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 160,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 38,
+        "unit": "px"
+      }
+    },
+    "component.otp.slotHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 42,
+        "unit": "px"
+      }
+    },
+    "component.otp.separatorWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.pagination.pagePaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pagination.ellipsisWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.listPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemGap": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.tabs.itemPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.popover.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 240,
+        "unit": "px"
+      }
+    },
+    "component.popover.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 360,
+        "unit": "px"
+      }
+    },
+    "component.popover.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.navigationMenu.panelMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.responsiveDrawer.width": {
+      "type": "dimension",
+      "value": {
+        "value": 420,
+        "unit": "px"
+      }
+    },
+    "component.dialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
+    "component.dialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.dialog.maxHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.dialog.closeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripAreaMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.bottomSheet.gripHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.picker.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.picker.wideWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.picker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.picker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.picker.columnGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.emptyOpacity": {
+      "type": "number",
+      "value": 0.4
+    },
+    "component.symbolPicker.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 130,
+        "unit": "ms"
+      }
+    },
+    "component.symbolPicker.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.symbolPicker.cellSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.footerMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.panelPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.symbolPicker.toneMenuOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.sidebar.width": {
+      "type": "dimension",
+      "value": {
+        "value": 248,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupLabelMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.groupHeaderHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.leadingWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.actionWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.separatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.badgeMinWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 20,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.railBadgeSize": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.nestingIndent": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.questionnaire.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 620,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 440,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.alertDialog.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.attachment.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.attachment.compactPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.attachment.progressGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.dragOpacity": {
+      "type": "number",
+      "value": 0.78
+    },
+    "component.calendar.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000002e",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 24,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.calendar.previewOpacity.subtle": {
+      "type": "number",
+      "value": 0.1
+    },
+    "component.calendar.previewOpacity.faint": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.calendar.previewOpacity.strong": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.calendar.settleDuration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "component.calendar.timeLabelWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorTop": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthIndicatorPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.calendar.monthOverflowLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.calendar.spanEventHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 26,
+        "unit": "px"
+      }
+    },
+    "component.calendar.allDayLaneStep": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.calendar.eventMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetInsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripThickness": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 9,
+        "unit": "px"
+      }
+    },
+    "component.calendar.resizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeTargetWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeEndOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.calendar.horizontalResizeGripWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchTargetOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripInset": {
+      "type": "dimension",
+      "value": {
+        "value": 15,
+        "unit": "px"
+      }
+    },
+    "component.calendar.touchGripSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dragOpacity": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.kanban.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "component.kanban.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.kanban.dropIndicatorEdgeOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.kanban.nativeCardElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000014",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 1,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 4,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.messageOpacity": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.toast.entryDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.toast.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000038",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 20,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.toast.viewportWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 380,
+        "unit": "px"
+      }
+    },
+    "component.toast.viewportInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.toast.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.paddingLeading": {
+      "type": "dimension",
+      "value": {
+        "value": 14,
+        "unit": "px"
+      }
+    },
+    "component.toast.contentGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.toast.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.drawer.scrimColor": {
+      "type": "color",
+      "value": "#0000008a"
+    },
+    "component.drawer.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.container.radius.floating": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.radius.fixed": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.elevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#0000003d",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": -12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.nativeElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000052",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 12,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 30,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.mobileAppBar.container.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 430,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.dockMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 320,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 72,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 78,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.floatingInset": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.container.bottomInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.default": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.radius.labeled": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 48,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labeledMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.columnWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 52,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.destination.labelGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.primaryAction.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 999,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.size": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 3,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.offsetInline": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.badge.strokeWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.label.fontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 11,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.opacity.glassLiquid": {
+      "type": "number",
+      "value": 0.2
+    },
+    "component.mobileAppBar.opacity.glassFrosted": {
+      "type": "number",
+      "value": 0.74
+    },
+    "component.mobileAppBar.opacity.hover": {
+      "type": "number",
+      "value": 0.54
+    },
+    "component.mobileAppBar.opacity.inactive": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.mobileAppBar.opacity.surface": {
+      "type": "number",
+      "value": 0.72
+    },
+    "component.mobileAppBar.opacity.raised": {
+      "type": "number",
+      "value": 0.82
+    },
+    "component.mobileAppBar.opacity.muted": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.mobileAppBar.opacity.border": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.mobileAppBar.opacity.pressedScale": {
+      "type": "number",
+      "value": 0.94
+    },
+    "component.mobileAppBar.motion.standard": {
+      "type": "duration",
+      "value": {
+        "value": 160,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.motion.moderate": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
+    },
+    "component.mobileAppBar.glass.webBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 22,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.nativeBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.mobileAppBar.glass.webSaturation": {
+      "type": "number",
+      "value": 1.45
     }
   },
   "variants": {

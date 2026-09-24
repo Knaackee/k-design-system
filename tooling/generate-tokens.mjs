@@ -157,12 +157,26 @@ function cssValue(token) {
   return String(token.value);
 }
 
+function tokenReference(token) {
+  if (typeof token?.value !== "string") return null;
+  return token.value.match(/^\{([^}]+)\}$/)?.[1] ?? null;
+}
+
+function cssTokenValue(path, token, sourceTokens, overrides = new Map()) {
+  const reference = tokenReference(sourceTokens.get(path));
+  if (path.startsWith("component.") && reference && !overrides.has(path)) {
+    return `var(--k-${kebab(reference)})`;
+  }
+  return cssValue(token);
+}
+
 const shadowLayers = (value) => (Array.isArray(value) ? value : [value]);
 const cssDimension = (value) => `${value.value}${value.unit}`;
 
-function cssBlock(selector, tokens) {
+function cssBlock(selector, tokens, sourceTokens = tokens, overrides) {
   const lines = [...tokens].map(
-    ([path, token]) => `  --k-${kebab(path)}: ${cssValue(token)};`,
+    ([path, token]) =>
+      `  --k-${kebab(path)}: ${cssTokenValue(path, token, sourceTokens, overrides)};`,
   );
   return `${selector} {\n${lines.join("\n")}\n}`;
 }
@@ -171,6 +185,7 @@ function dartType(token) {
   return {
     color: "Color",
     dimension: "double",
+    number: "double",
     duration: "Duration",
     fontFamily: "String",
     fontWeight: "FontWeight",
@@ -192,6 +207,8 @@ function dartValue(token) {
     }
     case "dimension":
       return `${Number(token.value.value).toFixed(1)}`;
+    case "number":
+      return `${Number(token.value).toFixed(2)}`;
     case "duration":
       return `Duration(${token.value.unit === "ms" ? "milliseconds" : "seconds"}: ${token.value.value})`;
     case "fontFamily":
@@ -229,14 +246,22 @@ function generateDart(themes, semantic, variants) {
   const copyParameters = [...semantic].map(
     ([path, token]) => `    ${dartType(token)}? ${camel(path)},`,
   );
-  const copies = [...semantic].map(
-    ([path]) => `      ${camel(path)}: ${camel(path)} ?? this.${camel(path)},`,
-  );
+  const copies = [...semantic].map(([path, token]) => {
+    const name = camel(path);
+    const reference = path.startsWith("component.")
+      ? tokenReference(token)
+      : null;
+    const dependency =
+      reference && semantic.has(reference) ? camel(reference) : null;
+    return dependency
+      ? `      ${name}: ${name} ?? ${dependency} ?? this.${name},`
+      : `      ${name}: ${name} ?? this.${name},`;
+  });
   const lerps = [...semantic].map(([path, token]) => {
     const name = camel(path);
     if (token.type === "color")
       return `      ${name}: Color.lerp(${name}, other.${name}, t)!,`;
-    if (token.type === "dimension")
+    if (token.type === "dimension" || token.type === "number")
       return `      ${name}: lerpDouble(${name}, other.${name}, t)!,`;
     if (token.type === "duration")
       return `      ${name}: t < 0.5 ? ${name} : other.${name},`;
@@ -299,26 +324,28 @@ export async function generate() {
   );
   const foundation = flattenTokens(sources.foundation);
   const semantic = flattenTokens(sources.semantic);
+  const themeOverrides = {
+    orbitLight: flattenTokens(sources.orbitLight),
+    orbitDark: flattenTokens(sources.orbitDark),
+    referenceLight: flattenTokens(sources.referenceLight),
+    referenceDark: flattenTokens(sources.referenceDark),
+  };
   const themes = {
     orbitLight: resolvedSemantic(
       foundation,
       semantic,
-      flattenTokens(sources.orbitLight),
+      themeOverrides.orbitLight,
     ),
-    orbitDark: resolvedSemantic(
-      foundation,
-      semantic,
-      flattenTokens(sources.orbitDark),
-    ),
+    orbitDark: resolvedSemantic(foundation, semantic, themeOverrides.orbitDark),
     referenceLight: resolvedSemantic(
       foundation,
       semantic,
-      flattenTokens(sources.referenceLight),
+      themeOverrides.referenceLight,
     ),
     referenceDark: resolvedSemantic(
       foundation,
       semantic,
-      flattenTokens(sources.referenceDark),
+      themeOverrides.referenceDark,
     ),
   };
   const variants = Object.fromEntries(
@@ -331,7 +358,7 @@ export async function generate() {
   const variantCss = Object.entries(variants)
     .map(([name, tokens]) => cssBlock(variantFiles[name][1], tokens))
     .join("\n\n");
-  const themeCss = `${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark)}`;
+  const themeCss = `${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight, semantic, themeOverrides.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark, semantic, themeOverrides.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight, semantic, themeOverrides.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark, semantic, themeOverrides.referenceDark)}`;
   const css = `/* GENERATED FILE. DO NOT EDIT. */\n@layer k-design-theme, k-design-mode;\n\n@layer k-design-theme {\n${themeCss}\n}\n\n@layer k-design-mode {\n${variantCss}\n}\n`;
   const names = [...semantic.keys()];
   const typescript = `// GENERATED FILE. DO NOT EDIT.\nexport const tokenNames = ${JSON.stringify(names, null, 2)} as const;\nexport type KTokenName = (typeof tokenNames)[number];\nexport const cssVariable = (token: KTokenName): string => \`--k-\${token.replace(/\\./g, "-").replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}\`;\n`;

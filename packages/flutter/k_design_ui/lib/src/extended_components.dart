@@ -17,8 +17,11 @@ class KKbd extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return Container(
-      constraints: const BoxConstraints(minWidth: 22, minHeight: 22),
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      constraints: BoxConstraints(
+        minWidth: t.componentKbdMinSize,
+        minHeight: t.componentKbdMinSize,
+      ),
+      padding: EdgeInsets.symmetric(horizontal: t.componentKbdPaddingInline),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: t.colorSurfaceSubtle,
@@ -42,11 +45,14 @@ class KKbdGroup extends StatelessWidget {
   const KKbdGroup({required this.children, super.key});
   final List<Widget> children;
   @override
-  Widget build(BuildContext context) => Wrap(
-    spacing: 4,
-    crossAxisAlignment: WrapCrossAlignment.center,
-    children: children,
-  );
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return Wrap(
+      spacing: t.componentKbdGroupGap,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: children,
+    );
+  }
 }
 
 class KProgress extends StatelessWidget {
@@ -85,13 +91,13 @@ class KProgress extends StatelessWidget {
                     ),
               ],
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: t.componentProgressMetaGap),
           ],
           ClipRRect(
             borderRadius: BorderRadius.circular(t.radiusFull),
             child: LinearProgressIndicator(
               value: normalized,
-              minHeight: 6,
+              minHeight: t.componentProgressTrackSize,
               color: t.colorActionPrimaryBackground,
               backgroundColor: t.colorSurfaceSubtle,
             ),
@@ -105,12 +111,12 @@ class KProgress extends StatelessWidget {
 class KSkeleton extends StatefulWidget {
   const KSkeleton({
     this.width = double.infinity,
-    this.height = 16,
+    this.height,
     this.circle = false,
     super.key,
   });
   final double width;
-  final double height;
+  final double? height;
   final bool circle;
   @override
   State<KSkeleton> createState() => _KSkeletonState();
@@ -118,10 +124,17 @@ class KSkeleton extends StatefulWidget {
 
 class _KSkeletonState extends State<KSkeleton>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1400),
-  )..repeat();
+  late final AnimationController _controller = AnimationController(vsync: this);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    if (_controller.duration != t.componentSkeletonAnimationDuration) {
+      _controller.duration = t.componentSkeletonAnimationDuration;
+    }
+    if (!_controller.isAnimating) _controller.repeat();
+  }
 
   @override
   void dispose() {
@@ -137,7 +150,7 @@ class _KSkeletonState extends State<KSkeleton>
         animation: _controller,
         builder: (context, _) => Container(
           width: widget.width,
-          height: widget.height,
+          height: widget.height ?? t.componentSkeletonDefaultSize,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
               widget.circle ? t.radiusFull : t.radiusControl,
@@ -164,18 +177,18 @@ class _KSkeletonState extends State<KSkeleton>
 }
 
 class KSpinner extends StatelessWidget {
-  const KSpinner({this.label = 'Loading', this.size = 18, super.key});
+  const KSpinner({this.label = 'Loading', this.size, super.key});
   final String label;
-  final double size;
+  final double? size;
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return Semantics(
       label: label,
       child: SizedBox.square(
-        dimension: size,
+        dimension: size ?? t.componentSpinnerDefaultSize,
         child: CircularProgressIndicator(
-          strokeWidth: 2,
+          strokeWidth: t.componentSpinnerStrokeWidth,
           color: t.colorActionPrimaryBackground,
           backgroundColor: t.colorBorderDefault,
         ),
@@ -208,14 +221,17 @@ class KSwitch extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: onChanged == null ? null : () => onChanged!(!value),
           child: SizedBox(
-            width: 40,
-            height: t.sizeHitTarget.clamp(22, double.infinity),
+            width: t.componentSwitchTrackWidth,
+            height: t.sizeHitTarget.clamp(
+              t.componentSwitchTrackHeight,
+              double.infinity,
+            ),
             child: Center(
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 150),
-                width: 40,
-                height: 22,
-                padding: const EdgeInsets.all(2),
+                duration: t.componentSwitchTransitionDuration,
+                width: t.componentSwitchTrackWidth,
+                height: t.componentSwitchTrackHeight,
+                padding: EdgeInsets.all(t.componentSwitchTrackInset),
                 decoration: BoxDecoration(
                   color: value
                       ? t.colorActionPrimaryBackground
@@ -228,19 +244,17 @@ class KSwitch extends StatelessWidget {
                   borderRadius: BorderRadius.circular(t.radiusFull),
                 ),
                 child: AnimatedAlign(
-                  duration: const Duration(milliseconds: 150),
+                  duration: t.componentSwitchTransitionDuration,
                   alignment: value
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Container(
-                    width: 16,
-                    height: 16,
+                    width: t.componentSwitchThumbSize,
+                    height: t.componentSwitchThumbSize,
                     decoration: BoxDecoration(
                       color: t.colorSurfaceRaised,
                       shape: BoxShape.circle,
-                      boxShadow: const [
-                        BoxShadow(color: Color(0x29000000), blurRadius: 2),
-                      ],
+                      boxShadow: t.componentSwitchNativeThumbElevation,
                     ),
                   ),
                 ),
@@ -282,10 +296,16 @@ class KSlider extends StatelessWidget {
         thumbShape: _KSliderThumbShape(
           fill: t.colorSurfaceRaised,
           border: t.colorActionPrimaryBackground,
+          size: t.componentSliderThumbSize,
+          strokeWidth: t.componentSliderThumbStrokeWidth,
         ),
-        overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
-        overlayColor: t.colorActionPrimaryBackground.withValues(alpha: .12),
-        trackHeight: 6,
+        overlayShape: RoundSliderOverlayShape(
+          overlayRadius: t.componentSliderOverlaySize / 2,
+        ),
+        overlayColor: t.colorActionPrimaryBackground.withValues(
+          alpha: t.componentSliderOverlayOpacity,
+        ),
+        trackHeight: t.componentSliderTrackSize,
       ),
       child: Slider(
         value: value.clamp(min, max),
@@ -301,11 +321,18 @@ class KSlider extends StatelessWidget {
 }
 
 class _KSliderThumbShape extends SliderComponentShape {
-  const _KSliderThumbShape({required this.fill, required this.border});
+  const _KSliderThumbShape({
+    required this.fill,
+    required this.border,
+    required this.size,
+    required this.strokeWidth,
+  });
   final Color fill;
   final Color border;
+  final double size;
+  final double strokeWidth;
   @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) => const Size(18, 18);
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) => Size.square(size);
   @override
   void paint(
     PaintingContext context,
@@ -322,13 +349,13 @@ class _KSliderThumbShape extends SliderComponentShape {
     required Size sizeWithOverflow,
   }) {
     context.canvas
-      ..drawCircle(center, 9, Paint()..color = fill)
+      ..drawCircle(center, size / 2, Paint()..color = fill)
       ..drawCircle(
         center,
-        8,
+        (size - strokeWidth) / 2,
         Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
+          ..strokeWidth = strokeWidth
           ..color = border,
       );
   }
@@ -407,8 +434,8 @@ class _KInputOtpState extends State<KInputOtp> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      width: 38,
-                      height: 42,
+                      width: t.componentOtpSlotWidth,
+                      height: t.componentOtpSlotHeight,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: t.colorSurfaceRaised,
@@ -433,7 +460,7 @@ class _KInputOtpState extends State<KInputOtp> {
                     if (widget.separatorAfter.contains(index + 1) &&
                         index + 1 < widget.length)
                       SizedBox(
-                        width: 24,
+                        width: t.componentOtpSeparatorWidth,
                         child: Center(
                           child: Text(
                             '−',
@@ -523,7 +550,7 @@ class KPagination extends StatelessWidget {
           for (var i = 0; i < visible.length; i++) ...[
             if (i > 0 && visible[i] - visible[i - 1] > 1)
               SizedBox(
-                width: 28,
+                width: t.componentPaginationEllipsisWidth,
                 child: Center(
                   child: Text('…', style: TextStyle(color: t.colorTextMuted)),
                 ),
@@ -548,7 +575,7 @@ class KPagination extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: t.fontFamily,
                           fontSize: t.fontControlSize,
-                          height: 1,
+                          height: t.fontTightHeight,
                           fontWeight: t.fontControlWeight,
                           color: visible[i] == page
                               ? t.colorActionPrimaryForeground
@@ -611,7 +638,7 @@ class KTabs extends StatelessWidget {
         Semantics(
           label: label,
           child: Container(
-            padding: const EdgeInsets.all(4),
+            padding: EdgeInsets.all(t.componentTabsListPadding),
             decoration: BoxDecoration(
               color: t.colorSurfaceSubtle,
               borderRadius: BorderRadius.circular(t.radiusControl),
@@ -632,7 +659,7 @@ class KTabs extends StatelessWidget {
                   children: [
                     for (final item in items)
                       Padding(
-                        padding: const EdgeInsets.only(right: 4),
+                        padding: EdgeInsets.only(right: t.spaceTight),
                         child: TextButton.icon(
                           icon: item.icon == null
                               ? const SizedBox.shrink()
@@ -755,7 +782,7 @@ class KNavigationMenu extends StatelessWidget {
       label: label,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(4),
+        padding: EdgeInsets.all(t.spaceTight),
         decoration: BoxDecoration(
           color: t.colorSurfaceRaised,
           border: Border.all(color: t.colorBorderDefault),
@@ -784,11 +811,13 @@ class KNavigationMenu extends StatelessWidget {
                       : KPopover(
                           label: item.id,
                           trigger: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: t.spaceControlInsetInline,
+                            ),
                             child: Row(
                               children: [
                                 item.label,
-                                const SizedBox(width: 6),
+                                SizedBox(width: t.spaceSmallInset),
                                 const KIcon(KIconName.chevronDown, size: 14),
                               ],
                             ),
@@ -832,8 +861,12 @@ class KResponsiveDrawer {
       context: context,
       barrierDismissible: dismissible,
       barrierLabel: closeLabel ?? 'Close',
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 180),
+      barrierColor: (Theme.of(
+        context,
+      ).extension<KDesignTokens>()!).componentDrawerScrimColor,
+      transitionDuration: (Theme.of(
+        context,
+      ).extension<KDesignTokens>()!).componentDrawerTransitionDuration,
       pageBuilder: (routeContext, _, _) => Align(
         alignment: left ? Alignment.centerLeft : Alignment.centerRight,
         child: _KResponsiveSideSheet(
@@ -873,7 +906,7 @@ class _KResponsiveSideSheet extends StatelessWidget {
       elevation: 0,
       child: SafeArea(
         child: SizedBox(
-          width: 420,
+          width: t.componentResponsiveDrawerWidth,
           height: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -904,7 +937,7 @@ class _KResponsiveSideSheet extends StatelessWidget {
                             child: title,
                           ),
                           if (description != null) ...[
-                            const SizedBox(height: 4),
+                            SizedBox(height: t.spaceTight),
                             DefaultTextStyle(
                               style: TextStyle(
                                 fontFamily: t.fontFamily,
@@ -930,7 +963,10 @@ class _KResponsiveSideSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(height: 1, color: t.colorBorderDefault),
+              Divider(
+                height: t.borderWidthDefault,
+                color: t.colorBorderDefault,
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.all(t.spaceLayoutGutter),
@@ -938,7 +974,10 @@ class _KResponsiveSideSheet extends StatelessWidget {
                 ),
               ),
               if (actions != null) ...[
-                Divider(height: 1, color: t.colorBorderDefault),
+                Divider(
+                  height: t.borderWidthDefault,
+                  color: t.colorBorderDefault,
+                ),
                 Padding(
                   padding: EdgeInsets.all(t.spaceLayoutGutter),
                   child: Align(
@@ -1025,7 +1064,7 @@ class KQuestionnaire extends StatelessWidget {
             child: current.title,
           ),
           if (current.description != null) ...[
-            const SizedBox(height: 4),
+            SizedBox(height: t.spaceTight),
             DefaultTextStyle(
               style: TextStyle(color: t.colorTextMuted),
               child: current.description!,
@@ -1048,7 +1087,7 @@ class KQuestionnaire extends StatelessWidget {
                   label: skipLabel,
                   onPressed: () => onStepChanged(step + 1),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: t.spaceControlGap),
               ],
               KButton(
                 label: step == steps.length - 1 ? completeLabel : nextLabel,
@@ -1111,31 +1150,37 @@ class KToast extends StatelessWidget {
     late final OverlayEntry entry;
     late final KToastController controller;
     entry = OverlayEntry(
-      builder: (overlayContext) => Positioned(
-        right: 16,
-        bottom: 16,
-        child: SafeArea(
-          child: Material(
-            color: Colors.transparent,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.sizeOf(overlayContext).width - 32 > 380
-                    ? 380
-                    : MediaQuery.sizeOf(overlayContext).width - 32,
-              ),
-              child: KToast(
-                title: title,
-                description: description,
-                icon: icon,
-                action: action,
-                tone: tone,
-                dismissLabel: dismissLabel,
-                onDismiss: controller.dismiss,
+      builder: (overlayContext) {
+        final t = Theme.of(overlayContext).extension<KDesignTokens>()!;
+        final availableWidth =
+            MediaQuery.sizeOf(overlayContext).width -
+            2 * t.componentToastViewportInset;
+        return Positioned(
+          right: t.componentToastViewportInset,
+          bottom: t.componentToastViewportInset,
+          child: SafeArea(
+            child: Material(
+              color: Colors.transparent,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: availableWidth > t.componentToastViewportWidth
+                      ? t.componentToastViewportWidth
+                      : availableWidth,
+                ),
+                child: KToast(
+                  title: title,
+                  description: description,
+                  icon: icon,
+                  action: action,
+                  tone: tone,
+                  dismissLabel: dismissLabel,
+                  onDismiss: controller.dismiss,
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
     controller = KToastController._(entry);
     overlay.insert(entry);
@@ -1165,33 +1210,39 @@ class KToast extends StatelessWidget {
       _ => t.colorSurfaceSubtle,
     };
     return Container(
-      constraints: const BoxConstraints(minHeight: 64),
-      padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+      constraints: BoxConstraints(minHeight: t.componentToastMinHeight),
+      padding: EdgeInsets.fromLTRB(
+        t.componentToastPaddingLeading,
+        t.componentToastPaddingBlock,
+        t.componentToastPaddingInline,
+        t.componentToastPaddingBlock,
+      ),
       decoration: BoxDecoration(
         color: t.colorSurfaceRaised,
         border: Border.all(color: border),
         borderRadius: BorderRadius.circular(t.radiusCard),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: .22), blurRadius: 20),
-        ],
+        boxShadow: t.componentToastNativeElevation,
       ),
       child: Row(
         children: [
           if (icon != null) ...[
             Container(
-              width: 30,
-              height: 30,
+              width: t.componentToastIconSize,
+              height: t.componentToastIconSize,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: iconBackground,
                 shape: BoxShape.circle,
               ),
               child: IconTheme(
-                data: IconThemeData(color: iconForeground, size: 18),
+                data: IconThemeData(
+                  color: iconForeground,
+                  size: t.componentSpinnerDefaultSize,
+                ),
                 child: icon!,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: t.componentToastContentGap),
           ],
           Expanded(
             child: Column(
@@ -1217,7 +1268,7 @@ class KToast extends StatelessWidget {
               ],
             ),
           ),
-          if (action != null) ...[const SizedBox(width: 8), action!],
+          if (action != null) ...[SizedBox(width: t.spaceControlGap), action!],
           if (onDismiss != null)
             KIconButton(
               icon: KIconName.x,

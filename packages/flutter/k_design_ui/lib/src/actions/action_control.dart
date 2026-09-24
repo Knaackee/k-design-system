@@ -45,8 +45,10 @@ class KActionControl extends StatelessWidget {
                 minimumSize: WidgetStatePropertyAll(Size(0, t.sizeControl)),
                 padding: WidgetStatePropertyAll(
                   EdgeInsets.symmetric(
-                    horizontal: iconOnly ? 0 : t.spaceControlInsetInline + 1,
-                    vertical: 1,
+                    horizontal: iconOnly
+                        ? 0
+                        : t.spaceControlInsetInline + t.borderWidthDefault,
+                    vertical: t.borderWidthDefault,
                   ),
                 ),
                 backgroundColor: WidgetStateProperty.resolveWith(
@@ -88,7 +90,7 @@ class KActionControl extends StatelessWidget {
                     fontFamily: t.fontFamily,
                     fontSize: t.fontControlSize,
                     fontWeight: t.fontControlWeight,
-                    height: 1,
+                    height: t.fontTightHeight,
                     // CSS centers leading evenly above and below the font metrics.
                     leadingDistribution: TextLeadingDistribution.even,
                     letterSpacing: -.01 * scaled,

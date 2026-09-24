@@ -308,7 +308,7 @@ class KKanban<T> extends StatelessWidget {
           _accepts(details.data, columnId, index),
       onAcceptWithDetails: (details) => _move(details.data, columnId, index),
       builder: (context, candidates, _) => AnimatedContainer(
-        duration: const Duration(milliseconds: 120),
+        duration: tokens.componentKanbanTransitionDuration,
         height: empty ? tokens.sizeHitTarget * 2 : tokens.spaceControlGap,
         decoration: BoxDecoration(
           border: empty
@@ -361,13 +361,7 @@ class KKanban<T> extends StatelessWidget {
               width: selected ? 2 : tokens.borderWidthDefault,
             ),
             borderRadius: BorderRadius.circular(tokens.radiusCard),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
+            boxShadow: tokens.componentKanbanNativeCardElevation,
           ),
           child: cardBuilder(
             context,
@@ -389,13 +383,16 @@ class KKanban<T> extends StatelessWidget {
           _accepts(details.data, columnId, index),
       onAcceptWithDetails: (details) => _move(details.data, columnId, index),
       builder: (context, candidates, _) => AnimatedContainer(
-        duration: const Duration(milliseconds: 120),
+        duration: tokens.componentKanbanTransitionDuration,
         decoration: BoxDecoration(
           color: candidates.isEmpty ? null : tokens.colorSurfaceSubtle,
           border: candidates.isEmpty
               ? null
               : Border(
-                  top: BorderSide(color: tokens.colorBorderFocus, width: 2),
+                  top: BorderSide(
+                    color: tokens.colorBorderFocus,
+                    width: tokens.borderWidthStrong,
+                  ),
                 ),
         ),
         child: dragEnabled && onCardMove != null

@@ -34,7 +34,8 @@
   display: grid;
   min-height: var(--k-size-hit-target);
   align-items: center;
-  border-bottom: 1px solid var(--k-color-border-default);
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
 }
 .k-calendar-month-heading {
   position: sticky;
@@ -50,11 +51,12 @@
 }
 .k-calendar-all-day {
   display: grid;
-  grid-template-columns: 56px 1fr;
-  border-bottom: 1px solid var(--k-color-border-default);
+  grid-template-columns: var(--k-component-calendar-time-label-width) 1fr;
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
 }
 .k-calendar-all-day > span {
-  padding: 8px 2px;
+  padding: var(--k-space-control-gap) var(--k-space-micro);
   font-size: var(--k-font-caption-size);
   color: var(--k-color-text-muted);
   white-space: nowrap;
@@ -70,20 +72,22 @@
   display: grid;
 }
 .k-calendar-span-cell {
-  border-inline-start: 1px solid var(--k-color-border-default);
+  border-inline-start: var(--k-border-width-default) solid
+    var(--k-color-border-default);
   min-width: 0;
 }
 .k-calendar-month-week {
-  border-bottom: 1px solid var(--k-color-border-default);
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
 }
 .k-calendar-date {
   display: block;
-  padding: 4px 8px;
+  padding: var(--k-space-tight) var(--k-space-control-gap);
   color: var(--k-color-text-muted);
 }
 .k-calendar-month-indicators {
   position: absolute;
-  inset: 28px 0 0;
+  inset: var(--k-component-calendar-month-indicator-top) 0 0;
   display: grid;
   pointer-events: none;
 }
@@ -95,8 +99,9 @@
   background: transparent;
   align-items: flex-start;
   justify-content: center;
-  gap: 3px;
-  padding: 5px 2px 0;
+  gap: var(--k-space-badge-offset);
+  padding: var(--k-component-calendar-month-indicator-padding-block)
+    var(--k-component-calendar-month-indicator-padding-inline) 0;
   color: inherit;
   pointer-events: auto;
 }
@@ -104,27 +109,27 @@
   pointer-events: none;
 }
 .k-calendar-month-indicator {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
+  width: var(--k-component-calendar-month-indicator-size);
+  height: var(--k-component-calendar-month-indicator-size);
+  flex: 0 0 var(--k-component-calendar-month-indicator-size);
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--k-radius-full);
   background: var(--k-color-border-focus);
   pointer-events: none;
 }
 .k-calendar-month-indicator-cell:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: 2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
 }
 .k-calendar-month-overflow {
   color: var(--k-color-text-muted);
   font-size: var(--k-font-caption-size);
-  line-height: 8px;
+  line-height: var(--k-component-calendar-month-overflow-line-height);
 }
 .k-calendar-span-event {
   position: absolute;
-  height: 26px;
+  height: var(--k-component-calendar-span-event-height);
   z-index: 1;
 }
 .k-calendar-event {
@@ -132,9 +137,9 @@
   width: 100%;
   height: 100%;
   min-width: 0;
-  padding: 4px 6px;
+  padding: var(--k-space-tight) var(--k-space-small-inset);
   overflow: hidden;
-  border: 1px solid var(--k-color-border-focus);
+  border: var(--k-border-width-default) solid var(--k-color-border-focus);
   border-radius: var(--k-radius-small);
   background: var(--k-color-surface-subtle);
   color: inherit;
@@ -149,8 +154,8 @@
 }
 .k-calendar-event-dragging {
   z-index: 4;
-  box-shadow: var(--k-shadow-medium, 0 8px 24px rgb(0 0 0 / 18%));
-  opacity: 0.78;
+  box-shadow: var(--k-component-calendar-drag-elevation);
+  opacity: var(--k-component-calendar-drag-opacity);
   pointer-events: none;
 }
 .k-calendar-event-content {
@@ -159,24 +164,24 @@
 }
 .k-calendar-event-content:focus-visible,
 .k-calendar [data-calendar-slot]:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 .k-calendar-time-body {
   position: relative;
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: var(--k-component-calendar-time-label-width) 1fr;
 }
 .k-calendar-hours {
   display: flex;
   flex-direction: column;
 }
 .k-calendar-hours span {
-  padding: 4px;
+  padding: var(--k-space-tight);
   color: var(--k-color-text-muted);
   font-size: var(--k-font-caption-size);
   text-align: end;
-  border-top: 1px solid var(--k-color-border-default);
+  border-top: var(--k-border-width-default) solid var(--k-color-border-default);
 }
 .k-calendar-days {
   display: grid;
@@ -188,25 +193,26 @@
   overflow: hidden;
 }
 .k-calendar-time-day {
-  border-inline-start: 1px solid var(--k-color-border-default);
+  border-inline-start: var(--k-border-width-default) solid
+    var(--k-color-border-default);
   background-image: linear-gradient(
     to bottom,
-    var(--k-color-border-default) 1px,
-    transparent 1px
+    var(--k-color-border-default) var(--k-border-width-default),
+    transparent var(--k-border-width-default)
   );
 }
 .k-calendar-positioned-event {
   position: absolute;
   z-index: 1;
-  min-height: 24px;
+  min-height: var(--k-component-calendar-event-min-height);
 }
 .k-calendar-positioned-event.k-calendar-event-dragging {
   z-index: 4;
 }
 .k-calendar-resize {
   position: absolute;
-  inset-inline: 24px;
-  height: 18px;
+  inset-inline: var(--k-component-calendar-resize-target-inset-inline);
+  height: var(--k-component-calendar-resize-target-height);
   cursor: ns-resize;
   z-index: 2;
   touch-action: none;
@@ -216,58 +222,63 @@
   display: block;
   position: absolute;
   inset-inline: 0;
-  height: 4px;
+  height: var(--k-component-calendar-resize-grip-thickness);
   background: var(--k-color-border-focus);
-  border-radius: 2px;
+  border-radius: var(--k-radius-extra-small);
 }
 .k-calendar-resize-start {
-  top: -9px;
+  top: calc(-1 * var(--k-component-calendar-resize-target-offset));
   bottom: auto;
 }
 .k-calendar-resize-end {
-  bottom: -9px;
+  bottom: calc(-1 * var(--k-component-calendar-resize-target-offset));
   top: auto;
 }
 .k-calendar-resize-end::after {
-  bottom: 7px;
+  bottom: var(--k-component-calendar-resize-grip-offset);
 }
 .k-calendar-resize-start::after {
-  top: 7px;
+  top: var(--k-component-calendar-resize-grip-offset);
 }
 .k-calendar-resize-horizontal {
   top: 0;
   bottom: 0;
   height: auto;
-  width: 14px;
+  width: var(--k-component-calendar-horizontal-resize-target-width);
   cursor: ew-resize;
 }
 .k-calendar-resize-horizontal.k-calendar-resize-start {
-  left: -7px;
+  left: calc(-1 * var(--k-component-calendar-resize-grip-offset));
   right: auto;
 }
 .k-calendar-resize-horizontal.k-calendar-resize-end {
-  right: -4px;
+  right: calc(-1 * var(--k-component-calendar-horizontal-resize-end-offset));
   left: auto;
 }
 .k-calendar-resize-horizontal::after {
-  top: 6px;
-  bottom: 6px;
-  left: 7px;
-  width: 3px;
+  top: var(--k-component-calendar-horizontal-resize-grip-inset);
+  bottom: var(--k-component-calendar-horizontal-resize-grip-inset);
+  left: var(--k-component-calendar-horizontal-resize-grip-offset);
+  width: var(--k-component-calendar-horizontal-resize-grip-width);
   height: auto;
 }
 .k-calendar-selection {
   position: absolute;
   z-index: 3;
-  background: color-mix(in srgb, var(--k-color-border-focus) 38%, transparent);
-  border: 2px solid var(--k-color-border-focus);
-  box-shadow: inset 0 0 0 1px var(--k-color-surface-canvas);
+  background: color-mix(
+    in srgb,
+    var(--k-color-border-focus) calc(var(--k-opacity-inactive) * 100%),
+    transparent
+  );
+  border: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  box-shadow: inset 0 0 0 var(--k-border-width-default)
+    var(--k-color-surface-canvas);
   pointer-events: none;
   overflow: hidden;
 }
 .k-calendar-selection-label {
   display: block;
-  padding: 4px 6px;
+  padding: var(--k-space-tight) var(--k-space-small-inset);
   color: var(--k-color-text-primary);
   font-size: var(--k-font-caption-size);
   font-weight: 600;
@@ -290,50 +301,52 @@
   z-index: 6;
 }
 .k-calendar-event[data-touch-editing] .k-calendar-resize {
-  width: 48px;
-  height: 48px;
+  width: var(--k-component-calendar-touch-target-size);
+  height: var(--k-component-calendar-touch-target-size);
   inset-inline: auto;
-  left: calc(50% - 24px);
+  left: calc(50% - var(--k-component-calendar-touch-target-offset));
   right: auto;
 }
 .k-calendar-event[data-touch-editing] .k-calendar-resize-start {
-  top: -24px;
+  top: calc(-1 * var(--k-component-calendar-touch-target-offset));
   bottom: auto;
   transform: none;
 }
 .k-calendar-event[data-touch-editing] .k-calendar-resize-end {
-  bottom: -24px;
+  bottom: calc(-1 * var(--k-component-calendar-touch-target-offset));
   top: auto;
   transform: none;
 }
 .k-calendar-event[data-touch-editing] .k-calendar-resize-horizontal {
-  top: calc(50% - 24px);
+  top: calc(50% - var(--k-component-calendar-touch-target-offset));
   bottom: auto;
   transform: none;
 }
 .k-calendar-event[data-touch-editing]
   .k-calendar-resize-horizontal.k-calendar-resize-start {
-  left: -24px;
+  left: calc(-1 * var(--k-component-calendar-touch-target-offset));
   right: auto;
 }
 .k-calendar-event[data-touch-editing]
   .k-calendar-resize-horizontal.k-calendar-resize-end {
-  right: -24px;
+  right: calc(-1 * var(--k-component-calendar-touch-target-offset));
   left: auto;
 }
 .k-calendar-event[data-touch-editing] .k-calendar-resize::after {
-  inset: 15px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid var(--k-color-surface-canvas);
+  inset: var(--k-component-calendar-touch-grip-inset);
+  width: var(--k-component-calendar-touch-grip-size);
+  height: var(--k-component-calendar-touch-grip-size);
+  border-radius: var(--k-radius-full);
+  border: var(--k-border-width-strong) solid var(--k-color-surface-canvas);
   box-sizing: border-box;
 }
 
 .k-calendar-event[data-touch-editing][data-short-event]
   .k-calendar-resize-start {
-  transform: translateX(-24px);
+  transform: translateX(
+    calc(-1 * var(--k-component-calendar-touch-target-offset))
+  );
 }
 .k-calendar-event[data-touch-editing][data-short-event] .k-calendar-resize-end {
-  transform: translateX(24px);
+  transform: translateX(var(--k-component-calendar-touch-target-offset));
 }

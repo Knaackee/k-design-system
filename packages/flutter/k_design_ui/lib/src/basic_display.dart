@@ -47,7 +47,7 @@ class KAttachment extends StatelessWidget {
     final padding = switch (size) {
       KAttachmentSize.standard => t.spaceControlGap,
       KAttachmentSize.small => t.spaceControlGap * .75,
-      KAttachmentSize.compact => 2.0,
+      KAttachmentSize.compact => t.componentAttachmentCompactPaddingBlock,
     };
     return Semantics(
       button: onActivate != null,
@@ -68,8 +68,8 @@ class KAttachment extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: t.componentAttachmentMediaSize,
+                height: t.componentAttachmentMediaSize,
                 decoration: BoxDecoration(
                   color: t.colorSurfaceSubtle,
                   borderRadius: BorderRadius.circular(t.radiusControl),
@@ -81,12 +81,12 @@ class KAttachment extends StatelessWidget {
                         child:
                             loadingIndicator ??
                             SizedBox.square(
-                              dimension: 18,
+                              dimension: t.componentSpinnerDefaultSize,
                               child: CircularProgressIndicator(
                                 value: MediaQuery.disableAnimationsOf(context)
                                     ? .72
                                     : null,
-                                strokeWidth: 2,
+                                strokeWidth: t.componentSpinnerStrokeWidth,
                                 color: t.colorActionPrimaryBackground,
                                 backgroundColor: t.colorBorderDefault,
                               ),
@@ -128,10 +128,10 @@ class KAttachment extends StatelessWidget {
                         child: description!,
                       ),
                     if (progress != null) ...[
-                      const SizedBox(height: 4),
+                      SizedBox(height: t.componentAttachmentProgressGap),
                       LinearProgressIndicator(
                         value: progress!.clamp(0, 1),
-                        minHeight: 3,
+                        minHeight: t.componentAttachmentProgressHeight,
                         backgroundColor: t.colorBorderDefault,
                         color: t.colorActionPrimaryBackground,
                       ),
@@ -171,18 +171,18 @@ class KAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final dimension = switch (size) {
-      KAvatarSize.small => 28.0,
-      KAvatarSize.standard => 36.0,
-      KAvatarSize.large => 48.0,
+      KAvatarSize.small => t.componentAvatarSizeSmall,
+      KAvatarSize.standard => t.componentAvatarSizeMedium,
+      KAvatarSize.large => t.componentAvatarSizeLarge,
     };
     final fallbackWidget = Center(
       child: DefaultTextStyle(
         style: _textStyle(
           t,
           size == KAvatarSize.large
-              ? 16
+              ? t.componentAvatarFallbackFontSizeLarge
               : size == KAvatarSize.small
-              ? 11
+              ? t.componentAvatarFallbackFontSizeSmall
               : t.fontControlSize,
           t.fontControlWeight,
           t.colorTextPrimary,
@@ -214,22 +214,32 @@ class KAvatar extends StatelessWidget {
             ),
             if (badge != null)
               PositionedDirectional(
-                end: -2,
-                bottom: -2,
+                end: -t.componentAvatarBadgeInset,
+                bottom: -t.componentAvatarBadgeInset,
                 child: Container(
-                  constraints: const BoxConstraints(
-                    minWidth: 12,
-                    minHeight: 12,
+                  constraints: BoxConstraints(
+                    minWidth: t.componentAvatarBadgeSize,
+                    minHeight: t.componentAvatarBadgeSize,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: t.componentAvatarBadgeInset,
+                  ),
                   decoration: BoxDecoration(
                     color: t.colorStatusSuccessAccent,
                     shape: BoxShape.circle,
-                    border: Border.all(color: t.colorSurfaceCanvas, width: 2),
+                    border: Border.all(
+                      color: t.colorSurfaceCanvas,
+                      width: t.componentAvatarBadgeStrokeWidth,
+                    ),
                   ),
                   alignment: Alignment.center,
                   child: DefaultTextStyle(
-                    style: _textStyle(t, 8, FontWeight.w600, Colors.white),
+                    style: _textStyle(
+                      t,
+                      t.componentAvatarBadgeFontSize,
+                      FontWeight.w600,
+                      t.colorActionPrimaryForeground,
+                    ),
                     child: badge!,
                   ),
                 ),
@@ -252,15 +262,21 @@ class KAvatarGroup extends StatelessWidget {
   const KAvatarGroup({required this.children, super.key});
   final List<Widget> children;
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 48,
-    child: Stack(
-      children: [
-        for (final (index, child) in children.indexed)
-          PositionedDirectional(start: index * 30, child: child),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return SizedBox(
+      height: t.componentAvatarSizeLarge,
+      child: Stack(
+        children: [
+          for (final (index, child) in children.indexed)
+            PositionedDirectional(
+              start: index * t.componentAvatarGroupStep,
+              child: child,
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 enum KBadgeVariant { primary, secondary, outline, ghost, destructive }
@@ -308,8 +324,8 @@ class KBadge extends StatelessWidget {
       ),
     };
     return Container(
-      constraints: const BoxConstraints(minHeight: 22),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      constraints: BoxConstraints(minHeight: t.componentBadgeMinHeight),
+      padding: EdgeInsets.symmetric(horizontal: t.componentBadgePaddingInline),
       decoration: BoxDecoration(
         color: background,
         border: Border.all(color: border),
@@ -320,10 +336,13 @@ class KBadge extends StatelessWidget {
         children: [
           if (leading != null) ...[
             IconTheme(
-              data: IconThemeData(size: 12, color: foreground),
+              data: IconThemeData(
+                size: t.componentBadgeIconSize,
+                color: foreground,
+              ),
               child: leading!,
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: t.componentBadgeContentGap),
           ],
           DefaultTextStyle(
             style: _textStyle(
@@ -335,9 +354,12 @@ class KBadge extends StatelessWidget {
             child: child,
           ),
           if (trailing != null) ...[
-            const SizedBox(width: 4),
+            SizedBox(width: t.componentBadgeContentGap),
             IconTheme(
-              data: IconThemeData(size: 12, color: foreground),
+              data: IconThemeData(
+                size: t.componentBadgeIconSize,
+                color: foreground,
+              ),
               child: trailing!,
             ),
           ],
@@ -357,7 +379,7 @@ TextStyle _textStyle(
   fontFamily: t.fontFamily,
   fontSize: size,
   fontWeight: weight,
-  height: 1.2,
+  height: t.fontRelaxedHeight,
   leadingDistribution: TextLeadingDistribution.even,
   fontVariations: [
     FontVariation.weight(weight.value.toDouble()),

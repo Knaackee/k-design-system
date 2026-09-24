@@ -111,7 +111,9 @@ class _SymbolPickerState extends State<_SymbolPicker> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(
+                  tokens.componentSymbolPickerPanelPadding,
+                ),
                 child: KInput(
                   focusNode: widget.searchFocus,
                   controller: _search,
@@ -126,7 +128,9 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                 ),
               ),
               Container(
-                height: 57,
+                height:
+                    tokens.componentSymbolPickerFooterMinHeight +
+                    tokens.borderWidthDefault,
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(color: tokens.colorBorderDefault),
@@ -141,15 +145,20 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                     child: ListView(
                       controller: _categoryScroll,
                       scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                      padding: EdgeInsets.fromLTRB(
+                        tokens.componentSymbolPickerPanelPadding,
+                        0,
+                        tokens.componentSymbolPickerPanelPadding,
+                        tokens.componentSymbolPickerPanelPadding,
+                      ),
                       children: [
                         for (final tab in tabs.entries)
                           Padding(
-                            padding: const EdgeInsets.only(right: 4),
+                            padding: EdgeInsets.only(right: tokens.spaceTight),
                             child: button(
                               tab.value,
                               SizedBox(
-                                width: 44,
+                                width: tokens.componentSymbolPickerCellSize,
                                 child: tab.key.isEmpty
                                     ? const KIcon(KIconName.search)
                                     : tab.key == '__recent'
@@ -192,17 +201,22 @@ class _SymbolPickerState extends State<_SymbolPicker> {
                                 // glyphs as they enter this small menu viewport.
                                 scrollCacheExtent:
                                     const ScrollCacheExtent.pixels(0),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      tokens.componentSymbolPickerPanelPadding,
+                                  vertical: tokens.spaceControlGap,
                                 ),
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount:
-                                          ((constraints.maxWidth - 24) / 44)
+                                          ((constraints.maxWidth -
+                                                      tokens.sizeIconDefault) /
+                                                  tokens
+                                                      .componentSymbolPickerCellSize)
                                               .floor()
                                               .clamp(1, 100),
-                                      mainAxisExtent: 44,
+                                      mainAxisExtent:
+                                          tokens.componentSymbolPickerCellSize,
                                     ),
                                 itemCount: visible.length,
                                 itemBuilder: (context, index) {
@@ -248,10 +262,10 @@ class _SymbolPickerState extends State<_SymbolPicker> {
               ),
               if (widget.accessory != null)
                 Container(
-                  height: 56,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                  height: tokens.componentSymbolPickerFooterMinHeight,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: tokens.componentSymbolPickerPanelPadding,
+                    vertical: tokens.spaceControlGap,
                   ),
                   decoration: BoxDecoration(
                     border: Border(
@@ -333,7 +347,10 @@ class _SymbolPickerCellState extends State<_SymbolPickerCell> {
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(tokens.radiusSmall),
                 border: widget.selected || _focused
-                    ? Border.all(color: tokens.colorBorderFocus, width: 2)
+                    ? Border.all(
+                        color: tokens.colorBorderFocus,
+                        width: tokens.borderWidthStrong,
+                      )
                     : null,
               ),
               child: ExcludeSemantics(child: Center(child: widget.child)),

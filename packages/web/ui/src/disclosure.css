@@ -39,11 +39,11 @@
 
 .k-disclosure__toggle:focus-visible {
   outline: var(--k-border-width-default) solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 
 .k-disclosure__toggle:disabled {
-  opacity: 0.48;
+  opacity: var(--k-opacity-disabled);
   cursor: default;
 }
 

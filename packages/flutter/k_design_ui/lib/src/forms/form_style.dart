@@ -12,7 +12,7 @@ TextStyle formTextStyle(BuildContext context, {Color? color}) {
     fontFamily: t.fontFamily,
     fontSize: t.fontControlSize,
     fontWeight: t.fontControlWeight,
-    height: 1,
+    height: t.fontTightHeight,
     leadingDistribution: TextLeadingDistribution.even,
     letterSpacing: -.01 * scaled,
     color: color ?? t.colorTextPrimary,

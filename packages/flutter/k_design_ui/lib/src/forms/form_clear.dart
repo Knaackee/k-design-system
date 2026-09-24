@@ -67,13 +67,16 @@ class _KFormClearState extends State<KFormClear> {
               behavior: HitTestBehavior.opaque,
               onTap: widget.onPressed,
               child: Container(
-                width: math.max(24, t.sizeHitTarget),
+                width: math.max(t.sizeIconDefault, t.sizeHitTarget),
                 height: math.max(t.sizeControl, t.sizeHitTarget),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(t.radiusControl),
                   border: _focusVisible
-                      ? Border.all(color: t.colorBorderFocus, width: 2)
+                      ? Border.all(
+                          color: t.colorBorderFocus,
+                          width: t.borderWidthStrong,
+                        )
                       : null,
                 ),
                 child: KIcon(

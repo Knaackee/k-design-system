@@ -82,8 +82,8 @@
   .k-table-viewport,
   .k-virtual-table
 )::-webkit-scrollbar-thumb {
-  min-width: 48px;
-  min-height: 48px;
+  min-width: var(--k-size-avatar-large);
+  min-height: var(--k-size-avatar-large);
   border: calc((var(--k-scrollbar-size) - var(--k-scrollbar-thumb-size)) / 2)
     solid transparent;
   border-radius: var(--k-radius-full);

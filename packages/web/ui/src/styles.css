@@ -254,7 +254,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--k-space-control-gap);
-  border: 1px solid var(--k-button-border);
+  border: var(--k-border-width-default) solid var(--k-button-border);
   border-radius: var(--k-radius-control);
   background: var(--k-button-background);
   color: var(--k-button-foreground);
@@ -310,23 +310,25 @@
 }
 
 .k-button:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: 2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
 }
 
 .k-button:disabled {
   cursor: not-allowed;
-  opacity: 0.48;
+  opacity: var(--k-component-button-disabled-opacity);
 }
 
 .k-button__spinner {
-  width: 14px;
-  height: 14px;
+  width: var(--k-component-button-loading-indicator-size);
+  height: var(--k-component-button-loading-indicator-size);
   box-sizing: border-box;
-  border: 2px solid currentColor;
+  border: var(--k-component-button-loading-indicator-stroke-width) solid
+    currentColor;
   border-right-color: transparent;
-  border-radius: 999px;
-  animation: k-button-spin 700ms linear infinite;
+  border-radius: var(--k-component-button-loading-indicator-radius);
+  animation: k-button-spin var(--k-component-spinner-animation-duration) linear
+    infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

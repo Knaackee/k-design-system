@@ -65,13 +65,13 @@ class KAlert extends StatelessWidget {
           child: title,
         ),
         if (description != null) ...[
-          const SizedBox(height: 2),
+          SizedBox(height: t.spaceMicro),
           DefaultTextStyle(
             style: _textStyle(
               t,
               t.fontBodySmallSize,
               t.fontBodyWeight,
-              foreground.withValues(alpha: .82),
+              foreground.withValues(alpha: t.componentToastMessageOpacity),
             ),
             child: description!,
           ),
@@ -189,7 +189,7 @@ class KAlertDialog extends StatelessWidget {
     return KDialog(
       title: title,
       description: description,
-      maxWidth: 440,
+      maxWidth: t.componentAlertDialogMaxWidth,
       actions: SizedBox(
         width: double.infinity,
         child: Wrap(
@@ -217,8 +217,8 @@ class KAlertDialog extends StatelessWidget {
       child: media == null
           ? const SizedBox.shrink()
           : Container(
-              width: 48,
-              height: 48,
+              width: t.componentAlertDialogMediaSize,
+              height: t.componentAlertDialogMediaSize,
               decoration: BoxDecoration(
                 color: t.colorSurfaceSubtle,
                 shape: BoxShape.circle,
@@ -242,7 +242,7 @@ class _DestructiveButton extends StatelessWidget {
       style: FilledButton.styleFrom(
         minimumSize: Size(0, t.sizeControl),
         padding: EdgeInsets.symmetric(
-          horizontal: t.spaceControlInsetInline + 1,
+          horizontal: t.spaceControlInsetInline + t.borderWidthDefault,
         ),
         backgroundColor: t.colorStatusErrorBackground,
         foregroundColor: t.colorStatusErrorForeground,
@@ -272,7 +272,7 @@ TextStyle _textStyle(
   fontFamily: t.fontFamily,
   fontSize: size,
   fontWeight: weight,
-  height: 1.2,
+  height: t.fontRelaxedHeight,
   leadingDistribution: TextLeadingDistribution.even,
   fontVariations: [
     FontVariation.weight(weight.value.toDouble()),

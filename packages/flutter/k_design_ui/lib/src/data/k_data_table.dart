@@ -26,7 +26,7 @@ class KDataTableColumn<T> {
     this.compare,
     this.width,
     this.paddingInline,
-    this.minWidth = 160,
+    this.minWidth,
     this.flex = 1,
     this.align = KTableAlign.start,
   });
@@ -38,7 +38,7 @@ class KDataTableColumn<T> {
 
   /// Horizontal cell padding; defaults to the density control inset.
   final double? paddingInline;
-  final double minWidth;
+  final double? minWidth;
   final double flex;
   final KTableAlign align;
 }
@@ -113,7 +113,7 @@ class KDataTable<T> extends StatelessWidget {
           KDataTableColumn<T>(
             id: '__singleColumn',
             label: singleColumn!.columnLabel,
-            minWidth: 160,
+            minWidth: null,
             paddingInline: 0,
             cell: (row) =>
                 KDataTableSingleRow<T>(content: singleColumn!, row: row),
@@ -211,13 +211,12 @@ class KDataTable<T> extends StatelessWidget {
         throw ArgumentError('Column labels must be nonempty');
       }
       final width = column.width ?? column.minWidth;
-      if (!width.isFinite ||
-          width <= 0 ||
+      if ((width != null && (!width.isFinite || width <= 0)) ||
           (column.width == null &&
               (!column.flex.isFinite || column.flex <= 0))) {
         throw ArgumentError('Column dimensions must be positive and finite');
       }
-      base += width;
+      base += width ?? 0;
       if (column.width == null) flex += column.flex;
     }
     if (!base.isFinite || !flex.isFinite) {

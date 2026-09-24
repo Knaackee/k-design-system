@@ -1,5 +1,5 @@
 .k-kanban {
-  --k-kanban-column-width: 280px;
+  --k-kanban-column-width: var(--k-component-kanban-column-width);
   box-sizing: border-box;
   display: grid;
   grid-auto-flow: column;
@@ -17,8 +17,8 @@
 }
 
 .k-kanban:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 
 .k-kanban-column {
@@ -100,12 +100,12 @@
 
 .k-kanban-card:focus-visible,
 .k-kanban-card[data-selected] {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 
 .k-kanban-card[data-dragging] {
-  opacity: 0.45;
+  opacity: var(--k-component-kanban-drag-opacity);
   outline: none;
   border-color: var(--k-color-border-default);
   box-shadow: var(--k-elevation-low);
@@ -119,9 +119,12 @@
 .k-kanban-card[data-drop-target]::before {
   position: absolute;
   inset-inline: 0;
-  top: calc((var(--k-space-control-gap) / -2) - 1px);
-  height: 2px;
-  border-radius: 999px;
+  top: calc(
+    (var(--k-space-control-gap) / -2) -
+      var(--k-component-kanban-drop-indicator-edge-offset)
+  );
+  height: var(--k-component-kanban-drop-indicator-height);
+  border-radius: var(--k-radius-full);
   background: var(--k-color-border-focus);
   content: "";
   pointer-events: none;
@@ -153,5 +156,5 @@
 }
 
 .k-kanban-add:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
 }

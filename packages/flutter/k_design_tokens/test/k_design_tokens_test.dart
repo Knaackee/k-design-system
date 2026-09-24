@@ -131,6 +131,69 @@ void main() {
     expect(theme.extension<KDesignTokens>()!.fontFamily, 'Consumer Sans');
   });
 
+  test('semantic overrides cascade to component defaults', () {
+    final squared = KDesignTokens.orbitLight.copyWith(
+      radiusFull: 0,
+      radiusSheet: 0,
+    );
+
+    expect(squared.componentMobileAppBarContainerRadiusFloating, 0);
+    expect(squared.componentMobileAppBarContainerRadiusFixed, 0);
+    expect(squared.componentMobileAppBarDestinationRadiusDefault, 0);
+    expect(squared.componentMobileAppBarBadgeRadius, 0);
+
+    final explicit = KDesignTokens.orbitLight.copyWith(
+      radiusFull: 0,
+      componentMobileAppBarBadgeRadius: 7,
+    );
+    expect(explicit.componentMobileAppBarContainerRadiusFloating, 0);
+    expect(explicit.componentMobileAppBarBadgeRadius, 7);
+  });
+
+  test('button component defaults follow shared semantic roles', () {
+    final tokens = KDesignTokens.orbitLight.copyWith(
+      opacityDisabled: 0.3,
+      sizeIndicatorSmall: 20,
+      borderWidthStrong: 3,
+    );
+
+    expect(tokens.componentButtonDisabledOpacity, 0.3);
+    expect(tokens.componentButtonLoadingIndicatorSize, 20);
+    expect(tokens.componentButtonLoadingIndicatorStrokeWidth, 3);
+  });
+
+  test('foundation component aliases follow semantic geometry and motion', () {
+    final tokens = KDesignTokens.orbitLight.copyWith(
+      sizeCompact: 26,
+      sizeIndicatorMedium: 20,
+      motionModerate: const Duration(milliseconds: 240),
+    );
+
+    expect(tokens.componentKbdMinSize, 26);
+    expect(tokens.componentSwitchTrackHeight, 26);
+    expect(tokens.componentSliderInputSize, 26);
+    expect(tokens.componentSpinnerDefaultSize, 20);
+    expect(tokens.componentSliderThumbSize, 20);
+    expect(
+      tokens.componentCarouselTransitionDuration,
+      const Duration(milliseconds: 240),
+    );
+  });
+
+  test('theme helper applies a consumer token transform', () {
+    final theme = kDesignTheme(
+      tokenTransform: (tokens) =>
+          tokens.copyWith(componentMobileAppBarPrimaryActionRadius: 3),
+    );
+
+    expect(
+      theme
+          .extension<KDesignTokens>()!
+          .componentMobileAppBarPrimaryActionRadius,
+      3,
+    );
+  });
+
   test('brand and status roles remain theme-overridable', () {
     expect(
       KDesignTokens.referenceLight.colorBrandPrimaryAccent,

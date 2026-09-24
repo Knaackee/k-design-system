@@ -10,21 +10,21 @@ final _builtInEmojiSvg = <String, String>{
 
 final _rasterBytes = <String, Uint8List>{};
 
-Widget _emojiPicture(KSymbolItem item) {
+Widget _emojiPicture(KSymbolItem item, {required double size}) {
   final raster = rasters.kEmojiRasters[item.value];
   if (raster != null && _builtInEmojiSvg[item.value] == item.svg) {
     return Image.memory(
       _rasterBytes.putIfAbsent(item.value!, () => base64Decode(raster)),
-      width: 24,
-      height: 24,
+      width: size,
+      height: size,
       filterQuality: FilterQuality.medium,
       excludeFromSemantics: true,
     );
   }
   return SvgPicture.string(
     item.svg!,
-    width: 24,
-    height: 24,
+    width: size,
+    height: size,
     excludeFromSemantics: true,
   );
 }

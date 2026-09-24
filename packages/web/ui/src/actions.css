@@ -25,11 +25,14 @@
   inset: auto;
   margin: 0;
   box-sizing: border-box;
-  width: min(240px, calc(100vw - 16px));
-  max-height: calc(100dvh - 16px);
+  width: min(
+    var(--k-component-context-menu-width),
+    calc(100vw - var(--k-component-context-menu-viewport-inset))
+  );
+  max-height: calc(100dvh - var(--k-component-context-menu-viewport-inset));
   overflow-y: auto;
   padding: var(--k-space-control-gap);
-  border: 1px solid var(--k-color-border-default);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
   border-radius: var(--k-radius-overlay);
   background: var(--k-color-surface-raised);
   color: var(--k-color-text-primary);
@@ -64,8 +67,8 @@
   background: var(--k-color-action-ghost-hover);
 }
 .k-menu__item:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 .k-menu__item:focus:not(:focus-visible) {
   outline: 0;
@@ -74,7 +77,7 @@
   background: var(--k-color-action-ghost-pressed);
 }
 .k-menu__item:disabled {
-  opacity: 0.48;
+  opacity: var(--k-opacity-disabled);
   cursor: not-allowed;
 }
 .k-menu__separator {
@@ -87,8 +90,8 @@
   min-width: 0;
 }
 .k-context-menu__target:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: 2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
 }
 .k-context-menu {
   max-height: none;
@@ -106,8 +109,8 @@
 }
 .k-context-menu__icon {
   display: inline-flex;
-  width: 16px;
-  min-width: 16px;
+  width: var(--k-component-context-menu-icon-size);
+  min-width: var(--k-component-context-menu-icon-size);
 }
 .k-context-menu__entry > .k-menu__item > .k-icon:last-child {
   margin-inline-start: auto;
@@ -119,13 +122,16 @@
   top: calc(-1 * var(--k-space-control-gap));
   left: calc(100% - var(--k-space-control-gap));
   box-sizing: border-box;
-  width: min(240px, calc(100vw - 16px));
+  width: min(
+    var(--k-component-context-menu-width),
+    calc(100vw - var(--k-component-context-menu-viewport-inset))
+  );
   padding: var(--k-space-control-gap);
-  border: 1px solid var(--k-color-border-default);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
   border-radius: var(--k-radius-overlay);
   background: var(--k-color-surface-raised);
   box-shadow: var(--k-elevation-overlay);
-  max-height: calc(100dvh - 16px);
+  max-height: calc(100dvh - var(--k-component-context-menu-viewport-inset));
   overflow-y: auto;
 }
 .k-context-menu__entry

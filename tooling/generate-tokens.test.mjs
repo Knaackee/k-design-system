@@ -111,6 +111,22 @@ test("emits runtime modes in a higher cascade layer than brand themes", async ()
   assert.match(css, /\[data-density="dense"\][\s\S]*--k-size-control: 32px/);
 });
 
+test("preserves component aliases as live Web custom-property references", async () => {
+  const css = await readFile(
+    new URL("../packages/web/tokens/src/generated/tokens.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(
+    css,
+    /--k-component-mobile-app-bar-container-radius-floating: var\(--k-radius-full\)/,
+  );
+  assert.match(
+    css,
+    /--k-component-mobile-app-bar-container-radius-fixed: var\(--k-radius-sheet\)/,
+  );
+});
+
 test("generates transparent DTCG colors for Flutter", async () => {
   const dart = await readFile(
     new URL(
@@ -188,7 +204,7 @@ test("projects DTCG shadow tokens to CSS and Flutter", async () => {
   assert.match(css, /--k-elevation-low: 0px 1px 2px 0px #[a-f\d]{8}/i);
   assert.match(
     dart,
-    /final List<BoxShadow> elevationLow;[\s\S]*BoxShadow\(color: Color\(0x[\dA-F]{8}\)/,
+    /final List<BoxShadow> elevationLow;[\s\S]*BoxShadow\(\s*color: Color\(0x[\dA-F]{8}\)/,
   );
 });
 

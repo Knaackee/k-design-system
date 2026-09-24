@@ -82,7 +82,7 @@ class KMobileAppBar extends StatefulWidget {
     this.liquidSurfaceBuilder,
     this.onResolvedQualityChanged,
     this.semanticLabel = 'Primary navigation',
-    this.maxWidth = 430,
+    this.maxWidth,
     super.key,
   });
 
@@ -101,7 +101,7 @@ class KMobileAppBar extends StatefulWidget {
   final KGlassSurfaceBuilder? liquidSurfaceBuilder;
   final ValueChanged<KGlassQuality>? onResolvedQualityChanged;
   final String semanticLabel;
-  final double maxWidth;
+  final double? maxWidth;
 
   @override
   State<KMobileAppBar> createState() => _KMobileAppBarState();
@@ -151,8 +151,14 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
       _ => false,
     };
     final radius = isFixed
-        ? const BorderRadius.vertical(top: Radius.circular(24))
-        : BorderRadius.circular(999);
+        ? BorderRadius.vertical(
+            top: Radius.circular(
+              tokens.componentMobileAppBarContainerRadiusFixed,
+            ),
+          )
+        : BorderRadius.circular(
+            tokens.componentMobileAppBarContainerRadiusFloating,
+          );
     final splitIndex = (widget.items.length / 2).ceil();
     final before = widget.primaryAction == null
         ? widget.items
@@ -163,29 +169,28 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
 
     final content = Container(
       constraints: BoxConstraints(
-        minHeight: widget.variant == KMobileAppBarVariant.labeled ? 78 : 72,
+        minHeight: widget.variant == KMobileAppBarVariant.labeled
+            ? tokens.componentMobileAppBarContainerLabeledMinHeight
+            : tokens.componentMobileAppBarContainerMinHeight,
       ),
       padding: EdgeInsets.fromLTRB(
-        10,
-        7,
-        10,
-        7 + (isFixed ? media.padding.bottom : 0),
+        tokens.componentMobileAppBarContainerPaddingInline,
+        tokens.componentMobileAppBarContainerPaddingBlock,
+        tokens.componentMobileAppBarContainerPaddingInline,
+        tokens.componentMobileAppBarContainerPaddingBlock +
+            (isFixed ? media.padding.bottom : 0),
       ),
       decoration: BoxDecoration(
         border: Border.all(
           color: Color.alphaBlend(
-            Colors.white.withValues(alpha: .08),
-            tokens.colorBorderStrong.withValues(alpha: .62),
+            tokens.colorGlassHighlight,
+            tokens.colorBorderStrong.withValues(
+              alpha: tokens.componentMobileAppBarOpacityBorder,
+            ),
           ),
         ),
         borderRadius: radius,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .32),
-            blurRadius: 30,
-            offset: const Offset(0, 12),
-          ),
-        ],
+        boxShadow: tokens.componentMobileAppBarContainerNativeElevation,
       ),
       child: widget.variant == KMobileAppBarVariant.contextual
           ? SizedBox(width: double.infinity, child: widget.contextualContent)
@@ -196,11 +201,16 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
                 ),
                 if (widget.primaryAction != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 7),
+                    padding: EdgeInsets.symmetric(
+                      horizontal:
+                          tokens.componentMobileAppBarContainerPaddingBlock,
+                    ),
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: 56,
-                        minHeight: 56,
+                      constraints: BoxConstraints(
+                        minWidth:
+                            tokens.componentMobileAppBarDestinationMinHeight,
+                        minHeight:
+                            tokens.componentMobileAppBarDestinationMinHeight,
                       ),
                       child: widget.primaryAction,
                     ),
@@ -214,11 +224,11 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
     );
 
     final surface = AnimatedSlide(
-      duration: const Duration(milliseconds: 180),
+      duration: tokens.componentMobileAppBarMotionModerate,
       curve: Curves.easeOutCubic,
       offset: widget.collapsed ? const Offset(0, 1.25) : Offset.zero,
       child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 160),
+        duration: tokens.componentMobileAppBarMotionStandard,
         opacity: widget.collapsed ? 0 : 1,
         child: IgnorePointer(
           ignoring: widget.collapsed,
@@ -240,7 +250,12 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
         bottom: !isFixed,
         minimum: isFixed
             ? EdgeInsets.zero
-            : const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            : EdgeInsets.fromLTRB(
+                tokens.componentMobileAppBarContainerFloatingInset,
+                0,
+                tokens.componentMobileAppBarContainerFloatingInset,
+                tokens.componentMobileAppBarContainerBottomInset,
+              ),
         child: Align(
           alignment: Alignment.bottomCenter,
           child: ConstrainedBox(
@@ -248,8 +263,9 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
               maxWidth: isFixed
                   ? double.infinity
                   : widget.variant == KMobileAppBarVariant.floatingDock
-                  ? 320
-                  : widget.maxWidth,
+                  ? tokens.componentMobileAppBarContainerDockMaxWidth
+                  : widget.maxWidth ??
+                        tokens.componentMobileAppBarContainerMaxWidth,
             ),
             child: surface,
           ),
@@ -285,9 +301,14 @@ class _GlassSurface extends StatelessWidget {
       KGlassQuality.frosted || KGlassQuality.auto => ClipRRect(
         borderRadius: borderRadius,
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+          filter: ImageFilter.blur(
+            sigmaX: tokens.componentMobileAppBarGlassNativeBlur,
+            sigmaY: tokens.componentMobileAppBarGlassNativeBlur,
+          ),
           child: ColoredBox(
-            color: tokens.colorSurfaceRaised.withValues(alpha: .72),
+            color: tokens.colorSurfaceRaised.withValues(
+              alpha: tokens.componentMobileAppBarOpacitySurface,
+            ),
             child: child,
           ),
         ),
@@ -361,23 +382,33 @@ class _Destination extends StatelessWidget {
         selected: selected,
         label: item.label,
         child: Opacity(
-          opacity: item.enabled ? 1 : .45,
+          opacity: item.enabled
+              ? 1
+              : tokens.componentMobileAppBarOpacityInactive,
           child: Material(
             color: selected
-                ? tokens.colorSurfaceSubtle.withValues(alpha: .82)
+                ? tokens.colorSurfaceSubtle.withValues(
+                    alpha: tokens.componentMobileAppBarOpacityRaised,
+                  )
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(
+              tokens.componentMobileAppBarDestinationRadiusDefault,
+            ),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: item.enabled ? onTap : null,
               customBorder: const StadiumBorder(),
               overlayColor: WidgetStatePropertyAll(
-                tokens.colorSurfaceSubtle.withValues(alpha: .5),
+                tokens.colorSurfaceSubtle.withValues(
+                  alpha: tokens.componentMobileAppBarOpacityMuted,
+                ),
               ),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minWidth: 48,
-                  minHeight: showLabel ? 64 : 56,
+                  minWidth: tokens.componentMobileAppBarDestinationMinWidth,
+                  minHeight: showLabel
+                      ? tokens.componentMobileAppBarDestinationLabeledMinHeight
+                      : tokens.componentMobileAppBarDestinationMinHeight,
                 ),
                 child: itemBuilder != null
                     ? itemBuilder!(
@@ -396,7 +427,8 @@ class _Destination extends StatelessWidget {
                               children: [
                                 IconTheme(
                                   data: IconThemeData(
-                                    size: 24,
+                                    size: tokens
+                                        .componentMobileAppBarDestinationIconSize,
                                     color: selected
                                         ? tokens.colorTextPrimary
                                         : tokens.colorTextMuted,
@@ -406,7 +438,10 @@ class _Destination extends StatelessWidget {
                                       : item.icon,
                                 ),
                                 if (showLabel) ...[
-                                  const SizedBox(height: 4),
+                                  SizedBox(
+                                    height: tokens
+                                        .componentMobileAppBarDestinationLabelGap,
+                                  ),
                                   Text(
                                     item.label,
                                     maxLines: 1,
@@ -416,9 +451,10 @@ class _Destination extends StatelessWidget {
                                           ? tokens.colorTextPrimary
                                           : tokens.colorTextMuted,
                                       fontFamily: tokens.fontFamily,
-                                      fontSize: 11,
+                                      fontSize: tokens
+                                          .componentMobileAppBarLabelFontSize,
                                       fontWeight: FontWeight.w600,
-                                      height: 1,
+                                      height: tokens.fontTightHeight,
                                     ),
                                   ),
                                 ],
@@ -426,33 +462,44 @@ class _Destination extends StatelessWidget {
                             ),
                             if (item.badge != null)
                               Positioned(
-                                top: 3,
-                                left: constraints.maxWidth / 2 + 6,
+                                top: tokens
+                                    .componentMobileAppBarBadgeOffsetBlock,
+                                left:
+                                    constraints.maxWidth / 2 +
+                                    tokens
+                                        .componentMobileAppBarBadgeOffsetInline,
                                 child: Container(
-                                  constraints: const BoxConstraints(
-                                    minWidth: 18,
-                                    minHeight: 18,
+                                  constraints: BoxConstraints(
+                                    minWidth:
+                                        tokens.componentMobileAppBarBadgeSize,
+                                    minHeight:
+                                        tokens.componentMobileAppBarBadgeSize,
                                   ),
-                                  height: 18,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
+                                  height: tokens.componentMobileAppBarBadgeSize,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: tokens
+                                        .componentMobileAppBarBadgePaddingInline,
                                   ),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: tokens.colorStatusErrorAccent,
                                     border: Border.all(
                                       color: tokens.colorSurfaceRaised,
-                                      width: 2,
+                                      width: tokens
+                                          .componentMobileAppBarBadgeStrokeWidth,
                                     ),
-                                    borderRadius: BorderRadius.circular(999),
+                                    borderRadius: BorderRadius.circular(
+                                      tokens.componentMobileAppBarBadgeRadius,
+                                    ),
                                   ),
                                   child: DefaultTextStyle(
                                     style: TextStyle(
                                       color: tokens.colorStatusErrorForeground,
                                       fontFamily: tokens.fontFamily,
-                                      fontSize: 11,
+                                      fontSize: tokens
+                                          .componentMobileAppBarLabelFontSize,
                                       fontWeight: FontWeight.w700,
-                                      height: 1,
+                                      height: tokens.fontTightHeight,
                                     ),
                                     child: item.badge!,
                                   ),

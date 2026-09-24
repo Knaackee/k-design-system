@@ -73,7 +73,9 @@ other adaptive axes. [Decision 0002](docs/decisions/0002-linear-default-and-visu
 governs visual acceptance. Component contracts:
 [Button](docs/components/button.md), [Typography](docs/components/typography.md),
 [Semantic colors](docs/components/colors.md), and
-[Surface and Card](docs/components/surface-card.md).
+[Surface and Card](docs/components/surface-card.md). See
+[Consumer theming](docs/components/theming.md) for scoped Web overrides, Flutter
+token transforms and the component-token cascade.
 
 ## Working agreement
 

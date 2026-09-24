@@ -1,6 +1,6 @@
 .k-sidebar {
-  --k-sidebar-width: 248px;
-  --k-sidebar-rail-width: 52px;
+  --k-sidebar-width: var(--k-component-sidebar-width);
+  --k-sidebar-rail-width: var(--k-component-sidebar-rail-width);
   box-sizing: border-box;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
@@ -61,7 +61,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 24px;
+  min-height: var(--k-component-sidebar-group-label-min-height);
   padding-left: var(--k-space-control-gap);
   color: var(--k-color-text-muted);
   font-size: calc(var(--k-font-caption-size) * var(--k-text-scale, 1));
@@ -80,7 +80,7 @@
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  gap: 4px;
+  gap: var(--k-space-tight);
   padding: 0;
   border: 0;
   background: transparent;
@@ -90,7 +90,7 @@
 }
 
 .k-sidebar-group__badge {
-  margin-left: 6px;
+  margin-left: var(--k-space-small-inset);
 }
 
 .k-sidebar-group__action {
@@ -108,12 +108,12 @@
 
 .k-sidebar-group__items {
   display: grid;
-  gap: 1px;
+  gap: var(--k-space-hairline);
 }
 
 .k-sidebar-subgroup__items {
   display: grid;
-  gap: 1px;
+  gap: var(--k-space-hairline);
 }
 
 .k-sidebar-group__items[hidden],
@@ -139,7 +139,8 @@
   min-height: var(--k-size-control);
   padding: 0 calc(var(--k-space-control-inset-inline) / 2);
   padding-left: calc(
-    var(--k-space-control-inset-inline) / 2 + var(--k-sidebar-depth, 0) * 18px
+    var(--k-space-control-inset-inline) / 2 + var(--k-sidebar-depth, 0) *
+      var(--k-component-sidebar-nesting-indent)
   );
   border: 0;
   border-radius: var(--k-radius-control);
@@ -172,12 +173,12 @@
 .k-sidebar-item__control:focus-visible,
 .k-sidebar-group__toggle:focus-visible,
 .k-sidebar-toggle:focus-visible {
-  outline: 2px solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 
 .k-sidebar-item[data-disabled] {
-  opacity: 0.48;
+  opacity: var(--k-opacity-disabled);
 }
 
 .k-sidebar-item[data-disabled] .k-sidebar-item__control {
@@ -224,8 +225,8 @@
 
 .k-sidebar-item__badge > .k-badge {
   justify-content: center;
-  min-width: 20px;
-  padding-inline: 4px;
+  min-width: var(--k-component-sidebar-badge-min-width);
+  padding-inline: var(--k-space-tight);
 }
 
 .k-sidebar-item__action {
@@ -343,7 +344,7 @@
 }
 
 .k-sidebar-workspace-switcher__label small {
-  margin-top: 2px;
+  margin-top: var(--k-space-micro);
   color: var(--k-color-text-muted);
   font-size: calc(var(--k-font-caption-size) * var(--k-text-scale, 1));
   font-weight: var(--k-font-body-weight);
@@ -363,19 +364,19 @@
 
 .k-sidebar[data-mode="rail"] .k-sidebar-item__badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: calc(-1 * var(--k-space-micro));
+  right: calc(-1 * var(--k-space-micro));
   z-index: 1;
   width: auto;
-  min-width: 16px;
-  height: 16px;
+  min-width: var(--k-component-sidebar-rail-badge-size);
+  height: var(--k-component-sidebar-rail-badge-size);
   margin: 0;
-  padding-inline: 3px;
+  padding-inline: var(--k-space-badge-offset);
   border-radius: var(--k-radius-full);
   background: var(--k-color-surface-raised);
-  box-shadow: 0 0 0 2px var(--k-color-surface-canvas);
+  box-shadow: 0 0 0 var(--k-border-width-strong) var(--k-color-surface-canvas);
   color: var(--k-color-text-primary);
-  font-size: 9px;
+  font-size: var(--k-font-micro-label-size);
   transform: none;
   pointer-events: none;
 }
@@ -387,11 +388,11 @@
 }
 
 .k-sidebar[data-mode="rail"] .k-sidebar-item__badge > .k-badge {
-  min-width: 16px;
-  min-height: 16px;
-  padding-inline: 3px;
-  box-shadow: 0 0 0 2px var(--k-color-surface-canvas);
-  font-size: 9px;
+  min-width: var(--k-component-sidebar-rail-badge-size);
+  min-height: var(--k-component-sidebar-rail-badge-size);
+  padding-inline: var(--k-space-badge-offset);
+  box-shadow: 0 0 0 var(--k-border-width-strong) var(--k-color-surface-canvas);
+  font-size: var(--k-font-micro-label-size);
 }
 
 .k-sidebar[data-mode="rail"] .k-sidebar-group + .k-sidebar-group {

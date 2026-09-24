@@ -13,7 +13,7 @@ class KTableColumn {
     this.headerLabel,
     this.width,
     this.paddingInline,
-    this.minWidth = 160,
+    this.minWidth,
     this.flex = 1,
     this.align = KTableAlign.start,
   });
@@ -24,7 +24,7 @@ class KTableColumn {
 
   /// Horizontal cell padding; defaults to the density control inset.
   final double? paddingInline;
-  final double minWidth;
+  final double? minWidth;
   final double flex;
   final KTableAlign align;
 }
@@ -74,8 +74,7 @@ class KTable extends StatelessWidget {
         throw ArgumentError('Column IDs must be nonempty and unique');
       }
       final base = column.width ?? column.minWidth;
-      if (!base.isFinite ||
-          base <= 0 ||
+      if ((base != null && (!base.isFinite || base <= 0)) ||
           (column.width == null &&
               (!column.flex.isFinite || column.flex <= 0))) {
         throw ArgumentError('Column dimensions must be positive and finite');
@@ -130,7 +129,11 @@ class KTable extends StatelessWidget {
         }
         final base = columns.fold(
           0.0,
-          (sum, c) => sum + (c.width ?? c.minWidth),
+          (sum, c) =>
+              sum +
+              (c.width ??
+                  c.minWidth ??
+                  tokens.componentDataTableDefaultColumnMinWidth),
         );
         final flex = columns
             .where((c) => c.width == null)
@@ -141,7 +144,9 @@ class KTable extends StatelessWidget {
         final extra = math.max(0.0, constraints.maxWidth - base);
         final widths = [
           for (final c in columns)
-            c.width ?? c.minWidth + (flex == 0 ? 0 : extra * (c.flex / flex)),
+            c.width ??
+                (c.minWidth ?? tokens.componentDataTableDefaultColumnMinWidth) +
+                    (flex == 0 ? 0 : extra * (c.flex / flex)),
         ];
         final width = widths.fold(0.0, (sum, w) => sum + w);
         TableRow row(List<Widget> cells, bool header, LocalKey key) => TableRow(

@@ -107,11 +107,17 @@ class _KMenuButtonState extends State<KMenuButton> {
     final overlay =
         Overlay.of(context).context.findRenderObject()! as RenderBox;
     final screen = overlay.size;
-    final width = math.min(240.0, math.max(0.0, screen.width - 16));
+    final width = math.min(
+      t.componentContextMenuWidth,
+      math.max(0.0, screen.width - t.componentContextMenuViewportInset),
+    );
     final origin =
         box?.localToGlobal(Offset.zero, ancestor: overlay) ?? Offset.zero;
     setState(() => _menuWidth = width);
-    final x = origin.dx.clamp(8.0, math.max(8.0, screen.width - width - 8));
+    final x = origin.dx.clamp(
+      t.spaceControlGap,
+      math.max(t.spaceControlGap, screen.width - width - t.spaceControlGap),
+    );
     _controller.open(
       position: Offset(
         x - origin.dx,
@@ -138,12 +144,19 @@ class _KMenuButtonState extends State<KMenuButton> {
     final scaled = MediaQuery.textScalerOf(context).scale(t.fontControlSize);
     final width =
         _menuWidth ??
-        math.min(240.0, math.max(0.0, MediaQuery.sizeOf(context).width - 16));
+        math.min(
+          t.componentContextMenuWidth,
+          math.max(
+            0.0,
+            MediaQuery.sizeOf(context).width -
+                t.componentContextMenuViewportInset,
+          ),
+        );
     final textStyle = TextStyle(
       fontFamily: t.fontFamily,
       fontSize: t.fontControlSize,
       fontWeight: t.fontControlWeight,
-      height: 1,
+      height: t.fontTightHeight,
       // CSS centers leading evenly above and below the font metrics.
       leadingDistribution: TextLeadingDistribution.even,
       letterSpacing: -.01 * scaled,
@@ -174,7 +187,7 @@ class _KMenuButtonState extends State<KMenuButton> {
         controller: _controller,
         childFocusNode: _trigger,
         alignmentOffset: Offset(0, t.spaceControlGap),
-        reservedPadding: const EdgeInsets.all(8),
+        reservedPadding: EdgeInsets.all(t.spaceControlGap),
         clipBehavior: Clip.none,
         style: MenuStyle(
           padding: const WidgetStatePropertyAll(EdgeInsets.zero),
@@ -321,7 +334,7 @@ class _KMenuButtonState extends State<KMenuButton> {
                                 color: states.contains(WidgetState.focused)
                                     ? t.colorBorderFocus
                                     : Colors.transparent,
-                                width: 2,
+                                width: t.borderWidthStrong,
                               ),
                             ),
                             shape: WidgetStatePropertyAll(

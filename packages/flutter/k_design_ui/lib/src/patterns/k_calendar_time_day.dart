@@ -258,7 +258,7 @@ class _KCalendarTimeDayState<T extends Object>
           setState(() => _hover = null);
         },
         builder: (context, candidates, rejected) => LayoutBuilder(
-        builder: (context, size) => SizedBox(
+          builder: (context, size) => SizedBox(
             key: _key,
             height: (c.endHour - c.startHour) * c.hourHeight,
             child: Stack(
@@ -377,17 +377,17 @@ class _KCalendarTimeDayState<T extends Object>
                     !preview.start.allDay &&
                     previewEnd > previewStart)
                   Positioned(
-                    left: 4,
-                    right: 4,
+                    left: t.spaceTight,
+                    right: t.spaceTight,
                     top: (previewStart - c.startHour * 60) / 60 * c.hourHeight,
                     height: math.max(
-                      24,
+                      t.componentCalendarEventMinHeight,
                       (previewEnd - previewStart) / 60 * c.hourHeight,
                     ),
                     child: IgnorePointer(
                       child: SizedBox.expand(
                         child: Opacity(
-                          opacity: .78,
+                          opacity: t.componentCalendarDragOpacity,
                           child: widget.eventWidget(active, compact: false),
                         ),
                       ),
@@ -395,8 +395,8 @@ class _KCalendarTimeDayState<T extends Object>
                   ),
                 if (shownSelection != null || shownHover != null)
                   Positioned(
-                    left: 3,
-                    right: 3,
+                    left: t.spaceBadgeOffset,
+                    right: t.spaceBadgeOffset,
                     top:
                         ((shownSelection?.start.minutes ?? shownHover!) -
                             c.startHour * 60) /
@@ -420,7 +420,9 @@ class _KCalendarTimeDayState<T extends Object>
                     child: IgnorePointer(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: t.colorBorderFocus.withValues(alpha: .28),
+                          color: t.colorBorderFocus.withValues(
+                            alpha: t.componentCalendarPreviewOpacityStrong,
+                          ),
                           border: Border.all(color: t.colorBorderFocus),
                         ),
                         child: Text(

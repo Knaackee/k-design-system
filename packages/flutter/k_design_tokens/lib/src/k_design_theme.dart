@@ -12,6 +12,8 @@ enum KInputMode { pointer, touch }
 
 enum KWindowClass { compact, medium, expanded, large, extraLarge }
 
+typedef KDesignTokenTransform = KDesignTokens Function(KDesignTokens tokens);
+
 @immutable
 class KDesignConfiguration {
   const KDesignConfiguration({
@@ -182,6 +184,7 @@ KDesignTokens kDesignTokens({
   KBrand brand = KBrand.orbit,
   Brightness brightness = Brightness.light,
   KDesignConfiguration configuration = const KDesignConfiguration(),
+  KDesignTokenTransform? tokenTransform,
 }) {
   final base = switch ((brand, brightness)) {
     (KBrand.orbit, Brightness.light) => KDesignTokens.orbitLight,
@@ -189,7 +192,8 @@ KDesignTokens kDesignTokens({
     (KBrand.reference, Brightness.light) => KDesignTokens.referenceLight,
     (KBrand.reference, Brightness.dark) => KDesignTokens.referenceDark,
   };
-  return resolveKDesignTokens(base, configuration);
+  final resolved = resolveKDesignTokens(base, configuration);
+  return tokenTransform?.call(resolved) ?? resolved;
 }
 
 ThemeData kDesignTheme({
@@ -198,11 +202,13 @@ ThemeData kDesignTheme({
   KDesignConfiguration configuration = const KDesignConfiguration(),
   String? fontFamily,
   ScrollbarThemeData? scrollbarTheme,
+  KDesignTokenTransform? tokenTransform,
 }) {
   final tokens = kDesignTokens(
     brand: brand,
     brightness: brightness,
     configuration: configuration,
+    tokenTransform: tokenTransform,
   ).copyWith(fontFamily: fontFamily);
 
   return ThemeData(

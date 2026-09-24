@@ -5,7 +5,7 @@
 }
 .k-table-viewport:focus-visible {
   outline: var(--k-border-width-default) solid var(--k-color-border-focus);
-  outline-offset: 2px;
+  outline-offset: var(--k-border-width-strong);
 }
 .k-table {
   border-collapse: separate;
@@ -59,8 +59,8 @@
   width: 100%;
   min-width: 0;
   min-height: max(var(--k-size-control), var(--k-size-hit-target));
-  padding: 1px var(--k-space-control-inset-inline);
-  border: 1px solid transparent;
+  padding: var(--k-border-width-default) var(--k-space-control-inset-inline);
+  border: var(--k-border-width-default) solid transparent;
   border-radius: var(--k-radius-control);
   background: transparent;
   color: inherit;
@@ -100,8 +100,10 @@ button.k-editable-cell:focus-visible {
     max(
         var(--k-size-control),
         var(--k-size-hit-target),
-        var(--k-font-control-size) * var(--k-text-scale, 1) + 2px,
-        var(--k-font-body-line-height) * var(--k-text-scale, 1) + 4px
+        var(--k-font-control-size) * var(--k-text-scale, 1) +
+          var(--k-space-micro),
+        var(--k-font-body-line-height) * var(--k-text-scale, 1) +
+          var(--k-space-tight)
       ) +
       2 * var(--k-space-control-gap) + var(--k-border-width-default)
   );
@@ -188,10 +190,10 @@ button.k-editable-cell:focus-visible {
 }
 .k-data-single-row:focus-visible {
   outline: var(--k-border-width-default) solid var(--k-color-border-focus);
-  outline-offset: -2px;
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }
 .k-data-single-leading {
-  margin-inline-end: calc(var(--k-space-control-gap) + 4px);
+  margin-inline-end: calc(var(--k-space-control-gap) + var(--k-space-tight));
 }
 .k-data-single-leading,
 .k-data-single-trailing {

@@ -62,9 +62,8 @@ class _KCalendarTouchHandlesState extends State<KCalendarTouchHandles> {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, size) {
-      final color = Theme.of(
-        context,
-      ).extension<KDesignTokens>()!.colorBorderFocus;
+      final tokens = Theme.of(context).extension<KDesignTokens>()!;
+      final color = tokens.colorBorderFocus;
       return TapRegion(
         groupId: _region,
         onTapOutside: widget.selected ? (_) => widget.onDismiss() : null,
@@ -76,8 +75,8 @@ class _KCalendarTouchHandlesState extends State<KCalendarTouchHandles> {
                 Positioned(
                   left: 0,
                   top: 0,
-                  width: 48,
-                  height: 48,
+                  width: tokens.componentCalendarTouchTargetSize,
+                  height: tokens.componentCalendarTouchTargetSize,
                   child: CompositedTransformFollower(
                     link: _link,
                     showWhenUnlinked: false,
@@ -86,27 +85,33 @@ class _KCalendarTouchHandlesState extends State<KCalendarTouchHandles> {
                             (edge == KCalendarResizeEdge.start
                                     ? widget.startOffset
                                     : size.maxWidth + widget.endOffset) -
-                                24,
+                                tokens.componentCalendarTouchTargetOffset,
                             size.maxHeight / 2 -
-                                24 +
-                                (size.maxWidth < 48
+                                tokens.componentCalendarTouchTargetOffset +
+                                (size.maxWidth <
+                                        tokens.componentCalendarTouchTargetSize
                                     ? (edge == KCalendarResizeEdge.start
-                                          ? -24
-                                          : 24)
+                                          ? -tokens
+                                                .componentCalendarTouchTargetOffset
+                                          : tokens
+                                                .componentCalendarTouchTargetOffset)
                                     : 0),
                           )
                         : Offset(
                             size.maxWidth / 2 -
-                                24 +
-                                (size.maxHeight < 48
+                                tokens.componentCalendarTouchTargetOffset +
+                                (size.maxHeight <
+                                        tokens.componentCalendarTouchTargetSize
                                     ? (edge == KCalendarResizeEdge.start
-                                          ? -24
-                                          : 24)
+                                          ? -tokens
+                                                .componentCalendarTouchTargetOffset
+                                          : tokens
+                                                .componentCalendarTouchTargetOffset)
                                     : 0),
                             (edge == KCalendarResizeEdge.start
                                     ? widget.startOffset
                                     : size.maxHeight + widget.endOffset) -
-                                24,
+                                tokens.componentCalendarTouchTargetOffset,
                           ),
                     child: TapRegion(
                       groupId: _region,
@@ -126,14 +131,14 @@ class _KCalendarTouchHandlesState extends State<KCalendarTouchHandles> {
                           onPanCancel: widget.onCancel,
                           child: Center(
                             child: Container(
-                              width: 18,
-                              height: 18,
+                              width: tokens.componentCalendarTouchGripSize,
+                              height: tokens.componentCalendarTouchGripSize,
                               decoration: BoxDecoration(
                                 color: color,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Theme.of(context).colorScheme.surface,
-                                  width: 2,
+                                  width: tokens.borderWidthStrong,
                                 ),
                               ),
                             ),

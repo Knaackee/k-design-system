@@ -229,6 +229,7 @@ class _KEmojiPickerState extends State<KEmojiPicker> {
   int _tone = 0;
   @override
   Widget build(BuildContext context) {
+    final tokens = Theme.of(context).extension<KDesignTokens>()!;
     final tone = (widget.skinTone ?? _tone).clamp(0, 5);
     final hand = kEmojiCatalog.firstWhere((item) => item.id == '270b');
     return _SymbolPickerAnchor(
@@ -263,7 +264,7 @@ class _KEmojiPickerState extends State<KEmojiPicker> {
         ),
         itemBuilder: (context, item) =>
             widget.itemBuilder?.call(context, item.withTone(tone)) ??
-            _emojiPicture(item.withTone(tone)),
+            _emojiPicture(item.withTone(tone), size: tokens.sizeIconDefault),
         accessory: widget.showSkinTonePicker
             ? _SkinToneControl(
                 hand: hand,
@@ -299,21 +300,21 @@ class _SkinToneControl extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
     return MenuAnchor(
-      alignmentOffset: const Offset(0, -96),
+      alignmentOffset: Offset(0, -tokens.componentSymbolPickerToneMenuOffset),
       style: MenuStyle(
         alignment: AlignmentDirectional.topEnd,
         backgroundColor: WidgetStatePropertyAll(tokens.colorSurfaceRaised),
-        padding: const WidgetStatePropertyAll(EdgeInsets.all(4)),
+        padding: WidgetStatePropertyAll(EdgeInsets.all(tokens.spaceTight)),
       ),
       menuChildren: [
         SizedBox(
-          width: 132,
+          width: tokens.componentSymbolPickerCellSize * 3,
           child: Wrap(
             children: [
               for (var index = 0; index < 6; index++)
                 SizedBox(
-                  width: 44,
-                  height: 44,
+                  width: tokens.componentSymbolPickerCellSize,
+                  height: tokens.componentSymbolPickerCellSize,
                   child: Tooltip(
                     message: labels.tones[index],
                     child: Semantics(
@@ -329,12 +330,15 @@ class _SkinToneControl extends StatelessWidget {
                             tone == index
                                 ? BorderSide(
                                     color: tokens.colorBorderFocus,
-                                    width: 2,
+                                    width: tokens.borderWidthStrong,
                                   )
                                 : BorderSide.none,
                           ),
                         ),
-                        child: _emojiPicture(hand.withTone(index)),
+                        child: _emojiPicture(
+                          hand.withTone(index),
+                          size: tokens.sizeIconDefault,
+                        ),
                       ),
                     ),
                   ),
@@ -348,7 +352,7 @@ class _SkinToneControl extends StatelessWidget {
         onPressed: enabled
             ? () => controller.isOpen ? controller.close() : controller.open()
             : null,
-        icon: _emojiPicture(hand.withTone(tone)),
+        icon: _emojiPicture(hand.withTone(tone), size: tokens.sizeIconDefault),
       ),
     );
   }

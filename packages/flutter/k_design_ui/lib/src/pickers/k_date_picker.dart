@@ -1,6 +1,7 @@
 import '../localization/k_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 import '../actions/action_control.dart';
 import '../forms/form_style.dart';
 import '../forms/k_input.dart';
@@ -242,10 +243,11 @@ class _KDatePickerState extends State<KDatePicker> {
       to: Navigator.of(context).context,
     );
     final textScaler = MediaQuery.textScalerOf(context);
+    final tokens = Theme.of(context).extension<KDesignTokens>()!;
     final route = RawDialogRoute<PickerCommit>(
       barrierDismissible: true,
       barrierLabel: _label('cancel'),
-      barrierColor: const Color(0x52000000),
+      barrierColor: tokens.colorScrimPicker,
       transitionDuration: Duration.zero,
       pageBuilder: (routeContext, animation, secondary) => themes.wrap(
         MediaQuery(
