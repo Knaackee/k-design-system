@@ -330,7 +330,7 @@ export function SettingsSidebarFixture() {
             {settingsItem("Agents & integrations", "settings")}
           </KSidebarGroup>
           <KSidebarGroup label="System">
-            {settingsItem("Data & advanced", "database")}
+            {settingsItem("Data & advanced", "settings")}
             {settingsItem("Administration", "settings")}
           </KSidebarGroup>
         </KSidebarBody>

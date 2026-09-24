@@ -27,6 +27,7 @@ import 'additional_primitive_fixtures.dart';
 import 'basic_component_fixtures.dart';
 import 'extended_component_fixtures.dart';
 import 'sidebar_fixtures.dart';
+import 'settings_page_fixtures.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -455,6 +456,15 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'SettingsPage',
+              children: [
+                WidgetbookUseCase(
+                  name: 'settings-page-responsive',
+                  builder: (_) => const SettingsPageFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Questionnaire',
               children: [

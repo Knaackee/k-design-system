@@ -1,0 +1,166 @@
+.settings-page {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--k-color-surface-canvas);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+
+.settings-page__navigation,
+.settings-page__detail {
+  min-width: 0;
+}
+.settings-page__sidebar {
+  --k-sidebar-width: 280px;
+}
+.settings-page__mobile-chevron,
+.settings-page__back {
+  display: none;
+}
+
+.settings-page__content {
+  box-sizing: border-box;
+  width: min(100%, 760px);
+  padding: clamp(28px, 5vw, 64px);
+}
+.settings-page__content header > span {
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+}
+.settings-page__content h1 {
+  margin: 10px 0 8px;
+  font-size: 28px;
+  line-height: 1.2;
+}
+.settings-page__content header > p,
+.settings-page__row p {
+  margin: 0;
+  color: var(--k-color-text-muted);
+  line-height: 1.5;
+}
+.settings-page__section {
+  display: grid;
+  gap: var(--k-space-content-action-gap);
+  margin-top: 32px;
+}
+.settings-page__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding-block: 18px;
+  border-block: 1px solid var(--k-color-border-default);
+}
+.settings-page__row p {
+  margin-top: 5px;
+}
+.settings-page__row .k-checkbox > span:last-child {
+  display: none;
+}
+.settings-page__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@container (max-width: 699px) {
+  .settings-page {
+    display: block;
+    min-height: 100vh;
+    background: var(--k-color-surface-raised);
+  }
+  .settings-page__navigation[data-mobile-hidden],
+  .settings-page__detail[data-mobile-hidden] {
+    display: none;
+  }
+  .settings-page__sidebar {
+    --k-sidebar-width: 100%;
+    border-right: 0;
+  }
+  .settings-page__mobile-chevron {
+    display: inline-flex;
+  }
+  .settings-page__content {
+    width: 100%;
+    padding: 20px 18px 32px;
+  }
+  .settings-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--k-size-hit-target);
+    margin: -8px 0 16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--k-color-text-primary);
+    font: 600 var(--k-font-control-size)/1 var(--k-font-family);
+    cursor: pointer;
+  }
+  .settings-page__content h1 {
+    font-size: 24px;
+  }
+  .settings-page__row {
+    gap: 12px;
+  }
+}
+
+/* Storybook's window-class control is an explicit platform preview and can be
+   narrower than the iframe itself. Honor it in addition to real container size. */
+[data-window-class="compact"] .settings-page {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--k-color-surface-raised);
+}
+
+[data-window-class="compact"] .settings-page__navigation[data-mobile-hidden],
+[data-window-class="compact"] .settings-page__detail[data-mobile-hidden] {
+  display: none;
+}
+
+[data-window-class="compact"] .settings-page__navigation,
+[data-window-class="compact"] .settings-page__detail,
+[data-window-class="compact"] .settings-page__sidebar,
+[data-window-class="compact"] .settings-page__content {
+  width: 100%;
+  max-width: none;
+}
+
+[data-window-class="compact"] .settings-page__sidebar {
+  --k-sidebar-width: 100%;
+  border-right: 0;
+}
+
+[data-window-class="compact"] .settings-page__mobile-chevron,
+[data-window-class="compact"] .settings-page__back {
+  display: inline-flex;
+}
+
+[data-window-class="compact"] .settings-page__content {
+  padding: 20px 18px 32px;
+}
+
+[data-window-class="compact"] .settings-page__back {
+  align-items: center;
+  gap: 8px;
+  min-height: var(--k-size-hit-target);
+  margin: -8px 0 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--k-color-text-primary);
+  font: 600 var(--k-font-control-size) / 1 var(--k-font-family);
+  cursor: pointer;
+}
+
+[data-window-class="compact"] .settings-page__content h1 {
+  font-size: 24px;
+}
+
+[data-window-class="compact"] .settings-page__row {
+  gap: 12px;
+}
