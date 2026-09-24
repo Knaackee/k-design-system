@@ -232,6 +232,97 @@ class KAgentStatusPart extends KChatMessagePart {
   final KAgentStatusTone tone;
 }
 
+enum KAgentFormFieldKind { text, number, boolean, singleChoice, multipleChoice }
+
+class KAgentFormField {
+  const KAgentFormField({
+    required this.id,
+    required this.kind,
+    required this.label,
+    this.description,
+    this.placeholder,
+    this.required = false,
+    this.defaultValue,
+    this.options = const [],
+    this.minimum,
+    this.maximum,
+    this.minItems,
+    this.maxItems,
+  });
+  final String id;
+  final KAgentFormFieldKind kind;
+  final String label;
+  final String? description;
+  final String? placeholder;
+  final bool required;
+  final Object? defaultValue;
+  final List<KAgentQuestionOption> options;
+  final num? minimum, maximum;
+  final int? minItems, maxItems;
+}
+
+class KAgentFormPart extends KChatMessagePart {
+  const KAgentFormPart({
+    required super.id,
+    required this.title,
+    required this.state,
+    required this.fields,
+    this.description,
+    this.submitLabel,
+    this.cancelLabel,
+    this.responseSummary,
+  });
+  final String title;
+  final String? description;
+  final KAgentResolutionState state;
+  final List<KAgentFormField> fields;
+  final String? submitLabel, cancelLabel, responseSummary;
+}
+
+class KAgentExternalActionPart extends KChatMessagePart {
+  const KAgentExternalActionPart({
+    required super.id,
+    required this.title,
+    required this.url,
+    required this.actionLabel,
+    required this.state,
+    this.description,
+    this.cancelLabel,
+    this.responseSummary,
+  });
+  final String title;
+  final String? description;
+  final Uri url;
+  final String actionLabel;
+  final String? cancelLabel;
+  final KAgentResolutionState state;
+  final String? responseSummary;
+}
+
+class KAgentAttachmentRequestPart extends KChatMessagePart {
+  const KAgentAttachmentRequestPart({
+    required super.id,
+    required this.title,
+    required this.actionLabel,
+    required this.state,
+    this.description,
+    this.accept,
+    this.multiple = false,
+    this.maxFiles,
+    this.attachments = const [],
+    this.responseSummary,
+  });
+  final String title;
+  final String? description;
+  final String actionLabel;
+  final String? accept;
+  final bool multiple;
+  final int? maxFiles;
+  final KAgentResolutionState state;
+  final List<KChatAttachmentPart> attachments;
+  final String? responseSummary;
+}
+
 class KChatMessageValue {
   const KChatMessageValue({
     required this.id,
@@ -273,6 +364,43 @@ class KAgentQuestionResponse {
   final List<String> optionIds;
   final String? text;
   final Object? value;
+}
+
+class KAgentFormResponse {
+  const KAgentFormResponse({
+    required this.formId,
+    required this.submit,
+    required this.values,
+  });
+  final String formId;
+  final bool submit;
+  final Map<String, Object?> values;
+}
+
+class KAgentExternalActionResponse {
+  const KAgentExternalActionResponse({
+    required this.actionId,
+    required this.open,
+    required this.url,
+  });
+  final String actionId;
+  final bool open;
+  final Uri url;
+}
+
+class KAgentAttachmentRequestResponse {
+  const KAgentAttachmentRequestResponse({
+    required this.requestId,
+    required this.select,
+    required this.multiple,
+    this.accept,
+    this.maxFiles,
+  });
+  final String requestId;
+  final bool select;
+  final bool multiple;
+  final String? accept;
+  final int? maxFiles;
 }
 
 abstract interface class KAgentUiAdapter<TSnapshot, TIntent> {
@@ -321,4 +449,19 @@ class KAgentApprovalIntent extends KAgentUiIntent {
 class KAgentQuestionIntent extends KAgentUiIntent {
   const KAgentQuestionIntent(this.response);
   final KAgentQuestionResponse response;
+}
+
+class KAgentFormIntent extends KAgentUiIntent {
+  const KAgentFormIntent(this.response);
+  final KAgentFormResponse response;
+}
+
+class KAgentExternalActionIntent extends KAgentUiIntent {
+  const KAgentExternalActionIntent(this.response);
+  final KAgentExternalActionResponse response;
+}
+
+class KAgentAttachmentRequestIntent extends KAgentUiIntent {
+  const KAgentAttachmentRequestIntent(this.response);
+  final KAgentAttachmentRequestResponse response;
 }

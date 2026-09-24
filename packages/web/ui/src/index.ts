@@ -285,6 +285,16 @@ export {
   KAgentReference,
   KAgentStatus,
 } from "./chat/agent-parts.js";
+export {
+  KAgentTextQuestion,
+  KAgentSingleChoice,
+  KAgentMultipleChoice,
+  KAgentConfirmation,
+  KAgentForm,
+  KAgentExternalAction,
+  KAgentAttachmentRequest,
+} from "./chat/ask-tools.js";
+export type { KAgentQuestionToolProps } from "./chat/ask-tools.js";
 export type {
   KAgentPartActions,
   KAgentToolRenderer,
@@ -313,6 +323,14 @@ export type {
   KChatMessageValue,
   KAgentApprovalResponse,
   KAgentQuestionResponse,
+  KAgentFormFieldKind,
+  KAgentFormField,
+  KAgentFormPart,
+  KAgentExternalActionPart,
+  KAgentAttachmentRequestPart,
+  KAgentFormResponse,
+  KAgentExternalActionResponse,
+  KAgentAttachmentRequestResponse,
   KAgentUiAdapter,
   KAgentUiIntent,
 } from "./chat/types.js";

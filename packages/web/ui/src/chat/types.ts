@@ -140,6 +140,62 @@ export interface KAgentStatusPart {
   tone?: "neutral" | "info" | "success" | "warning" | "error";
 }
 
+export type KAgentFormFieldKind =
+  "text" | "number" | "boolean" | "single-choice" | "multiple-choice";
+
+export interface KAgentFormField {
+  id: string;
+  kind: KAgentFormFieldKind;
+  label: string;
+  description?: string;
+  placeholder?: string;
+  required?: boolean;
+  defaultValue?: unknown;
+  options?: readonly KAgentQuestionOption[];
+  minimum?: number;
+  maximum?: number;
+  minItems?: number;
+  maxItems?: number;
+}
+
+export interface KAgentFormPart {
+  id: string;
+  type: "form";
+  title: string;
+  description?: string;
+  state: KAgentResolutionState;
+  fields: readonly KAgentFormField[];
+  submitLabel?: string;
+  cancelLabel?: string;
+  responseSummary?: string;
+}
+
+export interface KAgentExternalActionPart {
+  id: string;
+  type: "external-action";
+  title: string;
+  description?: string;
+  url: string;
+  actionLabel: string;
+  cancelLabel?: string;
+  state: KAgentResolutionState;
+  responseSummary?: string;
+}
+
+export interface KAgentAttachmentRequestPart {
+  id: string;
+  type: "attachment-request";
+  title: string;
+  description?: string;
+  actionLabel: string;
+  accept?: string;
+  multiple?: boolean;
+  maxFiles?: number;
+  state: KAgentResolutionState;
+  attachments?: readonly KChatAttachmentPart[];
+  responseSummary?: string;
+}
+
 export type KChatMessagePart =
   | KChatTextPart
   | KChatAttachmentPart
@@ -147,6 +203,9 @@ export type KChatMessagePart =
   | KAgentToolPart
   | KAgentApprovalPart
   | KAgentQuestionPart
+  | KAgentFormPart
+  | KAgentExternalActionPart
+  | KAgentAttachmentRequestPart
   | KAgentTaskPart
   | KAgentArtifactPart
   | KAgentActivityPart
@@ -174,6 +233,26 @@ export interface KAgentQuestionResponse {
   value?: unknown;
 }
 
+export interface KAgentFormResponse {
+  formId: string;
+  action: "submit" | "cancel";
+  values: Readonly<Record<string, unknown>>;
+}
+
+export interface KAgentExternalActionResponse {
+  actionId: string;
+  action: "open" | "cancel";
+  url: string;
+}
+
+export interface KAgentAttachmentRequestResponse {
+  requestId: string;
+  action: "select" | "cancel";
+  accept?: string;
+  multiple: boolean;
+  maxFiles?: number;
+}
+
 export interface KAgentUiAdapter<TSnapshot = unknown, TIntent = unknown> {
   toMessages(snapshot: TSnapshot): readonly KChatMessageValue[];
   toRunState(snapshot: TSnapshot): KChatRunState;
@@ -188,4 +267,10 @@ export type KAgentUiIntent =
   | { type: "activate-source"; partId: string }
   | { type: "activate-artifact"; partId: string }
   | { type: "approval-response"; response: KAgentApprovalResponse }
-  | { type: "question-response"; response: KAgentQuestionResponse };
+  | { type: "question-response"; response: KAgentQuestionResponse }
+  | { type: "form-response"; response: KAgentFormResponse }
+  | { type: "external-action"; response: KAgentExternalActionResponse }
+  | {
+      type: "attachment-request";
+      response: KAgentAttachmentRequestResponse;
+    };

@@ -1,0 +1,38 @@
+.k-agent-form,
+.k-agent-external-action,
+.k-agent-attachment-request {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-content-action-gap);
+}
+
+.k-agent-form__fields,
+.k-agent-attachment-request__files {
+  display: grid;
+  gap: var(--k-space-content-action-gap);
+}
+
+.k-agent-form__choice-group {
+  display: grid;
+  min-width: 0;
+  gap: var(--k-space-control-gap);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.k-agent-form__choice-group legend {
+  padding: 0;
+  color: var(--k-color-text-primary);
+  font-size: var(--k-font-label-size);
+  font-weight: var(--k-font-label-weight);
+}
+
+.k-agent-form__choice-group small {
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+}
+
+.k-agent-request--resolved {
+  align-items: flex-start;
+}

@@ -7,6 +7,7 @@ import '../basic_components.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import 'k_agent_parts.dart';
+import 'k_agent_ask_tools.dart';
 import 'k_chat_markdown.dart';
 import 'k_chat_types.dart';
 
@@ -66,6 +67,9 @@ class KChatConversation extends StatefulWidget {
     this.onLinkActivate,
     this.onApprovalResponse,
     this.onQuestionResponse,
+    this.onFormResponse,
+    this.onExternalAction,
+    this.onAttachmentRequest,
     this.onAttachmentActivate,
     this.onSourceActivate,
     this.onArtifactActivate,
@@ -90,6 +94,9 @@ class KChatConversation extends StatefulWidget {
   final ValueChanged<Uri>? onLinkActivate;
   final ValueChanged<KAgentApprovalResponse>? onApprovalResponse;
   final ValueChanged<KAgentQuestionResponse>? onQuestionResponse;
+  final ValueChanged<KAgentFormResponse>? onFormResponse;
+  final ValueChanged<KAgentExternalActionResponse>? onExternalAction;
+  final ValueChanged<KAgentAttachmentRequestResponse>? onAttachmentRequest;
   final ValueChanged<KChatAttachmentPart>? onAttachmentActivate;
   final ValueChanged<KAgentSourcePart>? onSourceActivate;
   final ValueChanged<KAgentArtifactPart>? onArtifactActivate;
@@ -313,6 +320,21 @@ class _KChatConversationState extends State<KChatConversation> {
     }
     if (part is KAgentQuestionPart) {
       return KAgentQuestion(part: part, onResponse: widget.onQuestionResponse);
+    }
+    if (part is KAgentFormPart) {
+      return KAgentForm(part: part, onResponse: widget.onFormResponse);
+    }
+    if (part is KAgentExternalActionPart) {
+      return KAgentExternalAction(
+        part: part,
+        onResponse: widget.onExternalAction,
+      );
+    }
+    if (part is KAgentAttachmentRequestPart) {
+      return KAgentAttachmentRequest(
+        part: part,
+        onResponse: widget.onAttachmentRequest,
+      );
     }
     if (part is KAgentTaskPart) return KAgentTaskGroup(part: part);
     if (part is KAgentActivityPart) return KAgentActivity(part: part);

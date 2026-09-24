@@ -3,6 +3,9 @@ import {
   KChatComposer,
   KChatConversation,
   type KAgentApprovalResponse,
+  type KAgentAttachmentRequestResponse,
+  type KAgentExternalActionResponse,
+  type KAgentFormResponse,
   type KAgentQuestionResponse,
   type KChatMessageValue,
   type KChatRunState,
@@ -11,7 +14,18 @@ import {
 } from "@k-design-system/ui";
 
 export type AgentUiFixtureKind =
-  "conversation" | "messages" | "tools" | "approval" | "question";
+  | "conversation"
+  | "messages"
+  | "tools"
+  | "approval"
+  | "question"
+  | "text-question"
+  | "multiple-choice"
+  | "confirmation"
+  | "form"
+  | "external-action"
+  | "attachment-request"
+  | "ask-tools";
 
 export function AgentUiFixture({
   kind = "conversation",
@@ -26,14 +40,28 @@ export function AgentUiFixture({
   const [runState, setRunState] = useState<KChatRunState>("awaiting-input");
   const [approval, setApproval] = useState<KAgentApprovalResponse>();
   const [answer, setAnswer] = useState<KAgentQuestionResponse>();
+  const [form, setForm] = useState<KAgentFormResponse>();
+  const [external, setExternal] = useState<KAgentExternalActionResponse>();
+  const [attachmentRequest, setAttachmentRequest] =
+    useState<KAgentAttachmentRequestResponse>();
   const [sentMessages, setSentMessages] = useState<KChatMessageValue[]>([]);
   const [attachments, setAttachments] = useState<KChatAttachmentPart[]>([]);
   const [voiceActive, setVoiceActive] = useState(false);
   const [model, setModel] = useState("fast");
 
   const messages = useMemo(
-    () => [...fixtureMessages(kind, approval, answer), ...sentMessages],
-    [answer, approval, kind, sentMessages],
+    () => [
+      ...fixtureMessages(
+        kind,
+        approval,
+        answer,
+        form,
+        external,
+        attachmentRequest,
+      ),
+      ...sentMessages,
+    ],
+    [answer, approval, attachmentRequest, external, form, kind, sentMessages],
   );
 
   const submit = (text: string) => {
@@ -71,6 +99,18 @@ export function AgentUiFixture({
         }}
         onQuestionResponse={(response) => {
           setAnswer(response);
+          setRunState("idle");
+        }}
+        onFormResponse={(response) => {
+          setForm(response);
+          setRunState("idle");
+        }}
+        onExternalAction={(response) => {
+          setExternal(response);
+          setRunState("idle");
+        }}
+        onAttachmentRequest={(response) => {
+          setAttachmentRequest(response);
           setRunState("idle");
         }}
         onSourceActivate={(source) =>
@@ -141,6 +181,9 @@ function fixtureMessages(
   kind: AgentUiFixtureKind,
   approval?: KAgentApprovalResponse,
   answer?: KAgentQuestionResponse,
+  form?: KAgentFormResponse,
+  external?: KAgentExternalActionResponse,
+  attachmentRequest?: KAgentAttachmentRequestResponse,
 ): KChatMessageValue[] {
   const intro: KChatMessageValue[] = [
     {
@@ -279,6 +322,154 @@ function fixtureMessages(
     ],
   };
 
+  const textQuestion = askMessage({
+    id: "release-note-question",
+    type: "question",
+    title: "Wie soll die Änderung beschrieben werden?",
+    description: "Eine freie Rückfrage mit typisiertem Antwort-Event.",
+    kind: "text",
+    state: answer ? "answered" : "pending",
+    placeholder: "Kurze Beschreibung…",
+    submitLabel: "Antworten",
+    answerSummary: answer?.text,
+  });
+  const multipleChoice = askMessage({
+    id: "checks-question",
+    type: "question",
+    title: "Welche Prüfungen sollen ausgeführt werden?",
+    kind: "multiple-choice",
+    state: answer ? "answered" : "pending",
+    options: [
+      { id: "web", label: "Web", description: "Typecheck und Storybook" },
+      {
+        id: "flutter",
+        label: "Flutter",
+        description: "Analyze und Widgetbook",
+      },
+      {
+        id: "a11y",
+        label: "Accessibility",
+        description: "Semantik und Kontrast",
+      },
+    ],
+    submitLabel: "Prüfungen starten",
+    answerSummary: answer
+      ? `${answer.optionIds?.length ?? 0} ausgewählt`
+      : undefined,
+  });
+  const confirmation = askMessage({
+    id: "replace-confirmation",
+    type: "question",
+    title: "Bestehende Vorschau ersetzen?",
+    description:
+      "Diese fachliche Bestätigung führt noch keine Tool-Aktion aus.",
+    kind: "confirmation",
+    state: answer ? "answered" : "pending",
+    options: [
+      { id: "cancel", label: "Behalten" },
+      { id: "replace", label: "Ersetzen" },
+    ],
+    submitLabel: "Übernehmen",
+    answerSummary: answer ? `Antwort: ${answer.optionIds?.[0]}` : undefined,
+  });
+  const formMessage = askMessage({
+    id: "release-form",
+    type: "form",
+    title: "Release konfigurieren",
+    description:
+      "Mehrere schemaorientierte Felder werden gemeinsam beantwortet.",
+    state: form
+      ? form.action === "submit"
+        ? "answered"
+        : "cancelled"
+      : "pending",
+    fields: [
+      {
+        id: "name",
+        kind: "text",
+        label: "Release-Name",
+        required: true,
+        placeholder: "September Release",
+      },
+      {
+        id: "environment",
+        kind: "single-choice",
+        label: "Umgebung",
+        required: true,
+        defaultValue: "preview",
+        options: [
+          { id: "preview", label: "Preview" },
+          { id: "production", label: "Production" },
+        ],
+      },
+      {
+        id: "checks",
+        kind: "multiple-choice",
+        label: "Checks",
+        minItems: 1,
+        defaultValue: ["web"],
+        options: [
+          { id: "web", label: "Web" },
+          { id: "flutter", label: "Flutter" },
+          { id: "a11y", label: "Accessibility" },
+        ],
+      },
+      {
+        id: "notify",
+        kind: "boolean",
+        label: "Team benachrichtigen",
+        defaultValue: true,
+      },
+    ],
+    cancelLabel: "Abbrechen",
+    submitLabel: "Konfiguration übernehmen",
+    responseSummary: form
+      ? `${Object.keys(form.values).length} Angaben übernommen`
+      : undefined,
+  });
+  const externalAction = askMessage({
+    id: "external-auth",
+    type: "external-action",
+    title: "Mit GitHub verbinden",
+    description: "Die Anmeldung findet außerhalb des Agentenverlaufs statt.",
+    url: "https://github.com/login",
+    actionLabel: "GitHub öffnen",
+    cancelLabel: "Nicht jetzt",
+    state: external
+      ? external.action === "open"
+        ? "answered"
+        : "cancelled"
+      : "pending",
+    responseSummary: external
+      ? external.action === "open"
+        ? "Externe Anmeldung geöffnet"
+        : "Abgebrochen"
+      : undefined,
+  });
+  const attachmentRequestMessage = askMessage({
+    id: "brief-request",
+    type: "attachment-request",
+    title: "Release-Brief anhängen",
+    description: "PDF oder Bild, maximal zwei Dateien.",
+    actionLabel: "Dateien auswählen",
+    accept: ".pdf,image/*",
+    multiple: true,
+    maxFiles: 2,
+    state: attachmentRequest ? "answered" : "pending",
+    attachments: attachmentRequest
+      ? [
+          {
+            id: "brief",
+            type: "attachment",
+            title: "Release-Brief.pdf",
+            description: "PDF · 1,8 MB",
+            state: "ready",
+          },
+        ]
+      : [],
+    responseSummary: attachmentRequest ? "1 Datei ausgewählt" : undefined,
+  });
+
   const messageStates: KChatMessageValue[] = [
     {
       id: "message-user-sent",
@@ -341,5 +532,34 @@ function fixtureMessages(
   if (kind === "messages") return messageStates;
   if (kind === "approval") return [...intro, approvalMessage];
   if (kind === "question") return [...intro, questionMessage];
+  if (kind === "text-question") return [...intro, textQuestion];
+  if (kind === "multiple-choice") return [...intro, multipleChoice];
+  if (kind === "confirmation") return [...intro, confirmation];
+  if (kind === "form") return [...intro, formMessage];
+  if (kind === "external-action") return [...intro, externalAction];
+  if (kind === "attachment-request")
+    return [...intro, attachmentRequestMessage];
+  if (kind === "ask-tools")
+    return [
+      ...intro,
+      questionMessage,
+      textQuestion,
+      multipleChoice,
+      confirmation,
+      formMessage,
+      externalAction,
+      attachmentRequestMessage,
+    ];
   return [...intro, tools, approvalMessage, questionMessage];
+}
+
+function askMessage(
+  part: KChatMessageValue["parts"][number],
+): KChatMessageValue {
+  return {
+    id: `${part.id}-message`,
+    role: "assistant",
+    authorLabel: "Agent",
+    parts: [part],
+  };
 }

@@ -22,6 +22,7 @@ class _WorkflowFixtureState extends State<WorkflowFixture> {
     const Duration(minutes: 3, seconds: 18),
   );
   String? _activated;
+  KAgentQuestionResponse? _answer;
 
   DateTime minute(double value) =>
       _start.add(Duration(milliseconds: (value * 60000).round()));
@@ -90,7 +91,7 @@ class _WorkflowFixtureState extends State<WorkflowFixture> {
       status: KWorkflowStatus.succeeded,
       startedAt: _start,
       endedAt: minute(.7),
-      events: const [
+      events: [
         KWorkflowEvent(
           id: 'started',
           kind: KWorkflowEventKind.status,
@@ -116,7 +117,7 @@ class _WorkflowFixtureState extends State<WorkflowFixture> {
       status: KWorkflowStatus.succeeded,
       startedAt: minute(.7),
       endedAt: minute(1.8),
-      events: const [
+      events: [
         KWorkflowEvent(
           id: 'location-question',
           kind: KWorkflowEventKind.question,
@@ -125,12 +126,28 @@ class _WorkflowFixtureState extends State<WorkflowFixture> {
               'Für welchen Ort soll ich das aktuelle Wetter ermitteln?',
           timestamp: '13:12',
           sequence: 4,
-          content: Text(
-            'Ort (Stadt oder Postleitzahl, gegebenenfalls Land): Zürich',
+          content: KAgentSingleChoice(
+            part: KAgentQuestionPart(
+              id: 'location-choice',
+              title: 'Ort auswählen',
+              description: 'Die Workflow-Ausführung wartet auf diese Antwort.',
+              kind: KAgentQuestionKind.singleChoice,
+              state: _answer == null
+                  ? KAgentResolutionState.pending
+                  : KAgentResolutionState.answered,
+              options: const [
+                KAgentQuestionOption(id: 'zurich', label: 'Zürich'),
+                KAgentQuestionOption(id: 'berlin', label: 'Berlin'),
+              ],
+              answerSummary: _answer == null
+                  ? null
+                  : 'Ausgewählt: ${_answer!.optionIds.firstOrNull ?? '–'}',
+              submitLabel: 'Fortsetzen',
+            ),
+            onResponse: (value) => setState(() => _answer = value),
           ),
-          interactive: true,
         ),
-        KWorkflowEvent(
+        const KWorkflowEvent(
           id: 'paused',
           kind: KWorkflowEventKind.status,
           title: 'Statusänderung',

@@ -50,3 +50,45 @@ export const Question: Story = {
   args: { kind: "question" },
   parameters: { fixtureId: "agent-ui-question" },
 };
+
+export const TextQuestion: Story = {
+  name: "agent-ui-text-question",
+  args: { kind: "text-question" },
+  parameters: { fixtureId: "agent-ui-text-question" },
+};
+
+export const MultipleChoice: Story = {
+  name: "agent-ui-multiple-choice",
+  args: { kind: "multiple-choice" },
+  parameters: { fixtureId: "agent-ui-multiple-choice" },
+};
+
+export const Confirmation: Story = {
+  name: "agent-ui-confirmation",
+  args: { kind: "confirmation" },
+  parameters: { fixtureId: "agent-ui-confirmation" },
+};
+
+export const Form: Story = {
+  name: "agent-ui-form",
+  args: { kind: "form" },
+  parameters: { fixtureId: "agent-ui-form" },
+};
+
+export const ExternalAction: Story = {
+  name: "agent-ui-external-action",
+  args: { kind: "external-action" },
+  parameters: { fixtureId: "agent-ui-external-action" },
+};
+
+export const AttachmentRequest: Story = {
+  name: "agent-ui-attachment-request",
+  args: { kind: "attachment-request" },
+  parameters: { fixtureId: "agent-ui-attachment-request" },
+};
+
+export const AskTools: Story = {
+  name: "agent-ui-ask-tools",
+  args: { kind: "ask-tools" },
+  parameters: { fixtureId: "agent-ui-ask-tools" },
+};

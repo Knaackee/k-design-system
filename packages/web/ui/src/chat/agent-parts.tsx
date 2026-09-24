@@ -8,6 +8,9 @@ import type {
   KAgentActivityPart,
   KAgentApprovalPart,
   KAgentApprovalResponse,
+  KAgentAttachmentRequestResponse,
+  KAgentExternalActionResponse,
+  KAgentFormResponse,
   KAgentArtifactPart,
   KAgentQuestionPart,
   KAgentQuestionResponse,
@@ -23,6 +26,9 @@ export type KAgentToolRenderer = (part: KAgentToolPart) => ReactNode;
 export interface KAgentPartActions {
   onApprovalResponse?: (response: KAgentApprovalResponse) => void;
   onQuestionResponse?: (response: KAgentQuestionResponse) => void;
+  onFormResponse?: (response: KAgentFormResponse) => void;
+  onExternalAction?: (response: KAgentExternalActionResponse) => void;
+  onAttachmentRequest?: (response: KAgentAttachmentRequestResponse) => void;
   onAttachmentActivate?: (part: KChatAttachmentPart) => void;
   onSourceActivate?: (part: KAgentSourcePart) => void;
   onArtifactActivate?: (part: KAgentArtifactPart) => void;

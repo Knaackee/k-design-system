@@ -23,6 +23,11 @@ import {
   type KAgentPartActions,
   type KAgentToolRenderer,
 } from "./agent-parts.js";
+import {
+  KAgentAttachmentRequest,
+  KAgentExternalAction,
+  KAgentForm,
+} from "./ask-tools.js";
 import type {
   KChatMessagePart,
   KChatMessageValue,
@@ -104,6 +109,9 @@ export function KChatConversation({
   renderAvatar,
   onApprovalResponse,
   onQuestionResponse,
+  onFormResponse,
+  onExternalAction,
+  onAttachmentRequest,
   onAttachmentActivate,
   onSourceActivate,
   onArtifactActivate,
@@ -217,6 +225,9 @@ export function KChatConversation({
                           onLinkActivate={onLinkActivate}
                           onApprovalResponse={onApprovalResponse}
                           onQuestionResponse={onQuestionResponse}
+                          onFormResponse={onFormResponse}
+                          onExternalAction={onExternalAction}
+                          onAttachmentRequest={onAttachmentRequest}
                           onAttachmentActivate={onAttachmentActivate}
                           onSourceActivate={onSourceActivate}
                           onArtifactActivate={onArtifactActivate}
@@ -354,6 +365,19 @@ function KChatPart({
   if (part.type === "question")
     return (
       <KAgentQuestion part={part} onResponse={actions.onQuestionResponse} />
+    );
+  if (part.type === "form")
+    return <KAgentForm part={part} onResponse={actions.onFormResponse} />;
+  if (part.type === "external-action")
+    return (
+      <KAgentExternalAction part={part} onResponse={actions.onExternalAction} />
+    );
+  if (part.type === "attachment-request")
+    return (
+      <KAgentAttachmentRequest
+        part={part}
+        onResponse={actions.onAttachmentRequest}
+      />
     );
   if (part.type === "tasks") return <KAgentTaskGroup part={part} />;
   if (part.type === "activity") return <KAgentActivity part={part} />;

@@ -30,6 +30,7 @@ import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
 import 'agent_ui_fixtures.dart';
+import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
@@ -563,6 +564,45 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'agent-ui-question',
                   builder: (_) =>
                       const AgentUiFixture(kind: AgentUiFixtureKind.question),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-text-question',
+                  builder: (_) => const AskToolsFixture(
+                    kind: AskToolsFixtureKind.textQuestion,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-multiple-choice',
+                  builder: (_) => const AskToolsFixture(
+                    kind: AskToolsFixtureKind.multipleChoice,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-confirmation',
+                  builder: (_) => const AskToolsFixture(
+                    kind: AskToolsFixtureKind.confirmation,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-form',
+                  builder: (_) =>
+                      const AskToolsFixture(kind: AskToolsFixtureKind.form),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-external-action',
+                  builder: (_) => const AskToolsFixture(
+                    kind: AskToolsFixtureKind.externalAction,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-attachment-request',
+                  builder: (_) => const AskToolsFixture(
+                    kind: AskToolsFixtureKind.attachmentRequest,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-ask-tools',
+                  builder: (_) => const AskToolsFixture(),
                 ),
               ],
             ),

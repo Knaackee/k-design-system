@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import {
   KWorkflow,
   KLink,
+  KAgentSingleChoice,
+  type KAgentQuestionResponse,
   type KWorkflowEvent,
   type KWorkflowPhase,
   type KWorkflowPresentation,
@@ -15,7 +17,11 @@ export function WorkflowFixture({
   showTechnicalEventsInCompact?: boolean;
 }) {
   const [activated, setActivated] = useState<string>();
-  const { start, phases } = useMemo(() => createFixture(), []);
+  const [answer, setAnswer] = useState<KAgentQuestionResponse>();
+  const { start, phases } = useMemo(
+    () => createFixture(answer, setAnswer),
+    [answer],
+  );
   return (
     <section className="k-workflow-fixture">
       <KWorkflow
@@ -64,7 +70,10 @@ const formatDemoDateTime = (value: string | number | Date) => {
   return `${part(date.getDate())}.${part(date.getMonth() + 1)}.${date.getFullYear()}, ${part(date.getHours())}:${part(date.getMinutes())}`;
 };
 
-function createFixture(): {
+function createFixture(
+  answer: KAgentQuestionResponse | undefined,
+  onAnswer: (value: KAgentQuestionResponse) => void,
+): {
   start: Date;
   phases: KWorkflowPhase[];
 } {
@@ -136,11 +145,27 @@ function createFixture(): {
             {
               sequence: 4,
               content: (
-                <p>
-                  Ort (Stadt oder Postleitzahl, gegebenenfalls Land): Zürich
-                </p>
+                <KAgentSingleChoice
+                  part={{
+                    id: "location-choice",
+                    type: "question",
+                    title: "Ort auswählen",
+                    description:
+                      "Die Workflow-Ausführung wartet auf diese Antwort.",
+                    kind: "single-choice",
+                    state: answer ? "answered" : "pending",
+                    options: [
+                      { id: "zurich", label: "Zürich" },
+                      { id: "berlin", label: "Berlin" },
+                    ],
+                    answerSummary: answer
+                      ? `Ausgewählt: ${answer.optionIds?.[0]}`
+                      : undefined,
+                    submitLabel: "Fortsetzen",
+                  }}
+                  onResponse={onAnswer}
+                />
               ),
-              interactive: true,
             },
           ),
           event(
