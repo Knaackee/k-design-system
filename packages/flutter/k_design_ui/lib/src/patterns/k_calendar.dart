@@ -23,6 +23,9 @@ class KCalendar<T extends Object> extends StatefulWidget {
     required this.eventBuilder,
     this.eventAllDay,
     this.onEventOpen,
+    this.onNavigate,
+    this.monthEventDisplay = KCalendarMonthEventDisplay.auto,
+    this.onMonthDayOpen,
     this.onEventMove,
     this.onEventResize,
     this.onCreate,
@@ -58,6 +61,11 @@ class KCalendar<T extends Object> extends StatefulWidget {
   final bool Function(T)? eventAllDay;
   final KCalendarEventBuilder<T> eventBuilder;
   final ValueChanged<T>? onEventOpen;
+
+  /// Requests the previous (-1) or next (1) visible period after a swipe.
+  final ValueChanged<int>? onNavigate;
+  final KCalendarMonthEventDisplay monthEventDisplay;
+  final void Function(DateTime date, List<T> events)? onMonthDayOpen;
   final ValueChanged<KCalendarMove<T>>? onEventMove;
   final ValueChanged<KCalendarResize<T>>? onEventResize;
   final ValueChanged<KCalendarSelection>? onCreate;
@@ -104,6 +112,9 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   String? _previewResizeId;
   String? _selectedEventId;
   String? _touchArmedId;
+  int? _pagePointer;
+  Offset? _pageOrigin;
+  bool _pageAtStart = false, _pageAtEnd = false;
   String? get selectedEventId => widget.onSelectedEventChange != null
       ? widget.selectedEventId
       : _selectedEventId;
@@ -120,6 +131,11 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   @override
   void didUpdateWidget(covariant KCalendar<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.date != oldWidget.date || widget.view != oldWidget.view) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_horizontal.hasClients) _horizontal.jumpTo(0);
+      });
+    }
     if (widget.events.length != oldWidget.events.length) {
       _pendingSelection = null;
     }
@@ -128,6 +144,32 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   void requestCreate(KCalendarSelection selection) {
     setState(() => _pendingSelection = selection);
     widget.onCreate?.call(selection);
+  }
+
+  void pagePointerDown(PointerDownEvent event) {
+    if (widget.onNavigate == null) return;
+    final position = _horizontal.hasClients ? _horizontal.position : null;
+    _pagePointer = event.pointer;
+    _pageOrigin = event.position;
+    _pageAtStart = position == null || position.pixels <= 1;
+    _pageAtEnd =
+        position == null || position.pixels >= position.maxScrollExtent - 1;
+  }
+
+  void pagePointerUp(PointerUpEvent event) {
+    final origin = _pageOrigin;
+    final matches = _pagePointer == event.pointer;
+    _pagePointer = null;
+    _pageOrigin = null;
+    if (!matches || origin == null || widget.onNavigate == null) return;
+    if (_previewMoveId != null || _previewResizeId != null) return;
+    final delta = event.position - origin;
+    if (delta.dx.abs() < 48 || delta.dx.abs() <= delta.dy.abs() * 1.2) return;
+    final direction = delta.dx < 0 ? 1 : -1;
+    if ((direction == 1 && !_pageAtEnd) || (direction == -1 && !_pageAtStart)) {
+      return;
+    }
+    widget.onNavigate!(direction);
   }
 
   DateTime? localStart(T event) {
@@ -486,173 +528,210 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                 final availableWidth = constraints.hasBoundedWidth
                     ? constraints.maxWidth
                     : minimumWidth;
-                final width = math.max(availableWidth, minimumWidth);
+                final width = month
+                    ? availableWidth
+                    : math.max(availableWidth, minimumWidth);
                 final dayWidth = (width - (month ? 0 : 56)) / count;
-                return SingleChildScrollView(
-                  controller: _horizontal,
-                  scrollDirection: Axis.horizontal,
-                  child: SizedBox(
-                    width: width,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: t.sizeHitTarget,
-                          child: Row(
-                            children: [
-                              if (!month) const SizedBox(width: 56),
-                              for (final day in days.take(count))
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      dayLabel(day, weekdayOnly: month),
+                final monthRowHeight = math.max(
+                  1.0,
+                  (widget.height - t.sizeHitTarget) / 6,
+                );
+                return Listener(
+                  behavior: HitTestBehavior.translucent,
+                  onPointerDown: pagePointerDown,
+                  onPointerUp: pagePointerUp,
+                  onPointerCancel: (_) {
+                    _pagePointer = null;
+                    _pageOrigin = null;
+                  },
+                  child: SingleChildScrollView(
+                    controller: _horizontal,
+                    scrollDirection: Axis.horizontal,
+                    child: SizedBox(
+                      width: width,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: t.sizeHitTarget,
+                            child: Row(
+                              children: [
+                                if (!month) const SizedBox(width: 56),
+                                for (final day in days.take(count))
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        dayLabel(day, weekdayOnly: month),
+                                      ),
                                     ),
                                   ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        if (month)
-                          Expanded(
-                            child: ListView.builder(
-                              controller: _vertical,
-                              itemCount: 6,
-                              itemBuilder: (context, index) => KCalendarDays<T>(
-                                calendar: widget,
-                                days: days.sublist(index * 7, index * 7 + 7),
-                                month: true,
-                                zone: zone,
-                                events: widget.events
-                                    .where((e) => localStart(e) != null)
-                                    .toList(),
-                                start: localStart,
-                                end: localEnd,
-                                eventWidget: (e) =>
-                                    event(e, compact: true, dayWidth: dayWidth),
-                                move: move,
-                                scrollAt: scrollAt,
-                                scrollBy: scrollBy,
-                                pendingSelection: _pendingSelection,
-                                requestCreate: requestCreate,
-                                previewMove: _previewMove,
-                                previewMoveId: _previewMoveId,
-                                previewResize: _previewResize,
-                                previewResizeId: _previewResizeId,
-                                previewEvent: previewEvent,
-                              ),
+                              ],
                             ),
-                          )
-                        else ...[
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 56,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    widget.labels.allDay,
-                                    style: TextStyle(
-                                      fontSize: t.fontCaptionSize,
+                          ),
+                          if (month)
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  for (var index = 0; index < 6; index++)
+                                    ClipRect(
+                                      child: KCalendarDays<T>(
+                                        calendar: widget,
+                                        days: days.sublist(
+                                          index * 7,
+                                          index * 7 + 7,
+                                        ),
+                                        month: true,
+                                        indicators:
+                                            widget.monthEventDisplay ==
+                                                KCalendarMonthEventDisplay
+                                                    .indicators ||
+                                            (widget.monthEventDisplay ==
+                                                    KCalendarMonthEventDisplay
+                                                        .auto &&
+                                                widget.requireLongPress),
+                                        fixedHeight: monthRowHeight,
+                                        zone: zone,
+                                        events: widget.events
+                                            .where((e) => localStart(e) != null)
+                                            .toList(),
+                                        start: localStart,
+                                        end: localEnd,
+                                        eventWidget: (e) => event(
+                                          e,
+                                          compact: true,
+                                          dayWidth: dayWidth,
+                                        ),
+                                        move: move,
+                                        scrollAt: scrollAt,
+                                        scrollBy: scrollBy,
+                                        pendingSelection: _pendingSelection,
+                                        requestCreate: requestCreate,
+                                        previewMove: _previewMove,
+                                        previewMoveId: _previewMoveId,
+                                        previewResize: _previewResize,
+                                        previewResizeId: _previewResizeId,
+                                        previewEvent: previewEvent,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            )
+                          else ...[
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 56,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      widget.labels.allDay,
+                                      style: TextStyle(
+                                        fontSize: t.fontCaptionSize,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: KCalendarDays<T>(
-                                  key: _allDayLayout,
-                                  calendar: widget,
-                                  days: days,
-                                  month: false,
-                                  zone: zone,
-                                  events: widget.events.where(allDay).toList(),
-                                  start: localStart,
-                                  end: localEnd,
-                                  eventWidget: (e) => event(
-                                    e,
-                                    compact: true,
-                                    dayWidth: dayWidth,
+                                Expanded(
+                                  child: KCalendarDays<T>(
+                                    key: _allDayLayout,
+                                    calendar: widget,
+                                    days: days,
+                                    month: false,
+                                    indicators: false,
+                                    zone: zone,
+                                    events: widget.events
+                                        .where(allDay)
+                                        .toList(),
+                                    start: localStart,
+                                    end: localEnd,
+                                    eventWidget: (e) => event(
+                                      e,
+                                      compact: true,
+                                      dayWidth: dayWidth,
+                                    ),
+                                    move: move,
+                                    scrollAt: scrollAt,
+                                    scrollBy: scrollBy,
+                                    pendingSelection: _pendingSelection,
+                                    requestCreate: requestCreate,
+                                    previewMove: _previewMove,
+                                    previewMoveId: _previewMoveId,
+                                    previewResize: _previewResize,
+                                    previewResizeId: _previewResizeId,
+                                    previewEvent: previewEvent,
                                   ),
-                                  move: move,
-                                  scrollAt: scrollAt,
-                                  scrollBy: scrollBy,
-                                  pendingSelection: _pendingSelection,
-                                  requestCreate: requestCreate,
-                                  previewMove: _previewMove,
-                                  previewMoveId: _previewMoveId,
-                                  previewResize: _previewResize,
-                                  previewResizeId: _previewResizeId,
-                                  previewEvent: previewEvent,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              controller: _vertical,
-                              child: SizedBox(
-                                height:
-                                    (widget.endHour - widget.startHour) *
-                                    widget.hourHeight,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 56,
-                                      child: Column(
-                                        children: [
-                                          for (
-                                            var hour = widget.startHour;
-                                            hour < widget.endHour;
-                                            hour++
-                                          )
-                                            SizedBox(
-                                              height: widget.hourHeight,
-                                              child: Text(
-                                                '${hour.toString().padLeft(2, '0')}:00',
-                                                style: TextStyle(
-                                                  fontSize: t.fontCaptionSize,
-                                                  color: t.colorTextMuted,
+                              ],
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                controller: _vertical,
+                                child: SizedBox(
+                                  height:
+                                      (widget.endHour - widget.startHour) *
+                                      widget.hourHeight,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 56,
+                                        child: Column(
+                                          children: [
+                                            for (
+                                              var hour = widget.startHour;
+                                              hour < widget.endHour;
+                                              hour++
+                                            )
+                                              SizedBox(
+                                                height: widget.hourHeight,
+                                                child: Text(
+                                                  '${hour.toString().padLeft(2, '0')}:00',
+                                                  style: TextStyle(
+                                                    fontSize: t.fontCaptionSize,
+                                                    color: t.colorTextMuted,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                    for (final day in days)
-                                      Expanded(
-                                        child: KCalendarTimeDay<T>(
-                                          calendar: widget,
-                                          day: day,
-                                          zone: zone,
-                                          events: widget.events
-                                              .where(
-                                                (e) =>
-                                                    !allDay(e) &&
-                                                    localStart(e) != null,
-                                              )
-                                              .toList(),
-                                          start: localStart,
-                                          end: localEnd,
-                                          eventWidget:
-                                              (e, {required compact}) =>
-                                                  event(e, compact: compact),
-                                          move: move,
-                                          scrollAt: scrollAt,
-                                          scrollBy: scrollBy,
-                                          pendingSelection: _pendingSelection,
-                                          requestCreate: requestCreate,
-                                          previewMove: _previewMove,
-                                          previewMoveId: _previewMoveId,
-                                          previewEvent: previewEvent,
+                                          ],
                                         ),
                                       ),
-                                  ],
+                                      for (final day in days)
+                                        Expanded(
+                                          child: KCalendarTimeDay<T>(
+                                            calendar: widget,
+                                            day: day,
+                                            zone: zone,
+                                            events: widget.events
+                                                .where(
+                                                  (e) =>
+                                                      !allDay(e) &&
+                                                      localStart(e) != null,
+                                                )
+                                                .toList(),
+                                            start: localStart,
+                                            end: localEnd,
+                                            eventWidget:
+                                                (e, {required compact}) =>
+                                                    event(e, compact: compact),
+                                            move: move,
+                                            scrollAt: scrollAt,
+                                            scrollBy: scrollBy,
+                                            pendingSelection: _pendingSelection,
+                                            requestCreate: requestCreate,
+                                            previewMove: _previewMove,
+                                            previewMoveId: _previewMoveId,
+                                            previewEvent: previewEvent,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                 );

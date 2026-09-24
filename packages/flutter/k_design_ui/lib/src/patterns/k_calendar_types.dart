@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 
 enum KCalendarView { day, threeDay, week, month }
 
+enum KCalendarMonthEventDisplay { auto, appointments, indicators }
+
 enum KCalendarResizeEdge { start, end }
 
 enum KCalendarInteractionPhase { start, preview, commit, cancel }

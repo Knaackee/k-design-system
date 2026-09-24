@@ -290,6 +290,9 @@ export function CalendarFixture({
           <KCalendar
             date={date}
             view={view}
+            onNavigate={(direction) =>
+              setDate(calendarNavigate(date, view, direction))
+            }
             events={visibleEvents}
             getEventId={(event) => event.id}
             getEventStart={(event) => event.start}

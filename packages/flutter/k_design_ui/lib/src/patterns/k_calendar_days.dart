@@ -13,6 +13,7 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
     required this.calendar,
     required this.days,
     required this.month,
+    required this.indicators,
     required this.zone,
     required this.events,
     required this.start,
@@ -28,11 +29,13 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
     required this.previewResize,
     required this.previewResizeId,
     this.previewEvent,
+    this.fixedHeight,
     super.key,
   });
   final KCalendar<T> calendar;
   final List<DateTime> days;
   final bool month;
+  final bool indicators;
   final String zone;
   final List<T> events;
   final DateTime? Function(T) start, end;
@@ -47,6 +50,7 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
   final KCalendarSelection? previewResize;
   final String? previewResizeId;
   final T? previewEvent;
+  final double? fixedHeight;
   @override
   State<KCalendarDays<T>> createState() => _KCalendarDaysState<T>();
 }
@@ -220,10 +224,9 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
     }
     final top = widget.month ? 28.0 : 4.0;
     final laneCount = math.max(laneEnds.length, (previewLane ?? -1) + 1);
-    final height = math.max(
-      widget.month ? 112.0 : 40.0,
-      top + laneCount * 32 + 9,
-    );
+    final height =
+        widget.fixedHeight ??
+        math.max(widget.month ? 112.0 : 40.0, top + laneCount * 32 + 9);
     final pendingStart = widget.pendingSelection == null
         ? 0
         : calendarDay(DateTime.parse(widget.pendingSelection!.start.date))
@@ -457,23 +460,97 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                         ),
                       ),
                     ),
-                  for (final segment in segments)
-                    Positioned(
-                      left: segment.first * width + 4,
-                      width: (segment.last - segment.first) * width - 8,
-                      top: top + segment.lane * 32,
-                      height: 28,
-                      child: IgnorePointer(
-                        ignoring: previewId != null,
-                        child: Opacity(
-                          opacity: c.eventId(segment.event) == previewId
-                              ? (widget.previewResizeId != null ? .001 : 0)
-                              : 1,
-                          child: widget.eventWidget(segment.event),
+                  if (widget.indicators)
+                    for (var day = 0; day < widget.days.length; day++)
+                      Builder(
+                        builder: (context) {
+                          final dayEvents = segments
+                              .where(
+                                (segment) =>
+                                    segment.first <= day && segment.last > day,
+                              )
+                              .map((segment) => segment.event)
+                              .toList();
+                          return Positioned(
+                            left: day * width,
+                            width: width,
+                            top: 28,
+                            height: 24,
+                            child: Semantics(
+                              button: dayEvents.isNotEmpty,
+                              label:
+                                  '${widget.days[day].day}, ${dayEvents.length}',
+                              child: InkWell(
+                                onTap: dayEvents.isEmpty
+                                    ? null
+                                    : () {
+                                        if (c.onMonthDayOpen != null) {
+                                          c.onMonthDayOpen!(
+                                            widget.days[day],
+                                            dayEvents,
+                                          );
+                                        } else {
+                                          c.onEventOpen?.call(dayEvents.first);
+                                        }
+                                      },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    for (final _ in dayEvents.take(3))
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 5,
+                                          left: 1.5,
+                                          right: 1.5,
+                                        ),
+                                        child: DecoratedBox(
+                                          decoration: BoxDecoration(
+                                            color: t.colorBorderFocus,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const SizedBox.square(
+                                            dimension: 6,
+                                          ),
+                                        ),
+                                      ),
+                                    if (dayEvents.length > 3)
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 2),
+                                        child: Text(
+                                          '+${dayEvents.length - 3}',
+                                          style: TextStyle(
+                                            color: t.colorTextMuted,
+                                            fontSize: t.fontCaptionSize,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                  if (!widget.indicators)
+                    for (final segment in segments)
+                      Positioned(
+                        left: segment.first * width + 4,
+                        width: (segment.last - segment.first) * width - 8,
+                        top: top + segment.lane * 32,
+                        height: 28,
+                        child: IgnorePointer(
+                          ignoring: previewId != null,
+                          child: Opacity(
+                            opacity: c.eventId(segment.event) == previewId
+                                ? (widget.previewResizeId != null ? .001 : 0)
+                                : 1,
+                            child: widget.eventWidget(segment.event),
+                          ),
                         ),
                       ),
-                    ),
-                  if (active != null &&
+                  if (!widget.indicators &&
+                      active != null &&
                       preview != null &&
                       preview.start.allDay &&
                       visiblePreviewLast > visiblePreviewFirst)

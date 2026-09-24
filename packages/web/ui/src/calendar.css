@@ -17,6 +17,9 @@
 .k-calendar-compact-interaction:active {
   cursor: grabbing;
 }
+.k-calendar-month-compact {
+  overflow: hidden;
+}
 .k-calendar * {
   box-sizing: border-box;
 }
@@ -77,6 +80,47 @@
   display: block;
   padding: 4px 8px;
   color: var(--k-color-text-muted);
+}
+.k-calendar-month-indicators {
+  position: absolute;
+  inset: 28px 0 0;
+  display: grid;
+  pointer-events: none;
+}
+.k-calendar-month-indicator-cell {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  padding: 5px 2px 0;
+  color: inherit;
+  pointer-events: auto;
+}
+.k-calendar-month-indicator-cell:disabled {
+  pointer-events: none;
+}
+.k-calendar-month-indicator {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--k-color-border-focus);
+  pointer-events: none;
+}
+.k-calendar-month-indicator-cell:focus-visible {
+  outline: 2px solid var(--k-color-border-focus);
+  outline-offset: 2px;
+}
+.k-calendar-month-overflow {
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+  line-height: 8px;
 }
 .k-calendar-span-event {
   position: absolute;

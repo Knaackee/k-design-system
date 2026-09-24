@@ -384,6 +384,7 @@ class _CalendarFixtureState extends State<CalendarFixture> {
                     child: KCalendar<CalendarDemoEvent>(
                       date: _date,
                       view: _view,
+                      onNavigate: navigate,
                       events: visible,
                       eventId: (e) => e.id,
                       eventStart: (e) => e.start,

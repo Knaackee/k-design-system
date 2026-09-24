@@ -1,5 +1,11 @@
 import { CalendarEvent } from "./calendar-event.js";
-import { useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { useKLocalization } from "../localization/provider.js";
 import {
   calendarDays,
@@ -66,6 +72,19 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
   };
   const root = useRef<HTMLDivElement>(null);
   const interaction = useCalendarInteraction(root, props, zone);
+  useEffect(() => {
+    root.current?.scrollTo({ left: 0 });
+  }, [date, view]);
+  const compact = props.requireLongPress || interaction.portrait;
+  const swipe = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    atStart: boolean;
+    atEnd: boolean;
+    startedAt: number;
+    onEvent: boolean;
+  } | null>(null);
   const [keyboardMinute, setKeyboardMinute] = useState(startHour * 60);
   const entries: CalendarEntry<T>[] = events.flatMap((event) => {
     const start = getEventStart(event);
@@ -103,6 +122,39 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
       start: a,
       end: shiftSlot(a, allDay ? 1440 : (props.defaultDurationMinutes ?? step)),
     });
+  }
+  function swipeStart(e: ReactPointerEvent<HTMLDivElement>) {
+    const node = root.current;
+    if (!node || !compact || !props.onNavigate || e.button !== 0) return;
+    swipe.current = {
+      id: e.pointerId,
+      x: e.clientX,
+      y: e.clientY,
+      atStart: node.scrollLeft <= 1,
+      atEnd: node.scrollLeft >= node.scrollWidth - node.clientWidth - 1,
+      startedAt: performance.now(),
+      onEvent: !!(e.target as HTMLElement).closest(".k-calendar-event"),
+    };
+  }
+  function swipeEnd(e: ReactPointerEvent<HTMLDivElement>) {
+    const start = swipe.current;
+    swipe.current = null;
+    if (!start || start.id !== e.pointerId || !props.onNavigate) return;
+    if (
+      interaction.previewEntryId ||
+      (start.onEvent && performance.now() - start.startedAt >= 450)
+    )
+      return;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
+    const direction: -1 | 1 = dx < 0 ? 1 : -1;
+    if (
+      (direction === 1 && !start.atEnd) ||
+      (direction === -1 && !start.atStart)
+    )
+      return;
+    props.onNavigate(direction);
   }
   function cell(
     key: string,
@@ -260,14 +312,24 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
           </div>
         );
     }
+    const compactMonth = view === "month" && compact;
+    const monthIndicators =
+      view === "month" &&
+      (props.monthEventDisplay === "indicators" ||
+        (props.monthEventDisplay !== "appointments" && compact));
+    const rowHeight = compactMonth
+      ? ((props.height ?? 680) - 44) / 6
+      : Math.max(
+          allDayOnly ? 40 : 116,
+          (allDayOnly ? 4 : 28) + lanes.length * 30,
+        );
     return (
       <div
         className={`k-calendar-span-row ${allDayOnly ? "" : "k-calendar-month-week"}`}
         style={{
-          minHeight: Math.max(
-            allDayOnly ? 40 : 116,
-            (allDayOnly ? 4 : 28) + lanes.length * 30,
-          ),
+          minHeight: rowHeight,
+          height: compactMonth ? rowHeight : undefined,
+          overflow: compactMonth ? "hidden" : undefined,
         }}
       >
         <div
@@ -279,22 +341,63 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
           {week.map((key) => cell(key, true, "k-calendar-span-cell"))}
         </div>
         {highlight}
-        {positioned.map(({ entry, start, end, lane }) => {
-          if (entry.id === interaction.previewEntryId) return null;
-          return (
-            <div
-              key={entry.id}
-              className="k-calendar-span-event"
-              style={{
-                left: `calc(${(start / week.length) * 100}% + 4px)`,
-                width: `calc(${((end - start) / week.length) * 100}% - 8px)`,
-                top: (allDayOnly ? 4 : 28) + lane * 30,
-              }}
-            >
-              {renderItem(entry, true)}
-            </div>
-          );
-        })}
+        {monthIndicators && (
+          <div
+            className="k-calendar-month-indicators"
+            style={{
+              gridTemplateColumns: `repeat(${week.length},minmax(0,1fr))`,
+            }}
+          >
+            {week.map((key, day) => {
+              const dayEntries = positioned.filter(
+                ({ start, end }) => start <= day && end > day,
+              );
+              return (
+                <button
+                  type="button"
+                  className="k-calendar-month-indicator-cell"
+                  key={key}
+                  aria-label={`${formatDay(key)} · ${dayEntries.length}`}
+                  disabled={dayEntries.length === 0}
+                  onClick={() => {
+                    const values = dayEntries.map(({ entry }) => entry.event);
+                    if (props.onMonthDayOpen) props.onMonthDayOpen(key, values);
+                    else if (values[0]) props.onEventOpen?.(values[0]);
+                  }}
+                >
+                  {dayEntries.slice(0, 3).map(({ entry }) => (
+                    <span
+                      key={entry.id}
+                      className="k-calendar-month-indicator"
+                    />
+                  ))}
+                  {dayEntries.length > 3 && (
+                    <span className="k-calendar-month-overflow">
+                      +{dayEntries.length - 3}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {!monthIndicators &&
+          positioned.map(({ entry, start, end, lane }) => {
+            if (entry.id === interaction.previewEntryId) return null;
+            return (
+              <div
+                key={entry.id}
+                className="k-calendar-span-event"
+                style={{
+                  left: `calc(${(start / week.length) * 100}% + 4px)`,
+                  width: `calc(${((end - start) / week.length) * 100}% - 8px)`,
+                  top: (allDayOnly ? 4 : 28) + lane * 30,
+                }}
+              >
+                {renderItem(entry, true)}
+              </div>
+            );
+          })}
         {preview &&
           interaction.previewEntryId &&
           entries.find((entry) => entry.id === interaction.previewEntryId) &&
@@ -334,20 +437,23 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
     );
   }
   const count = days.length,
-    minWidth = view === "month" ? 7 * minDayWidth : 56 + count * minDayWidth;
+    minWidth = view === "month" ? 0 : 56 + count * minDayWidth;
   return (
     <div
       ref={root}
       className={[
         "k-calendar",
-        (props.requireLongPress || interaction.portrait) &&
-          "k-calendar-compact-interaction",
+        compact && "k-calendar-compact-interaction",
+        view === "month" && compact && "k-calendar-month-compact",
         props.className,
       ]
         .filter(Boolean)
         .join(" ")}
       style={{ height: props.height ?? 680 }}
       aria-label={props.ariaLabel ?? "Calendar"}
+      onPointerDownCapture={swipeStart}
+      onPointerUpCapture={swipeEnd}
+      onPointerCancelCapture={() => (swipe.current = null)}
     >
       <div style={{ minWidth }}>
         {view === "month" ? (

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 export type KCalendarView = "day" | "three-day" | "week" | "month";
+export type KCalendarMonthEventDisplay = "auto" | "appointments" | "indicators";
 export interface KCalendarSlot {
   date: string;
   minutes: number;
@@ -51,6 +52,12 @@ export interface KCalendarProps<T> {
   /** All-day dates are civil dates encoded as UTC midnight, never zone-shifted. */
   getEventAllDay?: (event: T) => boolean;
   renderEvent: (context: KCalendarEventContext<T>) => ReactNode;
+  /** Requests the previous (-1) or next (1) visible period after a swipe. */
+  onNavigate?: (direction: -1 | 1) => void;
+  /** Auto uses indicators in compact month layouts and appointments otherwise. */
+  monthEventDisplay?: KCalendarMonthEventDisplay;
+  /** Opens the consumer-owned agenda/details surface for an indicator day. */
+  onMonthDayOpen?: (date: string, events: readonly T[]) => void;
   onEventOpen?: (event: T) => void;
   onEventMove?: (move: KCalendarMove<T>) => void;
   onEventResize?: (resize: KCalendarResize<T>) => void;
