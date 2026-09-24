@@ -44,3 +44,8 @@ export 'src/data/k_data_table_draft_boundary.dart';
 export 'src/pickers/k_symbol_picker.dart';
 export 'src/basic_components.dart';
 export 'src/extended_components.dart';
+export 'src/chat/k_chat_types.dart';
+export 'src/chat/k_agent_parts.dart';
+export 'src/chat/k_chat_markdown.dart';
+export 'src/chat/k_chat_conversation.dart';
+export 'src/chat/k_chat_composer.dart';

@@ -29,6 +29,7 @@ import 'extended_component_fixtures.dart';
 import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
+import 'agent_ui_fixtures.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -502,6 +503,47 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'AgentUI',
+              children: [
+                WidgetbookUseCase(
+                  name: 'agent-ui-conversation',
+                  builder: (_) => const AgentUiFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-messages',
+                  builder: (context) => AgentUiFixture(
+                    kind: AgentUiFixtureKind.messages,
+                    metadataMode: context.knobs.object
+                        .dropdown<KChatMessageMetadataMode>(
+                          label: 'Message metadata',
+                          options: KChatMessageMetadataMode.values,
+                          initialOption: KChatMessageMetadataMode.grouped,
+                          labelBuilder: (value) => value.name,
+                        ),
+                    showTimestamps: context.knobs.boolean(
+                      label: 'Show timestamps',
+                      initialValue: true,
+                    ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-tools',
+                  builder: (_) =>
+                      const AgentUiFixture(kind: AgentUiFixtureKind.tools),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-approval',
+                  builder: (_) =>
+                      const AgentUiFixture(kind: AgentUiFixtureKind.approval),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-question',
+                  builder: (_) =>
+                      const AgentUiFixture(kind: AgentUiFixtureKind.question),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'SettingsPage',
               children: [

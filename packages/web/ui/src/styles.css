@@ -11,6 +11,7 @@
 @import "./basic-components.css";
 @import "./sidebar.css";
 @import "./mobile-app-bar.css";
+@import "./chat.css";
 
 @font-face {
   font-family: "Inter";

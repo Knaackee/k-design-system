@@ -260,3 +260,57 @@ export type {
   KEmojiPickerProps,
   KSymbolPickerLabels,
 } from "./pickers/symbol-picker.js";
+export { KChatConversation } from "./chat/conversation.js";
+export type {
+  KChatConversationProps,
+  KChatLabels,
+  KChatMessageMetadataMode,
+  KChatAvatarRenderer,
+} from "./chat/conversation.js";
+export { KChatComposer } from "./chat/composer.js";
+export type {
+  KChatComposerProps,
+  KChatComposerLabels,
+  KChatComposerModel,
+} from "./chat/composer.js";
+export {
+  KAgentToolCall,
+  KAgentApproval,
+  KAgentQuestion,
+  KAgentTaskGroup,
+  KAgentActivity,
+  KAgentAttachment,
+  KAgentReference,
+  KAgentStatus,
+} from "./chat/agent-parts.js";
+export type {
+  KAgentPartActions,
+  KAgentToolRenderer,
+} from "./chat/agent-parts.js";
+export type {
+  KChatRole,
+  KChatRunState,
+  KAgentToolState,
+  KAgentResolutionState,
+  KChatTextPart,
+  KChatAttachmentPart,
+  KAgentSourcePart,
+  KAgentToolPart,
+  KAgentApprovalOption,
+  KAgentApprovalPart,
+  KAgentQuestionKind,
+  KAgentQuestionOption,
+  KAgentQuestionPart,
+  KAgentTaskState,
+  KAgentTaskItem,
+  KAgentTaskPart,
+  KAgentArtifactPart,
+  KAgentActivityPart,
+  KAgentStatusPart,
+  KChatMessagePart,
+  KChatMessageValue,
+  KAgentApprovalResponse,
+  KAgentQuestionResponse,
+  KAgentUiAdapter,
+  KAgentUiIntent,
+} from "./chat/types.js";
