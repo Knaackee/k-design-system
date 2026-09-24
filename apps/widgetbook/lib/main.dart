@@ -27,6 +27,7 @@ import 'additional_primitive_fixtures.dart';
 import 'basic_component_fixtures.dart';
 import 'extended_component_fixtures.dart';
 import 'sidebar_fixtures.dart';
+import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
@@ -268,6 +269,51 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Navigation',
           children: [
+            WidgetbookFolder(
+              name: 'MobileAppBar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-floating-glass',
+                  builder: (_) => const MobileAppBarFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-fixed',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.fixed,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-action',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.action,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-floating-dock',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.floatingDock,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-labeled',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.labeled,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-collapsible',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.collapsible,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile-app-bar-contextual',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.contextual,
+                  ),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Sidebar',
               children: [

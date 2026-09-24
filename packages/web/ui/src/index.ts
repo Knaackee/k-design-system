@@ -68,6 +68,16 @@ export type {
   KSidebarSubgroupProps,
   KSidebarToggleProps,
 } from "./navigation/sidebar.js";
+export { KMobileAppBar } from "./navigation/mobile-app-bar.js";
+export type {
+  KGlassQuality,
+  KResolvedGlassQuality,
+  KMobileAppBarItem,
+  KMobileAppBarItemState,
+  KMobileAppBarLabelVisibility,
+  KMobileAppBarProps,
+  KMobileAppBarVariant,
+} from "./navigation/mobile-app-bar.js";
 export { KToolbar } from "./patterns/toolbar.js";
 export type { KToolbarProps } from "./patterns/toolbar.js";
 export { KKanban } from "./patterns/kanban.js";

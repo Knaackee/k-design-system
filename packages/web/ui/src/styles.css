@@ -10,6 +10,7 @@
 @import "./scrollbars.css";
 @import "./basic-components.css";
 @import "./sidebar.css";
+@import "./mobile-app-bar.css";
 
 @font-face {
   font-family: "Inter";

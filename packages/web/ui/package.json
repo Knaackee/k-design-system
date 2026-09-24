@@ -17,6 +17,7 @@
     "src/styles.css",
     "src/basic-components.css",
     "src/sidebar.css",
+    "src/mobile-app-bar.css",
     "src/actions.css",
     "src/forms.css",
     "src/pickers.css",
@@ -40,6 +41,7 @@
     "@tanstack/react-table": "9.2.4",
     "@tanstack/react-virtual": "3.14.13",
     "@tanstack/table-core": "9.2.4",
+    "apple-liquid-glass-webgl": "^2.5.0",
     "motion": "^13.4.0",
     "react": "^19.2.8",
     "react-modal-sheet": "^5.6.0"

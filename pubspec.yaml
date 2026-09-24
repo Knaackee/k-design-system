@@ -8,6 +8,7 @@ workspace:
   - apps/widgetbook
   - packages/flutter/k_design_tokens
   - packages/flutter/k_design_ui
+  - packages/flutter/k_design_liquid_glass
 
 dev_dependencies:
   melos: ^7.1.1

@@ -74,6 +74,9 @@ importers:
       '@tanstack/table-core':
         specifier: 9.2.4
         version: 9.2.4
+      apple-liquid-glass-webgl:
+        specifier: ^2.5.0
+        version: 2.5.0
       motion:
         specifier: ^13.4.0
         version: 13.4.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1170,6 +1173,10 @@ packages:
   ansi-styles@5.2.0:
     resolution: {integrity: sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==}
     engines: {node: '>=10'}
+
+  apple-liquid-glass-webgl@2.5.0:
+    resolution: {integrity: sha512-4pd2wmONgyHzBTZwXqg+NlSXCreqOEiJpME/6B4NyuKYPMPi/8Ifq+HDQweFBB25FJBMSFOJHKMg73NS8/gl5w==}
+    engines: {node: '>=18'}
 
   aria-hidden@1.2.6:
     resolution: {integrity: sha512-ik3ZgC9dY/lYVVM++OISsaYDeg1tb0VtP5uL3ouh1koGOaUMDPpbFIei4JkFimWUFPn90sbMNMXQAIVOlnYKJA==}
@@ -2724,6 +2731,8 @@ snapshots:
   ansi-regex@5.0.1: {}
 
   ansi-styles@5.2.0: {}
+
+  apple-liquid-glass-webgl@2.5.0: {}
 
   aria-hidden@1.2.6:
     dependencies:
