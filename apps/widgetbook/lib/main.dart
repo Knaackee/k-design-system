@@ -30,6 +30,7 @@ import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
 import 'agent_ui_fixtures.dart';
+import 'workflow_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -504,6 +505,27 @@ class KDesignWidgetbook extends StatelessWidget {
           name: 'Patterns',
           children: [
             WidgetbookFolder(
+              name: 'Workflow',
+              children: [
+                WidgetbookUseCase(
+                  name: 'workflow-responsive',
+                  builder: (context) => WorkflowFixture(
+                    presentation: context.knobs.object
+                        .dropdown<KWorkflowPresentation>(
+                          label: 'Presentation',
+                          options: KWorkflowPresentation.values,
+                          initialOption: KWorkflowPresentation.auto,
+                          labelBuilder: (value) => value.name,
+                        ),
+                    showTechnicalEventsInCompact: context.knobs.boolean(
+                      label: 'Show technical events in compact',
+                      initialValue: false,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
               name: 'AgentUI',
               children: [
                 WidgetbookUseCase(
@@ -705,6 +727,48 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'icon-lucide',
                   builder: buildIconLucide,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Link',
+              children: [
+                WidgetbookUseCase(
+                  name: 'link-variants',
+                  builder: (_) => Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const KText('Links', variant: KTextVariant.heading4),
+                        const SizedBox(height: 16),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            const Text('Read the '),
+                            KLink(
+                              label: 'component documentation',
+                              onPressed: () {},
+                            ),
+                            const Text(' for details.'),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        KLink(
+                          label: 'Standalone action',
+                          variant: KLinkVariant.standalone,
+                          onPressed: () {},
+                        ),
+                        KLink(
+                          label: 'External resource',
+                          variant: KLinkVariant.standalone,
+                          external: true,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

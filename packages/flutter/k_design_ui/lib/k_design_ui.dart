@@ -1,6 +1,7 @@
 library;
 
 export 'src/primitives/k_button.dart';
+export 'src/primitives/k_link.dart';
 export 'src/primitives/k_card.dart';
 export 'src/overlays/k_overlays.dart';
 export 'src/primitives/k_disclosure.dart';
@@ -21,6 +22,7 @@ export 'src/patterns/k_kanban.dart';
 export 'src/patterns/k_calendar.dart';
 export 'src/patterns/k_calendar_types.dart';
 export 'src/patterns/k_calendar_model.dart' show kCalendarSlotToDate;
+export 'src/patterns/k_workflow.dart';
 
 export 'src/forms/k_field.dart';
 export 'src/forms/k_input.dart';

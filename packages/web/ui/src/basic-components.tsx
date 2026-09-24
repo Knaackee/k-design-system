@@ -266,7 +266,14 @@ export function KAvatarGroup({
 }
 
 export type KBadgeVariant =
-  "primary" | "secondary" | "outline" | "ghost" | "destructive";
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "info"
+  | "success"
+  | "warning"
+  | "destructive";
 export interface KBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: KBadgeVariant;
   leading?: ReactNode;

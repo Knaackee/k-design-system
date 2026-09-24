@@ -17,6 +17,10 @@
       "count": 1,
       "reason": "Kanban auto-scroll polling cadence is algorithm timing rather than rendered motion."
     },
+    "packages/web/ui/src/workflow.css|dimension|@container (max-width: 599px) {": {
+      "count": 1,
+      "reason": "CSS container-query conditions cannot reference design-token custom properties; this breakpoint switches the workflow composition to its compact layout."
+    },
     "packages/web/ui/src/table.css|dimension|height: 1em;": {
       "count": 1,
       "reason": "The virtual placeholder follows the consumer font size by design; a fixed visual token would break relative text geometry."

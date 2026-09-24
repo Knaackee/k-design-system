@@ -786,6 +786,21 @@
 .k-badge[data-variant="ghost"] {
   color: var(--k-color-text-muted);
 }
+.k-badge[data-variant="info"] {
+  background: var(--k-color-status-info-background);
+  border-color: var(--k-color-status-info-border);
+  color: var(--k-color-status-info-foreground);
+}
+.k-badge[data-variant="success"] {
+  background: var(--k-color-status-success-background);
+  border-color: var(--k-color-status-success-border);
+  color: var(--k-color-status-success-foreground);
+}
+.k-badge[data-variant="warning"] {
+  background: var(--k-color-status-warning-background);
+  border-color: var(--k-color-status-warning-border);
+  color: var(--k-color-status-warning-foreground);
+}
 .k-badge[data-variant="destructive"] {
   background: var(--k-color-status-error-background);
   border-color: var(--k-color-status-error-border);

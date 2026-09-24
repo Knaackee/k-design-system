@@ -12,6 +12,8 @@
 @import "./sidebar.css";
 @import "./mobile-app-bar.css";
 @import "./chat.css";
+@import "./workflow.css";
+@import "./link.css";
 
 @font-face {
   font-family: "Inter";

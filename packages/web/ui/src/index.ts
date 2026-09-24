@@ -1,5 +1,7 @@
 export { KButton } from "./primitives/button.js";
 export type { KButtonProps, KButtonVariant } from "./primitives/button.js";
+export { KLink } from "./primitives/link.js";
+export type { KLinkProps, KLinkVariant } from "./primitives/link.js";
 export { KText } from "./primitives/text.js";
 export type {
   KTextElement,
@@ -314,3 +316,14 @@ export type {
   KAgentUiAdapter,
   KAgentUiIntent,
 } from "./chat/types.js";
+export { KWorkflow, KElapsedTime } from "./patterns/workflow.js";
+export type {
+  KWorkflowProps,
+  KWorkflowLabels,
+  KWorkflowStatus,
+  KWorkflowEventKind,
+  KWorkflowPresentation,
+  KWorkflowEvent,
+  KWorkflowPhase,
+  KElapsedTimeProps,
+} from "./patterns/workflow.js";

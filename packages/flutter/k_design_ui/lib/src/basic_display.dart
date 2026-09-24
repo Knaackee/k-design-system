@@ -279,7 +279,16 @@ class KAvatarGroup extends StatelessWidget {
   }
 }
 
-enum KBadgeVariant { primary, secondary, outline, ghost, destructive }
+enum KBadgeVariant {
+  primary,
+  secondary,
+  outline,
+  ghost,
+  info,
+  success,
+  warning,
+  destructive,
+}
 
 class KBadge extends StatelessWidget {
   const KBadge({
@@ -316,6 +325,21 @@ class KBadge extends StatelessWidget {
         Colors.transparent,
         t.colorTextMuted,
         Colors.transparent,
+      ),
+      KBadgeVariant.info => (
+        t.colorStatusInfoBackground,
+        t.colorStatusInfoForeground,
+        t.colorStatusInfoBorder,
+      ),
+      KBadgeVariant.success => (
+        t.colorStatusSuccessBackground,
+        t.colorStatusSuccessForeground,
+        t.colorStatusSuccessBorder,
+      ),
+      KBadgeVariant.warning => (
+        t.colorStatusWarningBackground,
+        t.colorStatusWarningForeground,
+        t.colorStatusWarningBorder,
       ),
       KBadgeVariant.destructive => (
         t.colorStatusErrorBackground,
