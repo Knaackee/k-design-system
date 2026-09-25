@@ -10,8 +10,10 @@
   "dependencies": {
     "@k-design-system/tokens": "workspace:*",
     "@k-design-system/ui": "workspace:*",
+    "@svar-ui/react-gantt": "2.7.3",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "vis-timeline": "8.5.4"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.5.10",

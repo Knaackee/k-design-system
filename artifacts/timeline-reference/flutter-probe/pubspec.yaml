@@ -1,0 +1,11 @@
+name: k_timeline_flutter_probe
+environment:
+  sdk: ^3.12.0
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_gantt: 1.2.2
+  provider: ^6.1.5+1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

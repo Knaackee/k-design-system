@@ -1,0 +1,93 @@
+{
+  "categories": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "series": [
+    {
+      "id": "completed",
+      "label": "Completed",
+      "colorIndex": 0,
+      "points": [
+        {
+          "id": "completed-0",
+          "x": 0,
+          "y": 42
+        },
+        {
+          "id": "completed-1",
+          "x": 1,
+          "y": 58
+        },
+        {
+          "id": "completed-2",
+          "x": 2,
+          "y": 48
+        },
+        {
+          "id": "completed-3",
+          "x": 3,
+          "y": 72
+        },
+        {
+          "id": "completed-4",
+          "x": 4,
+          "y": 64
+        },
+        {
+          "id": "completed-5",
+          "x": 5,
+          "y": 80
+        }
+      ]
+    },
+    {
+      "id": "planned",
+      "label": "Planned",
+      "colorIndex": 1,
+      "points": [
+        {
+          "id": "planned-0",
+          "x": 0,
+          "y": 35
+        },
+        {
+          "id": "planned-1",
+          "x": 1,
+          "y": 40
+        },
+        {
+          "id": "planned-2",
+          "x": 2,
+          "y": 52
+        },
+        {
+          "id": "planned-3",
+          "x": 3,
+          "y": 60
+        },
+        {
+          "id": "planned-4",
+          "x": 4,
+          "y": 68
+        },
+        {
+          "id": "planned-5",
+          "x": 5,
+          "y": 56
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "id": "completed",
+      "label": "Completed",
+      "value": 64,
+      "colorIndex": 0
+    },
+    {
+      "id": "planned",
+      "label": "Planned",
+      "value": 36,
+      "colorIndex": 1
+    }
+  ]
+}

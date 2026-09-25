@@ -60,3 +60,9 @@ export 'src/actions/k_theme_switcher.dart';
 export 'src/actions/k_user_menu.dart';
 export 'src/charts/k_chart_types.dart';
 export 'src/charts/k_line_chart.dart';
+
+export 'src/charts/k_bar_chart.dart';
+export 'src/charts/k_area_chart.dart';
+export 'src/charts/k_donut_chart.dart';
+export 'src/charts/k_candle_types.dart';
+export 'src/charts/k_candlestick_chart.dart';

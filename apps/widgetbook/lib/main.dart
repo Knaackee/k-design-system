@@ -5,6 +5,9 @@ import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
 import 'chart_fixture.dart';
+import 'chart_family_fixture.dart';
+import 'candlestick_fixture.dart';
+import 'timeline_fixture.dart';
 import 'action_fixtures.dart';
 import 'context_menu_fixture.dart';
 import 'form_fixtures.dart';
@@ -176,6 +179,37 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Data display',
           children: [
+            WidgetbookFolder(
+              name: 'Timeline',
+              children: [
+                WidgetbookUseCase(
+                  name: 'timeline-reference',
+                  builder: (_) => const TimelineFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Charts',
+              children: [
+                for (final variant in [
+                  'bar',
+                  'bar-horizontal',
+                  'bar-stacked',
+                  'area',
+                  'area-stacked',
+                  'donut',
+                  'pie',
+                ])
+                  WidgetbookUseCase(
+                    name: 'chart-$variant',
+                    builder: (_) => ChartFamilyFixture(variant: variant),
+                  ),
+                WidgetbookUseCase(
+                  name: 'chart-candlestick',
+                  builder: (_) => const CandlestickFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'LineChart',
               children: [

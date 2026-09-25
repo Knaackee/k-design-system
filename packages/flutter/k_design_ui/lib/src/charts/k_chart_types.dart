@@ -51,3 +51,20 @@ class KChartAxis {
   final String Function(double) format;
   double fraction(double value) => (value - min) / (max - min);
 }
+
+/// Category x and numeric y keep their meaning in either orientation.
+enum KChartOrientation { vertical, horizontal }
+
+@immutable
+class KChartSegment {
+  const KChartSegment({
+    required this.id,
+    required this.label,
+    required this.value,
+    this.colorIndex = 0,
+  });
+  final String id;
+  final String label;
+  final double value;
+  final int colorIndex;
+}

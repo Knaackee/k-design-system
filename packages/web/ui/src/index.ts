@@ -381,3 +381,17 @@ export type {
   KChartSeries,
   KChartSelection,
 } from "./charts/chart-model.js";
+export { KBarChart, KAreaChart } from "./charts/cartesian-chart.js";
+export type {
+  KBarChartProps,
+  KAreaChartProps,
+} from "./charts/cartesian-chart.js";
+export { KDonutChart } from "./charts/donut-chart.js";
+export type { KDonutChartProps } from "./charts/donut-chart.js";
+export type { KChartSegment } from "./charts/chart-family-model.js";
+export { KCandlestickChart } from "./charts/candlestick-chart.js";
+export type { KCandlestickChartProps } from "./charts/candlestick-chart.js";
+export type {
+  KChartCandle,
+  KChartVisibleRange,
+} from "./charts/candle-model.js";

@@ -11,12 +11,14 @@ class KChartTooltip extends StatelessWidget {
     required this.x,
     required this.xAxis,
     required this.yAxis,
+    this.colorForSeries,
     super.key,
   });
   final List<KChartSeries> series;
   final double x;
   final KChartAxis xAxis;
   final KChartAxis yAxis;
+  final Color Function(KChartSeries)? colorForSeries;
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
@@ -58,7 +60,8 @@ class KChartTooltip extends StatelessWidget {
                             height: t.componentChartPointRadius * 2,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: chartColor(t, s),
+                              color:
+                                  colorForSeries?.call(s) ?? chartColor(t, s),
                             ),
                           ),
                           SizedBox(width: t.spaceControlGap),

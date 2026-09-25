@@ -1,0 +1,109 @@
+{
+  "id": "timeline-reference",
+  "title": "Release roadmap",
+  "today": "2026-09-25",
+  "window": { "start": "2026-09-21", "end": "2026-10-12" },
+  "groups": [
+    { "id": "design", "label": "Design" },
+    { "id": "engineering", "label": "Engineering" },
+    { "id": "launch", "label": "Launch" }
+  ],
+  "items": [
+    {
+      "id": "research",
+      "label": "Research",
+      "group": "design",
+      "start": "2026-09-21",
+      "end": "2026-09-25",
+      "tone": "primary"
+    },
+    {
+      "id": "design",
+      "label": "Design review",
+      "group": "design",
+      "start": "2026-09-24",
+      "end": "2026-09-29",
+      "tone": "primary"
+    },
+    {
+      "id": "prototype",
+      "label": "Prototype",
+      "group": "design",
+      "start": "2026-09-28",
+      "end": "2026-10-03",
+      "tone": "primary"
+    },
+    {
+      "id": "signoff",
+      "label": "Design sign-off",
+      "group": "design",
+      "start": "2026-10-05",
+      "end": "2026-10-07",
+      "tone": "primary"
+    },
+    {
+      "id": "api",
+      "label": "API contract",
+      "group": "engineering",
+      "start": "2026-09-22",
+      "end": "2026-09-27",
+      "tone": "info"
+    },
+    {
+      "id": "implementation",
+      "label": "Implementation",
+      "group": "engineering",
+      "start": "2026-09-25",
+      "end": "2026-10-03",
+      "tone": "info"
+    },
+    {
+      "id": "qa",
+      "label": "Quality assurance",
+      "group": "engineering",
+      "start": "2026-10-01",
+      "end": "2026-10-07",
+      "tone": "info"
+    },
+    {
+      "id": "freeze",
+      "label": "Code freeze",
+      "group": "engineering",
+      "start": "2026-10-07",
+      "end": "2026-10-09",
+      "tone": "info",
+      "readOnly": true
+    },
+    {
+      "id": "docs",
+      "label": "Documentation",
+      "group": "launch",
+      "start": "2026-09-23",
+      "end": "2026-09-29",
+      "tone": "success"
+    },
+    {
+      "id": "preview",
+      "label": "Public preview",
+      "group": "launch",
+      "start": "2026-09-29",
+      "end": "2026-10-03",
+      "tone": "success"
+    },
+    {
+      "id": "release-notes",
+      "label": "Release notes",
+      "group": "launch",
+      "start": "2026-10-05",
+      "end": "2026-10-09",
+      "tone": "success"
+    },
+    {
+      "id": "release",
+      "label": "Release",
+      "group": "launch",
+      "start": "2026-10-09",
+      "tone": "success"
+    }
+  ]
+}

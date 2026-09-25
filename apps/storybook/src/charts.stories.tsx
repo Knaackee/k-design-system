@@ -128,7 +128,7 @@ function ChartFixture({
               cells: [
                 formatDate(x),
                 ...values.map((points) =>
-                  points.get(x) == null ? "�" : String(points.get(x)),
+                  points.get(x) == null ? "—" : String(points.get(x)),
                 ),
               ],
             }))}

@@ -1,0 +1,208 @@
+.k-gantt-demo {
+  width: 100%;
+  min-width: 0;
+  color: var(--k-color-text-primary);
+}
+.k-gantt-header,
+.k-gantt-footer {
+  display: grid;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-card-padding);
+}
+.k-gantt-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+}
+.k-gantt-toolbar > .k-field {
+  width: auto;
+  min-width: 110px;
+}
+.k-gantt-muted {
+  color: var(--k-color-text-muted);
+}
+.k-gantt-canvas {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  width: 100%;
+  min-width: 0;
+}
+.k-gantt-canvas > div {
+  height: 100%;
+  min-height: 0;
+}
+.k-gantt-canvas .wx-willow-theme {
+  height: 100%;
+  min-height: 0;
+  --wx-font-family: var(--k-font-family);
+  --wx-font-size: var(--k-font-body-small-size);
+  --wx-font-size-sm: var(--k-font-caption-size);
+  --wx-font-weight: 400;
+  --wx-font-weight-md: 500;
+  --wx-background: var(--k-color-surface-canvas);
+  --wx-background-alt: var(--k-color-surface-raised);
+  --wx-color-font: var(--k-color-text-primary);
+  --wx-color-secondary-font: var(--k-color-text-muted);
+  --wx-color-primary: var(--k-color-action-primary-background);
+  --wx-border: var(--k-border-width-default) solid var(--k-color-border-default);
+  --wx-gantt-border: var(--wx-border);
+  --wx-gantt-border-color: var(--k-color-border-default);
+  --wx-gantt-task-color: color-mix(
+    in srgb,
+    var(--k-color-action-primary-background) 14%,
+    var(--k-color-surface-raised)
+  );
+  --wx-gantt-task-fill-color: color-mix(
+    in srgb,
+    var(--k-color-action-primary-background) 32%,
+    var(--k-color-surface-raised)
+  );
+  --wx-gantt-task-font-color: var(--k-color-text-primary);
+  --wx-gantt-task-border: var(--k-border-width-default) solid
+    var(--k-color-action-primary-background);
+  --wx-gantt-task-border-color: var(--k-color-action-primary-background);
+  --wx-gantt-summary-color: var(--k-color-surface-raised);
+  --wx-gantt-summary-fill-color: color-mix(
+    in srgb,
+    var(--k-color-status-info-accent) 28%,
+    var(--k-color-surface-raised)
+  );
+  --wx-gantt-summary-font-color: var(--k-color-text-primary);
+  --wx-gantt-summary-border: var(--wx-border);
+  --wx-gantt-summary-border-color: var(--k-color-border-default);
+  --wx-gantt-milestone-color: var(--k-color-status-success-accent);
+  --wx-gantt-bar-border-radius: var(--k-radius-control);
+  --wx-gantt-bar-font: 400 var(--k-font-body-small-size) var(--k-font-family);
+  --wx-gantt-bar-shadow: none;
+  --wx-gantt-link-color: var(--k-color-text-muted);
+  --wx-gantt-link-color-hovered: var(--k-color-action-primary-background);
+  --wx-gantt-select-color: color-mix(
+    in srgb,
+    var(--k-color-action-primary-background) 8%,
+    transparent
+  );
+  --wx-gantt-icon-color: var(--k-color-text-muted);
+  --wx-icon-color: var(--k-color-text-muted);
+  --wx-table-header-background: var(--k-color-surface-raised);
+  --wx-table-header-border: var(--wx-border);
+  --wx-table-header-cell-border: var(--wx-border);
+  --wx-table-cell-border: var(--wx-border);
+  --wx-table-select-background: var(--wx-gantt-select-color);
+  --wx-table-select-focus-background: var(--wx-gantt-select-color);
+  --wx-table-select-border: transparent;
+  --wx-grid-body-font: 400 var(--k-font-body-small-size) var(--k-font-family);
+  --wx-grid-header-font: 500 var(--k-font-caption-size) var(--k-font-family);
+  --wx-grid-body-font-color: var(--k-color-text-primary);
+  --wx-grid-header-font-color: var(--k-color-text-muted);
+  --wx-grid-body-row-border: var(--wx-border);
+  --wx-grid-header-shadow: none;
+  --wx-timescale-font: 400 var(--k-font-caption-size) var(--k-font-family);
+  --wx-timescale-font-color: var(--k-color-text-muted);
+  --wx-timescale-border: var(--wx-border);
+  --wx-timescale-shadow: none;
+}
+.k-gantt-canvas .wx-gantt {
+  height: 100%;
+  min-height: 0;
+}
+.k-gantt-canvas .wx-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 36px;
+  flex-shrink: 0;
+}
+.k-gantt-canvas .wx-toggle-icon::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    center/contain no-repeat;
+}
+.k-gantt-canvas .wx-toggle-icon.wxi-menu-right::before {
+  transform: rotate(-90deg);
+}
+.k-gantt-canvas .wx-resizer-display-chart {
+  width: var(--k-border-width-default) !important;
+  min-width: 0;
+}
+.k-gantt-canvas .wx-resizer-display-chart .wx-button-expand-box {
+  display: none;
+}
+.k-gantt-canvas .wx-area,
+.k-gantt-canvas .wx-scale,
+.k-gantt-canvas .wx-bar {
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+.k-gantt-label {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline: var(--k-space-control-inset-inline);
+  position: relative;
+  z-index: 1;
+}
+.k-gantt-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 100%;
+  z-index: 3;
+  cursor: ew-resize;
+}
+.k-gantt-handle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--k-color-action-primary-background);
+}
+.k-gantt-handle--start {
+  left: -7px;
+}
+.k-gantt-handle--end {
+  right: -7px;
+}
+.k-gantt-compact .k-gantt-handle {
+  display: none;
+}
+.k-gantt-compact .k-gantt-editing .k-gantt-handle {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+.k-gantt-compact .k-gantt-editing .k-gantt-handle--start {
+  left: -22px;
+}
+.k-gantt-compact .k-gantt-editing .k-gantt-handle--end {
+  right: -22px;
+}
+.k-gantt-compact .k-gantt-editing .k-gantt-handle::after {
+  width: 6px;
+  height: 20px;
+}
+.k-gantt-canvas .k-gantt-ghost {
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 10;
+}
+.k-gantt-form {
+  display: grid;
+  gap: var(--k-space-content-action-gap);
+}
+.k-gantt-form label {
+  display: grid;
+  gap: var(--k-space-control-gap);
+}

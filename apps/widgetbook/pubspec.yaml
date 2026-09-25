@@ -25,4 +25,7 @@ dev_dependencies:
 flutter:
   assets:
     - fixtures/chart-line-reference.json
+    - fixtures/chart-families.json
+    - fixtures/chart-candlestick.json
+    - fixtures/timeline-reference.json
   uses-material-design: true
