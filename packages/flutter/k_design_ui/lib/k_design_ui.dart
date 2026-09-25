@@ -57,3 +57,4 @@ export 'src/chat/k_chat_composer.dart';
 export 'src/editors/k_editors.dart';
 
 export 'src/actions/k_theme_switcher.dart';
+export 'src/actions/k_user_menu.dart';

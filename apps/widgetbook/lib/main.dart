@@ -36,6 +36,7 @@ import 'editor_fixtures.dart';
 import 'command_palette_fixture.dart';
 import 'animated_icon_fixture.dart';
 import 'theme_switcher_fixture.dart';
+import 'user_menu_fixture.dart';
 import 'notification_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
@@ -222,6 +223,19 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'command-palette-actions',
                   builder: (_) => const CommandPaletteFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'UserMenu',
+              children: [
+                WidgetbookUseCase(
+                  name: 'user-menu-account',
+                  builder: (_) => const UserMenuFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'user-menu-long-identity',
+                  builder: (_) => const UserMenuFixture(longIdentity: true),
                 ),
               ],
             ),

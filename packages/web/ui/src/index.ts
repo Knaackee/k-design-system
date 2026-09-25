@@ -366,6 +366,8 @@ export type {
 } from "./feedback/notifications.js";
 
 export { KThemeSwitcher } from "./actions/theme-switcher.js";
+export { KUserMenu } from "./actions/user-menu.js";
+export type { KUserMenuProps, KUserMenuAction } from "./actions/user-menu.js";
 export type {
   KThemeSwitcherProps,
   KThemeMode,

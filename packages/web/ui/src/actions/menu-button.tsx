@@ -30,6 +30,10 @@ export interface KMenuButtonProps {
   triggerVariant?: KButtonVariant;
   triggerClassName?: string;
   fullWidth?: boolean;
+  /** Non-interactive menu heading, e.g. account details. */
+  header?: ReactNode;
+  align?: "start" | "end";
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function KMenuButton({
@@ -41,6 +45,9 @@ export function KMenuButton({
   triggerVariant,
   triggerClassName,
   fullWidth = false,
+  header,
+  align = "start",
+  onOpenChange,
 }: KMenuButtonProps) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
@@ -71,7 +78,8 @@ export function KMenuButton({
       parseFloat(
         getComputedStyle(button).getPropertyValue("--k-space-control-gap"),
       ) || 4;
-    panel.style.left = `${Math.max(gutter, Math.min(rect.left, innerWidth - bounds.width - gutter))}px`;
+    const left = align === "end" ? rect.right - bounds.width : rect.left;
+    panel.style.left = `${Math.max(gutter, Math.min(left, innerWidth - bounds.width - gutter))}px`;
     panel.style.top = `${Math.max(gutter, Math.min(rect.bottom + gap, innerHeight - bounds.height - gutter))}px`;
   }
   function show(last = false) {
@@ -95,7 +103,7 @@ export function KMenuButton({
       window.removeEventListener("resize", reposition);
       window.removeEventListener("scroll", reposition, true);
     };
-  }, [open]);
+  }, [open, align]);
   useEffect(() => {
     if (disabled || actions.length === 0) close(false);
   }, [disabled, actions.length]);
@@ -144,7 +152,11 @@ export function KMenuButton({
         role="menu"
         aria-label={label}
         tabIndex={-1}
-        onToggle={(event) => setOpen(event.newState === "open")}
+        onToggle={(event) => {
+          const next = event.newState === "open";
+          setOpen(next);
+          onOpenChange?.(next);
+        }}
         onKeyDown={(event) => {
           event.stopPropagation();
           const buttons = items();
@@ -205,6 +217,11 @@ export function KMenuButton({
           }
         }}
       >
+        {header != null ? (
+          <div role="presentation" className="k-menu__header">
+            {header}
+          </div>
+        ) : null}
         {actions.map((action, index) => (
           <Fragment key={action.id}>
             {index > 0 && action.separatorBefore ? (

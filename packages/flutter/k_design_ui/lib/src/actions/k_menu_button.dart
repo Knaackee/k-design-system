@@ -36,6 +36,10 @@ class KMenuButton extends StatefulWidget {
     this.overflow = false,
     this.triggerContent,
     this.fullWidth = false,
+    this.header,
+    this.alignEnd = false,
+    this.onOpenChange,
+    this.triggerRadius,
     super.key,
   });
   final String label;
@@ -44,6 +48,10 @@ class KMenuButton extends StatefulWidget {
   final bool overflow;
   final Widget? triggerContent;
   final bool fullWidth;
+  final Widget? header;
+  final bool alignEnd;
+  final ValueChanged<bool>? onOpenChange;
+  final BorderRadius? triggerRadius;
   @override
   State<KMenuButton> createState() => _KMenuButtonState();
 }
@@ -54,6 +62,11 @@ class _KMenuButtonState extends State<KMenuButton> {
   final _trigger = FocusNode();
   final Map<String, FocusNode> _items = {};
   double? _menuWidth;
+  bool _keyboardFocus = false;
+  void _setKeyboardFocus(bool value) {
+    if (_keyboardFocus != value) setState(() => _keyboardFocus = value);
+  }
+
   String _search = '';
   DateTime _typedAt = DateTime(0);
   bool get _disabled => widget.disabled || widget.actions.isEmpty;
@@ -100,6 +113,7 @@ class _KMenuButtonState extends State<KMenuButton> {
   ];
   void _open({bool last = false}) {
     if (_disabled) return;
+    _keyboardFocus = HardwareKeyboard.instance.logicalKeysPressed.isNotEmpty;
     final box = _anchorKey.currentContext?.findRenderObject() as RenderBox?;
     final t =
         Theme.of(context).extension<KDesignTokens>() ??
@@ -114,7 +128,10 @@ class _KMenuButtonState extends State<KMenuButton> {
     final origin =
         box?.localToGlobal(Offset.zero, ancestor: overlay) ?? Offset.zero;
     setState(() => _menuWidth = width);
-    final x = origin.dx.clamp(
+    final desiredX = widget.alignEnd
+        ? origin.dx + (box?.size.width ?? 0) - width
+        : origin.dx;
+    final x = desiredX.clamp(
       t.spaceControlGap,
       math.max(t.spaceControlGap, screen.width - width - t.spaceControlGap),
     );
@@ -185,6 +202,8 @@ class _KMenuButtonState extends State<KMenuButton> {
       child: MenuAnchor(
         key: _anchorKey,
         controller: _controller,
+        onOpen: () => widget.onOpenChange?.call(true),
+        onClose: () => widget.onOpenChange?.call(false),
         childFocusNode: _trigger,
         alignmentOffset: Offset(0, t.spaceControlGap),
         reservedPadding: EdgeInsets.all(t.spaceControlGap),
@@ -200,182 +219,210 @@ class _KMenuButtonState extends State<KMenuButton> {
           shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
         ),
         menuChildren: [
-          SizedBox(
-            width: width,
-            child: KSurface(
-              radius: KSurfaceRadius.overlay,
-              elevation: KSurfaceElevation.overlay,
-              child: Padding(
-                padding: EdgeInsets.all(t.spaceControlGap),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final (index, action) in widget.actions.indexed) ...[
-                      if (index > 0 && action.separatorBefore)
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: t.spaceControlGap,
+          Listener(
+            onPointerHover: (_) => _setKeyboardFocus(false),
+            onPointerDown: (_) => _setKeyboardFocus(false),
+            child: SizedBox(
+              width: width,
+              child: KSurface(
+                radius: KSurfaceRadius.overlay,
+                elevation: KSurfaceElevation.overlay,
+                child: Padding(
+                  padding: EdgeInsets.all(t.spaceControlGap),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (widget.header != null)
+                        Container(
+                          padding: EdgeInsets.all(t.spaceControlInsetInline),
+                          margin: EdgeInsets.only(bottom: t.spaceControlGap),
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: t.colorBorderDefault,
+                                width: t.borderWidthDefault,
+                              ),
+                            ),
                           ),
-                          child: SizedBox(
-                            height: t.borderWidthDefault,
-                            child: ColoredBox(color: t.colorBorderDefault),
-                          ),
+                          child: widget.header,
                         ),
-                      Focus(
-                        canRequestFocus: false,
-                        skipTraversal: true,
-                        onKeyEvent: (_, event) {
-                          if (event is! KeyDownEvent) {
-                            return KeyEventResult.ignored;
-                          }
-                          final nodes = _enabled;
-                          final current = nodes.indexWhere((n) => n.hasFocus);
-                          final key = event.logicalKey;
-                          if (key == LogicalKeyboardKey.escape) {
-                            _close();
-                            return KeyEventResult.handled;
-                          }
-                          if (key == LogicalKeyboardKey.tab) {
-                            _close();
-                            return KeyEventResult.ignored;
-                          }
-                          if (nodes.isNotEmpty) {
-                            int? next;
-                            if (key == LogicalKeyboardKey.home) next = 0;
-                            if (key == LogicalKeyboardKey.end) {
-                              next = nodes.length - 1;
+                      for (final (index, action) in widget.actions.indexed) ...[
+                        if (index > 0 && action.separatorBefore)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: t.spaceControlGap,
+                            ),
+                            child: SizedBox(
+                              height: t.borderWidthDefault,
+                              child: ColoredBox(color: t.colorBorderDefault),
+                            ),
+                          ),
+                        Focus(
+                          canRequestFocus: false,
+                          skipTraversal: true,
+                          onKeyEvent: (_, event) {
+                            if (event is! KeyDownEvent) {
+                              return KeyEventResult.ignored;
                             }
-                            if (key == LogicalKeyboardKey.arrowDown) {
-                              next = (current + 1) % nodes.length;
-                            }
-                            if (key == LogicalKeyboardKey.arrowUp) {
-                              next =
-                                  (current - 1 + nodes.length) % nodes.length;
-                            }
-                            if (next != null) {
-                              nodes[next].requestFocus();
+                            _setKeyboardFocus(true);
+                            final nodes = _enabled;
+                            final current = nodes.indexWhere((n) => n.hasFocus);
+                            final key = event.logicalKey;
+                            if (key == LogicalKeyboardKey.escape) {
+                              _close();
                               return KeyEventResult.handled;
                             }
-                            final char = event.character;
-                            if (char != null &&
-                                char.trim().isNotEmpty &&
-                                !HardwareKeyboard.instance.isControlPressed &&
-                                !HardwareKeyboard.instance.isMetaPressed) {
-                              final now = DateTime.now();
-                              _search =
-                                  now.difference(_typedAt).inMilliseconds > 700
-                                  ? char
-                                  : _search + char;
-                              _typedAt = now;
-                              final enabled = widget.actions
-                                  .where((a) => !a.disabled)
-                                  .toList();
-                              for (
-                                var offset = 1;
-                                offset <= enabled.length;
-                                offset++
-                              ) {
-                                final candidate =
-                                    enabled[(current + offset) %
-                                        enabled.length];
-                                if (candidate.label.toLowerCase().startsWith(
-                                  _search.toLowerCase(),
-                                )) {
-                                  _items[candidate.id]!.requestFocus();
-                                  break;
-                                }
+                            if (key == LogicalKeyboardKey.tab) {
+                              _close();
+                              return KeyEventResult.ignored;
+                            }
+                            if (nodes.isNotEmpty) {
+                              int? next;
+                              if (key == LogicalKeyboardKey.home) next = 0;
+                              if (key == LogicalKeyboardKey.end) {
+                                next = nodes.length - 1;
                               }
-                              return KeyEventResult.handled;
+                              if (key == LogicalKeyboardKey.arrowDown) {
+                                next = (current + 1) % nodes.length;
+                              }
+                              if (key == LogicalKeyboardKey.arrowUp) {
+                                next =
+                                    (current - 1 + nodes.length) % nodes.length;
+                              }
+                              if (next != null) {
+                                nodes[next].requestFocus();
+                                return KeyEventResult.handled;
+                              }
+                              final char = event.character;
+                              if (char != null &&
+                                  char.trim().isNotEmpty &&
+                                  !HardwareKeyboard.instance.isControlPressed &&
+                                  !HardwareKeyboard.instance.isMetaPressed) {
+                                final now = DateTime.now();
+                                _search =
+                                    now.difference(_typedAt).inMilliseconds >
+                                        700
+                                    ? char
+                                    : _search + char;
+                                _typedAt = now;
+                                final enabled = widget.actions
+                                    .where((a) => !a.disabled)
+                                    .toList();
+                                for (
+                                  var offset = 1;
+                                  offset <= enabled.length;
+                                  offset++
+                                ) {
+                                  final candidate =
+                                      enabled[(current + offset) %
+                                          enabled.length];
+                                  if (candidate.label.toLowerCase().startsWith(
+                                    _search.toLowerCase(),
+                                  )) {
+                                    _items[candidate.id]!.requestFocus();
+                                    break;
+                                  }
+                                }
+                                return KeyEventResult.handled;
+                              }
                             }
-                          }
-                          return KeyEventResult.ignored;
-                        },
-                        child: MenuItemButton(
-                          key: ValueKey(action.id),
-                          focusNode: _items[action.id],
-                          onPressed: action.disabled
-                              ? null
-                              : () {
-                                  _close();
-                                  action.onSelect?.call();
-                                },
-                          style: ButtonStyle(
-                            visualDensity: VisualDensity.standard,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            minimumSize: WidgetStatePropertyAll(
-                              Size(0, math.max(t.sizeControl, t.sizeHitTarget)),
-                            ),
-                            padding: WidgetStatePropertyAll(
-                              EdgeInsets.symmetric(
-                                horizontal: t.spaceControlInsetInline,
-                                vertical: t.spaceControlGap,
+                            return KeyEventResult.ignored;
+                          },
+                          child: MenuItemButton(
+                            key: ValueKey(action.id),
+                            focusNode: _items[action.id],
+                            onPressed: action.disabled
+                                ? null
+                                : () {
+                                    _close();
+                                    action.onSelect?.call();
+                                  },
+                            style: ButtonStyle(
+                              visualDensity: VisualDensity.standard,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              minimumSize: WidgetStatePropertyAll(
+                                Size(
+                                  0,
+                                  math.max(t.sizeControl, t.sizeHitTarget),
+                                ),
                               ),
-                            ),
-                            textStyle: WidgetStatePropertyAll(textStyle),
-                            foregroundColor: WidgetStatePropertyAll(
-                              action.destructive
-                                  ? t.colorStatusErrorForeground
-                                  : t.colorTextPrimary,
-                            ),
-                            backgroundColor: WidgetStateProperty.resolveWith(
-                              (states) => states.contains(WidgetState.pressed)
-                                  ? t.colorActionGhostPressed
-                                  : states.contains(WidgetState.hovered) ||
-                                        states.contains(WidgetState.focused)
-                                  ? t.colorActionGhostHover
-                                  : Colors.transparent,
-                            ),
-                            overlayColor: const WidgetStatePropertyAll(
-                              Colors.transparent,
-                            ),
-                            side: WidgetStateProperty.resolveWith(
-                              (states) => BorderSide(
-                                color: states.contains(WidgetState.focused)
-                                    ? t.colorBorderFocus
+                              padding: WidgetStatePropertyAll(
+                                EdgeInsets.symmetric(
+                                  horizontal: t.spaceControlInsetInline,
+                                  vertical: t.spaceControlGap,
+                                ),
+                              ),
+                              textStyle: WidgetStatePropertyAll(textStyle),
+                              foregroundColor: WidgetStatePropertyAll(
+                                action.destructive
+                                    ? t.colorStatusErrorForeground
+                                    : t.colorTextPrimary,
+                              ),
+                              backgroundColor: WidgetStateProperty.resolveWith(
+                                (states) => states.contains(WidgetState.pressed)
+                                    ? t.colorActionGhostPressed
+                                    : states.contains(WidgetState.hovered) ||
+                                          (_keyboardFocus &&
+                                              states.contains(
+                                                WidgetState.focused,
+                                              ))
+                                    ? t.colorActionGhostHover
                                     : Colors.transparent,
-                                width: t.borderWidthStrong,
+                              ),
+                              overlayColor: const WidgetStatePropertyAll(
+                                Colors.transparent,
+                              ),
+                              side: WidgetStateProperty.resolveWith(
+                                (states) => BorderSide(
+                                  color:
+                                      _keyboardFocus &&
+                                          states.contains(WidgetState.focused)
+                                      ? t.colorBorderFocus
+                                      : Colors.transparent,
+                                  width: t.borderWidthStrong,
+                                ),
+                              ),
+                              shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    t.radiusControl,
+                                  ),
+                                ),
                               ),
                             ),
-                            shape: WidgetStatePropertyAll(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  t.radiusControl,
+                            child: Opacity(
+                              opacity: action.disabled ? .48 : 1,
+                              child: SizedBox(
+                                width: math.max(
+                                  0,
+                                  width -
+                                      2 *
+                                          (t.spaceControlGap +
+                                              1 +
+                                              t.spaceControlInsetInline),
+                                ),
+                                child: Row(
+                                  children: [
+                                    if (action.icon != null) ...[
+                                      KIcon(
+                                        action.icon!,
+                                        color: action.destructive
+                                            ? t.colorStatusErrorForeground
+                                            : t.colorTextPrimary,
+                                      ),
+                                      SizedBox(width: t.spaceControlGap),
+                                    ],
+                                    Expanded(child: Text(action.label)),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                          child: Opacity(
-                            opacity: action.disabled ? .48 : 1,
-                            child: SizedBox(
-                              width: math.max(
-                                0,
-                                width -
-                                    2 *
-                                        (t.spaceControlGap +
-                                            1 +
-                                            t.spaceControlInsetInline),
-                              ),
-                              child: Row(
-                                children: [
-                                  if (action.icon != null) ...[
-                                    KIcon(
-                                      action.icon!,
-                                      color: action.destructive
-                                          ? t.colorStatusErrorForeground
-                                          : t.colorTextPrimary,
-                                    ),
-                                    SizedBox(width: t.spaceControlGap),
-                                  ],
-                                  Expanded(child: Text(action.label)),
-                                ],
-                              ),
-                            ),
-                          ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -405,7 +452,9 @@ class _KMenuButtonState extends State<KMenuButton> {
               child: InkWell(
                 focusNode: _trigger,
                 onTap: onPressed,
-                borderRadius: BorderRadius.circular(t.radiusControl),
+                borderRadius:
+                    widget.triggerRadius ??
+                    BorderRadius.circular(t.radiusControl),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: math.max(t.sizeControl, t.sizeHitTarget),
