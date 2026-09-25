@@ -14,6 +14,8 @@ class _AnimatedIconFixtureState extends State<AnimatedIconFixture> {
   KIconName _from = KIconName.sun, _to = KIconName.moon;
   double _progress = .5;
   bool _destination = false;
+  String _query = '';
+  int _page = 1;
   String _status = 'Ready';
   static const _pairs = [
     (KIconName.sun, KIconName.moon, 'Theme'),
@@ -30,6 +32,22 @@ class _AnimatedIconFixtureState extends State<AnimatedIconFixture> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final gap = t.spaceLayoutSectionGap;
+    final matches = KIconName.values
+        .where(
+          (icon) => kIconLabels[icon]!.contains(_query.trim().toLowerCase()),
+        )
+        .toList();
+    final pageCount = (matches.length / 48).ceil().clamp(1, 10000);
+    final visible = matches.skip((_page - 1) * 48).take(48).toList();
+    final options = <KIconName>{_from, _to, ...visible}
+        .map(
+          (icon) => KSelectOption(
+            value: icon.name,
+            label: kIconLabels[icon]!,
+            icon: icon,
+          ),
+        )
+        .toList();
     return SingleChildScrollView(
       child: Center(
         child: ConstrainedBox(
@@ -90,13 +108,36 @@ class _AnimatedIconFixtureState extends State<AnimatedIconFixture> {
                 SizedBox(height: gap),
                 const KText('Try any pair', variant: KTextVariant.heading4),
                 SizedBox(height: gap),
+                KSearchField(
+                  label: 'Search icons',
+                  placeholder: 'Search all Lucide icons',
+                  onChanged: (value) => setState(() {
+                    _query = value;
+                    _page = 1;
+                  }),
+                ),
+                SizedBox(height: gap),
+                KText(
+                  '${matches.length} / ${KIconName.values.length} icons · ${visible.length} on this page',
+                  variant: KTextVariant.bodySmall,
+                ),
+                if (pageCount > 1) ...[
+                  SizedBox(height: gap),
+                  KPagination(
+                    page: _page,
+                    pageCount: pageCount,
+                    siblingCount: 0,
+                    onPageChanged: (value) => setState(() => _page = value),
+                  ),
+                ],
+                SizedBox(height: gap),
                 Row(
                   children: [
                     Expanded(
                       child: KCombobox(
                         label: 'From',
                         value: _from.name,
-                        options: _options,
+                        options: options,
                         onChanged: (v) =>
                             setState(() => _from = KIconName.values.byName(v!)),
                       ),
@@ -106,7 +147,7 @@ class _AnimatedIconFixtureState extends State<AnimatedIconFixture> {
                       child: KCombobox(
                         label: 'To',
                         value: _to.name,
-                        options: _options,
+                        options: options,
                         onChanged: (v) =>
                             setState(() => _to = KIconName.values.byName(v!)),
                       ),
@@ -175,9 +216,4 @@ class _AnimatedIconFixtureState extends State<AnimatedIconFixture> {
       ),
     );
   }
-
-  List<KSelectOption> get _options => [
-    for (final icon in KIconName.values)
-      KSelectOption(value: icon.name, label: icon.name, icon: icon),
-  ];
 }

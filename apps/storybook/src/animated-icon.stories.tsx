@@ -5,6 +5,9 @@ import {
   KAnimatedIcon,
   KButton,
   KCombobox,
+  KSearchField,
+  KField,
+  KPagination,
   KSelect,
   KSlider,
   KStack,
@@ -20,13 +23,10 @@ const pairs: readonly [KIconName, KIconName, string][] = [
   ["play", "pause", "Playback"],
   ["heart", "check", "Status"],
 ];
-const options = kIconNames.map((name) => ({
-  value: name,
-  label: name,
-  icon: name,
-}));
 
 function AnimatedIconFixture() {
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [states, setStates] = useState([false, false, false, false]);
   const [spring, setSpring] = useState<KAnimatedIconSpring>("snappy");
   const [from, setFrom] = useState<KIconName>("sun");
@@ -34,6 +34,16 @@ function AnimatedIconFixture() {
   const [destination, setDestination] = useState(false);
   const [progress, setProgress] = useState(50);
   const [status, setStatus] = useState("Ready");
+  const matches = kIconNames.filter((name) =>
+    name.includes(query.trim().toLowerCase()),
+  );
+  const pageCount = Math.max(1, Math.ceil(matches.length / 48));
+  const visible = matches.slice((page - 1) * 48, page * 48);
+  const options = Array.from(new Set([from, to, ...visible])).map((name) => ({
+    value: name,
+    label: name,
+    icon: name,
+  }));
   return (
     <section
       className="k-animated-icon-demo"
@@ -98,6 +108,29 @@ function AnimatedIconFixture() {
           ]}
         />
         <KText variant="heading4">Try any pair</KText>
+        <KField label="Search icons">
+          <KSearchField
+            aria-label="Search icons"
+            placeholder="Search all Lucide icons"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setPage(1);
+            }}
+          />
+        </KField>
+        <KText variant="bodySmall">
+          {matches.length} / {kIconNames.length} icons · {visible.length} on
+          this page
+        </KText>
+        {pageCount > 1 && (
+          <KPagination
+            page={page}
+            pageCount={pageCount}
+            onPageChange={setPage}
+            siblingCount={0}
+          />
+        )}
         <div
           style={{
             display: "grid",

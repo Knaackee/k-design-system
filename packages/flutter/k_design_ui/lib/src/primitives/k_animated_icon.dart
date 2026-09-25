@@ -88,14 +88,24 @@ class _Geometry {
         r'''([\w:-]+)\s*=\s*(["'])(.*?)\2''',
         dotAll: true,
       ).allMatches(tag[2]!)) {
-        if (attr[1] == 'transform' ||
-            attr[1] == 'style' ||
-            (attr[1] == 'fill' && attr[3] != 'none')) {
+        if (attr[1] == 'transform' || attr[1] == 'style') {
           throw ArgumentError(
             'KAnimatedIcon supports untransformed stroke geometry only.',
           );
         }
         attrs[attr[1]!] = attr[3]!;
+      }
+      // Lucide's tiny filled circles are already covered by its 2-unit stroke.
+      // Morphicons lowers these to the same circle centerline on Web.
+      final fill = attrs['fill'];
+      final lucideDot =
+          name == 'circle' &&
+          fill == 'currentColor' &&
+          (double.tryParse('${attrs['r']}') ?? double.infinity) <= 1;
+      if (fill != null && fill != 'none' && !lucideDot) {
+        throw ArgumentError(
+          'KAnimatedIcon supports stroke geometry and Lucide dots only.',
+        );
       }
       if (name == 'svg') {
         final viewBox = attrs['viewBox'] as String?;

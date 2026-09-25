@@ -66,32 +66,53 @@ void main() {
     }
   });
 
-  test('every bundled Lucide icon normalizes and samples finite geometry', () {
-    for (final entry in kIconSvg.entries) {
-      final shapes =
-          RegExp(r'<(path|line|circle|ellipse|rect|polyline|polygon)\b([^>]*)')
-              .allMatches(entry.value)
-              .map(
-                (element) => IconNode(element.group(1)!, {
-                  for (final attr in RegExp(
-                    r'([\w-]+)="([^"]*)"',
-                  ).allMatches(element.group(2)!))
-                    attr.group(1)!: attr.group(2)!,
-                }),
-              )
-              .toList();
-      final cubics = iconToCubics(shapes);
-      final sampled = resampleIcon(shapes);
-      expect(cubics, isNotEmpty, reason: entry.key.name);
-      expect(sampled.length, cubics.length, reason: entry.key.name);
-      for (final path in sampled) {
-        expect(path.pts.length, 128, reason: entry.key.name);
-        expect(
-          path.pts.every((coordinate) => coordinate.isFinite),
-          isTrue,
-          reason: entry.key.name,
-        );
+  test(
+    'every Lucide icon samples and morphs finite geometry in both directions',
+    () {
+      final anchor = resampleIcon(nodes(icons['menu']));
+      expect(kIconSvg.length, 1838);
+      expect(kIconSvg.length, KIconName.values.length);
+      for (final entry in kIconSvg.entries) {
+        final shapes =
+            RegExp(
+                  r'<(path|line|circle|ellipse|rect|polyline|polygon)\b([^>]*)',
+                )
+                .allMatches(entry.value)
+                .map(
+                  (element) => IconNode(element.group(1)!, {
+                    for (final attr in RegExp(
+                      r'([\w-]+)="([^"]*)"',
+                    ).allMatches(element.group(2)!))
+                      attr.group(1)!: attr.group(2)!,
+                  }),
+                )
+                .toList();
+        final cubics = iconToCubics(shapes);
+        final sampled = resampleIcon(shapes);
+        expect(cubics, isNotEmpty, reason: entry.key.name);
+        expect(sampled.length, cubics.length, reason: entry.key.name);
+        for (final path in sampled) {
+          expect(path.pts.length, 128, reason: entry.key.name);
+          expect(
+            path.pts.every((coordinate) => coordinate.isFinite),
+            isTrue,
+            reason: entry.key.name,
+          );
+        }
+        for (final endpoints in [(anchor, sampled), (sampled, anchor)]) {
+          final plan = buildPlan(endpoints.$1, endpoints.$2);
+          final output = allocOutputs(plan);
+          expect(output, isNotEmpty, reason: entry.key.name);
+          for (final progress in [0.0, 0.5, 1.0]) {
+            interpPolar(plan, progress, output);
+            expect(
+              output.every((path) => path.every((value) => value.isFinite)),
+              isTrue,
+              reason: '${entry.key.name} at $progress',
+            );
+          }
+        }
       }
-    }
-  });
+    },
+  );
 }

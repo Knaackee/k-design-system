@@ -1,6 +1,10 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   KContainer,
+  KSearchField,
+  KField,
+  KPagination,
   KIcon,
   KGrid,
   KInline,
@@ -17,8 +21,14 @@ const meta = {
 } satisfies Meta<{ size: number }>;
 export default meta;
 type Story = StoryObj<{ size: number }>;
-export const Lucide: Story = {
-  render: ({ size }) => (
+function IconCatalog({ size }: { size: number }) {
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const matches = kIconNames.filter((name) =>
+    name.includes(query.trim().toLowerCase()),
+  );
+  const pageCount = Math.max(1, Math.ceil(matches.length / 96));
+  return (
     <div className="k-primitive-fixture">
       <KContainer>
         <KStack align="stretch" gap="section">
@@ -45,16 +55,41 @@ export const Lucide: Story = {
               />
             ))}
           </KInline>
-          <KText variant="bodySmall">{kIconNames.length} Lucide icons</KText>
+          <KField label="Search icons">
+            <KSearchField
+              aria-label="Search icons"
+              placeholder="Search all Lucide icons"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setPage(1);
+              }}
+            />
+          </KField>
+          <KText variant="bodySmall">
+            {matches.length} / {kIconNames.length} Lucide icons
+          </KText>
           <KGrid minColumnWidth={48} gap="control">
-            {kIconNames.map((name) => (
+            {matches.slice((page - 1) * 96, page * 96).map((name) => (
               <div key={name} className="k-icon-cell" title={name}>
                 <KIcon name={name} size={size} label={name} />
               </div>
             ))}
           </KGrid>
+          {matches.length === 0 && <KText>No icons found</KText>}
+          {pageCount > 1 && (
+            <KPagination
+              page={page}
+              pageCount={pageCount}
+              onPageChange={setPage}
+              siblingCount={0}
+            />
+          )}
         </KStack>
       </KContainer>
     </div>
-  ),
+  );
+}
+export const Lucide: Story = {
+  render: ({ size }) => <IconCatalog size={size} />,
 };

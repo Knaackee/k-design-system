@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../generated/k_icons.g.dart';
-export '../generated/k_icons.g.dart' show KIconName;
+export '../generated/k_icons.g.dart' show KIconName, kIconLabels;
 
 class KIcon extends StatelessWidget {
   const KIcon(this.name, {this.size = 16, this.color, this.label, super.key});

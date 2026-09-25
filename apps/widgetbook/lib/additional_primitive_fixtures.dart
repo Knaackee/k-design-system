@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'icon_catalog_fixture.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
@@ -61,52 +62,7 @@ Widget buildIconLucide(BuildContext context) {
     initialOption: 16,
     labelBuilder: (n) => '${n.toInt()}',
   );
-  String iconLabel(KIconName name) => name.name.replaceAllMapped(
-    RegExp(r'[A-Z]'),
-    (match) => '-${match[0]!.toLowerCase()}',
-  );
-  return _frame(context, [
-    const KText('Shared Lucide icons', variant: KTextVariant.heading4),
-    KInline(
-      wrap: true,
-      gap: KLayoutGap.section,
-      align: KLayoutAlign.center,
-      children: [
-        KIcon(KIconName.check, label: 'Check', size: size),
-        KIcon(KIconName.x, label: 'Close', size: size),
-        KIcon(KIconName.arrowRight, label: 'Next', size: size),
-        KIcon(KIconName.info, label: 'Information', size: size),
-      ],
-    ),
-    KInline(
-      gap: KLayoutGap.section,
-      align: KLayoutAlign.center,
-      children: [
-        for (final n in [12.0, 16.0, 20.0])
-          KIcon(KIconName.check, size: n, label: 'Check ${n.toInt()}'),
-      ],
-    ),
-    KText(
-      '${KIconName.values.length} Lucide icons',
-      variant: KTextVariant.bodySmall,
-    ),
-    KGrid(
-      minColumnWidth: 48,
-      gap: KLayoutGap.control,
-      children: [
-        for (final name in KIconName.values)
-          SizedBox(
-            height: 32,
-            child: Center(
-              child: Tooltip(
-                message: iconLabel(name),
-                child: KIcon(name, size: size, label: iconLabel(name)),
-              ),
-            ),
-          ),
-      ],
-    ),
-  ]);
+  return IconCatalogFixture(size: size);
 }
 
 Widget buildSeparatorOrientations(BuildContext context) => _frame(context, [

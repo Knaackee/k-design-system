@@ -60,10 +60,7 @@ class KEmojiTone {
 
 final kDefaultIconItems = List<KSymbolItem>.unmodifiable(
   KIconName.values.map((name) {
-    final id = name.name.replaceAllMapped(
-      RegExp(r'[A-Z]'),
-      (m) => '-${m[0]!.toLowerCase()}',
-    );
+    final id = kIconLabels[name]!;
     return KSymbolItem(
       id: id,
       label: id.replaceAll('-', ' '),
