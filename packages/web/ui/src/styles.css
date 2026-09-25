@@ -15,6 +15,7 @@
 @import "./workflow.css";
 @import "./link.css";
 @import "./ask-tools.css";
+@import "./editors.css";
 
 @font-face {
   font-family: "Inter";

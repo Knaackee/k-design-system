@@ -20,6 +20,46 @@
       "type": "color",
       "value": "#727278"
     },
+    "color.syntax.heading": {
+      "type": "color",
+      "value": "#3f479f"
+    },
+    "color.syntax.markup": {
+      "type": "color",
+      "value": "#727278"
+    },
+    "color.syntax.link": {
+      "type": "color",
+      "value": "#5e6ad2"
+    },
+    "color.syntax.code": {
+      "type": "color",
+      "value": "#8b5cf6"
+    },
+    "color.syntax.comment": {
+      "type": "color",
+      "value": "#727278"
+    },
+    "color.syntax.keyword": {
+      "type": "color",
+      "value": "#8b5cf6"
+    },
+    "color.syntax.string": {
+      "type": "color",
+      "value": "#10b981"
+    },
+    "color.syntax.number": {
+      "type": "color",
+      "value": "#f59e0b"
+    },
+    "color.syntax.symbol": {
+      "type": "color",
+      "value": "#202024"
+    },
+    "color.syntax.invalid": {
+      "type": "color",
+      "value": "#ef4444"
+    },
     "color.brand.primary.accent": {
       "type": "color",
       "value": "#5e6ad2"
@@ -2888,6 +2928,46 @@
     "color.text.muted": {
       "type": "color",
       "value": "#99999f"
+    },
+    "color.syntax.heading": {
+      "type": "color",
+      "value": "#d9dcff"
+    },
+    "color.syntax.markup": {
+      "type": "color",
+      "value": "#99999f"
+    },
+    "color.syntax.link": {
+      "type": "color",
+      "value": "#8b8cf8"
+    },
+    "color.syntax.code": {
+      "type": "color",
+      "value": "#a78bfa"
+    },
+    "color.syntax.comment": {
+      "type": "color",
+      "value": "#99999f"
+    },
+    "color.syntax.keyword": {
+      "type": "color",
+      "value": "#a78bfa"
+    },
+    "color.syntax.string": {
+      "type": "color",
+      "value": "#34d399"
+    },
+    "color.syntax.number": {
+      "type": "color",
+      "value": "#fbbf24"
+    },
+    "color.syntax.symbol": {
+      "type": "color",
+      "value": "#eeeeef"
+    },
+    "color.syntax.invalid": {
+      "type": "color",
+      "value": "#f87171"
     },
     "color.brand.primary.accent": {
       "type": "color",
@@ -5758,6 +5838,46 @@
       "type": "color",
       "value": "#52706d"
     },
+    "color.syntax.heading": {
+      "type": "color",
+      "value": "#115e59"
+    },
+    "color.syntax.markup": {
+      "type": "color",
+      "value": "#52706d"
+    },
+    "color.syntax.link": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "color.syntax.code": {
+      "type": "color",
+      "value": "#0891b2"
+    },
+    "color.syntax.comment": {
+      "type": "color",
+      "value": "#52706d"
+    },
+    "color.syntax.keyword": {
+      "type": "color",
+      "value": "#0891b2"
+    },
+    "color.syntax.string": {
+      "type": "color",
+      "value": "#059669"
+    },
+    "color.syntax.number": {
+      "type": "color",
+      "value": "#d97706"
+    },
+    "color.syntax.symbol": {
+      "type": "color",
+      "value": "#134e4a"
+    },
+    "color.syntax.invalid": {
+      "type": "color",
+      "value": "#dc2626"
+    },
     "color.brand.primary.accent": {
       "type": "color",
       "value": "#0d9488"
@@ -8626,6 +8746,46 @@
     "color.text.muted": {
       "type": "color",
       "value": "#91b8b2"
+    },
+    "color.syntax.heading": {
+      "type": "color",
+      "value": "#ccfbf1"
+    },
+    "color.syntax.markup": {
+      "type": "color",
+      "value": "#91b8b2"
+    },
+    "color.syntax.link": {
+      "type": "color",
+      "value": "#2dd4bf"
+    },
+    "color.syntax.code": {
+      "type": "color",
+      "value": "#22d3ee"
+    },
+    "color.syntax.comment": {
+      "type": "color",
+      "value": "#91b8b2"
+    },
+    "color.syntax.keyword": {
+      "type": "color",
+      "value": "#22d3ee"
+    },
+    "color.syntax.string": {
+      "type": "color",
+      "value": "#34d399"
+    },
+    "color.syntax.number": {
+      "type": "color",
+      "value": "#fbbf24"
+    },
+    "color.syntax.symbol": {
+      "type": "color",
+      "value": "#ecfdf5"
+    },
+    "color.syntax.invalid": {
+      "type": "color",
+      "value": "#fb7185"
     },
     "color.brand.primary.accent": {
       "type": "color",

@@ -1,0 +1,126 @@
+.k-gallery:has(> .editor-demo) {
+  box-sizing: border-box;
+  height: 100vh;
+  min-height: 0;
+  padding: 0;
+}
+
+.editor-demo {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--k-color-text-primary);
+  background: var(--k-color-surface-canvas);
+}
+
+.editor-demo-shell {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.editor-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: 100%;
+  min-height: 0;
+  gap: var(--k-space-layout-section-gap);
+  padding: var(--k-space-layout-gutter);
+}
+
+.editor-demo-pane {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  gap: var(--k-space-control-gap);
+}
+
+.editor-demo-shell > .k-markdown-editor,
+.editor-demo-shell > .k-code-editor,
+.editor-demo-pane > .k-markdown-editor {
+  height: 100%;
+  min-height: 0;
+}
+
+.editor-demo-shell > .k-markdown-editor,
+.editor-demo-pane > .k-markdown-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-demo-shell
+  > .k-markdown-editor
+  > :is(.k-markdown-editor-source, .k-markdown-editor-surface),
+.editor-demo-pane
+  > .k-markdown-editor
+  > :is(.k-markdown-editor-source, .k-markdown-editor-surface) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.editor-demo-shell
+  > .k-markdown-editor
+  > .k-markdown-editor-source
+  > .k-code-editor,
+.editor-demo-pane
+  > .k-markdown-editor
+  > .k-markdown-editor-source
+  > .k-code-editor {
+  height: 100%;
+  min-height: 0;
+}
+
+.editor-demo-shell > .k-code-editor,
+.editor-demo-pane > .k-code-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-demo-shell > .k-code-editor > .k-code-editor-host,
+.editor-demo-pane > .k-code-editor > .k-code-editor-host {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.editor-demo-shell > .k-code-editor > .k-code-editor-host > .cm-editor,
+.editor-demo-pane > .k-code-editor > .k-code-editor-host > .cm-editor {
+  height: 100%;
+  min-height: 0;
+}
+
+.editor-demo-pane > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-body-small-size);
+}
+
+@media (max-width: 720px) {
+  .editor-demo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.editor-demo--mobile .editor-demo-shell {
+  height: 100%;
+  min-height: 0;
+}
+
+.editor-demo--mobile {
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.editor-demo--mobile .k-markdown-editor,
+.editor-demo--mobile .k-code-editor {
+  height: 100%;
+  min-height: 0;
+}

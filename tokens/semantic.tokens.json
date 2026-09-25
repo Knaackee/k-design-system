@@ -9,6 +9,39 @@
       "primary": { "$type": "color", "$value": "{color.neutral.900}" },
       "muted": { "$type": "color", "$value": "{color.neutral.600}" }
     },
+    "syntax": {
+      "heading": {
+        "$type": "color",
+        "$value": "{color.brand.primary.foreground}"
+      },
+      "markup": { "$type": "color", "$value": "{color.text.muted}" },
+      "link": {
+        "$type": "color",
+        "$value": "{color.brand.primary.accent}"
+      },
+      "code": {
+        "$type": "color",
+        "$value": "{color.brand.secondary.accent}"
+      },
+      "comment": { "$type": "color", "$value": "{color.text.muted}" },
+      "keyword": {
+        "$type": "color",
+        "$value": "{color.brand.secondary.accent}"
+      },
+      "string": {
+        "$type": "color",
+        "$value": "{color.status.success.accent}"
+      },
+      "number": {
+        "$type": "color",
+        "$value": "{color.status.warning.accent}"
+      },
+      "symbol": { "$type": "color", "$value": "{color.text.primary}" },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.status.error.accent}"
+      }
+    },
     "brand": {
       "primary": {
         "accent": { "$type": "color", "$value": "{color.indigo.600}" },
