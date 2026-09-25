@@ -66,6 +66,13 @@
   },
   "space": {
     "scale": {
+      "chartAxisGutter": {
+        "$type": "dimension",
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
       "hairline": {
         "$type": "dimension",
         "$value": { "value": 1, "unit": "px" }
@@ -116,6 +123,13 @@
   },
   "size": {
     "scale": {
+      "chartHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 256,
+          "unit": "px"
+        }
+      },
       "dot": { "$type": "dimension", "$value": { "value": 6, "unit": "px" } },
       "progressThin": {
         "$type": "dimension",

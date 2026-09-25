@@ -23,4 +23,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
+  assets:
+    - fixtures/chart-line-reference.json
   uses-material-design: true

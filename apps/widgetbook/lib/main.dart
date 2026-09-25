@@ -4,6 +4,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
+import 'chart_fixture.dart';
 import 'action_fixtures.dart';
 import 'context_menu_fixture.dart';
 import 'form_fixtures.dart';
@@ -175,6 +176,20 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Data display',
           children: [
+            WidgetbookFolder(
+              name: 'LineChart',
+              children: [
+                WidgetbookUseCase(
+                  name: 'chart-line-reference',
+                  builder: (_) => const ChartFixture(),
+                ),
+                for (final scenario in ['empty', 'gaps', 'large'])
+                  WidgetbookUseCase(
+                    name: 'chart-line-$scenario',
+                    builder: (_) => ChartFixture(scenario: scenario),
+                  ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Kbd',
               children: [

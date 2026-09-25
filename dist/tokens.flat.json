@@ -244,6 +244,13 @@
       "type": "color",
       "value": "#ffffff1a"
     },
+    "space.chartAxisGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "space.hairline": {
       "type": "dimension",
       "value": {
@@ -360,6 +367,13 @@
       "type": "dimension",
       "value": {
         "value": 15,
+        "unit": "px"
+      }
+    },
+    "size.chartHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
         "unit": "px"
       }
     },
@@ -1474,6 +1488,67 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.chart.height": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetLeft": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetRight": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetTop": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetBottom": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chart.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.chart.pointRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.chart.seriesPrimary": {
+      "type": "color",
+      "value": "#5e6ad2"
+    },
+    "component.chart.seriesSecondary": {
+      "type": "color",
+      "value": "#064e3b"
+    },
+    "component.chart.gridColor": {
+      "type": "color",
+      "value": "#e2e2e4"
     },
     "component.button.disabled.opacity": {
       "type": "number",
@@ -3153,6 +3228,13 @@
       "type": "color",
       "value": "#ffffff1a"
     },
+    "space.chartAxisGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "space.hairline": {
       "type": "dimension",
       "value": {
@@ -3269,6 +3351,13 @@
       "type": "dimension",
       "value": {
         "value": 15,
+        "unit": "px"
+      }
+    },
+    "size.chartHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
         "unit": "px"
       }
     },
@@ -4383,6 +4472,67 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.chart.height": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetLeft": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetRight": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetTop": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetBottom": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chart.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.chart.pointRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.chart.seriesPrimary": {
+      "type": "color",
+      "value": "#6f72e5"
+    },
+    "component.chart.seriesSecondary": {
+      "type": "color",
+      "value": "#d1fae5"
+    },
+    "component.chart.gridColor": {
+      "type": "color",
+      "value": "#303033"
     },
     "component.button.disabled.opacity": {
       "type": "number",
@@ -6062,6 +6212,13 @@
       "type": "color",
       "value": "#ffffff1a"
     },
+    "space.chartAxisGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "space.hairline": {
       "type": "dimension",
       "value": {
@@ -6178,6 +6335,13 @@
       "type": "dimension",
       "value": {
         "value": 15,
+        "unit": "px"
+      }
+    },
+    "size.chartHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
         "unit": "px"
       }
     },
@@ -7292,6 +7456,67 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.chart.height": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetLeft": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetRight": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetTop": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetBottom": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chart.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.chart.pointRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.chart.seriesPrimary": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "component.chart.seriesSecondary": {
+      "type": "color",
+      "value": "#065f46"
+    },
+    "component.chart.gridColor": {
+      "type": "color",
+      "value": "#99d5cd"
     },
     "component.button.disabled.opacity": {
       "type": "number",
@@ -8971,6 +9196,13 @@
       "type": "color",
       "value": "#ffffff1a"
     },
+    "space.chartAxisGutter": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "space.hairline": {
       "type": "dimension",
       "value": {
@@ -9087,6 +9319,13 @@
       "type": "dimension",
       "value": {
         "value": 15,
+        "unit": "px"
+      }
+    },
+    "size.chartHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
         "unit": "px"
       }
     },
@@ -10201,6 +10440,67 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.chart.height": {
+      "type": "dimension",
+      "value": {
+        "value": 256,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetLeft": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetRight": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetTop": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chart.insetBottom": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chart.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.chart.pointRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.chart.seriesPrimary": {
+      "type": "color",
+      "value": "#14b8a6"
+    },
+    "component.chart.seriesSecondary": {
+      "type": "color",
+      "value": "#d1fae5"
+    },
+    "component.chart.gridColor": {
+      "type": "color",
+      "value": "#23544e"
     },
     "component.button.disabled.opacity": {
       "type": "number",

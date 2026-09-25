@@ -10,6 +10,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  fl_chart: 1.2.0
   flutter:
     sdk: flutter
   k_design_tokens: any

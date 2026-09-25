@@ -372,3 +372,12 @@ export type {
   KThemeSwitcherProps,
   KThemeMode,
 } from "./actions/theme-switcher.js";
+
+export { KLineChart } from "./charts/line-chart.js";
+export type { KLineChartProps } from "./charts/line-chart.js";
+export type {
+  KChartAxis,
+  KChartPoint,
+  KChartSeries,
+  KChartSelection,
+} from "./charts/chart-model.js";

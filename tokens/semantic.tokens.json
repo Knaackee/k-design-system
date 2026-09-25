@@ -120,6 +120,10 @@
     }
   },
   "space": {
+    "chartAxisGutter": {
+      "$type": "dimension",
+      "$value": "{space.scale.chartAxisGutter}"
+    },
     "hairline": { "$type": "dimension", "$value": "{space.scale.hairline}" },
     "micro": { "$type": "dimension", "$value": "{space.scale.micro}" },
     "badgeOffset": {
@@ -151,6 +155,10 @@
     "touchInset": { "$type": "dimension", "$value": "{space.scale.touchInset}" }
   },
   "size": {
+    "chartHeight": {
+      "$type": "dimension",
+      "$value": "{size.scale.chartHeight}"
+    },
     "control": { "$type": "dimension", "$value": "{size.control.md}" },
     "hitTarget": { "$type": "dimension", "$value": "{size.hitTarget.pointer}" },
     "indicator": {
@@ -518,6 +526,48 @@
     }
   },
   "component": {
+    "chart": {
+      "height": {
+        "$type": "dimension",
+        "$value": "{size.chartHeight}"
+      },
+      "insetLeft": {
+        "$type": "dimension",
+        "$value": "{space.chartAxisGutter}"
+      },
+      "insetRight": {
+        "$type": "dimension",
+        "$value": "{space.layoutGutter}"
+      },
+      "insetTop": {
+        "$type": "dimension",
+        "$value": "{space.layoutGutter}"
+      },
+      "insetBottom": {
+        "$type": "dimension",
+        "$value": "{space.layoutSectionGap}"
+      },
+      "lineWidth": {
+        "$type": "dimension",
+        "$value": "{border.width.strong}"
+      },
+      "pointRadius": {
+        "$type": "dimension",
+        "$value": "{space.tight}"
+      },
+      "seriesPrimary": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "seriesSecondary": {
+        "$type": "color",
+        "$value": "{color.status.success.foreground}"
+      },
+      "gridColor": {
+        "$type": "color",
+        "$value": "{color.border.default}"
+      }
+    },
     "button": {
       "disabled": {
         "opacity": { "$type": "number", "$value": "{opacity.disabled}" }

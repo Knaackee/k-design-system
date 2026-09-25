@@ -1,0 +1,193 @@
+.k-line-chart {
+  min-width: 0;
+  width: 100%;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  font-size: var(--k-font-body-small-size);
+  line-height: var(--k-font-body-small-line-height);
+}
+.k-line-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+  margin-bottom: var(--k-space-content-action-gap);
+}
+.k-line-chart__legend .k-button {
+  max-width: 100%;
+  gap: var(--k-space-control-gap);
+}
+.k-line-chart__legend .k-button > span {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-line-chart__legend-label {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.k-line-chart__legend [aria-pressed="false"] {
+  opacity: var(--k-opacity-disabled);
+}
+.k-line-chart__swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: calc(var(--k-component-chart-point-radius) * 2);
+  height: calc(var(--k-component-chart-point-radius) * 2);
+  border-radius: var(--k-radius-full);
+}
+.k-line-chart__canvas {
+  position: relative;
+  height: var(--k-component-chart-height);
+  min-width: 0;
+}
+.k-line-chart__plot {
+  position: absolute;
+  inset: var(--k-component-chart-inset-top) var(--k-component-chart-inset-right)
+    var(--k-component-chart-inset-bottom) var(--k-component-chart-inset-left);
+}
+.k-line-chart__renderer,
+.k-line-chart__interaction {
+  position: absolute;
+  inset: 0;
+}
+.k-line-chart__renderer {
+  pointer-events: none;
+  overflow: hidden;
+}
+.k-line-chart__renderer svg {
+  display: block;
+}
+.k-line-chart__interaction {
+  touch-action: pan-y;
+  cursor: crosshair;
+  outline: none;
+}
+.k-line-chart__interaction:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-space-micro);
+  border-radius: var(--k-radius-small);
+}
+.k-line-chart__y {
+  position: absolute;
+  left: 0;
+  right: var(--k-component-chart-inset-right);
+  top: calc(
+    var(--k-component-chart-inset-top) +
+      (
+        100% - var(--k-component-chart-inset-top) -
+          var(--k-component-chart-inset-bottom)
+      ) *
+      var(--chart-position)
+  );
+  height: 0;
+}
+.k-line-chart__y span {
+  position: absolute;
+  right: calc(
+    100% - var(--k-component-chart-inset-left) + var(--k-space-control-gap)
+  );
+  transform: translateY(-50%);
+  color: var(--k-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.k-line-chart__y i {
+  position: absolute;
+  left: var(--k-component-chart-inset-left);
+  right: 0;
+  border-top: var(--k-border-width-default) solid
+    var(--k-component-chart-grid-color);
+}
+.k-line-chart__x {
+  position: absolute;
+  bottom: 0;
+  height: calc(
+    var(--k-component-chart-inset-bottom) - var(--k-space-control-gap)
+  );
+  left: var(--k-component-chart-inset-left);
+  right: var(--k-component-chart-inset-right);
+}
+.k-line-chart__x span {
+  position: absolute;
+  white-space: nowrap;
+  color: var(--k-color-text-muted);
+}
+.k-line-chart__crosshair {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: var(--k-border-width-default) solid var(--k-color-border-strong);
+  pointer-events: none;
+}
+.k-line-chart__marker {
+  position: absolute;
+  width: calc(var(--k-component-chart-point-radius) * 2);
+  height: calc(var(--k-component-chart-point-radius) * 2);
+  border-radius: var(--k-radius-full);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 var(--k-border-width-strong) var(--k-color-surface-raised);
+  pointer-events: none;
+}
+.k-line-chart__tooltip {
+  position: absolute;
+  top: var(--k-component-chart-inset-top);
+  right: var(--k-component-chart-inset-right);
+  padding: var(--k-space-control-inset-inline);
+  display: grid;
+  gap: var(--k-space-control-gap);
+  pointer-events: none;
+  max-width: calc(
+    100% - var(--k-component-chart-inset-left) -
+      var(--k-component-chart-inset-right)
+  );
+}
+.k-line-chart__tooltip strong,
+.k-line-chart__tooltip b {
+  font-weight: var(--k-font-label-weight);
+}
+.k-line-chart__tooltip > div {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-line-chart__tooltip > div > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k-line-chart__state {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--k-color-text-muted);
+}
+.k-line-chart__table {
+  overflow: auto;
+  margin-top: var(--k-space-content-action-gap);
+}
+.k-line-chart__table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.k-line-chart__table th,
+.k-line-chart__table td {
+  text-align: start;
+  padding: var(--k-space-control-inset-inline);
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  font-weight: normal;
+}
+.k-line-chart__table caption {
+  text-align: start;
+  padding: var(--k-space-control-inset-inline);
+  color: var(--k-color-text-muted);
+}
+.k-line-chart__sr {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
