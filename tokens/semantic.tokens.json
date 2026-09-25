@@ -194,7 +194,25 @@
       "$type": "dimension",
       "$value": "{size.scale.avatarMedium}"
     },
-    "switch": { "$type": "dimension", "$value": "{size.scale.switch}" },
+    "switch": {
+      "inactiveTrack": { "$type": "color", "$value": "{color.surface.subtle}" },
+      "inactiveBorder": { "$type": "color", "$value": "{color.text.muted}" },
+      "inactiveThumb": { "$type": "color", "$value": "{color.text.muted}" },
+      "activeTrack": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "activeBorder": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "activeThumb": {
+        "$type": "color",
+        "$value": "{color.action.primary.foreground}"
+      },
+      "$type": "dimension",
+      "$value": "{size.scale.switch}"
+    },
     "otpWidth": { "$type": "dimension", "$value": "{size.scale.otpWidth}" },
     "otpHeight": { "$type": "dimension", "$value": "{size.scale.otpHeight}" },
     "avatarLarge": {
@@ -526,6 +544,46 @@
     }
   },
   "component": {
+    "selection": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.surface.raised}"
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.text.primary}"
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.text.muted}"
+      },
+      "selectedBackground": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "selectedForeground": {
+        "$type": "color",
+        "$value": "{color.action.primary.foreground}"
+      },
+      "selectedBorder": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "focusRing": {
+        "$type": "color",
+        "$value": "{color.border.focus}"
+      }
+    },
+    "radio": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{size.content}"
+      },
+      "dotSize": {
+        "$type": "dimension",
+        "$value": "{size.dot}"
+      }
+    },
     "chart": {
       "height": {
         "$type": "dimension",
@@ -662,6 +720,77 @@
       "groupStep": { "$type": "dimension", "$value": "{size.avatarStep}" }
     },
     "badge": {
+      "primary": {
+        "background": {
+          "$type": "color",
+          "$value": "{color.action.primary.background}"
+        },
+        "foreground": {
+          "$type": "color",
+          "$value": "{color.action.primary.foreground}"
+        }
+      },
+      "secondary": {
+        "background": { "$type": "color", "$value": "{color.surface.subtle}" },
+        "foreground": { "$type": "color", "$value": "{color.text.primary}" }
+      },
+      "outline": {
+        "foreground": { "$type": "color", "$value": "{color.text.primary}" },
+        "border": { "$type": "color", "$value": "{color.border.default}" }
+      },
+      "ghost": {
+        "foreground": { "$type": "color", "$value": "{color.text.muted}" }
+      },
+      "info": {
+        "background": {
+          "$type": "color",
+          "$value": "{color.status.info.background}"
+        },
+        "foreground": {
+          "$type": "color",
+          "$value": "{color.status.info.foreground}"
+        },
+        "border": { "$type": "color", "$value": "{color.status.info.border}" }
+      },
+      "success": {
+        "background": {
+          "$type": "color",
+          "$value": "{color.status.success.background}"
+        },
+        "foreground": {
+          "$type": "color",
+          "$value": "{color.status.success.foreground}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{color.status.success.border}"
+        }
+      },
+      "warning": {
+        "background": {
+          "$type": "color",
+          "$value": "{color.status.warning.background}"
+        },
+        "foreground": {
+          "$type": "color",
+          "$value": "{color.status.warning.foreground}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{color.status.warning.border}"
+        }
+      },
+      "destructive": {
+        "background": {
+          "$type": "color",
+          "$value": "{color.status.error.background}"
+        },
+        "foreground": {
+          "$type": "color",
+          "$value": "{color.status.error.foreground}"
+        },
+        "border": { "$type": "color", "$value": "{color.status.error.border}" }
+      },
       "minHeight": { "$type": "dimension", "$value": "{size.compact}" },
       "paddingInline": { "$type": "dimension", "$value": "{space.controlGap}" },
       "contentGap": { "$type": "dimension", "$value": "{space.tight}" },

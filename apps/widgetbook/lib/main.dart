@@ -8,9 +8,11 @@ import 'chart_fixture.dart';
 import 'chart_family_fixture.dart';
 import 'candlestick_fixture.dart';
 import 'timeline_fixture.dart';
+import 'gantt_fixture.dart';
 import 'action_fixtures.dart';
 import 'context_menu_fixture.dart';
 import 'form_fixtures.dart';
+import 'radio_fixture.dart';
 import 'table_fixtures.dart';
 import 'data_table_fixtures.dart';
 import 'data_table_cells_fixture.dart';
@@ -179,6 +181,15 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Data display',
           children: [
+            WidgetbookFolder(
+              name: 'Gantt',
+              children: [
+                WidgetbookUseCase(
+                  name: 'gantt-reference',
+                  builder: (_) => const GanttFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Timeline',
               children: [
@@ -596,6 +607,15 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'checkbox-states',
                   builder: (context) => const FormFixture(kind: 'checkbox'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'RadioGroup',
+              children: [
+                WidgetbookUseCase(
+                  name: 'radio-group-options',
+                  builder: (context) => const RadioFixture(),
                 ),
               ],
             ),

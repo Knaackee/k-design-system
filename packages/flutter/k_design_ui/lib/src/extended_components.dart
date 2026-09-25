@@ -235,12 +235,12 @@ class KSwitch extends StatelessWidget {
                 padding: EdgeInsets.all(t.componentSwitchTrackInset),
                 decoration: BoxDecoration(
                   color: value
-                      ? t.colorActionPrimaryBackground
-                      : t.colorSurfaceSubtle,
+                      ? t.componentSwitchActiveTrack
+                      : t.componentSwitchInactiveTrack,
                   border: Border.all(
                     color: value
-                        ? t.colorActionPrimaryBackground
-                        : t.colorBorderDefault,
+                        ? t.componentSwitchActiveTrack
+                        : t.componentSwitchInactiveBorder,
                   ),
                   borderRadius: BorderRadius.circular(t.radiusFull),
                 ),
@@ -253,7 +253,9 @@ class KSwitch extends StatelessWidget {
                     width: t.componentSwitchThumbSize,
                     height: t.componentSwitchThumbSize,
                     decoration: BoxDecoration(
-                      color: t.colorSurfaceRaised,
+                      color: value
+                          ? t.componentSwitchActiveThumb
+                          : t.componentSwitchInactiveThumb,
                       shape: BoxShape.circle,
                       boxShadow: t.componentSwitchNativeThumbElevation,
                     ),

@@ -114,10 +114,14 @@ export function BadgeFixture() {
     <div
       style={{
         ...fixtureStyle,
-        gridTemplateColumns: "repeat(auto-fit, minmax(100px, max-content))",
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
       }}
     >
-      <KBadge leading={<KIcon name="check" />}>Active</KBadge>
+      <KBadge variant="success" leading={<KIcon name="check" />}>
+        Active
+      </KBadge>
       <KBadge variant="secondary">Draft</KBadge>
       <KBadge variant="outline">In review</KBadge>
       <KBadge variant="ghost">Archived</KBadge>

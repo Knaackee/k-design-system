@@ -29,6 +29,7 @@ export 'src/patterns/k_workflow.dart';
 export 'src/forms/k_field.dart';
 export 'src/forms/k_input.dart';
 export 'src/forms/k_checkbox.dart';
+export 'src/forms/k_radio_group.dart';
 export 'src/forms/k_select.dart';
 export 'src/forms/k_filter_chip.dart';
 export 'src/patterns/k_filter_bar.dart';

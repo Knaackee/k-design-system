@@ -82,14 +82,14 @@ class _KCheckboxState extends State<KCheckbox> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(t.radiusSmall),
                       color: widget.value == false
-                          ? t.colorSurfaceRaised
-                          : t.colorActionPrimaryBackground,
+                          ? t.componentSelectionBackground
+                          : t.componentSelectionSelectedBackground,
                       border: Border.all(
                         color: _showFocus
-                            ? t.colorBorderFocus
+                            ? t.componentSelectionFocusRing
                             : widget.value == false
-                            ? t.colorBorderDefault
-                            : Colors.transparent,
+                            ? t.componentSelectionBorder
+                            : t.componentSelectionSelectedBorder,
                       ),
                     ),
                     child: widget.value == false
@@ -100,7 +100,7 @@ class _KCheckboxState extends State<KCheckbox> {
                                   ? KIconName.minus
                                   : KIconName.check,
                               size: 12,
-                              color: t.colorActionPrimaryForeground,
+                              color: t.componentSelectionSelectedForeground,
                             ),
                           ),
                   ),

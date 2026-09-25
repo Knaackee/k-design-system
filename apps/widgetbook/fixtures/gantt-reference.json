@@ -1,0 +1,166 @@
+{
+  "id": "gantt-reference",
+  "title": "Release roadmap",
+  "today": "2026-09-25",
+  "window": { "start": "2026-09-21", "end": "2026-10-17" },
+  "tasks": [
+    {
+      "id": "design",
+      "text": "Design",
+      "type": "summary",
+      "start": "2026-09-21",
+      "end": "2026-09-30",
+      "progress": 0
+    },
+    {
+      "id": "research",
+      "text": "Research",
+      "parent": "design",
+      "type": "task",
+      "start": "2026-09-21",
+      "end": "2026-09-24",
+      "progress": 100
+    },
+    {
+      "id": "design-review",
+      "text": "Design review",
+      "parent": "design",
+      "type": "task",
+      "start": "2026-09-24",
+      "end": "2026-09-27",
+      "progress": 60
+    },
+    {
+      "id": "prototype",
+      "text": "Prototype",
+      "parent": "design",
+      "type": "task",
+      "start": "2026-09-26",
+      "end": "2026-09-30",
+      "progress": 30
+    },
+    {
+      "id": "engineering",
+      "text": "Engineering",
+      "type": "summary",
+      "start": "2026-09-23",
+      "end": "2026-10-12",
+      "progress": 0
+    },
+    {
+      "id": "api-contract",
+      "text": "API contract",
+      "parent": "engineering",
+      "type": "task",
+      "start": "2026-09-23",
+      "end": "2026-09-27",
+      "progress": 75
+    },
+    {
+      "id": "implementation",
+      "text": "Implementation",
+      "parent": "engineering",
+      "type": "task",
+      "start": "2026-09-28",
+      "end": "2026-10-08",
+      "progress": 20
+    },
+    {
+      "id": "quality-assurance",
+      "text": "Quality assurance",
+      "parent": "engineering",
+      "type": "task",
+      "start": "2026-10-06",
+      "end": "2026-10-12",
+      "progress": 0
+    },
+    {
+      "id": "launch",
+      "text": "Launch",
+      "type": "summary",
+      "start": "2026-10-05",
+      "end": "2026-10-17",
+      "progress": 0
+    },
+    {
+      "id": "documentation",
+      "text": "Documentation",
+      "parent": "launch",
+      "type": "task",
+      "start": "2026-10-05",
+      "end": "2026-10-10",
+      "progress": 10
+    },
+    {
+      "id": "public-preview",
+      "text": "Public preview",
+      "parent": "launch",
+      "type": "task",
+      "start": "2026-10-12",
+      "end": "2026-10-15",
+      "progress": 0
+    },
+    {
+      "id": "release-notes",
+      "text": "Release notes",
+      "parent": "launch",
+      "type": "task",
+      "start": "2026-10-13",
+      "end": "2026-10-16",
+      "progress": 0,
+      "readOnly": true
+    },
+    {
+      "id": "release",
+      "text": "Release",
+      "parent": "launch",
+      "type": "milestone",
+      "start": "2026-10-16",
+      "progress": 0
+    }
+  ],
+  "links": [
+    {
+      "id": "research-review",
+      "source": "research",
+      "target": "design-review",
+      "type": "e2s"
+    },
+    {
+      "id": "review-prototype",
+      "source": "design-review",
+      "target": "prototype",
+      "type": "s2s"
+    },
+    {
+      "id": "api-implementation",
+      "source": "api-contract",
+      "target": "implementation",
+      "type": "e2s"
+    },
+    {
+      "id": "implementation-qa",
+      "source": "implementation",
+      "target": "quality-assurance",
+      "type": "s2s"
+    },
+    {
+      "id": "qa-preview",
+      "source": "quality-assurance",
+      "target": "public-preview",
+      "type": "e2s"
+    },
+    {
+      "id": "preview-release",
+      "source": "public-preview",
+      "target": "release",
+      "type": "e2s"
+    },
+    {
+      "id": "notes-release",
+      "source": "release-notes",
+      "target": "release",
+      "type": "e2s"
+    }
+  ]
+}

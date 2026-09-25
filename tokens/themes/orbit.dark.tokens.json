@@ -12,14 +12,14 @@
     "border": {
       "default": { "$type": "color", "$value": "#303033" },
       "strong": { "$type": "color", "$value": "#414145" },
-      "focus": { "$type": "color", "$value": "#938cea" }
+      "focus": { "$type": "color", "$value": "#a3e635" }
     },
     "brand": {
       "primary": {
-        "accent": { "$type": "color", "$value": "#8b8cf8" },
-        "background": { "$type": "color", "$value": "#242748" },
-        "foreground": { "$type": "color", "$value": "#d9dcff" },
-        "border": { "$type": "color", "$value": "#454c86" }
+        "accent": { "$type": "color", "$value": "#a3e635" },
+        "background": { "$type": "color", "$value": "#1a2e05" },
+        "foreground": { "$type": "color", "$value": "#d9f99d" },
+        "border": { "$type": "color", "$value": "#4d7c0f" }
       },
       "secondary": {
         "accent": { "$type": "color", "$value": "#a78bfa" },
@@ -56,10 +56,10 @@
     },
     "action": {
       "primary": {
-        "background": { "$type": "color", "$value": "#6f72e5" },
-        "hover": { "$type": "color", "$value": "#7d80ed" },
-        "pressed": { "$type": "color", "$value": "#5e61cd" },
-        "foreground": { "$type": "color", "$value": "#ffffff" }
+        "background": { "$type": "color", "$value": "#a3e635" },
+        "hover": { "$type": "color", "$value": "#bef264" },
+        "pressed": { "$type": "color", "$value": "#84cc16" },
+        "foreground": { "$type": "color", "$value": "#1a2e05" }
       }
     }
   },

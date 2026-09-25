@@ -381,7 +381,7 @@
   display: inline-block;
   flex: none;
   vertical-align: middle;
-  color: var(--k-color-text-primary);
+  color: inherit;
   background-color: currentColor;
   mask-size: 100% 100%;
   mask-repeat: no-repeat;

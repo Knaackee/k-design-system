@@ -161,7 +161,11 @@ class _BasicComponentFixtureState extends State<BasicComponentFixture> {
     spacing: 16,
     runSpacing: 16,
     children: [
-      KBadge(leading: KIcon(KIconName.check), child: Text('Active')),
+      KBadge(
+        variant: KBadgeVariant.success,
+        leading: KIcon(KIconName.check),
+        child: Text('Active'),
+      ),
       KBadge(variant: KBadgeVariant.secondary, child: Text('Draft')),
       KBadge(variant: KBadgeVariant.outline, child: Text('In review')),
       KBadge(variant: KBadgeVariant.ghost, child: Text('Archived')),

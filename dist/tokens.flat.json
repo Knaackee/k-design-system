@@ -22,7 +22,7 @@
     },
     "color.syntax.heading": {
       "type": "color",
-      "value": "#3f479f"
+      "value": "#3f6212"
     },
     "color.syntax.markup": {
       "type": "color",
@@ -30,7 +30,7 @@
     },
     "color.syntax.link": {
       "type": "color",
-      "value": "#5e6ad2"
+      "value": "#4d7c0f"
     },
     "color.syntax.code": {
       "type": "color",
@@ -62,19 +62,19 @@
     },
     "color.brand.primary.accent": {
       "type": "color",
-      "value": "#5e6ad2"
+      "value": "#4d7c0f"
     },
     "color.brand.primary.background": {
       "type": "color",
-      "value": "#eff0fc"
+      "value": "#f7fee7"
     },
     "color.brand.primary.foreground": {
       "type": "color",
-      "value": "#3f479f"
+      "value": "#3f6212"
     },
     "color.brand.primary.border": {
       "type": "color",
-      "value": "#c9ccf0"
+      "value": "#bef264"
     },
     "color.brand.secondary.accent": {
       "type": "color",
@@ -166,19 +166,19 @@
     },
     "color.border.focus": {
       "type": "color",
-      "value": "#7c83f0"
+      "value": "#4d7c0f"
     },
     "color.action.primary.background": {
       "type": "color",
-      "value": "#5e6ad2"
+      "value": "#4d7c0f"
     },
     "color.action.primary.hover": {
       "type": "color",
-      "value": "#525dc2"
+      "value": "#3f6212"
     },
     "color.action.primary.pressed": {
       "type": "color",
-      "value": "#464fa8"
+      "value": "#365314"
     },
     "color.action.primary.foreground": {
       "type": "color",
@@ -1489,6 +1489,48 @@
         "unit": "px"
       }
     },
+    "component.selection.background": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.selection.foreground": {
+      "type": "color",
+      "value": "#202024"
+    },
+    "component.selection.border": {
+      "type": "color",
+      "value": "#727278"
+    },
+    "component.selection.selectedBackground": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
+    "component.selection.selectedForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.selection.selectedBorder": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
+    "component.selection.focusRing": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
+    "component.radio.size": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.radio.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.chart.height": {
       "type": "dimension",
       "value": {
@@ -1540,7 +1582,7 @@
     },
     "component.chart.seriesPrimary": {
       "type": "color",
-      "value": "#5e6ad2"
+      "value": "#4d7c0f"
     },
     "component.chart.seriesSecondary": {
       "type": "color",
@@ -1828,6 +1870,82 @@
         "value": 30,
         "unit": "px"
       }
+    },
+    "component.badge.primary.background": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
+    "component.badge.primary.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.badge.secondary.background": {
+      "type": "color",
+      "value": "#f2f2f3"
+    },
+    "component.badge.secondary.foreground": {
+      "type": "color",
+      "value": "#202024"
+    },
+    "component.badge.outline.foreground": {
+      "type": "color",
+      "value": "#202024"
+    },
+    "component.badge.outline.border": {
+      "type": "color",
+      "value": "#e2e2e4"
+    },
+    "component.badge.ghost.foreground": {
+      "type": "color",
+      "value": "#727278"
+    },
+    "component.badge.info.background": {
+      "type": "color",
+      "value": "#eff6ff"
+    },
+    "component.badge.info.foreground": {
+      "type": "color",
+      "value": "#1e3a8a"
+    },
+    "component.badge.info.border": {
+      "type": "color",
+      "value": "#bfdbfe"
+    },
+    "component.badge.success.background": {
+      "type": "color",
+      "value": "#ecfdf5"
+    },
+    "component.badge.success.foreground": {
+      "type": "color",
+      "value": "#064e3b"
+    },
+    "component.badge.success.border": {
+      "type": "color",
+      "value": "#a7f3d0"
+    },
+    "component.badge.warning.background": {
+      "type": "color",
+      "value": "#fffbeb"
+    },
+    "component.badge.warning.foreground": {
+      "type": "color",
+      "value": "#78350f"
+    },
+    "component.badge.warning.border": {
+      "type": "color",
+      "value": "#fde68a"
+    },
+    "component.badge.destructive.background": {
+      "type": "color",
+      "value": "#fef2f2"
+    },
+    "component.badge.destructive.foreground": {
+      "type": "color",
+      "value": "#7f1d1d"
+    },
+    "component.badge.destructive.border": {
+      "type": "color",
+      "value": "#fecaca"
     },
     "component.badge.minHeight": {
       "type": "dimension",
@@ -3006,7 +3124,7 @@
     },
     "color.syntax.heading": {
       "type": "color",
-      "value": "#d9dcff"
+      "value": "#d9f99d"
     },
     "color.syntax.markup": {
       "type": "color",
@@ -3014,7 +3132,7 @@
     },
     "color.syntax.link": {
       "type": "color",
-      "value": "#8b8cf8"
+      "value": "#a3e635"
     },
     "color.syntax.code": {
       "type": "color",
@@ -3046,19 +3164,19 @@
     },
     "color.brand.primary.accent": {
       "type": "color",
-      "value": "#8b8cf8"
+      "value": "#a3e635"
     },
     "color.brand.primary.background": {
       "type": "color",
-      "value": "#242748"
+      "value": "#1a2e05"
     },
     "color.brand.primary.foreground": {
       "type": "color",
-      "value": "#d9dcff"
+      "value": "#d9f99d"
     },
     "color.brand.primary.border": {
       "type": "color",
-      "value": "#454c86"
+      "value": "#4d7c0f"
     },
     "color.brand.secondary.accent": {
       "type": "color",
@@ -3150,23 +3268,23 @@
     },
     "color.border.focus": {
       "type": "color",
-      "value": "#938cea"
+      "value": "#a3e635"
     },
     "color.action.primary.background": {
       "type": "color",
-      "value": "#6f72e5"
+      "value": "#a3e635"
     },
     "color.action.primary.hover": {
       "type": "color",
-      "value": "#7d80ed"
+      "value": "#bef264"
     },
     "color.action.primary.pressed": {
       "type": "color",
-      "value": "#5e61cd"
+      "value": "#84cc16"
     },
     "color.action.primary.foreground": {
       "type": "color",
-      "value": "#ffffff"
+      "value": "#1a2e05"
     },
     "color.action.secondary.background": {
       "type": "color",
@@ -4473,6 +4591,48 @@
         "unit": "px"
       }
     },
+    "component.selection.background": {
+      "type": "color",
+      "value": "#202022"
+    },
+    "component.selection.foreground": {
+      "type": "color",
+      "value": "#eeeeef"
+    },
+    "component.selection.border": {
+      "type": "color",
+      "value": "#99999f"
+    },
+    "component.selection.selectedBackground": {
+      "type": "color",
+      "value": "#a3e635"
+    },
+    "component.selection.selectedForeground": {
+      "type": "color",
+      "value": "#1a2e05"
+    },
+    "component.selection.selectedBorder": {
+      "type": "color",
+      "value": "#a3e635"
+    },
+    "component.selection.focusRing": {
+      "type": "color",
+      "value": "#a3e635"
+    },
+    "component.radio.size": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.radio.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.chart.height": {
       "type": "dimension",
       "value": {
@@ -4524,7 +4684,7 @@
     },
     "component.chart.seriesPrimary": {
       "type": "color",
-      "value": "#6f72e5"
+      "value": "#a3e635"
     },
     "component.chart.seriesSecondary": {
       "type": "color",
@@ -4812,6 +4972,82 @@
         "value": 30,
         "unit": "px"
       }
+    },
+    "component.badge.primary.background": {
+      "type": "color",
+      "value": "#a3e635"
+    },
+    "component.badge.primary.foreground": {
+      "type": "color",
+      "value": "#1a2e05"
+    },
+    "component.badge.secondary.background": {
+      "type": "color",
+      "value": "#29292d"
+    },
+    "component.badge.secondary.foreground": {
+      "type": "color",
+      "value": "#eeeeef"
+    },
+    "component.badge.outline.foreground": {
+      "type": "color",
+      "value": "#eeeeef"
+    },
+    "component.badge.outline.border": {
+      "type": "color",
+      "value": "#303033"
+    },
+    "component.badge.ghost.foreground": {
+      "type": "color",
+      "value": "#99999f"
+    },
+    "component.badge.info.background": {
+      "type": "color",
+      "value": "#172c4b"
+    },
+    "component.badge.info.foreground": {
+      "type": "color",
+      "value": "#dbeafe"
+    },
+    "component.badge.info.border": {
+      "type": "color",
+      "value": "#285280"
+    },
+    "component.badge.success.background": {
+      "type": "color",
+      "value": "#15372d"
+    },
+    "component.badge.success.foreground": {
+      "type": "color",
+      "value": "#d1fae5"
+    },
+    "component.badge.success.border": {
+      "type": "color",
+      "value": "#27634f"
+    },
+    "component.badge.warning.background": {
+      "type": "color",
+      "value": "#3b3019"
+    },
+    "component.badge.warning.foreground": {
+      "type": "color",
+      "value": "#fef3c7"
+    },
+    "component.badge.warning.border": {
+      "type": "color",
+      "value": "#705d28"
+    },
+    "component.badge.destructive.background": {
+      "type": "color",
+      "value": "#3b1d22"
+    },
+    "component.badge.destructive.foreground": {
+      "type": "color",
+      "value": "#fee2e2"
+    },
+    "component.badge.destructive.border": {
+      "type": "color",
+      "value": "#74333d"
     },
     "component.badge.minHeight": {
       "type": "dimension",
@@ -7457,6 +7693,48 @@
         "unit": "px"
       }
     },
+    "component.selection.background": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.selection.foreground": {
+      "type": "color",
+      "value": "#134e4a"
+    },
+    "component.selection.border": {
+      "type": "color",
+      "value": "#52706d"
+    },
+    "component.selection.selectedBackground": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "component.selection.selectedForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.selection.selectedBorder": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "component.selection.focusRing": {
+      "type": "color",
+      "value": "#2dd4bf"
+    },
+    "component.radio.size": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.radio.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.chart.height": {
       "type": "dimension",
       "value": {
@@ -7796,6 +8074,82 @@
         "value": 30,
         "unit": "px"
       }
+    },
+    "component.badge.primary.background": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "component.badge.primary.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.badge.secondary.background": {
+      "type": "color",
+      "value": "#ccfbf1"
+    },
+    "component.badge.secondary.foreground": {
+      "type": "color",
+      "value": "#134e4a"
+    },
+    "component.badge.outline.foreground": {
+      "type": "color",
+      "value": "#134e4a"
+    },
+    "component.badge.outline.border": {
+      "type": "color",
+      "value": "#99d5cd"
+    },
+    "component.badge.ghost.foreground": {
+      "type": "color",
+      "value": "#52706d"
+    },
+    "component.badge.info.background": {
+      "type": "color",
+      "value": "#f0f9ff"
+    },
+    "component.badge.info.foreground": {
+      "type": "color",
+      "value": "#075985"
+    },
+    "component.badge.info.border": {
+      "type": "color",
+      "value": "#bae6fd"
+    },
+    "component.badge.success.background": {
+      "type": "color",
+      "value": "#ecfdf5"
+    },
+    "component.badge.success.foreground": {
+      "type": "color",
+      "value": "#065f46"
+    },
+    "component.badge.success.border": {
+      "type": "color",
+      "value": "#a7f3d0"
+    },
+    "component.badge.warning.background": {
+      "type": "color",
+      "value": "#fffbeb"
+    },
+    "component.badge.warning.foreground": {
+      "type": "color",
+      "value": "#92400e"
+    },
+    "component.badge.warning.border": {
+      "type": "color",
+      "value": "#fde68a"
+    },
+    "component.badge.destructive.background": {
+      "type": "color",
+      "value": "#fef2f2"
+    },
+    "component.badge.destructive.foreground": {
+      "type": "color",
+      "value": "#991b1b"
+    },
+    "component.badge.destructive.border": {
+      "type": "color",
+      "value": "#fecaca"
     },
     "component.badge.minHeight": {
       "type": "dimension",
@@ -10441,6 +10795,48 @@
         "unit": "px"
       }
     },
+    "component.selection.background": {
+      "type": "color",
+      "value": "#0b2925"
+    },
+    "component.selection.foreground": {
+      "type": "color",
+      "value": "#ecfdf5"
+    },
+    "component.selection.border": {
+      "type": "color",
+      "value": "#91b8b2"
+    },
+    "component.selection.selectedBackground": {
+      "type": "color",
+      "value": "#14b8a6"
+    },
+    "component.selection.selectedForeground": {
+      "type": "color",
+      "value": "#042f2e"
+    },
+    "component.selection.selectedBorder": {
+      "type": "color",
+      "value": "#14b8a6"
+    },
+    "component.selection.focusRing": {
+      "type": "color",
+      "value": "#5eead4"
+    },
+    "component.radio.size": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.radio.dotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.chart.height": {
       "type": "dimension",
       "value": {
@@ -10780,6 +11176,82 @@
         "value": 30,
         "unit": "px"
       }
+    },
+    "component.badge.primary.background": {
+      "type": "color",
+      "value": "#14b8a6"
+    },
+    "component.badge.primary.foreground": {
+      "type": "color",
+      "value": "#042f2e"
+    },
+    "component.badge.secondary.background": {
+      "type": "color",
+      "value": "#123b36"
+    },
+    "component.badge.secondary.foreground": {
+      "type": "color",
+      "value": "#ecfdf5"
+    },
+    "component.badge.outline.foreground": {
+      "type": "color",
+      "value": "#ecfdf5"
+    },
+    "component.badge.outline.border": {
+      "type": "color",
+      "value": "#23544e"
+    },
+    "component.badge.ghost.foreground": {
+      "type": "color",
+      "value": "#91b8b2"
+    },
+    "component.badge.info.background": {
+      "type": "color",
+      "value": "#102f42"
+    },
+    "component.badge.info.foreground": {
+      "type": "color",
+      "value": "#e0f2fe"
+    },
+    "component.badge.info.border": {
+      "type": "color",
+      "value": "#25617e"
+    },
+    "component.badge.success.background": {
+      "type": "color",
+      "value": "#12392e"
+    },
+    "component.badge.success.foreground": {
+      "type": "color",
+      "value": "#d1fae5"
+    },
+    "component.badge.success.border": {
+      "type": "color",
+      "value": "#276b55"
+    },
+    "component.badge.warning.background": {
+      "type": "color",
+      "value": "#3b3217"
+    },
+    "component.badge.warning.foreground": {
+      "type": "color",
+      "value": "#fef3c7"
+    },
+    "component.badge.warning.border": {
+      "type": "color",
+      "value": "#766225"
+    },
+    "component.badge.destructive.background": {
+      "type": "color",
+      "value": "#3c2027"
+    },
+    "component.badge.destructive.foreground": {
+      "type": "color",
+      "value": "#ffe4e6"
+    },
+    "component.badge.destructive.border": {
+      "type": "color",
+      "value": "#793743"
     },
     "component.badge.minHeight": {
       "type": "dimension",

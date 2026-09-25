@@ -28,4 +28,5 @@ flutter:
     - fixtures/chart-families.json
     - fixtures/chart-candlestick.json
     - fixtures/timeline-reference.json
+    - fixtures/gantt-reference.json
   uses-material-design: true

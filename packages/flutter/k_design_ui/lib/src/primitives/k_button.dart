@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import 'k_icon.dart';
 
 enum KButtonVariant { primary, secondary, ghost }
 
@@ -137,7 +138,18 @@ class KButton extends StatelessWidget {
                 SizedBox(width: tokens.spaceControlGap),
               ],
               if (leading != null) ...[
-                leading!,
+                if (leading is KIcon)
+                  KIcon(
+                    (leading! as KIcon).name,
+                    size: (leading! as KIcon).size,
+                    color: (leading! as KIcon).color ?? foreground,
+                    label: (leading! as KIcon).label,
+                  )
+                else
+                  IconTheme.merge(
+                    data: IconThemeData(color: foreground),
+                    child: leading!,
+                  ),
                 SizedBox(width: tokens.spaceControlGap),
               ],
               if (leading != null)

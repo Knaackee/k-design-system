@@ -106,6 +106,8 @@ export type { KFieldProps } from "./forms/field.js";
 export { KInput, KSearchField } from "./forms/input.js";
 export type { KInputProps } from "./forms/input.js";
 export { KCheckbox } from "./forms/checkbox.js";
+export { KRadioGroup } from "./forms/radio-group.js";
+export type { KRadioGroupProps, KRadioItem } from "./forms/radio-group.js";
 export type { KCheckboxProps } from "./forms/checkbox.js";
 export { KSelect, KCombobox } from "./forms/selection.js";
 export type { KSelectProps, KSelectOption } from "./forms/selection.js";

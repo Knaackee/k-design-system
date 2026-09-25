@@ -307,46 +307,55 @@ class KBadge extends StatelessWidget {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final (background, foreground, border) = switch (variant) {
       KBadgeVariant.primary => (
-        t.colorActionPrimaryBackground,
-        t.colorActionPrimaryForeground,
+        t.componentBadgePrimaryBackground,
+        t.componentBadgePrimaryForeground,
         Colors.transparent,
       ),
       KBadgeVariant.secondary => (
-        t.colorSurfaceSubtle,
-        t.colorTextPrimary,
+        t.componentBadgeSecondaryBackground,
+        t.componentBadgeSecondaryForeground,
         Colors.transparent,
       ),
       KBadgeVariant.outline => (
         Colors.transparent,
-        t.colorTextPrimary,
-        t.colorBorderDefault,
+        t.componentBadgeOutlineForeground,
+        t.componentBadgeOutlineBorder,
       ),
       KBadgeVariant.ghost => (
         Colors.transparent,
-        t.colorTextMuted,
+        t.componentBadgeGhostForeground,
         Colors.transparent,
       ),
       KBadgeVariant.info => (
-        t.colorStatusInfoBackground,
-        t.colorStatusInfoForeground,
-        t.colorStatusInfoBorder,
+        t.componentBadgeInfoBackground,
+        t.componentBadgeInfoForeground,
+        t.componentBadgeInfoBorder,
       ),
       KBadgeVariant.success => (
-        t.colorStatusSuccessBackground,
-        t.colorStatusSuccessForeground,
-        t.colorStatusSuccessBorder,
+        t.componentBadgeSuccessBackground,
+        t.componentBadgeSuccessForeground,
+        t.componentBadgeSuccessBorder,
       ),
       KBadgeVariant.warning => (
-        t.colorStatusWarningBackground,
-        t.colorStatusWarningForeground,
-        t.colorStatusWarningBorder,
+        t.componentBadgeWarningBackground,
+        t.componentBadgeWarningForeground,
+        t.componentBadgeWarningBorder,
       ),
       KBadgeVariant.destructive => (
-        t.colorStatusErrorBackground,
-        t.colorStatusErrorForeground,
-        t.colorStatusErrorBorder,
+        t.componentBadgeDestructiveBackground,
+        t.componentBadgeDestructiveForeground,
+        t.componentBadgeDestructiveBorder,
       ),
     };
+    Widget badgeIcon(Widget icon) => icon is KIcon
+        ? KIcon(
+            icon.name,
+            size: t.componentBadgeIconSize,
+            color: icon.color ?? foreground,
+            label: icon.label,
+            key: icon.key,
+          )
+        : icon;
     return Container(
       constraints: BoxConstraints(minHeight: t.componentBadgeMinHeight),
       padding: EdgeInsets.symmetric(horizontal: t.componentBadgePaddingInline),
@@ -364,7 +373,7 @@ class KBadge extends StatelessWidget {
                 size: t.componentBadgeIconSize,
                 color: foreground,
               ),
-              child: leading!,
+              child: badgeIcon(leading!),
             ),
             SizedBox(width: t.componentBadgeContentGap),
           ],
@@ -384,7 +393,7 @@ class KBadge extends StatelessWidget {
                 size: t.componentBadgeIconSize,
                 color: foreground,
               ),
-              child: trailing!,
+              child: badgeIcon(trailing!),
             ),
           ],
         ],
