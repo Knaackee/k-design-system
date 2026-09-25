@@ -14,6 +14,7 @@ import {
 import { KIcon, type KIconName } from "./primitives/icon.js";
 import { KButton } from "./primitives/button.js";
 import { KIconButton } from "./actions/icon-button.js";
+import { useHorizontalDragScroll } from "./util/use-horizontal-drag-scroll.js";
 import {
   KBottomSheet,
   KDialog,
@@ -362,6 +363,7 @@ export function KTabs({
   onValueChange,
   label = "Tabs",
 }: KTabsProps) {
+  const dragScroll = useHorizontalDragScroll<HTMLDivElement>();
   const [internal, setInternal] = useState(defaultValue ?? items[0]?.id ?? "");
   const current = value ?? internal;
   const select = (id: string) => {
@@ -386,7 +388,12 @@ export function KTabs({
   };
   return (
     <div className="k-tabs">
-      <div role="tablist" aria-label={label} className="k-tabs__list">
+      <div
+        {...dragScroll}
+        role="tablist"
+        aria-label={label}
+        className="k-tabs__list"
+      >
         {items.map((item, index) => (
           <button
             key={item.id}

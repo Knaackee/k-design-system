@@ -1,6 +1,12 @@
 import { autocompletion } from "@codemirror/autocomplete";
 import type { CompletionContext } from "@codemirror/autocomplete";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  redo as redoCommand,
+  undo as undoCommand,
+} from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { markdown } from "@codemirror/lang-markdown";
@@ -229,6 +235,8 @@ export interface KCodeEditorProps {
 
 export interface KCodeEditorHandle {
   focus: () => void;
+  undo: () => boolean;
+  redo: () => boolean;
   replaceRange: (
     from: number,
     to: number,
@@ -276,9 +284,17 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
     const valueRef = useRef(value);
     const changeRef = useRef(onChange);
     const selectionRef = useRef(onSelectionChange);
+    const labelKey = JSON.stringify(
+      Object.entries(labelOverrides ?? {}).sort(([left], [right]) =>
+        left.localeCompare(right),
+      ),
+    );
     const labels = useMemo(
       () => ({ ...kDefaultEditorLabels, ...labelOverrides }),
-      [labelOverrides],
+      // Controlled consumers commonly recreate partial label objects.
+      // Keep CodeMirror history intact while their values stay unchanged.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [labelKey],
     );
 
     changeRef.current = onChange;
@@ -289,6 +305,18 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
       () => ({
         focus() {
           viewRef.current?.focus();
+        },
+        undo() {
+          const view = viewRef.current;
+          if (!view) return false;
+          view.focus();
+          return undoCommand(view);
+        },
+        redo() {
+          const view = viewRef.current;
+          if (!view) return false;
+          view.focus();
+          return redoCommand(view);
         },
         replaceRange(from, to, insert, selection) {
           const view = viewRef.current;

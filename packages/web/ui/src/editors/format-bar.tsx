@@ -1,7 +1,10 @@
 import { KButton } from "../primitives/button.js";
+import { useHorizontalDragScroll } from "../util/use-horizontal-drag-scroll.js";
 import type { KEditorLabels } from "./types.js";
 
 export type KMarkdownFormatAction =
+  | "undo"
+  | "redo"
   | "bold"
   | "italic"
   | "strike"
@@ -14,6 +17,8 @@ export type KMarkdownFormatAction =
   | "codeBlock";
 
 export const kDefaultMarkdownFormatActions: KMarkdownFormatAction[] = [
+  "undo",
+  "redo",
   "bold",
   "italic",
   "strike",
@@ -27,6 +32,8 @@ export const kDefaultMarkdownFormatActions: KMarkdownFormatAction[] = [
 ];
 
 const actionGlyph: Record<KMarkdownFormatAction, string> = {
+  undo: "↶",
+  redo: "↷",
   bold: "B",
   italic: "I",
   strike: "S",
@@ -54,8 +61,10 @@ export function KEditorFormatBar({
   onAction,
   floating = false,
 }: KEditorFormatBarProps) {
+  const dragScroll = useHorizontalDragScroll<HTMLDivElement>();
   return (
     <div
+      {...dragScroll}
       className={`k-editor-format-bar k-scrollbar${floating ? " k-editor-format-bar--floating" : ""}`}
       role="toolbar"
       aria-label="Text formatting"

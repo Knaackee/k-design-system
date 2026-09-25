@@ -4,7 +4,7 @@ import TaskList from "@tiptap/extension-task-list";
 import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { KIconButton } from "../actions/icon-button.js";
 import type { KEditorCollaborationDocument } from "./collaboration.js";
@@ -157,7 +157,18 @@ export function KMarkdownEditor({
   const sourceRef = useRef<KCodeEditorHandle>(null);
   const sourceShellRef = useRef<HTMLDivElement>(null);
   const lastEmitted = useRef(markdown);
-  const labels = { ...kDefaultEditorLabels, ...labelOverrides };
+  const labelKey = JSON.stringify(
+    Object.entries(labelOverrides ?? {}).sort(([left], [right]) =>
+      left.localeCompare(right),
+    ),
+  );
+  const labels = useMemo(
+    () => ({ ...kDefaultEditorLabels, ...labelOverrides }),
+    // The public labels object may be recreated by controlled consumers.
+    // Reconfigure the editor only when a label value actually changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [labelKey],
+  );
 
   const preview = useEditor({
     extensions: [
@@ -221,6 +232,14 @@ export function KMarkdownEditor({
   }
 
   function applyFormat(action: KMarkdownFormatAction) {
+    if (action === "undo") {
+      sourceRef.current?.undo();
+      return;
+    }
+    if (action === "redo") {
+      sourceRef.current?.redo();
+      return;
+    }
     let href: string | undefined;
     if (action === "link") {
       const answer = window.prompt("Link URL", "https://");

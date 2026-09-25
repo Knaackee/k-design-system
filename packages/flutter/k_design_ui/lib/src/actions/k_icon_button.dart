@@ -7,11 +7,13 @@ class KIconButton extends StatefulWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.selected = false,
     super.key,
   });
   final String label;
   final KIconName icon;
   final VoidCallback? onPressed;
+  final bool selected;
   @override
   State<KIconButton> createState() => _KIconButtonState();
 }
@@ -32,6 +34,7 @@ class _KIconButtonState extends State<KIconButton> {
       label: widget.label,
       icon: widget.icon,
       iconOnly: true,
+      selected: widget.selected,
       focusNode: _focus,
       onPressed: widget.onPressed,
     ),

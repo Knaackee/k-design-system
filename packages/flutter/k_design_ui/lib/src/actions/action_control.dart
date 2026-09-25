@@ -11,6 +11,7 @@ class KActionControl extends StatelessWidget {
     required this.focusNode,
     this.icon,
     this.iconOnly = false,
+    this.selected = false,
     super.key,
   });
   final String label;
@@ -18,6 +19,7 @@ class KActionControl extends StatelessWidget {
   final FocusNode focusNode;
   final KIconName? icon;
   final bool iconOnly;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,9 @@ class KActionControl extends StatelessWidget {
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
     final scaled = MediaQuery.textScalerOf(context).scale(t.fontControlSize);
-    final foreground = iconOnly
+    final foreground = selected
+        ? t.colorActionPrimaryForeground
+        : iconOnly
         ? t.colorActionGhostForeground
         : t.colorActionSecondaryForeground;
     final target = math.max(t.sizeControl, t.sizeHitTarget);
@@ -53,14 +57,20 @@ class KActionControl extends StatelessWidget {
                 ),
                 backgroundColor: WidgetStateProperty.resolveWith(
                   (states) => states.contains(WidgetState.pressed)
-                      ? (iconOnly
+                      ? (selected
+                            ? t.colorActionPrimaryPressed
+                            : iconOnly
                             ? t.colorActionGhostPressed
                             : t.colorActionSecondaryPressed)
                       : states.contains(WidgetState.hovered)
-                      ? (iconOnly
+                      ? (selected
+                            ? t.colorActionPrimaryHover
+                            : iconOnly
                             ? t.colorActionGhostHover
                             : t.colorActionSecondaryHover)
-                      : (iconOnly
+                      : (selected
+                            ? t.colorActionPrimaryBackground
+                            : iconOnly
                             ? t.colorActionGhostBackground
                             : t.colorActionSecondaryBackground),
                 ),
@@ -69,6 +79,8 @@ class KActionControl extends StatelessWidget {
                   (states) => BorderSide(
                     color: states.contains(WidgetState.focused)
                         ? t.colorBorderFocus
+                        : selected
+                        ? Colors.transparent
                         : iconOnly
                         ? t.colorActionGhostBorder
                         : t.colorActionSecondaryBorder,

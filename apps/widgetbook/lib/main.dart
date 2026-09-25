@@ -32,6 +32,7 @@ import 'settings_page_fixtures.dart';
 import 'agent_ui_fixtures.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
+import 'editor_fixtures.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -368,6 +369,29 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Forms',
           children: [
+            WidgetbookFolder(
+              name: 'Editors',
+              children: [
+                WidgetbookUseCase(
+                  name: 'markdown',
+                  builder: (_) => const EditorFixture(markdown: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'markdown-mobile',
+                  builder: (_) =>
+                      const EditorFixture(markdown: true, mobile: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'code',
+                  builder: (_) => const EditorFixture(markdown: false),
+                ),
+                WidgetbookUseCase(
+                  name: 'code-mobile',
+                  builder: (_) =>
+                      const EditorFixture(markdown: false, mobile: true),
+                ),
+              ],
+            ),
             for (final entry in const [
               ('InputOTP', 'input-otp-code', 'otp'),
               ('Slider', 'slider-range', 'slider'),

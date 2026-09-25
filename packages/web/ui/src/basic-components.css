@@ -285,6 +285,10 @@
 .k-tabs__list::-webkit-scrollbar {
   display: none;
 }
+.k-tabs__list[data-dragging="true"] {
+  cursor: grabbing;
+  user-select: none;
+}
 .k-tabs__list button {
   display: inline-flex;
   align-items: center;

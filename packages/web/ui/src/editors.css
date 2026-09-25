@@ -107,6 +107,11 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.k-editor-format-bar[data-dragging="true"] {
+  cursor: grabbing;
+  user-select: none;
+}
+
 .k-editor-format-bar--floating {
   position: relative;
   z-index: 20;

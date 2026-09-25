@@ -18,8 +18,16 @@ dependencies:
   two_dimensional_scrollables: 0.5.4
   intl: ^0.20.3
   flutter_markdown_plus: ^1.0.12
+  re_editor: 0.10.0
+  re_highlight: 0.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+flutter:
+  fonts:
+    - family: KDesignMono
+      fonts:
+        - asset: assets/fonts/JetBrainsMono-Regular.ttf
