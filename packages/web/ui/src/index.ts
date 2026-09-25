@@ -335,6 +335,12 @@ export type {
   KAgentUiIntent,
 } from "./chat/types.js";
 export { KWorkflow, KElapsedTime } from "./patterns/workflow.js";
+export { KCommandPalette } from "./actions/command-palette.js";
+export type {
+  KCommandPaletteItem,
+  KCommandPaletteLabels,
+  KCommandPaletteProps,
+} from "./actions/command-palette.js";
 export type {
   KWorkflowProps,
   KWorkflowLabels,

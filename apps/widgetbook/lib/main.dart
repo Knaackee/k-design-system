@@ -33,6 +33,7 @@ import 'agent_ui_fixtures.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
 import 'editor_fixtures.dart';
+import 'command_palette_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -212,6 +213,15 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Actions',
           children: [
+            WidgetbookFolder(
+              name: 'CommandPalette',
+              children: [
+                WidgetbookUseCase(
+                  name: 'command-palette-actions',
+                  builder: (_) => const CommandPaletteFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'ContextMenu',
               children: [

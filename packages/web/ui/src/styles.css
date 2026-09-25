@@ -16,6 +16,7 @@
 @import "./link.css";
 @import "./ask-tools.css";
 @import "./editors.css";
+@import "./command-palette.css";
 
 @font-face {
   font-family: "Inter";

@@ -15,6 +15,7 @@ export 'src/primitives/k_separator.dart';
 export 'src/actions/k_icon_button.dart';
 export 'src/actions/k_menu_button.dart';
 export 'src/actions/k_context_menu.dart';
+export 'src/actions/k_command_palette.dart';
 export 'src/navigation/k_sidebar.dart';
 export 'src/navigation/k_mobile_app_bar.dart';
 export 'src/patterns/k_toolbar.dart';
