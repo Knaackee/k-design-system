@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ToastFixture } from "./extended-component-fixtures.js";
+import { ToastFixture } from "./notification-fixture.js";
 export default {
   title: "Feedback/Toast",
   component: ToastFixture,

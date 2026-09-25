@@ -9,6 +9,7 @@
 @import "./symbol-picker.css";
 @import "./scrollbars.css";
 @import "./basic-components.css";
+@import "./feedback/notifications.css";
 @import "./sidebar.css";
 @import "./mobile-app-bar.css";
 @import "./chat.css";

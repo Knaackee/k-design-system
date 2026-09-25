@@ -357,3 +357,16 @@ export type {
   KAnimatedIconSpring,
   KAnimatedIconReducedMotion,
 } from "./primitives/animated-icon.js";
+export { KSnackbar } from "./feedback/notifications.js";
+export type {
+  KSnackbarProps,
+  KNotificationOptions,
+  KNotificationTone,
+  KToastViewportProps,
+} from "./feedback/notifications.js";
+
+export { KThemeSwitcher } from "./actions/theme-switcher.js";
+export type {
+  KThemeSwitcherProps,
+  KThemeMode,
+} from "./actions/theme-switcher.js";

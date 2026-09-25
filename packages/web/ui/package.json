@@ -19,6 +19,7 @@
   "files": [
     "dist",
     "src/styles.css",
+    "src/feedback",
     "src/basic-components.css",
     "src/sidebar.css",
     "src/mobile-app-bar.css",

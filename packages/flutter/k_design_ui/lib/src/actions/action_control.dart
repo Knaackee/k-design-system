@@ -10,6 +10,7 @@ class KActionControl extends StatelessWidget {
     required this.onPressed,
     required this.focusNode,
     this.icon,
+    this.iconContent,
     this.iconOnly = false,
     this.selected = false,
     super.key,
@@ -18,6 +19,7 @@ class KActionControl extends StatelessWidget {
   final VoidCallback? onPressed;
   final FocusNode focusNode;
   final KIconName? icon;
+  final Widget? iconContent;
   final bool iconOnly;
   final bool selected;
 
@@ -116,7 +118,7 @@ class KActionControl extends StatelessWidget {
                 ),
               ),
               child: iconOnly
-                  ? KIcon(icon!, color: foreground)
+                  ? iconContent ?? KIcon(icon!, color: foreground)
                   : Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

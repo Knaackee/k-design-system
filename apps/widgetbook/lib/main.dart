@@ -35,6 +35,8 @@ import 'workflow_fixture.dart';
 import 'editor_fixtures.dart';
 import 'command_palette_fixture.dart';
 import 'animated_icon_fixture.dart';
+import 'theme_switcher_fixture.dart';
+import 'notification_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -224,6 +226,15 @@ class KDesignWidgetbook extends StatelessWidget {
               ],
             ),
             WidgetbookFolder(
+              name: 'ThemeSwitcher',
+              children: [
+                WidgetbookUseCase(
+                  name: 'theme-switcher-appearance',
+                  builder: (_) => const ThemeSwitcherFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
               name: 'ContextMenu',
               children: [
                 WidgetbookUseCase(
@@ -255,11 +266,28 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Feedback',
           children: [
+            WidgetbookFolder(
+              name: 'Toast',
+              children: [
+                WidgetbookUseCase(
+                  name: 'toast-notification',
+                  builder: (_) => const NotificationFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Snackbar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'snackbar-message',
+                  builder: (_) => const NotificationFixture(snackbar: true),
+                ),
+              ],
+            ),
             for (final entry in const [
               ('Progress', 'progress-states', 'progress'),
               ('Skeleton', 'skeleton-loading', 'skeleton'),
               ('Spinner', 'spinner-loading', 'spinner'),
-              ('Toast', 'toast-notification', 'toast'),
             ])
               WidgetbookFolder(
                 name: entry.$1,

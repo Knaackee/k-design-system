@@ -7,11 +7,15 @@ class KIconButton extends StatefulWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.iconContent,
     this.selected = false,
     super.key,
   });
   final String label;
   final KIconName icon;
+
+  /// Optional animated/custom visual; [icon] remains the static fallback.
+  final Widget? iconContent;
   final VoidCallback? onPressed;
   final bool selected;
   @override
@@ -33,6 +37,7 @@ class _KIconButtonState extends State<KIconButton> {
     child: KActionControl(
       label: widget.label,
       icon: widget.icon,
+      iconContent: widget.iconContent,
       iconOnly: true,
       selected: widget.selected,
       focusNode: _focus,

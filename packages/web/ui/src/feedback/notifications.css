@@ -1,0 +1,56 @@
+.k-toast-viewport {
+  pointer-events: none;
+  max-height: calc(100dvh - 2 * var(--k-component-toast-viewport-inset));
+  right: max(
+    var(--k-component-toast-viewport-inset),
+    env(safe-area-inset-right)
+  );
+  bottom: max(
+    var(--k-component-toast-viewport-inset),
+    env(safe-area-inset-bottom)
+  );
+}
+.k-toast-viewport[data-position="top-end"] {
+  top: max(var(--k-component-toast-viewport-inset), env(safe-area-inset-top));
+  bottom: auto;
+}
+.k-toast-viewport[data-position="bottom-center"] {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.k-toast {
+  pointer-events: auto;
+  display: flex;
+  min-width: 0;
+  box-sizing: border-box;
+  font-size: calc(var(--k-font-body-small-size) * var(--k-text-scale, 1));
+  line-height: var(--k-font-body-small-line-height);
+}
+.k-toast__content {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.k-toast__icon,
+.k-toast__action,
+.k-toast > .k-button-target {
+  flex-shrink: 0;
+}
+.k-toast__content strong {
+  font-weight: var(--k-font-label-weight);
+}
+.k-toast .k-snackbar__message {
+  color: var(--k-color-text-primary);
+}
+.k-toast__action {
+  max-width: 40%;
+}
+.k-toast__action .k-button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.k-snackbar .k-toast__icon {
+  background: transparent;
+  color: inherit;
+}

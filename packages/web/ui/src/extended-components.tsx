@@ -780,50 +780,5 @@ export function KQuestionnaire({
   );
 }
 
-export interface KToastProps {
-  title: ReactNode;
-  description?: ReactNode;
-  icon?: ReactNode;
-  action?: ReactNode;
-  onDismiss?: () => void;
-  dismissLabel?: string;
-  tone?: "neutral" | "success" | "warning" | "error";
-}
-export function KToast({
-  title,
-  description,
-  icon,
-  action,
-  onDismiss,
-  dismissLabel = "Dismiss",
-  tone = "neutral",
-}: KToastProps) {
-  return (
-    <div className="k-toast" data-tone={tone} role="status">
-      {icon ? <span className="k-toast__icon">{icon}</span> : null}
-      <div>
-        <strong>{title}</strong>
-        {description ? <span>{description}</span> : null}
-      </div>
-      {action}
-      <>
-        {onDismiss ? (
-          <KIconButton icon="x" label={dismissLabel} onClick={onDismiss} />
-        ) : null}
-      </>
-    </div>
-  );
-}
-export function KToastViewport({
-  children,
-  label = "Notifications",
-}: {
-  children: ReactNode;
-  label?: string;
-}) {
-  return (
-    <section className="k-toast-viewport" aria-label={label}>
-      {children}
-    </section>
-  );
-}
+export { KToast, KToastViewport } from "./feedback/notifications.js";
+export type { KToastProps } from "./feedback/notifications.js";
