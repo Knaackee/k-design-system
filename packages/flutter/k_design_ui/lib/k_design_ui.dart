@@ -11,6 +11,7 @@ export 'src/primitives/k_layout.dart';
 export 'src/primitives/k_container.dart';
 export 'src/primitives/k_grid.dart';
 export 'src/primitives/k_icon.dart';
+export 'src/primitives/k_animated_icon.dart';
 export 'src/primitives/k_separator.dart';
 export 'src/actions/k_icon_button.dart';
 export 'src/actions/k_menu_button.dart';

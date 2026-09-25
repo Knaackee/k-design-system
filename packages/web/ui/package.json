@@ -69,6 +69,7 @@
     "apple-liquid-glass-webgl": "^2.5.0",
     "cmdk": "^1.1.1",
     "codemirror": "^6.0.2",
+    "morphicons": "1.7.1",
     "motion": "^13.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

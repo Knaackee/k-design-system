@@ -34,6 +34,7 @@ import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
 import 'editor_fixtures.dart';
 import 'command_palette_fixture.dart';
+import 'animated_icon_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -801,6 +802,15 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'icon-lucide',
                   builder: buildIconLucide,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'AnimatedIcon',
+              children: [
+                WidgetbookUseCase(
+                  name: 'animated-icon-morphing',
+                  builder: (_) => const AnimatedIconFixture(),
                 ),
               ],
             ),

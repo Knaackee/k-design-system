@@ -1,5 +1,5 @@
 // Generated from assets/icons/lucide; do not edit.
-enum KIconName { arrowDown, arrowLeft, arrowRight, arrowUp, bell, calendar, check, checkCheck, chevronDown, chevronLeft, chevronRight, chevronUp, circleAlert, circleCheck, clock, copy, download, ellipsis, externalLink, eye, eyeOff, file, fileText, folder, funnel, heart, house, image, info, link, lock, lockOpen, mail, menu, mic, minus, paperclip, pen, plus, refreshCw, search, settings, slidersHorizontal, star, trash, triangleAlert, upload, user, users, x }
+enum KIconName { arrowDown, arrowLeft, arrowRight, arrowUp, bell, calendar, check, checkCheck, chevronDown, chevronLeft, chevronRight, chevronUp, circleAlert, circleCheck, clock, copy, download, ellipsis, externalLink, eye, eyeOff, file, fileText, folder, funnel, heart, house, image, info, link, lock, lockOpen, mail, menu, mic, minus, moon, paperclip, pause, pen, play, plus, refreshCw, search, settings, slidersHorizontal, star, sun, trash, triangleAlert, upload, user, users, x }
 
 const kIconSvg = <KIconName, String>{
   KIconName.arrowDown: r'''<svg
@@ -502,8 +502,35 @@ const kIconSvg = <KIconName, String>{
 >
   <path d="M5 12h14" />
 </svg>''',
+  KIconName.moon: r'''<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+</svg>''',
   KIconName.paperclip: r'''<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+</svg>''',
+  KIconName.pause: r'''<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="14" y="3" width="5" height="18" rx="1" />
+  <rect x="5" y="3" width="5" height="18" rx="1" />
 </svg>''',
   KIconName.pen: r'''<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -517,6 +544,19 @@ const kIconSvg = <KIconName, String>{
   stroke-linejoin="round"
 >
   <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+</svg>''',
+  KIconName.play: r'''<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
 </svg>''',
   KIconName.plus: r'''<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -609,6 +649,27 @@ const kIconSvg = <KIconName, String>{
   stroke-linejoin="round"
 >
   <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+</svg>''',
+  KIconName.sun: r'''<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="4" />
+  <path d="M12 2v2" />
+  <path d="M12 20v2" />
+  <path d="m4.93 4.93 1.41 1.41" />
+  <path d="m17.66 17.66 1.41 1.41" />
+  <path d="M2 12h2" />
+  <path d="M20 12h2" />
+  <path d="m6.34 17.66-1.41 1.41" />
+  <path d="m19.07 4.93-1.41 1.41" />
 </svg>''',
   KIconName.trash: r'''<svg
   xmlns="http://www.w3.org/2000/svg"

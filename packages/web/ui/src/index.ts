@@ -351,3 +351,9 @@ export type {
   KWorkflowPhase,
   KElapsedTimeProps,
 } from "./patterns/workflow.js";
+export { KAnimatedIcon } from "./primitives/animated-icon.js";
+export type {
+  KAnimatedIconProps,
+  KAnimatedIconSpring,
+  KAnimatedIconReducedMotion,
+} from "./primitives/animated-icon.js";
