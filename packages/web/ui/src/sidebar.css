@@ -32,15 +32,18 @@
 }
 
 .k-sidebar__header {
+  grid-row: 1;
   border-bottom: var(--k-border-width-default) solid
     var(--k-color-border-default);
 }
 
 .k-sidebar__footer {
+  grid-row: 3;
   border-top: var(--k-border-width-default) solid var(--k-color-border-default);
 }
 
 .k-sidebar__body {
+  grid-row: 2;
   min-height: 0;
   padding: var(--k-space-control-gap);
   overflow-x: hidden;

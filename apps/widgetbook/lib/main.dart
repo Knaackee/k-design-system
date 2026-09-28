@@ -5,6 +5,7 @@ import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
 import 'login_showcase.dart';
+import 'dashboard_shell_fixture.dart';
 import 'chart_fixture.dart';
 import 'chart_family_fixture.dart';
 import 'candlestick_fixture.dart';
@@ -129,6 +130,26 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Showcase',
           children: [
+            WidgetbookFolder(
+              name: 'Dashboard App Shell',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Workspace',
+                  builder: (_) => const DashboardShellFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'Expanded',
+                  builder: (_) => const DashboardShellFixture(
+                    initialMode: KSidebarMode.expanded,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'With inspector',
+                  builder: (_) =>
+                      const DashboardShellFixture(initialInspector: true),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Login',
               children: [

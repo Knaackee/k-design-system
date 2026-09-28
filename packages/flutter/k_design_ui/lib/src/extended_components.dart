@@ -848,6 +848,14 @@ class KResponsiveDrawer {
     bool dismissible = true,
     double breakpoint = 600,
     bool left = false,
+
+    /// Side-drawer composition; bottom sheets keep their existing layout.
+    double? sideWidth,
+    bool sideContentInset = true,
+    bool sideScrollable = true,
+    bool sideShowCloseButton = true,
+    // Null preserves platform defaults: root for side drawer, nearest for sheet.
+    bool? useRootNavigator,
   }) {
     if (MediaQuery.sizeOf(context).width < breakpoint) {
       return KBottomSheet.show<T>(
@@ -857,11 +865,13 @@ class KResponsiveDrawer {
         actions: actions,
         closeLabel: closeLabel,
         dismissible: dismissible,
+        useRootNavigator: useRootNavigator ?? false,
         child: child,
       );
     }
     return showGeneralDialog<T>(
       context: context,
+      useRootNavigator: useRootNavigator ?? true,
       barrierDismissible: dismissible,
       barrierLabel: closeLabel ?? 'Close',
       barrierColor: (Theme.of(
@@ -873,11 +883,16 @@ class KResponsiveDrawer {
       pageBuilder: (routeContext, _, _) => Align(
         alignment: left ? Alignment.centerLeft : Alignment.centerRight,
         child: _KResponsiveSideSheet(
+          width: sideWidth,
+          contentInset: sideContentInset,
+          scrollable: sideScrollable,
           title: title,
           description: description,
           actions: actions,
           closeLabel: closeLabel,
-          onClose: dismissible ? () => Navigator.of(routeContext).pop() : null,
+          onClose: dismissible && sideShowCloseButton
+              ? () => Navigator.of(routeContext).pop()
+              : null,
           child: child,
         ),
       ),
@@ -893,6 +908,9 @@ class _KResponsiveSideSheet extends StatelessWidget {
     this.actions,
     this.closeLabel,
     this.onClose,
+    this.width,
+    this.contentInset = true,
+    this.scrollable = true,
   });
   final Widget title;
   final Widget child;
@@ -900,6 +918,9 @@ class _KResponsiveSideSheet extends StatelessWidget {
   final Widget? actions;
   final String? closeLabel;
   final VoidCallback? onClose;
+  final double? width;
+  final bool contentInset;
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
@@ -909,7 +930,7 @@ class _KResponsiveSideSheet extends StatelessWidget {
       elevation: 0,
       child: SafeArea(
         child: SizedBox(
-          width: t.componentResponsiveDrawerWidth,
+          width: width ?? t.componentResponsiveDrawerWidth,
           height: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -918,8 +939,8 @@ class _KResponsiveSideSheet extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(
                   t.spaceLayoutGutter,
                   t.spaceLayoutGutter,
-                  t.spaceControlGap,
-                  t.spaceControlGap,
+                  contentInset ? t.spaceControlGap : t.spaceLayoutGutter,
+                  contentInset ? t.spaceControlGap : t.spaceLayoutGutter,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -966,15 +987,25 @@ class _KResponsiveSideSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(
-                height: t.borderWidthDefault,
-                color: t.colorBorderDefault,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(t.spaceLayoutGutter),
-                  child: child,
+              if (contentInset)
+                Divider(
+                  height: t.borderWidthDefault,
+                  color: t.colorBorderDefault,
                 ),
+              Expanded(
+                child: scrollable
+                    ? SingleChildScrollView(
+                        padding: contentInset
+                            ? EdgeInsets.all(t.spaceLayoutGutter)
+                            : EdgeInsets.zero,
+                        child: child,
+                      )
+                    : Padding(
+                        padding: contentInset
+                            ? EdgeInsets.all(t.spaceLayoutGutter)
+                            : EdgeInsets.zero,
+                        child: child,
+                      ),
               ),
               if (actions != null) ...[
                 Divider(

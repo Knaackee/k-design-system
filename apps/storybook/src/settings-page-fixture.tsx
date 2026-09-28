@@ -85,28 +85,37 @@ const sections: SettingsSection[] = [
 function SettingsNavigation({
   selected,
   onSelect,
+  onBackToApp,
 }: {
   selected: string;
   onSelect: (id: string) => void;
+  onBackToApp?: () => void;
 }) {
+  const [search, setSearch] = useState("");
   return (
     <KSidebar label="Settings navigation" className="settings-page__sidebar">
       <KSidebarHeader>
         <KSidebarItem
           label="Back to app"
           leading={<KIcon name="arrow-left" />}
-          onSelect={() => undefined}
+          onSelect={onBackToApp}
         />
         <KSearchField
           aria-label="Search settings"
           placeholder="Search settings…"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
         />
       </KSidebarHeader>
       <KSidebarBody>
         {(["Personal", "Workspace", "System"] as const).map((group) => (
           <KSidebarGroup key={group} label={group}>
             {sections
-              .filter((section) => section.group === group)
+              .filter(
+                (section) =>
+                  section.group === group &&
+                  section.label.toLowerCase().includes(search.toLowerCase()),
+              )
               .map((section) => (
                 <KSidebarItem
                   key={section.id}
@@ -156,8 +165,9 @@ function SettingsContent({
   onBack: () => void;
 }) {
   const [updates, setUpdates] = useState(true);
+  const [saved, setSaved] = useState(false);
   return (
-    <main className="settings-page__content">
+    <section className="settings-page__content" aria-label="Settings content">
       <button className="settings-page__back" type="button" onClick={onBack}>
         <KIcon name="arrow-left" size={16} />
         Settings
@@ -193,14 +203,17 @@ function SettingsContent({
           }
         />
         <div className="settings-page__actions">
-          <KButton>Save changes</KButton>
+          <KButton onClick={() => setSaved(true)}>Save changes</KButton>
         </div>
+        {saved && <p role="status">Demo: Changes saved locally.</p>}
       </section>
-    </main>
+    </section>
   );
 }
 
-export function SettingsPageFixture() {
+export function SettingsPageFixture({
+  onBackToApp,
+}: { onBackToApp?: () => void } = {}) {
   const [selected, setSelected] = useState("profile");
   const [mobileDetail, setMobileDetail] = useState(false);
   const section = sections.find((entry) => entry.id === selected)!;
@@ -212,6 +225,7 @@ export function SettingsPageFixture() {
       >
         <SettingsNavigation
           selected={selected}
+          onBackToApp={onBackToApp}
           onSelect={(id) => {
             setSelected(id);
             setMobileDetail(true);

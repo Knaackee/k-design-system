@@ -367,6 +367,7 @@ export function KSidebarToggle({
       type="button"
       className={["k-sidebar-toggle", className].filter(Boolean).join(" ")}
       aria-label={expanded ? expandedLabel : railLabel}
+      aria-expanded={expanded}
       title={expanded ? expandedLabel : railLabel}
       onClick={() => setMode?.(expanded ? "rail" : "expanded")}
       {...props}

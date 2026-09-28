@@ -113,8 +113,10 @@ class KBottomSheet extends StatelessWidget {
     double maxWidth = 640,
     bool dismissible = true,
     bool enableDrag = true,
+    bool useRootNavigator = false,
   }) => showModalBottomSheet<T>(
     context: context,
+    useRootNavigator: useRootNavigator,
     isScrollControlled: true,
     isDismissible: dismissible,
     enableDrag: dismissible && enableDrag,

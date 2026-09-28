@@ -45,7 +45,12 @@ class KSidebar extends StatelessWidget {
             color: tokens.colorSurfaceRaised,
             border: Border(right: BorderSide(color: tokens.colorBorderDefault)),
           ),
-          child: SizedBox(width: width, child: child),
+          child: OverflowBox(
+            alignment: Alignment.centerLeft,
+            minWidth: width - 1,
+            maxWidth: width - 1,
+            child: SizedBox(width: width - 1, child: child),
+          ),
         ),
       ),
     );
@@ -77,15 +82,31 @@ class KSidebarHeader extends StatelessWidget {
       Padding(padding: const EdgeInsets.fromLTRB(8, 8, 8, 4), child: child);
 }
 
-class KSidebarBody extends StatelessWidget {
+class KSidebarBody extends StatefulWidget {
   const KSidebarBody({required this.children, super.key});
   final List<Widget> children;
   @override
+  State<KSidebarBody> createState() => _KSidebarBodyState();
+}
+
+class _KSidebarBodyState extends State<KSidebarBody> {
+  final controller = ScrollController();
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Expanded(
     child: Scrollbar(
+      controller: controller,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-        children: children,
+        controller: controller,
+        padding: EdgeInsets.all(
+          Theme.of(context).extension<KDesignTokens>()!.spaceControlGap,
+        ),
+        children: widget.children,
       ),
     ),
   );
@@ -95,8 +116,21 @@ class KSidebarFooter extends StatelessWidget {
   const KSidebarFooter({required this.child, super.key});
   final Widget child;
   @override
-  Widget build(BuildContext context) =>
-      Padding(padding: const EdgeInsets.fromLTRB(8, 4, 8, 8), child: child);
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return Container(
+      padding: EdgeInsets.all(t.spaceControlGap),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: t.colorBorderDefault,
+            width: t.borderWidthDefault,
+          ),
+        ),
+      ),
+      child: child,
+    );
+  }
 }
 
 class KSidebarModeContent extends StatelessWidget {
@@ -116,10 +150,14 @@ class KSidebarToggle extends StatelessWidget {
   const KSidebarToggle({
     this.collapseLabel = 'Collapse sidebar',
     this.expandLabel = 'Expand sidebar',
+    this.expandedContent,
+    this.railContent,
     super.key,
   });
   final String collapseLabel;
   final String expandLabel;
+  final Widget? expandedContent;
+  final Widget? railContent;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +166,7 @@ class KSidebarToggle extends StatelessWidget {
     return _SidebarIconControl(
       label: expanded ? collapseLabel : expandLabel,
       icon: expanded ? KIconName.chevronLeft : KIconName.chevronRight,
+      content: expanded ? expandedContent : railContent,
       onPressed: scope.onModeChanged == null
           ? null
           : () => scope.onModeChanged!(
@@ -470,7 +509,9 @@ class _SidebarIconControl extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.content,
   });
+  final Widget? content;
   final String label;
   final KIconName icon;
   final VoidCallback? onPressed;
@@ -486,7 +527,7 @@ class _SidebarIconControl extends StatelessWidget {
           width: math.max(40, t.sizeHitTarget),
           height: math.max(40, t.sizeHitTarget),
         ),
-        icon: KIcon(icon),
+        icon: content ?? KIcon(icon),
       ),
     );
   }

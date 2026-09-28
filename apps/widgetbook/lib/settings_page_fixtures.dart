@@ -71,7 +71,8 @@ const _sections =
     ];
 
 class SettingsPageFixture extends StatefulWidget {
-  const SettingsPageFixture({super.key});
+  const SettingsPageFixture({this.onBackToApp, super.key});
+  final VoidCallback? onBackToApp;
 
   @override
   State<SettingsPageFixture> createState() => _SettingsPageFixtureState();
@@ -81,6 +82,8 @@ class _SettingsPageFixtureState extends State<SettingsPageFixture> {
   String selected = 'profile';
   bool mobileDetail = false;
   bool updates = true;
+  bool saved = false;
+  String query = '';
   final name = TextEditingController(text: 'Dennis Knaack');
   final email = TextEditingController(text: 'dennis@example.com');
 
@@ -103,11 +106,16 @@ class _SettingsPageFixtureState extends State<SettingsPageFixture> {
       final section = _sections.firstWhere((entry) => entry.id == selected);
       final navigation = _SettingsNavigation(
         selected: selected,
+        query: query,
+        onQueryChanged: (value) => setState(() => query = value),
+        onBackToApp: widget.onBackToApp,
         width: compact ? constraints.maxWidth : 280,
         onSelect: (id) => select(id, compact: compact),
       );
       final content = _SettingsContent(
         section: section,
+        saved: saved,
+        onSave: () => setState(() => saved = true),
         compact: compact,
         name: name,
         email: email,
@@ -135,11 +143,17 @@ class _SettingsNavigation extends StatelessWidget {
     required this.selected,
     required this.width,
     required this.onSelect,
+    required this.query,
+    required this.onQueryChanged,
+    this.onBackToApp,
   });
 
   final String selected;
   final double width;
   final ValueChanged<String> onSelect;
+  final String query;
+  final ValueChanged<String> onQueryChanged;
+  final VoidCallback? onBackToApp;
 
   @override
   Widget build(BuildContext context) => KSidebar(
@@ -148,15 +162,19 @@ class _SettingsNavigation extends StatelessWidget {
     semanticLabel: 'Settings navigation',
     child: Column(
       children: [
-        const KSidebarHeader(
+        KSidebarHeader(
           child: Column(
             spacing: 8,
             children: [
               KSidebarItem(
                 label: 'Back to app',
+                onPressed: onBackToApp,
                 leading: KIcon(KIconName.arrowLeft),
               ),
-              KSearchField(placeholder: 'Search settings'),
+              KSearchField(
+                placeholder: 'Search settings',
+                onChanged: onQueryChanged,
+              ),
             ],
           ),
         ),
@@ -166,7 +184,13 @@ class _SettingsNavigation extends StatelessWidget {
                 (group) => KSidebarGroup(
                   label: group,
                   children: _sections
-                      .where((section) => section.group == group)
+                      .where(
+                        (section) =>
+                            section.group == group &&
+                            section.label.toLowerCase().contains(
+                              query.toLowerCase(),
+                            ),
+                      )
                       .map(
                         (section) => KSidebarItem(
                           label: section.label,
@@ -192,6 +216,8 @@ class _SettingsNavigation extends StatelessWidget {
 class _SettingsContent extends StatelessWidget {
   const _SettingsContent({
     required this.section,
+    required this.saved,
+    required this.onSave,
     required this.compact,
     required this.name,
     required this.email,
@@ -209,6 +235,8 @@ class _SettingsContent extends StatelessWidget {
   })
   section;
   final bool compact;
+  final bool saved;
+  final VoidCallback onSave;
   final TextEditingController name;
   final TextEditingController email;
   final bool updates;
@@ -221,6 +249,7 @@ class _SettingsContent extends StatelessWidget {
     return ColoredBox(
       color: t.colorSurfaceCanvas,
       child: ListView(
+        primary: false,
         padding: EdgeInsets.symmetric(
           horizontal: compact ? 18 : 48,
           vertical: compact ? 12 : 48,
@@ -321,9 +350,14 @@ class _SettingsContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
+          if (saved)
+            Semantics(
+              liveRegion: true,
+              child: Text('Demo: Changes saved locally.'),
+            ),
           Align(
             alignment: Alignment.centerRight,
-            child: KButton(label: 'Save changes', onPressed: () {}),
+            child: KButton(label: 'Save changes', onPressed: onSave),
           ),
         ],
       ),

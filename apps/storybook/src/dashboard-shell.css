@@ -1,0 +1,155 @@
+.k-gallery:has(.dashboard-shell) {
+  padding: 0;
+}
+.dashboard-shell {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--k-color-surface-canvas);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+.dashboard-shell__sidebar {
+  --k-sidebar-width: 248px;
+  --k-sidebar-rail-width: 56px;
+  height: auto;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.dashboard-shell__navigation-drawer {
+  --k-component-responsive-drawer-width: 248px;
+}
+.dashboard-shell__navigation-drawer .k-overlay-close {
+  display: none;
+}
+.dashboard-shell__navigation-drawer > .k-overlay-body {
+  display: flex;
+}
+.dashboard-shell__navigation-drawer .dashboard-shell__sidebar {
+  width: 100%;
+  min-width: 0;
+  border-right: 0;
+}
+.dashboard-shell__brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 47px;
+  gap: var(--k-space-control-gap);
+}
+.dashboard-shell__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.dashboard-shell__workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.dashboard-shell__header {
+  box-sizing: border-box;
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  padding-inline: 24px;
+  border-bottom: 1px solid var(--k-color-border-default);
+  background: var(--k-color-surface-raised);
+}
+.dashboard-shell__header .k-breadcrumb {
+  flex: 1;
+  min-width: 0;
+}
+.dashboard-shell__header .k-breadcrumb ol {
+  flex-wrap: wrap;
+}
+.dashboard-shell__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.dashboard-shell__main {
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+}
+.dashboard-shell__muted {
+  color: var(--k-color-text-primary);
+}
+.dashboard-shell > .settings-page {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+.dashboard-shell__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.dashboard-shell__metrics .k-card {
+  min-height: 104px;
+}
+.dashboard-shell__project {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+  min-height: 48px;
+  border-bottom: 1px solid var(--k-color-border-default);
+}
+.dashboard-shell__project:last-child {
+  border-bottom: 0;
+}
+.dashboard-shell__project .k-button {
+  min-width: 0;
+  white-space: normal;
+  text-align: left;
+}
+.dashboard-shell .k-stack > .k-badge,
+.dashboard-shell__status {
+  align-self: flex-start;
+}
+.dashboard-shell[data-mobile] .dashboard-shell__header {
+  padding-inline: 16px;
+}
+.dashboard-shell[data-mobile] .dashboard-shell__main {
+  padding: 16px;
+}
+.dashboard-shell[data-mobile] .dashboard-shell__metrics {
+  grid-template-columns: 1fr;
+}
+.dashboard-shell[data-mobile] .dashboard-shell__project {
+  flex-wrap: wrap;
+}
+
+/* The shell follows its measured width, not the standalone gallery preview override. */
+.dashboard-shell:not([data-mobile]) .settings-page {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+}
+.dashboard-shell:not([data-mobile])
+  .settings-page__navigation[data-mobile-hidden],
+.dashboard-shell:not([data-mobile]) .settings-page__detail[data-mobile-hidden] {
+  display: block;
+}
+.dashboard-shell:not([data-mobile]) .settings-page__back,
+.dashboard-shell:not([data-mobile]) .settings-page__mobile-chevron {
+  display: none;
+}
+.dashboard-shell:not([data-mobile]) .settings-page__content {
+  width: min(100%, 760px);
+  padding: clamp(28px, 5vw, 64px);
+}
+.dashboard-shell[data-mobile] .settings-page {
+  display: block;
+}
+.dashboard-shell[data-mobile] .settings-page__navigation[data-mobile-hidden],
+.dashboard-shell[data-mobile] .settings-page__detail[data-mobile-hidden] {
+  display: none;
+}

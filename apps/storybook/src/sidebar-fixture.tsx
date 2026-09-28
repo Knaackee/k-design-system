@@ -15,7 +15,6 @@ import {
   KSidebarGroup,
   KSidebarHeader,
   KSidebarItem,
-  KSidebarRailContent,
   KSidebarSeparator,
   KSidebarSubgroup,
   KSidebarToggle,
@@ -121,45 +120,42 @@ function DemoSidebar({
     >
       <KSidebarHeader>
         <div style={{ ...workspaceStyle, justifyContent: "space-between" }}>
-          <KMenuButton
-            label="Orbit workspace"
-            actions={[
-              { id: "profile", label: "Account and profile", icon: "user" },
-              {
-                id: "workspace",
-                label: "Workspace settings",
-                icon: "settings",
-              },
-              {
-                id: "sign-out",
-                label: "Sign out",
-                icon: "x",
-                separatorBefore: true,
-              },
-            ]}
-            triggerVariant="ghost"
-            triggerClassName="k-sidebar-workspace-switcher"
-            fullWidth
-            triggerContent={
-              <span className="k-sidebar-workspace-switcher__content">
-                <span style={avatarStyle}>O</span>
-                <span className="k-sidebar__expanded-only k-sidebar-workspace-switcher__label">
-                  <strong>Orbit</strong>
-                  <small>Design workspace</small>
-                </span>
-                <span className="k-sidebar__expanded-only">
-                  <KIcon name="chevron-down" size={14} />
-                </span>
-              </span>
-            }
-          />
           <KSidebarExpandedContent>
-            <KSidebarToggle />
+            <KMenuButton
+              label="Orbit workspace"
+              actions={[
+                { id: "profile", label: "Account and profile", icon: "user" },
+                {
+                  id: "workspace",
+                  label: "Workspace settings",
+                  icon: "settings",
+                },
+                {
+                  id: "sign-out",
+                  label: "Sign out",
+                  icon: "x",
+                  separatorBefore: true,
+                },
+              ]}
+              triggerVariant="ghost"
+              triggerClassName="k-sidebar-workspace-switcher"
+              fullWidth
+              triggerContent={
+                <span className="k-sidebar-workspace-switcher__content">
+                  <span style={avatarStyle}>O</span>
+                  <span className="k-sidebar__expanded-only k-sidebar-workspace-switcher__label">
+                    <strong>Orbit</strong>
+                    <small>Design workspace</small>
+                  </span>
+                  <span className="k-sidebar__expanded-only">
+                    <KIcon name="chevron-down" size={14} />
+                  </span>
+                </span>
+              }
+            />
           </KSidebarExpandedContent>
+          <KSidebarToggle railContent={<span style={avatarStyle}>O</span>} />
         </div>
-        <KSidebarRailContent>
-          <KSidebarToggle />
-        </KSidebarRailContent>
       </KSidebarHeader>
       <KSidebarBody>
         <KSidebarGroup>

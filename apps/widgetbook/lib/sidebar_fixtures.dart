@@ -72,10 +72,7 @@ class _SidebarFixtureState extends State<SidebarFixture> {
                 const KSidebarToggle(),
               ],
             ),
-            rail: const Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [_OrbitAvatar(), KSidebarToggle()],
-            ),
+            rail: const KSidebarToggle(railContent: _OrbitAvatar()),
           ),
         ),
         if (widget.settings)
