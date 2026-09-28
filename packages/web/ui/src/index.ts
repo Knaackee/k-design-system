@@ -417,3 +417,6 @@ export {
   summarizeTasks as summarizeKGanttTasks,
   addDays as kGanttAddDays,
 } from "./data-display/gantt/gantt-model.js";
+
+export { KTextarea } from "./forms/textarea.js";
+export type { KTextareaProps } from "./forms/textarea.js";

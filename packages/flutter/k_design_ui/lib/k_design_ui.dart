@@ -69,3 +69,5 @@ export 'src/charts/k_candle_types.dart';
 export 'src/charts/k_candlestick_chart.dart';
 export 'src/data_display/k_timeline.dart';
 export 'src/data_display/k_gantt.dart';
+
+export 'src/forms/k_textarea.dart';

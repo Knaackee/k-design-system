@@ -23,6 +23,8 @@ candidates. Rich-text editing, Kanban, charts, virtualization and advanced
 editable data grids require their own scope. KGrid is a layout primitive, not a
 data grid. Menu items and icon glyphs are not separate component families.
 
+Textarea update (28 September 2026): `KTextarea` is now implemented and publicly exported for Web and Flutter. See [forms contract](components/forms.md) and matching `textarea-states` fixtures under Forms/Textarea. Visual Human Acceptance is pending; this supersedes the earlier Forms delivery cell for Textarea only.
+
 ## Catalog maintenance
 
 Each delivered family has a stable category/name, contract, dependencies, matching

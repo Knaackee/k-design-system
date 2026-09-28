@@ -437,3 +437,12 @@
   opacity: var(--k-opacity-disabled);
   cursor: not-allowed;
 }
+
+.k-textarea {
+  display: block;
+  height: auto;
+  min-height: max(var(--k-size-control), var(--k-size-hit-target));
+  line-height: calc(var(--k-font-body-line-height) * var(--k-text-scale, 1));
+  padding-block: var(--k-space-control-gap);
+  resize: none;
+}
