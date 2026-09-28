@@ -20,7 +20,7 @@
     "build:storybook": "pnpm --filter @k-design-system/storybook build",
     "widgetbook": "dart run melos exec --scope k_design_widgetbook -- \"flutter run -d web-server --web-port 6007\"",
     "build:widgetbook": "dart run melos exec --scope k_design_widgetbook -- \"flutter build web --release\"",
-    "typecheck:web": "pnpm --filter @k-design-system/tokens typecheck && pnpm --filter @k-design-system/ui typecheck",
+    "typecheck:web": "pnpm --filter @k-design-system/tokens typecheck && pnpm --filter @k-design-system/ui typecheck && pnpm --filter @k-design-system/storybook typecheck",
     "analyze:flutter": "dart run melos exec --concurrency 1 -- \"flutter analyze\"",
     "test:flutter": "dart run melos exec --concurrency 1 -- \"flutter test\"",
     "format:check": "prettier --check .",

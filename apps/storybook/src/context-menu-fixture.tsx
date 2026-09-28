@@ -58,7 +58,7 @@ export function ContextMenuFixture() {
           <KText variant="heading4">Context menu</KText>
           <KContextMenu label="Document actions" actions={actions}>
             <KCard className="k-context-menu-fixture__target">
-              <KStack gap="content">
+              <KStack gap="control">
                 <KText variant="label">Project brief</KText>
                 <KText variant="bodySmall">
                   Right-click or long-press this card.

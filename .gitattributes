@@ -1,7 +1,12 @@
-* text=auto
+* text=auto eol=lf
 *.dart text eol=lf
 *.json text eol=lf
 *.md text eol=lf whitespace=-blank-at-eol
 *.ts text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+
+# Preserve the exact bytes bound to historical approval receipts.
+docs/plans/2026-09-25-chart-reference.md -text
+docs/plans/2026-09-25-gantt-web-reference.md -text
+docs/plans/2026-09-25-timeline-reference.md -text

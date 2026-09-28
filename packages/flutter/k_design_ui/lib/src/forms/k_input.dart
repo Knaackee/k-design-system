@@ -16,6 +16,7 @@ class KInput extends StatefulWidget {
     this.placeholder,
     this.enabled = true,
     this.readOnly = false,
+    this.obscureText = false,
     this.focusNode,
     this.label,
     this.clearable = false,
@@ -29,6 +30,9 @@ class KInput extends StatefulWidget {
   final String? placeholder;
   final bool enabled;
   final bool readOnly;
+
+  /// Conceal sensitive input without changing its controller value.
+  final bool obscureText;
   final FocusNode? focusNode;
   final String? label;
   final bool clearable;
@@ -130,6 +134,9 @@ class _KInputState extends State<KInput> {
                 autofocus: widget.autofocus,
                 enabled: widget.enabled,
                 readOnly: widget.readOnly,
+                obscureText: widget.obscureText,
+                autocorrect: !widget.obscureText,
+                enableSuggestions: !widget.obscureText,
                 textAlignVertical: formInputAlignment(appearance),
                 style: formTextStyle(context),
                 cursorColor: t.colorBorderFocus,

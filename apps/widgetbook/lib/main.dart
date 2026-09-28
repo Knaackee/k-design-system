@@ -4,6 +4,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
+import 'login_showcase.dart';
 import 'chart_fixture.dart';
 import 'chart_family_fixture.dart';
 import 'candlestick_fixture.dart';
@@ -125,6 +126,20 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        WidgetbookCategory(
+          name: 'Showcase',
+          children: [
+            WidgetbookFolder(
+              name: 'Login',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Assetry',
+                  builder: (_) => const LoginShowcase(),
+                ),
+              ],
+            ),
+          ],
+        ),
         WidgetbookCategory(
           name: 'Overlays',
           children: [
