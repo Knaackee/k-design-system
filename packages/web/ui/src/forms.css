@@ -31,6 +31,14 @@
 .k-field__error {
   color: var(--k-color-status-error-foreground);
 }
+.k-selection__native {
+  position: absolute;
+  width: var(--k-border-width-default);
+  height: var(--k-border-width-default);
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
 .k-input-target {
   display: flex;
   align-items: center;

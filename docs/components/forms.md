@@ -151,6 +151,16 @@ Human visual acceptance is pending. No commit, push, master merge or Assetry API
 
 Human acceptance recorded on 28 September 2026: the user reviewed the galleries and explicitly authorized committing and pushing this extension, then integrating the controls into Assetry. The existing authorization to publish accepted design-system work to master applies. The preceding pending-acceptance paragraph describes the pre-review state.
 
+### Native select form contract — 28 September 2026
+
+Approved by the user: add native form participation to KSelect/KCombobox, commit and push, then resume Assetry's controls migration. The user explicitly waived another visual acceptance round because the existing presentation is unchanged. Existing controlled calls remain supported; optional defaultValue enables uncontrolled forms. Optional name, form, id, required and onChange expose native Web form behavior. KField required also participates in validation. A visually concealed native select owns submission and validation; its change bubbles to form-level dirty guards. Invalid submission focuses the visible combobox and announces the browser validation message. Reset runs after the native reset action and notifies controlled consumers through onValueChange. Consumers retain ownership of controlled values.
+
+Platform adaptation: HTML name/form/FormData/reset-event semantics apply only to Web. Flutter's existing controlled selection API and form ownership remain unchanged. No visual token defaults or Flutter presentation changed. The Web-only Form contract Storybook fixture is an integration test harness, not a new cross-platform visual variant.
+
+Verification: Web package build and select-form-browser.test.mjs passed, covering required submission blocking, accessible focus, change bubbling, submitted codes, disabled-field omission and controlled/uncontrolled reset. The first test exposed native-reset event ordering; deferring state synchronization until after native reset fixed it. Style audit initially rejected new hardcoded hidden-control dimensions; the existing border-width token replaces these values. Full pnpm verify is required before publishing.
+
+Final verification: pnpm verify completed with exit code 0, including Web/Flutter consumers, analysis, tests and both gallery release builds. The focused browser contract test passed again on the final implementation. Existing WASM dry-run warnings remain unchanged. The user authorized commit, push and host integration without another visual review for this nonvisual extension.
+
 ## References
 
 - [WAI-ARIA combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
