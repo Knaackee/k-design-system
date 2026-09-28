@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
-import 'package:k_design_widgetbook/timeline/timeline_canvas.dart';
-import 'package:k_design_widgetbook/timeline/timeline_model.dart';
+import 'package:k_design_ui/k_design_ui.dart';
 
 class _Harness {
   _Harness({
@@ -55,7 +54,7 @@ class _Harness {
           body: Builder(
             builder: (_) {
               final canvas = StatefulBuilder(
-                builder: (context, setState) => TimelineCanvas(
+                builder: (context, setState) => KTimeline(
                   items: items,
                   groups: groups,
                   selectedId: selected,
@@ -126,7 +125,7 @@ void main() {
           brightness: brightness,
           density: density,
         );
-        final canvasRect = tester.getRect(find.byType(TimelineCanvas));
+        final canvasRect = tester.getRect(find.byType(KTimeline));
         expect(canvasRect.size, const Size(1024, 420));
         final item = h.rect(tester);
         expect(canvasRect.contains(item.topLeft), isTrue);

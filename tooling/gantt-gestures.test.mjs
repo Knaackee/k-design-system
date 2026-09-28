@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { installGanttGestures } from "../apps/storybook/src/gantt/gantt-gestures.ts";
+import { installGanttGestures } from "../packages/web/ui/src/data-display/gantt/gantt-gestures.ts";
 
 function harness(t, compact = true) {
   t.mock.timers.enable({ apis: ["setTimeout"] });

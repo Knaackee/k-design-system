@@ -17,3 +17,5 @@ packages/flutter/k_design_ui/lib/src/generated/
 # Human-approved Plan bytes are immutable; lifecycle evidence lives separately.
 docs/plans/2026-09-25-chart-reference.md
 docs/decisions/0009-chart-reference-adapters.md
+docs/plans/2026-09-25-gantt-web-reference.md
+docs/plans/2026-09-25-timeline-reference.md

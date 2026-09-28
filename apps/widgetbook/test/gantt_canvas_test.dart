@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
-import 'package:k_design_widgetbook/gantt/gantt_canvas.dart';
-import 'package:k_design_widgetbook/gantt/gantt_model.dart';
-import 'package:k_design_widgetbook/gantt/gantt_painter.dart';
+import 'package:k_design_ui/k_design_ui.dart';
+import 'package:k_design_ui/src/data_display/gantt/gantt_painter.dart';
 
 class Harness {
   List<GanttTask> tasks = [
@@ -31,7 +30,7 @@ class Harness {
         theme: kDesignTheme(brightness: Brightness.dark),
         home: Scaffold(
           body: StatefulBuilder(
-            builder: (context, update) => GanttCanvas(
+            builder: (context, update) => KGantt(
               tasks: tasks,
               links: const [],
               start: DateTime(2026, 9, 21),

@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #0b1020;
+}
+
+main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: var(--k-space-layout-gutter);
+  background: var(--k-color-surface-canvas);
+  transition: background var(--k-motion-fast) ease;
+}
+
+.consumer-shell {
+  width: min(100%, 35rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-tight);
+}
+
+.consumer-card {
+  margin-top: var(--k-space-layout-section-gap);
+  width: 100%;
+}

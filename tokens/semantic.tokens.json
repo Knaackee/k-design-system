@@ -194,25 +194,7 @@
       "$type": "dimension",
       "$value": "{size.scale.avatarMedium}"
     },
-    "switch": {
-      "inactiveTrack": { "$type": "color", "$value": "{color.surface.subtle}" },
-      "inactiveBorder": { "$type": "color", "$value": "{color.text.muted}" },
-      "inactiveThumb": { "$type": "color", "$value": "{color.text.muted}" },
-      "activeTrack": {
-        "$type": "color",
-        "$value": "{color.action.primary.background}"
-      },
-      "activeBorder": {
-        "$type": "color",
-        "$value": "{color.action.primary.background}"
-      },
-      "activeThumb": {
-        "$type": "color",
-        "$value": "{color.action.primary.foreground}"
-      },
-      "$type": "dimension",
-      "$value": "{size.scale.switch}"
-    },
+    "switch": { "$type": "dimension", "$value": "{size.scale.switch}" },
     "otpWidth": { "$type": "dimension", "$value": "{size.scale.otpWidth}" },
     "otpHeight": { "$type": "dimension", "$value": "{size.scale.otpHeight}" },
     "avatarLarge": {
@@ -675,6 +657,21 @@
       "animationDuration": { "$type": "duration", "$value": "{motion.spinner}" }
     },
     "switch": {
+      "inactiveTrack": { "$type": "color", "$value": "{color.surface.subtle}" },
+      "inactiveBorder": { "$type": "color", "$value": "{color.text.muted}" },
+      "inactiveThumb": { "$type": "color", "$value": "{color.text.muted}" },
+      "activeTrack": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "activeBorder": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "activeThumb": {
+        "$type": "color",
+        "$value": "{color.action.primary.foreground}"
+      },
       "trackWidth": { "$type": "dimension", "$value": "{size.switch}" },
       "trackHeight": { "$type": "dimension", "$value": "{size.compact}" },
       "trackInset": { "$type": "dimension", "$value": "{space.micro}" },

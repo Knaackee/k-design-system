@@ -397,3 +397,23 @@ export type {
   KChartCandle,
   KChartVisibleRange,
 } from "./charts/candle-model.js";
+
+export { TimelineCanvas as KTimeline } from "./data-display/timeline/timeline-canvas.js";
+export type { TimelineCanvasProps as KTimelineProps } from "./data-display/timeline/timeline-canvas.js";
+export type { TimelineItem as KTimelineItem } from "./data-display/timeline/timeline-model.js";
+export {
+  applyProposal as applyKTimelineProposal,
+  addDays as kTimelineAddDays,
+  localDate as kTimelineLocalDate,
+} from "./data-display/timeline/timeline-model.js";
+export { GanttCanvas as KGantt } from "./data-display/gantt/gantt-canvas.js";
+export type { GanttCanvasProps as KGanttProps } from "./data-display/gantt/gantt-canvas.js";
+export type {
+  GanttTask as KGanttTask,
+  GanttLink as KGanttLink,
+} from "./data-display/gantt/gantt-model.js";
+export {
+  applyGanttProposal as applyKGanttProposal,
+  summarizeTasks as summarizeKGanttTasks,
+  addDays as kGanttAddDays,
+} from "./data-display/gantt/gantt-model.js";

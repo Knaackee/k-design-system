@@ -3,6 +3,7 @@ node_modules/
 .runtime/
 packages/web/*/dist/
 apps/storybook/storybook-static/
+examples/web/dist/
 coverage/
 .dart_tool/
 .flutter-plugins

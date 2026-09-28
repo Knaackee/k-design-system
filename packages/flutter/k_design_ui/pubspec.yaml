@@ -1,6 +1,6 @@
 name: k_design_ui
 description: Cross-platform Flutter primitives and components for K Design System.
-version: 0.0.0
+version: 1.0.0-rc.1
 publish_to: none
 
 environment:
@@ -13,7 +13,8 @@ dependencies:
   fl_chart: 1.2.0
   flutter:
     sdk: flutter
-  k_design_tokens: any
+  k_design_tokens:
+    path: ../k_design_tokens
   flutter_svg: ^2.3.0
   timezone: 0.11.1
   two_dimensional_scrollables: 0.5.4

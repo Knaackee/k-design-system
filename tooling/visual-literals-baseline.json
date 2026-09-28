@@ -1,37 +1,57 @@
 {
   "version": 1,
   "entries": {
-    "packages/flutter/k_design_ui/lib/src/extended_components.dart|opacity|opacity: .001,": {
-      "count": 1,
-      "reason": "Structural hidden-input opacity keeps the native OTP field focusable without rendering it as component chrome."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_calendar_pointer_drag.dart|motion|: const Duration(milliseconds: 500),": {
-      "count": 1,
-      "reason": "Long-press recognition threshold is interaction behavior, not an appearance animation."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_calendar.dart|motion|_autoScroll ??= Timer.periodic(const Duration(milliseconds: 30), (_) {": {
-      "count": 1,
-      "reason": "Calendar drag auto-scroll polling cadence is algorithm timing rather than rendered motion."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_kanban.dart|motion|static const _tick = Duration(milliseconds: 16);": {
-      "count": 1,
-      "reason": "Kanban auto-scroll polling cadence is algorithm timing rather than rendered motion."
-    },
-    "packages/web/ui/src/workflow.css|dimension|@container (max-width: 599px) {": {
-      "count": 1,
-      "reason": "CSS container-query conditions cannot reference design-token custom properties; this breakpoint switches the workflow composition to its compact layout."
-    },
-    "packages/web/ui/src/table.css|dimension|height: 1em;": {
-      "count": 1,
-      "reason": "The virtual placeholder follows the consumer font size by design; a fixed visual token would break relative text geometry."
-    },
-    "packages/web/ui/src/table.css|dimension|height: 1px;": {
-      "count": 1,
-      "reason": "The visually hidden table header uses the standard one-pixel clipping technique for assistive-technology structure."
-    },
-    "packages/web/ui/src/table.css|dimension|width: 1px;": {
-      "count": 2,
-      "reason": "The visually hidden header and invisible virtual-row ruler require one-pixel structural measurement boxes, not rendered component geometry."
-    }
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|dimension|height: 44,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|dimension|width: 44,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|motion|_hold = Timer(const Duration(milliseconds: 500), () {": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|color|Paint()..color = const Color(0xFFFFFFFF).withValues(alpha: .65),": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|dimension|height: 20,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|dimension|width: 6,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|opacity|..color = t.colorActionPrimaryBackground.withValues(alpha: .08),": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|opacity|Paint()..color = const Color(0xFFFFFFFF).withValues(alpha: .65),": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|dimension|height: 420,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|dimension|height: 44,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|dimension|width: 44,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|motion|_hold = Timer(const Duration(milliseconds: 500), () {": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_painter.dart|dimension|height: 20,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_painter.dart|dimension|width: 6,": 1,
+    "packages/flutter/k_design_ui/lib/src/extended_components.dart|opacity|opacity: .001,": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_calendar_pointer_drag.dart|motion|: const Duration(milliseconds: 500),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_calendar.dart|motion|_autoScroll ??= Timer.periodic(const Duration(milliseconds: 30), (_) {": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_kanban.dart|motion|static const _tick = Duration(milliseconds: 16);": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|appearance|border-radius: 2px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|appearance|opacity: 0.65;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 14px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 16px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 20px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 36px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 44px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 480px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|left: -22px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|left: -7px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|min-width: 110px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|right: -22px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|right: -7px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 14px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 16px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 24px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 3px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 44px;": 1,
+    "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 6px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|.k-timeline--touch .vis-item.vis-selected .vis-drag-left::after,": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|bottom: 12px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|height: 420px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|height: 44px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|left: -22px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|left: 19px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|right: -22px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|top: 12px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 120px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 44px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: max(var(--k-space-control-inset-inline), 16px);": 1,
+    "packages/web/ui/src/table.css|dimension|height: 1em;": 1,
+    "packages/web/ui/src/table.css|dimension|height: 1px;": 1,
+    "packages/web/ui/src/table.css|dimension|width: 1px;": 2,
+    "packages/web/ui/src/workflow.css|dimension|@container (max-width: 599px) {": 1
   }
 }

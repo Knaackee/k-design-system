@@ -1,9 +1,7 @@
 # Component catalog
 
-Status: target catalog, updated 2026-09-23. This is a roadmap, not approval to
-implement every entry. The current authorized Rapid slice is Alert, AlertDialog,
-Attachment, Avatar, Badge, Breadcrumb and Carousel, with matching Web and Flutter
-fixtures and focused checks.
+Status: release-candidate catalog, updated 2026-09-25. This records public package
+coverage and remaining candidates; a gallery fixture alone is not a public API.
 
 ## Categories and scope
 
@@ -16,7 +14,7 @@ fixtures and focused checks.
 | Forms        | Field, Input, Textarea, SearchField, Checkbox, RadioGroup, Switch, Select, Combobox, MultiSelect, SegmentedControl, Slider, InputOTP, DatePicker, TimePicker, DateTimePicker | Field, Input, SearchField, Checkbox, Switch, Slider, InputOTP, Select, Combobox and the three pickers implemented; picker visual acceptance pending |
 | Overlays     | Tooltip, Popover, Dialog, AlertDialog, Drawer, BottomSheet                                                                                                                   | Popover, Dialog, AlertDialog, responsive Drawer and BottomSheet implemented                                                                         |
 | Navigation   | Link, Tabs, Breadcrumb, NavigationMenu, Sidebar, NavigationItem/Section, BottomNavigation, Pagination                                                                        | Tabs, Breadcrumb, NavigationMenu and Pagination implemented; composable Sidebar implemented for Web, Flutter parity pending                         |
-| Data Display | Card, Badge, Avatar, Attachment, Carousel, Kbd, List/ListItem, DescriptionList, Table, Accordion                                                                             | Card, Badge, Avatar, Attachment, Carousel, Kbd, Table and Accordion implemented                                                                     |
+| Data Display | Card, Badge, Avatar, Attachment, Carousel, Kbd, List/ListItem, DescriptionList, Table, Accordion, Charts, Timeline, Gantt                                                    | Card, Badge, Avatar, Attachment, Carousel, Kbd, Table, Accordion, charts, Timeline and Gantt exported for Web and Flutter                           |
 | Feedback     | Alert, Toast, Progress, Spinner, Skeleton, EmptyState                                                                                                                        | Alert, Toast, Progress, Spinner and Skeleton implemented                                                                                            |
 | Patterns     | Toolbar, FilterBar/FilterChip, DataTable, Questionnaire, PageHeader, AppShell, DetailInspector                                                                               | Toolbar, FilterBar, FilterChip, DataTable and Questionnaire implemented                                                                             |
 

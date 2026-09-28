@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { installTimelineTouch } from "../apps/storybook/src/timeline/timeline-touch.ts";
+import { installTimelineTouch } from "../packages/web/ui/src/data-display/timeline/timeline-touch.ts";
 
 test("mobile timeline separates taps, holds, panning and edit dismissal", (t) => {
   t.mock.timers.enable({ apis: ["setTimeout"] });

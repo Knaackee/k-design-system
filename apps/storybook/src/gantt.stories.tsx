@@ -1,17 +1,21 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KButton, KDialog, KInput, KSurface, KText } from "@k-design-system/ui";
-import fixture from "../../../fixtures/gantt-reference.json";
-import { GanttCanvas } from "./gantt/gantt-canvas";
 import {
-  addDays,
-  applyGanttProposal,
-  summarizeTasks,
-  type GanttTask,
-  type GanttLink,
-} from "./gantt/gantt-model";
+  KButton,
+  KDialog,
+  KGantt,
+  KInput,
+  KSurface,
+  KText,
+  applyKGanttProposal,
+  kGanttAddDays,
+  summarizeKGanttTasks,
+  type KGanttLink,
+  type KGanttTask,
+} from "@k-design-system/ui";
+import fixture from "../../../fixtures/gantt-reference.json";
 
-const initial = fixture.tasks as GanttTask[];
+const initial = fixture.tasks as KGanttTask[];
 function GanttReference({
   scale = "weeks",
   start = fixture.window.start,
@@ -21,24 +25,24 @@ function GanttReference({
   start?: string;
   end?: string;
 }) {
-  const [tasks, setTasks] = useState<readonly GanttTask[]>(initial);
+  const [tasks, setTasks] = useState<readonly KGanttTask[]>(initial);
   const [selected, setSelected] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(
     initial.filter((task) => task.type === "summary").map((task) => task.id),
   );
-  const [editing, setEditing] = useState<GanttTask | null>(null);
+  const [editing, setEditing] = useState<KGanttTask | null>(null);
   const reject = false;
   const [message, setMessage] = useState(
     "Select a task to inspect its dates and progress.",
   );
   const [error, setError] = useState("");
-  const records = summarizeTasks(tasks);
+  const records = summarizeKGanttTasks(tasks);
   const open = (id: string) => {
     setEditing(records.find((task) => task.id === id) ?? null);
     setError("");
   };
-  const propose = (next: GanttTask) => {
-    const result = applyGanttProposal(tasks, next, !reject);
+  const propose = (next: KGanttTask) => {
+    const result = applyKGanttProposal(tasks, next, !reject);
     if (result === tasks) {
       setMessage("Change declined. Original values retained.");
       return false;
@@ -46,16 +50,16 @@ function GanttReference({
     setTasks(result);
     setSelected(next.id);
     setMessage(
-      `${next.text}: ${next.start}${next.end ? ` – ${addDays(next.end, -1)}` : ""} · ${next.progress}%. Saved in this demo.`,
+      `${next.text}: ${next.start}${next.end ? ` – ${kGanttAddDays(next.end, -1)}` : ""} · ${next.progress}%. Saved in this demo.`,
     );
     return true;
   };
   const locked = editing?.readOnly || editing?.type === "summary";
   return (
     <KSurface radius="card" className="k-gantt-demo">
-      <GanttCanvas
+      <KGantt
         tasks={tasks}
-        links={fixture.links as GanttLink[]}
+        links={fixture.links as KGanttLink[]}
         start={start}
         end={end}
         scale={scale}
@@ -118,12 +122,12 @@ function GanttReference({
                   required
                   disabled={locked}
                   min={editing.start}
-                  value={addDays(editing.end, -1)}
+                  value={kGanttAddDays(editing.end, -1)}
                   onChange={(event) => {
                     if (event.target.value)
                       setEditing({
                         ...editing,
-                        end: addDays(event.target.value, 1),
+                        end: kGanttAddDays(event.target.value, 1),
                       });
                   }}
                 />

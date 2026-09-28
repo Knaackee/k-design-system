@@ -10,7 +10,7 @@ import {
   moveGanttTask,
   summarizeTasks,
   validateGanttProposal,
-} from "../apps/storybook/src/gantt/gantt-model.ts";
+} from "../packages/web/ui/src/data-display/gantt/gantt-model.ts";
 
 const fixture = JSON.parse(
   readFileSync(

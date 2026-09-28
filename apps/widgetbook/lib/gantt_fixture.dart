@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
-import 'gantt/gantt_canvas.dart';
-import 'gantt/gantt_model.dart';
 
 class GanttFixture extends StatefulWidget {
   const GanttFixture({super.key});
@@ -167,7 +165,7 @@ class _GanttFixtureState extends State<GanttFixture> {
         padding: EdgeInsets.all(t.spaceLayoutGutter),
         child: KSurface(
           radius: KSurfaceRadius.card,
-          child: GanttCanvas(
+          child: KGantt(
             tasks: _tasks!,
             links: _links,
             start: _start,

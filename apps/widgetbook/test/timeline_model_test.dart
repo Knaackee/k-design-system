@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:k_design_widgetbook/timeline/timeline_model.dart';
+import 'package:k_design_ui/k_design_ui.dart';
+import 'package:k_design_ui/src/data_display/timeline/timeline_model.dart'
+    show dayIndex, layoutTimeline;
 
 void main() {
   const groups = [

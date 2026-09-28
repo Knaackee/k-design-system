@@ -1,6 +1,6 @@
 name: k_design_tokens
 description: Token projection for K Design System Flutter consumers.
-version: 0.0.0
+version: 1.0.0-rc.1
 publish_to: none
 
 environment:

@@ -1701,6 +1701,30 @@
         "unit": "ms"
       }
     },
+    "component.switch.inactiveTrack": {
+      "type": "color",
+      "value": "#f2f2f3"
+    },
+    "component.switch.inactiveBorder": {
+      "type": "color",
+      "value": "#727278"
+    },
+    "component.switch.inactiveThumb": {
+      "type": "color",
+      "value": "#727278"
+    },
+    "component.switch.activeTrack": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
+    "component.switch.activeBorder": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
+    "component.switch.activeThumb": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "component.switch.trackWidth": {
       "type": "dimension",
       "value": {
@@ -4802,6 +4826,30 @@
         "value": 700,
         "unit": "ms"
       }
+    },
+    "component.switch.inactiveTrack": {
+      "type": "color",
+      "value": "#29292d"
+    },
+    "component.switch.inactiveBorder": {
+      "type": "color",
+      "value": "#99999f"
+    },
+    "component.switch.inactiveThumb": {
+      "type": "color",
+      "value": "#99999f"
+    },
+    "component.switch.activeTrack": {
+      "type": "color",
+      "value": "#a3e635"
+    },
+    "component.switch.activeBorder": {
+      "type": "color",
+      "value": "#a3e635"
+    },
+    "component.switch.activeThumb": {
+      "type": "color",
+      "value": "#1a2e05"
     },
     "component.switch.trackWidth": {
       "type": "dimension",
@@ -7905,6 +7953,30 @@
         "unit": "ms"
       }
     },
+    "component.switch.inactiveTrack": {
+      "type": "color",
+      "value": "#ccfbf1"
+    },
+    "component.switch.inactiveBorder": {
+      "type": "color",
+      "value": "#52706d"
+    },
+    "component.switch.inactiveThumb": {
+      "type": "color",
+      "value": "#52706d"
+    },
+    "component.switch.activeTrack": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "component.switch.activeBorder": {
+      "type": "color",
+      "value": "#0d9488"
+    },
+    "component.switch.activeThumb": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "component.switch.trackWidth": {
       "type": "dimension",
       "value": {
@@ -11006,6 +11078,30 @@
         "value": 700,
         "unit": "ms"
       }
+    },
+    "component.switch.inactiveTrack": {
+      "type": "color",
+      "value": "#123b36"
+    },
+    "component.switch.inactiveBorder": {
+      "type": "color",
+      "value": "#91b8b2"
+    },
+    "component.switch.inactiveThumb": {
+      "type": "color",
+      "value": "#91b8b2"
+    },
+    "component.switch.activeTrack": {
+      "type": "color",
+      "value": "#14b8a6"
+    },
+    "component.switch.activeBorder": {
+      "type": "color",
+      "value": "#14b8a6"
+    },
+    "component.switch.activeThumb": {
+      "type": "color",
+      "value": "#042f2e"
     },
     "component.switch.trackWidth": {
       "type": "dimension",

@@ -7,32 +7,30 @@ import {
   KSelect,
   KSurface,
   KText,
+  KTimeline,
+  applyKTimelineProposal,
+  kTimelineAddDays,
+  kTimelineLocalDate,
+  type KTimelineItem,
 } from "@k-design-system/ui";
 import fixture from "../../../fixtures/timeline-reference.json";
-import { TimelineCanvas } from "./timeline/timeline-canvas";
-import {
-  addDays,
-  applyProposal,
-  localDate,
-  type TimelineItem,
-} from "./timeline/timeline-model";
 
 function TimelineReference() {
-  const [items, setItems] = useState<readonly TimelineItem[]>(fixture.items);
+  const [items, setItems] = useState<readonly KTimelineItem[]>(fixture.items);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [window, setWindow] = useState(fixture.window);
   const reject = false;
   const [message, setMessage] = useState(
     "Select an item to inspect or edit its dates.",
   );
-  const [editing, setEditing] = useState<TimelineItem | null>(null);
+  const [editing, setEditing] = useState<KTimelineItem | null>(null);
   const [error, setError] = useState("");
   const format = (date: string) =>
     new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(
-      localDate(date),
+      kTimelineLocalDate(date),
     );
-  const propose = (next: TimelineItem) => {
-    const result = applyProposal(
+  const propose = (next: KTimelineItem) => {
+    const result = applyKTimelineProposal(
       items,
       next,
       fixture.groups.map((group) => group.id),
@@ -49,13 +47,13 @@ function TimelineReference() {
     setItems(result);
     setSelectedId(next.id);
     setMessage(
-      `${next.label}: ${format(next.start)}${next.end ? ` – ${format(addDays(next.end, -1))}` : ""}. Change saved in this demo.`,
+      `${next.label}: ${format(next.start)}${next.end ? ` – ${format(kTimelineAddDays(next.end, -1))}` : ""}. Change saved in this demo.`,
     );
     return true;
   };
   return (
     <KSurface radius="card" className="k-timeline-demo">
-      <TimelineCanvas
+      <KTimeline
         items={items}
         groups={fixture.groups}
         selectedId={selectedId}
@@ -127,12 +125,12 @@ function TimelineReference() {
                   required
                   disabled={editing.readOnly}
                   min={editing.start}
-                  value={addDays(editing.end, -1)}
+                  value={kTimelineAddDays(editing.end, -1)}
                   onChange={(event) => {
                     if (event.target.value)
                       setEditing({
                         ...editing,
-                        end: addDays(event.target.value, 1),
+                        end: kTimelineAddDays(event.target.value, 1),
                       });
                   }}
                 />

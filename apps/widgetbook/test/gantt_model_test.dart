@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:k_design_widgetbook/gantt/gantt_model.dart';
+import 'package:k_design_ui/k_design_ui.dart';
+import 'package:k_design_ui/src/data_display/gantt/gantt_model.dart'
+    show ganttDayIndex, moveGanttTask;
 
 void main() {
   GanttTask task({

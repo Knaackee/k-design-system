@@ -19,6 +19,10 @@
 @import "./ask-tools.css";
 @import "./editors.css";
 @import "./command-palette.css";
+@import "vis-timeline/styles/vis-timeline-graph2d.css";
+@import "@svar-ui/react-gantt/all.css";
+@import "./data-display/timeline/timeline.css";
+@import "./data-display/gantt/gantt.css";
 
 @font-face {
   font-family: "Inter";

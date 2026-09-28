@@ -5,7 +5,7 @@ import {
   addDays,
   applyProposal,
   isDateKey,
-} from "../apps/storybook/src/timeline/timeline-model.ts";
+} from "../packages/web/ui/src/data-display/timeline/timeline-model.ts";
 const fixture = JSON.parse(
   readFileSync(
     new URL("../fixtures/timeline-reference.json", import.meta.url),

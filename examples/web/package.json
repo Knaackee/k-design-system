@@ -1,0 +1,24 @@
+{
+  "name": "@k-design-system/example-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "verify:tree-shaking": "node scripts/verify-tree-shaking.mjs"
+  },
+  "dependencies": {
+    "@k-design-system/tokens": "workspace:*",
+    "@k-design-system/ui": "workspace:*",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.2",
+    "vite": "^8.2.2"
+  }
+}

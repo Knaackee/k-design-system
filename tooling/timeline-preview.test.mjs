@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createTimelinePreview } from "../apps/storybook/src/timeline/timeline-preview.ts";
+import { createTimelinePreview } from "../packages/web/ui/src/data-display/timeline/timeline-preview.ts";
 
 test("proposal painting preserves canonical item geometry and cleans up", () => {
   const previous = globalThis.document;

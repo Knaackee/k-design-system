@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
-import 'timeline/timeline_model.dart';
-import 'timeline/timeline_canvas.dart';
 
 class TimelineFixture extends StatefulWidget {
   const TimelineFixture({super.key});
@@ -280,7 +278,7 @@ class _TimelineFixtureState extends State<TimelineFixture> {
                   style: TextStyle(color: t.colorTextMuted),
                 ),
               ]),
-              TimelineCanvas(
+              KTimeline(
                 items: items,
                 groups: _groups,
                 selectedId: _selected,
