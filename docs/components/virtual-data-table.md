@@ -21,8 +21,12 @@ span columns. Virtual mode has one shared horizontal and vertical viewport.
 
 The existing columns, cell renderer, rowId, sorting, filtering, group paths,
 collapse state, toolbar and optional footer remain consumer-controlled. Configure
-column widths and padding through the same KDataTableColumn API. No header is
-added to the pattern. On Web logical row counts/indices are ARIA attributes;
+column widths and padding through the same KDataTableColumn API. Headers stay
+hidden by default; showHeader=true enables the controlled, sortable header
+specified in [DataTable headers](data-table-headers.md). Its horizontal position
+follows the data viewport; it does not consume an external data index or reduce
+the configured body height. Empty data retains the existing empty presentation.
+On Web logical row counts/indices include the visible header for ARIA only;
 Flutter exposes logical row identifiers/count plus table/row/cell semantics.
 Native screen-reader traversal still requires device-level acceptance.
 

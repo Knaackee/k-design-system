@@ -37,6 +37,36 @@ Finder editTitle(String id) => find.byWidgetPredicate(
   (widget) => widget is KEditableCell && widget.label == 'Edit title for $id',
 );
 void main() {
+  testWidgets('header text aligns with editable title and numeric cell edges', (
+    tester,
+  ) async {
+    await mount(tester, fixture: const DataTableFixture(showHeader: true));
+    expect(
+      tester.getTopLeft(find.text('Project')).dx,
+      closeTo(tester.getTopLeft(find.text('Atlas website')).dx, 1),
+    );
+    expect(
+      tester.getTopRight(find.text('Budget')).dx,
+      closeTo(
+        tester
+            .getTopRight(
+              find.text(
+                formatCurrencyMinorUnits(
+                  12000,
+                  currency: 'EUR',
+                  locale: 'de-DE',
+                  fractionDigits: 0,
+                ),
+              ),
+            )
+            .dx,
+        1,
+      ),
+    );
+    final header = tester.widget<KButton>(button('Project'));
+    expect(header.leading, isNull);
+    expect(header.trailing, isA<KIcon>());
+  });
   Finder draftStatus() =>
       find.byWidgetPredicate((w) => w is KSelect && w.label == 'Status for ');
   testWidgets(

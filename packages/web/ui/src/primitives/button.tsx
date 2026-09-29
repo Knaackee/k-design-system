@@ -1,4 +1,10 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import {
+  Children,
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from "react";
+import { TruncatedContent } from "../internal/truncated-content.js";
 
 export type KButtonVariant = "primary" | "secondary" | "ghost";
 
@@ -46,7 +52,11 @@ export const KButton = forwardRef<HTMLButtonElement, KButtonProps>(
           {loading ? (
             <span className="k-button__spinner" aria-hidden="true" />
           ) : null}
-          <span>{children}</span>
+          <span className="k-button__content">
+            {Children.map(children, (child) => (
+              <TruncatedContent>{child}</TruncatedContent>
+            ))}
+          </span>
         </button>
       </span>
     );

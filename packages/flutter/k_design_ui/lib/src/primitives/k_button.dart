@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'k_icon.dart';
+import 'k_overflow_text.dart';
 
 enum KButtonVariant { primary, secondary, ghost }
 
@@ -11,6 +12,7 @@ class KButton extends StatelessWidget {
     this.loading = false,
     this.fullWidth = false,
     this.leading,
+    this.trailing,
     this.paddingInline,
     this.variant = KButtonVariant.primary,
     super.key,
@@ -21,6 +23,7 @@ class KButton extends StatelessWidget {
   final bool loading;
   final bool fullWidth;
   final Widget? leading;
+  final Widget? trailing;
 
   /// Overrides the density-based horizontal content inset when alignment is
   /// controlled by a parent layout, such as a table column.
@@ -152,10 +155,24 @@ class KButton extends StatelessWidget {
                   ),
                 SizedBox(width: tokens.spaceControlGap),
               ],
-              if (leading != null)
-                Flexible(child: Text(label))
-              else
-                Text(label),
+              Flexible(
+                child: KOverflowText(text: Text(label), focusable: false),
+              ),
+              if (trailing != null) ...[
+                SizedBox(width: tokens.spaceControlGap),
+                if (trailing is KIcon)
+                  KIcon(
+                    (trailing! as KIcon).name,
+                    size: (trailing! as KIcon).size,
+                    color: (trailing! as KIcon).color ?? foreground,
+                    label: (trailing! as KIcon).label,
+                  )
+                else
+                  IconTheme.merge(
+                    data: IconThemeData(color: foreground),
+                    child: trailing!,
+                  ),
+              ],
             ],
           ),
         ),

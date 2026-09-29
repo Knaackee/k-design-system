@@ -18,6 +18,7 @@ import 'textarea_fixture.dart';
 import 'radio_fixture.dart';
 import 'table_fixtures.dart';
 import 'data_table_fixtures.dart';
+import 'data_table_overflow_fixture.dart';
 import 'data_table_cells_fixture.dart';
 import 'disclosure_fixtures.dart';
 import 'overlay_fixtures.dart';
@@ -867,6 +868,11 @@ class KDesignWidgetbook extends StatelessWidget {
                   builder: (_) => const DataTableVirtualFixture(),
                 ),
                 WidgetbookUseCase(
+                  name: 'data-table-virtual-headers',
+                  builder: (_) =>
+                      const DataTableVirtualFixture(showHeader: true),
+                ),
+                WidgetbookUseCase(
                   name: 'data-table-external',
                   builder: (_) => const DataTableVirtualFixture(external: true),
                 ),
@@ -875,6 +881,19 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'DataTable',
               children: [
+                WidgetbookUseCase(
+                  name: 'data-table-overflow',
+                  builder: (_) => const DataTableOverflowFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-headers',
+                  builder: (_) => const DataTableFixture(showHeader: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-grouped-headers',
+                  builder: (_) =>
+                      const DataTableFixture(grouped: true, showHeader: true),
+                ),
                 WidgetbookUseCase(
                   name: 'data-table-cells',
                   builder: (_) => const DataTableCellsFixture(),

@@ -7,6 +7,11 @@ const meta = {
 } satisfies Meta<typeof DataTableVirtualFixture>;
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const Headers: Story = {
+  name: "data-table-virtual-headers",
+  args: { showHeader: true },
+  parameters: { fixtureId: "data-table-virtual-headers" },
+};
 export const Virtual: Story = {
   name: "data-table-virtual",
   args: { external: false },

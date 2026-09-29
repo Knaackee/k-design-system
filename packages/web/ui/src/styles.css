@@ -244,6 +244,8 @@
 }
 
 .k-button-target {
+  min-width: 0;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   min-height: var(--k-size-hit-target);
@@ -259,6 +261,8 @@
 }
 
 .k-button {
+  min-width: 0;
+  max-width: 100%;
   position: relative;
   min-height: var(--k-size-control);
   padding: 0 var(--k-space-control-inset-inline);
@@ -332,6 +336,7 @@
 }
 
 .k-button__spinner {
+  flex-shrink: 0;
   width: var(--k-component-button-loading-indicator-size);
   height: var(--k-component-button-loading-indicator-size);
   box-sizing: border-box;
@@ -401,4 +406,54 @@
 }
 .k-separator--vertical {
   width: var(--k-border-width-default);
+}
+
+/* Labels shrink; icons and loading indicators retain their size. */
+.k-button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+}
+.k-button__content > svg,
+.k-button__content > .k-icon,
+.k-button__content > .k-truncated:has(> .k-truncated__content > .k-icon),
+.k-button__content > .k-truncated:has(> .k-truncated__content > svg) {
+  flex-shrink: 0;
+}
+.k-truncated {
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.k-truncated__content {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: inherit;
+}
+.k-truncated__hint {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  max-width: 100vw;
+  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-overlay);
+  background: var(--k-color-surface-raised);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  font-size: calc(var(--k-font-body-size) * var(--k-text-scale, 1));
+  font-weight: var(--k-font-body-weight);
+  line-height: calc(var(--k-font-body-line-height) * var(--k-text-scale, 1));
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.k-truncated:focus-visible {
+  outline: var(--k-border-width-default) solid var(--k-color-border-focus);
 }

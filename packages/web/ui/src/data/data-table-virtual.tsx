@@ -1,4 +1,6 @@
 import { draftWindow } from "./data-table-draft-window.js";
+import { TruncatedContent } from "../internal/truncated-content.js";
+import { VirtualTableHeader } from "./data-table-virtual-header.js";
 import {
   useCallback,
   useEffect,
@@ -130,6 +132,7 @@ export function KVirtualDataTable<T>(props: Props<T>) {
   );
   const entries = useMemo(() => indexed.map((item) => item.entry), [indexed]);
   const count = projection?.count ?? local.length;
+  const showHeader = props.showHeader && count > 0;
   const entryAt = projection?.entryAt ?? ((index: number) => local[index]);
   const pinnedIndex = activeCell
     ? (indexed.find(
@@ -242,6 +245,7 @@ export function KVirtualDataTable<T>(props: Props<T>) {
   const minimum = tableWidths(columns, 0).reduce((a, b) => a + b, 0);
   const width = Math.max(geometry.width, minimum + maxDepth * indent);
   const [horizontal, setHorizontal] = useState(0);
+  const [headerOffset, setHeaderOffset] = useState(0);
   useEffect(() => {
     const target = props.focusCell;
     if (!target || !scroll.current) return;
@@ -370,6 +374,7 @@ export function KVirtualDataTable<T>(props: Props<T>) {
           data-cell-row={rowId(entry.row)}
           tabIndex={-1}
           className="k-virtual-cell"
+          data-overflow={column.overflow ?? "ellipsis"}
           style={{
             insetInlineStart: x,
             width: widths[index],
@@ -377,38 +382,58 @@ export function KVirtualDataTable<T>(props: Props<T>) {
             paddingInline: column.paddingInline,
           }}
         >
-          <div className="k-virtual-cell-content">{column.cell(entry.row)}</div>
+          <div className="k-virtual-cell-content">
+            {column.overflow === "visible" ? (
+              column.cell(entry.row)
+            ) : (
+              <TruncatedContent>{column.cell(entry.row)}</TruncatedContent>
+            )}
+          </div>
         </div>
       );
     });
   };
   return (
-    <div style={{ width: "100%", minWidth: 0 }}>
+    <div
+      style={{ width: "100%", minWidth: 0 }}
+      role="table"
+      aria-label={props.label}
+      aria-rowcount={count + (showHeader ? 1 : 0)}
+      aria-colcount={columns.length}
+      aria-busy={!!externalWindow && !window}
+    >
       {props.error}
       {!externalWindow && props.model.count === 0 ? props.empty : null}
+      {showHeader ? (
+        <VirtualTableHeader
+          table={{ ...props, rows: [] }}
+          width={width}
+          gutter={maxDepth * indent}
+          offset={headerOffset}
+          tableId={tableId}
+        />
+      ) : null}
       <div
         ref={scroll}
         className="k-virtual-table k-table"
         data-display-mode={props.displayMode}
-        role="table"
-        aria-label={props.label}
-        aria-rowcount={count}
-        aria-colcount={columns.length}
-        aria-busy={!!externalWindow && !window}
         data-row-dividers={props.showRowDividers ?? false}
         style={{ height: viewport.height }}
         tabIndex={0}
-        onScroll={(event) =>
-          setHorizontal(Math.abs(event.currentTarget.scrollLeft))
-        }
+        onScroll={(event) => {
+          setHorizontal(Math.abs(event.currentTarget.scrollLeft));
+          setHeaderOffset(event.currentTarget.scrollLeft);
+        }}
       >
-        <span className="k-table-hidden-header">
-          {columns.map((column, index) => (
-            <span key={column.id} id={`${tableId}-column-${index}`}>
-              {column.label}
-            </span>
-          ))}
-        </span>
+        {!showHeader ? (
+          <span className="k-table-hidden-header">
+            {columns.map((column, index) => (
+              <span key={column.id} id={`${tableId}-column-${index}`}>
+                {column.label}
+              </span>
+            ))}
+          </span>
+        ) : null}
         <span ref={probe} className="k-virtual-row-ruler" aria-hidden="true" />
         <div
           role="rowgroup"
@@ -424,7 +449,7 @@ export function KVirtualDataTable<T>(props: Props<T>) {
               <div
                 key={item.key}
                 role="row"
-                aria-rowindex={item.index + 1}
+                aria-rowindex={item.index + (showHeader ? 2 : 1)}
                 data-entry-id={entry?.id}
                 data-entry-kind={entry?.kind ?? "placeholder"}
                 className="k-virtual-row"

@@ -128,7 +128,13 @@ class _KEditableCellState extends State<KEditableCell> {
                       : Colors.transparent,
                 ),
               ),
-              alignment: AlignmentDirectional.centerStart,
+              alignment: switch (DefaultTextStyle.of(context).textAlign) {
+                TextAlign.end => AlignmentDirectional.centerEnd,
+                TextAlign.right => Alignment.centerRight,
+                TextAlign.center => Alignment.center,
+                TextAlign.left => Alignment.centerLeft,
+                _ => AlignmentDirectional.centerStart,
+              },
               child: DefaultTextStyle(
                 style: TextStyle(
                   fontFamily: t.fontFamily,

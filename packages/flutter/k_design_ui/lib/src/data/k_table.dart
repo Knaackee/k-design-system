@@ -2,8 +2,11 @@ import 'dart:ui' show SemanticsRole;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import '../primitives/k_overflow_text.dart';
 
 enum KTableAlign { start, center, end }
+
+enum KTableTextOverflow { ellipsis, wrap, visible }
 
 /// Column tracks include cell padding. Fixed widths override minWidth and flex.
 class KTableColumn {
@@ -16,6 +19,7 @@ class KTableColumn {
     this.minWidth,
     this.flex = 1,
     this.align = KTableAlign.start,
+    this.overflow = KTableTextOverflow.ellipsis,
   });
   final String id;
   final Widget header;
@@ -27,6 +31,7 @@ class KTableColumn {
   final double? minWidth;
   final double flex;
   final KTableAlign align;
+  final KTableTextOverflow overflow;
 }
 
 class KTableRow {
@@ -173,6 +178,19 @@ class KTable extends StatelessWidget {
                 role: header ? SemanticsRole.columnHeader : SemanticsRole.cell,
                 child: DefaultTextStyle(
                   style: style(header),
+                  maxLines:
+                      header || columns[i].overflow != KTableTextOverflow.wrap
+                      ? 1
+                      : null,
+                  softWrap:
+                      !header && columns[i].overflow == KTableTextOverflow.wrap,
+                  overflow: header
+                      ? TextOverflow.ellipsis
+                      : switch (columns[i].overflow) {
+                          KTableTextOverflow.ellipsis => TextOverflow.ellipsis,
+                          KTableTextOverflow.wrap => TextOverflow.clip,
+                          KTableTextOverflow.visible => TextOverflow.visible,
+                        },
                   textAlign: switch (columns[i].align) {
                     KTableAlign.start => TextAlign.start,
                     KTableAlign.center => TextAlign.center,
@@ -196,7 +214,13 @@ class KTable extends StatelessWidget {
                           KTableAlign.center => AlignmentDirectional.center,
                           KTableAlign.end => AlignmentDirectional.centerEnd,
                         },
-                        child: cells[i],
+                        child:
+                            (header ||
+                                    columns[i].overflow ==
+                                        KTableTextOverflow.ellipsis) &&
+                                cells[i] is Text
+                            ? KOverflowText(text: cells[i] as Text)
+                            : cells[i],
                       ),
                     ),
                   ),

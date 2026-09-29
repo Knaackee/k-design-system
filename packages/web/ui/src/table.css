@@ -3,6 +3,41 @@
   min-width: 0;
   overflow-x: auto;
 }
+.k-button.k-data-table-sort {
+  padding-inline: 0;
+  color: inherit;
+  font-weight: inherit;
+  max-width: 100%;
+}
+.k-data-table-sort > span,
+.k-data-table-header-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+}
+.k-data-table-header-viewport {
+  overflow: hidden;
+  min-width: 0;
+}
+.k-data-table-header-row {
+  display: flex;
+  box-sizing: border-box;
+  background: var(--k-color-surface-subtle);
+  color: var(--k-color-text-muted);
+  font-family: var(--k-font-family);
+  font-size: calc(var(--k-font-body-size) * var(--k-text-scale, 1));
+  font-weight: var(--k-font-label-weight);
+}
+.k-data-table-header-row > [role="columnheader"] {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+}
 .k-table-viewport:focus-visible {
   outline: var(--k-border-width-default) solid var(--k-color-border-focus);
   outline-offset: var(--k-border-width-strong);
@@ -34,7 +69,15 @@
   border-bottom: var(--k-border-width-default) solid
     var(--k-color-border-default);
   vertical-align: middle;
+  white-space: nowrap;
+}
+.k-table td[data-overflow="wrap"] {
+  white-space: normal;
   overflow-wrap: anywhere;
+}
+.k-table th > .k-truncated,
+.k-table td > .k-truncated {
+  display: block;
 }
 .k-table th {
   background: var(--k-color-surface-subtle);
@@ -54,7 +97,8 @@
 
 .k-editable-cell {
   box-sizing: border-box;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   width: 100%;
   min-width: 0;
@@ -66,7 +110,7 @@
   color: inherit;
   font: inherit;
   letter-spacing: inherit;
-  text-align: start;
+  text-align: inherit;
 }
 button.k-editable-cell {
   cursor: pointer;
@@ -161,6 +205,10 @@ button.k-editable-cell:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.k-virtual-cell[data-overflow="visible"],
+.k-virtual-cell[data-overflow="visible"] > .k-virtual-cell-content {
+  overflow: visible;
 }
 
 .k-data-single-row {

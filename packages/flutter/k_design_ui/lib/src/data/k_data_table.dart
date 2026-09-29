@@ -7,6 +7,7 @@ import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_layout.dart';
 import 'k_table.dart';
+import 'k_data_table_header.dart';
 import 'k_data_table_virtual.dart';
 import 'k_data_table_virtual_types.dart';
 
@@ -26,9 +27,11 @@ class KDataTableColumn<T> {
     this.compare,
     this.width,
     this.paddingInline,
+    this.headerContentInset = 0,
     this.minWidth,
     this.flex = 1,
     this.align = KTableAlign.start,
+    this.overflow = KTableTextOverflow.ellipsis,
   });
   final String id;
   final String label;
@@ -38,9 +41,13 @@ class KDataTableColumn<T> {
 
   /// Horizontal cell padding; defaults to the density control inset.
   final double? paddingInline;
+
+  /// Additional header inset for cells with their own internal padding.
+  final double headerContentInset;
   final double? minWidth;
   final double flex;
   final KTableAlign align;
+  final KTableTextOverflow overflow;
 }
 
 class KDataTableGroup<T> {
@@ -82,6 +89,8 @@ class KDataTable<T> extends StatelessWidget {
     required this.rowId,
     required this.empty,
     this.sort,
+    this.showHeader = false,
+    this.onSortChanged,
     this.draftRows = const [],
     this.filter,
     this.groups = const [],
@@ -152,6 +161,10 @@ class KDataTable<T> extends StatelessWidget {
       (draftFor(a) != null ? 1 : 0) - (draftFor(b) != null ? 1 : 0);
   final Widget empty;
   final KDataTableSort? sort;
+  final bool showHeader;
+  final ValueChanged<KDataTableSort?>? onSortChanged;
+  bool get hasHeader =>
+      showHeader && displayMode == KDataTableDisplayMode.multiColumn;
   final bool Function(T)? filter;
   final List<KDataTableGroup<T>> groups;
 
@@ -278,19 +291,20 @@ class KDataTable<T> extends StatelessWidget {
             children: [
               KTable(
                 label: [label, ...labels].join(' / '),
-                showHeader: false,
+                showHeader: hasHeader,
                 showRowDividers: showRowDividers,
                 columns: [
                   for (final c in visibleColumns)
                     KTableColumn(
                       id: c.id,
-                      header: Text(c.label),
+                      header: KDataTableHeader(table: this, column: c),
                       headerLabel: c.label,
                       width: c.width,
                       paddingInline: c.paddingInline,
                       minWidth: c.minWidth,
                       flex: c.flex,
                       align: c.align,
+                      overflow: c.overflow,
                     ),
                 ],
                 rows: [
@@ -364,6 +378,11 @@ class KDataTable<T> extends StatelessWidget {
             empty: empty,
             draftRows: draftRows.where((d) => d.originPath.isEmpty).toList(),
             showRowDividers: showRowDividers,
+            showHeader: showHeader,
+            sort: sort,
+            onSortChanged: onSortChanged,
+            activeCell: activeCell,
+            onBeforeActiveCellExit: onBeforeActiveCellExit,
           ),
       ],
     );

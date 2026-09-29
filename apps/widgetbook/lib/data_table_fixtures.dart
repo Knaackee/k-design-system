@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'data_table_title_cell.dart';
+import 'data_table_sort_menu.dart';
 import 'data_table_budget_cell.dart';
 import 'data_table_project_data.dart';
 export 'data_table_project_data.dart' show DataTableProject;
@@ -11,6 +12,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 class DataTableFixture extends StatefulWidget {
   const DataTableFixture({
     this.grouped = false,
+    this.showHeader = false,
     this.singleColumn = false,
     this.addLabel = 'Add project',
     this.initialEditColumn = 'project',
@@ -31,6 +33,7 @@ class DataTableFixture extends StatefulWidget {
   )?
   createProject;
   final bool grouped;
+  final bool showHeader;
   final bool singleColumn;
   @override
   State<DataTableFixture> createState() => _DataTableFixtureState();
@@ -305,6 +308,7 @@ class _DataTableFixtureState extends State<DataTableFixture> {
                 KDataTableColumn(
                   id: 'project',
                   label: 'Project',
+                  headerContentInset: 4 + t.borderWidthDefault,
                   minWidth: 240,
                   flex: 2,
                   paddingInline: 0,
@@ -314,6 +318,8 @@ class _DataTableFixtureState extends State<DataTableFixture> {
                 KDataTableColumn(
                   id: 'status',
                   label: 'Status',
+                  headerContentInset:
+                      t.spaceControlInsetInline + t.borderWidthDefault,
                   minWidth: 180,
                   cell: (row) => _draftCell(
                     row,
@@ -336,6 +342,7 @@ class _DataTableFixtureState extends State<DataTableFixture> {
                 KDataTableColumn(
                   id: 'budget',
                   label: 'Budget',
+                  headerContentInset: 4 + t.borderWidthDefault,
                   width: 168,
                   align: KTableAlign.end,
                   cell: (row) => _draftCell(
@@ -358,6 +365,8 @@ class _DataTableFixtureState extends State<DataTableFixture> {
                 child: const KText('No matching projects'),
               ),
               sort: _sort,
+              showHeader: widget.showHeader,
+              onSortChanged: (sort) => setState(() => _sort = sort),
               footerBuilder: !widget.allowAdd
                   ? null
                   : (section) => Semantics(
@@ -437,55 +446,8 @@ class _DataTableFixtureState extends State<DataTableFixture> {
                       },
                     ),
                   ),
-                  KMenuButton(
-                    label: 'Sort',
-                    actions: [
-                      KMenuAction(
-                        id: 'original',
-                        label: 'Original order',
-                        onSelect: () => setState(() => _sort = null),
-                      ),
-                      KMenuAction(
-                        id: 'project-asc',
-                        label: 'Project ascending',
-                        onSelect: () => setState(
-                          () => _sort = const KDataTableSort(
-                            columnId: 'project',
-                            direction: KDataTableSortDirection.ascending,
-                          ),
-                        ),
-                      ),
-                      KMenuAction(
-                        id: 'project-desc',
-                        label: 'Project descending',
-                        onSelect: () => setState(
-                          () => _sort = const KDataTableSort(
-                            columnId: 'project',
-                            direction: KDataTableSortDirection.descending,
-                          ),
-                        ),
-                      ),
-                      KMenuAction(
-                        id: 'budget-asc',
-                        label: 'Budget ascending',
-                        onSelect: () => setState(
-                          () => _sort = const KDataTableSort(
-                            columnId: 'budget',
-                            direction: KDataTableSortDirection.ascending,
-                          ),
-                        ),
-                      ),
-                      KMenuAction(
-                        id: 'budget-desc',
-                        label: 'Budget descending',
-                        onSelect: () => setState(
-                          () => _sort = const KDataTableSort(
-                            columnId: 'budget',
-                            direction: KDataTableSortDirection.descending,
-                          ),
-                        ),
-                      ),
-                    ],
+                  DataTableSortMenu(
+                    onChanged: (sort) => setState(() => _sort = sort),
                   ),
                 ],
               ),
