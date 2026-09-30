@@ -46,6 +46,7 @@ import 'animated_icon_fixture.dart';
 import 'theme_switcher_fixture.dart';
 import 'user_menu_fixture.dart';
 import 'notification_fixture.dart';
+import 'orbit_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -217,6 +218,23 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Data display',
           children: [
+            WidgetbookFolder(
+              name: 'Orbit',
+              children: [
+                WidgetbookUseCase(
+                  name: 'orbit-team-projects',
+                  builder: (_) => const OrbitFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'orbit-communication',
+                  builder: (_) => const OrbitFixture(communication: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'orbit-deterministic',
+                  builder: (_) => const OrbitFixture(freeze: true),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Gantt',
               children: [

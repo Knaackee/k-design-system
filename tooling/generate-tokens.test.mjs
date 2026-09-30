@@ -127,6 +127,58 @@ test("preserves component aliases as live Web custom-property references", async
   );
 });
 
+test("projects the shared Orbit appearance and signal timing contract", async () => {
+  const [flat, css, dart] = await Promise.all([
+    readFile(new URL("../dist/tokens.flat.json", import.meta.url), "utf8").then(
+      JSON.parse,
+    ),
+    readFile(
+      new URL(
+        "../packages/web/tokens/src/generated/tokens.css",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    readFile(
+      new URL(
+        "../packages/flutter/k_design_tokens/lib/src/generated/k_design_tokens.g.dart",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ]);
+
+  for (const theme of ["orbitLight", "orbitDark"]) {
+    assert.equal(flat[theme]["component.orbit.track.color"].value, "#c17e47");
+    assert.equal(
+      flat[theme]["component.orbit.center.highlight"].value,
+      "#edba87",
+    );
+    assert.equal(
+      flat[theme]["component.orbit.motion.travelDuration"].value.value,
+      1200,
+    );
+    assert.equal(
+      flat[theme]["component.orbit.motion.pingDuration"].value.value,
+      240,
+    );
+  }
+
+  assert.match(css, /--k-component-orbit-signal-ping-radius:/);
+  assert.match(css, /--k-component-orbit-center-base: #ad622f;/);
+  assert.match(css, /--k-component-orbit-center-radius-ratio: 0\.296;/);
+  assert.match(dart, /componentOrbitCenterRadiusRatio: 0\.296,/);
+  // Foundation aliases must resolve to values: only semantic names are emitted.
+  const emittedNames = new Set(
+    [...css.matchAll(/(--k-[\w-]+):/g)].map((m) => m[1]),
+  );
+  for (const match of css.matchAll(/var\((--k-[\w-]+)\)/g)) {
+    assert.ok(emittedNames.has(match[1]), `Missing CSS token ${match[1]}`);
+  }
+  assert.match(dart, /final Duration componentOrbitMotionTravelDuration;/);
+  assert.match(dart, /final double componentOrbitSignalParticleSize;/);
+});
+
 test("generates transparent DTCG colors for Flutter", async () => {
   const dart = await readFile(
     new URL(

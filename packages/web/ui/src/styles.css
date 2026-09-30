@@ -23,6 +23,7 @@
 @import "@svar-ui/react-gantt/all.css";
 @import "./data-display/timeline/timeline.css";
 @import "./data-display/gantt/gantt.css";
+@import "./data-display/orbit/orbit.css";
 
 @font-face {
   font-family: "Inter";

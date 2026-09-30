@@ -417,3 +417,22 @@ export {
   summarizeTasks as summarizeKGanttTasks,
   addDays as kGanttAddDays,
 } from "./data-display/gantt/gantt-model.js";
+export { KOrbit } from "./data-display/orbit/orbit.js";
+export type { KOrbitProps, KOrbitLabels } from "./data-display/orbit/orbit.js";
+export {
+  KOrbitController,
+  kOrbitDefaultView,
+} from "./data-display/orbit/orbit-model.js";
+export type {
+  KOrbitLevel,
+  KOrbitNode,
+  KOrbitConnection,
+  KOrbitViewState,
+  KOrbitSignal,
+  KOrbitSignalResult,
+  KOrbitSignalEndReason,
+  KOrbitLineStyle,
+  KOrbitSignalStyle,
+  KOrbitTone,
+  KOrbitNodeStatus,
+} from "./data-display/orbit/orbit-model.js";

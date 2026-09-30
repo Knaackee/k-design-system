@@ -164,7 +164,12 @@ function tokenReference(token) {
 
 function cssTokenValue(path, token, sourceTokens, overrides = new Map()) {
   const reference = tokenReference(sourceTokens.get(path));
-  if (path.startsWith("component.") && reference && !overrides.has(path)) {
+  if (
+    path.startsWith("component.") &&
+    reference &&
+    sourceTokens.has(reference) &&
+    !overrides.has(path)
+  ) {
     return `var(--k-${kebab(reference)})`;
   }
   return cssValue(token);
@@ -208,7 +213,9 @@ function dartValue(token) {
     case "dimension":
       return `${Number(token.value.value).toFixed(1)}`;
     case "number":
-      return `${Number(token.value).toFixed(2)}`;
+      return Number.isInteger(Number(token.value))
+        ? `${Number(token.value)}.0`
+        : String(Number(token.value));
     case "duration":
       return `Duration(${token.value.unit === "ms" ? "milliseconds" : "seconds"}: ${token.value.value})`;
     case "fontFamily":

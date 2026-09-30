@@ -1338,6 +1338,13 @@
         "unit": "ms"
       }
     },
+    "motion.emphasis": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
     "motion.long": {
       "type": "duration",
       "value": {
@@ -1591,6 +1598,162 @@
     "component.chart.gridColor": {
       "type": "color",
       "value": "#e2e2e4"
+    },
+    "component.orbit.track.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.track.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.track.opacity": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.orbit.connection.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.connection.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.gapLength": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.opacity": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.orbit.center.radiusRatio": {
+      "type": "number",
+      "value": 0.296
+    },
+    "component.orbit.center.shadow": {
+      "type": "color",
+      "value": "#382820"
+    },
+    "component.orbit.center.base": {
+      "type": "color",
+      "value": "#ad622f"
+    },
+    "component.orbit.center.highlight": {
+      "type": "color",
+      "value": "#edba87"
+    },
+    "component.orbit.center.rim": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.glow.color": {
+      "type": "color",
+      "value": "#d88945"
+    },
+    "component.orbit.glow.blur": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.orbit.glow.opacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.orbit.node.size": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.hitTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.particleSize": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.trailLength": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.pingRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.orbit.motion.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.travelDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.pingDuration": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
     },
     "component.button.disabled.opacity": {
       "type": "number",
@@ -4464,6 +4627,13 @@
         "unit": "ms"
       }
     },
+    "motion.emphasis": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
     "motion.long": {
       "type": "duration",
       "value": {
@@ -4717,6 +4887,162 @@
     "component.chart.gridColor": {
       "type": "color",
       "value": "#303033"
+    },
+    "component.orbit.track.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.track.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.track.opacity": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.orbit.connection.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.connection.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.gapLength": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.opacity": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.orbit.center.radiusRatio": {
+      "type": "number",
+      "value": 0.296
+    },
+    "component.orbit.center.shadow": {
+      "type": "color",
+      "value": "#382820"
+    },
+    "component.orbit.center.base": {
+      "type": "color",
+      "value": "#ad622f"
+    },
+    "component.orbit.center.highlight": {
+      "type": "color",
+      "value": "#edba87"
+    },
+    "component.orbit.center.rim": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.glow.color": {
+      "type": "color",
+      "value": "#d88945"
+    },
+    "component.orbit.glow.blur": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.orbit.glow.opacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.orbit.node.size": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.hitTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.particleSize": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.trailLength": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.pingRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.orbit.motion.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.travelDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.pingDuration": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
     },
     "component.button.disabled.opacity": {
       "type": "number",
@@ -7590,6 +7916,13 @@
         "unit": "ms"
       }
     },
+    "motion.emphasis": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
     "motion.long": {
       "type": "duration",
       "value": {
@@ -7843,6 +8176,162 @@
     "component.chart.gridColor": {
       "type": "color",
       "value": "#99d5cd"
+    },
+    "component.orbit.track.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.track.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.track.opacity": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.orbit.connection.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.connection.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.gapLength": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.opacity": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.orbit.center.radiusRatio": {
+      "type": "number",
+      "value": 0.296
+    },
+    "component.orbit.center.shadow": {
+      "type": "color",
+      "value": "#382820"
+    },
+    "component.orbit.center.base": {
+      "type": "color",
+      "value": "#ad622f"
+    },
+    "component.orbit.center.highlight": {
+      "type": "color",
+      "value": "#edba87"
+    },
+    "component.orbit.center.rim": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.glow.color": {
+      "type": "color",
+      "value": "#d88945"
+    },
+    "component.orbit.glow.blur": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.orbit.glow.opacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.orbit.node.size": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.hitTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.particleSize": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.trailLength": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.pingRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.orbit.motion.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.travelDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.pingDuration": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
     },
     "component.button.disabled.opacity": {
       "type": "number",
@@ -10716,6 +11205,13 @@
         "unit": "ms"
       }
     },
+    "motion.emphasis": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
     "motion.long": {
       "type": "duration",
       "value": {
@@ -10969,6 +11465,162 @@
     "component.chart.gridColor": {
       "type": "color",
       "value": "#23544e"
+    },
+    "component.orbit.track.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.track.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.track.opacity": {
+      "type": "number",
+      "value": 0.28
+    },
+    "component.orbit.connection.color": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.connection.lineWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.gapLength": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.connection.opacity": {
+      "type": "number",
+      "value": 0.62
+    },
+    "component.orbit.center.radiusRatio": {
+      "type": "number",
+      "value": 0.296
+    },
+    "component.orbit.center.shadow": {
+      "type": "color",
+      "value": "#382820"
+    },
+    "component.orbit.center.base": {
+      "type": "color",
+      "value": "#ad622f"
+    },
+    "component.orbit.center.highlight": {
+      "type": "color",
+      "value": "#edba87"
+    },
+    "component.orbit.center.rim": {
+      "type": "color",
+      "value": "#c17e47"
+    },
+    "component.orbit.glow.color": {
+      "type": "color",
+      "value": "#d88945"
+    },
+    "component.orbit.glow.blur": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.orbit.glow.opacity": {
+      "type": "number",
+      "value": 0.12
+    },
+    "component.orbit.node.size": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelSize": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.hitTargetSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.orbit.node.labelOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.particleSize": {
+      "type": "dimension",
+      "value": {
+        "value": 5,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.trailLength": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.orbit.signal.pingRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.orbit.motion.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.travelDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1200,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.pingDuration": {
+      "type": "duration",
+      "value": {
+        "value": 240,
+        "unit": "ms"
+      }
+    },
+    "component.orbit.motion.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 180,
+        "unit": "ms"
+      }
     },
     "component.button.disabled.opacity": {
       "type": "number",

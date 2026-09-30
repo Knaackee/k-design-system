@@ -1,0 +1,84 @@
+{
+  "size": { "width": 400, "height": 400 },
+  "levels": [
+    { "id": "projects", "label": "Projects", "radius": 10, "periodSeconds": 8 },
+    { "id": "issues", "label": "Issues", "radius": 3, "periodSeconds": 4 },
+    { "id": "people", "label": "People", "radius": 1, "periodSeconds": 2 }
+  ],
+  "nodes": [
+    { "id": "root", "label": "Root" },
+    {
+      "id": "project",
+      "label": "Project",
+      "levelId": "projects",
+      "parentId": "root",
+      "phase": 0
+    },
+    {
+      "id": "issue",
+      "label": "Issue",
+      "levelId": "issues",
+      "parentId": "project",
+      "phase": 0
+    },
+    {
+      "id": "agent",
+      "label": "Agent",
+      "levelId": "people",
+      "parentId": "issue",
+      "phase": 0
+    }
+  ],
+  "cases": [
+    {
+      "time": 0,
+      "yaw": 0,
+      "pitch": 0,
+      "points": {
+        "root": [200, 200, 0],
+        "project": [320, 200, 0],
+        "issue": [356, 200, 0],
+        "agent": [368, 200, 0]
+      }
+    },
+    {
+      "time": 1,
+      "yaw": 0,
+      "pitch": 0,
+      "points": {
+        "root": [200, 200, 0],
+        "project": [284.8528137423857, 115.1471862576143, 0],
+        "issue": [284.8528137423857, 79.1471862576143, 0],
+        "agent": [272.8528137423857, 79.1471862576143, 0]
+      }
+    },
+    {
+      "time": 0,
+      "yaw": 1.5707963267948966,
+      "pitch": 0,
+      "points": {
+        "root": [200, 200, 0],
+        "project": [200, 200, -0.7142857142857143],
+        "issue": [200, 200, -0.9285714285714286],
+        "agent": [200, 200, -1]
+      }
+    },
+    {
+      "time": 1,
+      "yaw": 0.3,
+      "pitch": 0.4,
+      "points": {
+        "root": [200, 200, 0],
+        "project": [
+          290.8279348977121, 121.84538303049655, 0.038641034603683434
+        ],
+        "issue": [294.97085050159575, 88.6871872463927, 0.11836079573416762],
+        "agent": [283.5068126320885, 88.6871872463927, 0.1394693819242633]
+      }
+    }
+  ],
+  "extent": 14,
+  "scale": 12,
+  "centerRadius": 49.728,
+  "ringCount": 3
+}

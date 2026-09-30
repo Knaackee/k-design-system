@@ -466,6 +466,7 @@
     "quick": { "$type": "duration", "$value": "{motion.duration.quick}" },
     "standard": { "$type": "duration", "$value": "{motion.duration.standard}" },
     "moderate": { "$type": "duration", "$value": "{motion.duration.moderate}" },
+    "emphasis": { "$type": "duration", "$value": "{motion.duration.emphasis}" },
     "long": { "$type": "duration", "$value": "{motion.duration.long}" },
     "spinner": { "$type": "duration", "$value": "{motion.duration.spinner}" },
     "progress": { "$type": "duration", "$value": "{motion.duration.progress}" },
@@ -606,6 +607,88 @@
       "gridColor": {
         "$type": "color",
         "$value": "{color.border.default}"
+      }
+    },
+    "orbit": {
+      "track": {
+        "color": { "$type": "color", "$value": "{color.bronze.accent}" },
+        "lineWidth": {
+          "$type": "dimension",
+          "$value": "{border.width.default}"
+        },
+        "opacity": { "$type": "number", "$value": "{opacity.medium}" }
+      },
+      "connection": {
+        "color": { "$type": "color", "$value": "{color.bronze.accent}" },
+        "lineWidth": {
+          "$type": "dimension",
+          "$value": "{border.width.default}"
+        },
+        "dashLength": { "$type": "dimension", "$value": "{space.1}" },
+        "gapLength": {
+          "$type": "dimension",
+          "$value": "{space.compact}"
+        },
+        "opacity": { "$type": "number", "$value": "{opacity.strong}" }
+      },
+      "center": {
+        "radiusRatio": { "$type": "number", "$value": 0.296 },
+        "shadow": { "$type": "color", "$value": "{color.bronze.shadow}" },
+        "base": { "$type": "color", "$value": "{color.bronze.base}" },
+        "highlight": {
+          "$type": "color",
+          "$value": "{color.bronze.highlight}"
+        },
+        "rim": { "$type": "color", "$value": "{color.bronze.accent}" }
+      },
+      "glow": {
+        "color": { "$type": "color", "$value": "{color.bronze.glow}" },
+        "blur": { "$type": "dimension", "$value": "{space.8}" },
+        "opacity": { "$type": "number", "$value": "{opacity.faint}" }
+      },
+      "node": {
+        "size": { "$type": "dimension", "$value": "{size.iconDefault}" },
+        "labelSize": { "$type": "dimension", "$value": "{font.caption.size}" },
+        "hitTargetSize": {
+          "$type": "dimension",
+          "$value": "{size.control.lg}"
+        },
+        "labelOffset": {
+          "$type": "dimension",
+          "$value": { "value": 18, "unit": "px" }
+        }
+      },
+      "signal": {
+        "particleSize": {
+          "$type": "dimension",
+          "$value": "{space.compact}"
+        },
+        "trailLength": {
+          "$type": "dimension",
+          "$value": "{size.iconDefault}"
+        },
+        "pingRadius": {
+          "$type": "dimension",
+          "$value": "{space.barVertical}"
+        }
+      },
+      "motion": {
+        "pulseDuration": {
+          "$type": "duration",
+          "$value": { "value": 1800, "unit": "ms" }
+        },
+        "travelDuration": {
+          "$type": "duration",
+          "$value": "{motion.progress}"
+        },
+        "pingDuration": {
+          "$type": "duration",
+          "$value": "{motion.emphasis}"
+        },
+        "transitionDuration": {
+          "$type": "duration",
+          "$value": "{motion.moderate}"
+        }
       }
     },
     "button": {

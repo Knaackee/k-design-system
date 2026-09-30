@@ -21,6 +21,13 @@
       "600": { "$type": "color", "$value": "#0d9488" },
       "700": { "$type": "color", "$value": "#0f766e" }
     },
+    "bronze": {
+      "shadow": { "$type": "color", "$value": "#382820" },
+      "base": { "$type": "color", "$value": "#ad622f" },
+      "accent": { "$type": "color", "$value": "#c17e47" },
+      "highlight": { "$type": "color", "$value": "#edba87" },
+      "glow": { "$type": "color", "$value": "#d88945" }
+    },
     "violet": {
       "50": { "$type": "color", "$value": "#f5f3ff" },
       "200": { "$type": "color", "$value": "#ddd6fe" },
@@ -705,6 +712,10 @@
       "moderate": {
         "$type": "duration",
         "$value": { "value": 180, "unit": "ms" }
+      },
+      "emphasis": {
+        "$type": "duration",
+        "$value": { "value": 240, "unit": "ms" }
       },
       "long": { "$type": "duration", "$value": { "value": 500, "unit": "ms" } },
       "spinner": {

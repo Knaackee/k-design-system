@@ -1,0 +1,281 @@
+.k-orbit {
+  --k-component-orbit-progress-line-width: var(--k-border-width-focus);
+  width: 100%;
+  min-width: 0;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+
+.k-orbit__stage {
+  position: relative;
+  width: 100%;
+  min-height: calc(var(--k-size-control) * 16);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+.k-orbit__stage:focus-visible {
+  outline: var(--k-border-width-focus) solid var(--k-color-focus-ring);
+  outline-offset: var(--k-space-micro);
+}
+.k-orbit__stage[data-interaction-mode="embedded"] {
+  touch-action: pan-y;
+}
+
+.k-orbit__stage canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+.k-orbit__shader {
+  display: none !important;
+}
+
+.k-orbit__node {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: max(
+    var(--k-component-orbit-node-hit-target-size),
+    calc(var(--k-orbit-node-radius) * 2)
+  );
+  height: max(
+    var(--k-component-orbit-node-hit-target-size),
+    calc(var(--k-orbit-node-radius) * 2)
+  );
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--k-color-text-primary);
+  font: inherit;
+  cursor: pointer;
+  opacity: var(--k-orbit-depth, 1);
+}
+
+.k-orbit__node-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: calc(var(--k-orbit-node-radius) * 2);
+  height: calc(var(--k-orbit-node-radius) * 2);
+  overflow: hidden;
+  border: var(--k-border-width-default) solid transparent;
+  border-radius: var(--k-radius-full);
+  background: transparent;
+  font-size: var(--k-font-body-size);
+  font-weight: var(--k-font-label-weight);
+  translate: -50% -50%;
+}
+.k-orbit__node-visual {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--k-component-orbit-node-size);
+  height: var(--k-component-orbit-node-size);
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  translate: -50% -50%;
+  scale: calc(var(--k-orbit-node-scale, 1) * 2);
+}
+.k-orbit__node-visual > * {
+  width: 70%;
+  height: 70%;
+  max-width: 70%;
+  max-height: 70%;
+}
+
+.k-orbit__node-label {
+  position: absolute;
+  left: calc(50% + var(--k-orbit-label-offset));
+  top: 50%;
+  box-sizing: border-box;
+  width: var(--k-orbit-label-width);
+  padding: var(--k-space-micro) var(--k-space-control-gap);
+  overflow: hidden;
+  border-radius: var(--k-radius-control);
+  background: color-mix(
+    in srgb,
+    var(--k-color-surface-raised) 90%,
+    transparent
+  );
+  font-size: var(--k-component-orbit-node-label-size);
+  font-weight: var(--k-font-label-weight);
+  line-height: var(--k-font-caption-line-height);
+  text-overflow: ellipsis;
+  translate: 0 -50%;
+  white-space: nowrap;
+}
+.k-orbit__node[data-label-side="left"] .k-orbit__node-label {
+  left: auto;
+  right: calc(50% + var(--k-orbit-label-offset));
+}
+.k-orbit__node[data-label-side="below"] .k-orbit__node-label {
+  left: 50%;
+  top: calc(50% + var(--k-orbit-label-offset));
+  translate: -50% 0;
+}
+.k-orbit__node[data-label-side="above"] .k-orbit__node-label {
+  left: 50%;
+  top: auto;
+  bottom: calc(50% + var(--k-orbit-label-offset));
+  translate: -50% 0;
+}
+.k-orbit__node[data-center] {
+  border-radius: var(--k-radius-full);
+}
+.k-orbit__node[data-label-side="center"] .k-orbit__node-label {
+  left: 50%;
+  top: calc(50% + var(--k-orbit-center-radius) + var(--k-orbit-root-label-gap));
+  translate: -50% 0;
+}
+.k-orbit__node[data-label-side="hidden"] .k-orbit__node-label {
+  display: none;
+}
+.k-orbit__node[data-label-side="hidden"]:is(
+    :hover,
+    :focus-visible,
+    [data-selected]
+  )
+  .k-orbit__node-label {
+  left: calc(50% + var(--k-orbit-label-offset));
+  top: 50%;
+  display: block;
+  translate: 0 -50%;
+}
+
+.k-orbit__node:hover .k-orbit__node-content,
+.k-orbit__node[data-selected] .k-orbit__node-content {
+  border-color: var(--k-color-border-focus);
+  background: color-mix(in srgb, var(--k-color-text-primary) 8%, transparent);
+}
+
+.k-orbit__node:focus-visible {
+  outline: none;
+}
+.k-orbit__node:focus-visible .k-orbit__node-content {
+  outline: var(--k-border-width-focus) solid var(--k-color-focus-ring);
+  outline-offset: var(--k-space-micro);
+}
+.k-orbit__node:disabled {
+  cursor: default;
+  opacity: var(--k-opacity-disabled);
+}
+.k-orbit__node[data-departing] {
+  pointer-events: none;
+}
+.k-orbit__node[data-departing] .k-orbit__node-label {
+  display: none;
+}
+
+.k-orbit__controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+  padding-block-start: var(--k-space-control-gap);
+}
+.k-orbit__controls .k-slider {
+  min-width: calc(var(--k-size-control) * 4);
+  flex: 1 1 12rem;
+}
+
+.k-orbit__sr-only {
+  position: absolute;
+  width: var(--k-border-width-default);
+  height: var(--k-border-width-default);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 599px) {
+  .k-orbit__stage {
+    min-height: calc(var(--k-size-control) * 13);
+  }
+  .k-orbit__node-label {
+    max-width: calc(var(--k-size-control) * 4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-orbit__node {
+    transition: none;
+  }
+}
+
+.k-orbit__stage[data-label-visibility="interaction"]
+  .k-orbit__node:not(:hover):not(:focus-visible):not([data-selected])
+  .k-orbit__node-label,
+.k-orbit__stage[data-label-visibility="hidden"]
+  .k-orbit__node
+  .k-orbit__node-label {
+  display: none;
+}
+.k-orbit__node[data-appearance="avatar"] .k-orbit__node-visual > * {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: grid;
+  place-items: center;
+}
+.k-orbit__node[data-appearance="avatar"] .k-orbit__node-content {
+  font-size: var(--k-font-body-size);
+}
+.k-orbit__node[data-tone="warning"] {
+  --k-orbit-status-color: var(--k-color-status-warning-accent);
+}
+.k-orbit__node[data-tone="error"] {
+  --k-orbit-status-color: var(--k-color-status-error-accent);
+}
+.k-orbit__node[data-tone="success"] {
+  --k-orbit-status-color: var(--k-color-status-success-accent);
+}
+.k-orbit__status {
+  position: absolute;
+  left: calc(50% + var(--k-orbit-node-radius) * 0.7);
+  top: calc(50% - var(--k-orbit-node-radius) * 0.7);
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: var(--k-size-content);
+  height: var(--k-size-content);
+  border-radius: var(--k-radius-full);
+  border: var(--k-border-width-default) solid
+    var(--k-orbit-status-color, var(--k-color-status-info-accent));
+  color: var(--k-orbit-status-color, var(--k-color-status-info-accent));
+  background: var(--k-color-surface-raised);
+  font-size: var(--k-font-caption-size);
+  font-weight: var(--k-font-label-weight);
+  scale: var(--k-orbit-node-scale, 1);
+  pointer-events: none;
+}
+
+.k-orbit__node[data-node-tone="info"] .k-orbit__node-content {
+  color: var(--k-color-status-info-foreground);
+}
+.k-orbit__node[data-node-tone="success"] .k-orbit__node-content {
+  color: var(--k-color-status-success-foreground);
+}
+.k-orbit__node[data-node-tone="warning"] .k-orbit__node-content {
+  color: var(--k-color-status-warning-foreground);
+}
+.k-orbit__node[data-node-tone="error"] .k-orbit__node-content {
+  color: var(--k-color-status-error-foreground);
+}
+
+/* Zero-width borders resolve consumer CSS colors for the canvas. */
+.k-orbit__node {
+  border-top-color: var(--k-orbit-custom-background, transparent);
+  border-bottom-color: var(--k-orbit-custom-border, transparent);
+}
+.k-orbit__status {
+  min-width: var(--k-size-content);
+  width: auto;
+  padding-inline: var(--k-space-micro);
+}
