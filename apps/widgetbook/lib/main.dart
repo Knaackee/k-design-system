@@ -233,6 +233,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'orbit-deterministic',
                   builder: (_) => const OrbitFixture(freeze: true),
                 ),
+                WidgetbookUseCase(
+                  name: 'orbit-deep-hierarchy',
+                  builder: (_) => const OrbitFixture(deep: true),
+                ),
               ],
             ),
             WidgetbookFolder(

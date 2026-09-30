@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
-import '../../primitives/k_icon.dart';
 import 'orbit_models.dart';
 import 'orbit_projection.dart';
 
-class KOrbitNodeLayer extends StatelessWidget {
+class KOrbitNodeLayer extends StatefulWidget {
   const KOrbitNodeLayer({
     required this.levels,
     required this.nodes,
@@ -21,6 +20,8 @@ class KOrbitNodeLayer extends StatelessWidget {
     required this.opacityFor,
     required this.scaleFor,
     required this.isDeparting,
+    this.sceneFor,
+    this.labelVisibility = KOrbitLabelVisibility.interaction,
     this.centerContent,
     super.key,
   });
@@ -39,32 +40,48 @@ class KOrbitNodeLayer extends StatelessWidget {
   final double Function(String id) opacityFor;
   final double Function(String id) scaleFor;
   final bool Function(String id) isDeparting;
+  final KOrbitSceneProjection Function(Size)? sceneFor;
+  final KOrbitLabelVisibility labelVisibility;
   final Widget? centerContent;
+
+  @override
+  State<KOrbitNodeLayer> createState() => _KOrbitNodeLayerState();
+}
+
+class _KOrbitNodeLayerState extends State<KOrbitNodeLayer> {
+  String? hoveredId;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => AnimatedBuilder(
-      animation: repaint,
+      animation: widget.repaint,
       builder: (context, _) {
         final size = constraints.biggest;
-        final scene = projectKOrbitScene(
-          size: size,
-          levels: levels,
-          nodes: nodes,
-          connections: connections,
-          view: view(),
-          timeSeconds: time(),
-          radiusRatio: tokens.componentOrbitCenterRadiusRatio,
-          extentOverride: extentOverride,
-        );
+        final scene =
+            widget.sceneFor?.call(size) ??
+            projectKOrbitScene(
+              size: size,
+              levels: widget.levels,
+              nodes: widget.nodes,
+              connections: widget.connections,
+              view: widget.view(),
+              timeSeconds: widget.time(),
+              radiusRatio: widget.tokens.componentOrbitCenterRadiusRatio,
+              extentOverride: widget.extentOverride,
+            );
         final labels = kOrbitLabelLayout(
           scene: scene,
           size: size,
-          fontSize: tokens.componentOrbitNodeLabelSize,
-          labelHeight: tokens.fontCaptionLineHeight,
-          labelOffset: tokens.componentOrbitNodeLabelOffset,
-          nodeSize: tokens.componentOrbitNodeSize,
-          selectedId: selectedId,
+          visibleIds: widget.labelVisibility == KOrbitLabelVisibility.always
+              ? null
+              : widget.labelVisibility == KOrbitLabelVisibility.hidden
+              ? const <String>{}
+              : {if (widget.selectedId != null) widget.selectedId!, ?hoveredId},
+          fontSize: widget.tokens.componentOrbitNodeLabelSize,
+          labelHeight: widget.tokens.fontCaptionLineHeight,
+          labelOffset: widget.tokens.componentOrbitNodeLabelOffset,
+          nodeSize: widget.tokens.componentOrbitNodeSize,
+          selectedId: widget.selectedId,
         );
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -73,11 +90,11 @@ class KOrbitNodeLayer extends StatelessWidget {
               scene: scene,
               labels: labels,
               point: details.localPosition,
-              hitTargetSize: tokens.componentOrbitNodeHitTargetSize,
+              hitTargetSize: widget.tokens.componentOrbitNodeHitTargetSize,
               eligible: (item) =>
-                  !isDeparting(item.node.id) && !_occluded(item, scene),
+                  !widget.isDeparting(item.node.id) && !_occluded(item, scene),
             );
-            if (node != null) onActivate(node);
+            if (node != null) widget.onActivate(node);
           },
           child: Stack(
             clipBehavior: Clip.none,
@@ -95,38 +112,36 @@ class KOrbitNodeLayer extends StatelessWidget {
 
   Widget _marker(KOrbitProjectedNode item, KOrbitSceneProjection scene) {
     final node = item.node;
-    final center = item.point.offset;
-    final markerSize = node.isCenter
-        ? scene.centerRadius * 2
-        : tokens.componentOrbitNodeSize;
+    final radius = scene.radiusFor(node.id) * widget.scaleFor(node.id);
+    final visualSize = radius * 2;
+    final hitSize = visualSize < widget.tokens.componentOrbitNodeHitTargetSize
+        ? widget.tokens.componentOrbitNodeHitTargetSize
+        : visualSize;
     final occluded = _occluded(item, scene);
+    final hidden = occluded || widget.isDeparting(node.id);
     final depth = .55 + .45 * ((item.point.depth + 1) / 2).clamp(0, 1);
-    final hidden = occluded || isDeparting(node.id);
     return Positioned(
-      left: center.dx - markerSize / 2,
-      top: center.dy - markerSize / 2,
-      width: markerSize,
-      height: markerSize,
-      child: IgnorePointer(
-        ignoring: true,
+      left: item.point.offset.dx - hitSize / 2,
+      top: item.point.offset.dy - hitSize / 2,
+      width: hitSize,
+      height: hitSize,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => hoveredId = node.id),
+        onExit: (_) =>
+            setState(() => hoveredId = hoveredId == node.id ? null : hoveredId),
         child: ExcludeSemantics(
           excluding: hidden,
-          child: Transform.scale(
-            scale: scaleFor(node.id),
-            child: Opacity(
-              opacity: occluded ? 0 : depth * opacityFor(node.id),
-              child: _KOrbitMarker(
-                node: node,
-                selected: node.id == selectedId,
-                tokens: tokens,
-                size: node.isCenter
-                    ? markerSize
-                    : tokens.componentOrbitNodeSize,
-                timeSeconds: time(),
-                reducedMotion: reducedMotion,
-                centerContent: node.isCenter ? centerContent : null,
-                onActivate: () => onActivate(node),
-              ),
+          child: Opacity(
+            opacity: occluded ? 0 : depth * widget.opacityFor(node.id),
+            child: _KOrbitMarker(
+              node: node,
+              selected: node.id == widget.selectedId,
+              tokens: widget.tokens,
+              size: visualSize,
+              onActivate: hidden || node.disabled
+                  ? null
+                  : () => widget.onActivate(node),
+              centerContent: node.isCenter ? widget.centerContent : null,
             ),
           ),
         ),
@@ -139,15 +154,31 @@ class KOrbitNodeLayer extends StatelessWidget {
     KOrbitSceneProjection scene,
     Rect rect,
   ) {
-    final occluded = _occluded(item, scene);
     final depth = .55 + .45 * ((item.point.depth + 1) / 2).clamp(0, 1);
     return Positioned.fromRect(
-      rect: rect,
+      rect: Rect.fromLTWH(
+        rect.left - widget.tokens.spaceControlGap,
+        rect.top - widget.tokens.spaceMicro,
+        rect.width + 2 * widget.tokens.spaceControlGap,
+        rect.height + 2 * widget.tokens.spaceMicro,
+      ),
       child: IgnorePointer(
         ignoring: true,
-        child: ExcludeSemantics(
-          child: Opacity(
-            opacity: occluded ? 0 : depth * opacityFor(item.node.id),
+        child: Opacity(
+          opacity: _occluded(item, scene)
+              ? 0
+              : depth * widget.opacityFor(item.node.id),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: widget.tokens.spaceControlGap,
+              vertical: widget.tokens.spaceMicro,
+            ),
+            decoration: BoxDecoration(
+              color: widget.tokens.colorSurfaceRaised.withValues(
+                alpha: widget.tokens.opacityProminent,
+              ),
+              borderRadius: BorderRadius.circular(widget.tokens.radiusControl),
+            ),
             child: Text(
               item.node.label,
               maxLines: 1,
@@ -156,13 +187,13 @@ class KOrbitNodeLayer extends StatelessWidget {
                   ? TextAlign.center
                   : TextAlign.start,
               style: TextStyle(
-                color: tokens.colorTextPrimary,
-                fontFamily: tokens.fontFamily,
-                fontSize: tokens.componentOrbitNodeLabelSize,
+                color: widget.tokens.colorTextPrimary,
+                fontFamily: widget.tokens.fontFamily,
+                fontSize: widget.tokens.componentOrbitNodeLabelSize,
                 height:
-                    tokens.fontCaptionLineHeight /
-                    tokens.componentOrbitNodeLabelSize,
-                fontWeight: tokens.fontLabelWeight,
+                    widget.tokens.fontCaptionLineHeight /
+                    widget.tokens.componentOrbitNodeLabelSize,
+                fontWeight: widget.tokens.fontLabelWeight,
               ),
             ),
           ),
@@ -171,10 +202,16 @@ class KOrbitNodeLayer extends StatelessWidget {
     );
   }
 
-  bool _occluded(KOrbitProjectedNode item, KOrbitSceneProjection scene) =>
-      !item.node.isCenter &&
-      item.point.depth < 0 &&
-      (item.point.offset - scene.center).distance < scene.centerRadius;
+  bool _occluded(KOrbitProjectedNode item, KOrbitSceneProjection scene) {
+    final radius = scene.radiusFor(item.node.id);
+    return scene.nodes.any(
+      (other) =>
+          other.node.id != item.node.id &&
+          other.point.depth > item.point.depth &&
+          (item.point.offset - other.point.offset).distance + radius <
+              scene.radiusFor(other.node.id),
+    );
+  }
 }
 
 class _KOrbitMarker extends StatelessWidget {
@@ -183,9 +220,7 @@ class _KOrbitMarker extends StatelessWidget {
     required this.selected,
     required this.tokens,
     required this.size,
-    required this.timeSeconds,
-    required this.reducedMotion,
-    required this.onActivate,
+    this.onActivate,
     this.centerContent,
   });
 
@@ -193,98 +228,155 @@ class _KOrbitMarker extends StatelessWidget {
   final bool selected;
   final KDesignTokens tokens;
   final double size;
-  final double timeSeconds;
-  final bool reducedMotion;
-  final VoidCallback onActivate;
+  final VoidCallback? onActivate;
   final Widget? centerContent;
 
-  Color get color => switch (node.status) {
-    KOrbitStatus.active => tokens.colorStatusInfoAccent,
-    KOrbitStatus.question => tokens.colorStatusWarningAccent,
-    KOrbitStatus.error => tokens.colorStatusErrorAccent,
-    KOrbitStatus.idle => switch (node.tone) {
-      KOrbitTone.neutral => tokens.componentOrbitConnectionColor,
-      KOrbitTone.brand => tokens.colorBrandPrimaryAccent,
-      KOrbitTone.info => tokens.colorStatusInfoAccent,
-      KOrbitTone.success => tokens.colorStatusSuccessAccent,
-      KOrbitTone.warning => tokens.colorStatusWarningAccent,
-      KOrbitTone.error => tokens.colorStatusErrorAccent,
-    },
-  };
-
   @override
-  Widget build(BuildContext context) => Semantics(
-    key: ValueKey('k-orbit-node-${node.id}'),
-    button: !node.disabled,
-    selected: selected,
-    label: node.label,
-    hint: [
-      node.description,
-      node.statusLabel,
-    ].whereType<String>().where((value) => value.isNotEmpty).join('. '),
-    enabled: !node.disabled,
-    child: Material(
-      type: MaterialType.transparency,
-      child: InkResponse(
-        radius: size / 2,
-        canRequestFocus: !node.disabled,
-        onTap: node.disabled ? null : onActivate,
-        child: Center(
+  Widget build(BuildContext context) {
+    final content =
+        centerContent ??
+        node.content ??
+        (node.appearance == KOrbitNodeAppearance.sphere
+            ? null
+            : Text(
+                _initials(node.label),
+                style: TextStyle(
+                  color: _tone(node),
+                  fontWeight: tokens.fontLabelWeight,
+                ),
+              ));
+    return Semantics(
+      key: ValueKey('k-orbit-node-${node.id}'),
+      button: !node.disabled,
+      onTap: onActivate,
+      selected: selected,
+      label: node.label,
+      hint: [
+        node.description,
+        node.badge?.label,
+        node.progress == null ? null : '${node.progress!.round()}%',
+        node.statusLabel ??
+            (node.status == KOrbitStatus.idle ? null : node.status.name),
+      ].whereType<String>().where((value) => value.isNotEmpty).join('. '),
+      enabled: !node.disabled,
+      child: Center(
+        child: SizedBox.square(
+          dimension: size,
           child: Stack(
             alignment: Alignment.center,
             clipBehavior: Clip.none,
             children: [
-              if (node.shouldPulse) _pulse(),
-              if (node.isCenter && centerContent != null) centerContent!,
-              if (!node.isCenter)
-                Container(
-                  width: size,
-                  height: size,
-                  decoration: BoxDecoration(
-                    color: tokens.colorSurfaceRaised,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: selected ? tokens.colorBorderFocus : color,
-                      width: selected
-                          ? tokens.borderWidthStrong
-                          : tokens.borderWidthDefault,
+              if (content != null)
+                ClipOval(
+                  child: SizedBox.square(
+                    dimension: size,
+                    child: FittedBox(
+                      child: SizedBox.square(
+                        dimension: tokens.componentOrbitNodeSize,
+                        child: DefaultTextStyle(
+                          style: TextStyle(
+                            fontFamily: tokens.fontFamily,
+                            fontSize: tokens.fontBodySize,
+                            fontWeight: tokens.fontLabelWeight,
+                            color: tokens.colorTextPrimary,
+                          ),
+                          child: Center(
+                            child: FractionallySizedBox(
+                              widthFactor:
+                                  node.appearance == KOrbitNodeAppearance.avatar
+                                  ? 1
+                                  : .7,
+                              heightFactor:
+                                  node.appearance == KOrbitNodeAppearance.avatar
+                                  ? 1
+                                  : .7,
+                              child: Center(child: content),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  alignment: Alignment.center,
-                  child:
-                      node.content ??
-                      KIcon(
-                        KIconName.circle,
-                        size: tokens.componentOrbitNodeSize * 2 / 3,
-                        color: color,
-                      ),
                 ),
+              if (selected)
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: tokens.colorBorderFocus,
+                        width: tokens.borderWidthStrong,
+                      ),
+                    ),
+                  ),
+                ),
+              if (node.showBadge &&
+                  (node.badge != null || node.status != KOrbitStatus.idle))
+                _badge(),
             ],
-          ),
-        ),
-      ),
-    ),
-  );
-
-  Widget _pulse() {
-    final duration =
-        node.pulsePeriod ?? tokens.componentOrbitMotionPulseDuration;
-    final period = duration.inMicroseconds / Duration.microsecondsPerSecond;
-    final phase = reducedMotion ? .2 : (timeSeconds / period) % 1;
-    return Opacity(
-      opacity: reducedMotion ? .32 : .48 * (1 - phase),
-      child: Transform.scale(
-        scale: reducedMotion ? 1.12 : 1 + phase * .5,
-        child: Container(
-          key: ValueKey('k-orbit-pulse-${node.id}'),
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: color, width: tokens.borderWidthStrong),
           ),
         ),
       ),
     );
   }
+
+  Widget _badge() {
+    final badge = node.badge;
+    final color = badge == null ? _statusTone(node) : _toneValue(badge.tone);
+    final content =
+        badge?.content ??
+        Text(switch (node.status) {
+          KOrbitStatus.question => '?',
+          KOrbitStatus.error => '!',
+          KOrbitStatus.completed => '✓',
+          _ => '•',
+        });
+    return Positioned(
+      left: size * .85 - tokens.sizeContent / 2,
+      top: size * .15 - tokens.sizeContent / 2,
+      child: Transform.scale(
+        scale: size / (2 * tokens.componentOrbitNodeSize),
+        child: Container(
+          width: tokens.sizeContent,
+          height: tokens.sizeContent,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: tokens.colorSurfaceRaised,
+            shape: BoxShape.circle,
+            border: Border.all(color: color, width: tokens.borderWidthDefault),
+          ),
+          child: IconTheme(
+            data: IconThemeData(size: tokens.sizeContent * .65, color: color),
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: color,
+                fontSize: tokens.sizeContent * .65,
+                fontWeight: tokens.fontLabelWeight,
+              ),
+              child: content,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _initials(String value) =>
+      value.trim().characters.take(2).toString().toUpperCase();
+  Color _statusTone(KOrbitNode item) => item.status == KOrbitStatus.question
+      ? tokens.colorStatusWarningAccent
+      : item.status == KOrbitStatus.error
+      ? tokens.colorStatusErrorAccent
+      : item.status == KOrbitStatus.completed
+      ? tokens.colorStatusSuccessAccent
+      : _tone(item);
+  Color _tone(KOrbitNode item) => item.borderColor ?? _toneValue(item.tone);
+  Color _toneValue(KOrbitTone tone) => switch (tone) {
+    KOrbitTone.neutral => tokens.componentOrbitConnectionColor,
+    KOrbitTone.brand => tokens.colorBrandPrimaryAccent,
+    KOrbitTone.info => tokens.colorStatusInfoAccent,
+    KOrbitTone.success => tokens.colorStatusSuccessAccent,
+    KOrbitTone.warning => tokens.colorStatusWarningAccent,
+    KOrbitTone.error => tokens.colorStatusErrorAccent,
+  };
 }

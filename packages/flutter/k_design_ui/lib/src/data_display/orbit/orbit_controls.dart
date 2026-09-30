@@ -34,14 +34,16 @@ class KOrbitControls extends StatelessWidget {
           variant: KButtonVariant.secondary,
           onPressed: onReset,
         ),
-        SizedBox(width: tokens.spaceControlGap),
-        KButton(
-          label: paused ? labels.resume : labels.pause,
-          variant: KButtonVariant.secondary,
-          onPressed: onPauseChanged == null
-              ? null
-              : () => onPauseChanged!.call(!paused),
-        ),
+        if (onPauseChanged != null) ...[
+          SizedBox(width: tokens.spaceControlGap),
+          KButton(
+            label: paused ? labels.resume : labels.pause,
+            variant: KButtonVariant.secondary,
+            onPressed: onPauseChanged == null
+                ? null
+                : () => onPauseChanged!.call(!paused),
+          ),
+        ],
       ],
     );
     final slider = SliderTheme(
@@ -72,15 +74,19 @@ class KOrbitControls extends StatelessWidget {
                       alignment: AlignmentDirectional.centerStart,
                       child: buttons,
                     ),
-                    SizedBox(height: tokens.spaceControlGap),
-                    slider,
+                    if (onSpeedChanged != null) ...[
+                      SizedBox(height: tokens.spaceControlGap),
+                      slider,
+                    ],
                   ],
                 )
               : Row(
                   children: [
                     buttons,
-                    SizedBox(width: tokens.spaceControlGap),
-                    Expanded(child: slider),
+                    if (onSpeedChanged != null) ...[
+                      SizedBox(width: tokens.spaceControlGap),
+                      Expanded(child: slider),
+                    ],
                   ],
                 ),
         ),

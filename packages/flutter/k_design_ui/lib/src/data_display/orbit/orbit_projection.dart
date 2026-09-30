@@ -80,6 +80,7 @@ class KOrbitSceneProjection {
     required this.maxLevelRadius,
     required this.center,
     required this.centerRadius,
+    required this.radii,
   });
 
   final List<KOrbitProjectedNode> nodes;
@@ -90,6 +91,7 @@ class KOrbitSceneProjection {
   final double maxLevelRadius;
   final Offset center;
   final double centerRadius;
+  final Map<String, double> radii;
 
   KOrbitProjectedNode? node(String id) {
     for (final item in nodes) {
@@ -97,6 +99,8 @@ class KOrbitSceneProjection {
     }
     return null;
   }
+
+  double radiusFor(String id) => radii[id] ?? 0;
 }
 
 Map<String, Rect> kOrbitLabelLayout({
@@ -107,20 +111,24 @@ Map<String, Rect> kOrbitLabelLayout({
   required double labelOffset,
   required double nodeSize,
   String? selectedId,
+  Set<String>? visibleIds,
 }) {
-  final sorted = [...scene.nodes]
-    ..sort((a, b) {
-      int priority(KOrbitProjectedNode item) {
-        if (item.node.isCenter) return 0;
-        if (item.node.id == selectedId) return 1;
-        if (item.node.status == KOrbitStatus.question) return 2;
-        if (item.node.status == KOrbitStatus.active) return 3;
-        return 4;
-      }
+  final sorted =
+      [
+        for (final item in scene.nodes)
+          if (visibleIds == null || visibleIds.contains(item.node.id)) item,
+      ]..sort((a, b) {
+        int priority(KOrbitProjectedNode item) {
+          if (item.node.isCenter) return 0;
+          if (item.node.id == selectedId) return 1;
+          if (item.node.status == KOrbitStatus.question) return 2;
+          if (item.node.status == KOrbitStatus.active) return 3;
+          return 4;
+        }
 
-      final order = priority(a).compareTo(priority(b));
-      return order != 0 ? order : a.node.id.compareTo(b.node.id);
-    });
+        final order = priority(a).compareTo(priority(b));
+        return order != 0 ? order : a.node.id.compareTo(b.node.id);
+      });
   final placed = <String, Rect>{};
   final accepted = <Rect>[];
   final sphere = Rect.fromCircle(
@@ -211,7 +219,7 @@ KOrbitNode? kOrbitHitTest({
   final candidates = scene.nodes.where((item) {
     if (item.node.disabled || !(eligible?.call(item) ?? true)) return false;
     if (labels[item.node.id]?.contains(point) ?? false) return true;
-    final radius = item.node.isCenter ? scene.centerRadius : hitTargetSize / 2;
+    final radius = math.max(scene.radiusFor(item.node.id), hitTargetSize / 2);
     return (item.point.offset - point).distanceSquared <= math.pow(radius, 2);
   }).toList();
   if (candidates.isEmpty) return null;
@@ -235,9 +243,7 @@ bool _rectHitsCircle(Rect rect, Offset center, double radius) {
 }
 
 double kOrbitPeriodFor(KOrbitLevel level, double maxLevelRadius) =>
-    level.periodSeconds ??
-    (18 * math.pow(level.radius / math.max(1.0, maxLevelRadius), 1.5))
-        .toDouble();
+    level.periodSeconds ?? 60;
 
 /// Returns an orbit-local point after inclination and azimuth, then camera
 /// pitch and yaw. Scene projection adds parent anchors before camera rotation.
@@ -272,6 +278,7 @@ KOrbitSceneProjection projectKOrbitScene({
   required double timeSeconds,
   double radiusRatio = .296,
   double? extentOverride,
+  Map<String, double>? angles,
 }) {
   final levelById = {for (final level in levels) level.id: level};
   final nodeById = {for (final node in nodes) node.id: node};
@@ -294,14 +301,14 @@ KOrbitSceneProjection projectKOrbitScene({
         : worldFor(parent);
     if (node.levelId == null) return anchor;
     final level = levelById[node.levelId]!;
-    final direction = level.clockwise ? 1.0 : -1.0;
     final angle =
         node.phase +
-        direction *
-            timeSeconds *
-            math.pi *
-            2 /
-            kOrbitPeriodFor(level, maxLevelRadius);
+        (angles?[node.id] ??
+            (node.direction ?? level.direction) *
+                timeSeconds *
+                math.pi *
+                2 /
+                (node.periodSeconds ?? kOrbitPeriodFor(level, maxLevelRadius)));
     return anchor + _local(level, angle);
   });
   final projectedNodes = [
@@ -355,6 +362,22 @@ KOrbitSceneProjection projectKOrbitScene({
       ),
     );
   }
+  final radii = {
+    for (final node in nodes)
+      node.id:
+          scale *
+          (node.radius ??
+              (node.levelId == null
+                  ? extent * radiusRatio
+                  : levelById[node.levelId]!.radius * .14)),
+  };
+  KOrbitNode? centerNode;
+  for (final node in nodes) {
+    if (node.levelId == null) {
+      centerNode = node;
+      break;
+    }
+  }
   return KOrbitSceneProjection(
     nodes: projectedNodes,
     rings: rings,
@@ -363,7 +386,10 @@ KOrbitSceneProjection projectKOrbitScene({
     extent: extent,
     maxLevelRadius: maxLevelRadius,
     center: center,
-    centerRadius: extent * scale * radiusRatio,
+    centerRadius: centerNode == null
+        ? extent * scale * radiusRatio
+        : radii[centerNode.id]!,
+    radii: radii,
   );
 }
 
@@ -381,7 +407,10 @@ double kOrbitExtentFor({
   });
   return math.max(
     1.0,
-    nodes.fold<double>(0, (value, node) => math.max(value, nodeExtent(node))),
+    nodes.fold<double>(
+      0,
+      (value, node) => math.max(value, nodeExtent(node) + (node.radius ?? 0)),
+    ),
   );
 }
 

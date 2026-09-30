@@ -255,7 +255,7 @@ void main() {
     expect(ended, [('one', KOrbitSignalEndReason.completed)]);
   });
 
-  testWidgets('labels activate nodes and status pulses update', (tester) async {
+  testWidgets('labels activate nodes and status badges update', (tester) async {
     String? selected;
     late StateSetter update;
     var active = true;
@@ -266,6 +266,7 @@ void main() {
             update = setState;
             return KOrbit(
               levels: _levels,
+              labelVisibility: KOrbitLabelVisibility.always,
               nodes: [
                 KOrbitNode(
                   id: 'team',
@@ -289,28 +290,13 @@ void main() {
         ),
       ),
     );
-    expect(find.byKey(const ValueKey('k-orbit-pulse-team')), findsOneWidget);
-    expect(find.byKey(const ValueKey('k-orbit-pulse-project')), findsOneWidget);
-    expect(
-      find.descendant(
-        of: find.byKey(const ValueKey('k-orbit-node-team')),
-        matching: find.byType(KIcon),
-      ),
-      findsNothing,
-    );
-    expect(
-      find.descendant(
-        of: find.byKey(const ValueKey('k-orbit-node-project')),
-        matching: find.byType(KIcon),
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('?'), findsOneWidget);
+    expect(find.byKey(const ValueKey('k-orbit-node-team')), findsOneWidget);
     await tester.tapAt(tester.getCenter(find.text('Project')));
     expect(selected, 'project');
     update(() => active = false);
     await tester.pump();
-    expect(find.byKey(const ValueKey('k-orbit-pulse-team')), findsNothing);
-    expect(find.byKey(const ValueKey('k-orbit-pulse-project')), findsNothing);
+    expect(find.text('?'), findsNothing);
   });
 
   testWidgets('demo overlap activates Atlas at its projected center', (
@@ -349,7 +335,7 @@ void main() {
           .getSemantics(find.byKey(const ValueKey('k-orbit-node-atlas')))
           .rect
           .size,
-      const Size.square(24),
+      const Size.square(44),
     );
     await tester.tapAt(origin + scene.node('atlas')!.point.offset);
     expect(activated, 'atlas');
@@ -402,6 +388,7 @@ void main() {
             nodes: _nodes,
             connections: const [],
             elapsedSeconds: 0,
+            showControls: true,
             onPausedChange: (_) {},
             onMotionSpeedChange: (_) {},
           ),

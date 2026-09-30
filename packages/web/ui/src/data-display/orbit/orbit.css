@@ -1,5 +1,8 @@
 .k-orbit {
-  --k-component-orbit-progress-line-width: var(--k-border-width-focus);
+  --k-component-orbit-progress-line-width: var(
+    --k-border-width-focus,
+    var(--k-border-width-strong)
+  );
   width: 100%;
   min-width: 0;
   color: var(--k-color-text-primary);

@@ -15,6 +15,11 @@ import 'orbit_painter.dart';
 import 'orbit_projection.dart';
 import 'orbit_stage.dart';
 import 'orbit_transition.dart';
+import 'orbit_motion.dart';
+import 'orbit_presentation.dart';
+import 'orbit_signals.dart';
+
+part 'orbit_rendering.dart';
 
 class KOrbit extends StatefulWidget {
   const KOrbit({
@@ -25,6 +30,10 @@ class KOrbit extends StatefulWidget {
     this.viewState,
     this.initialViewState = const KOrbitViewState(),
     this.selectedNodeId,
+    this.pinnedNodeId,
+    this.onPinnedChange,
+    this.maxAngularSpeed = 12,
+    this.labelVisibility = KOrbitLabelVisibility.interaction,
     this.initialSelectedNodeId,
     this.selectionControlled = false,
     this.onNodeActivate,
@@ -43,7 +52,7 @@ class KOrbit extends StatefulWidget {
     this.maxActiveSignals = 32,
     this.reducedMotion,
     this.interactionMode = KOrbitInteractionMode.dedicated,
-    this.showControls = true,
+    this.showControls = false,
     this.centerContent,
     this.visualStyle = const KOrbitVisualStyle(),
     this.labels = const KOrbitLabels(),
@@ -66,7 +75,10 @@ class KOrbit extends StatefulWidget {
   final void Function(String id, KOrbitSignalEndReason reason)? onSignalEnd;
   final ValueChanged<double>? onMotionSpeedChange;
   final ValueChanged<bool>? onPausedChange;
-  final double motionSpeed;
+  final String? pinnedNodeId;
+  final ValueChanged<String?>? onPinnedChange;
+  final KOrbitLabelVisibility labelVisibility;
+  final double motionSpeed, maxAngularSpeed;
   final double? elapsedSeconds;
   final double minZoom, maxZoom;
   final int maxActiveSignals;
@@ -85,18 +97,29 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
   late final KOrbitNodeTransition _nodeTransition;
   late KOrbitViewState _view;
   String? _selectedNodeId;
-  final List<KOrbitActiveSignal> _signals = [];
+  late final KOrbitSignals _signals;
+  final _angles = <String, double>{};
+  final _presentation = KOrbitPresentation();
+  KOrbitSceneProjection? _frame;
+  Size? _frameSize;
+  KOrbitViewState? _renderedView;
+  double _clock = 0;
   final FocusNode _focus = FocusNode();
   Duration? _lastElapsed, _lastDragAt;
-  double _orbitTime = 0, _signalTime = 0;
+  double _orbitTime = 0;
   bool _interacting = false, _shaderRequested = false;
   Offset _inertia = Offset.zero;
+  int? _mousePointer;
+  bool _mouseInput = false, _mouseRotate = false, _keyboardFocus = false;
   double _gestureZoom = 1;
   KOrbitViewState? _gestureStart;
   ui.FragmentShader? _centerShader;
   Duration _travelDuration = Duration.zero;
 
-  KOrbitViewState get _currentView => widget.viewState ?? _view;
+  KOrbitViewState get _currentView => _bounded(widget.viewState ?? _view);
+  String? get _pinned => widget.nodes.any((n) => n.id == widget.pinnedNodeId)
+      ? widget.pinnedNodeId
+      : null;
   String? get _currentSelection =>
       widget.selectionControlled ? widget.selectedNodeId : _selectedNodeId;
   bool get _reduceMotion =>
@@ -109,7 +132,10 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _validateConfiguration();
-    _view = widget.initialViewState;
+    _view = _bounded(widget.initialViewState);
+    _signals = KOrbitSignals(
+      (id, reason) => widget.onSignalEnd?.call(id, reason),
+    );
     _selectedNodeId = widget.initialSelectedNodeId;
     _ticker = AnimationController(
       vsync: this,
@@ -126,12 +152,15 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_shaderRequested) {
+    if (!_shaderRequested &&
+        widget.nodes.any(
+          (node) => node.appearance == KOrbitNodeAppearance.sphere,
+        )) {
       _shaderRequested = true;
       _loadCenterShader();
     }
     if (!TickerMode.getValuesNotifier(context).value.enabled) {
-      _cancelAll();
+      _signals.cancelAll();
       _ticker.stop();
     } else if (!_ticker.isAnimating) {
       _lastElapsed = null;
@@ -161,6 +190,13 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
   void didUpdateWidget(covariant KOrbit oldWidget) {
     super.didUpdateWidget(oldWidget);
     _validateConfiguration();
+    if (!_shaderRequested &&
+        widget.nodes.any(
+          (node) => node.appearance == KOrbitNodeAppearance.sphere,
+        )) {
+      _shaderRequested = true;
+      _loadCenterShader();
+    }
     _nodeTransition.update(
       oldLevels: oldWidget.levels,
       levels: widget.levels,
@@ -177,12 +213,17 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
       if (!widget.selectionControlled) setState(() => _selectedNodeId = null);
       widget.onSelectionChange?.call(null);
     }
-    final connectionIds = widget.connections.map((item) => item.id).toSet();
-    for (final signal in List<KOrbitActiveSignal>.of(_signals)) {
-      if (!connectionIds.contains(signal.signal.connectionId)) {
-        _cancelSignal(signal.signal.id);
-      }
+    _signals.reconcile(widget.nodes, widget.connections);
+    if (oldWidget.pinnedNodeId != null && _pinned == null) {
+      _inertia = Offset.zero;
+      _setView(widget.initialViewState.copyWith(offset: Offset.zero));
     }
+    if (widget.pinnedNodeId != null && _pinned == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onPinnedChange?.call(null);
+      });
+    }
+    _frame = null;
   }
 
   void _validateConfiguration() {
@@ -191,6 +232,9 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
       nodes: widget.nodes,
       connections: widget.connections,
     );
+    if (!widget.maxAngularSpeed.isFinite || widget.maxAngularSpeed < 0) {
+      throw ArgumentError.value(widget.maxAngularSpeed, 'maxAngularSpeed');
+    }
     if (!widget.motionSpeed.isFinite || widget.motionSpeed < 0) {
       throw ArgumentError.value(
         widget.motionSpeed,
@@ -215,12 +259,13 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
 
   void _attachController() => widget.controller?.attach(
     trigger: _triggerSignal,
-    cancel: _cancelSignal,
-    cancelAll: _cancelAll,
+    cancel: _signals.cancel,
+    cancelAll: _signals.cancelAll,
     resetView: _resetView,
   );
 
   void _transitionChanged() {
+    _frame = null;
     if (mounted) setState(() {});
   }
 
@@ -230,105 +275,71 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
     final previous = _lastElapsed;
     _lastElapsed = elapsed;
     if (previous == null) return;
-    final delta =
-        (elapsed - previous).inMicroseconds /
-        Duration.microsecondsPerSecond *
-        widget.motionSpeed;
-    if (widget.paused || widget.motionSpeed == 0) return;
-    _signalTime += delta;
-    if (widget.elapsedSeconds == null && !_reduceMotion && !_interacting) {
-      _orbitTime += delta;
+    final realDelta =
+        (elapsed - previous).inMicroseconds / Duration.microsecondsPerSecond;
+    final delta = math.min(.05, realDelta);
+    _clock += realDelta * 1000;
+    _frame = null;
+    _signals.advance(realDelta);
+    if (widget.paused ||
+        widget.motionSpeed == 0 ||
+        _interacting ||
+        (_keyboardFocus && _focus.hasFocus && _pinned == null)) {
+      return;
     }
-    if (!_reduceMotion && !_interacting && _inertia != Offset.zero) {
+    if (widget.elapsedSeconds == null && !_reduceMotion) {
+      _orbitTime += delta;
+      advanceKOrbitAngles(
+        angles: _angles,
+        levels: _nodeTransition.levels,
+        nodes: _nodeTransition.nodes,
+        delta: delta,
+        speed: widget.motionSpeed,
+        maxAngularSpeed: widget.maxAngularSpeed,
+      );
+    }
+    if (!_reduceMotion && _inertia != Offset.zero) {
       _setView(
         _currentView.copyWith(
           yaw: _currentView.yaw + _inertia.dx * delta,
           pitch: _currentView.pitch + _inertia.dy * delta,
         ),
       );
-      final decay = math.pow(.05, delta).toDouble();
-      _inertia *= decay;
+      _inertia *= math.pow(.05, delta).toDouble();
       if (_inertia.distance < .001) _inertia = Offset.zero;
     }
-    final complete = _signals.where((active) {
-      final duration =
-          active.duration.inMicroseconds / Duration.microsecondsPerSecond;
-      return _signalTime - active.startedAt >= duration;
-    }).toList();
-    if (complete.isNotEmpty) {
-      setState(() => _signals.removeWhere(complete.contains));
-      for (final item in complete) {
-        widget.onSignalEnd?.call(
-          item.signal.id,
-          KOrbitSignalEndReason.completed,
-        );
-      }
-    }
   }
 
-  KOrbitSignalTriggerResult _triggerSignal(KOrbitSignal signal) {
-    if (widget.paused ||
-        widget.motionSpeed == 0 ||
-        !TickerMode.getValuesNotifier(context).value.enabled) {
-      return KOrbitSignalTriggerResult.inactive;
-    }
-    if (signal.id.isEmpty ||
-        (signal.duration != null && signal.duration! <= Duration.zero) ||
-        _signals.any((active) => active.signal.id == signal.id) ||
-        !widget.connections.any((item) => item.id == signal.connectionId)) {
-      return KOrbitSignalTriggerResult.invalid;
-    }
-    if (_signals.length >= widget.maxActiveSignals) {
-      return KOrbitSignalTriggerResult.capacity;
-    }
-    setState(() {
-      _signals.add(
-        KOrbitActiveSignal(
-          signal: signal,
-          startedAt: _signalTime,
-          duration: signal.duration ?? _travelDuration,
-        ),
+  KOrbitSignalTriggerResult _triggerSignal(KOrbitSignal signal) =>
+      _signals.trigger(
+        signal,
+        nodes: widget.nodes,
+        connections: widget.connections,
+        capacity: widget.maxActiveSignals,
+        defaultDuration: _travelDuration,
+        visible: TickerMode.getValuesNotifier(context).value.enabled,
       );
-    });
-    return KOrbitSignalTriggerResult.accepted;
-  }
 
-  bool _cancelSignal(String id) {
-    final index = _signals.indexWhere((active) => active.signal.id == id);
-    if (index < 0) return false;
-    final signal = _signals[index];
-    setState(() => _signals.removeAt(index));
-    widget.onSignalEnd?.call(signal.signal.id, KOrbitSignalEndReason.cancelled);
-    return true;
-  }
-
-  void _cancelAll() {
-    final cancelled = List<KOrbitActiveSignal>.of(_signals);
-    if (mounted && cancelled.isNotEmpty) setState(_signals.clear);
-    for (final active in cancelled) {
-      widget.onSignalEnd?.call(
-        active.signal.id,
-        KOrbitSignalEndReason.cancelled,
-      );
-    }
-  }
+  KOrbitViewState _bounded(KOrbitViewState view) => view.copyWith(
+    pitch: view.pitch.clamp(-math.pi / 2, math.pi / 2),
+    zoom: view.zoom.clamp(widget.minZoom, widget.maxZoom),
+    offset: Offset(
+      view.offset.dx.clamp(-240, 240),
+      view.offset.dy.clamp(-240, 240),
+    ),
+  );
 
   void _setView(KOrbitViewState view) {
-    final bounded = view.copyWith(
-      pitch: view.pitch.clamp(-math.pi / 2, math.pi / 2),
-      zoom: view.zoom.clamp(widget.minZoom, widget.maxZoom),
-      offset: Offset(
-        view.offset.dx.clamp(-240, 240),
-        view.offset.dy.clamp(-240, 240),
-      ),
-    );
+    final bounded = _bounded(view);
+    _frame = null;
     if (widget.viewState == null) setState(() => _view = bounded);
     widget.onViewChange?.call(bounded);
   }
 
   void _resetView() {
     _inertia = Offset.zero;
-    _setView(widget.initialViewState);
+    widget.onPinnedChange?.call(null);
+    _setView(widget.initialViewState.copyWith(offset: Offset.zero));
   }
 
   void _select(KOrbitNode node) {
@@ -354,6 +365,7 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
 
   KeyEventResult _onKey(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    _keyboardFocus = true;
     if (event.logicalKey == LogicalKeyboardKey.home) {
       _resetView();
     } else if (event.logicalKey == LogicalKeyboardKey.escape) {
@@ -374,6 +386,7 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
         KDesignTokens.orbitLight;
     _travelDuration = tokens.componentOrbitMotionTravelDuration;
     _nodeTransition.setDuration(tokens.componentOrbitMotionTransitionDuration);
+    _frame = null;
     final stage = _buildStage(tokens);
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -403,97 +416,13 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildStage(KDesignTokens tokens) => KOrbitStage(
-    label: widget.labels.stage,
-    focusNode: _focus,
-    onKeyEvent: _onKey,
-    onPointerSignal: (event, size) {
-      if (event is! PointerScrollEvent ||
-          (!_focus.hasFocus &&
-              widget.interactionMode != KOrbitInteractionMode.dedicated)) {
-        return;
-      }
-      _setView(
-        kOrbitZoomAt(
-          view: _currentView,
-          zoom: _currentView.zoom * math.exp(-event.scrollDelta.dy * .001),
-          focalPoint: event.localPosition,
-          viewportCenter: size.center(Offset.zero),
-          minZoom: widget.minZoom,
-          maxZoom: widget.maxZoom,
-        ),
-      );
-    },
-    onScaleStart: (_) {
-      _gestureStart = _currentView;
-      _gestureZoom = _currentView.zoom;
-      _startInteraction();
-    },
-    onScaleUpdate: _updateGesture,
-    onScaleEnd: (_) => _endInteraction(),
-    painter: KOrbitPainter(
-      levels: _nodeTransition.levels,
-      nodes: _nodeTransition.nodes,
-      connections: widget.connections,
-      view: () => _currentView,
-      orbitTimeSeconds: () => _displayTime,
-      signalTimeSeconds: () => _signalTime,
-      signals: () => _signals,
-      tokens: tokens,
-      style: widget.visualStyle,
-      reducedMotion: _reduceMotion,
-      centerShader: _centerShader,
-      extentOverride: _nodeTransition.extentOverride,
-      repaint: _ticker,
-    ),
-    nodeLayer: KOrbitNodeLayer(
-      levels: _nodeTransition.levels,
-      nodes: _nodeTransition.nodes,
-      connections: widget.connections,
-      view: () => _currentView,
-      time: () => _displayTime,
-      tokens: tokens,
-      selectedId: _currentSelection,
-      reducedMotion: _reduceMotion,
-      centerContent: widget.centerContent,
-      extentOverride: _nodeTransition.extentOverride,
-      opacityFor: _nodeTransition.opacityFor,
-      scaleFor: _nodeTransition.scaleFor,
-      isDeparting: _nodeTransition.isDeparting,
-      onActivate: _select,
-      repaint: _ticker,
-    ),
-  );
-
-  void _updateGesture(ScaleUpdateDetails details, Size size) {
-    final now = _ticker.lastElapsedDuration;
-    final result = kOrbitGestureUpdate(
-      details: details,
-      size: size,
-      interactionMode: widget.interactionMode,
-      currentView: _currentView,
-      gestureStart: _gestureStart,
-      gestureZoom: _gestureZoom,
-      now: now,
-      lastDragAt: _lastDragAt,
-      reducedMotion: _reduceMotion,
-      minZoom: widget.minZoom,
-      maxZoom: widget.maxZoom,
-    );
-    if (result == null) return;
-    _setView(result.view);
-    _inertia = result.inertia;
-    _lastDragAt = result.lastDragAt;
-    if (details.pointerCount == 1) _gestureStart = _currentView;
-  }
-
   @override
   void dispose() {
     widget.controller?.detach();
     _ticker.dispose();
     _nodeTransition.dispose();
     _focus.dispose();
-    _signals.clear();
+    _signals.active.clear();
     super.dispose();
   }
 }

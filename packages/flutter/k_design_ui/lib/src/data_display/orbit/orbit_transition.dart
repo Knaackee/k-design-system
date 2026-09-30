@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/animation.dart';
@@ -5,6 +6,31 @@ import 'package:flutter/foundation.dart';
 
 import 'orbit_models.dart';
 import 'orbit_projection.dart';
+
+class KOrbitPresenceMotion {
+  const KOrbitPresenceMotion({
+    required this.from,
+    required this.to,
+    required this.startedAt,
+    required this.durationMs,
+  });
+
+  final double from;
+  final double to;
+  final double startedAt;
+  final double durationMs;
+}
+
+double kOrbitPresenceScale(KOrbitPresenceMotion? motion, double now) {
+  if (motion == null) return 1;
+  final t = motion.durationMs <= 0
+      ? 1.0
+      : ((now - motion.startedAt) / motion.durationMs).clamp(0.0, 1.0);
+  double back(double value) =>
+      1 + 2.70158 * math.pow(value - 1, 3) + 1.70158 * math.pow(value - 1, 2);
+  final eased = motion.to > motion.from ? back(t) : 1 - back(1 - t);
+  return math.max(0, motion.from + (motion.to - motion.from) * eased);
+}
 
 class KOrbitNodeTransition extends ChangeNotifier {
   KOrbitNodeTransition({
@@ -36,6 +62,7 @@ class KOrbitNodeTransition extends ChangeNotifier {
   List<KOrbitLevel> _targetLevels = const [];
   final Set<String> _entering = {};
   final Set<String> _departing = {};
+  final Map<String, double> _scaleFrom = {};
   double _fromExtent = 1;
   double _toExtent = 1;
 
@@ -82,12 +109,18 @@ class KOrbitNodeTransition extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    final scaleFrom = {
+      for (final id in {...entering, ...departing}) id: scaleFor(id),
+    };
     _entering
       ..clear()
       ..addAll(entering);
     _departing
       ..clear()
       ..addAll(departing);
+    _scaleFrom
+      ..clear()
+      ..addAll(scaleFrom);
     _fromExtent = _controller.isAnimating
         ? extent
         : kOrbitExtentFor(levels: oldLevels, nodes: oldNodes);
@@ -119,11 +152,23 @@ class KOrbitNodeTransition extends ChangeNotifier {
     return 1;
   }
 
-  double scaleFor(String id) => _departing.contains(id)
-      ? 1 - _controller.value * .15
-      : _entering.contains(id)
-      ? .85 + _controller.value * .15
-      : 1;
+  double scaleFor(String id) {
+    final to = _departing.contains(id)
+        ? 0.0
+        : _entering.contains(id)
+        ? 1.0
+        : null;
+    if (to == null) return 1;
+    return kOrbitPresenceScale(
+      KOrbitPresenceMotion(
+        from: _scaleFrom[id] ?? (to == 1 ? 0 : 1),
+        to: to,
+        startedAt: 0,
+        durationMs: 1,
+      ),
+      _controller.value,
+    );
+  }
 
   bool isDeparting(String id) => _departing.contains(id);
 

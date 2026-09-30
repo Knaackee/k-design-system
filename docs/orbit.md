@@ -185,7 +185,7 @@ Removing/filtering the followed node performs the same reset and clears inertia.
 Optional node `progress` accepts finite values from 0 to 100. Its arc starts at
 12 o'clock on the existing contour, inherits the node's border/status color, and
 scales with the node. `--k-component-orbit-progress-line-width` defaults to the
-existing focus-border token. Value transitions and the camera return use the
+existing focus-border token, falling back to the strong-border token. Value transitions and the camera return use the
 existing Orbit transition duration; reduced motion snaps to the new state.
 The demo exposes Node progress and starts Release readiness at 42%.
 
@@ -193,3 +193,28 @@ Verification: 22 focused tests and UI/Storybook TypeScript pass. Browser checks
 cover following under zoom/inclination, restoring the center, filtering the
 followed node and changing progress to 50%. This addition is Web-only; it does
 not establish a Flutter API or implementation commitment.
+
+### Flutter transfer approved after Web review
+
+On 2026-09-30 the user approved transferring the current Web Orbit to Flutter,
+after backup commit `823eb16`. Scope: recursive geometry and motion limits,
+flat node presentation, per-node content/colors/badges/pulses/progress, animated
+filter presence, zoom/pan/rotation, node following and the matching Widgetbook
+demonstrations. Web remains the visual reference.
+
+Flutter consumers control `pinnedNodeId` and `onPinnedChange`, independently of
+selection. Unpinning or removing the target restores `initialViewState` and zero
+pan. Node `progress` is nullable (0–100); `visualStyle.progressLineWidth` falls
+back to `borderWidthStrong`. `showBadge: false` explicitly hides automatic or
+custom badges; otherwise `badge` overrides the status badge. Colors accept
+consumer token values, content and badge content accept widgets. `labelVisibility`
+defaults to interaction. Signals target exactly one `nodeId` or `connectionId`.
+
+Verification on 2026-09-30: the 17 focused Flutter Orbit tests cover recursive
+projection, capped motion, reversible presence, progress transitions, following
+through zoom/rotation, unpin/filter reset, mouse pan/rotation, touch/pinch and
+local signal completion while paused, accessible activation and proportional
+content/badge zoom. Widgetbook release build succeeds;
+browser checks confirm the new command center and responsive detail/follow flow.
+Visual acceptance remains with the user; this is not a claim of a completed
+pixel-diff baseline between the platforms.

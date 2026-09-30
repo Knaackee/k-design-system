@@ -12,6 +12,9 @@ class KOrbitStage extends StatelessWidget {
     required this.onScaleEnd,
     required this.painter,
     required this.nodeLayer,
+    this.onPointerDown,
+    this.onPointerMove,
+    this.onPointerEnd,
     super.key,
   });
 
@@ -24,6 +27,9 @@ class KOrbitStage extends StatelessWidget {
   final GestureScaleEndCallback onScaleEnd;
   final CustomPainter painter;
   final Widget nodeLayer;
+  final void Function(PointerDownEvent, Size)? onPointerDown;
+  final void Function(PointerMoveEvent, Size)? onPointerMove;
+  final void Function(PointerEvent)? onPointerEnd;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -36,18 +42,25 @@ class KOrbitStage extends StatelessWidget {
           focusNode: focusNode,
           onKeyEvent: onKeyEvent,
           child: Listener(
+            onPointerDown: (event) => onPointerDown?.call(event, size),
+            onPointerMove: (event) => onPointerMove?.call(event, size),
+            onPointerUp: onPointerEnd,
+            onPointerCancel: onPointerEnd,
             onPointerSignal: (event) => onPointerSignal(event, size),
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
+              onTapDown: (_) => focusNode.requestFocus(),
               onScaleStart: onScaleStart,
               onScaleUpdate: (details) => onScaleUpdate(details, size),
               onScaleEnd: onScaleEnd,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CustomPaint(painter: painter),
-                  nodeLayer,
-                ],
+              child: ClipRect(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CustomPaint(painter: painter),
+                    nodeLayer,
+                  ],
+                ),
               ),
             ),
           ),
