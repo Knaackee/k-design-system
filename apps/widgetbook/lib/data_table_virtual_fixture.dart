@@ -14,14 +14,20 @@ final _seed = List.generate(
 );
 
 class DataTableVirtualFixture extends StatefulWidget {
-  const DataTableVirtualFixture({this.external = false, super.key});
+  const DataTableVirtualFixture({
+    this.external = false,
+    this.showHeader = false,
+    super.key,
+  });
   final bool external;
+  final bool showHeader;
   @override
   State<DataTableVirtualFixture> createState() => _VirtualState();
 }
 
 class _VirtualState extends State<DataTableVirtualFixture> {
   List<_Item> _rows = List.of(_seed);
+  KDataTableSort? _sort;
   KDataTableCellIdentity? _active, _focusCell;
   final _draft = TextEditingController();
   final _editorFocus = FocusNode();
@@ -201,6 +207,11 @@ class _VirtualState extends State<DataTableVirtualFixture> {
           ),
           KDataTable<_Item>(
             label: external ? 'External projects' : 'Virtual projects',
+            showHeader: widget.showHeader,
+            sort: _sort,
+            onSortChanged: external
+                ? null
+                : (sort) => setState(() => _sort = sort),
             rows: external ? [] : _rows,
             rowId: (r) => r.id,
             empty: const Text('No projects'),
@@ -208,8 +219,13 @@ class _VirtualState extends State<DataTableVirtualFixture> {
               KDataTableColumn(
                 id: 'title',
                 label: 'Project',
+                headerContentInset:
+                    tokens.spaceControlInsetInline + tokens.borderWidthDefault,
                 minWidth: 240,
                 cell: external ? (r) => Text(r.title) : _title,
+                compare: (a, b) => int.parse(
+                  a.id.substring(4),
+                ).compareTo(int.parse(b.id.substring(4))),
               ),
               KDataTableColumn(
                 id: 'team',

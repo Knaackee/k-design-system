@@ -8,6 +8,7 @@ import {
   KStack,
   KText,
   type KDataTableColumn,
+  type KDataTableSort,
   type KDataTableWindow,
   type KDataTableRange,
   type KDataTableCellIdentity,
@@ -26,10 +27,13 @@ const rowId = (row: Item) => row.id;
 const groups = [{ id: "team", value: (row: Item) => row.team }];
 export function DataTableVirtualFixture({
   external = false,
+  showHeader = false,
 }: {
   external?: boolean;
+  showHeader?: boolean;
 }) {
   const [rows, setRows] = useState(seed);
+  const [sort, setSort] = useState<KDataTableSort | null>(null);
   const [active, setActive] = useState<KDataTableCellIdentity | null>(null);
   const [draft, setDraft] = useState("");
   const editSession = useRef<{ rowId: string; draft: string } | null>(null);
@@ -92,6 +96,9 @@ export function DataTableVirtualFixture({
     {
       id: "title",
       label: "Project",
+      headerContentInset: "var(--k-space-control-inset-inline)",
+      compare: (a, b) =>
+        a.title.localeCompare(b.title, "en", { numeric: true }),
       minWidth: 240,
       cell: (row) => (
         <KEditableCell
@@ -214,6 +221,9 @@ export function DataTableVirtualFixture({
         )}
       </KInline>
       <KDataTable
+        showHeader={showHeader}
+        sort={sort}
+        onSortChange={external ? undefined : setSort}
         label={external ? "External projects" : "Virtual projects"}
         rows={external ? [] : rows}
         rowId={rowId}

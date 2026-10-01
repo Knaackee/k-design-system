@@ -31,6 +31,7 @@ import {
 
 export function DataTableFixture({
   grouped = false,
+  showHeader = false,
   singleColumn = false,
   addLabel = "Add project",
   createProject,
@@ -42,6 +43,7 @@ export function DataTableFixture({
   cancelLabel = "Cancel",
 }: {
   grouped?: boolean;
+  showHeader?: boolean;
   singleColumn?: boolean;
   addLabel?: string;
   createProject?: (section: KDataTableSection<Project>) => Omit<Project, "id">;
@@ -125,6 +127,7 @@ export function DataTableFixture({
     {
       id: "project",
       label: "Project",
+      headerContentInset: 4,
       minWidth: 240,
       flex: 2,
       paddingInline: 0,
@@ -154,6 +157,8 @@ export function DataTableFixture({
     {
       id: "status",
       label: "Status",
+      headerContentInset:
+        "calc(var(--k-space-control-inset-inline) + var(--k-border-width-default))",
       minWidth: 180,
       cell: (row: Project) => (
         <KSelect
@@ -169,6 +174,7 @@ export function DataTableFixture({
     {
       id: "budget",
       label: "Budget",
+      headerContentInset: 4,
       width: 168,
       align: "end",
       cell: (row) => (
@@ -228,6 +234,8 @@ export function DataTableFixture({
             rowId={(row) => row.id}
             empty={<KText role="status">No matching projects</KText>}
             sort={sort}
+            showHeader={showHeader}
+            onSortChange={setSort}
             renderFooter={
               !allowCreate
                 ? undefined

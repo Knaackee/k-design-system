@@ -1,14 +1,16 @@
 import 'dart:math' as math;
 import 'k_data_table_external_drafts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 import '../primitives/k_layout.dart';
+import '../primitives/k_overflow_text.dart';
 import 'k_table.dart';
 import 'k_data_table_spanning.dart';
 import 'k_data_table_scroll.dart';
 import 'k_data_table_semantics.dart';
+import 'k_data_table_virtual_header.dart';
+import 'k_data_table_virtual_cell.dart';
 import 'k_data_table.dart';
 import 'k_data_table_flatten.dart';
 import 'k_data_table_virtual_types.dart';
@@ -300,204 +302,197 @@ class _KVirtualDataTableState<T> extends State<KVirtualDataTable<T>> {
           )
         else
           status(
-            SizedBox(
-              height: viewport.height,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (!constraints.hasBoundedWidth) {
-                    throw ArgumentError('Virtual table requires bounded width');
-                  }
-                  final base = visibleColumns.fold(
-                    0.0,
-                    (s, c) =>
-                        s +
-                        (c.width ??
-                            c.minWidth ??
-                            t.componentDataTableDefaultColumnMinWidth),
-                  );
-                  final flex = visibleColumns
-                      .where((c) => c.width == null)
-                      .fold(0.0, (s, c) => s + c.flex);
-                  final extra = math.max(
-                    0.0,
-                    constraints.maxWidth - base - gutter,
-                  );
-                  final widths = [
-                    for (final c in visibleColumns)
-                      c.width ??
-                          (c.minWidth ??
-                                  t.componentDataTableDefaultColumnMinWidth) +
-                              (flex == 0 ? 0 : extra * c.flex / flex),
-                  ];
-                  _viewportWidth = constraints.maxWidth;
-                  _columnOffsets = [gutter];
-                  for (final width in widths) {
-                    _columnOffsets.add(_columnOffsets.last + width);
-                  }
-                  return Semantics(
-                    label: table.label,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (!constraints.hasBoundedWidth) {
+                  throw ArgumentError('Virtual table requires bounded width');
+                }
+                final base = visibleColumns.fold(
+                  0.0,
+                  (s, c) =>
+                      s +
+                      (c.width ??
+                          c.minWidth ??
+                          t.componentDataTableDefaultColumnMinWidth),
+                );
+                final flex = visibleColumns
+                    .where((c) => c.width == null)
+                    .fold(0.0, (s, c) => s + c.flex);
+                final extra = math.max(
+                  0.0,
+                  constraints.maxWidth - base - gutter,
+                );
+                final widths = [
+                  for (final c in visibleColumns)
+                    c.width ??
+                        (c.minWidth ??
+                                t.componentDataTableDefaultColumnMinWidth) +
+                            (flex == 0 ? 0 : extra * c.flex / flex),
+                ];
+                _viewportWidth = constraints.maxWidth;
+                _columnOffsets = [gutter];
+                for (final width in widths) {
+                  _columnOffsets.add(_columnOffsets.last + width);
+                }
+                return KDataTableVirtualHeader(
+                  table: table,
+                  widths: widths,
+                  gutter: gutter,
+                  horizontal: _horizontal,
+                  child: SizedBox(
+                    height: viewport.height,
+                    child: Semantics(
+                      label: table.label,
 
-                    explicitChildNodes: true,
-                    value: '$_count',
-                    child: KSemanticTableView(
-                      configuration: TableView.builder(
-                        // TableView 0.5.4 exposes cacheExtent, despite its SDK deprecation.
-                        // ignore: deprecated_member_use
-                        cacheExtent: viewport.overscan * _rowHeight,
-                        verticalDetails: ScrollableDetails.vertical(
-                          controller: _vertical,
-                          physics: KDataTableScrollPhysics(allow: _allowScroll),
-                        ),
-                        horizontalDetails: ScrollableDetails.horizontal(
-                          controller: _horizontal,
-                          physics: KDataTableScrollPhysics(
-                            allow: (offset) {
-                              final active = table.interactiveCell;
-                              if (active == null) return true;
-                              final i = visibleColumns.indexWhere(
-                                (c) => c.id == active.columnId,
-                              );
-                              return i < 0 ||
-                                  (_columnOffsets[i] >= offset &&
-                                      _columnOffsets[i + 1] <=
-                                          offset + _viewportWidth) ||
-                                  _allowExit();
-                            },
+                      explicitChildNodes: true,
+                      value: '$_count',
+                      child: KSemanticTableView(
+                        configuration: TableView.builder(
+                          // TableView 0.5.4 exposes cacheExtent, despite its SDK deprecation.
+                          // ignore: deprecated_member_use
+                          cacheExtent: viewport.overscan * _rowHeight,
+                          verticalDetails: ScrollableDetails.vertical(
+                            controller: _vertical,
+                            physics: KDataTableScrollPhysics(
+                              allow: _allowScroll,
+                            ),
                           ),
-                        ),
-                        columnCount: visibleColumns.length + leading,
-                        rowCount: _count,
-                        columnBuilder: (i) => TableSpan(
-                          extent: FixedTableSpanExtent(
-                            i < leading ? gutter : widths[i - leading],
+                          horizontalDetails: ScrollableDetails.horizontal(
+                            controller: _horizontal,
+                            physics: KDataTableScrollPhysics(
+                              allow: (offset) {
+                                final active = table.interactiveCell;
+                                if (active == null) return true;
+                                final i = visibleColumns.indexWhere(
+                                  (c) => c.id == active.columnId,
+                                );
+                                return i < 0 ||
+                                    (_columnOffsets[i] >= offset &&
+                                        _columnOffsets[i + 1] <=
+                                            offset + _viewportWidth) ||
+                                    _allowExit();
+                              },
+                            ),
                           ),
-                        ),
-                        rowBuilder: (i) =>
-                            TableSpan(extent: FixedTableSpanExtent(_height(i))),
-                        cellBuilder: (context, vicinity) {
-                          final entry = _entry(vicinity.row);
-                          if (entry == null) {
-                            return TableViewCell(
-                              child: ExcludeSemantics(
-                                child: ColoredBox(color: t.colorSurfaceSubtle),
-                              ),
-                            );
-                          }
-                          final spanning =
-                              entry.kind != KDataTableEntryKind.item;
-                          if (!spanning && vicinity.column < leading) {
-                            return const TableViewCell(
-                              child: SizedBox.shrink(),
-                            );
-                          }
-                          final column =
-                              visibleColumns[math.max(
-                                0,
-                                vicinity.column - leading,
-                              )];
-                          final identity = spanning
-                              ? '${entry.kind}/${entry.id}'
-                              : '${table.rowId(entry.row as T)}/${column.id}';
-                          Widget child;
-                          if (spanning) {
-                            child = buildKDataTableSpanning(
-                              table,
-                              entry,
-                              indent,
-                              _allowExit,
-                            );
-                          } else {
-                            final padding =
-                                column.paddingInline ??
-                                t.spaceControlInsetInline;
-                            child = Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                padding,
-                                t.spaceControlGap,
-                                padding,
-                                t.spaceControlGap + t.borderWidthDefault,
-                              ),
-                              child: Align(
-                                alignment: switch (column.align) {
-                                  KTableAlign.start =>
-                                    AlignmentDirectional.centerStart,
-                                  KTableAlign.center =>
-                                    AlignmentDirectional.center,
-                                  KTableAlign.end =>
-                                    AlignmentDirectional.centerEnd,
-                                },
-                                child: Focus(
-                                  key: _cellKeys.putIfAbsent(
-                                    identity,
-                                    GlobalKey.new,
+                          columnCount: visibleColumns.length + leading,
+                          rowCount: _count,
+                          columnBuilder: (i) => TableSpan(
+                            extent: FixedTableSpanExtent(
+                              i < leading ? gutter : widths[i - leading],
+                            ),
+                          ),
+                          rowBuilder: (i) => TableSpan(
+                            extent: FixedTableSpanExtent(_height(i)),
+                          ),
+                          cellBuilder: (context, vicinity) {
+                            final entry = _entry(vicinity.row);
+                            if (entry == null) {
+                              return TableViewCell(
+                                child: ExcludeSemantics(
+                                  child: ColoredBox(
+                                    color: t.colorSurfaceSubtle,
                                   ),
-                                  canRequestFocus: false,
-                                  skipTraversal: true,
-                                  child: column.cell(entry.row as T),
                                 ),
-                              ),
-                            );
-                          }
-                          return TableViewCell(
-                            key: ValueKey(identity),
-                            columnMergeStart: spanning ? 0 : null,
-                            columnMergeSpan: spanning
-                                ? visibleColumns.length + leading
-                                : null,
-                            child: Semantics(
-                              container: true,
-                              explicitChildNodes: true,
-                              role: SemanticsRole.cell,
-                              sortKey: OrdinalSortKey(vicinity.row.toDouble()),
-                              identifier: 'k-data-row-${vicinity.row + 1}',
-                              label: spanning ? null : column.label,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: t.colorSurfaceCanvas,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      width: t.borderWidthDefault,
-                                      color: table.showRowDividers
-                                          ? t.colorBorderDefault
-                                          : Colors.transparent,
+                              );
+                            }
+                            final spanning =
+                                entry.kind != KDataTableEntryKind.item;
+                            if (!spanning && vicinity.column < leading) {
+                              return const TableViewCell(
+                                child: SizedBox.shrink(),
+                              );
+                            }
+                            final column =
+                                visibleColumns[math.max(
+                                  0,
+                                  vicinity.column - leading,
+                                )];
+                            final identity = spanning
+                                ? '${entry.kind}/${entry.id}'
+                                : '${table.rowId(entry.row as T)}/${column.id}';
+                            Widget child;
+                            if (spanning) {
+                              child = buildKDataTableSpanning(
+                                table,
+                                entry,
+                                indent,
+                                _allowExit,
+                              );
+                            } else {
+                              final cell = column.cell(entry.row as T);
+                              final padding =
+                                  column.paddingInline ??
+                                  t.spaceControlInsetInline;
+                              child = Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                  padding,
+                                  t.spaceControlGap,
+                                  padding,
+                                  t.spaceControlGap + t.borderWidthDefault,
+                                ),
+                                child: Align(
+                                  alignment: switch (column.align) {
+                                    KTableAlign.start =>
+                                      AlignmentDirectional.centerStart,
+                                    KTableAlign.center =>
+                                      AlignmentDirectional.center,
+                                    KTableAlign.end =>
+                                      AlignmentDirectional.centerEnd,
+                                  },
+                                  child: Focus(
+                                    key: _cellKeys.putIfAbsent(
+                                      identity,
+                                      GlobalKey.new,
+                                    ),
+                                    canRequestFocus: false,
+                                    skipTraversal: true,
+                                    child: DefaultTextStyle.merge(
+                                      softWrap: false,
+                                      maxLines: 1,
+                                      overflow:
+                                          column.overflow ==
+                                              KTableTextOverflow.visible
+                                          ? TextOverflow.visible
+                                          : TextOverflow.ellipsis,
+                                      child:
+                                          cell is Text &&
+                                              column.overflow !=
+                                                  KTableTextOverflow.visible
+                                          ? KOverflowText(
+                                              text: cell,
+                                              focusable: false,
+                                            )
+                                          : cell,
                                     ),
                                   ),
                                 ),
-                                child: DefaultTextStyle(
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: t.fontFamily,
-                                    fontSize: t.fontBodySize,
-                                    height:
-                                        t.fontBodyLineHeight / t.fontBodySize,
-                                    leadingDistribution:
-                                        TextLeadingDistribution.even,
-                                    fontWeight: t.fontBodyWeight,
-                                    color: t.colorTextPrimary,
-                                    letterSpacing: t.fontBodyLetterSpacing,
-                                    fontVariations: [
-                                      FontVariation.weight(
-                                        t.fontBodyWeight.value.toDouble(),
-                                      ),
-                                      FontVariation.opticalSize(
-                                        scaler
-                                            .scale(t.fontBodySize)
-                                            .clamp(14, 32),
-                                      ),
-                                    ],
-                                  ),
-                                  child: child,
-                                ),
+                              );
+                            }
+                            return TableViewCell(
+                              key: ValueKey(identity),
+                              columnMergeStart: spanning ? 0 : null,
+                              columnMergeSpan: spanning
+                                  ? visibleColumns.length + leading
+                                  : null,
+                              child: KDataTableVirtualCell(
+                                textAlign: switch (column.align) {
+                                  KTableAlign.center => TextAlign.center,
+                                  KTableAlign.end => TextAlign.end,
+                                  _ => TextAlign.start,
+                                },
+                                rowIndex: vicinity.row,
+                                label: spanning ? null : column.label,
+                                showRowDividers: table.showRowDividers,
+                                child: child,
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ),
       ],

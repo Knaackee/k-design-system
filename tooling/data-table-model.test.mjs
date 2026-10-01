@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { dataTableModel } from "../packages/web/ui/src/data/data-table-model.ts";
+import {
+  dataTableModel,
+  nextDataTableSort,
+} from "../packages/web/ui/src/data/data-table-model.ts";
 const rows = [
   { id: "a", value: 4, status: "active", platform: "web" },
   { id: "b", value: 2, status: "planned", platform: "mobile" },
@@ -12,6 +15,25 @@ const base = {
   rowId: (r) => r.id,
   columns: [{ id: "value", compare: (a, b) => a.value - b.value }],
 };
+test("header sorting cycles ascending, descending, original and resets for a new column", () => {
+  let sort = null;
+  for (const expected of [
+    ["d", "b", "a", "c"],
+    ["a", "c", "b", "d"],
+    ["a", "b", "c", "d"],
+  ]) {
+    sort = nextDataTableSort(sort, "value");
+    assert.deepEqual(
+      dataTableModel({ ...base, sort }).nodes[0].rows.map((row) => row.id),
+      expected,
+    );
+  }
+  assert.equal(sort, null);
+  assert.deepEqual(
+    nextDataTableSort({ columnId: "other", direction: "descending" }, "value"),
+    { columnId: "value", direction: "ascending" },
+  );
+});
 test("controlled sorting is stable and never mutates source rows", () => {
   const ascending = dataTableModel({
     ...base,

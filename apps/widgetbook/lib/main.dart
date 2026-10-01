@@ -14,9 +14,11 @@ import 'gantt_fixture.dart';
 import 'action_fixtures.dart';
 import 'context_menu_fixture.dart';
 import 'form_fixtures.dart';
+import 'textarea_fixture.dart';
 import 'radio_fixture.dart';
 import 'table_fixtures.dart';
 import 'data_table_fixtures.dart';
+import 'data_table_overflow_fixture.dart';
 import 'data_table_cells_fixture.dart';
 import 'disclosure_fixtures.dart';
 import 'overlay_fixtures.dart';
@@ -541,6 +543,15 @@ class KDesignWidgetbook extends StatelessWidget {
           name: 'Forms',
           children: [
             WidgetbookFolder(
+              name: 'Textarea',
+              children: [
+                WidgetbookUseCase(
+                  name: 'textarea-states',
+                  builder: (_) => const TextareaFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
               name: 'Editors',
               children: [
                 WidgetbookUseCase(
@@ -879,6 +890,11 @@ class KDesignWidgetbook extends StatelessWidget {
                   builder: (_) => const DataTableVirtualFixture(),
                 ),
                 WidgetbookUseCase(
+                  name: 'data-table-virtual-headers',
+                  builder: (_) =>
+                      const DataTableVirtualFixture(showHeader: true),
+                ),
+                WidgetbookUseCase(
                   name: 'data-table-external',
                   builder: (_) => const DataTableVirtualFixture(external: true),
                 ),
@@ -887,6 +903,19 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'DataTable',
               children: [
+                WidgetbookUseCase(
+                  name: 'data-table-overflow',
+                  builder: (_) => const DataTableOverflowFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-headers',
+                  builder: (_) => const DataTableFixture(showHeader: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'data-table-grouped-headers',
+                  builder: (_) =>
+                      const DataTableFixture(grouped: true, showHeader: true),
+                ),
                 WidgetbookUseCase(
                   name: 'data-table-cells',
                   builder: (_) => const DataTableCellsFixture(),

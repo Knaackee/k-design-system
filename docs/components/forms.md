@@ -77,6 +77,17 @@ Checks for this extension: targeted native and browser interaction tests for
 clearing, focus, query cancellation, reset enablement and image fallback;
 paired layouts including clear targets and enlarged text; and `pnpm verify`.
 
+### Textarea extension — 28 September 2026
+
+Approved scope: user authorized a public multiline input in Web and Flutter before continuing the Assetry migration. Implementation branch: codex/textarea, based on master d534830. Reuses KField, input appearance and existing tokens; no new token axis or dependency.
+
+- Web: KTextarea/KTextareaProps at the public root and forms/textarea subpath. Native textarea attributes, ref, controlled or default value, name/FormData, required, maxLength, disabled and readOnly remain available. Enter inserts a newline. Default rows is 4. Fixed viewport with internal scrolling; no resize handle or automatic growth.
+- Flutter: KTextarea with optional externally owned controller/focusNode, onChanged, label, placeholder, autofocus, enabled, readOnly, rows (default 4) and maxLength. KField conveys required/error/help semantics; consumers own validation and submission. Fixed min/max lines, native multiline keyboard and newline action. Flutter's native maxLength counts grapheme clusters; Web native maxLength counts UTF-16 code units. These native limits are presentation constraints, not a replacement for canonical server validation.
+- Shared appearance: existing control font, body line-height, control inset/gap, border, radius, surface, focus, error and disabled tokens. Existing inputs are unchanged.
+- Matching fixture ID: textarea-states under Forms/Textarea in Storybook and Widgetbook. Editable, required/error, read-only and disabled examples use the same synthetic content.
+- Focused checks: pnpm build:web; node --test packages/web/ui/test/textarea.test.mjs; Flutter package flutter test test/textarea_test.dart. Web checks native values and KField accessibility; Flutter checks multiline edits, length limits, states and controller ownership. Both passed. Full pnpm verify and browser review are recorded in follow-up evidence.
+- Assetry has not imported the new API. Visual Human Acceptance and applicable Git authorization precede integration per consumer workflow.
+
 ## Verification and acceptance
 
 Run Web interaction tests and Flutter widget tests for naming, disabled and
@@ -129,6 +140,26 @@ was reset and the regular `pnpm verify` build restored them. Browser parity now
 checks the font manifest, Inter font and gallery avatars before measurement.
 Use the root pnpm build commands consistently; do not compensate fallback fonts
 by changing component typography.
+
+### Textarea verification — 28 September 2026
+
+`pnpm verify` completed with exit code 0 on codex/textarea, including generation checks, 101 tooling tests, visual-literal audit, Web typecheck and consumer build, Flutter consumer build, all Flutter analysis/tests, Storybook and Widgetbook release builds. New focused Web static-render test and Flutter textarea test passed. Evidence: host tmp/textarea-verify.log and tmp/textarea-build.log. Existing WASM dry-run and missing optional Cupertino font warnings match the previous dashboard-shell-final-verify.log; no warning was suppressed. Documentation formatting was checked separately after the final documentation additions.
+
+Codex browser smoke verified editable multiline content, required/error/read-only/disabled presentation and compact rendering in both galleries. Storybook viewport is 375 by 812; Widgetbook uses its existing Compact 375 viewport. Screenshots: host tmp/textarea-web.png and tmp/textarea-flutter.png. Native browser inputs and Flutter canvas text editing differ in selection mechanics; no shared behavior was replaced to accommodate automation.
+
+Human visual acceptance is pending. No commit, push, master merge or Assetry API integration was performed for this new component. Next action: user reviews Forms/Textarea in both open tabs, then authorize the applicable publish steps and continue the previously requested Assetry-wide migration. The host backup remains 69c45f6 on origin/main; host dark-logo/density changes remain uncommitted as recorded there.
+
+Human acceptance recorded on 28 September 2026: the user reviewed the galleries and explicitly authorized committing and pushing this extension, then integrating the controls into Assetry. The existing authorization to publish accepted design-system work to master applies. The preceding pending-acceptance paragraph describes the pre-review state.
+
+### Native select form contract — 28 September 2026
+
+Approved by the user: add native form participation to KSelect/KCombobox, commit and push, then resume Assetry's controls migration. The user explicitly waived another visual acceptance round because the existing presentation is unchanged. Existing controlled calls remain supported; optional defaultValue enables uncontrolled forms. Optional name, form, id, required and onChange expose native Web form behavior. KField required also participates in validation. A visually concealed native select owns submission and validation; its change bubbles to form-level dirty guards. Invalid submission focuses the visible combobox and announces the browser validation message. Reset runs after the native reset action and notifies controlled consumers through onValueChange. Consumers retain ownership of controlled values.
+
+Platform adaptation: HTML name/form/FormData/reset-event semantics apply only to Web. Flutter's existing controlled selection API and form ownership remain unchanged. No visual token defaults or Flutter presentation changed. The Web-only Form contract Storybook fixture is an integration test harness, not a new cross-platform visual variant.
+
+Verification: Web package build and select-form-browser.test.mjs passed, covering required submission blocking, accessible focus, change bubbling, submitted codes, disabled-field omission and controlled/uncontrolled reset. The first test exposed native-reset event ordering; deferring state synchronization until after native reset fixed it. Style audit initially rejected new hardcoded hidden-control dimensions; the existing border-width token replaces these values. Full pnpm verify is required before publishing.
+
+Final verification: pnpm verify completed with exit code 0, including Web/Flutter consumers, analysis, tests and both gallery release builds. The focused browser contract test passed again on the final implementation. Existing WASM dry-run warnings remain unchanged. The user authorized commit, push and host integration without another visual review for this nonvisual extension.
 
 ## References
 

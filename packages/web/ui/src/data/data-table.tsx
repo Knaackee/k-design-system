@@ -1,7 +1,13 @@
 import { insertDataTableDrafts } from "./data-table-draft-placement.js";
+import { DataTableHeader } from "./data-table-header.js";
 import type { KDataTableDraftRow } from "./data-table-draft.js";
 import { useEffect, useRef, useMemo, type ReactNode } from "react";
-import { KTable, type KTableColumn, type KTableAlign } from "./table.js";
+import {
+  KTable,
+  type KTableColumn,
+  type KTableAlign,
+  type KTableTextOverflow,
+} from "./table.js";
 import { KButton } from "../primitives/button.js";
 import { KIcon } from "../primitives/icon.js";
 import { tableWidths } from "./table-layout.js";
@@ -27,6 +33,9 @@ export interface KDataTableColumn<T> {
   flex?: number;
   align?: KTableAlign;
   paddingInline?: number;
+  /** Additional header inset for consumer-rendered cells with their own padding. */
+  headerContentInset?: React.CSSProperties["paddingInline"];
+  overflow?: KTableTextOverflow;
 }
 export type {
   KDataTableGroupValue,
@@ -81,7 +90,10 @@ export interface KDataTableProps<T> {
   toolbar?: ReactNode;
   renderFooter?: (section: KDataTableSection<T>) => ReactNode;
   showRowDividers?: boolean;
+  /** Opt-in for backwards compatibility. Single-column lists remain headerless. */
+  showHeader?: boolean;
   sort?: KDataTableSort | null;
+  onSortChange?: (sort: KDataTableSort | null) => void;
   filter?: (row: T) => boolean;
   groups?: readonly KDataTableGroup<T>[];
   /** Logical pixels per group level; defaults to the control inline inset token. */
@@ -112,6 +124,8 @@ export function KDataTable<T>({
   renderFooter,
   showRowDividers = false,
   sort,
+  showHeader = false,
+  onSortChange,
   filter,
   groups,
   groupIndent,
@@ -246,6 +260,9 @@ export function KDataTable<T>({
       <KStack align="stretch" gap="section">
         {toolbar}
         <KVirtualDataTable
+          showHeader={showHeader && displayMode !== "singleColumn"}
+          sort={sort}
+          onSortChange={onSortChange}
           draftRows={draftRows}
           label={label}
           columns={displayColumns}
@@ -278,8 +295,23 @@ export function KDataTable<T>({
     flex: column.flex,
     align: column.align,
     paddingInline: column.paddingInline,
-    header: column.label,
+    overflow: column.overflow,
+    header: (
+      <DataTableHeader
+        column={column}
+        sort={sort}
+        onSortChange={onSortChange}
+        beforeSort={
+          activeCell ? () => onBeforeActiveCellExit?.() ?? false : undefined
+        }
+      />
+    ),
     headerLabel: column.label,
+    sortDirection: column.compare
+      ? sort?.columnId === column.id
+        ? sort.direction
+        : "none"
+      : undefined,
   }));
   const render = (
     nodes: DataTableNode<T>[],
@@ -297,7 +329,7 @@ export function KDataTable<T>({
               <KTable
                 label={[label, ...path.map((group) => group.label)].join(" / ")}
                 columns={tableColumns}
-                showHeader={false}
+                showHeader={showHeader && displayMode !== "singleColumn"}
                 data-display-mode={displayMode}
                 showRowDividers={showRowDividers}
                 rows={node.rows.map((row) => ({

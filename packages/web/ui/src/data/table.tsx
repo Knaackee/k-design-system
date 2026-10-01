@@ -6,15 +6,20 @@ import {
   type HTMLAttributes,
 } from "react";
 import { tableWidths, type TableTrack } from "./table-layout.js";
+import { TruncatedContent } from "../internal/truncated-content.js";
 
 export type KTableAlign = "start" | "center" | "end";
+export type KTableTextOverflow = "ellipsis" | "wrap" | "visible";
 export interface KTableColumn extends TableTrack {
   id: string;
   header: ReactNode;
   align?: KTableAlign;
   headerLabel?: string;
+  sortDirection?: "none" | "ascending" | "descending";
   /** Optional cell inset in logical pixels; defaults to the theme control inset. */
   paddingInline?: number;
+  /** Text cells default to one line; preserve full values or allow descriptions to wrap. */
+  overflow?: KTableTextOverflow;
 }
 export interface KTableRow {
   id: string;
@@ -104,12 +109,17 @@ export function KTable({
               <th
                 key={column.id}
                 scope="col"
+                aria-sort={column.sortDirection}
                 style={{
                   textAlign: column.align ?? "start",
                   paddingInline: column.paddingInline,
                 }}
               >
-                {showHeader ? column.header : column.headerLabel}
+                {showHeader ? (
+                  <TruncatedContent>{column.header}</TruncatedContent>
+                ) : (
+                  column.headerLabel
+                )}
               </th>
             ))}
           </tr>
@@ -120,12 +130,17 @@ export function KTable({
               {row.cells.map((cell, index) => (
                 <td
                   key={columns[index].id}
+                  data-overflow={columns[index].overflow ?? "ellipsis"}
                   style={{
                     textAlign: columns[index].align ?? "start",
                     paddingInline: columns[index].paddingInline,
                   }}
                 >
-                  {cell}
+                  {(columns[index].overflow ?? "ellipsis") === "ellipsis" ? (
+                    <TruncatedContent>{cell}</TruncatedContent>
+                  ) : (
+                    cell
+                  )}
                 </td>
               ))}
             </tr>

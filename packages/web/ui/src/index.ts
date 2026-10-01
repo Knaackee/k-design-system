@@ -436,3 +436,5 @@ export type {
   KOrbitTone,
   KOrbitNodeStatus,
 } from "./data-display/orbit/orbit-model.js";
+export { KTextarea } from "./forms/textarea.js";
+export type { KTextareaProps } from "./forms/textarea.js";

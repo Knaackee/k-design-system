@@ -122,6 +122,10 @@ KDataTable hides row dividers by default; showRowDividers=true enables them.
 KTable keeps its visible dividers by default. Hiding divider paint retains its
 reserved geometry, so switching the property does not shift row positions.
 
+The headerless appearance described above remains the default. Optional visible,
+sortable headers are specified in [DataTable headers](data-table-headers.md),
+with matching fixtures for ordinary, grouped and virtual tables.
+
 ## Verification and review
 
 Matching fixtures: Patterns / DataTable / data-table-rows and data-table-groups.

@@ -1,5 +1,12 @@
 import { useKLocalization } from "../localization/provider.js";
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ChangeEventHandler,
+} from "react";
 import { useField } from "./field.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import { OptionMedia } from "./option-media.js";
@@ -14,8 +21,14 @@ export interface KSelectOption {
 export interface KSelectProps {
   presentation?: "standard" | "inline";
   options: readonly KSelectOption[];
-  value: string | null;
-  onValueChange: (value: string) => void;
+  value?: string | null;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  onChange?: ChangeEventHandler<HTMLSelectElement>;
+  name?: string;
+  form?: string;
+  id?: string;
+  required?: boolean;
   label?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -33,7 +46,13 @@ export function KCombobox(props: KSelectProps) {
 }
 function Selection({
   options,
-  value,
+  value: controlledValue,
+  defaultValue,
+  onChange,
+  name,
+  form,
+  id: suppliedId,
+  required,
   onValueChange,
   label,
   placeholder,
@@ -49,7 +68,17 @@ function Selection({
   const { messages } = useKLocalization();
   const field = useField();
   const generated = useId();
-  const id = field.id ?? generated;
+  const id = suppliedId ?? field.id ?? generated;
+  const initialValue = useRef(
+    defaultValue ??
+      (controlledValue === undefined
+        ? (options.find((option) => !option.disabled)?.value ?? "")
+        : (controlledValue ?? "")),
+  );
+  const [localValue, setLocalValue] = useState(initialValue.current);
+  const value = controlledValue === undefined ? localValue : controlledValue;
+  const native = useRef<HTMLSelectElement>(null);
+  const [validationMessage, setValidationMessage] = useState("");
   const input = useRef<HTMLInputElement>(null);
   const popup = useRef<HTMLDivElement>(null);
   const target = useRef<HTMLDivElement>(null);
@@ -89,10 +118,37 @@ function Selection({
     }
   }
   function choose(next: string) {
-    onValueChange(next);
+    if (native.current) {
+      native.current.value = next;
+      native.current.dispatchEvent(new Event("change", { bubbles: true }));
+    }
     close();
     input.current?.focus();
   }
+  useEffect(() => {
+    const owner = native.current?.form;
+    if (!owner) return;
+    const reset = (event: Event) => {
+      // Native reset applies after event dispatch; restore controlled state afterwards.
+      setTimeout(() => {
+        if (event.defaultPrevented) return;
+        setLocalValue(initialValue.current);
+        setValidationMessage("");
+        onValueChange?.(initialValue.current);
+        close();
+        if (native.current)
+          native.current.value =
+            controlledValue === undefined
+              ? initialValue.current
+              : (controlledValue ?? "");
+      });
+    };
+    owner.addEventListener("reset", reset);
+    return () => owner.removeEventListener("reset", reset);
+  }, [form, controlledValue, onValueChange]);
+  useEffect(() => {
+    setValidationMessage("");
+  }, [value]);
   useEffect(() => {
     if (disabled) setOpen(false);
   }, [disabled]);
@@ -222,9 +278,16 @@ function Selection({
           id={id}
           role="combobox"
           aria-label={label}
-          aria-describedby={field.description}
-          aria-invalid={field.invalid || undefined}
-          aria-required={field.required || undefined}
+          aria-describedby={
+            [
+              field.description,
+              validationMessage ? `${id}-validation` : undefined,
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined
+          }
+          aria-invalid={field.invalid || !!validationMessage || undefined}
+          aria-required={(required ?? field.required) || undefined}
           aria-expanded={open}
           aria-controls={open ? `${id}-list` : undefined}
           aria-activedescendant={
@@ -277,6 +340,39 @@ function Selection({
           onKeyDown={keyDown}
         />
       </span>
+      <select
+        ref={native}
+        className="k-selection__native"
+        aria-hidden="true"
+        tabIndex={-1}
+        name={name}
+        form={form}
+        required={required ?? field.required}
+        disabled={disabled}
+        value={value ?? ""}
+        onChange={(event) => {
+          setLocalValue(event.currentTarget.value);
+          setValidationMessage("");
+          onValueChange?.(event.currentTarget.value);
+          onChange?.(event);
+        }}
+        onInvalid={(event) => {
+          event.preventDefault();
+          setValidationMessage(event.currentTarget.validationMessage);
+          input.current?.focus();
+        }}
+      >
+        {!options.some((option) => option.value === "") && <option value="" />}
+        {options.map((option) => (
+          <option
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </option>
+        ))}
+      </select>
       {showMedia && (
         <span className="k-selection__media">
           <OptionMedia {...selectedOption} />
@@ -286,6 +382,7 @@ function Selection({
         <ClearButton
           label={clearLabel ?? messages.clear}
           onClear={() => {
+            choose("");
             onClear?.();
             close();
             input.current?.focus();
@@ -334,6 +431,15 @@ function Selection({
             </div>
           )}
         </div>
+      )}
+      {validationMessage && (
+        <span
+          id={`${id}-validation`}
+          className="k-field__description k-field__error"
+          role="alert"
+        >
+          {validationMessage}
+        </span>
       )}
     </div>
   );

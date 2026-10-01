@@ -16,6 +16,15 @@ export interface KDataTableSort {
   columnId: string;
   direction: KDataTableSortDirection;
 }
+export function nextDataTableSort(
+  sort: KDataTableSort | null | undefined,
+  columnId: string,
+): KDataTableSort | null {
+  if (sort?.columnId !== columnId) return { columnId, direction: "ascending" };
+  return sort.direction === "ascending"
+    ? { columnId, direction: "descending" }
+    : null;
+}
 export interface KDataTableGroup<T> {
   id: string;
   value: (row: T) => string;
