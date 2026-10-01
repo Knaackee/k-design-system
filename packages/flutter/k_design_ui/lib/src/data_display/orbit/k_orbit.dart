@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import '../../actions/k_menu_button.dart';
 
 import 'orbit_controller.dart';
 import 'orbit_controls.dart';
@@ -16,6 +17,7 @@ import 'orbit_projection.dart';
 import 'orbit_stage.dart';
 import 'orbit_transition.dart';
 import 'orbit_motion.dart';
+import 'orbit_layout.dart';
 import 'orbit_presentation.dart';
 import 'orbit_signals.dart';
 
@@ -27,6 +29,8 @@ class KOrbit extends StatefulWidget {
     required this.nodes,
     required this.connections,
     this.controller,
+    this.autoLayout = false,
+    this.layoutGap = 12,
     this.viewState,
     this.initialViewState = const KOrbitViewState(),
     this.selectedNodeId,
@@ -37,6 +41,7 @@ class KOrbit extends StatefulWidget {
     this.initialSelectedNodeId,
     this.selectionControlled = false,
     this.onNodeActivate,
+    this.nodeActions,
     this.onSelectionChange,
     this.onViewChange,
     this.onInteractionStart,
@@ -63,11 +68,14 @@ class KOrbit extends StatefulWidget {
   final List<KOrbitNode> nodes;
   final List<KOrbitConnection> connections;
   final KOrbitController? controller;
+  final bool autoLayout;
+  final double layoutGap;
   final KOrbitViewState? viewState;
   final KOrbitViewState initialViewState;
   final String? selectedNodeId, initialSelectedNodeId;
   final bool selectionControlled, paused, showControls;
   final ValueChanged<KOrbitNode>? onNodeActivate;
+  final List<KMenuAction> Function(KOrbitNode)? nodeActions;
   final ValueChanged<String?>? onSelectionChange;
   final ValueChanged<KOrbitViewState>? onViewChange;
   final VoidCallback? onInteractionStart;
@@ -95,6 +103,10 @@ class KOrbit extends StatefulWidget {
 class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
   late final AnimationController _ticker;
   late final KOrbitNodeTransition _nodeTransition;
+  late KOrbitLayout _layout;
+  KOrbitLayout _resolveLayout() => widget.autoLayout
+      ? layoutKOrbit(widget.levels, widget.nodes, gap: widget.layoutGap)
+      : KOrbitLayout(levels: widget.levels, nodes: widget.nodes);
   late KOrbitViewState _view;
   String? _selectedNodeId;
   late final KOrbitSignals _signals;
@@ -141,10 +153,12 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(hours: 1),
     )..addListener(_tick);
+    _layout = _resolveLayout();
+    if (_pinned != null) _view = _bounded(_view.copyWith(zoom: _followZoom()));
     _nodeTransition = KOrbitNodeTransition(
       vsync: this,
-      initialNodes: widget.nodes,
-      initialLevels: widget.levels,
+      initialNodes: _layout.nodes,
+      initialLevels: _layout.levels,
     )..addListener(_transitionChanged);
     _attachController();
   }
@@ -197,11 +211,13 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
       _shaderRequested = true;
       _loadCenterShader();
     }
+    final previousLayout = _layout;
+    _layout = _resolveLayout();
     _nodeTransition.update(
-      oldLevels: oldWidget.levels,
-      levels: widget.levels,
-      oldNodes: oldWidget.nodes,
-      nodes: widget.nodes,
+      oldLevels: previousLayout.levels,
+      levels: _layout.levels,
+      oldNodes: previousLayout.nodes,
+      nodes: _layout.nodes,
       reducedMotion: _reduceMotion,
     );
     if (oldWidget.controller != widget.controller) {
@@ -214,6 +230,9 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
       widget.onSelectionChange?.call(null);
     }
     _signals.reconcile(widget.nodes, widget.connections);
+    if (_pinned != null && oldWidget.pinnedNodeId != _pinned) {
+      _setView(_currentView.copyWith(zoom: _followZoom()));
+    }
     if (oldWidget.pinnedNodeId != null && _pinned == null) {
       _inertia = Offset.zero;
       _setView(widget.initialViewState.copyWith(offset: Offset.zero));
@@ -296,6 +315,7 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
         delta: delta,
         speed: widget.motionSpeed,
         maxAngularSpeed: widget.maxAngularSpeed,
+        synchronizeLevels: widget.autoLayout,
       );
     }
     if (!_reduceMotion && _inertia != Offset.zero) {
@@ -320,13 +340,17 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
         visible: TickerMode.getValuesNotifier(context).value.enabled,
       );
 
+  double _followZoom() =>
+      kOrbitExtentFor(levels: _layout.levels, nodes: _layout.nodes) /
+      kOrbitExtentFor(
+        levels: _layout.levels,
+        nodes: _layout.nodes,
+        rootId: _pinned,
+      );
+
   KOrbitViewState _bounded(KOrbitViewState view) => view.copyWith(
     pitch: view.pitch.clamp(-math.pi / 2, math.pi / 2),
     zoom: view.zoom.clamp(widget.minZoom, widget.maxZoom),
-    offset: Offset(
-      view.offset.dx.clamp(-240, 240),
-      view.offset.dy.clamp(-240, 240),
-    ),
   );
 
   void _setView(KOrbitViewState view) {

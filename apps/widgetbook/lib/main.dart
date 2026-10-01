@@ -239,6 +239,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'orbit-deep-hierarchy',
                   builder: (_) => const OrbitFixture(deep: true),
                 ),
+                WidgetbookUseCase(
+                  name: 'orbit-adaptive-spacing',
+                  builder: (_) => const OrbitFixture(spacing: true),
+                ),
               ],
             ),
             WidgetbookFolder(
@@ -694,6 +698,10 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'select-states',
                   builder: (context) => const FormFixture(kind: 'select'),
+                ),
+                WidgetbookUseCase(
+                  name: 'select-multiple',
+                  builder: (context) => const MultiSelectFixture(),
                 ),
               ],
             ),

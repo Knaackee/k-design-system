@@ -35,6 +35,74 @@ const people: KSelectOption[] = [
   },
   { value: "sam", label: "Sam", icon: "user", disabled: true },
 ];
+
+export function MultiSelectFixture() {
+  const [teams, setTeams] = useState<string[]>([]);
+  const [projects, setProjects] = useState<string[]>([]);
+  const [persons, setPersons] = useState<string[]>([]);
+  return (
+    <div className="k-primitive-fixture">
+      <KContainer>
+        <KStack align="stretch" gap="section">
+          <KText variant="heading4">Workspace filters</KText>
+          <KField label="Teams">
+            <KSelect
+              multiple
+              clearable
+              label="Teams"
+              placeholder="All teams and private projects"
+              values={teams}
+              onValuesChange={setTeams}
+              selectionLabel={
+                teams.length > 1 ? `${teams.length} areas` : undefined
+              }
+              options={[
+                {
+                  value: "private",
+                  label: "Private workspace projects",
+                  icon: "lock",
+                },
+                { value: "design", label: "Design", icon: "palette" },
+                { value: "engineering", label: "Engineering", icon: "code" },
+              ]}
+            />
+          </KField>
+          <KField label="Projects">
+            <KSelect
+              multiple
+              clearable
+              label="Projects"
+              placeholder="All projects"
+              values={projects}
+              onValuesChange={setProjects}
+              selectionLabel={
+                projects.length > 1 ? `${projects.length} projects` : undefined
+              }
+              options={[
+                { value: "orbit", label: "Orbit", icon: "rocket" },
+                { value: "tasks", label: "Tasks", icon: "code" },
+              ]}
+            />
+          </KField>
+          <KField label="People">
+            <KCombobox
+              multiple
+              clearable
+              label="People"
+              placeholder="All people"
+              values={persons}
+              onValuesChange={setPersons}
+              selectionLabel={
+                persons.length > 1 ? `${persons.length} people` : undefined
+              }
+              options={people}
+            />
+          </KField>
+        </KStack>
+      </KContainer>
+    </div>
+  );
+}
 export type FormFixtureKind =
   | "field"
   | "input"

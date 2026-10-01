@@ -21,6 +21,8 @@ import {
   deepLevels,
   deepNodes,
   deepConnections,
+  spacingLevels,
+  spacingNodes,
 } from "./orbit-fixtures";
 
 type Filter = "all" | "active" | "questions";
@@ -52,10 +54,12 @@ function OrbitFixture({
   communication = false,
   deep = false,
   freeze = false,
+  spacing = false,
 }: {
   communication?: boolean;
   deep?: boolean;
   freeze?: boolean;
+  spacing?: boolean;
 }) {
   const controller = useMemo(() => new KOrbitController(), []);
   const [filter, setFilter] = useState<Filter>("all");
@@ -69,7 +73,7 @@ function OrbitFixture({
     Record<string, NonNullable<KOrbitNode["status"]>>
   >({});
   const [minZoom, setMinZoom] = useState(0.65);
-  const [maxZoom, setMaxZoom] = useState(deep ? 5 : 2.2);
+  const [maxZoom, setMaxZoom] = useState(spacing ? 20 : deep ? 5 : 2.2);
   const [maxAngularSpeed, setMaxAngularSpeed] = useState(12);
   const [nodeOptions, setNodeOptions] = useState<
     Record<string, Partial<KOrbitNode>>
@@ -80,8 +84,8 @@ function OrbitFixture({
   const [signalStyle, setSignalStyle] = useState<KOrbitSignalStyle>("trail");
   const sequence = useRef(1);
   const [events, setEvents] = useState<string[]>(["Ready"]);
-  const sourceNodes = deep ? deepNodes : data;
-  const sourceConnections = deep ? deepConnections : connections;
+  const sourceNodes = spacing ? spacingNodes : deep ? deepNodes : data;
+  const sourceConnections = spacing ? [] : deep ? deepConnections : connections;
   const allNodes = [...sourceNodes, ...(showAdded ? addedNodes : [])].map(
     (node) => {
       const status = statuses[node.id] ?? node.status;
@@ -140,7 +144,8 @@ function OrbitFixture({
     <section className="k-orbit-demo">
       <KOrbit
         className="k-orbit-demo__scene"
-        levels={deep ? deepLevels : levels}
+        autoLayout={spacing}
+        levels={spacing ? spacingLevels : deep ? deepLevels : levels}
         nodes={nodes}
         defaultView={{ yaw: 0, pitch: 0, zoom: 1.15, offset: { x: 0, y: 0 } }}
         zoomBounds={[minZoom, maxZoom]}
@@ -151,10 +156,24 @@ function OrbitFixture({
         onPinnedChange={setPinned}
         onSelectionChange={setSelected}
         onNodeActivate={(node) => setDetails(node)}
+        nodeActions={(node) => [
+          {
+            id: "follow",
+            label: pinned === node.id ? "Unfollow" : "Follow",
+            icon: "orbit",
+            onSelect: () => setPinned(pinned === node.id ? null : node.id),
+          },
+          {
+            id: "details",
+            label: "Details",
+            icon: "external-link",
+            onSelect: () => setDetails(node),
+          },
+        ]}
         labelVisibility={labelVisibility}
         motionSpeed={speed}
         maxAngularSpeed={maxAngularSpeed}
-        paused={paused}
+        paused={paused || details !== null}
         onPausedChange={setPaused}
         onMotionSpeedChange={setSpeed}
         signalStyle={signalStyle}
@@ -410,7 +429,7 @@ function OrbitFixture({
           <KSlider
             label="Maximum zoom"
             min={1}
-            max={10}
+            max={20}
             step={0.1}
             value={maxZoom}
             onValueChange={setMaxZoom}
@@ -471,4 +490,9 @@ export const DeepHierarchy: Story = {
   name: "orbit-deep-hierarchy",
   args: { deep: true },
   parameters: { fixtureId: "orbit-deep-hierarchy" },
+};
+export const AdaptiveSpacing: Story = {
+  name: "orbit-adaptive-spacing",
+  args: { spacing: true },
+  parameters: { fixtureId: "orbit-adaptive-spacing" },
 };

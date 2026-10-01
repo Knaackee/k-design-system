@@ -44,6 +44,7 @@ export interface RendererOptions {
   paused: boolean;
   speed: number;
   maxAngularSpeed?: number;
+  synchronizeLevels?: boolean;
   reducedMotion: boolean;
   elapsedSeconds?: number;
   extent: RefObject<KOrbitExtentTransition | undefined>;
@@ -215,6 +216,7 @@ export function useKOrbitRenderer(options: RendererOptions): void {
           delta,
           current.speed,
           current.maxAngularSpeed,
+          current.synchronizeLevels,
         );
       }
       if (
@@ -280,6 +282,7 @@ export function useKOrbitRenderer(options: RendererOptions): void {
                 current.elapsedSeconds,
                 current.speed,
                 current.maxAngularSpeed,
+                current.synchronizeLevels,
               ),
         );
       frame = requestAnimationFrame(render);

@@ -10,13 +10,19 @@ Map<String, double> advanceKOrbitAngles({
   required double delta,
   double speed = 1,
   double maxAngularSpeed = 12,
+  bool synchronizeLevels = false,
 }) {
   final levelsById = {for (final level in levels) level.id: level};
   final ids = nodes.map((node) => node.id).toSet();
+  final groupAngles = <String, double>{};
   angles.removeWhere((id, _) => !ids.contains(id));
   for (final node in nodes) {
     final level = node.levelId == null ? null : levelsById[node.levelId];
     if (level == null) continue;
+    if (synchronizeLevels && groupAngles.containsKey(level.id)) {
+      angles[node.id] = groupAngles[level.id]!;
+      continue;
+    }
     final degrees = math.min(
       maxAngularSpeed,
       360 * speed / (node.periodSeconds ?? level.periodSeconds ?? 60),
@@ -29,6 +35,7 @@ Map<String, double> advanceKOrbitAngles({
                     180 *
                     (node.direction ?? level.direction))
             .remainder(math.pi * 2);
+    if (synchronizeLevels) groupAngles[level.id] = angles[node.id]!;
   }
   return angles;
 }

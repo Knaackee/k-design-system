@@ -8,6 +8,8 @@ export interface KOrbitLevel {
   id: string;
   label: string;
   radius: number;
+  /** Optional concrete CSS color for this orbit track. */
+  color?: string;
   inclination?: number;
   azimuth?: number;
   periodSeconds?: number;
@@ -355,16 +357,22 @@ export function projectKOrbitScene(
 export function kOrbitSceneExtent(
   levels: readonly KOrbitLevel[],
   nodes: readonly KOrbitNode[],
+  rootId?: string,
 ): number {
   const radii = new Map(levels.map(({ id, radius }) => [id, radius]));
   const byId = new Map(nodes.map((node) => [node.id, node]));
   const extents = new Map<string, number>();
   const extentFor = (node: KOrbitNode): number => {
+    if (node.id === rootId) return 0;
     const known = extents.get(node.id);
     if (known !== undefined) return known;
     const extent =
       (node.levelId ? (radii.get(node.levelId) ?? 0) : 0) +
-      (node.parentId ? extentFor(byId.get(node.parentId)!) : 0);
+      (node.parentId
+        ? extentFor(byId.get(node.parentId)!)
+        : rootId
+          ? -Infinity
+          : 0);
     extents.set(node.id, extent);
     return extent;
   };

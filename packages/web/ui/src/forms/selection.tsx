@@ -19,6 +19,11 @@ export interface KSelectOption {
   imageSrc?: string;
 }
 export interface KSelectProps {
+  multiple?: boolean;
+  values?: readonly string[];
+  defaultValues?: readonly string[];
+  onValuesChange?: (values: string[]) => void;
+  selectionLabel?: string;
   presentation?: "standard" | "inline";
   options: readonly KSelectOption[];
   value?: string | null;
@@ -45,6 +50,11 @@ export function KCombobox(props: KSelectProps) {
   return <Selection {...props} searchable />;
 }
 function Selection({
+  multiple = false,
+  values: controlledValues,
+  defaultValues = [],
+  onValuesChange,
+  selectionLabel,
   options,
   value: controlledValue,
   defaultValue,
@@ -76,6 +86,13 @@ function Selection({
         : (controlledValue ?? "")),
   );
   const [localValue, setLocalValue] = useState(initialValue.current);
+  const initialValues = useRef(defaultValues);
+  const [localValues, setLocalValues] = useState<readonly string[]>(
+    initialValues.current,
+  );
+  const values = controlledValues ?? localValues;
+  const isSelected = (candidate: string) =>
+    multiple ? values.includes(candidate) : candidate === value;
   const value = controlledValue === undefined ? localValue : controlledValue;
   const native = useRef<HTMLSelectElement>(null);
   const [validationMessage, setValidationMessage] = useState("");
@@ -85,14 +102,24 @@ function Selection({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<string | null>(null);
-  const selectedOption = options.find((option) => option.value === value);
+  const selectedOptions = options.filter((option) => isSelected(option.value));
+  const selectedOption = multiple
+    ? selectedOptions.length === 1
+      ? selectedOptions[0]
+      : undefined
+    : options.find((option) => option.value === value);
   const showMedia =
     !!(selectedOption?.icon || selectedOption?.imageSrc) &&
     !(searchable && open);
   const canClear =
-    clearable && !!onClear && !disabled && (value !== null || query.length > 0);
-  const selected =
-    options.find((option) => option.value === value)?.label ?? "";
+    clearable &&
+    (multiple || !!onClear) &&
+    !disabled &&
+    (multiple ? values.length > 0 : value !== null || query.length > 0);
+  const selected = multiple
+    ? (selectionLabel ??
+      selectedOptions.map((option) => option.label).join(", "))
+    : (options.find((option) => option.value === value)?.label ?? "");
   const filtered = options.filter(
     (option) =>
       !searchable ||
@@ -110,7 +137,7 @@ function Selection({
       setQuery("");
       setOpen(true);
       setActive(
-        options.find((option) => option.value === value && !option.disabled)
+        options.find((option) => isSelected(option.value) && !option.disabled)
           ?.value ??
           options.find((option) => !option.disabled)?.value ??
           null,
@@ -119,10 +146,16 @@ function Selection({
   }
   function choose(next: string) {
     if (native.current) {
-      native.current.value = next;
+      if (multiple) {
+        for (const option of native.current.options)
+          option.selected =
+            option.value === next
+              ? !values.includes(next)
+              : values.includes(option.value);
+      } else native.current.value = next;
       native.current.dispatchEvent(new Event("change", { bubbles: true }));
     }
-    close();
+    if (!multiple) close();
     input.current?.focus();
   }
   useEffect(() => {
@@ -133,10 +166,12 @@ function Selection({
       setTimeout(() => {
         if (event.defaultPrevented) return;
         setLocalValue(initialValue.current);
+        setLocalValues(initialValues.current);
+        if (multiple) onValuesChange?.([...initialValues.current]);
         setValidationMessage("");
-        onValueChange?.(initialValue.current);
+        if (!multiple) onValueChange?.(initialValue.current);
         close();
-        if (native.current)
+        if (native.current && !multiple)
           native.current.value =
             controlledValue === undefined
               ? initialValue.current
@@ -145,7 +180,7 @@ function Selection({
     };
     owner.addEventListener("reset", reset);
     return () => owner.removeEventListener("reset", reset);
-  }, [form, controlledValue, onValueChange]);
+  }, [form, controlledValue, onValueChange, multiple, onValuesChange]);
   useEffect(() => {
     setValidationMessage("");
   }, [value]);
@@ -349,11 +384,19 @@ function Selection({
         form={form}
         required={required ?? field.required}
         disabled={disabled}
-        value={value ?? ""}
+        multiple={multiple}
+        value={multiple ? [...values] : (value ?? "")}
         onChange={(event) => {
           setLocalValue(event.currentTarget.value);
           setValidationMessage("");
-          onValueChange?.(event.currentTarget.value);
+          if (multiple) {
+            const next = Array.from(
+              event.currentTarget.selectedOptions,
+              (option) => option.value,
+            );
+            setLocalValues(next);
+            onValuesChange?.(next);
+          } else onValueChange?.(event.currentTarget.value);
           onChange?.(event);
         }}
         onInvalid={(event) => {
@@ -362,7 +405,9 @@ function Selection({
           input.current?.focus();
         }}
       >
-        {!options.some((option) => option.value === "") && <option value="" />}
+        {!multiple && !options.some((option) => option.value === "") && (
+          <option value="" />
+        )}
         {options.map((option) => (
           <option
             key={option.value}
@@ -382,7 +427,13 @@ function Selection({
         <ClearButton
           label={clearLabel ?? messages.clear}
           onClear={() => {
-            choose("");
+            if (multiple && native.current) {
+              for (const option of native.current.options)
+                option.selected = false;
+              native.current.dispatchEvent(
+                new Event("change", { bubbles: true }),
+              );
+            } else choose("");
             onClear?.();
             close();
             input.current?.focus();
@@ -399,6 +450,7 @@ function Selection({
           className="k-select-list"
           id={`${id}-list`}
           role="listbox"
+          aria-multiselectable={multiple || undefined}
           aria-label={optionsLabel ?? label ?? messages.options}
           onPointerDown={(event) => event.preventDefault()}
         >
@@ -407,7 +459,7 @@ function Selection({
               id={`${id}-option-${option.value}`}
               key={option.value}
               role="option"
-              aria-selected={value === option.value}
+              aria-selected={isSelected(option.value)}
               aria-disabled={option.disabled || undefined}
               data-active={active === option.value || undefined}
               className="k-select-option"
@@ -422,7 +474,13 @@ function Selection({
                 <OptionMedia {...option} />
                 <span>{option.label}</span>
               </span>
-              {value === option.value && <KIcon name="check" />}
+              {multiple ? (
+                <KIcon
+                  name={isSelected(option.value) ? "square-check" : "square"}
+                />
+              ) : (
+                isSelected(option.value) && <KIcon name="check" />
+              )}
             </div>
           ))}
           {!filtered.length && (

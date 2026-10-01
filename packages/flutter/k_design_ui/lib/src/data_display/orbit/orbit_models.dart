@@ -27,6 +27,7 @@ class KOrbitLevel {
   const KOrbitLevel({
     required this.id,
     required this.radius,
+    this.color,
     this.inclination = 0,
     this.azimuth = 0,
     this.periodSeconds,
@@ -37,6 +38,7 @@ class KOrbitLevel {
 
   final String id;
   final double radius;
+  final Color? color;
   final double inclination;
   final double azimuth;
   final double? periodSeconds;

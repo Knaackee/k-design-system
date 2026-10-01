@@ -134,6 +134,7 @@ extension _KOrbitRendering on _KOrbitState {
       scaleFor: _nodeTransition.scaleFor,
       isDeparting: _nodeTransition.isDeparting,
       onActivate: _select,
+      nodeActions: widget.nodeActions,
       repaint: _ticker,
     ),
   );
@@ -170,8 +171,7 @@ extension _KOrbitRendering on _KOrbitState {
       return;
     }
     _mouseRotate = event.buttons == kSecondaryMouseButton;
-    if (!_mouseRotate) {
-      if (_pinned != null) return;
+    if (_mouseRotate && widget.nodeActions != null) {
       final tokens =
           Theme.of(context).extension<KDesignTokens>() ??
           KDesignTokens.orbitLight;
@@ -184,6 +184,7 @@ extension _KOrbitRendering on _KOrbitState {
       );
       if (hit != null) return;
     }
+    if (!_mouseRotate && _pinned != null) return;
     _mousePointer = event.pointer;
     _startInteraction();
   }

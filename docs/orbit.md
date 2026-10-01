@@ -13,7 +13,27 @@ branch, remove its descendants and connections as well.
 
 ## Consumer control
 
+- Set `autoLayout: true` (React: `autoLayout`) for a flat, subtree-aware tree.
+  Each sibling reserves its complete moving descendant footprint. Equal-speed
+  siblings share an evenly spaced ring; different speeds use separate annuli.
+  `layoutGap` is the minimum clearance in world units (default 12). Supplied
+  radii remain minimums; local inclination, azimuth and phases are replaced.
+  Filtering recalculates the layout. Clearance applies in the flat scene;
+  rotating the camera can overlap nodes in projection. Explicit geometry remains
+  the default. Storybook and Widgetbook expose `orbit-adaptive-spacing` with
+  projects containing 1, 8 and 20 issues and nested agents. Its shared geometry
+  fixture is checked at multiple times and after removing a project.
+
 - Supply nodes, levels, connection definitions, labels and custom node content.
+- `level.color` overrides that ring's track color (a concrete CSS color in Web,
+  `Color` in Flutter). Automatic layout preserves it.
+- `nodeActions` supplies existing K context-menu actions per node: right-click or
+  keyboard context-menu key in Web, long press/right-click in Flutter. Normal
+  activation stays consumer-owned. Primary mouse dragging works when started on
+  a node and suppresses click activation after movement; following still keeps
+  the followed node centered until explicitly released.
+- `zoomBounds` (Web) / `minZoom`, `maxZoom` (Flutter) remain consumer-configurable.
+  The adaptive-spacing fixtures use a maximum of 20, with matching controls.
 - Web: `node.radius` sets the sphere radius in world units, independently of its
   parent's size. The root need not be the largest planet. Each satellite orbit
   follows its moving parent; `level.radius` is the orbit radius, not planet size.

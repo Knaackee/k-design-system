@@ -279,7 +279,7 @@ class OrbitDemoPanel extends StatelessWidget {
           KSlider(
             label: 'Maximum zoom',
             min: 1,
-            max: 10,
+            max: 20,
             divisions: 90,
             value: maxZoom,
             onChanged: onMaxZoom,

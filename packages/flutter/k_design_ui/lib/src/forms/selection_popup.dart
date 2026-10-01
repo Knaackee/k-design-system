@@ -11,6 +11,8 @@ class KSelectionPopup extends StatelessWidget {
     required this.options,
     required this.active,
     required this.value,
+    this.multiple = false,
+    this.values = const [],
     required this.maxHeight,
     required this.onActive,
     required this.onSelected,
@@ -23,6 +25,10 @@ class KSelectionPopup extends StatelessWidget {
   final List<KSelectOption> options;
   final int active;
   final String? value;
+  final bool multiple;
+  final List<String> values;
+  bool _selected(String candidate) =>
+      multiple ? values.contains(candidate) : value == candidate;
   final double maxHeight;
   final ValueChanged<int> onActive;
   final ValueChanged<KSelectOption> onSelected;
@@ -71,7 +77,7 @@ class KSelectionPopup extends StatelessWidget {
                         options[i].value,
                         GlobalKey.new,
                       ),
-                      selected: options[i].value == value,
+                      selected: _selected(options[i].value),
                       enabled: !options[i].disabled,
                       onTap: options[i].disabled
                           ? null
@@ -127,9 +133,16 @@ class KSelectionPopup extends StatelessWidget {
                                       style: formTextStyle(context),
                                     ),
                                   ),
-                                  if (options[i].value == value) ...[
+                                  if (multiple ||
+                                      _selected(options[i].value)) ...[
                                     SizedBox(width: t.spaceControlGap),
-                                    const KIcon(KIconName.check),
+                                    KIcon(
+                                      multiple
+                                          ? (_selected(options[i].value)
+                                                ? KIconName.squareCheck
+                                                : KIconName.square)
+                                          : KIconName.check,
+                                    ),
                                   ],
                                 ],
                               ),

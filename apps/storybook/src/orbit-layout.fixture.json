@@ -1,0 +1,287 @@
+{
+  "nodes": [
+    {
+      "radius": 28,
+      "label": "Workspace",
+      "id": "workspace"
+    },
+    {
+      "parentId": "workspace",
+      "radius": 23,
+      "label": "Platform team",
+      "levelId": "teams",
+      "id": "team"
+    },
+    {
+      "parentId": "team",
+      "radius": 18,
+      "label": "Project 0",
+      "levelId": "projects",
+      "id": "project-0"
+    },
+    {
+      "parentId": "project-0",
+      "radius": 12,
+      "label": "Issue 0",
+      "levelId": "issues",
+      "id": "issue-0-0"
+    },
+    {
+      "parentId": "issue-0-0",
+      "radius": 9,
+      "label": "Agent 0",
+      "levelId": "agents",
+      "id": "agent-0"
+    },
+    {
+      "parentId": "team",
+      "radius": 18,
+      "label": "Project 1",
+      "levelId": "projects",
+      "id": "project-1"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 0",
+      "levelId": "issues",
+      "id": "issue-1-0"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 1",
+      "levelId": "issues",
+      "id": "issue-1-1"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 2",
+      "levelId": "issues",
+      "id": "issue-1-2"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 3",
+      "levelId": "issues",
+      "id": "issue-1-3"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 4",
+      "levelId": "issues",
+      "id": "issue-1-4"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 5",
+      "levelId": "issues",
+      "id": "issue-1-5"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 6",
+      "levelId": "issues",
+      "id": "issue-1-6"
+    },
+    {
+      "parentId": "project-1",
+      "radius": 12,
+      "label": "Issue 7",
+      "levelId": "issues",
+      "id": "issue-1-7"
+    },
+    {
+      "parentId": "issue-1-0",
+      "radius": 9,
+      "label": "Agent 1",
+      "levelId": "agents",
+      "id": "agent-1"
+    },
+    {
+      "parentId": "team",
+      "radius": 18,
+      "label": "Project 2",
+      "levelId": "projects",
+      "id": "project-2"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 0",
+      "levelId": "issues",
+      "id": "issue-2-0"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 1",
+      "levelId": "issues",
+      "id": "issue-2-1"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 2",
+      "levelId": "issues",
+      "id": "issue-2-2"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 3",
+      "levelId": "issues",
+      "id": "issue-2-3"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 4",
+      "levelId": "issues",
+      "id": "issue-2-4"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 5",
+      "levelId": "issues",
+      "id": "issue-2-5"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 6",
+      "levelId": "issues",
+      "id": "issue-2-6"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 7",
+      "levelId": "issues",
+      "id": "issue-2-7"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 8",
+      "levelId": "issues",
+      "id": "issue-2-8"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 9",
+      "levelId": "issues",
+      "id": "issue-2-9"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 10",
+      "levelId": "issues",
+      "id": "issue-2-10"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 11",
+      "levelId": "issues",
+      "id": "issue-2-11"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 12",
+      "levelId": "issues",
+      "id": "issue-2-12"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 13",
+      "levelId": "issues",
+      "id": "issue-2-13"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 14",
+      "levelId": "issues",
+      "id": "issue-2-14"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 15",
+      "levelId": "issues",
+      "id": "issue-2-15"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 16",
+      "levelId": "issues",
+      "id": "issue-2-16"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 17",
+      "levelId": "issues",
+      "id": "issue-2-17"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 18",
+      "levelId": "issues",
+      "id": "issue-2-18"
+    },
+    {
+      "parentId": "project-2",
+      "radius": 12,
+      "label": "Issue 19",
+      "levelId": "issues",
+      "id": "issue-2-19"
+    },
+    {
+      "parentId": "issue-2-0",
+      "radius": 9,
+      "label": "Agent 2",
+      "levelId": "agents",
+      "id": "agent-2"
+    }
+  ],
+  "levels": [
+    {
+      "radius": 180,
+      "periodSeconds": 180,
+      "label": "Teams",
+      "id": "teams"
+    },
+    {
+      "radius": 100,
+      "periodSeconds": 150,
+      "label": "Projects",
+      "id": "projects"
+    },
+    {
+      "radius": 50,
+      "periodSeconds": 120,
+      "label": "Issues",
+      "id": "issues"
+    },
+    {
+      "radius": 20,
+      "periodSeconds": 90,
+      "label": "Agents",
+      "id": "agents"
+    }
+  ]
+}

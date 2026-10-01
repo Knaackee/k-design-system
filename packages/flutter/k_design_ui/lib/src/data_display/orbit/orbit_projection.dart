@@ -396,14 +396,19 @@ KOrbitSceneProjection projectKOrbitScene({
 double kOrbitExtentFor({
   required List<KOrbitLevel> levels,
   required List<KOrbitNode> nodes,
+  String? rootId,
 }) {
   final levelById = {for (final level in levels) level.id: level};
   final nodeById = {for (final node in nodes) node.id: node};
   final cache = <String, double>{};
   double nodeExtent(KOrbitNode node) => cache.putIfAbsent(node.id, () {
+    if (node.id == rootId) return 0;
     final own = node.levelId == null ? 0.0 : levelById[node.levelId]!.radius;
     final parent = node.parentId == null ? null : nodeById[node.parentId];
-    return own + (parent == null ? 0 : nodeExtent(parent));
+    return own +
+        (parent == null
+            ? (rootId == null ? 0 : double.negativeInfinity)
+            : nodeExtent(parent));
   });
   return math.max(
     1.0,

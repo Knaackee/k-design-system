@@ -20,6 +20,7 @@ interface GestureOptions {
   zoomBounds: readonly [number, number];
   reducedMotion: boolean;
   panDisabled?: boolean;
+  contextMenuEnabled?: boolean;
   interactionMode?: "dedicated" | "embedded";
   onInteractionStart?(): void;
   onInteractionEnd?(): void;
@@ -27,6 +28,7 @@ interface GestureOptions {
 
 export function useKOrbitGestures(options: GestureOptions) {
   const interacting = useRef(false);
+  const dragged = useRef(false);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
   const gesture = useRef<{
     distance: number;
@@ -61,16 +63,20 @@ export function useKOrbitGestures(options: GestureOptions) {
       event.button !== 2
     )
       return;
+    const node = (event.target as HTMLElement).closest<HTMLButtonElement>(
+      ".k-orbit__node",
+    );
     if (
-      event.button !== 2 &&
-      (event.target as HTMLElement).closest("button,input")
+      (event.target as HTMLElement).closest("input,button:not(.k-orbit__node)")
     )
       return;
+    if (node && event.button === 2 && options.contextMenuEnabled) return;
+    dragged.current = false;
     pointers.current.set(event.pointerId, {
       x: event.clientX,
       y: event.clientY,
     });
-    event.currentTarget.setPointerCapture(event.pointerId);
+    (node ?? event.currentTarget).setPointerCapture(event.pointerId);
     if (pointers.current.size === 1) {
       drag.current = {
         x: event.clientX,
@@ -119,6 +125,13 @@ export function useKOrbitGestures(options: GestureOptions) {
     if (options.panDisabled && !drag.current.rotate) return;
     const dx = event.clientX - previous.x;
     const dy = event.clientY - previous.y;
+    if (
+      Math.hypot(
+        event.clientX - drag.current.x,
+        event.clientY - drag.current.y,
+      ) > 4
+    )
+      dragged.current = true;
     options.changeView(
       kOrbitDragView(options.view.current, dx, dy, drag.current.rotate),
     );
@@ -194,6 +207,7 @@ export function useKOrbitGestures(options: GestureOptions) {
 
   return {
     interacting,
+    dragged,
     inertia,
     onPointerDown,
     onPointerMove,

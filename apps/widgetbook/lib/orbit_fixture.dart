@@ -11,10 +11,11 @@ class OrbitFixture extends StatefulWidget {
     this.communication = false,
     this.deep = false,
     this.freeze = false,
+    this.spacing = false,
     super.key,
   });
 
-  final bool communication, deep, freeze;
+  final bool communication, deep, freeze, spacing;
 
   @override
   State<OrbitFixture> createState() => _OrbitFixtureState();
@@ -33,7 +34,7 @@ class _OrbitFixtureState extends State<OrbitFixture> {
   KOrbitLabelVisibility _labelVisibility = KOrbitLabelVisibility.interaction;
   KOrbitSignalStyle _signalStyle = KOrbitSignalStyle.trail;
   String? _selected, _pinned;
-  bool _showAdded = false, _paused = false;
+  bool _showAdded = false, _paused = false, _detailsOpen = false;
   double _speed = 1, _duration = 1800, _minZoom = .65;
   double _maxZoom = 2.2, _maxAngularSpeed = 12;
   int _sequence = 1;
@@ -42,11 +43,12 @@ class _OrbitFixtureState extends State<OrbitFixture> {
   void initState() {
     super.initState();
     if (widget.deep) _maxZoom = 5;
+    if (widget.spacing) _maxZoom = 20;
   }
 
   List<KOrbitNode> _allNodes(KDesignTokens tokens) {
     final source = [
-      ...orbitNodes(tokens),
+      ...(widget.spacing ? orbitSpacingNodes : orbitNodes(tokens)),
       if (widget.deep) ...orbitDeepExtraNodes,
       if (_showAdded) ...orbitAddedNodes,
     ];
@@ -91,7 +93,11 @@ class _OrbitFixtureState extends State<OrbitFixture> {
 
   List<KOrbitConnection> _visibleConnections(List<KOrbitNode> nodes) {
     final source = [
-      ...(widget.deep ? orbitDeepConnections : orbitConnections),
+      ...(widget.spacing
+          ? <KOrbitConnection>[]
+          : widget.deep
+          ? orbitDeepConnections
+          : orbitConnections),
       if (_showAdded) ...orbitAddedConnections,
     ];
     final ids = nodes.map((node) => node.id).toSet();
@@ -142,15 +148,22 @@ class _OrbitFixtureState extends State<OrbitFixture> {
     _log('${selected.label}: ${next.name}');
   }
 
-  void _openDetails(KOrbitNode? node) {
+  Future<void> _openDetails(KOrbitNode? node) async {
     if (node == null) return;
-    setState(() => _selected = node.id);
-    showOrbitDemoDetails(
-      context: context,
-      node: node,
-      pinnedNodeId: _pinned,
-      onPinnedChange: (value) => setState(() => _pinned = value),
-    );
+    setState(() {
+      _selected = node.id;
+      _detailsOpen = true;
+    });
+    try {
+      await showOrbitDemoDetails(
+        context: context,
+        node: node,
+        pinnedNodeId: _pinned,
+        onPinnedChange: (value) => setState(() => _pinned = value),
+      );
+    } finally {
+      if (mounted) setState(() => _detailsOpen = false);
+    }
   }
 
   @override
@@ -161,7 +174,12 @@ class _OrbitFixtureState extends State<OrbitFixture> {
     final connections = _visibleConnections(nodes);
     final selected = allNodes.where((node) => node.id == _selected).firstOrNull;
     final orbit = KOrbit(
-      levels: widget.deep ? orbitDeepLevels : orbitLevels,
+      autoLayout: widget.spacing,
+      levels: widget.spacing
+          ? orbitSpacingLevels
+          : widget.deep
+          ? orbitDeepLevels
+          : orbitLevels,
       nodes: nodes,
       connections: connections,
       controller: _controller,
@@ -173,7 +191,7 @@ class _OrbitFixtureState extends State<OrbitFixture> {
       labelVisibility: _labelVisibility,
       motionSpeed: _speed,
       maxAngularSpeed: _maxAngularSpeed,
-      paused: _paused,
+      paused: _paused || _detailsOpen,
       elapsedSeconds: widget.freeze ? 0 : null,
       minZoom: _minZoom,
       maxZoom: _maxZoom,
@@ -181,6 +199,21 @@ class _OrbitFixtureState extends State<OrbitFixture> {
       onPausedChange: (value) => setState(() => _paused = value),
       onSelectionChange: (value) => setState(() => _selected = value),
       onNodeActivate: _openDetails,
+      nodeActions: (node) => [
+        KMenuAction(
+          id: 'follow',
+          label: _pinned == node.id ? 'Unfollow' : 'Follow',
+          icon: KIconName.orbit,
+          onSelect: () =>
+              setState(() => _pinned = _pinned == node.id ? null : node.id),
+        ),
+        KMenuAction(
+          id: 'details',
+          label: 'Details',
+          icon: KIconName.externalLink,
+          onSelect: () => _openDetails(node),
+        ),
+      ],
       showControls: true,
       onSignalEnd: (id, reason) => _log('$id: ${reason.name}'),
     );

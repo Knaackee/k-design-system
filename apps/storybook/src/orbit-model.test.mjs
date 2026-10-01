@@ -29,6 +29,24 @@ const level = {
   azimuth: -0.2,
   periodSeconds: 20,
 };
+
+test("follow extent includes complete descendant orbits but excludes ancestors and siblings", () => {
+  const levels = [
+    { id: "projects", radius: 500 },
+    { id: "issues", radius: 100 },
+    { id: "agents", radius: 30 },
+  ];
+  const nodes = [
+    { id: "w", radius: 28 },
+    { id: "p", parentId: "w", levelId: "projects", radius: 18 },
+    { id: "i", parentId: "p", levelId: "issues", radius: 13 },
+    { id: "a", parentId: "i", levelId: "agents", radius: 9 },
+  ];
+  assert.equal(kOrbitSceneExtent(levels, nodes), 639);
+  assert.equal(kOrbitSceneExtent(levels, nodes, "p"), 139);
+  assert.equal(kOrbitSceneExtent(levels, nodes, "i"), 39);
+  assert.equal(kOrbitSceneExtent(levels, nodes, "a"), 9);
+});
 const parityFixture = JSON.parse(
   readFileSync(new URL("./orbit-parity.fixture.json", import.meta.url), "utf8"),
 );

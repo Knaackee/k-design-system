@@ -12,6 +12,102 @@ const _statuses = [
     disabled: true,
   ),
 ];
+
+class MultiSelectFixture extends StatefulWidget {
+  const MultiSelectFixture({super.key});
+  @override
+  State<MultiSelectFixture> createState() => _MultiSelectFixtureState();
+}
+
+class _MultiSelectFixtureState extends State<MultiSelectFixture> {
+  List<String> teams = [], projects = [], people = [];
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    padding: EdgeInsets.symmetric(
+      vertical: Theme.of(context).extension<KDesignTokens>()!.spaceLayoutGutter,
+    ),
+    child: KContainer(
+      child: KStack(
+        gap: KLayoutGap.section,
+        align: KLayoutAlign.stretch,
+        children: [
+          const KText('Workspace filters', variant: KTextVariant.heading4),
+          KField(
+            label: 'Teams',
+            child: KSelect(
+              multiple: true,
+              clearable: true,
+              label: 'Teams',
+              placeholder: 'All teams and private projects',
+              values: teams,
+              onValuesChanged: (values) => setState(() => teams = values),
+              selectionLabel: teams.length > 1 ? '${teams.length} areas' : null,
+              options: const [
+                KSelectOption(
+                  value: 'private',
+                  label: 'Private workspace projects',
+                  icon: KIconName.lock,
+                ),
+                KSelectOption(
+                  value: 'design',
+                  label: 'Design',
+                  icon: KIconName.palette,
+                ),
+                KSelectOption(
+                  value: 'engineering',
+                  label: 'Engineering',
+                  icon: KIconName.code,
+                ),
+              ],
+            ),
+          ),
+          KField(
+            label: 'Projects',
+            child: KSelect(
+              multiple: true,
+              clearable: true,
+              label: 'Projects',
+              placeholder: 'All projects',
+              values: projects,
+              onValuesChanged: (values) => setState(() => projects = values),
+              selectionLabel: projects.length > 1
+                  ? '${projects.length} projects'
+                  : null,
+              options: const [
+                KSelectOption(
+                  value: 'orbit',
+                  label: 'Orbit',
+                  icon: KIconName.rocket,
+                ),
+                KSelectOption(
+                  value: 'tasks',
+                  label: 'Tasks',
+                  icon: KIconName.code,
+                ),
+              ],
+            ),
+          ),
+          KField(
+            label: 'People',
+            child: KCombobox(
+              multiple: true,
+              clearable: true,
+              label: 'People',
+              placeholder: 'All people',
+              values: people,
+              onValuesChanged: (values) => setState(() => people = values),
+              selectionLabel: people.length > 1
+                  ? '${people.length} people'
+                  : null,
+              options: _people,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 const _people = [
   KSelectOption(
     value: 'alex',

@@ -9,6 +9,41 @@ import 'package:k_design_ui/src/data_display/orbit/orbit_projection.dart';
 import 'package:k_design_ui/src/data_display/orbit/orbit_transition.dart';
 
 void main() {
+  test('follow extent covers descendants relative to the followed root', () {
+    const levels = [
+      KOrbitLevel(id: 'projects', radius: 500),
+      KOrbitLevel(id: 'issues', radius: 100),
+      KOrbitLevel(id: 'agents', radius: 30),
+    ];
+    const nodes = [
+      KOrbitNode(id: 'w', label: 'W', radius: 28),
+      KOrbitNode(
+        id: 'p',
+        label: 'P',
+        parentId: 'w',
+        levelId: 'projects',
+        radius: 18,
+      ),
+      KOrbitNode(
+        id: 'i',
+        label: 'I',
+        parentId: 'p',
+        levelId: 'issues',
+        radius: 13,
+      ),
+      KOrbitNode(
+        id: 'a',
+        label: 'A',
+        parentId: 'i',
+        levelId: 'agents',
+        radius: 9,
+      ),
+    ];
+    expect(kOrbitExtentFor(levels: levels, nodes: nodes), 639);
+    expect(kOrbitExtentFor(levels: levels, nodes: nodes, rootId: 'p'), 139);
+    expect(kOrbitExtentFor(levels: levels, nodes: nodes, rootId: 'i'), 39);
+    expect(kOrbitExtentFor(levels: levels, nodes: nodes, rootId: 'a'), 9);
+  });
   test('nested projection follows parents and keeps independent radii', () {
     const levels = [
       KOrbitLevel(id: 'planet', radius: 100, periodSeconds: 40),

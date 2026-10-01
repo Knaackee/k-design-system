@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import '../../actions/k_context_menu.dart';
+import '../../actions/k_menu_button.dart';
 
 import 'orbit_models.dart';
 import 'orbit_projection.dart';
@@ -15,6 +17,7 @@ class KOrbitNodeLayer extends StatefulWidget {
     required this.selectedId,
     required this.reducedMotion,
     required this.onActivate,
+    this.nodeActions,
     required this.repaint,
     required this.extentOverride,
     required this.opacityFor,
@@ -35,6 +38,7 @@ class KOrbitNodeLayer extends StatefulWidget {
   final String? selectedId;
   final bool reducedMotion;
   final ValueChanged<KOrbitNode> onActivate;
+  final List<KMenuAction> Function(KOrbitNode)? nodeActions;
   final Listenable repaint;
   final double? extentOverride;
   final double Function(String id) opacityFor;
@@ -119,6 +123,16 @@ class _KOrbitNodeLayerState extends State<KOrbitNodeLayer> {
         : visualSize;
     final occluded = _occluded(item, scene);
     final hidden = occluded || widget.isDeparting(node.id);
+    final marker = _KOrbitMarker(
+      node: node,
+      selected: node.id == widget.selectedId,
+      tokens: widget.tokens,
+      size: visualSize,
+      onActivate: hidden || node.disabled
+          ? null
+          : () => widget.onActivate(node),
+      centerContent: node.isCenter ? widget.centerContent : null,
+    );
     final depth = .55 + .45 * ((item.point.depth + 1) / 2).clamp(0, 1);
     return Positioned(
       left: item.point.offset.dx - hitSize / 2,
@@ -133,16 +147,14 @@ class _KOrbitNodeLayerState extends State<KOrbitNodeLayer> {
           excluding: hidden,
           child: Opacity(
             opacity: occluded ? 0 : depth * widget.opacityFor(node.id),
-            child: _KOrbitMarker(
-              node: node,
-              selected: node.id == widget.selectedId,
-              tokens: widget.tokens,
-              size: visualSize,
-              onActivate: hidden || node.disabled
-                  ? null
-                  : () => widget.onActivate(node),
-              centerContent: node.isCenter ? widget.centerContent : null,
-            ),
+            child: widget.nodeActions == null
+                ? marker
+                : KContextMenu(
+                    label: node.label,
+                    actions: widget.nodeActions!(node),
+                    disabled: hidden || node.disabled,
+                    child: marker,
+                  ),
           ),
         ),
       ),

@@ -15,6 +15,69 @@ export const levels: readonly KOrbitLevel[] = [
   },
 ];
 
+export const spacingLevels: readonly KOrbitLevel[] = [
+  { id: "teams", label: "Teams", radius: 180, periodSeconds: 180 },
+  { id: "projects", label: "Projects", radius: 100, periodSeconds: 150 },
+  { id: "issues", label: "Issues", radius: 50, periodSeconds: 120 },
+  ...["#6366f1", "#0ea5e9", "#f59e0b"].map((color, index) => ({
+    id: `issues-${index}`,
+    label: "Issues",
+    radius: 50,
+    periodSeconds: 120,
+    color,
+  })),
+  { id: "agents", label: "Agents", radius: 20, periodSeconds: 90 },
+];
+export const spacingNodes: readonly KOrbitNode[] = [
+  {
+    id: "workspace",
+    label: "Workspace",
+    radius: 28,
+    content: <KIcon name="orbit" />,
+  },
+  {
+    id: "team",
+    label: "Platform team",
+    radius: 23,
+    parentId: "workspace",
+    levelId: "teams",
+    content: "PT",
+  },
+  ...[1, 8, 20].flatMap((count, project) => [
+    {
+      id: `project-${project}`,
+      label: `Project ${project + 1} · ${count} issues`,
+      radius: 18,
+      parentId: "team",
+      levelId: "projects",
+      borderColor: ["#6366f1", "#0ea5e9", "#f59e0b"][project],
+      content: (
+        <KIcon
+          name={(["rocket", "code", "palette"] as const)[project]!}
+          color={["#6366f1", "#0ea5e9", "#f59e0b"][project]}
+        />
+      ),
+    },
+    ...Array.from({ length: count }, (_, issue) => ({
+      id: `issue-${project}-${issue}`,
+      label: `Issue ${project + 1}.${issue + 1}`,
+      radius: 12,
+      parentId: `project-${project}`,
+      levelId: `issues-${project}`,
+      content: <KIcon name="circle-dot" />,
+    })),
+    {
+      id: `agent-${project}`,
+      label: `Agent ${project + 1}`,
+      radius: 9,
+      parentId: `issue-${project}-0`,
+      levelId: "agents",
+      status: "active" as const,
+      content: <KIcon name="bot" />,
+    },
+  ]),
+];
+
 export const data: readonly KOrbitNode[] = [
   {
     id: "team",

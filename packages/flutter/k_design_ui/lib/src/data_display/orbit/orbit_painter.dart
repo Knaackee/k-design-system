@@ -111,7 +111,9 @@ class KOrbitPainter extends CustomPainter {
             scene,
             previous,
             point,
-            style.trackColor ?? tokens.componentOrbitTrackColor,
+            ring.level.color ??
+                style.trackColor ??
+                tokens.componentOrbitTrackColor,
             tokens.componentOrbitTrackLineWidth,
             tokens.componentOrbitTrackOpacity,
           );

@@ -8,13 +8,19 @@ export function advanceKOrbitAngles(
   delta: number,
   speed = 1,
   maxAngularSpeed = 12,
+  synchronizeLevels = false,
 ): Map<string, number> {
   const byId = new Map(levels.map((level) => [level.id, level]));
   const ids = new Set(nodes.map((node) => node.id));
+  const groupAngles = new Map<string, number>();
   for (const id of angles.keys()) if (!ids.has(id)) angles.delete(id);
   for (const node of nodes) {
     const level = node.levelId ? byId.get(node.levelId) : undefined;
     if (!level) continue;
+    if (synchronizeLevels && groupAngles.has(level.id)) {
+      angles.set(node.id, groupAngles.get(level.id)!);
+      continue;
+    }
     const degrees = Math.min(
       maxAngularSpeed,
       (360 * speed) / (node.periodSeconds ?? level.periodSeconds ?? 60),
@@ -26,6 +32,7 @@ export function advanceKOrbitAngles(
           (node.direction ?? level.direction ?? 1)) %
         (Math.PI * 2),
     );
+    if (synchronizeLevels) groupAngles.set(level.id, angles.get(node.id)!);
   }
   return angles;
 }

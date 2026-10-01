@@ -35,6 +35,74 @@ Widget app(Widget child) => MaterialApp(
 Finder marker(String id) => find.byKey(ValueKey('k-orbit-node-$id'));
 
 void main() {
+  testWidgets(
+    'node long press exposes K context actions without activating details',
+    (tester) async {
+      String? action;
+      await tester.pumpWidget(
+        app(
+          KOrbit(
+            levels: const [],
+            nodes: const [KOrbitNode(id: 'root', label: 'Root', radius: 24)],
+            connections: const [],
+            paused: true,
+            onNodeActivate: (_) => action = 'activate',
+            nodeActions: (_) => [
+              KMenuAction(
+                id: 'follow',
+                label: 'Follow',
+                onSelect: () => action = 'follow',
+              ),
+              KMenuAction(
+                id: 'details',
+                label: 'Details',
+                onSelect: () => action = 'details',
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.longPress(marker('root'));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(action, isNull);
+      expect(find.text('Details'), findsOneWidget);
+      await tester.tap(find.text('Follow'));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(action, 'follow');
+    },
+  );
+
+  testWidgets(
+    'primary mouse drag beginning on a zoomed node pans without activating it',
+    (tester) async {
+      KOrbitViewState? changed;
+      var activated = false;
+      await tester.pumpWidget(
+        app(
+          KOrbit(
+            levels: levels,
+            nodes: nodes,
+            connections: const [],
+            paused: true,
+            initialViewState: const KOrbitViewState(zoom: 8),
+            maxZoom: 20,
+            onViewChange: (view) => changed = view,
+            onNodeActivate: (_) => activated = true,
+          ),
+        ),
+      );
+      final gesture = await tester.startGesture(
+        tester.getCenter(marker('team')),
+        kind: PointerDeviceKind.mouse,
+      );
+      await gesture.moveBy(const Offset(-300, 245));
+      await gesture.up();
+      await tester.pump();
+      expect(changed!.offset, const Offset(-300, 245));
+      expect(activated, isFalse);
+    },
+  );
+
   testWidgets('node content and badge scale together with camera zoom', (
     tester,
   ) async {

@@ -31,8 +31,12 @@ enum KSelectPresentation { standard, inline }
 class KSelect extends StatefulWidget {
   const KSelect({
     required this.options,
-    required this.value,
-    required this.onChanged,
+    this.value,
+    this.onChanged,
+    this.multiple = false,
+    this.values = const [],
+    this.onValuesChanged,
+    this.selectionLabel,
     this.label,
     this.placeholder,
     this.clearable = false,
@@ -45,6 +49,11 @@ class KSelect extends StatefulWidget {
   final KSelectPresentation presentation;
   final List<KSelectOption> options;
   final String? value;
+  final bool multiple;
+  final List<String> values;
+  final ValueChanged<List<String>>? onValuesChanged;
+  final String? selectionLabel;
+  bool get enabled => multiple ? onValuesChanged != null : onChanged != null;
   final ValueChanged<String?>? onChanged;
   final String? label;
   final String? placeholder;
@@ -59,8 +68,12 @@ class KSelect extends StatefulWidget {
 class KCombobox extends KSelect {
   const KCombobox({
     required super.options,
-    required super.value,
-    required super.onChanged,
+    super.value,
+    super.onChanged,
+    super.multiple,
+    super.values,
+    super.onValuesChanged,
+    super.selectionLabel,
     super.label,
     super.presentation,
     super.placeholder,
@@ -116,9 +129,19 @@ class _KSelectState extends State<KSelect> {
   String _query = '';
   int _active = -1;
   bool get _open => _portal.isShowing;
-  String get _committed =>
-      widget.options.where((o) => o.value == widget.value).firstOrNull?.label ??
-      '';
+  bool _selected(String value) =>
+      widget.multiple ? widget.values.contains(value) : widget.value == value;
+  String get _committed => widget.multiple
+      ? (widget.selectionLabel ??
+            widget.options
+                .where((o) => _selected(o.value))
+                .map((o) => o.label)
+                .join(', '))
+      : widget.options
+                .where((o) => o.value == widget.value)
+                .firstOrNull
+                ?.label ??
+            '';
   List<KSelectOption> get _visible => widget.options
       .where(
         (o) =>
@@ -135,8 +158,10 @@ class _KSelectState extends State<KSelect> {
   @override
   void didUpdateWidget(covariant KSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value || !_open) _text.text = _committed;
-    if (widget.onChanged == null && _open) _close();
+    if ((!widget.editable || !_open) || oldWidget.value != widget.value) {
+      _text.text = _committed;
+    }
+    if (!widget.enabled && _open) _close();
   }
 
   @override
@@ -149,13 +174,11 @@ class _KSelectState extends State<KSelect> {
   }
 
   void _show() {
-    if (widget.onChanged == null) return;
+    if (!widget.enabled) return;
     setState(() {
       _query = '';
       if (widget.editable) _text.clear();
-      _active = _visible.indexWhere(
-        (o) => o.value == widget.value && !o.disabled,
-      );
+      _active = _visible.indexWhere((o) => _selected(o.value) && !o.disabled);
       if (_active < 0) _active = _visible.indexWhere((o) => !o.disabled);
     });
     _portal.show();
@@ -178,12 +201,24 @@ class _KSelectState extends State<KSelect> {
       _active = -1;
       _text.clear();
     });
-    widget.onChanged?.call(null);
+    if (widget.multiple) {
+      widget.onValuesChanged?.call([]);
+    } else {
+      widget.onChanged?.call(null);
+    }
     restoreFormFocus(_focus, () => mounted);
   }
 
   void _choose(KSelectOption option) {
     if (option.disabled) return;
+    if (widget.multiple) {
+      final next = widget.values.contains(option.value)
+          ? widget.values.where((value) => value != option.value).toList()
+          : [...widget.values, option.value];
+      widget.onValuesChanged?.call(next);
+      _focus.requestFocus();
+      return;
+    }
     _portal.hide();
     _query = '';
     _text.text = option.label;
@@ -272,11 +307,14 @@ class _KSelectState extends State<KSelect> {
     final field = KFieldScope.of(context);
     final canClear =
         widget.clearable &&
-        widget.onChanged != null &&
-        (widget.value != null || _query.isNotEmpty);
-    final selected = widget.options
-        .where((o) => o.value == widget.value)
-        .firstOrNull;
+        widget.enabled &&
+        (widget.multiple
+            ? widget.values.isNotEmpty
+            : widget.value != null || _query.isNotEmpty);
+    final selectedOptions = widget.options
+        .where((o) => _selected(o.value))
+        .toList();
+    final selected = selectedOptions.length == 1 ? selectedOptions.first : null;
     final inlineResting =
         widget.presentation == KSelectPresentation.inline &&
         !_focus.hasFocus &&
@@ -352,7 +390,7 @@ class _KSelectState extends State<KSelect> {
                 ? SemanticsValidationResult.invalid
                 : SemanticsValidationResult.none,
             child: Opacity(
-              opacity: widget.onChanged == null ? .48 : 1,
+              opacity: !widget.enabled ? .48 : 1,
               child: ConstrainedBox(
                 key: _anchor,
                 constraints: BoxConstraints(
@@ -363,11 +401,11 @@ class _KSelectState extends State<KSelect> {
                   child: TextField(
                     controller: _text,
                     focusNode: _focus,
-                    enabled: widget.onChanged != null,
+                    enabled: widget.enabled,
                     readOnly: !widget.editable,
                     enableInteractiveSelection: widget.editable,
                     showCursor: widget.editable,
-                    mouseCursor: widget.onChanged == null
+                    mouseCursor: !widget.enabled
                         ? SystemMouseCursors.basic
                         : widget.editable
                         ? SystemMouseCursors.text
@@ -430,6 +468,8 @@ class _KSelectState extends State<KSelect> {
         options: options,
         active: _active,
         value: widget.value,
+        multiple: widget.multiple,
+        values: widget.values,
         maxHeight: maxHeight,
         optionKeys: _optionKeys,
         onActive: (index) => setState(() => _active = index),

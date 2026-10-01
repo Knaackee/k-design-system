@@ -279,7 +279,7 @@ function addRingCommands(
           scene,
           previous,
           point,
-          palette.track,
+          ring.level.color ?? palette.track,
           palette.trackWidth,
           palette.trackOpacity * visibility,
           [],

@@ -9,14 +9,18 @@ import {
   type ReactElement,
 } from "react";
 import { KButton } from "../../primitives/button.js";
+import { KContextMenu } from "../../actions/context-menu.js";
+import type { KMenuAction } from "../../actions/menu-button.js";
 import { KSlider } from "../../extended-components.js";
 import { useKOrbitGestures } from "./orbit-gestures.js";
 import { useKOrbitPresence } from "./orbit-presence.js";
+import { layoutKOrbit } from "./orbit-layout.js";
 import { resolveKOrbitPointerNode } from "./orbit-label-layout.js";
 import { useKOrbitRenderer } from "./orbit-renderer.js";
 import {
   KOrbitController,
   kOrbitDefaultView,
+  kOrbitSceneExtent,
   validateKOrbit,
   type KOrbitConnection,
   type KOrbitLevel,
@@ -35,6 +39,10 @@ export interface KOrbitLabels {
   speed?: string;
 }
 export interface KOrbitProps {
+  /** Flat, subtree-aware spacing. Explicit geometry remains the default. */
+  autoLayout?: boolean;
+  /** Minimum world-unit clearance between reserved subtrees. Default 12. */
+  layoutGap?: number;
   levels: readonly KOrbitLevel[];
   nodes: readonly KOrbitNode[];
   connections?: readonly KOrbitConnection[];
@@ -46,6 +54,7 @@ export interface KOrbitProps {
   defaultSelectedId?: string | null;
   onSelectionChange?(id: string | null): void;
   onNodeActivate?(node: KOrbitNode): void;
+  nodeActions?(node: KOrbitNode): readonly KMenuAction[];
   view?: KOrbitViewState;
   defaultView?: KOrbitViewState;
   onViewChange?(view: KOrbitViewState): void;
@@ -81,7 +90,15 @@ const fallbackLabels: Required<KOrbitLabels> = {
   resume: "Resume motion",
   speed: "Motion speed",
 };
-export function KOrbit(props: KOrbitProps): ReactElement {
+export function KOrbit(input: KOrbitProps): ReactElement {
+  const layout = useMemo(
+    () =>
+      input.autoLayout
+        ? layoutKOrbit(input.levels, input.nodes, input.layoutGap)
+        : null,
+    [input.autoLayout, input.layoutGap, input.levels, input.nodes],
+  );
+  const props = layout ? { ...input, ...layout } : input;
   const connections = props.connections ?? [];
   useMemo(
     () => validateKOrbit(props.levels, props.nodes, connections),
@@ -144,6 +161,7 @@ export function KOrbit(props: KOrbitProps): ReactElement {
     fallback: KOrbitNode,
     event: MouseEvent<HTMLButtonElement>,
   ) => {
+    if (event.detail !== 0 && gestures.dragged.current) return;
     let node = fallback;
     if (event.detail !== 0) {
       const bounds = root.current?.getBoundingClientRect();
@@ -204,10 +222,19 @@ export function KOrbit(props: KOrbitProps): ReactElement {
     reducedMotion: reduced,
     interactionMode: props.interactionMode,
     panDisabled: Boolean(pinned),
+    contextMenuEnabled: Boolean(props.nodeActions),
     onInteractionStart: props.onInteractionStart,
     onInteractionEnd: props.onInteractionEnd,
   });
   useEffect(() => {
+    if (pinned && previousPin.current !== pinned) {
+      changeView({
+        ...currentView.current,
+        zoom:
+          kOrbitSceneExtent(props.levels, props.nodes) /
+          kOrbitSceneExtent(props.levels, props.nodes, pinned),
+      });
+    }
     if (previousPin.current && !pinned) {
       gestures.inertia.current = { x: 0, y: 0 };
       changeView({
@@ -247,6 +274,7 @@ export function KOrbit(props: KOrbitProps): ReactElement {
     paused,
     speed,
     maxAngularSpeed: props.maxAngularSpeed,
+    synchronizeLevels: props.autoLayout,
     reducedMotion: reduced,
     elapsedSeconds: props.elapsedSeconds,
     extent: presence.extent,
@@ -283,6 +311,7 @@ export function KOrbit(props: KOrbitProps): ReactElement {
             setFocused(false);
         }}
         onKeyDown={(event) => {
+          if ((event.target as HTMLElement).closest('[role="menu"]')) return;
           setFocused(true);
           if (event.key === "Home") props.onPinnedChange?.(null);
           gestures.onKeyDown(event);
@@ -305,69 +334,83 @@ export function KOrbit(props: KOrbitProps): ReactElement {
           aria-hidden="true"
         />
         <canvas ref={canvas} aria-hidden="true" />
-        {presence.nodes.map((node) => (
-          <button
-            key={node.id}
-            ref={(element) => {
-              if (element) nodeElements.current.set(node.id, element);
-              else nodeElements.current.delete(node.id);
-            }}
-            type="button"
-            className="k-orbit__node"
-            data-tone={node.badge?.tone ?? nodeTone(node)}
-            style={
-              {
-                "--k-orbit-custom-background": node.backgroundColor,
-                "--k-orbit-custom-border": node.borderColor,
-              } as CSSProperties
-            }
-            data-appearance={node.appearance ?? "icon"}
-            data-node-tone={node.tone ?? "neutral"}
-            data-status={node.status ?? "idle"}
-            data-center={!node.levelId || undefined}
-            data-departing={presence.departingIds.has(node.id) || undefined}
-            data-selected={selected === node.id || undefined}
-            disabled={node.disabled || presence.departingIds.has(node.id)}
-            aria-hidden={presence.departingIds.has(node.id) || undefined}
-            tabIndex={presence.departingIds.has(node.id) ? -1 : undefined}
-            aria-pressed={selected === node.id}
-            aria-label={[
-              node.label,
-              node.description,
-              node.badge?.label,
-              node.progress !== undefined ? `${node.progress}%` : undefined,
-              node.statusLabel ??
-                (node.status === "idle" ? undefined : node.status),
-            ]
-              .filter(Boolean)
-              .join(". ")}
-            onClick={(event) => activate(node, event)}
-          >
-            <span className="k-orbit__node-content">
-              <span className="k-orbit__node-visual">
-                {node.content ??
-                  (node.appearance === "sphere"
-                    ? null
-                    : node.label.trim().slice(0, 2).toLocaleUpperCase())}
-              </span>
-            </span>
-            {node.badge !== null &&
-              (node.badge || (node.status && node.status !== "idle")) && (
-                <span className="k-orbit__status" aria-hidden="true">
-                  {node.badge
-                    ? node.badge.content
-                    : node.status === "question"
-                      ? "?"
-                      : node.status === "error"
-                        ? "!"
-                        : node.status === "completed"
-                          ? "✓"
-                          : "•"}
+        {presence.nodes.map((node) => {
+          const marker = (
+            <button
+              key={node.id}
+              ref={(element) => {
+                if (element) nodeElements.current.set(node.id, element);
+                else nodeElements.current.delete(node.id);
+              }}
+              type="button"
+              className="k-orbit__node"
+              data-tone={node.badge?.tone ?? nodeTone(node)}
+              style={
+                {
+                  "--k-orbit-custom-background": node.backgroundColor,
+                  "--k-orbit-custom-border": node.borderColor,
+                } as CSSProperties
+              }
+              data-appearance={node.appearance ?? "icon"}
+              data-node-tone={node.tone ?? "neutral"}
+              data-status={node.status ?? "idle"}
+              data-center={!node.levelId || undefined}
+              data-departing={presence.departingIds.has(node.id) || undefined}
+              data-selected={selected === node.id || undefined}
+              disabled={node.disabled || presence.departingIds.has(node.id)}
+              aria-hidden={presence.departingIds.has(node.id) || undefined}
+              tabIndex={presence.departingIds.has(node.id) ? -1 : undefined}
+              aria-pressed={selected === node.id}
+              aria-label={[
+                node.label,
+                node.description,
+                node.badge?.label,
+                node.progress !== undefined ? `${node.progress}%` : undefined,
+                node.statusLabel ??
+                  (node.status === "idle" ? undefined : node.status),
+              ]
+                .filter(Boolean)
+                .join(". ")}
+              onClick={(event) => activate(node, event)}
+            >
+              <span className="k-orbit__node-content">
+                <span className="k-orbit__node-visual">
+                  {node.content ??
+                    (node.appearance === "sphere"
+                      ? null
+                      : node.label.trim().slice(0, 2).toLocaleUpperCase())}
                 </span>
-              )}
-            <span className="k-orbit__node-label">{node.label}</span>
-          </button>
-        ))}
+              </span>
+              {node.badge !== null &&
+                (node.badge || (node.status && node.status !== "idle")) && (
+                  <span className="k-orbit__status" aria-hidden="true">
+                    {node.badge
+                      ? node.badge.content
+                      : node.status === "question"
+                        ? "?"
+                        : node.status === "error"
+                          ? "!"
+                          : node.status === "completed"
+                            ? "✓"
+                            : "•"}
+                  </span>
+                )}
+              <span className="k-orbit__node-label">{node.label}</span>
+            </button>
+          );
+          return props.nodeActions ? (
+            <KContextMenu
+              key={node.id}
+              label={node.label}
+              actions={props.nodeActions(node)}
+              disabled={node.disabled || presence.departingIds.has(node.id)}
+            >
+              {marker}
+            </KContextMenu>
+          ) : (
+            marker
+          );
+        })}
       </div>
       {props.showControls && (
         <div className="k-orbit__controls">
@@ -428,9 +471,5 @@ function clampView(
     ...view,
     pitch: Math.max(-Math.PI / 2, Math.min(Math.PI / 2, view.pitch)),
     zoom: Math.max(bounds[0], Math.min(bounds[1], view.zoom)),
-    offset: {
-      x: Math.max(-240, Math.min(240, view.offset.x)),
-      y: Math.max(-240, Math.min(240, view.offset.y)),
-    },
   };
 }

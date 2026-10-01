@@ -224,3 +224,92 @@ const orbitDeepConnections = [
     targetId: 'signal-a',
   ),
 ];
+
+const orbitSpacingLevels = [
+  KOrbitLevel(id: 'teams', label: 'Teams', radius: 180, periodSeconds: 180),
+  KOrbitLevel(
+    id: 'projects',
+    label: 'Projects',
+    radius: 100,
+    periodSeconds: 150,
+  ),
+  KOrbitLevel(id: 'issues', label: 'Issues', radius: 50, periodSeconds: 120),
+  KOrbitLevel(
+    id: 'issues-0',
+    label: 'Issues',
+    radius: 50,
+    periodSeconds: 120,
+    color: Color(0xff6366f1),
+  ),
+  KOrbitLevel(
+    id: 'issues-1',
+    label: 'Issues',
+    radius: 50,
+    periodSeconds: 120,
+    color: Color(0xff0ea5e9),
+  ),
+  KOrbitLevel(
+    id: 'issues-2',
+    label: 'Issues',
+    radius: 50,
+    periodSeconds: 120,
+    color: Color(0xfff59e0b),
+  ),
+  KOrbitLevel(id: 'agents', label: 'Agents', radius: 20, periodSeconds: 90),
+];
+final orbitSpacingNodes = <KOrbitNode>[
+  const KOrbitNode(
+    id: 'workspace',
+    label: 'Workspace',
+    radius: 28,
+    content: KIcon(KIconName.orbit),
+  ),
+  const KOrbitNode(
+    id: 'team',
+    label: 'Platform team',
+    radius: 23,
+    parentId: 'workspace',
+    levelId: 'teams',
+    content: Text('PT'),
+  ),
+  for (var project = 0; project < 3; project++) ...[
+    KOrbitNode(
+      id: 'project-$project',
+      label: 'Project ${project + 1} · ${[1, 8, 20][project]} issues',
+      radius: 18,
+      parentId: 'team',
+      levelId: 'projects',
+      borderColor: const [
+        Color(0xff6366f1),
+        Color(0xff0ea5e9),
+        Color(0xfff59e0b),
+      ][project],
+      content: KIcon(
+        const [KIconName.rocket, KIconName.code, KIconName.palette][project],
+        color: const [
+          Color(0xff6366f1),
+          Color(0xff0ea5e9),
+          Color(0xfff59e0b),
+        ][project],
+      ),
+    ),
+    for (var issue = 0; issue < [1, 8, 20][project]; issue++)
+      KOrbitNode(
+        id: 'issue-$project-$issue',
+        label: 'Issue ${project + 1}.${issue + 1}',
+        radius: 12,
+        parentId: 'project-$project',
+        levelId: 'issues-$project',
+        content: const KIcon(KIconName.circleDot),
+      ),
+    KOrbitNode(
+      id: 'agent-$project',
+      label: 'Agent ${project + 1}',
+      radius: 9,
+      parentId: 'issue-$project-0',
+      levelId: 'agents',
+      status: KOrbitStatus.active,
+      content: const KIcon(KIconName.bot),
+    ),
+  ],
+];

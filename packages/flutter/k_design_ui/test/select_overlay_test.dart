@@ -5,6 +5,63 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/src/forms/selection_popup.dart';
 
 void main() {
+  testWidgets(
+    'multiple selection toggles without closing and ignores disabled options',
+    (tester) async {
+      var values = <String>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(extensions: [KDesignTokens.orbitLight]),
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, update) => SizedBox(
+                width: 320,
+                child: KSelect(
+                  multiple: true,
+                  values: values,
+                  onValuesChanged: (next) => update(() => values = next),
+                  label: 'Teams',
+                  placeholder: 'All teams',
+                  options: const [
+                    KSelectOption(
+                      value: 'private',
+                      label: 'Private projects',
+                      icon: KIconName.lock,
+                    ),
+                    KSelectOption(
+                      value: 'team',
+                      label: 'Team',
+                      icon: KIconName.users,
+                    ),
+                    KSelectOption(
+                      value: 'disabled',
+                      label: 'Disabled',
+                      disabled: true,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byType(TextField));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Private projects'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Team'));
+      await tester.pumpAndSettle();
+      expect(values, ['private', 'team']);
+      expect(find.byType(KSelectionPopup), findsOneWidget);
+      await tester.tap(find.text('Disabled'));
+      await tester.pumpAndSettle();
+      expect(values, ['private', 'team']);
+      await tester.tap(find.text('Private projects'));
+      await tester.pumpAndSettle();
+      expect(values, ['team']);
+      expect(tester.takeException(), isNull);
+    },
+  );
   for (final top in [40.0, 240.0]) {
     testWidgets('select popup uses shifted nested overlay bounds at $top', (
       tester,
