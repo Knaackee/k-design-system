@@ -319,10 +319,11 @@ class _KSelectState extends State<KSelect> {
         widget.presentation == KSelectPresentation.inline &&
         !_focus.hasFocus &&
         !_open;
+    final placeholder =
+        widget.placeholder ?? KLocalization.of(context).text('choose');
     var appearance = formDecoration(
       context,
-      placeholder:
-          widget.placeholder ?? KLocalization.of(context).text('choose'),
+      placeholder: placeholder,
       invalid: field?.invalid ?? false,
       prefix: selected?.hasMedia == true && (!widget.editable || !_open)
           ? Padding(
@@ -382,8 +383,10 @@ class _KSelectState extends State<KSelect> {
           onPressed: canClear ? _clear : null,
           right: t.spaceControlInsetInline + 1 + 16 + t.spaceControlGap,
           child: Semantics(
+            button: !widget.editable,
             expanded: _open,
             label: widget.label ?? field?.label,
+            value: _text.text.isEmpty ? placeholder : null,
             hint: field?.helperText,
             isRequired: field?.required,
             validationResult: field?.invalid == true

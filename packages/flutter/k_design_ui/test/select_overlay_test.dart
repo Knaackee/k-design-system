@@ -5,6 +5,35 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/src/forms/selection_popup.dart';
 
 void main() {
+  testWidgets('empty select exposes its label and placeholder', (tester) async {
+    final semantics = tester.ensureSemantics();
+    Widget select(String? value) => MaterialApp(
+      theme: ThemeData(extensions: [KDesignTokens.orbitLight]),
+      home: Scaffold(
+        body: KSelect(
+          label: 'Teams',
+          placeholder: 'All teams',
+          value: value,
+          onChanged: (_) {},
+          options: const [KSelectOption(value: 'team', label: 'Team')],
+        ),
+      ),
+    );
+    await tester.pumpWidget(select(null));
+
+    final data = tester.getSemantics(find.byType(TextField)).getSemanticsData();
+    expect(data.label, 'Teams');
+    expect(data.value, 'All teams');
+    expect(data.flagsCollection.isButton, isTrue);
+
+    await tester.pumpWidget(select('team'));
+    expect(
+      tester.getSemantics(find.byType(TextField)).getSemanticsData().value,
+      'Team',
+    );
+    semantics.dispose();
+  });
+
   testWidgets(
     'multiple selection toggles without closing and ignores disabled options',
     (tester) async {
