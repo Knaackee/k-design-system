@@ -35,6 +35,39 @@ Widget app(Widget child) => MaterialApp(
 Finder marker(String id) => find.byKey(ValueKey('k-orbit-node-$id'));
 
 void main() {
+  for (final paused in [false, true]) {
+    testWidgets('context menu holds motion and preserves pause=$paused', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        app(
+          KOrbit(
+            levels: levels,
+            nodes: nodes,
+            connections: const [],
+            paused: paused,
+            nodeActions: (_) => [
+              KMenuAction(id: 'close', label: 'Close', onSelect: () {}),
+            ],
+          ),
+        ),
+      );
+      await tester.pump(const Duration(seconds: 1));
+      await tester.longPress(marker('team'));
+      await tester.pump(const Duration(milliseconds: 300));
+      final before = tester.getCenter(marker('issue'));
+      await tester.pump(const Duration(seconds: 1));
+      expect(tester.getCenter(marker('issue')), before);
+      await tester.tap(find.text('Close'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(seconds: 1));
+      if (paused) {
+        expect(tester.getCenter(marker('issue')), before);
+      } else {
+        expect(tester.getCenter(marker('issue')), isNot(before));
+      }
+    });
+  }
   testWidgets(
     'node long press exposes K context actions without activating details',
     (tester) async {
@@ -217,7 +250,7 @@ void main() {
   );
 
   testWidgets(
-    'primary mouse pans, secondary rotates, touch rotates and pinch zooms',
+    'mouse mapping stays; one finger pans, pinch only zooms',
     (tester) async {
       var view = const KOrbitViewState();
       await tester.pumpWidget(
@@ -228,6 +261,7 @@ void main() {
             connections: const [],
             showControls: false,
             paused: true,
+            interactionMode: KOrbitInteractionMode.embedded,
             onViewChange: (value) => view = value,
           ),
         ),
@@ -258,7 +292,8 @@ void main() {
       await touch.moveBy(const Offset(30, 0));
       await touch.up();
       await tester.pump();
-      expect(view.yaw, greaterThan(.32));
+      expect(view.yaw, closeTo(.32, .001));
+      expect(view.offset.dx, greaterThan(40));
       final a = await tester.startGesture(
         origin + const Offset(80, 80),
         pointer: 4,
@@ -277,6 +312,8 @@ void main() {
       await a.up();
       await b.up();
       expect(view.zoom, greaterThan(1));
+      expect(view.yaw, closeTo(.32, .001));
+      expect(view.pitch, closeTo(.16, .001));
       expect(tester.takeException(), isNull);
     },
   );

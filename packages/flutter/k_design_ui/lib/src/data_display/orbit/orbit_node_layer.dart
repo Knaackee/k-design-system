@@ -18,6 +18,7 @@ class KOrbitNodeLayer extends StatefulWidget {
     required this.reducedMotion,
     required this.onActivate,
     this.nodeActions,
+    this.onContextMenuOpenChange,
     required this.repaint,
     required this.extentOverride,
     required this.opacityFor,
@@ -39,6 +40,7 @@ class KOrbitNodeLayer extends StatefulWidget {
   final bool reducedMotion;
   final ValueChanged<KOrbitNode> onActivate;
   final List<KMenuAction> Function(KOrbitNode)? nodeActions;
+  final ValueChanged<bool>? onContextMenuOpenChange;
   final Listenable repaint;
   final double? extentOverride;
   final double Function(String id) opacityFor;
@@ -152,6 +154,7 @@ class _KOrbitNodeLayerState extends State<KOrbitNodeLayer> {
                 : KContextMenu(
                     label: node.label,
                     actions: widget.nodeActions!(node),
+                    onOpenChange: widget.onContextMenuOpenChange,
                     disabled: hidden || node.disabled,
                     child: marker,
                   ),

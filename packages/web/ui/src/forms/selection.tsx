@@ -344,7 +344,6 @@ function Selection({
             if (!searchable && !disabled) {
               event.preventDefault();
               input.current?.focus();
-              if (!open) show();
             }
           }}
           onSelect={(event) => {
@@ -356,7 +355,8 @@ function Selection({
               event.currentTarget.setSelectionRange(0, 0);
           }}
           onClick={() => {
-            if (!open) show();
+            if (open && !searchable) close();
+            else if (!open) show();
           }}
 
           onChange={(event) => {

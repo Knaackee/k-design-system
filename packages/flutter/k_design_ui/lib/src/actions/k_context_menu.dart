@@ -14,6 +14,7 @@ class KContextMenu extends StatefulWidget {
     required this.actions,
     required this.child,
     this.disabled = false,
+    this.onOpenChange,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class KContextMenu extends StatefulWidget {
   final List<KMenuAction> actions;
   final Widget child;
   final bool disabled;
+  final ValueChanged<bool>? onOpenChange;
 
   @override
   State<KContextMenu> createState() => _KContextMenuState();
@@ -260,7 +262,11 @@ class _KContextMenuState extends State<KContextMenu> {
       childFocusNode: _focus,
       reservedPadding: EdgeInsets.all(t.spaceControlGap),
       style: _menuStyle(width),
-      onClose: _closeSubmenusExcept,
+      onOpen: () => widget.onOpenChange?.call(true),
+      onClose: () {
+        _closeSubmenusExcept();
+        widget.onOpenChange?.call(false);
+      },
       menuChildren: [_surface(context, widget.actions, width)],
       builder: (context, controller, child) => Focus(
         focusNode: _focus,

@@ -5,6 +5,31 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/src/forms/selection_popup.dart';
 
 void main() {
+  testWidgets('select trigger toggles its popup closed', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(extensions: [KDesignTokens.orbitLight]),
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 320,
+              child: KSelect(
+                label: 'Status',
+                onChanged: (_) {},
+                options: [KSelectOption(value: 'open', label: 'Open')],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+    expect(find.byType(KSelectionPopup), findsOneWidget);
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+    expect(find.byType(KSelectionPopup), findsNothing);
+  });
   testWidgets('empty select exposes its label and placeholder', (tester) async {
     final semantics = tester.ensureSemantics();
     Widget select(String? value) => MaterialApp(

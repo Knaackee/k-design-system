@@ -7,10 +7,30 @@ const browser = await chromium.launch({ channel: "msedge", headless: true });
 try {
   const page = await browser.newPage();
   await page.goto(
+    "http://localhost:6006/iframe.html?id=actions-iconbutton--actions&viewMode=story",
+  );
+  await page.locator(".k-icon-button").first().waitFor();
+  const iconFits = await page
+    .locator(".k-icon-button")
+    .first()
+    .evaluate((button) => {
+      const content = button.querySelector(".k-truncated__content");
+      const icon = button.querySelector(".k-icon");
+      return (
+        content.getBoundingClientRect().width >=
+        icon.getBoundingClientRect().width
+      );
+    });
+  assert.ok(iconFits, "Icon button must not clip its icon");
+  await page.goto(
     "http://localhost:6006/iframe.html?id=forms-select-form-contract--native-form&viewMode=story",
   );
   const country = page.getByRole("combobox", { name: "Country" });
   await country.waitFor();
+  await country.click();
+  assert.equal(await country.getAttribute("aria-expanded"), "true");
+  await country.click();
+  assert.equal(await country.getAttribute("aria-expanded"), "false");
   await page.getByRole("button", { name: "Submit", exact: true }).click();
   assert.equal(
     await page.getByLabel("Submitted", { exact: true }).textContent(),

@@ -5,6 +5,7 @@ import {
   type PointerEvent,
   type ReactNode,
   useId,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -16,6 +17,7 @@ export interface KContextMenuProps {
   actions: readonly KMenuAction[];
   children: ReactNode;
   disabled?: boolean;
+  onOpenChange?(open: boolean): void;
 }
 
 function enabledItems(level: HTMLElement) {
@@ -163,10 +165,20 @@ export function KContextMenu({
   actions,
   children,
   disabled = false,
+  onOpenChange,
 }: KContextMenuProps) {
   const id = useId();
   const target = useRef<HTMLDivElement>(null);
   const menu = useRef<HTMLDivElement>(null);
+  const open = useRef(false);
+  const openChange = useRef(onOpenChange);
+  openChange.current = onOpenChange;
+  useEffect(
+    () => () => {
+      if (open.current) openChange.current?.(false);
+    },
+    [],
+  );
   const longPressTimer = useRef<number | undefined>(undefined);
   const pointerStart = useRef<{ x: number; y: number } | undefined>(undefined);
   function cancelLongPress() {
@@ -245,6 +257,10 @@ export function KContextMenu({
         popover="auto"
         className="k-menu k-context-menu"
         role="presentation"
+        onToggle={(event) => {
+          open.current = event.newState === "open";
+          onOpenChange?.(open.current);
+        }}
       >
         <MenuLevel actions={actions} close={close} label={label} />
       </div>

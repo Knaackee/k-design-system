@@ -120,11 +120,11 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
   Duration? _lastElapsed, _lastDragAt;
   double _orbitTime = 0;
   bool _interacting = false, _shaderRequested = false;
+  bool _contextMenuOpen = false;
   Offset _inertia = Offset.zero;
   int? _mousePointer;
   bool _mouseInput = false, _mouseRotate = false, _keyboardFocus = false;
   double _gestureZoom = 1;
-  KOrbitViewState? _gestureStart;
   ui.FragmentShader? _centerShader;
   Duration _travelDuration = Duration.zero;
 
@@ -293,6 +293,7 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
     if (elapsed == null) return;
     final previous = _lastElapsed;
     _lastElapsed = elapsed;
+    if (_contextMenuOpen) return;
     if (previous == null) return;
     final realDelta =
         (elapsed - previous).inMicroseconds / Duration.microsecondsPerSecond;

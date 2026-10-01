@@ -1,4 +1,4 @@
-.k-icon-button {
+.k-button.k-icon-button {
   width: max(var(--k-size-control), var(--k-size-hit-target));
   padding-inline: 0;
 }

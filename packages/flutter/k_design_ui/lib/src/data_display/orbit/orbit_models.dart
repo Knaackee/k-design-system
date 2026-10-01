@@ -280,7 +280,7 @@ class KOrbitLabels {
   const KOrbitLabels({
     this.stage = 'Interactive orbit visualization',
     this.instructions =
-        'Use arrow keys to move between nodes. Press Enter to activate.',
+        'Drag with one finger to pan; pinch with two fingers to zoom. Long press a node for actions.',
     this.reset = 'Reset view',
     this.pause = 'Pause motion',
     this.resume = 'Resume motion',

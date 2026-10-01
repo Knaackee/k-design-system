@@ -89,7 +89,6 @@ extension _KOrbitRendering on _KOrbitState {
     },
     onScaleStart: (_) {
       if (_mouseInput) return;
-      _gestureStart = _currentView;
       _gestureZoom = _currentView.zoom;
       _startInteraction();
     },
@@ -135,6 +134,7 @@ extension _KOrbitRendering on _KOrbitState {
       isDeparting: _nodeTransition.isDeparting,
       onActivate: _select,
       nodeActions: widget.nodeActions,
+      onContextMenuOpenChange: (open) => _contextMenuOpen = open,
       repaint: _ticker,
     ),
   );
@@ -145,13 +145,9 @@ extension _KOrbitRendering on _KOrbitState {
     final result = kOrbitGestureUpdate(
       details: details,
       size: size,
-      interactionMode: widget.interactionMode,
       currentView: _currentView,
-      gestureStart: _gestureStart,
       gestureZoom: _gestureZoom,
       now: now,
-      lastDragAt: _lastDragAt,
-      reducedMotion: _reduceMotion,
       minZoom: widget.minZoom,
       maxZoom: widget.maxZoom,
     );
@@ -159,7 +155,6 @@ extension _KOrbitRendering on _KOrbitState {
     _setView(result.view);
     _inertia = result.inertia;
     _lastDragAt = result.lastDragAt;
-    if (details.pointerCount == 1) _gestureStart = _currentView;
   }
 
   void _mouseDown(PointerDownEvent event, Size size) {

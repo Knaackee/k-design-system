@@ -128,6 +128,7 @@ export function KOrbit(input: KOrbitProps): ReactElement {
   currentView.current = clampView(props.view ?? internalView, props.zoomBounds);
   const [systemReduced, setSystemReduced] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const labels = { ...fallbackLabels, ...props.labels };
   const speed = props.motionSpeed ?? 1;
   if (
@@ -271,7 +272,7 @@ export function KOrbit(input: KOrbitProps): ReactElement {
     interacting: gestures.interacting,
     inertia: gestures.inertia,
     focused,
-    paused,
+    paused: paused || contextMenuOpen,
     speed,
     maxAngularSpeed: props.maxAngularSpeed,
     synchronizeLevels: props.autoLayout,
@@ -403,6 +404,10 @@ export function KOrbit(input: KOrbitProps): ReactElement {
               key={node.id}
               label={node.label}
               actions={props.nodeActions(node)}
+              onOpenChange={(open) => {
+                setContextMenuOpen(open);
+                if (!open) setFocused(false);
+              }}
               disabled={node.disabled || presence.departingIds.has(node.id)}
             >
               {marker}

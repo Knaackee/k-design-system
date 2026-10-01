@@ -422,7 +422,11 @@ class _KSelectState extends State<KSelect> {
                       _focus.unfocus();
                     },
                     onTap: () {
-                      if (!_open) _show();
+                      if (_open && !widget.editable) {
+                        _close();
+                      } else if (!_open) {
+                        _show();
+                      }
                     },
                     onChanged: (value) {
                       if (!_open) _portal.show();
