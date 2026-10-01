@@ -24,7 +24,7 @@
     "analyze:flutter": "dart run melos exec --concurrency 1 -- \"flutter analyze\"",
     "test:flutter": "dart run melos exec --concurrency 1 -- \"flutter test\"",
     "format:check": "prettier --check .",
-    "verify": "pnpm format:check && pnpm generate:check && pnpm test:tooling && pnpm audit:styles && pnpm typecheck:web && pnpm verify:web-consumer && pnpm verify:flutter-consumer && pnpm analyze:flutter && pnpm test:flutter && pnpm build:storybook && pnpm build:widgetbook"
+    "verify": "pnpm format:check && pnpm generate:check && pnpm test:tooling && pnpm audit:styles && pnpm build:web && pnpm typecheck:web && pnpm verify:web-consumer && pnpm verify:flutter-consumer && pnpm analyze:flutter && pnpm test:flutter && pnpm build:storybook && pnpm build:widgetbook"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
