@@ -6,6 +6,7 @@ import {
   useState,
   type KeyboardEvent,
   type ChangeEventHandler,
+  type ReactNode,
 } from "react";
 import { useField } from "./field.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
@@ -16,6 +17,8 @@ export interface KSelectOption {
   label: string;
   disabled?: boolean;
   icon?: KIconName;
+  /** Decorative media; takes precedence over icon and imageSrc. */
+  leading?: ReactNode;
   imageSrc?: string;
 }
 export interface KSelectProps {
@@ -109,8 +112,11 @@ function Selection({
       : undefined
     : options.find((option) => option.value === value);
   const showMedia =
-    !!(selectedOption?.icon || selectedOption?.imageSrc) &&
-    !(searchable && open);
+    !!(
+      selectedOption?.leading ||
+      selectedOption?.icon ||
+      selectedOption?.imageSrc
+    ) && !(searchable && open);
   const canClear =
     clearable &&
     (multiple || !!onClear) &&

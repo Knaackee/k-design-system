@@ -77,12 +77,12 @@ class _MultiSelectFixtureState extends State<MultiSelectFixture> {
                 KSelectOption(
                   value: 'orbit',
                   label: 'Orbit',
-                  icon: KIconName.rocket,
+                  leading: KIcon(KIconName.rocket, color: Color(0xFFE76F51)),
                 ),
                 KSelectOption(
                   value: 'tasks',
                   label: 'Tasks',
-                  icon: KIconName.code,
+                  leading: KIcon(KIconName.code, color: Color(0xFF2A9D8F)),
                 ),
               ],
             ),

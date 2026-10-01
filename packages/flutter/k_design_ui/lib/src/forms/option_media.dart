@@ -13,17 +13,19 @@ class KOptionMedia extends StatelessWidget {
     return ExcludeSemantics(
       child: SizedBox.square(
         dimension: t.sizeContent,
-        child: option.imageSrc == null
-            ? fallback
-            : ClipOval(
-                child: Image.network(
-                  option.imageSrc!,
-                  width: t.sizeContent,
-                  height: t.sizeContent,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => fallback,
-                ),
-              ),
+        child:
+            option.leading ??
+            (option.imageSrc == null
+                ? fallback
+                : ClipOval(
+                    child: Image.network(
+                      option.imageSrc!,
+                      width: t.sizeContent,
+                      height: t.sizeContent,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => fallback,
+                    ),
+                  )),
       ),
     );
   }

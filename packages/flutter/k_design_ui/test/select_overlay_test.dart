@@ -5,6 +5,38 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/src/forms/selection_popup.dart';
 
 void main() {
+  testWidgets('custom option icon appears in trigger and popup', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(extensions: [KDesignTokens.orbitLight]),
+        home: Scaffold(
+          body: KSelect(
+            label: 'Projects',
+            value: 'orbit',
+            onChanged: (_) {},
+            options: const [
+              KSelectOption(
+                value: 'orbit',
+                label: 'Orbit',
+                leading: Icon(Icons.flag, color: Color(0xFFE76F51)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.flag), findsOneWidget);
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.flag), findsNWidgets(2));
+    expect(
+      tester.widget<Icon>(find.byIcon(Icons.flag).last).color,
+      const Color(0xFFE76F51),
+    );
+  });
+
   testWidgets('select trigger toggles its popup closed', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

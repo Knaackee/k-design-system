@@ -16,14 +16,17 @@ class KSelectOption {
     required this.label,
     this.disabled = false,
     this.icon,
+    this.leading,
     this.imageSrc,
   });
   final String value;
   final String label;
   final bool disabled;
   final KIconName? icon;
+  /// Decorative media; takes precedence over icon and imageSrc.
+  final Widget? leading;
   final String? imageSrc;
-  bool get hasMedia => icon != null || imageSrc != null;
+  bool get hasMedia => leading != null || icon != null || imageSrc != null;
 }
 
 enum KSelectPresentation { standard, inline }

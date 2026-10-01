@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   KContainer,
+  KIcon,
   KStack,
   KInline,
   KText,
@@ -79,8 +80,16 @@ export function MultiSelectFixture() {
                 projects.length > 1 ? `${projects.length} projects` : undefined
               }
               options={[
-                { value: "orbit", label: "Orbit", icon: "rocket" },
-                { value: "tasks", label: "Tasks", icon: "code" },
+                {
+                  value: "orbit",
+                  label: "Orbit",
+                  leading: <KIcon name="rocket" color="#E76F51" />,
+                },
+                {
+                  value: "tasks",
+                  label: "Tasks",
+                  leading: <KIcon name="code" color="#2A9D8F" />,
+                },
               ]}
             />
           </KField>
