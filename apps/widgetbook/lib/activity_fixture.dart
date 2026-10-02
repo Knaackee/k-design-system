@@ -4,8 +4,13 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'activity_fixture_data.dart';
 
 class ActivityFixture extends StatefulWidget {
-  const ActivityFixture({this.phone = false, this.empty = false, super.key});
-  final bool phone, empty;
+  const ActivityFixture({
+    this.phone = false,
+    this.empty = false,
+    this.statusView = false,
+    super.key,
+  });
+  final bool phone, empty, statusView;
   @override
   State<ActivityFixture> createState() => _ActivityFixtureState();
 }
@@ -18,12 +23,17 @@ class _ActivityFixtureState extends State<ActivityFixture> {
 
   KDesignTokens get t => Theme.of(context).extension<KDesignTokens>()!;
   List<ActivityIssue> get filtered =>
-      (widget.empty ? <ActivityIssue>[] : activityIssues)
+      (widget.empty
+              ? <ActivityIssue>[]
+              : widget.statusView
+              ? activityStatusIssues
+              : activityIssues)
           .where(
             (i) =>
-                (mode == 'completed'
-                    ? i.status == 'done'
-                    : i.status != 'done') &&
+                (widget.statusView ||
+                    (mode == 'completed'
+                        ? i.status == 'done'
+                        : i.status != 'done')) &&
                 (projects.isEmpty || projects.contains(i.project)) &&
                 (people.isEmpty || people.contains(i.person)) &&
                 (statuses.isEmpty || statuses.contains(i.status)),
@@ -172,9 +182,14 @@ class _ActivityFixtureState extends State<ActivityFixture> {
                         ? const Color(0xffE76F51)
                         : const Color(0xff2A9D8F),
                   ),
+                  completed: issue.status == 'done',
                 ),
             ],
             onOpenItem: (id) => setState(() => detail = id),
+            onAddDate: (date) => setState(
+              () => detail = 'add:${date.toIso8601String().substring(0, 10)}',
+            ),
+            addLabel: 'Issue hinzufügen',
           ),
           if (detail != null)
             Text(

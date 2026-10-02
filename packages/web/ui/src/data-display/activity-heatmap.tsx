@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { activityMonth } from "./activity-month-model.js";
+import { activityDayStatus } from "./activity-status-model.js";
 import { KBottomSheet } from "../overlays/overlay.js";
 import { KButton } from "../primitives/button.js";
 import { KIcon } from "../primitives/icon.js";
@@ -16,12 +17,15 @@ export interface KActivityItem {
   date: string | null;
   metadata?: string;
   leading?: ReactNode;
+  completed?: boolean;
 }
 export interface KActivityHeatmapProps {
   items: readonly KActivityItem[];
   mode: "completed" | "upcoming";
   today: string;
   onOpenItem: (id: string) => void;
+  onAddDate?: (date: string) => void;
+  addLabel?: string;
   phone?: boolean;
 }
 const dateLabel = (value: string) =>
@@ -37,6 +41,8 @@ export function KActivityHeatmap({
   mode,
   today,
   onOpenItem,
+  onAddDate,
+  addLabel = "Issue hinzufügen",
   phone = false,
 }: KActivityHeatmapProps) {
   const [selectedDay, setDay] = useState<string | null>(null);
@@ -49,10 +55,17 @@ export function KActivityHeatmap({
     return date.toISOString().slice(0, 10);
   });
   const dated = items.filter((item) => item.date);
-  const counts = new Map<string, number>();
-  for (const item of dated)
-    counts.set(item.date!, (counts.get(item.date!) ?? 0) + 1);
+  const byDay = new Map<string, KActivityItem[]>();
+  for (const item of dated) {
+    const dayItems = byDay.get(item.date!) ?? [];
+    dayItems.push(item);
+    byDay.set(item.date!, dayItems);
+  }
   const rows = dated.filter((item) => item.date === selectedDay);
+  const status = (date: string) => {
+    const dayItems = byDay.get(date) ?? [];
+    return activityDayStatus(dayItems, mode === "completed");
+  };
   const [narrow, setNarrow] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -124,24 +137,29 @@ export function KActivityHeatmap({
     </button>
   );
   const renderDay = (date: string, includeYear = false) => {
-    const count = counts.get(date) ?? 0;
+    const day = status(date);
     const outside = mode === "completed" ? date > today : date < today;
     return (
       <button
         type="button"
         key={date}
-        disabled={outside && count === 0}
+        disabled={outside && day.count === 0}
         className="k-activity-day"
-        data-level={Math.min(count, 4)}
+        data-level={day.level}
+        data-status={day.tone}
         data-today={date === today || undefined}
         data-selected={date === selectedDay || undefined}
         aria-pressed={date === selectedDay}
-        aria-label={`${dateLabel(date)}${includeYear ? ` ${date.slice(0, 4)}` : ""}: ${count} Issues`}
-        title={`${dateLabel(date)} · ${count} Issues`}
+        aria-label={`${dateLabel(date)}${includeYear ? ` ${date.slice(0, 4)}` : ""}: ${day.summary}`}
+        title={`${dateLabel(date)} · ${day.summary}`}
         onClick={() => {
           setDay(date === selectedDay ? null : date);
         }}
-      />
+      >
+        {day.count > 0 && (
+          <span className="k-activity-status-marker" aria-hidden="true" />
+        )}
+      </button>
     );
   };
   return (
@@ -241,19 +259,18 @@ export function KActivityHeatmap({
           {mode === "completed" ? "Abschlüsse pro Tag" : "Issues pro Tag"} ·
           Heute: {dateLabel(today)}
         </span>
-        <span>
-          Weniger{" "}
-          {[0, 1, 2, 3, 4].map((level) => (
-            <i key={level} data-level={level} />
-          ))}{" "}
-          Mehr
-        </span>
+        <span>Amber: offen · Grün: erledigt · Intensität: 1, 2–3, 4–7, 8+</span>
       </div>
       {selectedDay && (
         <div className="k-activity-desktop-only">
           <div className="k-activity-list-header">
             <h2>{dateLabel(selectedDay)}</h2>
-            {selectedDay && (
+            <div className="k-activity-day-actions">
+              {onAddDate && (
+                <KButton onClick={() => onAddDate(selectedDay)}>
+                  {addLabel}
+                </KButton>
+              )}
               <KButton
                 variant="ghost"
                 onClick={() => {
@@ -262,8 +279,11 @@ export function KActivityHeatmap({
               >
                 Schließen
               </KButton>
-            )}
+            </div>
           </div>
+          <p className="k-activity-day-summary">
+            {status(selectedDay).summary}
+          </p>
           <div aria-live="polite">
             {rows.length ? (
               rows.map(renderIssue)
@@ -288,12 +308,23 @@ export function KActivityHeatmap({
           closeLabel="Schließen"
           className="k-activity-sheet"
         >
-          {selectedDay &&
-            (rows.length ? (
-              rows.map(renderIssue)
-            ) : (
-              <p className="k-activity-empty">Keine Issues an diesem Tag.</p>
-            ))}
+          {selectedDay && (
+            <>
+              <p className="k-activity-day-summary">
+                {status(selectedDay).summary}
+              </p>
+              {onAddDate && (
+                <KButton fullWidth onClick={() => onAddDate(selectedDay)}>
+                  {addLabel}
+                </KButton>
+              )}
+              {rows.length ? (
+                rows.map(renderIssue)
+              ) : (
+                <p className="k-activity-empty">Keine Issues an diesem Tag.</p>
+              )}
+            </>
+          )}
         </KBottomSheet>
       )}
     </section>

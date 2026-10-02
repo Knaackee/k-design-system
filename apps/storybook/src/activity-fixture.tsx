@@ -54,14 +54,28 @@ const issues = Array.from({ length: 140 }, (_, i) => {
   };
 });
 
+const statusIssues = [1, 3, 7, 8].flatMap((count, group) =>
+  Array.from({ length: count }, (_, index) => ({
+    id: `STATUS-${group}-${index}`,
+    title: `Statusbeispiel ${group + 1}`,
+    project: projects[group % 2],
+    person: "Denis",
+    status:
+      group === 0 || (group === 2 && index === 0) ? "in-progress" : "done",
+    date: day(95 + group),
+  })),
+);
+
 export function ActivityFixture({
   initialMode = "completed",
   phone = false,
   empty = false,
+  statusView = false,
 }: {
   initialMode?: "completed" | "upcoming";
   phone?: boolean;
   empty?: boolean;
+  statusView?: boolean;
 }) {
   const [mode, setMode] = useState(initialMode);
 
@@ -73,11 +87,12 @@ export function ActivityFixture({
 
   const [detail, setDetail] = useState<string | null>(null);
 
-  const filtered = (empty ? [] : issues).filter(
+  const filtered = (empty ? [] : statusView ? statusIssues : issues).filter(
     (issue) =>
-      (mode === "completed"
-        ? issue.status === "done"
-        : issue.status !== "done") &&
+      (statusView ||
+        (mode === "completed"
+          ? issue.status === "done"
+          : issue.status !== "done")) &&
       (!selectedProjects.length ||
         selectedProjects.includes(issue.project.value)) &&
       (!people.length || people.includes(issue.person)) &&
@@ -190,6 +205,7 @@ export function ActivityFixture({
         phone={phone}
         items={filtered.map((issue) => ({
           ...issue,
+          completed: issue.status === "done",
           metadata: `${issue.id} · ${issue.project.label} · ${issue.person}`,
           leading: (
             <KIcon
@@ -199,6 +215,8 @@ export function ActivityFixture({
           ),
         }))}
         onOpenItem={setDetail}
+        onAddDate={(date) => setDetail(`add:${date}`)}
+        addLabel="Issue hinzufügen"
       />
 
       {detail && (

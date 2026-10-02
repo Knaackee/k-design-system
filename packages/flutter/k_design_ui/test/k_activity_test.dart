@@ -49,7 +49,8 @@ void main() {
           final lastDay = find.byWidgetPredicate(
             (w) =>
                 w is Semantics &&
-                w.properties.label == '30. November 2026: 0 Issues',
+                w.properties.label ==
+                    '30. November 2026: 0 Issues, 0 offen, 0 erledigt',
           );
           await tester.ensureVisible(lastDay);
           await tester.pumpAndSettle();
@@ -100,7 +101,9 @@ void main() {
     expect(find.text('Consumer item'), findsNothing);
     final day = find.byWidgetPredicate(
       (w) =>
-          w is Semantics && w.properties.label == '2. Oktober 2026: 1 Issues',
+          w is Semantics &&
+          w.properties.label ==
+              '2. Oktober 2026: 1 Issues, 1 offen, 0 erledigt',
     );
     expect(tester.getSize(day), const Size(44, 44));
     await tester.ensureVisible(day);
@@ -151,7 +154,8 @@ void main() {
       final day = find.byWidgetPredicate(
         (w) =>
             w is Semantics &&
-            w.properties.label == '30. September 2026: 1 Issues',
+            w.properties.label ==
+                '30. September 2026: 1 Issues, 1 offen, 0 erledigt',
       );
       await tester.tap(day);
       await tester.pumpAndSettle();
@@ -161,4 +165,52 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('Mixed day is summarized and exposes the consumer add action', (
+    tester,
+  ) async {
+    DateTime? added;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: KActivityHeatmap(
+              today: DateTime.utc(2026, 10, 2),
+              mode: KActivityMode.upcoming,
+              items: [
+                KActivityItem(
+                  id: 'done',
+                  title: 'Done',
+                  date: DateTime.utc(2026, 10, 2),
+                  completed: true,
+                ),
+                KActivityItem(
+                  id: 'open',
+                  title: 'Open',
+                  date: DateTime.utc(2026, 10, 2),
+                  completed: false,
+                ),
+              ],
+              onOpenItem: (_) {},
+              onAddDate: (date) => added = date,
+              addLabel: 'Hinzufügen',
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final day = find.byWidgetPredicate(
+      (w) =>
+          w is Semantics &&
+          w.properties.label ==
+              '2. Oktober 2026: 2 Issues, 1 offen, 1 erledigt',
+    );
+    await tester.tap(day);
+    await tester.pumpAndSettle();
+    expect(find.text('2 Issues, 1 offen, 1 erledigt'), findsOneWidget);
+    await tester.tap(find.text('Hinzufügen'));
+    expect(added, DateTime.utc(2026, 10, 2));
+  });
 }

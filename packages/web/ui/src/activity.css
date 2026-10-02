@@ -60,29 +60,67 @@
   padding: 0;
   cursor: pointer;
   min-width: 0;
+  position: relative;
 }
-.k-activity [data-level="1"] {
+.k-activity-day[data-status="open"][data-level="1"] {
   background: color-mix(
     in srgb,
-    var(--k-color-text-primary) 15%,
+    var(--k-color-status-warning-accent) 22%,
     var(--k-color-surface-canvas)
   );
 }
-.k-activity [data-level="2"] {
+.k-activity-day[data-status="open"][data-level="2"] {
   background: color-mix(
     in srgb,
-    var(--k-color-text-primary) 30%,
+    var(--k-color-status-warning-accent) 42%,
     var(--k-color-surface-canvas)
   );
 }
-.k-activity [data-level="3"] {
+.k-activity-day[data-status="open"][data-level="3"] {
   background: color-mix(
     in srgb,
-    var(--k-color-text-primary) 55%,
+    var(--k-color-status-warning-accent) 68%,
     var(--k-color-surface-canvas)
   );
 }
-.k-activity [data-level="4"] {
+.k-activity-day[data-status="open"][data-level="4"] {
+  background: var(--k-color-status-warning-accent);
+}
+.k-activity-day[data-status="done"][data-level="1"] {
+  background: color-mix(
+    in srgb,
+    var(--k-color-status-success-accent) 22%,
+    var(--k-color-surface-canvas)
+  );
+}
+.k-activity-day[data-status="done"][data-level="2"] {
+  background: color-mix(
+    in srgb,
+    var(--k-color-status-success-accent) 42%,
+    var(--k-color-surface-canvas)
+  );
+}
+.k-activity-day[data-status="done"][data-level="3"] {
+  background: color-mix(
+    in srgb,
+    var(--k-color-status-success-accent) 68%,
+    var(--k-color-surface-canvas)
+  );
+}
+.k-activity-day[data-status="done"][data-level="4"] {
+  background: var(--k-color-status-success-accent);
+}
+.k-activity-status-marker {
+  position: absolute;
+  inset-inline-end: var(--k-space-micro);
+  inset-block-end: var(--k-space-micro);
+  width: var(--k-space-compact);
+  height: var(--k-space-compact);
+  border: var(--k-border-width-strong) solid var(--k-color-text-primary);
+  border-radius: var(--k-radius-full);
+  background: transparent;
+}
+.k-activity-day[data-status="done"] .k-activity-status-marker {
   background: var(--k-color-text-primary);
 }
 .k-activity-day:disabled {
@@ -120,6 +158,15 @@
   align-items: center;
   justify-content: space-between;
   min-height: var(--k-size-switch);
+}
+.k-activity-day-actions {
+  display: flex;
+  gap: var(--k-space-control-gap);
+}
+.k-activity-day-summary {
+  margin: var(--k-space-control-gap) 0 0;
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
 }
 .k-activity-issue {
   width: 100%;

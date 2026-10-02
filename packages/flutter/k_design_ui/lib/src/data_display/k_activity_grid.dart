@@ -5,14 +5,15 @@ extension _ActivityGrid on _KActivityHeatmapState {
     DateTime day,
     double size,
     bool mobile,
-    Map<DateTime, int> counts,
+    Map<DateTime, List<KActivityItem>> byDay,
   ) {
-    final count = counts[day] ?? 0;
+    final dayStatus = status(day, byDay[day]);
+    final count = dayStatus.count;
     final outside = widget.mode == KActivityMode.completed
         ? day.isAfter(today)
         : day.isBefore(today);
     final disabled = outside && count == 0;
-    final label = '${dateLabel(day)} ${day.year}: $count Issues';
+    final label = '${dateLabel(day)} ${day.year}: ${dayStatus.summary}';
     return Semantics(
       label: label,
       button: true,
@@ -26,23 +27,52 @@ extension _ActivityGrid on _KActivityHeatmapState {
             width: size,
             height: size,
             child: Material(
-              color: level(count),
+              color: level(count, dayStatus.open),
               borderRadius: BorderRadius.circular(t.radiusSmall),
               child: InkWell(
                 borderRadius: BorderRadius.circular(t.radiusSmall),
                 onTap: disabled ? null : () => chooseDay(day, mobile),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(t.radiusSmall),
-                    border: Border.all(
-                      color: selected == day || day == today
-                          ? t.colorTextPrimary
-                          : t.colorBorderDefault,
-                      width: selected == day || day == today
-                          ? t.borderWidthStrong
-                          : t.borderWidthDefault,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(t.radiusSmall),
+                          border: Border.all(
+                            color: selected == day || day == today
+                                ? t.colorTextPrimary
+                                : t.colorBorderDefault,
+                            width: selected == day || day == today
+                                ? t.borderWidthStrong
+                                : t.borderWidthDefault,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    if (count > 0)
+                      PositionedDirectional(
+                        end: t.spaceMicro,
+                        bottom: t.spaceMicro,
+                        child: Container(
+                          width: t.spaceCompact,
+                          height: t.spaceCompact,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: dayStatus.open > 0
+                                ? Colors.transparent
+                                : t.colorTextPrimary,
+                            border: Border.all(
+                              color: dayStatus.open > 0
+                                  ? t.colorTextPrimary
+                                  : t.colorSurfaceCanvas,
+                              width: dayStatus.open > 0
+                                  ? t.borderWidthStrong
+                                  : t.borderWidthDefault,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -52,7 +82,7 @@ extension _ActivityGrid on _KActivityHeatmapState {
     );
   }
 
-  Widget monthBlock(int offset, Map<DateTime, int> counts) {
+  Widget monthBlock(int offset, Map<DateTime, List<KActivityItem>> byDay) {
     final start = DateTime.utc(today.year, today.month + offset);
     final leading = start.weekday - 1;
     final length = DateTime.utc(start.year, start.month + 1, 0).day;
@@ -142,7 +172,7 @@ extension _ActivityGrid on _KActivityHeatmapState {
                                               ),
                                               touchSize,
                                               true,
-                                              counts,
+                                              byDay,
                                             ),
                                     ),
                                 ],
@@ -161,7 +191,7 @@ extension _ActivityGrid on _KActivityHeatmapState {
     );
   }
 
-  Widget desktop(double width, Map<DateTime, int> counts) {
+  Widget desktop(double width, Map<DateTime, List<KActivityItem>> byDay) {
     final first = today.subtract(Duration(days: today.weekday - 1 + 91));
     final size = ((width - 25 * t.spaceTight) / 26).clamp(
       t.sizeSmallControl,
@@ -210,7 +240,7 @@ extension _ActivityGrid on _KActivityHeatmapState {
                             first.add(Duration(days: week * 7 + row)),
                             size,
                             false,
-                            counts,
+                            byDay,
                           ),
                         ),
                     ],

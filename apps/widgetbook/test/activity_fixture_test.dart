@@ -10,6 +10,16 @@ void main() {
     expect(activityIssues.length, 140);
     expect(activityIssues.where((i) => i.status == 'done').length, 100);
     expect(activityIssues.first.id, 'ISS-600');
+    expect(activityStatusIssues.length, 19);
+    expect(
+      [
+        for (var offset = 95; offset <= 98; offset++)
+          activityStatusIssues
+              .where((i) => i.date == activityDay(offset))
+              .length,
+      ],
+      [1, 3, 7, 8],
+    );
   });
   testWidgets('Phone shows month raster and opens day in bottom sheet', (
     tester,
@@ -29,7 +39,9 @@ void main() {
     expect(find.textContaining('ISS-'), findsNothing);
     final day = find.byWidgetPredicate(
       (w) =>
-          w is Semantics && w.properties.label == '2. Oktober 2026: 0 Issues',
+          w is Semantics &&
+          w.properties.label ==
+              '2. Oktober 2026: 0 Issues, 0 offen, 0 erledigt',
     );
     expect(tester.getSize(day), const Size(44, 44));
     await tester.ensureVisible(day);

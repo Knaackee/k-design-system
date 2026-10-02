@@ -57,3 +57,18 @@ final activityIssues = List.generate(140, (i) {
         : null,
   );
 });
+
+final activityStatusIssues = [1, 3, 7, 8].indexed.expand((entry) {
+  final (group, count) = entry;
+  return List.generate(
+    count,
+    (index) => ActivityIssue(
+      'STATUS-$group-$index',
+      'Statusbeispiel ${group + 1}',
+      group.isEven ? 'Tasks' : 'Orbit',
+      'Denis',
+      group == 0 || (group == 2 && index == 0) ? 'in-progress' : 'done',
+      activityDay(95 + group),
+    ),
+  );
+}).toList();

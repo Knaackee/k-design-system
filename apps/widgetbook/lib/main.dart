@@ -864,6 +864,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'activity-empty',
                   builder: (_) => const ActivityFixture(empty: true),
                 ),
+                WidgetbookUseCase(
+                  name: 'activity-day-status',
+                  builder: (_) => const ActivityFixture(statusView: true),
+                ),
               ],
             ),
             WidgetbookFolder(

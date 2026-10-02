@@ -15,11 +15,13 @@ class KActivityItem {
     this.date,
     this.metadata,
     this.leading,
+    this.completed,
   });
   final String id, title;
   final DateTime? date;
   final String? metadata;
   final Widget? leading;
+  final bool? completed;
 }
 
 /// The consumer supplies filtered items and their activity dates/navigation.
@@ -29,6 +31,8 @@ class KActivityHeatmap extends StatefulWidget {
     required this.mode,
     required this.today,
     required this.onOpenItem,
+    this.onAddDate,
+    this.addLabel = 'Issue hinzufügen',
     this.phone = false,
     super.key,
   });
@@ -36,6 +40,8 @@ class KActivityHeatmap extends StatefulWidget {
   final KActivityMode mode;
   final DateTime today;
   final ValueChanged<String> onOpenItem;
+  final ValueChanged<DateTime>? onAddDate;
+  final String addLabel;
   final bool phone;
   @override
   State<KActivityHeatmap> createState() => _KActivityHeatmapState();
@@ -69,19 +75,52 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
   List<KActivityItem> rows(DateTime day) => widget.items
       .where((item) => item.date != null && dateOnly(item.date!) == day)
       .toList();
-  Color level(int count) => count == 0
-      ? t.colorSurfaceSubtle
-      : Color.lerp(
-          t.colorSurfaceCanvas,
-          t.colorTextPrimary,
-          [
-            0.0,
-            t.opacityFaint,
-            t.opacityMedium,
-            t.opacityInteractiveHover,
-            1.0,
-          ][count.clamp(0, 4)],
-        )!;
+  ({int count, int completed, int open, int level, String summary}) status(
+    DateTime day, [
+    List<KActivityItem>? dayItems,
+  ]) {
+    final items = dayItems ?? rows(day);
+    final completed = items
+        .where(
+          (item) => item.completed ?? widget.mode == KActivityMode.completed,
+        )
+        .length;
+    final count = items.length;
+    final open = count - completed;
+    final level = count == 0
+        ? 0
+        : count == 1
+        ? 1
+        : count <= 3
+        ? 2
+        : count <= 7
+        ? 3
+        : 4;
+    return (
+      count: count,
+      completed: completed,
+      open: open,
+      level: level,
+      summary: '$count Issues, $open offen, $completed erledigt',
+    );
+  }
+
+  Color level(int count, int open) {
+    if (count == 0) return t.colorSurfaceSubtle;
+    final intensity = count == 1
+        ? 0.22
+        : count <= 3
+        ? 0.42
+        : count <= 7
+        ? 0.68
+        : 1.0;
+    return Color.lerp(
+      t.colorSurfaceCanvas,
+      open > 0 ? t.colorStatusWarningAccent : t.colorStatusSuccessAccent,
+      intensity,
+    )!;
+  }
+
   Widget small(String text) => Text(
     text,
     style: TextStyle(fontSize: t.fontCaptionSize, color: t.colorTextMuted),
@@ -112,9 +151,19 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
 
   Widget dayItems(DateTime day, {bool mobile = false}) {
     final items = rows(day);
+    final dayStatus = status(day);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        Align(alignment: Alignment.centerLeft, child: small(dayStatus.summary)),
+        if (widget.onAddDate != null) ...[
+          SizedBox(height: t.spaceControlGap),
+          KButton(
+            label: widget.addLabel,
+            onPressed: () => widget.onAddDate!(day),
+            fullWidth: mobile,
+          ),
+        ],
         if (items.isEmpty)
           Padding(
             padding: EdgeInsets.symmetric(vertical: t.spaceLayoutSectionGap),
@@ -205,11 +254,10 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
       final mobile = widget.phone || box.maxWidth <= 600;
-      final counts = <DateTime, int>{};
+      final byDay = <DateTime, List<KActivityItem>>{};
       for (final item in widget.items) {
         if (item.date != null) {
-          final day = dateOnly(item.date!);
-          counts[day] = (counts[day] ?? 0) + 1;
+          (byDay[dateOnly(item.date!)] ??= []).add(item);
         }
       }
       return Column(
@@ -232,7 +280,7 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
             ),
             SizedBox(height: t.spaceLayoutSectionGap - t.spaceControlGap),
             for (var month = firstMonth; month <= lastMonth; month++)
-              monthBlock(month, counts),
+              monthBlock(month, byDay),
             KButton(
               label: 'Weitere Monate laden',
               onPressed: () => loadMonths(false),
@@ -240,14 +288,14 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
               fullWidth: true,
             ),
           ] else
-            desktop(box.maxWidth, counts),
+            desktop(box.maxWidth, byDay),
           SizedBox(height: t.spaceControlGap),
           Wrap(
             spacing: t.spaceContentActionGap,
             runSpacing: t.spaceControlGap,
             children: [
               small(
-                '${widget.mode == KActivityMode.completed ? 'Abschlüsse' : 'Issues'} pro Tag · Heute: ${dateLabel(today)}',
+                '${widget.mode == KActivityMode.completed ? 'Abschlüsse' : 'Issues'} pro Tag · Heute: ${dateLabel(today)} · Amber: offen · Grün: erledigt',
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -259,7 +307,7 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
                       height: t.spaceBarInline,
                       margin: EdgeInsets.symmetric(horizontal: t.spaceMicro),
                       decoration: BoxDecoration(
-                        color: level(i),
+                        color: level(i == 0 ? 0 : [1, 3, 7, 8][i - 1], 1),
                         border: Border.all(color: t.colorBorderDefault),
                         borderRadius: BorderRadius.circular(t.radiusSmall),
                       ),

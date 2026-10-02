@@ -20,3 +20,7 @@ export const Empty: Story = {
   name: "activity-empty",
   args: { empty: true },
 };
+export const DayStatus: Story = {
+  name: "activity-day-status",
+  args: { statusView: true },
+};
