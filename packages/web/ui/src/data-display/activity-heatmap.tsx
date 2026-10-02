@@ -208,18 +208,24 @@ export function KActivityHeatmap({
                     ))}
                   </div>
                   <div
-                    className="k-activity-month-grid"
-                    style={{
-                      gridTemplateColumns: `repeat(${month.weeks}, 44px)`,
-                    }}
+                    className="k-activity-month-scroll"
+                    tabIndex={0}
+                    aria-label="Wochenspalten"
                   >
-                    {month.cells.map((date, i) =>
-                      date ? (
-                        renderDay(date, true)
-                      ) : (
-                        <span key={`blank-${i}`} />
-                      ),
-                    )}
+                    <div
+                      className="k-activity-month-grid"
+                      style={{
+                        gridTemplateColumns: `repeat(${month.weeks}, 44px)`,
+                      }}
+                    >
+                      {month.cells.map((date, i) =>
+                        date ? (
+                          renderDay(date, true)
+                        ) : (
+                          <span key={`blank-${i}`} />
+                        ),
+                      )}
+                    </div>
                   </div>
                 </div>
               </section>

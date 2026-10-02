@@ -12,7 +12,7 @@ export function activityMonth(offset: number, today = "2026-10-02") {
     Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0),
   ).getUTCDate();
   const leading = (start.getUTCDay() + 6) % 7;
-  const weeks = Math.ceil((leading + length) / 7);
+  const weeks = 6;
   const cells = Array.from({ length: weeks * 7 }, (_, index) => {
     const day = index - leading + 1;
     return day < 1 || day > length

@@ -19,6 +19,8 @@
     "packages/flutter/k_design_ui/lib/src/patterns/k_calendar_pointer_drag.dart|motion|: const Duration(milliseconds: 500),": 1,
     "packages/flutter/k_design_ui/lib/src/patterns/k_calendar.dart|motion|_autoScroll ??= Timer.periodic(const Duration(milliseconds: 30), (_) {": 1,
     "packages/flutter/k_design_ui/lib/src/patterns/k_kanban.dart|motion|static const _tick = Duration(milliseconds: 16);": 1,
+    "packages/web/ui/src/activity.css|dimension|max-width: calc(6 * 44px + 5 * var(--k-space-control-inset-inline));": 1,
+    "packages/web/ui/src/activity.css|dimension|min-width: calc(6 * 44px + 5 * var(--k-space-control-gap));": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|appearance|border-radius: 2px;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|appearance|opacity: 0.65;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 14px;": 1,

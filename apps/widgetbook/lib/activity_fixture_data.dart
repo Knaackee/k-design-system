@@ -57,15 +57,3 @@ final activityIssues = List.generate(140, (i) {
         : null,
   );
 });
-
-List<DateTime?> activityMonthCells(int offset) {
-  final start = DateTime.utc(2026, 10 + offset);
-  final leading = start.weekday - 1;
-  final length = DateTime.utc(start.year, start.month + 1, 0).day;
-  return List.generate(
-    ((leading + length) / 7).ceil() * 7,
-    (i) => i < leading || i >= leading + length
-        ? null
-        : DateTime.utc(start.year, start.month, i - leading + 1),
-  );
-}
