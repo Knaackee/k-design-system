@@ -49,6 +49,7 @@ import 'theme_switcher_fixture.dart';
 import 'user_menu_fixture.dart';
 import 'notification_fixture.dart';
 import 'orbit_fixture.dart';
+import 'activity_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -845,6 +846,23 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'questionnaire-steps',
                   builder: (_) =>
                       const ExtendedComponentFixture(kind: 'questionnaire'),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Activity',
+              children: [
+                WidgetbookUseCase(
+                  name: 'activity-completed',
+                  builder: (_) => const ActivityFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'activity-phone',
+                  builder: (_) => const ActivityFixture(phone: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'activity-empty',
+                  builder: (_) => const ActivityFixture(empty: true),
                 ),
               ],
             ),

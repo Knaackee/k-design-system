@@ -438,3 +438,9 @@ export type {
 } from "./data-display/orbit/orbit-model.js";
 export { KTextarea } from "./forms/textarea.js";
 export type { KTextareaProps } from "./forms/textarea.js";
+
+export { KActivityHeatmap } from "./data-display/activity-heatmap.js";
+export type {
+  KActivityHeatmapProps,
+  KActivityItem,
+} from "./data-display/activity-heatmap.js";
