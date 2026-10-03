@@ -1,3 +1,5 @@
+import 'dictation_anchor.dart';
+import 'k_dictation_action.dart';
 import '../localization/k_localization.dart';
 import 'dart:ui' show SemanticsValidationResult;
 import 'dart:math' as math;
@@ -22,6 +24,8 @@ class KInput extends StatefulWidget {
     this.clearable = false,
     this.clearLabel,
     this.trailingAction,
+    this.dictationState,
+    this.dictationOffset,
     super.key,
   });
   final TextEditingController? controller;
@@ -41,6 +45,10 @@ class KInput extends StatefulWidget {
 
   /// An end action, hidden for disabled, read-only or concealed input.
   final Widget? trailingAction;
+  final KDictationState? dictationState;
+
+  /// Saved UTF-16 insertion offset; defaults to the current caret.
+  final int? dictationOffset;
   Widget? prefix(BuildContext context) => null;
   @override
   State<KInput> createState() => _KInputState();
@@ -113,63 +121,70 @@ class _KInputState extends State<KInput> {
             )
           : null,
     );
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        KFormClearOverlay(
-          right: action != null
-              ? actionWidth + t.borderWidthDefault
-              : t.borderWidthDefault,
-          label: widget.clearLabel ?? KLocalization.of(context).text('clear'),
-          onPressed: canClear
-              ? () {
-                  _controller.clear();
-                  widget.onChanged?.call('');
-                  restoreFormFocus(_focus, () => mounted);
-                }
-              : null,
-          child: Semantics(
-            label: widget.label ?? field?.label,
-            hint: field?.helperText,
-            isRequired: field?.required,
-            validationResult: field?.invalid == true
-                ? SemanticsValidationResult.invalid
-                : SemanticsValidationResult.none,
-            child: Opacity(
-              opacity: widget.enabled ? 1 : .48,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: math.max(t.sizeControl, t.sizeHitTarget),
-                ),
-                child: Center(
-                  heightFactor: 1,
-                  child: TextField(
-                    controller: _controller,
-                    focusNode: _focus,
-                    onChanged: widget.onChanged,
-                    onSubmitted: widget.onSubmitted,
-                    autofocus: widget.autofocus,
-                    enabled: widget.enabled,
-                    readOnly: widget.readOnly,
-                    obscureText: widget.obscureText,
-                    autocorrect: !widget.obscureText,
-                    enableSuggestions: !widget.obscureText,
-                    textAlignVertical: formInputAlignment(appearance),
-                    style: formTextStyle(context),
-                    cursorColor: t.colorBorderFocus,
-                    decoration: appearance,
+    return KDictationFieldOverlay(
+      controller: _controller,
+      state: widget.enabled && !widget.readOnly && !widget.obscureText
+          ? widget.dictationState
+          : null,
+      offset: widget.dictationOffset,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          KFormClearOverlay(
+            right: action != null
+                ? actionWidth + t.borderWidthDefault
+                : t.borderWidthDefault,
+            label: widget.clearLabel ?? KLocalization.of(context).text('clear'),
+            onPressed: canClear
+                ? () {
+                    _controller.clear();
+                    widget.onChanged?.call('');
+                    restoreFormFocus(_focus, () => mounted);
+                  }
+                : null,
+            child: Semantics(
+              label: widget.label ?? field?.label,
+              hint: field?.helperText,
+              isRequired: field?.required,
+              validationResult: field?.invalid == true
+                  ? SemanticsValidationResult.invalid
+                  : SemanticsValidationResult.none,
+              child: Opacity(
+                opacity: widget.enabled ? 1 : .48,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: math.max(t.sizeControl, t.sizeHitTarget),
+                  ),
+                  child: Center(
+                    heightFactor: 1,
+                    child: TextField(
+                      controller: _controller,
+                      focusNode: _focus,
+                      onChanged: widget.onChanged,
+                      onSubmitted: widget.onSubmitted,
+                      autofocus: widget.autofocus,
+                      enabled: widget.enabled,
+                      readOnly: widget.readOnly,
+                      obscureText: widget.obscureText,
+                      autocorrect: !widget.obscureText,
+                      enableSuggestions: !widget.obscureText,
+                      textAlignVertical: formInputAlignment(appearance),
+                      style: formTextStyle(context),
+                      cursorColor: t.colorBorderFocus,
+                      decoration: appearance,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        if (action != null)
-          Positioned(
-            right: t.borderWidthDefault,
-            child: TextFieldTapRegion(child: action),
-          ),
-      ],
+          if (action != null)
+            Positioned(
+              right: t.borderWidthDefault,
+              child: TextFieldTapRegion(child: action),
+            ),
+        ],
+      ),
     );
   }
 }

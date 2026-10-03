@@ -15,6 +15,7 @@ class KEditorFormatBar extends StatelessWidget {
     this.activeActions = const <KMarkdownFormatAction>{},
     this.floating = false,
     this.minimumItemExtent,
+    this.trailingAction,
     super.key,
   });
 
@@ -23,6 +24,9 @@ class KEditorFormatBar extends StatelessWidget {
   final Set<KMarkdownFormatAction> activeActions;
   final ValueChanged<KMarkdownFormatAction> onAction;
   final bool floating;
+
+  /// Final action inside the bar, kept visible after the scrollable formatting actions.
+  final Widget? trailingAction;
 
   /// Minimum visual and interactive size of each formatting action.
   ///
@@ -82,47 +86,64 @@ class KEditorFormatBar extends StatelessWidget {
         ),
         child: SizedBox(
           height: itemExtent,
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(
-              dragDevices: const {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.stylus,
-                PointerDeviceKind.trackpad,
-              },
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const ClampingScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: t.spaceTight),
-              child: Row(
-                children: [
-                  for (final action in actions)
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: t.spaceHairline,
-                      ),
-                      child: Tooltip(
-                        message: _label(action),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minWidth: itemExtent,
-                            minHeight: itemExtent,
+          child: Row(
+            children: [
+              Expanded(
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: const {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.stylus,
+                      PointerDeviceKind.trackpad,
+                    },
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(horizontal: t.spaceTight),
+                    child: Row(
+                      children: [
+                        for (final action in actions)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: t.spaceHairline,
+                            ),
+                            child: Tooltip(
+                              message: _label(action),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minWidth: itemExtent,
+                                  minHeight: itemExtent,
+                                ),
+                                child: KButton(
+                                  label: _glyphs[action]!,
+                                  variant: activeActions.contains(action)
+                                      ? KButtonVariant.primary
+                                      : KButtonVariant.ghost,
+                                  paddingInline: 0,
+                                  onPressed: () => onAction(action),
+                                ),
+                              ),
+                            ),
                           ),
-                          child: KButton(
-                            label: _glyphs[action]!,
-                            variant: activeActions.contains(action)
-                                ? KButtonVariant.primary
-                                : KButtonVariant.ghost,
-                            paddingInline: 0,
-                            onPressed: () => onAction(action),
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
-                ],
+                  ),
+                ),
               ),
-            ),
+              if (trailingAction != null)
+                Padding(
+                  padding: EdgeInsetsDirectional.only(end: t.spaceTight),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: itemExtent,
+                      minHeight: itemExtent,
+                    ),
+                    child: trailingAction!,
+                  ),
+                ),
+            ],
           ),
         ),
       ),

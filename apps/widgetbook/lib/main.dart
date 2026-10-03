@@ -41,6 +41,7 @@ import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
 import 'agent_ui_fixtures.dart';
+import 'chat_composer_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
 import 'editor_fixtures.dart';
@@ -571,12 +572,21 @@ class KDesignWidgetbook extends StatelessWidget {
               children: [
                 WidgetbookUseCase(
                   name: 'markdown',
-                  builder: (_) => const EditorFixture(markdown: true),
+                  builder: (_) =>
+                      const EditorFixture(markdown: true, dictation: true),
                 ),
                 WidgetbookUseCase(
                   name: 'markdown-mobile',
+                  builder: (_) => const EditorFixture(
+                    markdown: true,
+                    mobile: true,
+                    dictation: true,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'markdown-editor-dictation',
                   builder: (_) =>
-                      const EditorFixture(markdown: true, mobile: true),
+                      const EditorFixture(markdown: true, dictation: true),
                 ),
                 WidgetbookUseCase(
                   name: 'code',
@@ -763,6 +773,14 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'AgentUI',
               children: [
+                WidgetbookUseCase(
+                  name: 'chat-composer-controls',
+                  builder: (_) => const ChatComposerFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'chat-composer-mobile',
+                  builder: (_) => const ChatComposerFixture(mobile: true),
+                ),
                 WidgetbookUseCase(
                   name: 'agent-ui-conversation',
                   builder: (_) => const AgentUiFixture(),

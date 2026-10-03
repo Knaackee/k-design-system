@@ -12,6 +12,7 @@ import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import 'k_editor_search_panel.dart';
 import 'k_editor_types.dart';
+import 'k_markdown_dictation_overlay.dart';
 
 class KCodeEditor extends StatefulWidget {
   const KCodeEditor({
@@ -315,6 +316,7 @@ class KCodeEditorState extends State<KCodeEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final markdownGeometry = KMarkdownSourceGeometry.of(context);
     final t =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
@@ -344,6 +346,7 @@ class KCodeEditorState extends State<KCodeEditor> {
                     Positioned.fill(
                       child: _withAutocomplete(
                         CodeEditor(
+                          scrollController: markdownGeometry?.scrollController,
                           controller: _controller,
                           findController: _findController,
                           focusNode: _focusNode,
@@ -388,7 +391,10 @@ class KCodeEditorState extends State<KCodeEditor> {
                                         fontSize: t.fontCaptionSize,
                                       ),
                                     )
-                              : null,
+                              : markdownGeometry == null
+                              ? null
+                              : (context, editing, chunk, notifier) =>
+                                    markdownGeometry.capture(notifier),
                           leadingDivider: widget.showLineNumbers
                               ? VerticalDivider(
                                   width: t.spaceSmallInset,

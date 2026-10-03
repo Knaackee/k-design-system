@@ -20,6 +20,47 @@
   position: relative;
 }
 
+.k-markdown-editor-rich {
+  position: relative;
+}
+
+.k-editor-format-bar[data-has-trailing-action="true"] {
+  overflow: visible;
+}
+.k-editor-format-actions {
+  display: flex;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+.k-editor-format-bar > .k-dictation-action {
+  flex: none;
+}
+.k-markdown-editor-dictation {
+  order: 2;
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: var(--k-space-small-inset);
+  display: flex;
+  justify-content: flex-end;
+  padding-inline: var(--k-space-small-inset);
+}
+
+.k-markdown-editor-dictation > .k-editor-format-bar {
+  width: 100%;
+  max-width: 100%;
+}
+
+.k-editor-format-actions > .k-button-target {
+  flex: 0 0 auto;
+}
+.k-editor-format-bar[data-has-trailing-action="true"] > .k-button-target {
+  flex: 0 0 auto;
+}
+
 .k-code-editor {
   position: relative;
 }

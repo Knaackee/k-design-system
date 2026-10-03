@@ -5,6 +5,178 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets(
+    'dictation is the final bottom format action on compact and wide editors',
+    (tester) async {
+      for (final width in [420.0, 700.0]) {
+        for (final showFixedToolbar in [true, false]) {
+          await tester.pumpWidget(
+            _Shell(
+              width: width,
+              child: KMarkdownEditor(
+                markdown: 'alpha beta',
+                showFixedToolbar: showFixedToolbar,
+                dictationState: KDictationState.ready,
+                onDictationPressed: () {},
+              ),
+            ),
+          );
+          final bar = tester.widget<KEditorFormatBar>(
+            find.byType(KEditorFormatBar),
+          );
+          expect(bar.trailingAction, isA<KDictationAction>());
+          expect(
+            bar.actions,
+            showFixedToolbar ? kDefaultMarkdownFormatActions : isEmpty,
+          );
+          expect(find.byType(KDictationAction), findsOneWidget);
+          expect(
+            tester.getTopLeft(find.byType(KEditorFormatBar)).dy,
+            greaterThanOrEqualTo(
+              tester.getBottomLeft(find.byType(KCodeEditor)).dy,
+            ),
+          );
+          final source = tester.state<KCodeEditorState>(
+            find.byType(KCodeEditor),
+          );
+          source.replaceRange(
+            0,
+            0,
+            '',
+            selection: const KEditorSelection(anchor: 0, head: 5),
+          );
+          await tester.pump();
+          final bars = tester.widgetList<KEditorFormatBar>(
+            find.byType(KEditorFormatBar),
+          );
+          expect(bars, hasLength(2));
+          expect(bars.where((bar) => bar.trailingAction != null), hasLength(1));
+          expect(find.byType(KDictationAction), findsOneWidget);
+          FocusManager.instance.primaryFocus?.unfocus();
+          await tester.pump(const Duration(milliseconds: 120));
+          await tester.pumpWidget(const SizedBox.shrink());
+        }
+      }
+    },
+  );
+
+  testWidgets(
+    'markdown dictation saves its insertion point before caret moves',
+    (tester) async {
+      final key = GlobalKey<KMarkdownEditorState>();
+      var dictation = KDictationState.ready;
+      String? changed;
+      await tester.pumpWidget(
+        _Shell(
+          child: StatefulBuilder(
+            builder: (context, setState) => KMarkdownEditor(
+              key: key,
+              markdown: 'alpha beta',
+              dictationState: dictation,
+              onDictationPressed: () =>
+                  setState(() => dictation = KDictationState.recording),
+              onChanged: (value, _) => changed = value,
+            ),
+          ),
+        ),
+      );
+      final source = tester.state<KCodeEditorState>(find.byType(KCodeEditor));
+      source.replaceRange(6, 6, '');
+      await tester.pump();
+      await tester.tap(find.byTooltip('Dictate'));
+      await tester.pump();
+      source.replaceRange(0, 0, '');
+      await tester.pump();
+      key.currentState!.insertDictation('voice ');
+      await tester.pump();
+      expect(changed, 'alpha voice beta');
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump(const Duration(milliseconds: 120));
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'markdown dictation stays visual and inserts with undo and collaboration',
+    (tester) async {
+      final key = GlobalKey<KMarkdownEditorState>();
+      final adapter = _TestAdapter('alpha beta');
+      var state = KDictationState.ready;
+      late StateSetter update;
+      await tester.pumpWidget(
+        _Shell(
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              update = setState;
+              return KMarkdownEditor(
+                key: key,
+                markdown: '',
+                collaborationAdapter: adapter,
+                dictationState: state,
+                dictationOffset: 6,
+                onDictationPressed: () =>
+                    setState(() => state = KDictationState.recording),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.tap(find.byTooltip('Dictate'));
+      await tester.pump();
+      await tester.pump();
+      expect(find.byType(KDictationAnchor), findsOneWidget);
+      expect(adapter.localTransactions, isEmpty);
+      expect(
+        tester.state<KCodeEditorState>(find.byType(KCodeEditor)).value,
+        'alpha beta',
+      );
+      update(() => state = KDictationState.processing);
+      await tester.pump();
+      expect(find.byType(KDictationAnchor), findsOneWidget);
+      key.currentState!.insertDictation(
+        'voice ',
+        selection: const KEditorSelection(anchor: 6, head: 6),
+      );
+      update(() => state = KDictationState.ready);
+      await tester.pump();
+      expect(adapter.localTransactions.last.value, 'alpha voice beta');
+      expect(find.byType(KDictationAnchor), findsNothing);
+      await tester.tap(find.byTooltip('Undo'));
+      await tester.pump();
+      expect(adapter.localTransactions.last.value, 'alpha beta');
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump(const Duration(milliseconds: 120));
+      await tester.pumpWidget(const SizedBox.shrink());
+      adapter.dispose();
+    },
+  );
+
+  testWidgets('read and read-only markdown suppress dictation', (tester) async {
+    for (final mode in [KEditorMode.source, KEditorMode.read]) {
+      final key = GlobalKey<KMarkdownEditorState>();
+      final changes = <String>[];
+      await tester.pumpWidget(
+        _Shell(
+          child: KMarkdownEditor(
+            key: key,
+            markdown: 'alpha',
+            mode: mode,
+            readOnly: mode == KEditorMode.source,
+            dictationState: KDictationState.recording,
+            onDictationPressed: () {},
+            onChanged: (value, _) => changes.add(value),
+          ),
+        ),
+      );
+      key.currentState!.insertDictation('voice');
+      await tester.pump();
+      expect(find.byType(KDictationAction), findsNothing);
+      expect(find.byType(KDictationAnchor), findsNothing);
+      expect(changes, isEmpty);
+    }
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   testWidgets('code editor emits local transactions and accepts remote state', (
     tester,
   ) async {
@@ -156,13 +328,16 @@ void main() {
 }
 
 class _Shell extends StatelessWidget {
-  const _Shell({required this.child});
+  const _Shell({required this.child, this.width = 420});
   final Widget child;
+  final double width;
 
   @override
   Widget build(BuildContext context) => MaterialApp(
     theme: kDesignTheme(),
-    home: Scaffold(body: SizedBox(width: 420, height: 600, child: child)),
+    home: Scaffold(
+      body: SizedBox(width: width, height: 600, child: child),
+    ),
   );
 }
 
@@ -179,7 +354,13 @@ class _TestAdapter implements KEditorCollaborationAdapter {
   @override
   void applyLocalTransaction(KEditorTransaction transaction) {
     localTransactions.add(transaction);
+    _snapshot.value = KEditorCollaborationSnapshot(
+      value: transaction.value,
+      selection: transaction.selection,
+    );
   }
+
+  void dispose() => _snapshot.dispose();
 
   void remote(String value) {
     _snapshot.value = KEditorCollaborationSnapshot(

@@ -1,5 +1,7 @@
 import { useKLocalization } from "../localization/provider.js";
 import {
+  forwardRef,
+  useImperativeHandle,
   useEffect,
   useRef,
   useState,
@@ -9,31 +11,42 @@ import {
 import { KIcon } from "../primitives/icon.js";
 import { useField } from "./field.js";
 import { ClearButton } from "./clear-button.js";
+import { KDictationState } from "./dictation-action.js";
+import { KDictationFieldAnchor } from "./dictation-anchor.js";
 export interface KInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size"
 > {
   /** An end action, hidden for disabled, read-only or password input. */
   trailingAction?: ReactNode;
+  dictationState?: KDictationState;
+  /** Saved UTF-16 insertion offset; defaults to the current caret. */
+  dictationOffset?: number;
   clearable?: boolean;
   clearLabel?: string;
   /** Update the application value when a controlled input is cleared. */
   onClear?: () => void;
 }
-export function KInput({
-  className = "",
-  clearable = false,
-  clearLabel,
-  onClear,
-  trailingAction,
-  value,
-  defaultValue,
-  onChange,
-  ...props
-}: KInputProps) {
+export const KInput = forwardRef<HTMLInputElement, KInputProps>(function KInput(
+  {
+    className = "",
+    clearable = false,
+    clearLabel,
+    onClear,
+    trailingAction,
+    dictationState,
+    dictationOffset,
+    value,
+    defaultValue,
+    onChange,
+    ...props
+  }: KInputProps,
+  ref,
+) {
   const { messages } = useKLocalization();
   const field = useField();
   const input = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => input.current!, []);
   const [localValue, setLocalValue] = useState(defaultValue ?? "");
   useEffect(() => {
     const form = input.current?.form;
@@ -53,6 +66,12 @@ export function KInput({
     !props.disabled && !props.readOnly && props.type !== "password"
       ? trailingAction
       : null;
+  const showAnchor =
+    !props.disabled &&
+    !props.readOnly &&
+    props.type !== "password" &&
+    (dictationState === KDictationState.recording ||
+      dictationState === KDictationState.processing);
   return (
     <span
       className="k-input-target k-input-clearable"
@@ -74,6 +93,13 @@ export function KInput({
         }}
         className={`k-input ${className}`}
       />
+      {showAnchor && (
+        <KDictationFieldAnchor
+          target={input}
+          offset={dictationOffset}
+          state={dictationState!}
+        />
+      )}
       {action && <span className="k-input-trailing-action">{action}</span>}
       {canClear && (
         <ClearButton
@@ -88,7 +114,7 @@ export function KInput({
       )}
     </span>
   );
-}
+});
 export function KSearchField(props: KInputProps) {
   return (
     <span className="k-search-field">

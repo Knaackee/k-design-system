@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import 'package:re_editor/re_editor.dart';
 
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
+import '../forms/k_dictation_action.dart';
 import 'k_code_editor.dart';
 import 'k_editor_format_bar.dart';
 import 'k_editor_types.dart';
+import 'k_markdown_dictation_overlay.dart';
+import 'k_markdown_source_formatting.dart';
 
 typedef KEditorLinkRequest =
     Future<String?> Function(KEditorSelection selection);
@@ -32,6 +36,10 @@ class KMarkdownEditor extends StatefulWidget {
     this.onLinkRequested,
     this.minHeight = 280,
     this.formatBarMinimumItemExtent,
+    this.dictationState,
+    this.dictationOffset,
+    this.dictationLabel = 'Dictate',
+    this.onDictationPressed,
     super.key,
   });
 
@@ -58,12 +66,23 @@ class KMarkdownEditor extends StatefulWidget {
   /// format bar resolves a density- and input-mode-aware value from tokens.
   final double? formatBarMinimumItemExtent;
 
+  /// Consumer-owned speech state. Omit to hide the dictation action.
+  final KDictationState? dictationState;
+
+  /// Saved insertion offset, which a collaboration host can map after edits.
+  final int? dictationOffset;
+  final String dictationLabel;
+  final VoidCallback? onDictationPressed;
+
   @override
-  State<KMarkdownEditor> createState() => _KMarkdownEditorState();
+  State<KMarkdownEditor> createState() => KMarkdownEditorState();
 }
 
-class _KMarkdownEditorState extends State<KMarkdownEditor> {
+class KMarkdownEditorState extends State<KMarkdownEditor> {
   final _editorKey = GlobalKey<KCodeEditorState>();
+  final _scrollController = CodeScrollController();
+  final _paragraphs = ValueNotifier<CodeIndicatorValue?>(null);
+  KEditorSelection? _dictationSelection;
   late KEditorMode _internalMode;
   late String _draft;
   KEditorSelection _selection = const KEditorSelection(anchor: 0, head: 0);
@@ -71,6 +90,24 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
   KEditorMode get _mode => widget.mode ?? _internalMode;
   String get _effectiveDraft =>
       widget.collaborationAdapter?.snapshot.value.value ?? _draft;
+
+  KEditorSelection get selection => _selection;
+
+  /// Inserts a completed result through the source editor's undo/CRDT path.
+  /// A collaborative host can supply its mapped saved selection.
+  void insertDictation(String text, {KEditorSelection? selection}) {
+    if (widget.readOnly || _mode != KEditorMode.source || text.isEmpty) return;
+    final target = selection ?? _dictationSelection ?? _selection;
+    _editorKey.currentState?.replaceRange(target.start, target.end, text);
+    _dictationSelection = null;
+  }
+
+  void _dictate() {
+    if (widget.dictationState != KDictationState.recording) {
+      _dictationSelection = _selection;
+    }
+    widget.onDictationPressed?.call();
+  }
 
   @override
   void initState() {
@@ -97,6 +134,10 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
   @override
   void dispose() {
     widget.collaborationAdapter?.snapshot.removeListener(_handleCollaboration);
+    _scrollController.verticalScroller.dispose();
+    _scrollController.horizontalScroller.dispose();
+    _scrollController.dispose();
+    _paragraphs.dispose();
     super.dispose();
   }
 
@@ -136,7 +177,7 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
           : await widget.onLinkRequested!.call(_selection);
       if (!mounted || href == null) return;
     }
-    final change = _markdownChange(
+    final change = kMarkdownSourceChange(
       _effectiveDraft,
       _selection,
       action,
@@ -167,7 +208,8 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
                   if (widget.showFixedToolbar &&
                       editing &&
                       !widget.readOnly &&
-                      !compact)
+                      !compact &&
+                      widget.dictationState == null)
                     DecoratedBox(
                       decoration: BoxDecoration(
                         color: t.colorSurfaceRaised,
@@ -184,25 +226,57 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
                     ),
                   Expanded(
                     child: editing
-                        ? KCodeEditor(
-                            key: _editorKey,
-                            value: _effectiveDraft,
-                            onChanged: _changeSource,
-                            onSelectionChanged: _updateSelection,
-                            language: KCodeLanguage.markdown,
-                            readOnly: widget.readOnly,
-                            placeholder: widget.placeholder,
-                            showLineNumbers: false,
-                            lineWrapping: true,
-                            showSearchButton: true,
-                            searchButtonEndInset: widget.showModeSwitcher
-                                ? t.sizeHitTarget + t.spaceControlGap * 2
-                                : null,
-                            labels: widget.labels,
-                            remoteSelections: widget.remoteSelections,
-                            collaborationAdapter: widget.collaborationAdapter,
-                            semanticLabel: widget.semanticLabel,
-                            minHeight: widget.minHeight,
+                        ? KMarkdownSourceGeometry(
+                            scrollController: _scrollController,
+                            paragraphs: _paragraphs,
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: KCodeEditor(
+                                    key: _editorKey,
+                                    value: _effectiveDraft,
+                                    onChanged: _changeSource,
+                                    onSelectionChanged: _updateSelection,
+                                    language: KCodeLanguage.markdown,
+                                    readOnly: widget.readOnly,
+                                    placeholder: widget.placeholder,
+                                    showLineNumbers: false,
+                                    lineWrapping: true,
+                                    showSearchButton: true,
+                                    searchButtonEndInset:
+                                        widget.showModeSwitcher
+                                        ? t.sizeHitTarget +
+                                              t.spaceControlGap * 2
+                                        : null,
+                                    labels: widget.labels,
+                                    remoteSelections: widget.remoteSelections,
+                                    collaborationAdapter:
+                                        widget.collaborationAdapter,
+                                    semanticLabel: widget.semanticLabel,
+                                    minHeight: widget.minHeight,
+                                  ),
+                                ),
+                                if (!widget.readOnly &&
+                                    (widget.dictationState ==
+                                            KDictationState.recording ||
+                                        widget.dictationState ==
+                                            KDictationState.processing))
+                                  Positioned.fill(
+                                    child: IgnorePointer(
+                                      child: KMarkdownDictationOverlay(
+                                        scrollController: _scrollController,
+                                        paragraphs: _paragraphs,
+                                        source: _effectiveDraft,
+                                        offset:
+                                            widget.dictationOffset ??
+                                            _dictationSelection?.start ??
+                                            _selection.start,
+                                        state: widget.dictationState!,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           )
                         : _MarkdownPreview(
                             markdown: _effectiveDraft,
@@ -212,10 +286,11 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
                                 : t.spaceMediumInset,
                           ),
                   ),
-                  if (widget.showFixedToolbar &&
+                  if ((widget.showFixedToolbar ||
+                          widget.dictationState != null) &&
                       editing &&
                       !widget.readOnly &&
-                      compact)
+                      (compact || widget.dictationState != null))
                     SafeArea(
                       top: false,
                       child: Padding(
@@ -227,10 +302,21 @@ class _KMarkdownEditorState extends State<KMarkdownEditor> {
                         ),
                         child: KEditorFormatBar(
                           labels: widget.labels,
-                          actions: widget.formatActions,
+                          actions: widget.showFixedToolbar
+                              ? widget.formatActions
+                              : const [],
                           onAction: _applyFormat,
                           floating: true,
                           minimumItemExtent: widget.formatBarMinimumItemExtent,
+                          trailingAction: widget.dictationState == null
+                              ? null
+                              : KDictationAction(
+                                  state: widget.dictationState!,
+                                  label: widget.dictationLabel,
+                                  onPressed: widget.onDictationPressed == null
+                                      ? null
+                                      : _dictate,
+                                ),
                         ),
                       ),
                     ),
@@ -353,103 +439,3 @@ class _MarkdownPreview extends StatelessWidget {
     );
   }
 }
-
-class _MarkdownChange {
-  const _MarkdownChange({
-    required this.from,
-    required this.to,
-    required this.insert,
-    required this.selection,
-  });
-
-  final int from;
-  final int to;
-  final String insert;
-  final KEditorSelection selection;
-}
-
-_MarkdownChange _wrap(
-  String source,
-  KEditorSelection selection,
-  String before, [
-  String? after,
-]) {
-  final selected = source.substring(selection.start, selection.end);
-  final suffix = after ?? before;
-  return _MarkdownChange(
-    from: selection.start,
-    to: selection.end,
-    insert: '$before$selected$suffix',
-    selection: KEditorSelection(
-      anchor: selection.start + before.length,
-      head: selection.start + before.length + selected.length,
-    ),
-  );
-}
-
-_MarkdownChange _prefixLines(
-  String source,
-  KEditorSelection selection,
-  String Function(int index) prefix,
-) {
-  final lineStart = source.lastIndexOf('\n', selection.start - 1) + 1;
-  final nextBreak = source.indexOf('\n', selection.end);
-  final lineEnd = nextBreak < 0 ? source.length : nextBreak;
-  final insert = source
-      .substring(lineStart, lineEnd)
-      .split('\n')
-      .indexed
-      .map((entry) => '${prefix(entry.$1)}${entry.$2}')
-      .join('\n');
-  return _MarkdownChange(
-    from: lineStart,
-    to: lineEnd,
-    insert: insert,
-    selection: KEditorSelection(
-      anchor: lineStart,
-      head: lineStart + insert.length,
-    ),
-  );
-}
-
-_MarkdownChange _markdownChange(
-  String source,
-  KEditorSelection selection,
-  KMarkdownFormatAction action, {
-  String? href,
-}) => switch (action) {
-  KMarkdownFormatAction.undo || KMarkdownFormatAction.redo => throw StateError(
-    'History actions are handled by the editor controller.',
-  ),
-  KMarkdownFormatAction.bold => _wrap(source, selection, '**'),
-  KMarkdownFormatAction.italic => _wrap(source, selection, '_'),
-  KMarkdownFormatAction.strike => _wrap(source, selection, '~~'),
-  KMarkdownFormatAction.code => _wrap(source, selection, '`'),
-  KMarkdownFormatAction.link => _MarkdownChange(
-    from: selection.start,
-    to: selection.end,
-    insert:
-        '[${source.substring(selection.start, selection.end)}](${href ?? 'https://'})',
-    selection: KEditorSelection(
-      anchor: selection.start + 1,
-      head: selection.end + 1,
-    ),
-  ),
-  KMarkdownFormatAction.bulletList => _prefixLines(
-    source,
-    selection,
-    (_) => '- ',
-  ),
-  KMarkdownFormatAction.orderedList => _prefixLines(
-    source,
-    selection,
-    (index) => '${index + 1}. ',
-  ),
-  KMarkdownFormatAction.taskList => _prefixLines(
-    source,
-    selection,
-    (_) => '- [ ] ',
-  ),
-  KMarkdownFormatAction.quote => _prefixLines(source, selection, (_) => '> '),
-  KMarkdownFormatAction.codeBlock => _wrap(source, selection, '```\n', '\n```'),
-};

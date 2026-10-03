@@ -41,6 +41,8 @@ class _DictationFixtureState extends State<DictationFixture> {
               label: 'Title',
               child: KInput(
                 controller: title,
+                dictationState: state,
+                dictationOffset: 8,
                 clearable: true,
                 trailingAction: action,
               ),
@@ -48,6 +50,8 @@ class _DictationFixtureState extends State<DictationFixture> {
             KField(
               label: 'Notes',
               child: KTextarea(
+                dictationState: state,
+                dictationOffset: 0,
                 placeholder: 'Describe the next steps…',
                 trailingAction: action,
               ),
@@ -56,6 +60,8 @@ class _DictationFixtureState extends State<DictationFixture> {
               KField(
                 label: status.name,
                 child: KInput(
+                  dictationState: status,
+                  dictationOffset: 0,
                   trailingAction: KDictationAction(
                     state: status,
                     label: 'Dictation ${status.name}',

@@ -111,4 +111,48 @@ void main() {
       );
     },
   );
+  testWidgets('saved-caret dots follow the offset without modifying text', (
+    tester,
+  ) async {
+    final controller = TextEditingController(text: 'Inspect roof');
+    addTearDown(controller.dispose);
+    Future<void> show(int offset, {bool readOnly = false}) async {
+      await tester.pumpWidget(
+        screen(
+          KInput(
+            controller: controller,
+            dictationState: KDictationState.recording,
+            dictationOffset: offset,
+            readOnly: readOnly,
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    await show(0);
+    expect(find.byType(KDictationAnchor), findsOneWidget);
+    final start = tester.getTopLeft(find.byType(KDictationAnchor));
+    await show(8);
+    expect(
+      tester.getTopLeft(find.byType(KDictationAnchor)).dx,
+      greaterThan(start.dx),
+    );
+    expect(controller.text, 'Inspect roof');
+    expect(controller.selection.baseOffset, -1);
+    await show(8, readOnly: true);
+    expect(find.byType(KDictationAnchor), findsNothing);
+    await tester.pumpWidget(
+      screen(
+        KTextarea(
+          controller: controller,
+          dictationState: KDictationState.processing,
+          dictationOffset: 8,
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(find.byType(KDictationAnchor), findsOneWidget);
+    expect(controller.text, 'Inspect roof');
+  });
 }

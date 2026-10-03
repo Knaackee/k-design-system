@@ -111,4 +111,79 @@ void main() {
     expect(attachmentRequests, 1);
     expect(voiceRequests, 1);
   });
+  testWidgets('composer places voice beside primary Send at mobile width', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: Align(
+            alignment: Alignment.topCenter,
+            child: KChatComposer(
+              value: 'Draft',
+              onValueChanged: (_) {},
+              onSubmit: (_) {},
+              onAttach: () {},
+              onVoiceInput: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+    final attach = find.byTooltip('Attach files');
+    final voice = find.byTooltip('Start voice input');
+    final send = find.byTooltip('Send message');
+    final t = KDesignTokens.orbitLight;
+    expect(tester.getRect(attach).right, lessThan(tester.getRect(voice).left));
+    expect(
+      tester.getRect(send).left - tester.getRect(voice).right,
+      closeTo(t.spaceControlGap, 0.01),
+    );
+    expect(tester.getRect(voice).left, greaterThan(180));
+    final sendButton = tester.widget<KIconButton>(
+      find.ancestor(of: send, matching: find.byType(KIconButton)),
+    );
+    expect(sendButton.selected, isTrue);
+    expect(sendButton.icon, KIconName.arrowUp);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('disabled composer prevents voice activation', (tester) async {
+    var calls = 0;
+    await mount(
+      tester,
+      Align(
+        alignment: Alignment.topCenter,
+        child: KChatComposer(
+          value: 'Draft',
+          disabled: true,
+          onValueChanged: (_) {},
+          onSubmit: (_) {},
+          onVoiceInput: () => calls++,
+        ),
+      ),
+    );
+    await tester.tap(find.byTooltip('Start voice input'));
+    expect(calls, 0);
+  });
+
+  testWidgets('active voice can stop while the composer is disabled', (tester) async {
+    var calls = 0;
+    await mount(tester, Align(alignment: Alignment.topCenter, child: KChatComposer(
+      value: 'Draft', disabled: true, voiceActive: true,
+      onValueChanged: (_) {}, onSubmit: (_) {}, onVoiceInput: () => calls++,
+    )));
+    expect(tester.widget<TextField>(find.byType(TextField)).enabled, isFalse);
+    await tester.tap(find.byTooltip('Stop voice input'));
+    expect(calls, 1);
+    final sendButton = tester.widget<KIconButton>(find.ancestor(
+      of: find.byTooltip('Send message'), matching: find.byType(KIconButton)));
+    expect(sendButton.onPressed, isNull);
+  });
+
 }

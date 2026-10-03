@@ -6,6 +6,7 @@ import { KInput } from "../dist/forms/input.js";
 import { KTextarea } from "../dist/forms/textarea.js";
 import {
   KDictationAction,
+  KDictationAnchor,
   KDictationState,
 } from "../dist/forms/dictation-action.js";
 
@@ -65,6 +66,52 @@ test("textarea keeps form attributes and gates the bottom action", () => {
     assert.doesNotMatch(
       renderToStaticMarkup(h(KTextarea, { ...lock, trailingAction: action() })),
       /Dictate notes/,
+    );
+  }
+});
+
+test("saved-caret feedback is decorative and never becomes input text", () => {
+  for (const state of Object.values(KDictationState)) {
+    const active = state === "recording" || state === "processing";
+    for (const Field of [KInput, KTextarea]) {
+      const html = renderToStaticMarkup(
+        h(Field, {
+          defaultValue: "Keep this",
+          dictationState: state,
+          dictationOffset: 4,
+        }),
+      );
+      assert.equal(html.includes('class="k-dictation-anchor"'), active);
+      assert.match(html, /Keep this/);
+      assert.doesNotMatch(html, /dictationOffset=|dictationState=/);
+      if (active) assert.match(html, /aria-hidden="true"/);
+    }
+  }
+  const html = renderToStaticMarkup(
+    h(KDictationAnchor, { state: KDictationState.recording }),
+  );
+  assert.equal((html.match(/--k-dictation-dot-index:/g) ?? []).length, 3);
+  assert.doesNotMatch(html, /role=|tabindex=/);
+});
+test("protected text removes saved-caret feedback", () => {
+  for (const lock of [
+    { disabled: true },
+    { readOnly: true },
+    { type: "password" },
+  ]) {
+    assert.doesNotMatch(
+      renderToStaticMarkup(
+        h(KInput, { ...lock, dictationState: KDictationState.recording }),
+      ),
+      /k-dictation-anchor/,
+    );
+  }
+  for (const lock of [{ disabled: true }, { readOnly: true }]) {
+    assert.doesNotMatch(
+      renderToStaticMarkup(
+        h(KTextarea, { ...lock, dictationState: KDictationState.processing }),
+      ),
+      /k-dictation-anchor/,
     );
   }
 });

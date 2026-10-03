@@ -6,6 +6,8 @@ import {
   type KEditorMode,
 } from "@k-design-system/ui/editors";
 import { useMemo, useState } from "react";
+import { useRef } from "react";
+import { KDictationState } from "@k-design-system/ui";
 import "./editor-fixture.css";
 
 const initialMarkdown = `# Collaborative release notes
@@ -79,41 +81,62 @@ const dennisSelection = [
 ];
 
 export function MarkdownEditorFixture() {
+  return <MarkdownEditorDictationFixture showModeSwitcher />;
+}
+
+/** Deterministic capture simulation; galleries never access a microphone. */
+export function MarkdownEditorDictationFixture({
+  mobile = false,
+  showModeSwitcher = false,
+}: { mobile?: boolean; showModeSwitcher?: boolean } = {}) {
   const [markdown, setMarkdown] = useState(initialMarkdown);
-  const [mode, setMode] = useState<KEditorMode>("source");
+  const [state, setState] = useState(KDictationState.ready);
+  const insertion = useRef<((text: string) => boolean) | null>(null);
+  const cancel = useRef<(() => void) | null>(null);
   return (
-    <div className="editor-demo">
+    <div className={`editor-demo${mobile ? " editor-demo--mobile" : ""}`}>
       <div className="editor-demo-shell">
         <KMarkdownEditor
           markdown={markdown}
-          mode={mode}
-          onModeChange={setMode}
           onChange={setMarkdown}
+          showModeSwitcher={showModeSwitcher}
           placeholder="Write release notes…"
           labels={{ source: "Markdown", read: "Preview" }}
+          dictation={{
+            state,
+            label:
+              state === KDictationState.recording
+                ? "Stop dictation"
+                : "Start dictation",
+            onStart: (insert, stop) => {
+              insertion.current = insert;
+              cancel.current = stop;
+              setState(KDictationState.recording);
+            },
+            onStop: () => {
+              insertion.current?.("Dictated text");
+              insertion.current = null;
+              setState(KDictationState.ready);
+            },
+          }}
         />
+        {state === KDictationState.recording && (
+          <button
+            onClick={() => {
+              cancel.current?.();
+              setState(KDictationState.ready);
+            }}
+          >
+            Cancel dictation
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
 export function MarkdownEditorMobileFixture() {
-  const [markdown, setMarkdown] = useState(initialMarkdown);
-  const [mode, setMode] = useState<KEditorMode>("source");
-  return (
-    <div className="editor-demo editor-demo--mobile">
-      <div className="editor-demo-shell">
-        <KMarkdownEditor
-          markdown={markdown}
-          mode={mode}
-          onModeChange={setMode}
-          onChange={setMarkdown}
-          placeholder="Write release notes…"
-          labels={{ source: "Markdown", read: "Preview" }}
-        />
-      </div>
-    </div>
-  );
+  return <MarkdownEditorDictationFixture mobile showModeSwitcher />;
 }
 
 export function CodeEditorFixture() {

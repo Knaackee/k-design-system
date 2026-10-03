@@ -148,15 +148,6 @@ export function KChatComposer({
                 onClick={onAttach}
               />
             ) : null}
-            {onVoiceInput ? (
-              <KIconButton
-                icon="mic"
-                label={voiceActive ? labels.stopVoice : labels.voice}
-                aria-pressed={voiceActive}
-                data-active={voiceActive || undefined}
-                onClick={onVoiceInput}
-              />
-            ) : null}
             {leadingTools}
           </div>
           <div className="k-chat-composer__tools">
@@ -172,6 +163,16 @@ export function KChatComposer({
                   placeholder={labels.model}
                 />
               </div>
+            ) : null}
+            {onVoiceInput ? (
+              <KIconButton
+                icon="mic"
+                label={voiceActive ? labels.stopVoice : labels.voice}
+                aria-pressed={voiceActive}
+                data-active={voiceActive || undefined}
+                disabled={disabled && !voiceActive}
+                onClick={onVoiceInput}
+              />
             ) : null}
             {running ? (
               <KIconButton icon="x" label={labels.stop} onClick={onStop} />

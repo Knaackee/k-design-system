@@ -221,33 +221,13 @@ class _KChatComposerState extends State<KChatComposer> {
                       ),
                     ),
                     Row(
+                      spacing: t.spaceControlGap,
                       children: [
                         if (widget.onAttach != null)
                           KIconButton(
                             label: widget.labels.attach,
                             icon: KIconName.paperclip,
                             onPressed: widget.onAttach,
-                          ),
-                        if (widget.onVoiceInput != null)
-                          Semantics(
-                            selected: widget.voiceActive,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: widget.voiceActive
-                                    ? t.colorActionGhostHover
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(
-                                  t.radiusControl,
-                                ),
-                              ),
-                              child: KIconButton(
-                                label: widget.voiceActive
-                                    ? widget.labels.stopVoice
-                                    : widget.labels.voice,
-                                icon: KIconName.mic,
-                                onPressed: widget.onVoiceInput,
-                              ),
-                            ),
                           ),
                         ...?widget.leadingTools,
                         const Spacer(),
@@ -273,11 +253,35 @@ class _KChatComposerState extends State<KChatComposer> {
                               onChanged: widget.onModelChanged,
                             ),
                           ),
+                        if (widget.onVoiceInput != null)
+                          Semantics(
+                            selected: widget.voiceActive,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: widget.voiceActive
+                                    ? t.colorActionGhostHover
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(
+                                  t.radiusControl,
+                                ),
+                              ),
+                              child: KIconButton(
+                                label: widget.voiceActive
+                                    ? widget.labels.stopVoice
+                                    : widget.labels.voice,
+                                icon: KIconName.mic,
+                                onPressed: widget.disabled && !widget.voiceActive
+                                    ? null
+                                    : widget.onVoiceInput,
+                              ),
+                            ),
+                          ),
                         KIconButton(
                           label: _running
                               ? widget.labels.stop
                               : widget.labels.send,
                           icon: _running ? KIconName.x : KIconName.arrowUp,
+                          selected: !_running,
                           onPressed: _running
                               ? widget.onStop
                               : (_controller.text.trim().isEmpty ||

@@ -1,4 +1,5 @@
 import { KButton } from "../primitives/button.js";
+import type { ReactNode } from "react";
 import { useHorizontalDragScroll } from "../util/use-horizontal-drag-scroll.js";
 import type { KEditorLabels } from "./types.js";
 
@@ -52,6 +53,7 @@ export interface KEditorFormatBarProps {
   activeActions?: KMarkdownFormatAction[];
   onAction: (action: KMarkdownFormatAction) => void;
   floating?: boolean;
+  trailingAction?: ReactNode;
 }
 
 export function KEditorFormatBar({
@@ -60,31 +62,41 @@ export function KEditorFormatBar({
   activeActions = [],
   onAction,
   floating = false,
+  trailingAction,
 }: KEditorFormatBarProps) {
   const dragScroll = useHorizontalDragScroll<HTMLDivElement>();
+  const formatButtons = actions.map((action) => (
+    <KButton
+      key={action}
+      variant="ghost"
+      className="k-editor-format-action"
+      aria-label={labels[action]}
+      title={labels[action]}
+      aria-pressed={activeActions.includes(action)}
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={() => onAction(action)}
+    >
+      <span aria-hidden="true" data-action={action}>
+        {actionGlyph[action]}
+      </span>
+    </KButton>
+  ));
   return (
     <div
-      {...dragScroll}
+      {...(trailingAction ? {} : dragScroll)}
+      data-has-trailing-action={Boolean(trailingAction)}
       className={`k-editor-format-bar k-scrollbar${floating ? " k-editor-format-bar--floating" : ""}`}
       role="toolbar"
       aria-label="Text formatting"
     >
-      {actions.map((action) => (
-        <KButton
-          key={action}
-          variant="ghost"
-          className="k-editor-format-action"
-          aria-label={labels[action]}
-          title={labels[action]}
-          aria-pressed={activeActions.includes(action)}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={() => onAction(action)}
-        >
-          <span aria-hidden="true" data-action={action}>
-            {actionGlyph[action]}
-          </span>
-        </KButton>
-      ))}
+      {trailingAction ? (
+        <div {...dragScroll} className="k-editor-format-actions">
+          {formatButtons}
+        </div>
+      ) : (
+        formatButtons
+      )}
+      {trailingAction}
     </div>
   );
 }

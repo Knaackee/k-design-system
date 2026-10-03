@@ -30,10 +30,16 @@ export function participantLabel(user: EditorParticipant) {
 ''';
 
 class EditorFixture extends StatefulWidget {
-  const EditorFixture({required this.markdown, this.mobile = false, super.key});
+  const EditorFixture({
+    required this.markdown,
+    this.mobile = false,
+    this.dictation = false,
+    super.key,
+  });
 
   final bool markdown;
   final bool mobile;
+  final bool dictation;
 
   @override
   State<EditorFixture> createState() => _EditorFixtureState();
@@ -42,6 +48,20 @@ class EditorFixture extends StatefulWidget {
 class _EditorFixtureState extends State<EditorFixture> {
   late String _value;
   KEditorMode _mode = KEditorMode.source;
+  final _markdownKey = GlobalKey<KMarkdownEditorState>();
+  KDictationState _dictationState = KDictationState.ready;
+
+  Future<void> _dictate() async {
+    if (_dictationState == KDictationState.ready) {
+      setState(() => _dictationState = KDictationState.recording);
+      return;
+    }
+    setState(() => _dictationState = KDictationState.processing);
+    await Future<void>.delayed(const Duration(milliseconds: 900));
+    if (!mounted) return;
+    _markdownKey.currentState?.insertDictation('Dictated release update. ');
+    setState(() => _dictationState = KDictationState.ready);
+  }
 
   @override
   void initState() {
@@ -65,6 +85,12 @@ class _EditorFixtureState extends State<EditorFixture> {
     return SizedBox.expand(
       child: widget.markdown
           ? KMarkdownEditor(
+              key: _markdownKey,
+              dictationState: widget.dictation ? _dictationState : null,
+              dictationLabel: _dictationState == KDictationState.recording
+                  ? 'Finish dictation'
+                  : 'Start dictation',
+              onDictationPressed: widget.dictation ? _dictate : null,
               markdown: _value,
               onChanged: (value, _) => setState(() => _value = value),
               mode: _mode,

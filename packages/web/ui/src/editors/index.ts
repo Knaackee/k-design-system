@@ -1,5 +1,11 @@
 export { KMarkdownEditor } from "./markdown-editor.js";
 export type { KMarkdownEditorProps } from "./markdown-editor.js";
+export {
+  KEditorDictationExtension,
+  beginKEditorDictation,
+  cancelKEditorDictation,
+  insertKEditorDictation,
+} from "./dictation.js";
 export { KCodeEditor } from "./code-editor.js";
 export type {
   KCodeEditorProps,

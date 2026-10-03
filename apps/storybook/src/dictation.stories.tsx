@@ -36,12 +36,17 @@ function DictationFixture() {
           <KField label="Title">
             <KInput
               defaultValue="Inspect the roof"
+              dictationState={state}
+              dictationOffset={8}
               clearable
               trailingAction={action}
             />
           </KField>
           <KField label="Notes">
             <KTextarea
+              dictationState={state}
+              dictationOffset={9}
+              defaultValue="Describe the next steps"
               placeholder="Describe the next steps…"
               trailingAction={action}
             />
@@ -49,6 +54,8 @@ function DictationFixture() {
           {Object.values(KDictationState).map((status) => (
             <KField key={status} label={status}>
               <KInput
+                dictationState={status}
+                dictationOffset={0}
                 trailingAction={
                   <KDictationAction
                     state={status}

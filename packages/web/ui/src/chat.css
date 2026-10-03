@@ -422,7 +422,7 @@
 }
 
 .k-chat-composer__tools [aria-pressed="true"] {
-  color: var(--k-color-action-primary);
+  color: var(--k-color-action-ghost-foreground);
   background: var(--k-color-action-ghost-hover);
 }
 
