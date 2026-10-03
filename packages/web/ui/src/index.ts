@@ -444,3 +444,6 @@ export type {
   KActivityHeatmapProps,
   KActivityItem,
 } from "./data-display/activity-heatmap.js";
+
+export { KDictationAction, KDictationState } from "./forms/dictation-action.js";
+export type { KDictationActionProps } from "./forms/dictation-action.js";

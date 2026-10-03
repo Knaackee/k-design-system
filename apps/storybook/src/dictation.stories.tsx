@@ -1,0 +1,80 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import {
+  KContainer,
+  KDictationAction,
+  KDictationState,
+  KField,
+  KInput,
+  KStack,
+  KTextarea,
+} from "@k-design-system/ui";
+
+function DictationFixture() {
+  const [state, setState] = useState(KDictationState.ready);
+  const action = (
+    <KDictationAction
+      state={state}
+      label={
+        state === KDictationState.recording
+          ? "Stop dictation"
+          : "Start dictation"
+      }
+      onPressed={() =>
+        setState(
+          state === KDictationState.recording
+            ? KDictationState.ready
+            : KDictationState.recording,
+        )
+      }
+    />
+  );
+  return (
+    <div className="k-primitive-fixture">
+      <KContainer>
+        <KStack align="stretch" gap="section">
+          <KField label="Title">
+            <KInput
+              defaultValue="Inspect the roof"
+              clearable
+              trailingAction={action}
+            />
+          </KField>
+          <KField label="Notes">
+            <KTextarea
+              placeholder="Describe the next steps…"
+              trailingAction={action}
+            />
+          </KField>
+          {Object.values(KDictationState).map((status) => (
+            <KField key={status} label={status}>
+              <KInput
+                trailingAction={
+                  <KDictationAction
+                    state={status}
+                    label={`Dictation ${status}`}
+                    onPressed={() => undefined}
+                  />
+                }
+              />
+            </KField>
+          ))}
+          <KField label="Read only">
+            <KInput readOnly trailingAction={action} />
+          </KField>
+          <KField label="Unavailable">
+            <KTextarea disabled trailingAction={action} />
+          </KField>
+        </KStack>
+      </KContainer>
+    </div>
+  );
+}
+
+const meta = {
+  title: "Forms/Dictation",
+  component: DictationFixture,
+  parameters: { fixtureId: "dictation-controls" },
+} satisfies Meta<typeof DictationFixture>;
+export default meta;
+export const Controls: StoryObj<typeof meta> = { name: "dictation-controls" };

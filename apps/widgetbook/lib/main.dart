@@ -15,6 +15,7 @@ import 'action_fixtures.dart';
 import 'context_menu_fixture.dart';
 import 'form_fixtures.dart';
 import 'textarea_fixture.dart';
+import 'dictation_fixture.dart';
 import 'radio_fixture.dart';
 import 'table_fixtures.dart';
 import 'data_table_fixtures.dart';
@@ -547,6 +548,15 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Forms',
           children: [
+            WidgetbookFolder(
+              name: 'Dictation',
+              children: [
+                WidgetbookUseCase(
+                  name: 'dictation-controls',
+                  builder: (_) => const DictationFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Textarea',
               children: [

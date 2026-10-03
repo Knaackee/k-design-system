@@ -1,5 +1,11 @@
 import { useKLocalization } from "../localization/provider.js";
-import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type InputHTMLAttributes,
+} from "react";
 import { KIcon } from "../primitives/icon.js";
 import { useField } from "./field.js";
 import { ClearButton } from "./clear-button.js";
@@ -7,6 +13,8 @@ export interface KInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size"
 > {
+  /** An end action, hidden for disabled, read-only or password input. */
+  trailingAction?: ReactNode;
   clearable?: boolean;
   clearLabel?: string;
   /** Update the application value when a controlled input is cleared. */
@@ -17,6 +25,7 @@ export function KInput({
   clearable = false,
   clearLabel,
   onClear,
+  trailingAction,
   value,
   defaultValue,
   onChange,
@@ -40,10 +49,15 @@ export function KInput({
     !props.disabled &&
     !props.readOnly &&
     (value === undefined || !!onClear);
+  const action =
+    !props.disabled && !props.readOnly && props.type !== "password"
+      ? trailingAction
+      : null;
   return (
     <span
       className="k-input-target k-input-clearable"
       data-clearable={canClear || undefined}
+      data-trailing-action={action ? true : undefined}
     >
       <input
         id={field.id}
@@ -60,6 +74,7 @@ export function KInput({
         }}
         className={`k-input ${className}`}
       />
+      {action && <span className="k-input-trailing-action">{action}</span>}
       {canClear && (
         <ClearButton
           label={clearLabel ?? messages.clear}

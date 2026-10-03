@@ -72,3 +72,5 @@ export 'src/data_display/k_activity.dart';
 export 'src/data_display/k_gantt.dart';
 export 'src/data_display/k_orbit.dart';
 export 'src/forms/k_textarea.dart';
+
+export 'src/forms/k_dictation_action.dart';

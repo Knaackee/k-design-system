@@ -454,3 +454,47 @@
   padding-block: var(--k-space-control-gap);
   resize: none;
 }
+
+.k-input-trailing-action,
+.k-textarea-trailing-action {
+  position: absolute;
+  right: var(--k-border-width-default);
+  display: flex;
+}
+.k-input-trailing-action {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.k-input-clearable[data-trailing-action] > .k-input {
+  padding-right: calc(
+    max(var(--k-size-control), var(--k-size-hit-target)) +
+      var(--k-space-control-inset-inline)
+  );
+}
+.k-input-clearable[data-trailing-action][data-clearable] > .k-input {
+  padding-right: calc(
+    max(var(--k-size-control), var(--k-size-hit-target)) +
+      max(var(--k-size-icon-default), var(--k-size-hit-target)) +
+      var(--k-space-control-inset-inline)
+  );
+}
+.k-input-clearable[data-trailing-action] > .k-form-clear {
+  right: calc(
+    max(var(--k-size-control), var(--k-size-hit-target)) +
+      var(--k-border-width-default)
+  );
+}
+.k-textarea-target {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.k-textarea-target > .k-textarea {
+  padding-bottom: calc(
+    max(var(--k-size-control), var(--k-size-hit-target)) +
+      var(--k-space-control-gap)
+  );
+}
+.k-textarea-trailing-action {
+  bottom: var(--k-border-width-default);
+}

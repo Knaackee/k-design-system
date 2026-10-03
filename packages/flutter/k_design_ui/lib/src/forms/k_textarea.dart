@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' show SemanticsValidationResult;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,7 @@ class KTextarea extends StatelessWidget {
     this.readOnly = false,
     this.rows = 4,
     this.maxLength,
+    this.trailingAction,
     super.key,
   }) : assert(rows > 0),
        assert(maxLength == null || maxLength > 0);
@@ -32,6 +34,9 @@ class KTextarea extends StatelessWidget {
   final int rows;
   final int? maxLength;
 
+  /// A bottom end action, hidden for disabled or read-only text.
+  final Widget? trailingAction;
+
   @override
   Widget build(BuildContext context) {
     final t = formTokens(context);
@@ -39,45 +44,64 @@ class KTextarea extends StatelessWidget {
     final style = formTextStyle(
       context,
     ).copyWith(height: t.fontBodyLineHeight / t.fontControlSize);
-    return Semantics(
-      label: label ?? field?.label,
-      hint: field?.helperText,
-      isRequired: field?.required,
-      validationResult: field?.invalid == true
-          ? SemanticsValidationResult.invalid
-          : SemanticsValidationResult.none,
-      child: Opacity(
-        opacity: enabled ? 1 : t.opacityDisabled,
-        child: TextField(
-          controller: controller,
-          onChanged: onChanged,
-          focusNode: focusNode,
-          autofocus: autofocus,
-          enabled: enabled,
-          readOnly: readOnly,
-          minLines: rows,
-          maxLines: rows,
-          maxLength: maxLength,
-          maxLengthEnforcement:
-              MaxLengthEnforcement.truncateAfterCompositionEnds,
-          keyboardType: TextInputType.multiline,
-          textInputAction: TextInputAction.newline,
-          textAlignVertical: TextAlignVertical.top,
-          style: style,
-          cursorColor: t.colorBorderFocus,
-          decoration: formDecoration(context, invalid: field?.invalid ?? false)
-              .copyWith(
-                hintText: placeholder,
-                hintStyle: style.copyWith(color: t.colorTextMuted),
-                hintMaxLines: rows,
-                counterText: '',
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: t.spaceControlInsetInline,
-                  vertical: t.spaceControlGap,
-                ),
-              ),
+    final action = enabled && !readOnly ? trailingAction : null;
+    return Stack(
+      children: [
+        Semantics(
+          label: label ?? field?.label,
+          hint: field?.helperText,
+          isRequired: field?.required,
+          validationResult: field?.invalid == true
+              ? SemanticsValidationResult.invalid
+              : SemanticsValidationResult.none,
+          child: Opacity(
+            opacity: enabled ? 1 : t.opacityDisabled,
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              focusNode: focusNode,
+              autofocus: autofocus,
+              enabled: enabled,
+              readOnly: readOnly,
+              minLines: rows,
+              maxLines: rows,
+              maxLength: maxLength,
+              maxLengthEnforcement:
+                  MaxLengthEnforcement.truncateAfterCompositionEnds,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              textAlignVertical: TextAlignVertical.top,
+              style: style,
+              cursorColor: t.colorBorderFocus,
+              decoration:
+                  formDecoration(
+                    context,
+                    invalid: field?.invalid ?? false,
+                  ).copyWith(
+                    hintText: placeholder,
+                    hintStyle: style.copyWith(color: t.colorTextMuted),
+                    hintMaxLines: rows,
+                    counterText: '',
+                    contentPadding: EdgeInsets.fromLTRB(
+                      t.spaceControlInsetInline,
+                      t.spaceControlGap,
+                      t.spaceControlInsetInline,
+                      t.spaceControlGap +
+                          (action != null
+                              ? math.max(t.sizeControl, t.sizeHitTarget)
+                              : 0),
+                    ),
+                  ),
+            ),
+          ),
         ),
-      ),
+        if (action != null)
+          Positioned(
+            right: t.borderWidthDefault,
+            bottom: t.borderWidthDefault,
+            child: TextFieldTapRegion(child: action),
+          ),
+      ],
     );
   }
 }
