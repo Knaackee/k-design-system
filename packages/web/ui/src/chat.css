@@ -421,11 +421,6 @@
   width: var(--k-layout-table-column-width);
 }
 
-.k-chat-composer__tools [aria-pressed="true"] {
-  color: var(--k-color-action-ghost-foreground);
-  background: var(--k-color-action-ghost-hover);
-}
-
 .k-visually-hidden {
   position: absolute;
   width: var(--k-border-width-default);

@@ -5,6 +5,10 @@ import {
   type ReactNode,
 } from "react";
 import { KIconButton } from "../actions/icon-button.js";
+import {
+  KDictationAction,
+  KDictationState,
+} from "../forms/dictation-action.js";
 import { KSelect } from "../forms/selection.js";
 import type { KIconName } from "../primitives/icon.js";
 import type { KChatAttachmentPart, KChatRunState } from "./types.js";
@@ -19,6 +23,9 @@ export interface KChatComposerLabels {
   attach: string;
   voice: string;
   stopVoice: string;
+  processingVoice?: string;
+  unavailableVoice?: string;
+  errorVoice?: string;
   model: string;
 }
 
@@ -31,6 +38,9 @@ const defaultLabels: KChatComposerLabels = {
   attach: "Attach files",
   voice: "Start voice input",
   stopVoice: "Stop voice input",
+  processingVoice: "Transcribing voice input",
+  unavailableVoice: "Voice input unavailable",
+  errorVoice: "Retry voice input",
   model: "Model",
 };
 
@@ -58,6 +68,8 @@ export interface KChatComposerProps {
   onAttach?: () => void;
   onVoiceInput?: () => void;
   voiceActive?: boolean;
+  voiceState?: KDictationState;
+  voiceAudioLevel?: number;
   models?: readonly KChatComposerModel[];
   model?: string | null;
   onModelChange?: (model: string) => void;
@@ -80,11 +92,24 @@ export function KChatComposer({
   onAttach,
   onVoiceInput,
   voiceActive = false,
+  voiceState,
+  voiceAudioLevel,
   models = [],
   model = null,
   onModelChange,
 }: KChatComposerProps) {
   const labels = { ...defaultLabels, ...labelsInput };
+  const dictationState =
+    voiceState ??
+    (voiceActive ? KDictationState.recording : KDictationState.ready);
+  const recording = dictationState === KDictationState.recording;
+  const voiceLabel = {
+    ready: labels.voice,
+    recording: labels.stopVoice,
+    processing: labels.processingVoice ?? "Transcribing voice input",
+    unavailable: labels.unavailableVoice ?? "Voice input unavailable",
+    error: labels.errorVoice ?? "Retry voice input",
+  }[dictationState];
   const composing = useRef(false);
   const running = runState === "submitted" || runState === "streaming";
   const submit = (event?: FormEvent) => {
@@ -165,13 +190,11 @@ export function KChatComposer({
               </div>
             ) : null}
             {onVoiceInput ? (
-              <KIconButton
-                icon="mic"
-                label={voiceActive ? labels.stopVoice : labels.voice}
-                aria-pressed={voiceActive}
-                data-active={voiceActive || undefined}
-                disabled={disabled && !voiceActive}
-                onClick={onVoiceInput}
+              <KDictationAction
+                state={dictationState}
+                label={voiceLabel}
+                audioLevel={voiceAudioLevel}
+                onPressed={disabled && !recording ? undefined : onVoiceInput}
               />
             ) : null}
             {running ? (

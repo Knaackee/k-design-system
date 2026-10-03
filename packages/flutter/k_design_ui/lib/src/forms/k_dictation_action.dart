@@ -12,12 +12,16 @@ class KDictationAction extends StatelessWidget {
     required this.state,
     required this.label,
     this.onPressed,
+    this.audioLevel,
     super.key,
   });
 
   final KDictationState state;
   final String label;
   final VoidCallback? onPressed;
+
+  /// Genuine consumer audio level, normalized to 0..1. No audio is sampled here.
+  final double? audioLevel;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -32,14 +36,13 @@ class KDictationAction extends StatelessWidget {
         KDictationState.unavailable => KIconName.micOff,
         KDictationState.error => KIconName.circleAlert,
       },
-      iconContent:
-          state == KDictationState.recording ||
-              state == KDictationState.processing
+      iconContent: state == KDictationState.recording
+          ? _DictationWave(audioLevel: audioLevel)
+          : state == KDictationState.processing
           ? KDictationPulse(
               child: KIcon(
-                state == KDictationState.recording
-                    ? KIconName.square
-                    : KIconName.loaderCircle,
+                KIconName.loaderCircle,
+                color: formTokens(context).colorActionGhostForeground,
               ),
             )
           : null,
@@ -51,6 +54,44 @@ class KDictationAction extends StatelessWidget {
           : onPressed,
     ),
   );
+}
+
+class _DictationWave extends StatelessWidget {
+  const _DictationWave({this.audioLevel});
+  final double? audioLevel;
+  @override
+  Widget build(BuildContext context) {
+    final t = formTokens(context);
+    final level = audioLevel == null
+        ? null
+        : audioLevel!.isFinite
+        ? audioLevel!.clamp(0.0, 1.0)
+        : 0.0;
+    final wave = ExcludeSemantics(
+      child: SizedBox(
+        width: t.sizeIconDefault,
+        height: t.sizeIconDefault,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            for (final weight in [0.45, 0.75, 1.0, 0.75, 0.45])
+              Container(
+                width: t.borderWidthStrong,
+                height:
+                    t.sizeIconDefault *
+                    weight *
+                    (level == null ? 1 : 0.3 + 0.7 * level),
+                decoration: BoxDecoration(
+                  color: t.colorActionPrimaryForeground,
+                  borderRadius: BorderRadius.circular(t.radiusSmall),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+    return level == null ? KDictationPulse(child: wave) : wave;
+  }
 }
 
 /// Visual feedback only; consumers own the saved text offset and transcription.

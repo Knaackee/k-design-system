@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { KChatComposer, KStack } from "@k-design-system/ui";
+import { KChatComposer, KDictationState, KStack } from "@k-design-system/ui";
 
 function ComposerFixture({ mobile = false }: { mobile?: boolean }) {
   const [voiceActive, setVoiceActive] = useState(false);
@@ -22,6 +22,7 @@ function ComposerFixture({ mobile = false }: { mobile?: boolean }) {
           onSubmit={() => undefined}
           onAttach={() => undefined}
           voiceActive
+          voiceAudioLevel={0.5}
           onVoiceInput={() => undefined}
         />
         <KChatComposer
@@ -39,6 +40,20 @@ function ComposerFixture({ mobile = false }: { mobile?: boolean }) {
           onStop={() => undefined}
           onVoiceInput={() => undefined}
         />
+        {[
+          KDictationState.processing,
+          KDictationState.unavailable,
+          KDictationState.error,
+        ].map((state) => (
+          <KChatComposer
+            key={state}
+            value={state}
+            voiceState={state}
+            onValueChange={() => undefined}
+            onSubmit={() => undefined}
+            onVoiceInput={() => undefined}
+          />
+        ))}
         <KChatComposer
           value="Voice omitted"
           onValueChange={() => undefined}

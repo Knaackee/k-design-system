@@ -6,6 +6,7 @@ import '../actions/k_icon_button.dart';
 import '../basic_components.dart';
 import '../primitives/k_icon.dart';
 import '../forms/k_select.dart';
+import '../forms/k_dictation_action.dart';
 import 'k_chat_types.dart';
 
 class KChatComposerModel {
@@ -31,6 +32,9 @@ class KChatComposerLabels {
     this.attach = 'Attach files',
     this.voice = 'Start voice input',
     this.stopVoice = 'Stop voice input',
+    this.processingVoice = 'Transcribing voice input',
+    this.unavailableVoice = 'Voice input unavailable',
+    this.errorVoice = 'Retry voice input',
     this.model = 'Model',
   });
   final String input;
@@ -41,6 +45,9 @@ class KChatComposerLabels {
   final String attach;
   final String voice;
   final String stopVoice;
+  final String processingVoice;
+  final String unavailableVoice;
+  final String errorVoice;
   final String model;
 }
 
@@ -63,6 +70,8 @@ class KChatComposer extends StatefulWidget {
     this.onAttach,
     this.onVoiceInput,
     this.voiceActive = false,
+    this.voiceState,
+    this.voiceAudioLevel,
     this.models = const [],
     this.model,
     this.onModelChanged,
@@ -85,6 +94,8 @@ class KChatComposer extends StatefulWidget {
   final VoidCallback? onAttach;
   final VoidCallback? onVoiceInput;
   final bool voiceActive;
+  final KDictationState? voiceState;
+  final double? voiceAudioLevel;
   final List<KChatComposerModel> models;
   final String? model;
   final ValueChanged<String?>? onModelChanged;
@@ -129,6 +140,19 @@ class _KChatComposerState extends State<KChatComposer> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final dictationState =
+        widget.voiceState ??
+        (widget.voiceActive
+            ? KDictationState.recording
+            : KDictationState.ready);
+    final recording = dictationState == KDictationState.recording;
+    final voiceLabel = switch (dictationState) {
+      KDictationState.ready => widget.labels.voice,
+      KDictationState.recording => widget.labels.stopVoice,
+      KDictationState.processing => widget.labels.processingVoice,
+      KDictationState.unavailable => widget.labels.unavailableVoice,
+      KDictationState.error => widget.labels.errorVoice,
+    };
     return Material(
       color: t.colorSurfaceCanvas,
       child: Padding(
@@ -254,27 +278,13 @@ class _KChatComposerState extends State<KChatComposer> {
                             ),
                           ),
                         if (widget.onVoiceInput != null)
-                          Semantics(
-                            selected: widget.voiceActive,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: widget.voiceActive
-                                    ? t.colorActionGhostHover
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(
-                                  t.radiusControl,
-                                ),
-                              ),
-                              child: KIconButton(
-                                label: widget.voiceActive
-                                    ? widget.labels.stopVoice
-                                    : widget.labels.voice,
-                                icon: KIconName.mic,
-                                onPressed: widget.disabled && !widget.voiceActive
-                                    ? null
-                                    : widget.onVoiceInput,
-                              ),
-                            ),
+                          KDictationAction(
+                            state: dictationState,
+                            label: voiceLabel,
+                            audioLevel: widget.voiceAudioLevel,
+                            onPressed: widget.disabled && !recording
+                                ? null
+                                : widget.onVoiceInput,
                           ),
                         KIconButton(
                           label: _running

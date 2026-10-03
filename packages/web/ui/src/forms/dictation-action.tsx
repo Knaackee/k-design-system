@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
-import { KIconButton } from "../actions/icon-button.js";
+import { KButton } from "../primitives/button.js";
+import { KIcon } from "../primitives/icon.js";
 
 export enum KDictationState {
   ready = "ready",
@@ -13,6 +14,8 @@ export interface KDictationActionProps {
   state: KDictationState;
   label: string;
   onPressed?: () => void;
+  /** Genuine consumer audio level, normalized to 0..1. No audio is sampled here. */
+  audioLevel?: number;
 }
 
 /** Presentation only. Consumers own recording, permission and transcription. */
@@ -20,6 +23,7 @@ export function KDictationAction({
   state,
   label,
   onPressed,
+  audioLevel,
 }: KDictationActionProps) {
   const icon = {
     ready: "mic",
@@ -28,22 +32,45 @@ export function KDictationAction({
     unavailable: "mic-off",
     error: "circle-alert",
   } as const;
+  const level =
+    audioLevel === undefined
+      ? undefined
+      : Number.isFinite(audioLevel)
+        ? Math.min(1, Math.max(0, audioLevel))
+        : 0;
   return (
-    <KIconButton
-      className="k-dictation-action"
-      data-dictation-state={state}
-      label={label}
-      icon={icon[state]}
-      variant={state === KDictationState.recording ? "primary" : "ghost"}
-      disabled={
-        !onPressed ||
-        state === KDictationState.processing ||
-        state === KDictationState.unavailable
-      }
-      aria-pressed={state === KDictationState.recording}
-      loading={state === KDictationState.processing}
-      onClick={onPressed}
-    />
+    <span aria-busy={state === KDictationState.processing || undefined}>
+      <KButton
+        className="k-icon-button k-dictation-action"
+        data-dictation-state={state}
+        data-audio-level={level === undefined ? undefined : "provided"}
+        aria-label={label}
+        title={label}
+        variant={state === KDictationState.recording ? "primary" : "ghost"}
+        disabled={
+          !onPressed ||
+          state === KDictationState.processing ||
+          state === KDictationState.unavailable
+        }
+        aria-pressed={state === KDictationState.recording}
+        onClick={onPressed}
+      >
+        {state === KDictationState.recording ? (
+          <span className="k-dictation-wave" aria-hidden="true">
+            {[0.45, 0.75, 1, 0.75, 0.45].map((weight, index) => (
+              <span
+                key={index}
+                style={{
+                  transform: `scaleY(${weight * (level === undefined ? 1 : 0.3 + 0.7 * level)})`,
+                }}
+              />
+            ))}
+          </span>
+        ) : (
+          <KIcon name={icon[state]} color="currentColor" />
+        )}
+      </KButton>
+    </span>
   );
 }
 

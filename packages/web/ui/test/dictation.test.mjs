@@ -115,3 +115,24 @@ test("protected text removes saved-caret feedback", () => {
     );
   }
 });
+
+test("recording wave uses only supplied level and clamps its range", () => {
+  const render = (audioLevel) =>
+    renderToStaticMarkup(
+      h(KDictationAction, {
+        state: KDictationState.recording,
+        label: "Stop dictation",
+        onPressed() {},
+        audioLevel,
+      }),
+    );
+  const low = render(0);
+  const high = render(1);
+  assert.match(high, /k-dictation-wave/);
+  assert.match(high, /scaleY\(1\)/);
+  assert.match(low, /scaleY\(0.3\)/);
+  assert.equal(render(-3), low);
+  assert.equal(render(3), high);
+  assert.equal(render(NaN), low);
+  assert.doesNotMatch(render(undefined), /data-audio-level=/);
+});

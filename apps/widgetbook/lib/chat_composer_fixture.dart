@@ -35,6 +35,7 @@ class _ChatComposerFixtureState extends State<ChatComposerFixture> {
               onSubmit: (_) {},
               onAttach: () {},
               voiceActive: true,
+              voiceAudioLevel: 0.5,
               onVoiceInput: () {},
             ),
             KChatComposer(
@@ -52,6 +53,18 @@ class _ChatComposerFixtureState extends State<ChatComposerFixture> {
               onStop: () {},
               onVoiceInput: () {},
             ),
+            for (final state in [
+              KDictationState.processing,
+              KDictationState.unavailable,
+              KDictationState.error,
+            ])
+              KChatComposer(
+                value: state.name,
+                voiceState: state,
+                onValueChanged: (_) {},
+                onSubmit: (_) {},
+                onVoiceInput: () {},
+              ),
             KChatComposer(
               value: 'Voice omitted',
               onValueChanged: (_) {},

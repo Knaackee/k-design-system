@@ -13,6 +13,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: kDesignTheme(),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(disableAnimations: true),
+          child: child!,
+        ),
         home: Scaffold(body: child),
       ),
     );
@@ -172,18 +176,61 @@ void main() {
     expect(calls, 0);
   });
 
-  testWidgets('active voice can stop while the composer is disabled', (tester) async {
+  testWidgets('active voice can stop while the composer is disabled', (
+    tester,
+  ) async {
     var calls = 0;
-    await mount(tester, Align(alignment: Alignment.topCenter, child: KChatComposer(
-      value: 'Draft', disabled: true, voiceActive: true,
-      onValueChanged: (_) {}, onSubmit: (_) {}, onVoiceInput: () => calls++,
-    )));
+    await mount(
+      tester,
+      Align(
+        alignment: Alignment.topCenter,
+        child: KChatComposer(
+          value: 'Draft',
+          disabled: true,
+          voiceActive: true,
+          onValueChanged: (_) {},
+          onSubmit: (_) {},
+          onVoiceInput: () => calls++,
+        ),
+      ),
+    );
     expect(tester.widget<TextField>(find.byType(TextField)).enabled, isFalse);
     await tester.tap(find.byTooltip('Stop voice input'));
     expect(calls, 1);
-    final sendButton = tester.widget<KIconButton>(find.ancestor(
-      of: find.byTooltip('Send message'), matching: find.byType(KIconButton)));
+    final sendButton = tester.widget<KIconButton>(
+      find.ancestor(
+        of: find.byTooltip('Send message'),
+        matching: find.byType(KIconButton),
+      ),
+    );
     expect(sendButton.onPressed, isNull);
   });
 
+  testWidgets(
+    'composer passes explicit state and measured level to shared action',
+    (tester) async {
+      await mount(
+        tester,
+        Align(
+          alignment: Alignment.topCenter,
+          child: KChatComposer(
+            value: 'Draft',
+            disabled: true,
+            voiceState: KDictationState.recording,
+            voiceAudioLevel: 0.5,
+            onValueChanged: (_) {},
+            onSubmit: (_) {},
+            onVoiceInput: () {},
+          ),
+        ),
+      );
+      final action = tester.widget<KDictationAction>(
+        find.byType(KDictationAction),
+      );
+      expect(action.state, KDictationState.recording);
+      expect(action.audioLevel, 0.5);
+      expect(action.onPressed, isNotNull);
+      expect(action.label, 'Stop voice input');
+    },
+  );
 }

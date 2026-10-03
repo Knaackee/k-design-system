@@ -10,11 +10,13 @@ class DictationFixture extends StatefulWidget {
 
 class _DictationFixtureState extends State<DictationFixture> {
   final title = TextEditingController(text: 'Inspect the roof');
+  final notes = TextEditingController(text: 'Describe the next steps');
   KDictationState state = KDictationState.ready;
 
   @override
   void dispose() {
     title.dispose();
+    notes.dispose();
     super.dispose();
   }
 
@@ -51,7 +53,8 @@ class _DictationFixtureState extends State<DictationFixture> {
               label: 'Notes',
               child: KTextarea(
                 dictationState: state,
-                dictationOffset: 0,
+                controller: notes,
+                dictationOffset: 9,
                 placeholder: 'Describe the next steps…',
                 trailingAction: action,
               ),
@@ -65,6 +68,18 @@ class _DictationFixtureState extends State<DictationFixture> {
                   trailingAction: KDictationAction(
                     state: status,
                     label: 'Dictation ${status.name}',
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+            for (final level in [0.0, 0.5, 1.0])
+              KField(
+                label: 'Recording level sample $level',
+                child: KInput(
+                  trailingAction: KDictationAction(
+                    state: KDictationState.recording,
+                    label: 'Stop dictation',
+                    audioLevel: level,
                     onPressed: () {},
                   ),
                 ),

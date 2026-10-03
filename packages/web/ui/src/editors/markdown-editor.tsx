@@ -59,6 +59,7 @@ export interface KMarkdownEditorProps {
   /** Optional capture UI; microphone and transcription remain with the host. */
   dictation?: {
     state: KDictationState;
+    audioLevel?: number;
     label: string;
     onStart: (insert: (text: string) => boolean, cancel: () => void) => void;
     onStop: () => void;
@@ -307,6 +308,7 @@ export function KMarkdownEditor({
                 dictation && !readOnly ? (
                   <KDictationAction
                     state={dictation.state}
+                    audioLevel={dictation.audioLevel}
                     label={dictation.label}
                     onPressed={() => {
                       if (dictation.state === KDictationState.recording)
@@ -405,6 +407,7 @@ export function KMarkdownEditor({
                 trailingAction={
                   <KDictationAction
                     state={dictation.state}
+                    audioLevel={dictation.audioLevel}
                     label={dictation.label}
                     onPressed={() => {
                       if (dictation.state === KDictationState.recording) {

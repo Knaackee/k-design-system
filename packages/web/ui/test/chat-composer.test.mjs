@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { KDictationState } from "../dist/forms/dictation-action.js";
 import { KChatComposer } from "../dist/chat/composer.js";
 
 const render = (props = {}) =>
@@ -55,4 +56,23 @@ test("active voice remains stoppable while the composer is disabled", () => {
   assert.doesNotMatch(stopVoice, /disabled=/);
   assert.match(html, /<textarea[^>]*disabled=""/);
   assert.match(html, /aria-label="Send message"[^>]*disabled=""/);
+});
+
+test("composer renders the shared dictation action and explicit states", () => {
+  const html = render({
+    voiceState: KDictationState.recording,
+    voiceAudioLevel: 0.5,
+    disabled: true,
+  });
+  assert.match(html, /k-dictation-action/);
+  assert.match(html, /k-dictation-wave/);
+  assert.match(html, /aria-label="Stop voice input"/);
+  assert.match(
+    render({ voiceState: KDictationState.processing }),
+    /aria-label="Transcribing voice input"[^>]*disabled=""/,
+  );
+  assert.match(
+    render({ voiceState: KDictationState.error }),
+    /aria-label="Retry voice input"/,
+  );
 });

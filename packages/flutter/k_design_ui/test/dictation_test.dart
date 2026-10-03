@@ -155,4 +155,46 @@ void main() {
     expect(find.byType(KDictationAnchor), findsOneWidget);
     expect(controller.text, 'Inspect roof');
   });
+
+  testWidgets(
+    'recording feedback uses supplied level and reduced motion is static',
+    (tester) async {
+      Future<Size> wave(double? level) async {
+        await tester.pumpWidget(
+          screen(
+            MediaQuery(
+              data: const MediaQueryData(disableAnimations: true),
+              child: KDictationAction(
+                state: KDictationState.recording,
+                label: 'Stop dictation',
+                audioLevel: level,
+                onPressed: () {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final bars = find.descendant(
+          of: find.byType(KDictationAction),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Container &&
+                widget.constraints?.maxWidth ==
+                    KDesignTokens.orbitLight.borderWidthStrong,
+          ),
+        );
+        expect(bars, findsNWidgets(5));
+        return tester.getSize(bars.at(2));
+      }
+
+      final low = await wave(0);
+      final high = await wave(1);
+      expect(high.height, KDesignTokens.orbitLight.sizeIconDefault);
+      expect(low.height, closeTo(high.height * 0.3, 0.01));
+      expect(await wave(3), high);
+      expect(await wave(-3), low);
+      expect(await wave(double.nan), low);
+      expect(await wave(null), high);
+    },
+  );
 }

@@ -66,6 +66,23 @@ function DictationFixture() {
               />
             </KField>
           ))}
+          {[0, 0.5, 1].map((level) => (
+            <KField
+              key={level}
+              label={`Recording level sample ${level.toFixed(1)}`}
+            >
+              <KInput
+                trailingAction={
+                  <KDictationAction
+                    state={KDictationState.recording}
+                    label="Stop dictation"
+                    audioLevel={level}
+                    onPressed={() => undefined}
+                  />
+                }
+              />
+            </KField>
+          ))}
           <KField label="Read only">
             <KInput readOnly trailingAction={action} />
           </KField>

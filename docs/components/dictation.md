@@ -11,18 +11,22 @@ a required accessible `label`, and an optional `onPressed` callback. Consumers
 supply localized labels appropriate to the state, such as “Start dictation”,
 “Stop dictation”, “Transcribing”, or “Retry dictation”.
 
-| State         | Visual                    | Activation        |
-| ------------- | ------------------------- | ----------------- |
-| `ready`       | Microphone                | Consumer callback |
-| `recording`   | Stop, selected appearance | Consumer callback |
-| `processing`  | Progress                  | Disabled          |
-| `unavailable` | Microphone off            | Disabled          |
-| `error`       | Alert                     | Consumer callback |
+| State         | Visual                         | Activation        |
+| ------------- | ------------------------------ | ----------------- |
+| `ready`       | Microphone                     | Consumer callback |
+| `recording`   | Wave bars, selected appearance | Consumer callback |
+| `processing`  | Progress                       | Disabled          |
+| `unavailable` | Microphone off                 | Disabled          |
+| `error`       | Alert                          | Consumer callback |
 
 No callback also disables the action. The action uses existing icon-button
 semantics, keyboard support, focus appearance and token-defined hit targets.
-Recording pulses the stop control; processing displays animated progress on both
-platforms, respecting reduced motion. Neither platform starts a microphone, requests permission,
+Recording shows five identical token-sized wave bars on both platforms. Optional
+`audioLevel` supplies a genuine normalized microphone level (0..1); the component
+clamps it and renders the corresponding height without sampling audio. Without
+a level, fixed bars pulse to indicate recording activity, rather than volume.
+Reduced motion removes ambient pulsing. Processing pulses the same progress icon.
+Gallery level samples are explicitly labeled fixed samples. Neither platform starts a microphone, requests permission,
 transcribes, edits text, or interprets errors. The host owns all those behaviors
 and any status/error text associated with the field.
 
@@ -43,3 +47,11 @@ same document and transport. Install `KEditorDictationExtension` and use
 The extension uses Tiptap's mappable positions, including Yjs-relative anchors.
 Read-only/preview modes hide capture controls. There is no public CodeEditor
 dictation API. Failed insertions return false; hosts retain the transcript.
+
+Chat composers use this same action. Existing `voiceActive` still maps to ready
+or recording; optional `voiceState` overrides that mapping, and `voiceAudioLevel`
+forwards the genuine level. Recording remains stoppable when the composer is
+otherwise disabled. State labels (`processingVoice`, `unavailableVoice`,
+`errorVoice`) are consumer-configurable alongside the existing voice labels.
+Markdown editors forward Flutter `dictationAudioLevel` and Web
+`dictation.audioLevel` to the same shared action, in source and rich mode.

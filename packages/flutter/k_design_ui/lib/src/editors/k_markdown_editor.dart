@@ -37,6 +37,7 @@ class KMarkdownEditor extends StatefulWidget {
     this.minHeight = 280,
     this.formatBarMinimumItemExtent,
     this.dictationState,
+    this.dictationAudioLevel,
     this.dictationOffset,
     this.dictationLabel = 'Dictate',
     this.onDictationPressed,
@@ -68,6 +69,9 @@ class KMarkdownEditor extends StatefulWidget {
 
   /// Consumer-owned speech state. Omit to hide the dictation action.
   final KDictationState? dictationState;
+
+  /// Normalized genuine microphone level for the shared dictation action.
+  final double? dictationAudioLevel;
 
   /// Saved insertion offset, which a collaboration host can map after edits.
   final int? dictationOffset;
@@ -312,6 +316,7 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
                               ? null
                               : KDictationAction(
                                   state: widget.dictationState!,
+                                  audioLevel: widget.dictationAudioLevel,
                                   label: widget.dictationLabel,
                                   onPressed: widget.onDictationPressed == null
                                       ? null
