@@ -3,10 +3,13 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 
 import 'k_icon.dart';
 
+enum KDisclosurePresentation { normal, compact }
+
 class KDisclosure extends StatefulWidget {
   const KDisclosure({
     required this.title,
     required this.child,
+    this.titleWidget,
     this.leadingIcon,
     this.titleIcon,
     this.actions,
@@ -14,11 +17,13 @@ class KDisclosure extends StatefulWidget {
     this.defaultOpen = false,
     this.onOpenChange,
     this.disabled = false,
+    this.presentation = KDisclosurePresentation.normal,
     super.key,
   });
 
   final String title;
   final Widget child;
+  final Widget? titleWidget;
   final Widget? leadingIcon;
   final Widget? titleIcon;
   final Widget? actions;
@@ -26,6 +31,7 @@ class KDisclosure extends StatefulWidget {
   final bool defaultOpen;
   final ValueChanged<bool>? onOpenChange;
   final bool disabled;
+  final KDisclosurePresentation presentation;
 
   @override
   State<KDisclosure> createState() => _KDisclosureState();
@@ -39,6 +45,7 @@ class _KDisclosureState extends State<KDisclosure> {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final expanded = widget.open ?? _open;
     final radius = BorderRadius.circular(t.radiusControl);
+    final compact = widget.presentation == KDisclosurePresentation.compact;
     void toggle() {
       final next = !expanded;
       if (widget.open == null) setState(() => _open = next);
@@ -47,12 +54,14 @@ class _KDisclosureState extends State<KDisclosure> {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colorSurfaceCanvas,
-        border: Border.all(
-          color: t.colorBorderDefault,
-          width: t.borderWidthDefault,
-        ),
-        borderRadius: radius,
+        color: compact ? Colors.transparent : t.colorSurfaceCanvas,
+        border: compact
+            ? null
+            : Border.all(
+                color: t.colorBorderDefault,
+                width: t.borderWidthDefault,
+              ),
+        borderRadius: compact ? null : radius,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,14 +74,16 @@ class _KDisclosureState extends State<KDisclosure> {
                   expanded: expanded,
                   enabled: !widget.disabled,
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: t.sizeHitTarget),
+                    constraints: BoxConstraints(
+                      minHeight: compact ? t.sizeControl : t.sizeHitTarget,
+                    ),
                     child: InkWell(
                       borderRadius: radius,
                       excludeFromSemantics: true,
                       onTap: widget.disabled ? null : toggle,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: t.spaceControlInsetInline,
+                          horizontal: compact ? 0 : t.spaceControlInsetInline,
                           vertical: t.spaceControlGap,
                         ),
                         child: Row(
@@ -89,29 +100,40 @@ class _KDisclosureState extends State<KDisclosure> {
                             ],
                             SizedBox(width: t.spaceControlGap),
                             Flexible(
-                              child: Text(
-                                widget.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: t.colorTextPrimary,
-                                  fontFamily: t.fontFamily,
-                                  fontSize: t.fontBodySize,
-                                  fontWeight: t.fontLabelWeight,
-                                  fontVariations: [
-                                    FontVariation.weight(
-                                      t.fontLabelWeight.value.toDouble(),
+                              child:
+                                  widget.titleWidget ??
+                                  Text(
+                                    widget.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: compact
+                                          ? t.colorTextMuted
+                                          : t.colorTextPrimary,
+                                      fontFamily: t.fontFamily,
+                                      fontSize: t.fontBodySize,
+                                      fontWeight: compact
+                                          ? t.fontBodyWeight
+                                          : t.fontLabelWeight,
+                                      fontVariations: [
+                                        FontVariation.weight(
+                                          (compact
+                                                  ? t.fontBodyWeight
+                                                  : t.fontLabelWeight)
+                                              .value
+                                              .toDouble(),
+                                        ),
+                                        FontVariation.opticalSize(
+                                          MediaQuery.textScalerOf(
+                                            context,
+                                          ).scale(t.fontBodySize).clamp(14, 32),
+                                        ),
+                                      ],
+                                      height:
+                                          t.fontBodyLineHeight / t.fontBodySize,
+                                      letterSpacing: t.fontBodyLetterSpacing,
                                     ),
-                                    FontVariation.opticalSize(
-                                      MediaQuery.textScalerOf(
-                                        context,
-                                      ).scale(t.fontBodySize).clamp(14, 32),
-                                    ),
-                                  ],
-                                  height: t.fontBodyLineHeight / t.fontBodySize,
-                                  letterSpacing: t.fontBodyLetterSpacing,
-                                ),
-                              ),
+                                  ),
                             ),
                             if (widget.titleIcon != null) ...[
                               SizedBox(width: t.spaceControlGap),
@@ -127,7 +149,7 @@ class _KDisclosureState extends State<KDisclosure> {
               if (widget.actions != null)
                 Padding(
                   padding: EdgeInsetsDirectional.only(
-                    end: t.spaceControlInsetInline,
+                    end: compact ? 0 : t.spaceControlInsetInline,
                   ),
                   child: widget.actions!,
                 ),
@@ -136,14 +158,24 @@ class _KDisclosureState extends State<KDisclosure> {
           Visibility(
             visible: expanded,
             maintainState: true,
-            child: DecoratedBox(
+            child: Container(
+              margin: compact
+                  ? EdgeInsetsDirectional.only(start: t.spaceControlInsetInline)
+                  : null,
               decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: t.colorBorderDefault,
-                    width: t.borderWidthDefault,
-                  ),
-                ),
+                border: compact
+                    ? BorderDirectional(
+                        start: BorderSide(
+                          color: t.colorBorderDefault,
+                          width: t.borderWidthDefault,
+                        ),
+                      )
+                    : Border(
+                        top: BorderSide(
+                          color: t.colorBorderDefault,
+                          width: t.borderWidthDefault,
+                        ),
+                      ),
               ),
               child: Padding(
                 padding: EdgeInsets.all(t.spaceControlInsetInline),

@@ -50,8 +50,8 @@
 }
 .k-overlay-header {
   display: flex;
-  align-items: flex-start;
-  gap: var(--k-space-layout-gutter);
+  align-items: center;
+  gap: var(--k-space-control-gap);
 }
 .k-overlay-heading {
   flex: 1;
@@ -105,3 +105,5 @@
   border-radius: var(--k-radius-extra-small);
   background: var(--k-color-border-strong);
 }
+
+.k-overlay-header-actions { display: flex; align-items: center; gap: var(--k-space-control-gap); }

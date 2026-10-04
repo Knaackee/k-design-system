@@ -57,6 +57,8 @@ class KChatComposer extends StatefulWidget {
     required this.onValueChanged,
     required this.onSubmit,
     this.onStop,
+    this.padding,
+    this.backgroundColor,
     this.runState = KChatRunState.idle,
     this.disabled = false,
     this.maxLength,
@@ -81,6 +83,8 @@ class KChatComposer extends StatefulWidget {
   final ValueChanged<String> onValueChanged;
   final ValueChanged<String> onSubmit;
   final VoidCallback? onStop;
+  final EdgeInsetsGeometry? padding;
+  final Color? backgroundColor;
   final KChatRunState runState;
   final bool disabled;
   final int? maxLength;
@@ -154,9 +158,9 @@ class _KChatComposerState extends State<KChatComposer> {
       KDictationState.error => widget.labels.errorVoice,
     };
     return Material(
-      color: t.colorSurfaceCanvas,
+      color: widget.backgroundColor ?? t.colorSurfaceCanvas,
       child: Padding(
-        padding: EdgeInsets.all(t.spaceControlInsetInline),
+        padding: widget.padding ?? EdgeInsets.all(t.spaceControlInsetInline),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -232,11 +236,21 @@ class _KChatComposerState extends State<KChatComposer> {
                         controller: _controller,
                         focusNode: widget.focusNode,
                         enabled: !widget.disabled,
+                        style: TextStyle(
+                          fontSize:
+                              KDesignTokenVariants.typeScaleCompactFontBodySize,
+                        ),
                         minLines: 1,
                         maxLines: 6,
                         maxLength: widget.maxLength,
                         decoration: InputDecoration(
-                          labelText: widget.labels.input,
+                          isDense: true,
+                          filled: false,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: t.spaceControlGap / 2,
+                            vertical: t.spaceControlGap,
+                          ),
+                          labelText: null,
                           hintText: widget.labels.placeholder,
                           border: InputBorder.none,
                           counterText: '',

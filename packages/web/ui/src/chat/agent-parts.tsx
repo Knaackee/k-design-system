@@ -42,23 +42,59 @@ export function KAgentToolCall({
   renderer?: KAgentToolRenderer;
 }) {
   if (renderer) return renderer(part);
-  const complete = ["succeeded", "failed", "cancelled"].includes(part.state);
+  return (
+    <>
+      <KDisclosure
+        className="k-agent-tool"
+        data-state={part.state}
+        title={part.title}
+        leadingIcon={<ToolStateIcon state={part.state} />}
+        actions={
+          <span className="k-visually-hidden">
+            {toolStateLabel(part.state)}
+          </span>
+        }
+      >
+        {part.description ? <p>{part.description}</p> : null}
+        {part.arguments !== undefined ? (
+          <AgentData label="Arguments" value={part.arguments} />
+        ) : null}
+        {part.result !== undefined ? (
+          <AgentData label="Result" value={part.result} />
+        ) : null}
+      </KDisclosure>
+      {part.error ? <KAlert tone="error" title={part.error} /> : null}
+    </>
+  );
+}
+
+/** Consecutive calls of the same tool, without hiding questions or approvals. */
+export function KAgentToolGroup({
+  parts,
+}: {
+  parts: readonly KAgentToolPart[];
+}) {
+  const state = parts.some((part) => part.state === "failed")
+    ? "failed"
+    : parts.some((part) => part.state === "running")
+      ? "running"
+      : parts.some((part) => part.state === "approval-required")
+        ? "approval-required"
+        : parts.some((part) => part.state === "pending")
+          ? "pending"
+          : parts.every((part) => part.state === "cancelled")
+            ? "cancelled"
+            : "succeeded";
   return (
     <KDisclosure
-      className="k-agent-card k-agent-tool"
-      title={part.title}
-      defaultOpen={!complete}
-      leadingIcon={<ToolStateIcon state={part.state} />}
-      actions={<KBadge variant="outline">{toolStateLabel(part.state)}</KBadge>}
+      className="k-agent-tool k-agent-tool-group"
+      data-state={state}
+      title={`${parts[0].title} · ${parts.length}×`}
+      leadingIcon={<ToolStateIcon state={state} />}
     >
-      {part.description ? <p>{part.description}</p> : null}
-      {part.arguments !== undefined ? (
-        <AgentData label="Arguments" value={part.arguments} />
-      ) : null}
-      {part.result !== undefined ? (
-        <AgentData label="Result" value={part.result} />
-      ) : null}
-      {part.error ? <KAlert tone="error" title={part.error} /> : null}
+      {parts.map((part) => (
+        <KAgentToolCall key={part.id} part={part} />
+      ))}
     </KDisclosure>
   );
 }
@@ -66,7 +102,7 @@ export function KAgentToolCall({
 export function KAgentApproval({
   part,
   onResponse,
-  reasonLabel = "Optional reason",
+  reasonLabel = "Add a note (optional)",
 }: {
   part: KAgentApprovalPart;
   onResponse?: (response: KAgentApprovalResponse) => void;
@@ -86,13 +122,14 @@ export function KAgentApproval({
       {part.detail ? <pre className="k-agent-data">{part.detail}</pre> : null}
       {pending ? (
         <>
-          <label className="k-agent-reason">
-            <span>{reasonLabel}</span>
+          <KDisclosure className="k-agent-note" title={reasonLabel}>
             <textarea
+              aria-label={reasonLabel}
+              className="k-agent-note__input"
               value={reason}
               onChange={(event) => setReason(event.target.value)}
             />
-          </label>
+          </KDisclosure>
           <div className="k-agent-actions">
             {part.options.map((option) => (
               <KButton
@@ -131,7 +168,7 @@ export function KAgentQuestion({
   const [selected, setSelected] = useState<string[]>([]);
   if (part.state !== "pending") {
     return (
-      <section className="k-agent-card">
+      <section className="k-agent-card k-agent-question">
         <div className="k-agent-card__heading">
           <KIcon name="info" />
           <div>
@@ -171,7 +208,7 @@ export function KAgentQuestion({
       ) : null}
       <div className="k-agent-options">
         {part.options?.map((option) => (
-          <label key={option.id}>
+          <label key={option.id} data-selected={selected.includes(option.id)}>
             <input
               type={multiple ? "checkbox" : "radio"}
               name={part.id}
@@ -240,8 +277,8 @@ export function KAgentActivity({ part }: { part: KAgentActivityPart }) {
   return (
     <KDisclosure
       className="k-agent-activity"
+      data-state={part.active ? "running" : "succeeded"}
       title={part.title}
-      defaultOpen={Boolean(part.active)}
       leadingIcon={
         <ToolStateIcon state={part.active ? "running" : "succeeded"} />
       }

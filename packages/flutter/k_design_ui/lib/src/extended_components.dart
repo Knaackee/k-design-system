@@ -853,6 +853,7 @@ class KResponsiveDrawer {
     double? sideWidth,
     bool sideContentInset = true,
     bool sideScrollable = true,
+    bool sheetExpandBody = false,
     bool sideShowCloseButton = true,
     // Null preserves platform defaults: root for side drawer, nearest for sheet.
     bool? useRootNavigator,
@@ -866,6 +867,7 @@ class KResponsiveDrawer {
         closeLabel: closeLabel,
         dismissible: dismissible,
         useRootNavigator: useRootNavigator ?? false,
+        expandBody: sheetExpandBody,
         child: child,
       );
     }
@@ -943,7 +945,7 @@ class _KResponsiveSideSheet extends StatelessWidget {
                   contentInset ? t.spaceControlGap : t.spaceLayoutGutter,
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Column(

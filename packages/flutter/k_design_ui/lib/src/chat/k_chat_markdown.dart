@@ -20,8 +20,9 @@ class KChatMarkdown extends StatelessWidget {
     final body = TextStyle(
       color: t.colorTextPrimary,
       fontFamily: t.fontFamily,
-      fontSize: t.fontBodySize,
-      height: t.fontBodyLineHeight / t.fontBodySize,
+      fontSize: KDesignTokenVariants.typeScaleCompactFontBodySize,
+      height: KDesignTokenVariants.typeScaleCompactFontBodyLineHeight /
+          KDesignTokenVariants.typeScaleCompactFontBodySize,
     );
     return Semantics(
       liveRegion: streaming,

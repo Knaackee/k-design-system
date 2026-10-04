@@ -20,6 +20,7 @@ import {
   KAgentStatus,
   KAgentTaskGroup,
   KAgentToolCall,
+  KAgentToolGroup,
   type KAgentPartActions,
   type KAgentToolRenderer,
 } from "./agent-parts.js";
@@ -45,6 +46,7 @@ export interface KChatLabels {
   sending: string;
   sent: string;
   failed: string;
+  approvalNote?: string;
 }
 
 const defaultLabels: KChatLabels = {
@@ -58,6 +60,7 @@ const defaultLabels: KChatLabels = {
   sending: "Sending…",
   sent: "Sent",
   failed: "Not sent",
+  approvalNote: "Add a note (optional)",
 };
 
 export type KChatMessageMetadataMode = "always" | "grouped" | "hidden";
@@ -211,8 +214,40 @@ export function KChatConversation({
                   renderAvatar={renderAvatar}
                   actions={renderMessageActions?.(message)}
                 >
-                  {message.parts.map(
-                    (part) =>
+                  {message.parts.map((part, index) => {
+                    // Only group the default renderer; custom parts keep their contract.
+                    if (
+                      !renderPart &&
+                      part.type === "tool" &&
+                      !toolRenderers?.[part.toolName]
+                    ) {
+                      const previous = message.parts[index - 1];
+                      const canGroup = (candidate: KChatMessagePart) =>
+                        candidate.type === "tool" &&
+                        candidate.toolName === part.toolName &&
+                        !candidate.error &&
+                        candidate.state !== "failed" &&
+                        candidate.state !== "approval-required";
+                      if (canGroup(part)) {
+                        if (previous && canGroup(previous)) return null;
+                        const parts = [part];
+                        for (
+                          let next = index + 1;
+                          next < message.parts.length;
+                          next++
+                        ) {
+                          const candidate = message.parts[next];
+                          if (candidate.type !== "tool" || !canGroup(candidate))
+                            break;
+                          parts.push(candidate);
+                        }
+                        if (parts.length > 1)
+                          return (
+                            <KAgentToolGroup key={part.id} parts={parts} />
+                          );
+                      }
+                    }
+                    return (
                       renderPart?.(part, message) ?? (
                         <KChatPart
                           key={part.id}
@@ -223,6 +258,7 @@ export function KChatConversation({
                               : undefined
                           }
                           onLinkActivate={onLinkActivate}
+                          approvalNoteLabel={labels.approvalNote}
                           onApprovalResponse={onApprovalResponse}
                           onQuestionResponse={onQuestionResponse}
                           onFormResponse={onFormResponse}
@@ -232,8 +268,9 @@ export function KChatConversation({
                           onSourceActivate={onSourceActivate}
                           onArtifactActivate={onArtifactActivate}
                         />
-                      ),
-                  )}
+                      )
+                    );
+                  })}
                 </KChatMessage>
               );
             })}
@@ -316,11 +353,13 @@ function KChatPart({
   part,
   toolRenderer,
   onLinkActivate,
+  approvalNoteLabel,
   ...actions
 }: {
   part: KChatMessagePart;
   toolRenderer?: KAgentToolRenderer;
   onLinkActivate?: (url: string) => void;
+  approvalNoteLabel?: string;
 } & KAgentPartActions) {
   if (part.type === "text") {
     return (
@@ -360,7 +399,11 @@ function KChatPart({
     return <KAgentToolCall part={part} renderer={toolRenderer} />;
   if (part.type === "approval")
     return (
-      <KAgentApproval part={part} onResponse={actions.onApprovalResponse} />
+      <KAgentApproval
+        part={part}
+        reasonLabel={approvalNoteLabel}
+        onResponse={actions.onApprovalResponse}
+      />
     );
   if (part.type === "question")
     return (

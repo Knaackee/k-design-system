@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KBottomSheet, KButton, KDialog, KText } from "@k-design-system/ui";
+import { KBottomSheet, KButton, KDialog, KIconButton, KText } from "@k-design-system/ui";
 
 export function OverlayFixture({ sheet = false }: { sheet?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -38,6 +38,7 @@ export function OverlayFixture({ sheet = false }: { sheet?: boolean }) {
           title="Share project"
           description="Project settings"
           actions={actions}
+          headerActions={<KIconButton icon="plus" label="New conversation" onClick={() => setMessage("New conversation")} />}
         >
           {content}
         </KBottomSheet>
@@ -48,6 +49,7 @@ export function OverlayFixture({ sheet = false }: { sheet?: boolean }) {
           title="Share project"
           description="Project settings"
           actions={actions}
+          headerActions={<KIconButton icon="plus" label="New conversation" onClick={() => setMessage("New conversation")} />}
         >
           {content}
         </KDialog>

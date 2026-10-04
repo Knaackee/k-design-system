@@ -92,6 +92,7 @@ class KBottomSheet extends StatelessWidget {
     this.onClose,
     this.closeLabel,
     this.maxWidth = 640,
+    this.expandBody = false,
     super.key,
   });
 
@@ -102,6 +103,7 @@ class KBottomSheet extends StatelessWidget {
   final VoidCallback? onClose;
   final String? closeLabel;
   final double maxWidth;
+  final bool expandBody;
 
   static Future<T?> show<T>({
     required BuildContext context,
@@ -114,6 +116,7 @@ class KBottomSheet extends StatelessWidget {
     bool dismissible = true,
     bool enableDrag = true,
     bool useRootNavigator = false,
+    bool expandBody = false,
   }) => showModalBottomSheet<T>(
     context: context,
     useRootNavigator: useRootNavigator,
@@ -122,14 +125,20 @@ class KBottomSheet extends StatelessWidget {
     enableDrag: dismissible && enableDrag,
     backgroundColor: Colors.transparent,
     useSafeArea: true,
-    builder: (routeContext) => KBottomSheet(
-      title: title,
-      description: description,
-      actions: actions,
-      closeLabel: closeLabel,
-      onClose: dismissible ? () => Navigator.of(routeContext).pop() : null,
-      maxWidth: maxWidth,
-      child: child,
+    builder: (routeContext) => Padding(
+      padding: EdgeInsets.only(
+        bottom: expandBody ? MediaQuery.viewInsetsOf(routeContext).bottom : 0,
+      ),
+      child: KBottomSheet(
+        title: title,
+        description: description,
+        actions: actions,
+        closeLabel: closeLabel,
+        onClose: dismissible ? () => Navigator.of(routeContext).pop() : null,
+        maxWidth: maxWidth,
+        expandBody: expandBody,
+        child: child,
+      ),
     ),
   );
 
@@ -160,7 +169,7 @@ class KBottomSheet extends StatelessWidget {
           child: SafeArea(
             top: false,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: expandBody ? MainAxisSize.max : MainAxisSize.min,
               children: [
                 SizedBox(
                   height: t.componentBottomSheetGripAreaMinHeight,
@@ -175,15 +184,29 @@ class KBottomSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-                _OverlayBody(
-                  title: title,
-                  description: description,
-                  actions: actions,
-                  onClose: onClose,
-                  closeLabel: closeLabel,
-                  padding: t.spaceLayoutGutter,
-                  child: child,
-                ),
+                if (expandBody)
+                  Expanded(
+                    child: _OverlayBody(
+                      title: title,
+                      description: description,
+                      actions: actions,
+                      onClose: onClose,
+                      closeLabel: closeLabel,
+                      padding: t.spaceLayoutGutter,
+                      expandBody: true,
+                      child: child,
+                    ),
+                  )
+                else
+                  _OverlayBody(
+                    title: title,
+                    description: description,
+                    actions: actions,
+                    onClose: onClose,
+                    closeLabel: closeLabel,
+                    padding: t.spaceLayoutGutter,
+                    child: child,
+                  ),
               ],
             ),
           ),
@@ -202,6 +225,7 @@ class _OverlayBody extends StatelessWidget {
     this.actions,
     this.onClose,
     this.closeLabel,
+    this.expandBody = false,
   });
 
   final Widget title;
@@ -211,19 +235,25 @@ class _OverlayBody extends StatelessWidget {
   final VoidCallback? onClose;
   final String? closeLabel;
   final double padding;
+  final bool expandBody;
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(padding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    final body = Padding(
+      padding: expandBody ? EdgeInsets.zero : EdgeInsets.all(padding),
+      child: Column(
+        crossAxisAlignment: expandBody
+            ? CrossAxisAlignment.stretch
+            : CrossAxisAlignment.start,
+        mainAxisSize: expandBody ? MainAxisSize.max : MainAxisSize.min,
+        children: [
+          Padding(
+            padding: expandBody
+                ? EdgeInsets.fromLTRB(padding, padding, padding, 0)
+                : EdgeInsets.zero,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: DefaultTextStyle(
@@ -247,26 +277,27 @@ class _OverlayBody extends StatelessWidget {
                   ),
               ],
             ),
-            if (description != null) ...[
-              SizedBox(height: t.spaceTight),
-              DefaultTextStyle(
-                style: TextStyle(
-                  fontFamily: t.fontFamily,
-                  fontSize: t.fontBodySmallSize,
-                  color: t.colorTextMuted,
-                ),
-                child: description!,
+          ),
+          if (description != null) ...[
+            SizedBox(height: t.spaceTight),
+            DefaultTextStyle(
+              style: TextStyle(
+                fontFamily: t.fontFamily,
+                fontSize: t.fontBodySmallSize,
+                color: t.colorTextMuted,
               ),
-            ],
-            SizedBox(height: t.spaceLayoutGutter),
-            child,
-            if (actions != null) ...[
-              SizedBox(height: t.spaceLayoutGutter),
-              Align(alignment: Alignment.centerRight, child: actions!),
-            ],
+              child: description!,
+            ),
           ],
-        ),
+          SizedBox(height: t.spaceLayoutGutter),
+          if (expandBody) Expanded(child: child) else child,
+          if (actions != null) ...[
+            SizedBox(height: t.spaceLayoutGutter),
+            Align(alignment: Alignment.centerRight, child: actions!),
+          ],
+        ],
       ),
     );
+    return expandBody ? body : SingleChildScrollView(child: body);
   }
 }

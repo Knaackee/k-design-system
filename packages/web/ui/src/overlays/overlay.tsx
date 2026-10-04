@@ -10,6 +10,7 @@ export type KOverlayProps = {
   description?: ReactNode;
   children: ReactNode;
   actions?: ReactNode;
+  headerActions?: ReactNode;
   dismissible?: boolean;
   closeLabel?: string;
   className?: string;
@@ -24,6 +25,7 @@ export function KDialog({
   description,
   children,
   actions,
+  headerActions,
   dismissible = true,
   closeLabel = "Close",
   className,
@@ -52,6 +54,7 @@ export function KDialog({
                 </Dialog.Description>
               )}
             </div>
+            {headerActions && <div className="k-overlay-header-actions">{headerActions}</div>}
             {dismissible && (
               <Dialog.Close asChild>
                 <KIconButton
@@ -88,6 +91,7 @@ export function KBottomSheet({
   description,
   children,
   actions,
+  headerActions,
   dismissible = true,
   closeLabel = "Close",
   className,
@@ -146,6 +150,7 @@ export function KBottomSheet({
                     </Dialog.Description>
                   )}
                 </div>
+                {headerActions && <div className="k-overlay-header-actions">{headerActions}</div>}
                 {dismissible && (
                   <Dialog.Close asChild>
                     <KIconButton

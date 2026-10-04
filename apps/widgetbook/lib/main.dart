@@ -4,6 +4,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
+import 'compact_tool_activity_fixture.dart';
 import 'login_showcase.dart';
 import 'dashboard_shell_fixture.dart';
 import 'chart_fixture.dart';
@@ -806,6 +807,19 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'agent-ui-tools',
                   builder: (_) =>
                       const AgentUiFixture(kind: AgentUiFixtureKind.tools),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-compact-tools',
+                  builder: (_) => const CompactToolActivityFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-compact-tools-phone',
+                  builder: (_) => const CompactToolActivityFixture(phone: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-project-selection',
+                  builder: (_) =>
+                      const CompactToolActivityFixture(question: true),
                 ),
                 WidgetbookUseCase(
                   name: 'agent-ui-approval',
