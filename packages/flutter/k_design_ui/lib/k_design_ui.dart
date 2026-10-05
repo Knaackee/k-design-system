@@ -20,6 +20,7 @@ export 'src/actions/k_command_palette.dart';
 export 'src/navigation/k_sidebar.dart';
 export 'src/navigation/k_mobile_app_bar.dart';
 export 'src/patterns/k_toolbar.dart';
+export 'src/patterns/k_settings_page.dart';
 export 'src/patterns/k_kanban.dart';
 export 'src/patterns/k_calendar.dart';
 export 'src/patterns/k_calendar_types.dart';

@@ -82,6 +82,17 @@ export type {
 } from "./navigation/mobile-app-bar.js";
 export { KToolbar } from "./patterns/toolbar.js";
 export type { KToolbarProps } from "./patterns/toolbar.js";
+export {
+  KSettingsPage,
+  KSettingsSection,
+  KSettingsRow,
+} from "./patterns/settings-page.js";
+export type {
+  KSettingsPageProps,
+  KSettingsSectionProps,
+  KSettingsRowProps,
+  KSettingsRowLayout,
+} from "./patterns/settings-page.js";
 export { KKanban } from "./patterns/kanban.js";
 export type {
   KKanbanProps,
@@ -300,6 +311,7 @@ export type { KAgentQuestionToolProps } from "./chat/ask-tools.js";
 export type {
   KAgentPartActions,
   KAgentToolRenderer,
+  KAgentQuestionInputRenderer,
 } from "./chat/agent-parts.js";
 export type {
   KChatRole,

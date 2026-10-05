@@ -1,0 +1,252 @@
+.k-settings-page {
+  container-type: inline-size;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--k-color-surface-canvas);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+
+.k-settings-page__layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.k-settings-page__navigation,
+.k-settings-page__detail {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.k-settings-page__navigation {
+  overflow-y: auto;
+}
+
+.k-settings-page__navigation > .k-sidebar {
+  --k-sidebar-width: 100%;
+  min-height: 100%;
+}
+
+.k-settings-page__detail {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-left: var(--k-border-width-default) solid var(--k-color-border-default);
+}
+
+.k-settings-page__content {
+  box-sizing: border-box;
+  width: min(100%, 896px);
+  padding: 24px 48px 48px;
+}
+
+.k-settings-page__content[data-wide] {
+  width: min(100%, 1216px);
+}
+
+.k-settings-page__back-slot {
+  display: none;
+}
+
+.k-settings-page__compact-only {
+  display: none;
+}
+
+.k-settings-page__header {
+  margin-bottom: 28px;
+}
+
+.k-settings-page__eyebrow,
+.k-settings-page__header > p,
+.k-settings-section__header p,
+.k-settings-row__description {
+  color: var(--k-color-text-muted);
+}
+
+.k-settings-page__eyebrow {
+  font-size: var(--k-font-caption-size);
+}
+
+.k-settings-page__header h1 {
+  margin: 0 0 8px;
+  font-size: var(--k-font-heading2-size);
+  font-weight: var(--k-font-heading-weight);
+  letter-spacing: var(--k-font-heading2-letter-spacing);
+  line-height: var(--k-font-heading2-line-height);
+}
+
+.k-settings-page__header > p,
+.k-settings-section__header p,
+.k-settings-row__description {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.k-settings-page__body {
+  display: grid;
+  gap: 32px;
+}
+
+.k-settings-section__body {
+  display: grid;
+  gap: var(--k-space-content-action-gap);
+}
+
+.k-settings-section__header {
+  margin-bottom: 20px;
+}
+
+.k-settings-section__header h2 {
+  margin: 0;
+  font-size: var(--k-font-heading4-size);
+  font-weight: var(--k-font-heading-weight);
+  letter-spacing: var(--k-font-heading4-letter-spacing);
+  line-height: var(--k-font-heading4-line-height);
+}
+
+.k-settings-section__header p {
+  margin-top: 6px;
+}
+
+.k-settings-row {
+  container-type: inline-size;
+}
+
+.k-settings-row__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding-block: 12px;
+}
+
+.k-settings-row__title {
+  font-size: var(--k-font-label-size);
+  font-weight: var(--k-font-label-weight);
+  letter-spacing: var(--k-font-label-letter-spacing);
+  line-height: var(--k-font-label-line-height);
+}
+
+.k-settings-row__description {
+  margin-top: 4px;
+  font-size: var(--k-font-body-small-size);
+}
+
+.k-settings-row__control {
+  min-width: 0;
+}
+
+.k-settings-row[data-layout="full-width"] .k-settings-row__layout {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.k-settings-row[data-layout="full-width"] .k-settings-row__control {
+  width: 100%;
+}
+
+@container (max-width: 699px) {
+  .k-settings-page__layout {
+    display: block;
+  }
+
+  .k-settings-page__detail {
+    display: none;
+    border-left: 0;
+  }
+
+  .k-settings-page[data-detail-visible] .k-settings-page__navigation {
+    display: none;
+  }
+
+  .k-settings-page[data-detail-visible] .k-settings-page__detail {
+    display: block;
+  }
+
+  .k-settings-page__content,
+  .k-settings-page__content[data-wide] {
+    width: 100%;
+    padding: 12px 18px;
+  }
+
+  .k-settings-page .k-settings-page__back {
+    display: inline-flex;
+    margin: 0 0 12px;
+  }
+
+  .k-settings-page__back-slot {
+    display: block;
+  }
+
+  .k-settings-page__compact-only {
+    display: inline-flex;
+  }
+}
+
+@container (max-width: 479px) {
+  .k-settings-row[data-layout="auto"] .k-settings-row__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .k-settings-row[data-layout="auto"] .k-settings-row__control {
+    justify-self: end;
+    max-width: 100%;
+  }
+
+  .k-settings-row[data-layout="compact"] .k-settings-row__layout {
+    gap: 12px;
+  }
+}
+
+/* Galleries can force the compact window class independently of iframe width. */
+[data-window-class="compact"] .k-settings-page {
+  width: 100%;
+  background: var(--k-color-surface-raised);
+}
+
+[data-window-class="compact"] .k-settings-page__layout {
+  display: block;
+}
+
+[data-window-class="compact"] .k-settings-page__detail {
+  display: none;
+  border-left: 0;
+}
+
+[data-window-class="compact"]
+  .k-settings-page[data-detail-visible]
+  .k-settings-page__navigation {
+  display: none;
+}
+
+[data-window-class="compact"]
+  .k-settings-page[data-detail-visible]
+  .k-settings-page__detail {
+  display: block;
+}
+
+[data-window-class="compact"] .k-settings-page__content,
+[data-window-class="compact"] .k-settings-page__content[data-wide] {
+  width: 100%;
+  padding: 12px 18px;
+}
+
+[data-window-class="compact"] .k-settings-page .k-settings-page__back {
+  display: inline-flex;
+  margin: 0 0 12px;
+}
+
+[data-window-class="compact"] .k-settings-page__back-slot {
+  display: block;
+}
+
+[data-window-class="compact"] .k-settings-page__compact-only {
+  display: inline-flex;
+}

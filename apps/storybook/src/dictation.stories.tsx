@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import {
   KContainer,
+  KAgentQuestion,
   KDictationAction,
   KDictationState,
   KField,
@@ -89,6 +90,27 @@ function DictationFixture() {
           <KField label="Unavailable">
             <KTextarea disabled trailingAction={action} />
           </KField>
+          <KAgentQuestion
+            part={{
+              id: "dictation-question",
+              type: "question",
+              title: "What should the agent remember?",
+              description: "The question input accepts the consumer dictation action.",
+              kind: "text",
+              state: "pending",
+              placeholder: "Speak or type a note…",
+              submitLabel: "Save note",
+            }}
+            inputRenderer={({ value, onChange }) => (
+              <KInput
+                value={value}
+                placeholder="Speak or type a note…"
+                onChange={(event) => onChange(event.target.value)}
+                dictationState={state}
+                trailingAction={action}
+              />
+            )}
+          />
         </KStack>
       </KContainer>
     </div>

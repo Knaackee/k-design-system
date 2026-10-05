@@ -7,6 +7,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import '../basic_components.dart';
 import '../extended_components.dart';
 import '../primitives/k_button.dart';
+import '../forms/k_input.dart';
 import '../forms/k_textarea.dart';
 import '../primitives/k_disclosure.dart';
 import '../primitives/k_icon.dart';
@@ -193,9 +194,20 @@ class _KAgentApprovalState extends State<KAgentApproval> {
 }
 
 class KAgentQuestion extends StatefulWidget {
-  const KAgentQuestion({required this.part, this.onResponse, super.key});
+  const KAgentQuestion({
+    required this.part,
+    this.onResponse,
+    this.inputBuilder,
+    super.key,
+  });
   final KAgentQuestionPart part;
   final ValueChanged<KAgentQuestionResponse>? onResponse;
+
+  /// Builds the consumer-owned text input, using the question controller.
+  ///
+  /// The default is the design-system single-line [KInput]. Consumers can
+  /// provide a [KTextarea] or a decorated input with dictation actions.
+  final Widget Function(TextEditingController controller)? inputBuilder;
   @override
   State<KAgentQuestion> createState() => _KAgentQuestionState();
 }
@@ -205,14 +217,29 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
   late final Set<String> _selected = {...widget.part.selectedOptionIds};
   @override
   void dispose() {
+    _text.removeListener(_textChanged);
     _text.dispose();
     super.dispose();
   }
 
   @override
+  void initState() {
+    super.initState();
+    _text.addListener(_textChanged);
+  }
+
+  void _textChanged() => setState(() {});
+
+  @override
   Widget build(BuildContext context) {
     final t = _tokens(context);
     final part = widget.part;
+    final headingStyle = _heading5Style(t);
+    final questionIcon = SizedBox(
+      height: MediaQuery.textScalerOf(context).scale(headingStyle.fontSize!) *
+          headingStyle.height!,
+      child: const Center(child: KIcon(KIconName.circleQuestionMark)),
+    );
     if (part.state != KAgentResolutionState.pending) {
       return Container(
         padding: EdgeInsets.all(t.spaceControlGap),
@@ -220,7 +247,7 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const KIcon(KIconName.info),
+            questionIcon,
             SizedBox(width: t.spaceControlGap),
             Expanded(
               child: Column(
@@ -248,7 +275,7 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const KIcon(KIconName.info),
+              questionIcon,
               SizedBox(width: t.spaceControlGap),
               Expanded(
                 child: Column(
@@ -267,11 +294,8 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
           ),
           if (isText) ...[
             SizedBox(height: t.spaceControlGap),
-            TextField(
-              controller: _text,
-              decoration: InputDecoration(hintText: part.placeholder),
-              onChanged: (_) => setState(() {}),
-            ),
+            widget.inputBuilder?.call(_text) ??
+                KInput(controller: _text, placeholder: part.placeholder),
           ],
           if (part.options.isNotEmpty) ...[
             SizedBox(height: t.spaceControlInsetInline),

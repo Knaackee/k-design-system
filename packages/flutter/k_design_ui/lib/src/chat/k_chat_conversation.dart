@@ -116,6 +116,11 @@ class _KChatConversationState extends State<KChatConversation> {
   final _scroll = ScrollController();
   bool _following = true;
   bool _showNewest = false;
+  double? _viewportDimension;
+  bool _jumpScheduled = false;
+  bool _adjustingFocusedField = false;
+  int _scrollIntent = 0;
+  bool _userScrolling = false;
 
   @override
   void initState() {
@@ -128,7 +133,7 @@ class _KChatConversationState extends State<KChatConversation> {
   void didUpdateWidget(covariant KChatConversation oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.messages != widget.messages && _following) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _jumpToEnd());
+      _scheduleJumpToEnd();
     }
   }
 
@@ -141,12 +146,106 @@ class _KChatConversationState extends State<KChatConversation> {
 
   void _onScroll() {
     if (!_scroll.hasClients) return;
-    final following = _scroll.position.extentAfter < 32;
+    if (_adjustingFocusedField) return;
+    final position = _scroll.position;
+    final viewportChanged =
+        _viewportDimension != null &&
+        _viewportDimension != position.viewportDimension;
+    _viewportDimension = position.viewportDimension;
+    if (viewportChanged) {
+      if (!_userScrolling) _scheduleFocusedFieldIntoView();
+      if (!_userScrolling &&
+          _focusedScrollableContext() == null &&
+          _following) {
+        _scheduleJumpToEnd();
+      }
+      return;
+    }
+    final following = position.extentAfter < 32;
     if (following == _following) return;
     setState(() {
       _following = following;
       _showNewest = !following;
     });
+  }
+
+  bool _onScrollNotification(ScrollNotification notification) {
+    if (notification.depth != 0) return false;
+    if (notification is ScrollStartNotification &&
+        notification.dragDetails != null) {
+      _scrollIntent++;
+      _userScrolling = true;
+    } else if (notification is ScrollEndNotification) {
+      _userScrolling = false;
+    }
+    return false;
+  }
+
+  bool _onMetrics(ScrollMetricsNotification notification) {
+    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical)
+      return false;
+    final previousViewport = _viewportDimension;
+    _viewportDimension = notification.metrics.viewportDimension;
+    if (_userScrolling) return false;
+    final focusedContext = _focusedScrollableContext();
+    if (focusedContext != null &&
+        previousViewport != null &&
+        notification.metrics.viewportDimension < previousViewport) {
+      _scheduleFocusedFieldIntoView();
+    } else if (_following) {
+      _scheduleJumpToEnd();
+    }
+    return false;
+  }
+
+  void _scheduleJumpToEnd() {
+    if (_jumpScheduled) return;
+    _jumpScheduled = true;
+    final intent = _scrollIntent;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _jumpScheduled = false;
+      if (mounted &&
+          intent == _scrollIntent &&
+          !_userScrolling &&
+          _following &&
+          _focusedScrollableContext() == null) {
+        _jumpToEnd();
+      }
+    });
+  }
+
+  void _scheduleFocusedFieldIntoView() {
+    final context = _focusedScrollableContext();
+    if (context == null || _userScrolling) return;
+    final intent = _scrollIntent;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted ||
+          !context.mounted ||
+          _userScrolling ||
+          intent != _scrollIntent)
+        return;
+      _adjustingFocusedField = true;
+      Scrollable.ensureVisible(context, alignment: 1, duration: Duration.zero);
+      _adjustingFocusedField = false;
+    });
+  }
+
+  BuildContext? _focusedScrollableContext() {
+    final context = FocusManager.instance.primaryFocus?.context;
+    if (context == null || !_scroll.hasClients) return null;
+    var belongsToConversation = false;
+    BuildContext target = context;
+    context.visitAncestorElements((element) {
+      if (element.widget is TextField) target = element;
+      if (element is StatefulElement &&
+          element.state is ScrollableState &&
+          (element.state as ScrollableState).position == _scroll.position) {
+        belongsToConversation = true;
+        return false;
+      }
+      return true;
+    });
+    return belongsToConversation ? target : null;
   }
 
   void _jumpToEnd({bool jump = false}) {
@@ -190,66 +289,76 @@ class _KChatConversationState extends State<KChatConversation> {
                           widget.emptyState ??
                           _EmptyState(labels: widget.labels),
                     )
-                  : ListView.builder(
-                      controller: _scroll,
-                      padding: EdgeInsets.all(t.spaceLayoutGutter),
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      itemCount: entries,
-                      itemBuilder: (context, index) {
-                        if (widget.hasOlder && index == 0) {
-                          return Align(
-                            child: KButton(
-                              label: widget.labels.loadOlder,
-                              loading: widget.loadingOlder,
-                              variant: KButtonVariant.ghost,
-                              onPressed: widget.onLoadOlder,
-                            ),
-                          );
-                        }
-                        final messageIndex = index - (widget.hasOlder ? 1 : 0);
-                        final message = widget.messages[messageIndex];
-                        final previous = messageIndex > 0
-                            ? widget.messages[messageIndex - 1]
-                            : null;
-                        final author = _authorFor(message);
-                        final startsGroup =
-                            previous == null ||
-                            previous.role != message.role ||
-                            _authorFor(previous) != author;
-                        final metadataMode =
-                            widget.metadataByRole[message.role] ??
-                            widget.metadataMode;
-                        final showMetadata =
-                            metadataMode == KChatMessageMetadataMode.always ||
-                            (metadataMode == KChatMessageMetadataMode.grouped &&
-                                startsGroup);
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            bottom: t.spaceLayoutSectionGap,
-                          ),
-                          child: _Message(
-                            message: message,
-                            labels: widget.labels,
-                            author: author,
-                            showMetadata: showMetadata,
-                            showTimestamp: widget.showTimestamps,
-                            avatarBuilder: widget.avatarBuilder,
-                            formatTimestamp: widget.formatTimestamp,
-                            actions: widget.renderMessageActions?.call(
-                              context,
-                              widget.messages[messageIndex],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: _buildMessageParts(
-                                context,
-                                widget.messages[messageIndex],
+                  : NotificationListener<ScrollMetricsNotification>(
+                      onNotification: _onMetrics,
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: _onScrollNotification,
+                        child: ListView.builder(
+                          controller: _scroll,
+                          padding: EdgeInsets.all(t.spaceLayoutGutter),
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          itemCount: entries,
+                          itemBuilder: (context, index) {
+                            if (widget.hasOlder && index == 0) {
+                              return Align(
+                                child: KButton(
+                                  label: widget.labels.loadOlder,
+                                  loading: widget.loadingOlder,
+                                  variant: KButtonVariant.ghost,
+                                  onPressed: widget.onLoadOlder,
+                                ),
+                              );
+                            }
+                            final messageIndex =
+                                index - (widget.hasOlder ? 1 : 0);
+                            final message = widget.messages[messageIndex];
+                            final previous = messageIndex > 0
+                                ? widget.messages[messageIndex - 1]
+                                : null;
+                            final author = _authorFor(message);
+                            final startsGroup =
+                                previous == null ||
+                                previous.role != message.role ||
+                                _authorFor(previous) != author;
+                            final metadataMode =
+                                widget.metadataByRole[message.role] ??
+                                widget.metadataMode;
+                            final showMetadata =
+                                metadataMode ==
+                                    KChatMessageMetadataMode.always ||
+                                (metadataMode ==
+                                        KChatMessageMetadataMode.grouped &&
+                                    startsGroup);
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: t.spaceLayoutSectionGap,
                               ),
-                            ),
-                          ),
-                        );
-                      },
+                              child: _Message(
+                                message: message,
+                                labels: widget.labels,
+                                author: author,
+                                showMetadata: showMetadata,
+                                showTimestamp: widget.showTimestamps,
+                                avatarBuilder: widget.avatarBuilder,
+                                formatTimestamp: widget.formatTimestamp,
+                                actions: widget.renderMessageActions?.call(
+                                  context,
+                                  widget.messages[messageIndex],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: _buildMessageParts(
+                                    context,
+                                    widget.messages[messageIndex],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
             ),
           ),

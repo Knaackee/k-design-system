@@ -1,19 +1,23 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   KButton,
-  KCheckbox,
   KField,
   KIcon,
   KInput,
   KSearchField,
+  KSettingsPage,
+  KSettingsRow,
+  KSettingsSection,
+  KSlider,
   KSidebar,
   KSidebarBody,
   KSidebarGroup,
   KSidebarHeader,
   KSidebarItem,
+  KStack,
+  KSwitch,
   type KIconName,
 } from "@k-design-system/ui";
-import "./settings-page-fixture.css";
 
 interface SettingsSection {
   id: string;
@@ -34,7 +38,8 @@ const sections: SettingsSection[] = [
   {
     id: "profile",
     label: "Profile",
-    description: "Your public name and account details.",
+    description:
+      "Manage your personal information and communication preferences.",
     icon: "user",
     group: "Personal",
   },
@@ -93,7 +98,7 @@ function SettingsNavigation({
 }) {
   const [search, setSearch] = useState("");
   return (
-    <KSidebar label="Settings navigation" className="settings-page__sidebar">
+    <KSidebar label="Settings navigation" role="navigation">
       <KSidebarHeader>
         <KSidebarItem
           label="Back to app"
@@ -122,7 +127,7 @@ function SettingsNavigation({
                   label={section.label}
                   leading={<KIcon name={section.icon} />}
                   trailing={
-                    <span className="settings-page__mobile-chevron">
+                    <span className="k-settings-page__compact-only">
                       <KIcon name="chevron-right" size={14} />
                     </span>
                   }
@@ -137,77 +142,78 @@ function SettingsNavigation({
   );
 }
 
-function SettingRow({
-  title,
-  description,
-  control,
-}: {
-  title: string;
-  description: string;
-  control: ReactNode;
-}) {
-  return (
-    <div className="settings-page__row">
-      <div>
-        <strong>{title}</strong>
-        <p>{description}</p>
-      </div>
-      {control}
-    </div>
-  );
-}
-
-function SettingsContent({
-  section,
-  onBack,
-}: {
-  section: SettingsSection;
-  onBack: () => void;
-}) {
+function SettingsContent() {
   const [updates, setUpdates] = useState(true);
+  const [volume, setVolume] = useState(60);
   const [saved, setSaved] = useState(false);
   return (
-    <section className="settings-page__content" aria-label="Settings content">
-      <button className="settings-page__back" type="button" onClick={onBack}>
-        <KIcon name="arrow-left" size={16} />
-        Settings
-      </button>
-      <header>
-        <span>{section.group}</span>
-        <h1>{section.label}</h1>
-        <p>{section.description}</p>
-      </header>
-      <section
-        className="settings-page__section"
-        aria-label={`${section.label} settings`}
+    <>
+      <KSettingsSection
+        title="Profile information"
+        description="Details shown across your workspace."
       >
-        <KField label="Display name">
-          <KInput defaultValue="Dennis Knaack" clearable />
-        </KField>
-        <KField
-          label="Contact email"
-          helperText="Used for account and security messages."
-        >
-          <KInput type="email" defaultValue="dennis@example.com" />
-        </KField>
-        <SettingRow
-          title="Product updates"
-          description="Receive a concise monthly summary of important changes."
+        <KSettingsRow
+          title="Display name"
+          description="Used in comments, assignments, and mentions."
+          layout="fullWidth"
           control={
-            <KCheckbox
-              label="Product updates"
-              aria-label="Product updates"
-              value={updates}
-              onValueChange={setUpdates}
+            <KInput
+              aria-label="Display name"
+              defaultValue="Dennis Knaack"
+              clearable
             />
           }
         />
-        <div className="settings-page__actions">
-          <KButton onClick={() => setSaved(true)}>Save changes</KButton>
-        </div>
-        {saved && <p role="status">Demo: Changes saved locally.</p>}
-      </section>
-    </section>
+        <KSettingsRow
+          title="Contact email"
+          description="Used for account and security messages."
+          layout="fullWidth"
+          control={
+            <KInput
+              aria-label="Contact email"
+              type="email"
+              defaultValue="dennis@example.com"
+            />
+          }
+        />
+      </KSettingsSection>
+      <KSettingsSection
+        title="Communication"
+        description="Choose which product messages you receive."
+      >
+        <KSettingsRow
+          title="Notification volume"
+          description="Adjust the volume used for preview sounds."
+          layout="fullWidth"
+          control={
+            <KSlider
+              label="Notification volume"
+              min={0}
+              max={100}
+              value={volume}
+              valueLabel={(value) => `${value}%`}
+              onValueChange={setVolume}
+            />
+          }
+        />
+        <KSettingsRow
+          title="Product updates"
+          description="Receive a concise monthly summary of important changes."
+          layout="compact"
+          control={
+            <KSwitch
+              label="Product updates"
+              checked={updates}
+              onCheckedChange={setUpdates}
+            />
+          }
+        />
+      </KSettingsSection>
+      <KStack gap="action">
+        <KButton onClick={() => setSaved(true)}>Save changes</KButton>
+        {saved && <p role="status">Changes saved locally.</p>}
+      </KStack>
+    </>
   );
 }
 
@@ -218,11 +224,8 @@ export function SettingsPageFixture({
   const [mobileDetail, setMobileDetail] = useState(false);
   const section = sections.find((entry) => entry.id === selected)!;
   return (
-    <div className="settings-page">
-      <div
-        className="settings-page__navigation"
-        data-mobile-hidden={mobileDetail || undefined}
-      >
+    <KSettingsPage
+      navigation={
         <SettingsNavigation
           selected={selected}
           onBackToApp={onBackToApp}
@@ -231,16 +234,13 @@ export function SettingsPageFixture({
             setMobileDetail(true);
           }}
         />
-      </div>
-      <div
-        className="settings-page__detail"
-        data-mobile-hidden={!mobileDetail || undefined}
-      >
-        <SettingsContent
-          section={section}
-          onBack={() => setMobileDetail(false)}
-        />
-      </div>
-    </div>
+      }
+      detailVisible={mobileDetail}
+      onBack={() => setMobileDetail(false)}
+      title={section.label}
+      description={section.description}
+    >
+      <SettingsContent />
+    </KSettingsPage>
   );
 }

@@ -82,7 +82,7 @@
 .dashboard-shell__muted {
   color: var(--k-color-text-primary);
 }
-.dashboard-shell > .settings-page {
+.dashboard-shell > .k-settings-page {
   height: 100%;
   min-height: 0;
   overflow: auto;
@@ -129,27 +129,33 @@
 }
 
 /* The shell follows its measured width, not the standalone gallery preview override. */
-.dashboard-shell:not([data-mobile]) .settings-page {
+.dashboard-shell:not([data-mobile]) .k-settings-page__layout {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
 }
-.dashboard-shell:not([data-mobile])
-  .settings-page__navigation[data-mobile-hidden],
-.dashboard-shell:not([data-mobile]) .settings-page__detail[data-mobile-hidden] {
+.dashboard-shell:not([data-mobile]) .k-settings-page__navigation,
+.dashboard-shell:not([data-mobile]) .k-settings-page__detail {
   display: block;
 }
-.dashboard-shell:not([data-mobile]) .settings-page__back,
-.dashboard-shell:not([data-mobile]) .settings-page__mobile-chevron {
+.dashboard-shell:not([data-mobile]) .k-settings-page__back,
+.dashboard-shell:not([data-mobile]) .k-settings-page__compact-only {
   display: none;
 }
-.dashboard-shell:not([data-mobile]) .settings-page__content {
-  width: min(100%, 760px);
-  padding: clamp(28px, 5vw, 64px);
-}
-.dashboard-shell[data-mobile] .settings-page {
+.dashboard-shell[data-mobile] .k-settings-page__layout {
   display: block;
 }
-.dashboard-shell[data-mobile] .settings-page__navigation[data-mobile-hidden],
-.dashboard-shell[data-mobile] .settings-page__detail[data-mobile-hidden] {
+.dashboard-shell[data-mobile] .k-settings-page__detail,
+.dashboard-shell[data-mobile]
+  .k-settings-page[data-detail-visible]
+  .k-settings-page__navigation {
   display: none;
+}
+.dashboard-shell[data-mobile]
+  .k-settings-page[data-detail-visible]
+  .k-settings-page__detail {
+  display: block;
+}
+.dashboard-shell[data-mobile] .k-settings-page__back,
+.dashboard-shell[data-mobile] .k-settings-page__compact-only {
+  display: inline-flex;
 }

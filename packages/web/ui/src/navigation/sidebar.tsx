@@ -237,7 +237,11 @@ export function KSidebarItem({
     className: "k-sidebar-item__control",
     "aria-current": active ? ("page" as const) : undefined,
     "aria-expanded": expanded,
-    "aria-label": mode === "rail" ? accessibleLabel : undefined,
+    "aria-label": textLabel
+      ? accessibleLabel
+      : mode === "rail"
+        ? accessibleLabel
+        : undefined,
     title: mode === "rail" ? accessibleLabel : undefined,
     onClick: (event: MouseEvent<HTMLElement>) => {
       if (disabled) {

@@ -70,4 +70,84 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('newest control stays in flow below the scroll body', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 500);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await mount(tester, [
+      ...List.generate(
+        20,
+        (index) => KChatTextPart(
+          id: 'long-message-$index',
+          text: 'A long message that makes the conversation scrollable.',
+        ),
+      ),
+      const KAgentQuestionPart(
+        id: 'question',
+        title: 'Which project?',
+        kind: KAgentQuestionKind.text,
+        state: KAgentResolutionState.pending,
+      ),
+    ]);
+
+    final questionField = find.byType(TextField);
+    await tester.ensureVisible(questionField);
+    await tester.tap(questionField);
+    tester.view.physicalSize = const Size(360, 300);
+    await tester.pumpAndSettle();
+    final scrollBodyAfterResize = tester.getRect(find.byType(ListView));
+    expect(
+      tester.getRect(questionField).bottom,
+      lessThanOrEqualTo(scrollBodyAfterResize.bottom),
+    );
+    expect(find.text('Jump to newest message'), findsNothing);
+
+    tester.view.physicalSize = const Size(360, 500);
+    await tester.pump();
+
+    await tester.drag(find.byType(ListView), const Offset(0, 120));
+    await tester.pump();
+
+    final scrollBody = tester.getRect(find.byType(ListView));
+    final newest = tester.getRect(find.text('Jump to newest message'));
+    expect(newest.top, greaterThanOrEqualTo(scrollBody.bottom));
+  });
+  testWidgets('manual drag cancels a queued automatic follow', (tester) async {
+    tester.view.physicalSize = const Size(360, 500);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await mount(
+      tester,
+      List.generate(
+        30,
+        (index) => KChatTextPart(
+          id: 'line-$index',
+          text:
+              'A message with enough content to scroll through the conversation.',
+        ),
+      ),
+    );
+    final list = find.byType(ListView);
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(of: list, matching: find.byType(Scrollable)).first,
+    );
+    final bottom = scrollable.position.pixels;
+    ScrollMetricsNotification(
+      metrics: scrollable.position.copyWith(),
+      context: tester.element(list),
+    ).dispatch(tester.element(list));
+    final gesture = await tester.startGesture(tester.getCenter(list));
+    await gesture.moveBy(const Offset(0, 24));
+    await gesture.moveBy(const Offset(0, 150));
+    await tester.pump();
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(scrollable.position.pixels, lessThan(bottom - 50));
+    expect(find.text('Jump to newest message'), findsOneWidget);
+  });
 }

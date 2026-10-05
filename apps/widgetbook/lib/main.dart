@@ -42,6 +42,7 @@ import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
 import 'agent_ui_fixtures.dart';
+import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
@@ -836,6 +837,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   builder: (_) => const AskToolsFixture(
                     kind: AskToolsFixtureKind.textQuestion,
                   ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-ui-text-question-dictation',
+                  builder: (_) => const AgentQuestionDictationFixture(),
                 ),
                 WidgetbookUseCase(
                   name: 'agent-ui-multiple-choice',

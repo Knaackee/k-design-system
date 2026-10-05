@@ -4,6 +4,7 @@ import { KProgress } from "../extended-components.js";
 import { KButton } from "../primitives/button.js";
 import { KDisclosure } from "../primitives/disclosure.js";
 import { KIcon } from "../primitives/icon.js";
+import { KInput } from "../forms/input.js";
 import type {
   KAgentActivityPart,
   KAgentApprovalPart,
@@ -22,6 +23,11 @@ import type {
 } from "./types.js";
 
 export type KAgentToolRenderer = (part: KAgentToolPart) => ReactNode;
+
+export type KAgentQuestionInputRenderer = (props: {
+  value: string;
+  onChange: (value: string) => void;
+}) => ReactNode;
 
 export interface KAgentPartActions {
   onApprovalResponse?: (response: KAgentApprovalResponse) => void;
@@ -160,9 +166,11 @@ export function KAgentApproval({
 export function KAgentQuestion({
   part,
   onResponse,
+  inputRenderer,
 }: {
   part: KAgentQuestionPart;
   onResponse?: (response: KAgentQuestionResponse) => void;
+  inputRenderer?: KAgentQuestionInputRenderer;
 }) {
   const [text, setText] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
@@ -170,7 +178,7 @@ export function KAgentQuestion({
     return (
       <section className="k-agent-card k-agent-question">
         <div className="k-agent-card__heading">
-          <KIcon name="info" />
+          <span className="k-agent-question__icon"><KIcon name="circle-question-mark" /></span>
           <div>
             <strong>{part.title}</strong>
             <p>{part.answerSummary ?? resolutionLabel(part.state)}</p>
@@ -193,18 +201,22 @@ export function KAgentQuestion({
   return (
     <section className="k-agent-card k-agent-question">
       <div className="k-agent-card__heading">
-        <KIcon name="info" />
+        <span className="k-agent-question__icon"><KIcon name="circle-question-mark" /></span>
         <div>
           <strong>{part.title}</strong>
           {part.description ? <p>{part.description}</p> : null}
         </div>
       </div>
       {part.kind === "text" ? (
-        <textarea
-          value={text}
-          placeholder={part.placeholder}
-          onChange={(event) => setText(event.target.value)}
-        />
+        inputRenderer ? (
+          inputRenderer({ value: text, onChange: setText })
+        ) : (
+          <KInput
+            value={text}
+            placeholder={part.placeholder}
+            onChange={(event) => setText(event.target.value)}
+          />
+        )
       ) : null}
       <div className="k-agent-options">
         {part.options?.map((option) => (

@@ -211,4 +211,56 @@ void main() {
     );
     semantics.dispose();
   });
+
+  testWidgets('text question defaults to KInput without dictation', (
+    tester,
+  ) async {
+    await mount(
+      tester,
+      const KAgentQuestion(
+        part: KAgentQuestionPart(
+          id: 'text',
+          title: 'Add a note',
+          kind: KAgentQuestionKind.text,
+          state: KAgentResolutionState.pending,
+        ),
+      ),
+    );
+
+    expect(find.byType(KInput), findsOneWidget);
+    expect(find.byType(KDictationAction), findsNothing);
+  });
+
+  testWidgets('programmatic inputBuilder controller text enables submit', (
+    tester,
+  ) async {
+    TextEditingController? controller;
+    KAgentQuestionResponse? response;
+    await mount(
+      tester,
+      KAgentQuestion(
+        part: const KAgentQuestionPart(
+          id: 'text',
+          title: 'Add a note',
+          kind: KAgentQuestionKind.text,
+          state: KAgentResolutionState.pending,
+        ),
+        inputBuilder: (provided) {
+          controller = provided;
+          return KInput(controller: provided);
+        },
+        onResponse: (value) => response = value,
+      ),
+    );
+
+    final submit = find.byWidgetPredicate(
+      (widget) => widget is KButton && widget.label == 'Continue',
+    );
+    expect(tester.widget<KButton>(submit).onPressed, isNull);
+    controller!.text = 'Dictated note';
+    await tester.pump();
+    expect(tester.widget<KButton>(submit).onPressed, isNotNull);
+    await tester.tap(submit);
+    expect(response?.text, 'Dictated note');
+  });
 }

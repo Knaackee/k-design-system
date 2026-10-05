@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AgentUiFixture } from "./agent-ui-fixture.js";
+import { AgentQuestionDictationFixture } from "./agent-question-dictation-fixture.js";
 
 const meta = {
   title: "Patterns/AgentUI",
@@ -55,6 +56,12 @@ export const TextQuestion: Story = {
   name: "agent-ui-text-question",
   args: { kind: "text-question" },
   parameters: { fixtureId: "agent-ui-text-question" },
+};
+
+export const TextQuestionDictation: Story = {
+  name: "agent-ui-text-question-dictation",
+  render: () => <AgentQuestionDictationFixture />,
+  parameters: { fixtureId: "agent-ui-text-question-dictation" },
 };
 
 export const MultipleChoice: Story = {

@@ -92,6 +92,24 @@ class _DictationFixtureState extends State<DictationFixture> {
               label: 'Unavailable',
               child: KTextarea(enabled: false, trailingAction: action),
             ),
+            KAgentQuestion(
+              part: const KAgentQuestionPart(
+                id: 'dictation-question',
+                title: 'What should the agent remember?',
+                description:
+                    'The question input accepts the consumer dictation action.',
+                kind: KAgentQuestionKind.text,
+                state: KAgentResolutionState.pending,
+                placeholder: 'Speak or type a note…',
+                submitLabel: 'Save note',
+              ),
+              inputBuilder: (controller) => KInput(
+                controller: controller,
+                placeholder: 'Speak or type a note…',
+                dictationState: state,
+                trailingAction: action,
+              ),
+            ),
           ],
         ),
       ),

@@ -639,3 +639,13 @@
 
 .k-agent-question { padding: var(--k-space-control-gap); }
 .k-agent-question .k-agent-options label { padding: var(--k-space-control-gap); }
+
+/* Align question icons with the first heading line, including wrapped titles. */
+.k-agent-question .k-agent-card__heading {
+  align-items: start;
+}
+.k-agent-question__icon {
+  display: flex;
+  align-items: center;
+  height: var(--k-font-heading5-line-height);
+}
