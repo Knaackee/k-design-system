@@ -46,6 +46,8 @@ import 'usage_details_fixture.dart';
 import 'agent_ui_fixtures.dart';
 import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
+import 'agent_chat_switcher_fixture.dart';
+import 'agent_switcher_variants_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
 import 'editor_fixtures.dart';
@@ -781,6 +783,36 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'AgentUI',
               children: [
+                WidgetbookUseCase(
+                  name: 'agent-chat-switcher',
+                  builder: (_) => const AgentChatSwitcherFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-switcher-custom-content',
+                  builder: (context) => AgentSwitcherShowcaseFixture(
+                    showConnections: context.knobs.boolean(
+                      label: 'Show connections',
+                      initialValue: true,
+                    ),
+                    showActivity: context.knobs.boolean(
+                      label: 'Show activity',
+                      initialValue: true,
+                    ),
+                    showUnread: context.knobs.boolean(
+                      label: 'Show unread',
+                      initialValue: true,
+                    ),
+                    customColors: context.knobs.boolean(
+                      label: 'Custom colors',
+                      initialValue: true,
+                    ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-switcher-reorder',
+                  builder: (_) =>
+                      const AgentSwitcherShowcaseFixture(reorderable: true),
+                ),
                 WidgetbookUseCase(
                   name: 'chat-composer-controls',
                   builder: (_) => const ChatComposerFixture(),

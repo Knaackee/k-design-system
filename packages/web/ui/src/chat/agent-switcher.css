@@ -1,0 +1,223 @@
+.k-agent-switcher {
+  width: 100%;
+  min-width: 0;
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  background: var(--k-color-surface-raised);
+}
+
+.k-agent-switcher__list {
+  display: flex;
+  gap: var(--k-space-control-gap);
+  margin: 0;
+  padding: var(--k-space-control-gap) var(--k-space-layout-gutter);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  touch-action: pan-x;
+  list-style: none;
+}
+
+.k-agent-switcher__item {
+  flex: none;
+}
+
+.k-agent-switcher__item[data-dragging] {
+  z-index: 2;
+  opacity: var(--k-opacity-prominent);
+}
+
+.k-agent-switcher__item[data-drag-over]:not([data-dragging]) {
+  border-radius: var(--k-radius-large);
+  outline: var(--k-border-width-strong) dashed var(--k-color-border-focus);
+  outline-offset: var(--k-space-micro);
+}
+
+.k-agent-switcher__button {
+  display: grid;
+  justify-items: center;
+  gap: var(--k-space-tight);
+  width: calc(
+    var(--k-component-avatar-size-large) + var(--k-space-control-inset-inline) *
+      2
+  );
+  padding: var(--k-space-tight);
+  border: 0;
+  border-radius: var(--k-radius-large);
+  color: var(--k-color-text-muted);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.k-agent-switcher:has(.k-agent-switcher__item[data-dragging])
+  .k-agent-switcher__button {
+  cursor: grabbing;
+}
+
+.k-agent-switcher__button:hover {
+  background: var(--k-color-action-ghost-hover);
+  color: var(--k-color-text-primary);
+}
+
+.k-agent-switcher__button:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-space-micro);
+}
+
+.k-agent-switcher__button[aria-pressed="true"] {
+  color: var(--k-color-text-primary);
+}
+
+.k-agent-switcher__avatar-shell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--k-component-avatar-size-large);
+  height: var(--k-component-avatar-size-large);
+}
+
+.k-agent-switcher__button[aria-pressed="true"] .k-agent-switcher__avatar {
+  box-shadow:
+    0 0 0 var(--k-border-width-strong) var(--k-color-surface-raised),
+    0 0 0 calc(var(--k-border-width-strong) * 2)
+      var(--k-agent-selected-color, var(--k-color-brand-primary-accent));
+}
+
+.k-agent-switcher__avatar-custom {
+  display: grid;
+  place-items: center;
+  width: var(--k-component-avatar-size-large);
+  height: var(--k-component-avatar-size-large);
+  overflow: hidden;
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-surface-subtle);
+}
+
+.k-agent-switcher__avatar-custom > * {
+  width: 100%;
+  height: 100%;
+}
+
+.k-agent-switcher__connection,
+.k-agent-switcher__unread {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: var(--k-size-indicator-tiny);
+  height: var(--k-size-indicator-tiny);
+  box-sizing: border-box;
+  border: var(--k-border-width-default) solid var(--k-color-surface-raised);
+  border-radius: var(--k-radius-full);
+  color: var(--k-color-action-primary-foreground);
+  font-size: var(--k-font-micro-label-size);
+  font-weight: var(--k-font-control-weight);
+  line-height: 1;
+}
+
+.k-agent-switcher__connection {
+  bottom: 0;
+  left: 0;
+  border-color: var(--k-agent-connection-color, var(--k-color-border-strong));
+  background: var(--k-color-surface-raised);
+}
+
+.k-agent-switcher__connection[data-connection="online"] {
+  border-color: var(
+    --k-agent-connection-color,
+    var(--k-color-status-success-accent)
+  );
+  background: var(
+    --k-agent-connection-color,
+    var(--k-color-status-success-accent)
+  );
+}
+
+.k-agent-switcher__connection[data-connection="unknown"] {
+  border-style: dashed;
+}
+
+.k-agent-switcher__connection[data-connection="sleeping"] {
+  border-color: var(
+    --k-agent-connection-color,
+    var(--k-color-status-info-accent)
+  );
+  border-radius: var(--k-radius-extra-small);
+  background: var(
+    --k-agent-connection-color,
+    var(--k-color-status-info-accent)
+  );
+}
+
+.k-agent-switcher__unread {
+  top: calc(-1 * var(--k-space-tight));
+  right: calc(-1 * var(--k-space-tight));
+  min-width: var(--k-size-indicator-medium);
+  height: var(--k-size-indicator-medium);
+  padding-inline: var(--k-space-micro);
+  background: var(--k-agent-badge-color, var(--k-color-status-error-accent));
+  color: var(
+    --k-agent-badge-foreground,
+    var(--k-color-action-primary-foreground)
+  );
+}
+
+.k-agent-switcher__name {
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--k-font-caption-size);
+  line-height: var(--k-font-caption-line-height);
+}
+
+.k-agent-switcher__activity-label {
+  width: 100%;
+  overflow: hidden;
+  color: var(--k-agent-status-color, var(--k-color-text-muted));
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--k-font-micro-label-size);
+  font-weight: var(--k-font-label-weight);
+  line-height: var(--k-font-relaxed-height);
+}
+
+.k-agent-switcher__activity-label[data-activity="working"] {
+  color: var(--k-agent-status-color, var(--k-color-status-info-foreground));
+}
+
+.k-agent-switcher__activity-label[data-activity="needs-input"] {
+  color: var(--k-agent-status-color, var(--k-color-status-warning-foreground));
+}
+
+.k-agent-switcher__manage-icon {
+  display: grid;
+  place-items: center;
+  width: var(--k-component-avatar-size-large);
+  height: var(--k-component-avatar-size-large);
+  box-sizing: border-box;
+  border: var(--k-border-width-default) dashed var(--k-color-border-strong);
+  border-radius: var(--k-radius-full);
+  color: var(--k-color-text-muted);
+  line-height: 1;
+}
+
+.k-agent-switcher__manage-icon .k-icon {
+  width: var(--k-size-icon-default);
+  height: var(--k-size-icon-default);
+}
+
+.k-agent-switcher__sr-only {
+  position: absolute;
+  width: var(--k-border-width-default);
+  height: var(--k-border-width-default);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

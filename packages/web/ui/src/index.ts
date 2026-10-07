@@ -288,6 +288,14 @@ export type {
   KChatComposerLabels,
   KChatComposerModel,
 } from "./chat/composer.js";
+export { KAgentSwitcher } from "./chat/agent-switcher.js";
+export type {
+  KAgentSwitcherProps,
+  KAgentSwitcherItem,
+  KAgentSwitcherLabels,
+  KAgentConnection,
+  KAgentActivityState,
+} from "./chat/agent-switcher.js";
 export {
   KAgentToolCall,
   KAgentApproval,
