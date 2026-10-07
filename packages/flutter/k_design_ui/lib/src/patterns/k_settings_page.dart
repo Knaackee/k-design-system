@@ -22,6 +22,7 @@ class KSettingsPage extends StatelessWidget {
     this.description,
     this.eyebrow,
     this.wide = false,
+    this.contentPadding,
     super.key,
   });
 
@@ -36,6 +37,10 @@ class KSettingsPage extends StatelessWidget {
   final String? description;
   final String? eyebrow;
   final bool wide;
+
+  /// Optional consumer spacing, equivalent to styling the Web content pane.
+  /// Null preserves the standard responsive settings spacing.
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) => _buildPage(context);
@@ -52,7 +57,7 @@ class KSettingsPage extends StatelessWidget {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(width: 280, child: navigation),
+                  SizedBox(width: tokens.layoutPanelWidth, child: navigation),
                   Expanded(child: _contentPane(context, compact: false)),
                 ],
               );
@@ -68,20 +73,30 @@ class KSettingsPage extends StatelessWidget {
 
   Widget _contentPane(BuildContext context, {required bool compact}) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
-    final horizontal = compact ? 18.0 : 48.0;
-    final vertical = compact ? 12.0 : 48.0;
-    final maxWidth = wide ? 1120.0 : 800.0;
+    final horizontal = compact
+        ? tokens.spaceControlInsetInline + tokens.spaceSmallInset
+        : tokens.spaceLayoutSectionGap + tokens.spaceContentActionGap;
+    final vertical = compact
+        ? tokens.spaceControlInsetInline
+        : tokens.spaceLayoutSectionGap + tokens.spaceContentActionGap;
+    final maxWidth = wide
+        ? tokens.layoutContentWidth + (tokens.layoutMenuWidth * 2)
+        : tokens.layoutContentWidth + tokens.layoutTableColumnWidth;
     return Material(
       key: const ValueKey('k-settings-content'),
       color: tokens.colorSurfaceCanvas,
       child: SingleChildScrollView(
         primary: false,
-        padding: EdgeInsets.fromLTRB(
-          horizontal,
-          compact ? 12 : 24,
-          horizontal,
-          vertical,
-        ),
+        padding:
+            contentPadding ??
+            EdgeInsets.fromLTRB(
+              horizontal,
+              compact
+                  ? tokens.spaceControlInsetInline
+                  : tokens.spaceContentActionGap + tokens.spaceControlGap,
+              horizontal,
+              vertical,
+            ),
         child: Align(
           alignment: AlignmentDirectional.topStart,
           child: ConstrainedBox(
@@ -99,7 +114,7 @@ class KSettingsPage extends StatelessWidget {
                       onPressed: onBack,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: tokens.spaceControlInsetInline),
                 ],
                 if (eyebrow case final value?) ...[
                   KText(
@@ -107,11 +122,12 @@ class KSettingsPage extends StatelessWidget {
                     variant: KTextVariant.caption,
                     style: TextStyle(color: tokens.colorTextMuted),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: tokens.spaceSmallInset),
                 ],
                 if (title case final value?) ...[
                   KText(value, variant: KTextVariant.heading2),
-                  if (description != null) const SizedBox(height: 8),
+                  if (description != null)
+                    SizedBox(height: tokens.spaceControlGap),
                 ],
                 if (description case final value?) ...[
                   KText(
@@ -121,7 +137,11 @@ class KSettingsPage extends StatelessWidget {
                   ),
                 ],
                 if (title != null || description != null || eyebrow != null)
-                  const SizedBox(height: 28),
+                  SizedBox(
+                    height:
+                        tokens.spaceContentActionGap +
+                        tokens.spaceControlInsetInline,
+                  ),
                 content,
               ],
             ),
@@ -155,14 +175,16 @@ class KSettingsSection extends StatelessWidget {
         children: [
           KText(title, variant: KTextVariant.heading4),
           if (description case final value?) ...[
-            const SizedBox(height: 6),
+            SizedBox(height: tokens.spaceSmallInset),
             KText(
               value,
               variant: KTextVariant.bodySmall,
               style: TextStyle(color: tokens.colorTextMuted),
             ),
           ],
-          const SizedBox(height: 20),
+          SizedBox(
+            height: tokens.spaceControlInsetInline + tokens.spaceControlGap,
+          ),
           child,
         ],
       ),
@@ -219,7 +241,7 @@ class KSettingsRow extends StatelessWidget {
           children: [
             KText(title, variant: KTextVariant.label),
             if (description case final value?) ...[
-              const SizedBox(height: 4),
+              SizedBox(height: tokens.spaceTight),
               KText(
                 value,
                 variant: KTextVariant.bodySmall,
@@ -231,13 +253,15 @@ class KSettingsRow extends StatelessWidget {
         return Semantics(
           container: true,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(
+              vertical: tokens.spaceControlInsetInline,
+            ),
             child: stacked
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       copy,
-                      const SizedBox(height: 12),
+                      SizedBox(height: tokens.spaceControlInsetInline),
                       if (layout == KSettingsRowLayout.fullWidth)
                         boundedControl
                       else
@@ -251,7 +275,11 @@ class KSettingsRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(child: copy),
-                      const SizedBox(width: 24),
+                      SizedBox(
+                        width:
+                            tokens.spaceContentActionGap +
+                            tokens.spaceControlGap,
+                      ),
                       boundedControl,
                     ],
                   ),

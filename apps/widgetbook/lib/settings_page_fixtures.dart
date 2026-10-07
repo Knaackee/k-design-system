@@ -102,6 +102,12 @@ class _SettingsPageFixtureState extends State<SettingsPageFixture> {
   @override
   Widget build(BuildContext context) {
     return KSettingsPage(
+      contentPadding: EdgeInsets.fromLTRB(
+        MediaQuery.sizeOf(context).width < KSettingsPage.breakpoint ? 16 : 24,
+        24,
+        MediaQuery.sizeOf(context).width < KSettingsPage.breakpoint ? 16 : 24,
+        48,
+      ),
       navigation: _SettingsNavigation(
         selected: selected,
         query: query,

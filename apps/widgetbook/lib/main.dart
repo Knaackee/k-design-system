@@ -24,6 +24,7 @@ import 'data_table_overflow_fixture.dart';
 import 'data_table_cells_fixture.dart';
 import 'disclosure_fixtures.dart';
 import 'overlay_fixtures.dart';
+import 'adaptive_dialog_fixture.dart';
 import 'currency_fixtures.dart';
 import 'data_table_virtual_fixture.dart';
 import 'kanban_fixtures.dart';
@@ -41,6 +42,7 @@ import 'extended_component_fixtures.dart';
 import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
+import 'usage_details_fixture.dart';
 import 'agent_ui_fixtures.dart';
 import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
@@ -214,6 +216,10 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'Dialog',
               children: [
+                WidgetbookUseCase(
+                  name: 'adaptive-dialog',
+                  builder: (_) => const AdaptiveDialogFixture(),
+                ),
                 WidgetbookUseCase(
                   name: 'dialog-modal',
                   builder: (_) => const OverlayFixture(),
@@ -883,6 +889,15 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'settings-page-responsive',
                   builder: (_) => const SettingsPageFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'UsageDetails',
+              children: [
+                WidgetbookUseCase(
+                  name: 'usage-details-subscription',
+                  builder: (_) => const UsageDetailsFixture(),
                 ),
               ],
             ),

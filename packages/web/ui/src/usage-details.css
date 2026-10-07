@@ -1,0 +1,95 @@
+.k-usage-details {
+  container-type: inline-size;
+  min-width: 0;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  display: grid;
+  gap: var(--k-space-content-action-gap);
+}
+.k-usage-details__header,
+.k-usage-details__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+}
+.k-usage-details__title {
+  font-weight: var(--k-font-heading-weight);
+}
+.k-usage-details__muted {
+  color: var(--k-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+.k-usage-details__windows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--k-space-control-inset-inline);
+}
+.k-usage-details__window,
+.k-usage-details__extras {
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--k-space-control-gap);
+}
+.k-usage-details__extras {
+  border-top: var(--k-border-width-default) solid var(--k-color-border-default);
+  padding-top: var(--k-space-control-inset-inline);
+}
+.k-usage-details__values {
+  margin: 0;
+  display: grid;
+  gap: var(--k-space-control-inset-inline);
+  font-size: var(--k-font-body-small-size);
+}
+.k-usage-details__value {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--k-space-control-inset-inline);
+}
+.k-usage-details__value dt {
+  color: var(--k-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+.k-usage-details__value dd {
+  margin: 0;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.k-usage-details strong {
+  font-weight: var(--k-font-heading-weight);
+  font-variant-numeric: tabular-nums;
+}
+.k-usage-details__footer {
+  display: grid;
+  gap: var(--k-space-tight);
+}
+@container (max-width: 440px) {
+  .k-usage-details__windows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .k-usage-details__value {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--k-space-tight);
+  }
+  .k-usage-details__value dd {
+    text-align: left;
+  }
+}
+
+.k-usage-details .k-progress__meta > span:last-child {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.k-usage-details__progress-value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+@container (min-width: 700px) {
+  .k-usage-details__windows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

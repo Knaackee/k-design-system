@@ -250,7 +250,7 @@ void main() {
     expect(find.text('Preferences'), findsNothing);
     await tester.tap(find.text('Save changes'));
     await tester.pumpAndSettle();
-    expect(find.text('Demo: Changes saved locally.'), findsOneWidget);
+    expect(find.text('Changes saved locally.'), findsOneWidget);
     await tester.tap(find.text('Back to app'));
     await tester.pumpAndSettle();
     expect(find.text('Customer portal'), findsWidgets);

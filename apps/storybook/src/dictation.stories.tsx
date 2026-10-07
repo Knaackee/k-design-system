@@ -95,7 +95,8 @@ function DictationFixture() {
               id: "dictation-question",
               type: "question",
               title: "What should the agent remember?",
-              description: "The question input accepts the consumer dictation action.",
+              description:
+                "The question input accepts the consumer dictation action.",
               kind: "text",
               state: "pending",
               placeholder: "Speak or type a note…",

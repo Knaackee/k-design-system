@@ -7,6 +7,7 @@ export interface KSettingsPageProps extends Omit<
   "title"
 > {
   navigation: ReactNode;
+  breadcrumb?: ReactNode;
   children: ReactNode;
   detailVisible?: boolean;
   onBack?: () => void;
@@ -20,6 +21,7 @@ export interface KSettingsPageProps extends Omit<
 /** Responsive settings shell. Consumers retain routing, state and navigation content. */
 export function KSettingsPage({
   navigation,
+  breadcrumb,
   children,
   detailVisible = false,
   onBack,
@@ -50,16 +52,17 @@ export function KSettingsPage({
           >
             {onBack ? (
               <div className="k-settings-page__back-slot">
-              <KButton
-                className="k-settings-page__back"
-                variant="ghost"
-                onClick={onBack}
-              >
-                <KIcon name="arrow-left" size={16} />
-                {backLabel}
-              </KButton>
+                <KButton
+                  className="k-settings-page__back"
+                  variant="ghost"
+                  onClick={onBack}
+                >
+                  <KIcon name="arrow-left" size={16} />
+                  {backLabel}
+                </KButton>
               </div>
             ) : null}
+            {breadcrumb}
             {eyebrow || title || description ? (
               <header className="k-settings-page__header">
                 {eyebrow ? (

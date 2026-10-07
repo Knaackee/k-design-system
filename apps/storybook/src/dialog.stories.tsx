@@ -11,3 +11,22 @@ export const Modal = {
   parameters: { fixtureId: "dialog-modal" },
   render: () => <OverlayFixture />,
 };
+
+export const Phone = {
+  name: "adaptive-dialog-phone",
+  globals: { viewport: { value: "mobile1", isRotated: false } },
+  parameters: {
+    fixtureId: "adaptive-dialog-phone",
+    viewport: { defaultViewport: "mobile1" },
+  },
+  render: () => <OverlayFixture />,
+};
+export const Tablet = {
+  name: "adaptive-dialog-tablet",
+  globals: { viewport: { value: "tablet", isRotated: false } },
+  parameters: {
+    fixtureId: "adaptive-dialog-tablet",
+    viewport: { defaultViewport: "tablet" },
+  },
+  render: () => <OverlayFixture />,
+};

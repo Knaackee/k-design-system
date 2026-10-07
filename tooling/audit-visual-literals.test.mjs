@@ -3,6 +3,17 @@ import test from "node:test";
 
 import { auditSource } from "./audit-visual-literals.mjs";
 
+test("excludes query thresholds while auditing declarations inside queries", () => {
+  for (const query of ["@media", "@container", "@container usage"]) {
+    const findings = auditSource(
+      `${query} (max-width: 440px) { .fixture { padding: 12px; } }`,
+      ".css",
+    );
+    assert.equal(findings.length, 1);
+    assert.equal(findings[0].rule, "dimension");
+  }
+});
+
 test("finds raw Web colors, visual declarations and motion", () => {
   const findings = auditSource(
     ".fixture { color: #fff; opacity: .5; padding: 8px; border: 1px solid currentColor; transition: color 150ms ease; }",

@@ -11,7 +11,11 @@ export function AgentQuestionDictationFixture() {
   const action = (
     <KDictationAction
       state={state}
-      label={state === KDictationState.recording ? "Stop dictation" : "Start dictation"}
+      label={
+        state === KDictationState.recording
+          ? "Stop dictation"
+          : "Start dictation"
+      }
       onPressed={() =>
         setState((current) =>
           current === KDictationState.recording

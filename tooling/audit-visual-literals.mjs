@@ -14,15 +14,15 @@ const rules = {
     ["color", /#[0-9a-f]{3,8}\b|(?:rgb|hsl)a?\([^)]*\)/gi],
     [
       "appearance",
-      /(?:border-radius|box-shadow|opacity|font-size|outline(?:-width|-offset)?|border(?:-(?:top|right|bottom|left|inline-start|inline-end|block-start|block-end))?(?:-width)?)\s*:\s*[^;}]*\d[^;}]*[;}]/gi,
+      /(?:border-radius|box-shadow|opacity|font-size|outline(?:-width|-offset)?|border(?:-(?:top|right|bottom|left|inline-start|inline-end|block-start|block-end))?(?:-width)?)\s*:\s*[^;{}]*\d[^;{}]*[;}]/gi,
     ],
     [
       "dimension",
-      /(?:gap|row-gap|column-gap|padding(?:-(?:top|right|bottom|left|inline|inline-start|inline-end|block|block-start|block-end))?|margin(?:-(?:top|right|bottom|left|inline|inline-start|inline-end|block|block-start|block-end))?|(?:min-|max-)?(?:width|height)|inset(?:-(?:inline|block|inline-start|inline-end|block-start|block-end))?|top|right|bottom|left)\s*:\s*[^;}]*\b\d+(?:\.\d+)?(?:px|rem|em)\b[^;}]*[;}]/gi,
+      /(?:gap|row-gap|column-gap|padding(?:-(?:top|right|bottom|left|inline|inline-start|inline-end|block|block-start|block-end))?|margin(?:-(?:top|right|bottom|left|inline|inline-start|inline-end|block|block-start|block-end))?|(?:min-|max-)?(?:width|height)|inset(?:-(?:inline|block|inline-start|inline-end|block-start|block-end))?|top|right|bottom|left)\s*:\s*[^;{}]*\b\d+(?:\.\d+)?(?:px|rem|em)\b[^;{}]*[;}]/gi,
     ],
     [
       "motion",
-      /(?:animation|transition)[^;}]*\b\d+(?:\.\d+)?(?:ms|s)\b[^;}]*[;}]/gi,
+      /(?:animation|transition)[^;{}]*\b\d+(?:\.\d+)?(?:ms|s)\b[^;{}]*[;}]/gi,
     ],
   ],
   dart: [
@@ -80,7 +80,19 @@ export function auditSource(source, extension, path = "fixture") {
       if (rule === "appearance" && !hasRawAppearanceValue(match[0])) continue;
       const line = source.slice(0, match.index).split(/\r?\n/).length;
       const sourceLine = normalizeLine(sourceLines[line - 1] ?? match[0]);
-      if (sourceLine.startsWith("@media")) continue;
+      // Query thresholds cannot reference CSS custom properties. Exclude only
+      // the query prelude, never declarations inside its block.
+      const beforeMatch = source.slice(0, match.index);
+      const statementStart = Math.max(
+        beforeMatch.lastIndexOf("{"),
+        beforeMatch.lastIndexOf("}"),
+        beforeMatch.lastIndexOf(";"),
+      );
+      if (
+        /^\s*@(media|container)\b/.test(beforeMatch.slice(statementStart + 1))
+      ) {
+        continue;
+      }
       if (
         extension === ".css" &&
         rule === "dimension" &&

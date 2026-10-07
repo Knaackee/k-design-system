@@ -622,14 +622,16 @@
 }
 
 /* Compact conversations omit redundant author chrome and assistant bubbles. */
-.k-chat-message[data-role="assistant"][data-avatar-visible="false"][data-text-only="true"] .k-chat-message__parts {
+.k-chat-message[data-role="assistant"][data-avatar-visible="false"][data-text-only="true"]
+  .k-chat-message__parts {
   width: 100%;
   max-width: 100%;
   padding: 0;
   border: 0;
   background: transparent;
 }
-.k-chat-message[data-role="user"][data-text-only="true"] .k-chat-message__parts {
+.k-chat-message[data-role="user"][data-text-only="true"]
+  .k-chat-message__parts {
   border-color: var(--k-color-border-default);
   background: var(--k-color-surface-raised);
 }
@@ -637,8 +639,12 @@
   color: var(--k-color-text-primary);
 }
 
-.k-agent-question { padding: var(--k-space-control-gap); }
-.k-agent-question .k-agent-options label { padding: var(--k-space-control-gap); }
+.k-agent-question {
+  padding: var(--k-space-control-gap);
+}
+.k-agent-question .k-agent-options label {
+  padding: var(--k-space-control-gap);
+}
 
 /* Align question icons with the first heading line, including wrapped titles. */
 .k-agent-question .k-agent-card__heading {

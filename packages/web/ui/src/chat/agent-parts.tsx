@@ -178,7 +178,9 @@ export function KAgentQuestion({
     return (
       <section className="k-agent-card k-agent-question">
         <div className="k-agent-card__heading">
-          <span className="k-agent-question__icon"><KIcon name="circle-question-mark" /></span>
+          <span className="k-agent-question__icon">
+            <KIcon name="circle-question-mark" />
+          </span>
           <div>
             <strong>{part.title}</strong>
             <p>{part.answerSummary ?? resolutionLabel(part.state)}</p>
@@ -201,7 +203,9 @@ export function KAgentQuestion({
   return (
     <section className="k-agent-card k-agent-question">
       <div className="k-agent-card__heading">
-        <span className="k-agent-question__icon"><KIcon name="circle-question-mark" /></span>
+        <span className="k-agent-question__icon">
+          <KIcon name="circle-question-mark" />
+        </span>
         <div>
           <strong>{part.title}</strong>
           {part.description ? <p>{part.description}</p> : null}

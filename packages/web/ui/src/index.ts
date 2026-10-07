@@ -25,7 +25,7 @@ export type {
   KLayoutAlign,
 } from "./primitives/layout.js";
 export { KCard } from "./primitives/card.js";
-export { KDialog, KBottomSheet } from "./overlays/overlay.js";
+export { KDialog, KAdaptiveDialog, KBottomSheet } from "./overlays/overlay.js";
 export type { KOverlayProps, KBottomSheetProps } from "./overlays/overlay.js";
 export type { KCardProps } from "./primitives/card.js";
 export { KDisclosure, KAccordion } from "./primitives/disclosure.js";
@@ -464,3 +464,10 @@ export {
   createKDictationAnchor,
 } from "./forms/dictation-action.js";
 export type { KDictationActionProps } from "./forms/dictation-action.js";
+
+export { KUsageDetails } from "./patterns/usage-details.js";
+export type {
+  KUsageDetailsProps,
+  KUsageWindow,
+  KUsageValue,
+} from "./patterns/usage-details.js";

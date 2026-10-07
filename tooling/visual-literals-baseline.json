@@ -1,6 +1,14 @@
 {
   "version": 1,
   "entries": {
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 6px;": {
+      "count": 1,
+      "reason": "Existing touch resize grip geometry predates this change; now detected because query parsing no longer consumes following declarations. Preserve the reviewed touch appearance."
+    },
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 96px;": {
+      "count": 1,
+      "reason": "Existing mobile timeline label width predates this change; now detected inside the media query. Preserve the existing responsive layout; no matching semantic token exists."
+    },
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|dimension|height: 44,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|dimension|width: 44,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|motion|_hold = Timer(const Duration(milliseconds: 500), () {": 1,

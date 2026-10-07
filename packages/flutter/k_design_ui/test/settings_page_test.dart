@@ -4,6 +4,32 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets(
+    'consumer content padding aligns settings content without shifting navigation',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: const KSettingsPage(
+            navigation: SizedBox(key: ValueKey('navigation')),
+            contentPadding: EdgeInsets.all(24),
+            content: SizedBox(key: ValueKey('content'), height: 40),
+          ),
+        ),
+      );
+      expect(
+        tester.getSize(find.byKey(const ValueKey('navigation'))).width,
+        280,
+      );
+      expect(
+        tester.getTopLeft(find.byKey(const ValueKey('content'))),
+        const Offset(304, 24),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
   testWidgets('settings page switches navigation and detail below 700px', (
     tester,
   ) async {

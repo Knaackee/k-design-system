@@ -15,6 +15,7 @@ class KDialog extends StatelessWidget {
     this.onClose,
     this.closeLabel,
     this.maxWidth = 520,
+    this.expandBody = false,
     super.key,
   });
 
@@ -25,6 +26,7 @@ class KDialog extends StatelessWidget {
   final VoidCallback? onClose;
   final String? closeLabel;
   final double maxWidth;
+  final bool expandBody;
 
   static Future<T?> show<T>({
     required BuildContext context,
@@ -73,6 +75,7 @@ class KDialog extends StatelessWidget {
               onClose: onClose,
               closeLabel: closeLabel,
               padding: t.spaceLayoutGutter,
+              expandBody: expandBody,
               child: child,
             ),
           ),
@@ -93,6 +96,8 @@ class KBottomSheet extends StatelessWidget {
     this.closeLabel,
     this.maxWidth = 640,
     this.expandBody = false,
+    this.onDragUpdate,
+    this.onDragEnd,
     super.key,
   });
 
@@ -104,6 +109,8 @@ class KBottomSheet extends StatelessWidget {
   final String? closeLabel;
   final double maxWidth;
   final bool expandBody;
+  final GestureDragUpdateCallback? onDragUpdate;
+  final GestureDragEndCallback? onDragEnd;
 
   static Future<T?> show<T>({
     required BuildContext context,
@@ -171,15 +178,22 @@ class KBottomSheet extends StatelessWidget {
             child: Column(
               mainAxisSize: expandBody ? MainAxisSize.max : MainAxisSize.min,
               children: [
-                SizedBox(
-                  height: t.componentBottomSheetGripAreaMinHeight,
-                  child: Center(
-                    child: Container(
-                      width: t.componentBottomSheetGripWidth,
-                      height: t.componentBottomSheetGripHeight,
-                      decoration: BoxDecoration(
-                        color: t.colorBorderStrong,
-                        borderRadius: BorderRadius.circular(t.radiusExtraSmall),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onVerticalDragUpdate: onDragUpdate,
+                  onVerticalDragEnd: onDragEnd,
+                  child: SizedBox(
+                    height: t.componentBottomSheetGripAreaMinHeight,
+                    child: Center(
+                      child: Container(
+                        width: t.componentBottomSheetGripWidth,
+                        height: t.componentBottomSheetGripHeight,
+                        decoration: BoxDecoration(
+                          color: t.colorBorderStrong,
+                          borderRadius: BorderRadius.circular(
+                            t.radiusExtraSmall,
+                          ),
+                        ),
                       ),
                     ),
                   ),

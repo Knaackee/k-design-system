@@ -182,8 +182,9 @@ class _KChatConversationState extends State<KChatConversation> {
   }
 
   bool _onMetrics(ScrollMetricsNotification notification) {
-    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical)
+    if (notification.depth != 0 || notification.metrics.axis != Axis.vertical) {
       return false;
+    }
     final previousViewport = _viewportDimension;
     _viewportDimension = notification.metrics.viewportDimension;
     if (_userScrolling) return false;
@@ -222,8 +223,9 @@ class _KChatConversationState extends State<KChatConversation> {
       if (!mounted ||
           !context.mounted ||
           _userScrolling ||
-          intent != _scrollIntent)
+          intent != _scrollIntent) {
         return;
+      }
       _adjustingFocusedField = true;
       Scrollable.ensureVisible(context, alignment: 1, duration: Duration.zero);
       _adjustingFocusedField = false;
