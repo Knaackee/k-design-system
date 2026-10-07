@@ -26,7 +26,7 @@ export const CustomContent: StoryObj<typeof AgentSwitcherShowcaseFixture> = {
     showActivity: true,
     showUnread: true,
     customColors: true,
-    reorderable: false,
+    reorderable: true,
   },
   parameters: { fixtureId: "agent-switcher-custom-content" },
 };

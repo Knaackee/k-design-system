@@ -22,20 +22,15 @@ export function moveAgentId(
   return next;
 }
 
-interface Gesture {
+interface PointerGesture {
   id: string;
-  name: string;
   pointerId: number;
+  pointerType: string;
   startX: number;
   startY: number;
-  element: HTMLButtonElement;
-  activated: boolean;
-  reordering: boolean;
-  panning: boolean;
-  overId: string;
-  clientX: number;
-  clientY: number;
   scrollLeft: number;
+  panning: boolean;
+  activated: boolean;
 }
 
 interface ReorderFeedback {
@@ -53,48 +48,24 @@ export function useAgentSwitcherReorder({
   onLongPress?: (id: string) => void;
   feedback: ReorderFeedback;
 }) {
-  const [draggingId, setDraggingId] = useState<string>();
-  const [overId, setOverId] = useState<string>();
   const [announcement, setAnnouncement] = useState("");
-  const gesture = useRef<Gesture | undefined>(undefined);
+  const gesture = useRef<PointerGesture | undefined>(undefined);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const suppressClick = useRef<string | undefined>(undefined);
   const rootRef = useRef<HTMLElement>(null);
-  const autoScrollDirection = useRef(0);
-  const autoScrollFrame = useRef<number | undefined>(undefined);
+  const dragActive = useRef(false);
 
   const clearTimer = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
     timer.current = undefined;
   }, []);
 
-  const stopAutoScroll = useCallback(() => {
-    autoScrollDirection.current = 0;
-    if (autoScrollFrame.current !== undefined) {
-      cancelAnimationFrame(autoScrollFrame.current);
-      autoScrollFrame.current = undefined;
-    }
-  }, []);
-
-  const reset = useCallback(() => {
+  const resetPointer = useCallback(() => {
     clearTimer();
-    stopAutoScroll();
     gesture.current = undefined;
-    setDraggingId(undefined);
-    setOverId(undefined);
-  }, [clearTimer, stopAutoScroll]);
+  }, [clearTimer]);
 
-  useEffect(() => reset, [reset]);
-
-  useEffect(() => {
-    const stopActiveTouchDrag = (event: TouchEvent) => {
-      if (gesture.current?.reordering) event.preventDefault();
-    };
-    window.addEventListener("touchmove", stopActiveTouchDrag, {
-      passive: false,
-    });
-    return () => window.removeEventListener("touchmove", stopActiveTouchDrag);
-  }, []);
+  useEffect(() => resetPointer, [resetPointer]);
 
   useEffect(() => {
     const list = rootRef.current?.querySelector<HTMLElement>(
@@ -119,237 +90,125 @@ export function useAgentSwitcherReorder({
   }, []);
 
   const pointerDown = useCallback(
-    (event: ReactPointerEvent<HTMLButtonElement>, id: string, name: string) => {
+    (event: ReactPointerEvent<HTMLButtonElement>, id: string) => {
       if (event.button !== 0) return;
       suppressClick.current = undefined;
       clearTimer();
+      const list = rootRef.current?.querySelector<HTMLElement>(
+        ".k-agent-switcher__list",
+      );
       gesture.current = {
         id,
-        name,
         pointerId: event.pointerId,
+        pointerType: event.pointerType,
         startX: event.clientX,
         startY: event.clientY,
-        element: event.currentTarget,
-        activated: false,
-        reordering: false,
+        scrollLeft: list?.scrollLeft ?? 0,
         panning: false,
-        overId: id,
-        clientX: event.clientX,
-        clientY: event.clientY,
-        scrollLeft:
-          rootRef.current?.querySelector<HTMLElement>(".k-agent-switcher__list")
-            ?.scrollLeft ?? 0,
+        activated: false,
       };
-      if (event.pointerType === "mouse")
-        event.currentTarget.setPointerCapture?.(event.pointerId);
-      if (!onReorder && !onLongPress) return;
-      timer.current = setTimeout(() => {
-        const current = gesture.current;
-        if (!current || current.pointerId !== event.pointerId) return;
-        current.activated = true;
-        onLongPress?.(current.id);
-        if (onReorder) {
-          current.reordering = true;
-          current.element.setPointerCapture?.(current.pointerId);
-          setDraggingId(current.id);
-          setOverId(current.id);
-          setAnnouncement(
-            feedback.announce(
-              current.name,
-              ids.indexOf(current.id) + 1,
-              ids.length,
-            ),
-          );
-        }
-      }, longPressDelay);
-    },
-    [clearTimer, feedback, ids, onLongPress, onReorder],
-  );
-
-  const updateOver = useCallback(
-    (clientX: number, clientY: number) => {
-      const target = document
-        .elementFromPoint(clientX, clientY)
-        ?.closest<HTMLElement>("[data-agent-id]");
-      const nextOver = target?.dataset.agentId;
-      if (
-        target &&
-        rootRef.current?.contains(target) &&
-        nextOver &&
-        ids.includes(nextOver)
-      ) {
-        if (gesture.current) gesture.current.overId = nextOver;
-        setOverId(nextOver);
+      if (!onReorder && onLongPress) {
+        timer.current = setTimeout(() => {
+          const current = gesture.current;
+          if (!current || current.pointerId !== event.pointerId) return;
+          current.activated = true;
+          suppressClick.current = current.id;
+          onLongPress(current.id);
+        }, longPressDelay);
       }
     },
-    [ids],
+    [clearTimer, onLongPress, onReorder],
   );
-
-  const startAutoScroll = useCallback(() => {
-    if (autoScrollFrame.current !== undefined) return;
-    const tick = () => {
-      const current = gesture.current;
-      const list = rootRef.current?.querySelector<HTMLElement>(
-        ".k-agent-switcher__list",
-      );
-      if (!current?.reordering || !list || !autoScrollDirection.current) {
-        autoScrollFrame.current = undefined;
-        return;
-      }
-      list.scrollLeft += autoScrollDirection.current * 8;
-      updateOver(current.clientX, current.clientY);
-      autoScrollFrame.current = requestAnimationFrame(tick);
-    };
-    autoScrollFrame.current = requestAnimationFrame(tick);
-  }, [updateOver]);
 
   const pointerMove = useCallback(
-    (event: ReactPointerEvent<HTMLButtonElement>) => {
+    (event: ReactPointerEvent<HTMLElement>) => {
       const current = gesture.current;
-      if (!current || current.pointerId !== event.pointerId) return;
-      current.clientX = event.clientX;
-      current.clientY = event.clientY;
-      if (current.panning) {
-        event.preventDefault();
-        const list = rootRef.current?.querySelector<HTMLElement>(
-          ".k-agent-switcher__list",
-        );
-        if (list)
-          list.scrollLeft =
-            current.scrollLeft - (event.clientX - current.startX);
+      if (
+        !current ||
+        current.pointerId !== event.pointerId ||
+        dragActive.current
+      )
         return;
-      }
-      if (!current.activated) {
-        const deltaX = event.clientX - current.startX;
-        const deltaY = event.clientY - current.startY;
-        if (Math.hypot(deltaX, deltaY) > movementTolerance) {
-          clearTimer();
-          if (
-            event.pointerType === "mouse" &&
-            Math.abs(deltaX) >= Math.abs(deltaY)
-          ) {
-            current.panning = true;
-            current.element.setPointerCapture?.(current.pointerId);
-            const list = rootRef.current?.querySelector<HTMLElement>(
-              ".k-agent-switcher__list",
-            );
-            if (list) list.scrollLeft = current.scrollLeft - deltaX;
-          } else {
-            gesture.current = undefined;
-          }
+      const deltaX = event.clientX - current.startX;
+      const deltaY = event.clientY - current.startY;
+      if (!current.panning) {
+        if (Math.hypot(deltaX, deltaY) <= movementTolerance) return;
+        clearTimer();
+        if (
+          current.pointerType !== "mouse" ||
+          Math.abs(deltaX) < Math.abs(deltaY)
+        ) {
+          gesture.current = undefined;
+          return;
         }
-        return;
+        current.panning = true;
       }
-      if (!current.reordering) return;
       event.preventDefault();
-      updateOver(event.clientX, event.clientY);
       const list = rootRef.current?.querySelector<HTMLElement>(
         ".k-agent-switcher__list",
       );
-      if (list) {
-        const bounds = list.getBoundingClientRect();
-        const edge = Math.min(48, bounds.width * 0.15);
-        autoScrollDirection.current =
-          event.clientX < bounds.left + edge
-            ? -1
-            : event.clientX > bounds.right - edge
-              ? 1
-              : 0;
-        if (autoScrollDirection.current) startAutoScroll();
-        else stopAutoScroll();
-      }
+      if (list) list.scrollLeft = current.scrollLeft - deltaX;
     },
-    [clearTimer, startAutoScroll, stopAutoScroll, updateOver],
+    [clearTimer],
   );
 
   const pointerUp = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>) => {
       const current = gesture.current;
       if (!current || current.pointerId !== event.pointerId) return;
-      if (current.panning) {
-        const list = rootRef.current?.querySelector<HTMLElement>(
-          ".k-agent-switcher__list",
-        );
-        if (list)
-          list.scrollLeft =
-            current.scrollLeft - (event.clientX - current.startX);
-        reset();
+      if (current.panning || current.activated || dragActive.current) {
         suppressClick.current = current.id;
-        return;
       }
-      const activated = current.activated;
-      const next = moveAgentId(ids, current.id, current.overId);
-      reset();
-      if (!activated && !current.panning) return;
-      suppressClick.current = current.id;
-      if (
-        current.reordering &&
-        onReorder &&
-        next.some((id, index) => id !== ids[index])
-      ) {
-        onReorder(next);
-        setAnnouncement(
-          feedback.announce(
-            current.name,
-            next.indexOf(current.id) + 1,
-            next.length,
-          ),
-        );
-      }
+      resetPointer();
     },
-    [feedback, ids, onReorder, reset],
+    [resetPointer],
   );
 
-  const cancel = useCallback(() => {
+  const cancelPointer = useCallback(() => {
     const current = gesture.current;
-    if (current?.activated) {
-      suppressClick.current = current.id;
+    if (current?.activated || current?.panning || dragActive.current) {
+      suppressClick.current = current?.id;
     }
-    reset();
-  }, [feedback, reset]);
+    resetPointer();
+  }, [resetPointer]);
 
   const pointerLeave = useCallback(() => {
-    if (
-      gesture.current &&
-      !gesture.current.activated &&
-      !gesture.current.panning
-    )
-      reset();
-  }, [reset]);
+    if (gesture.current?.pointerType === "touch" && !dragActive.current) {
+      resetPointer();
+    }
+  }, [resetPointer]);
 
-  useEffect(() => {
-    const endOutside = (event: PointerEvent) => {
-      const current = gesture.current;
-      if (!current || current.pointerId !== event.pointerId) return;
-      if (current.reordering) {
-        const next = moveAgentId(ids, current.id, current.overId);
-        suppressClick.current = current.id;
-        reset();
-        if (onReorder && next.some((id, index) => id !== ids[index])) {
-          onReorder(next);
-          setAnnouncement(
-            feedback.announce(
-              current.name,
-              next.indexOf(current.id) + 1,
-              next.length,
-            ),
-          );
-        }
-      } else {
-        if (current.panning) suppressClick.current = current.id;
-        reset();
-      }
-    };
-    const cancelOutside = (event: PointerEvent) => {
-      if (gesture.current?.pointerId === event.pointerId) cancel();
-    };
-    window.addEventListener("pointerup", endOutside);
-    window.addEventListener("pointercancel", cancelOutside);
-    return () => {
-      window.removeEventListener("pointerup", endOutside);
-      window.removeEventListener("pointercancel", cancelOutside);
-    };
-  }, [cancel, feedback, ids, onReorder, reset]);
+  const startReorder = useCallback(
+    (id: string, name: string) => {
+      dragActive.current = true;
+      suppressClick.current = id;
+      onLongPress?.(id);
+      setAnnouncement(feedback.announce(name, ids.indexOf(id) + 1, ids.length));
+    },
+    [feedback, ids, onLongPress],
+  );
+
+  const finishReorder = useCallback(
+    (
+      id: string,
+      name: string,
+      overId: string | undefined,
+      sourceIds: readonly string[],
+      canceled: boolean,
+    ) => {
+      dragActive.current = false;
+      suppressClick.current = id;
+      resetPointer();
+      if (canceled || !onReorder || !overId) return;
+      const next = moveAgentId(sourceIds, id, overId);
+      if (!next.some((nextId, index) => nextId !== sourceIds[index])) return;
+      onReorder(next);
+      setAnnouncement(
+        feedback.announce(name, next.indexOf(id) + 1, next.length),
+      );
+    },
+    [feedback, onReorder, resetPointer],
+  );
 
   const keyboardMove = useCallback(
     (id: string, name: string, direction: -1 | 1) => {
@@ -372,14 +231,14 @@ export function useAgentSwitcherReorder({
 
   return {
     rootRef,
-    draggingId,
-    overId,
     announcement,
     pointerDown,
     pointerMove,
     pointerUp,
-    cancel,
+    cancelPointer,
     pointerLeave,
+    startReorder,
+    finishReorder,
     keyboardMove,
     consumeClick,
   };

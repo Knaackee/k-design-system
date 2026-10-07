@@ -24,7 +24,7 @@ const order = () =>
 
 try {
   await page.goto(
-    `${base}/iframe.html?id=patterns-agentswitcher--custom-content&viewMode=story`,
+    `${base}/iframe.html?id=patterns-agentswitcher--custom-content&viewMode=story&args=reorderable:false`,
   );
   await page.getByRole("button", { name: "Nova, plant, VIP" }).waitFor();
   assert.equal(
@@ -129,13 +129,49 @@ try {
     "echo",
     "sage",
   ]);
+  const postPanTransforms = await page
+    .locator("[data-agent-id]")
+    .evaluateAll((items) =>
+      items.slice(0, 4).map((item) => ({
+        id: item.dataset.agentId,
+        transform: getComputedStyle(item).transform,
+        translate: getComputedStyle(item).translate,
+      })),
+    );
+  assert.ok(
+    postPanTransforms.every(
+      ({ transform, translate }) =>
+        transform === "none" && (translate === "none" || translate === "0px"),
+    ),
+    `short pan leaves no sortable transforms: ${JSON.stringify(postPanTransforms)}`,
+  );
   await reorderList.evaluate((element) => {
     element.scrollLeft = 0;
   });
 
-  await atlas.click();
+  const clickLayout = await page.evaluate(() => {
+    const atlasItem = document.querySelector('[data-agent-id="atlas"]');
+    const sageItem = document.querySelector('[data-agent-id="sage"]');
+    const atlasBounds = atlasItem.getBoundingClientRect();
+    const hit = document.elementFromPoint(
+      atlasBounds.x + atlasBounds.width / 2,
+      atlasBounds.y + atlasBounds.height / 2,
+    );
+    return {
+      atlas: atlasBounds.toJSON(),
+      sage: sageItem.getBoundingClientRect().toJSON(),
+      hitId: hit?.closest("[data-agent-id]")?.dataset.agentId,
+    };
+  });
+  assert.equal(
+    clickLayout.hitId,
+    "atlas",
+    `short pan restores item hit testing: ${JSON.stringify(clickLayout)}`,
+  );
+
+  await atlas.dispatchEvent("click");
   assert.equal(await atlas.getAttribute("aria-pressed"), "true");
-  await nova.click();
+  await nova.dispatchEvent("click");
   assert.equal(await nova.getAttribute("aria-pressed"), "true");
 
   await nova.focus();
@@ -144,19 +180,58 @@ try {
   assert.equal(await nova.getAttribute("aria-pressed"), "true");
 
   const source = await atlas.boundingBox();
+  const shiftedNeighborBeforeDrag = await nova.boundingBox();
   const target = await page.locator('[data-agent-id="sage"]').boundingBox();
+  const dragX = target.x + target.width / 2;
+  const dragY = target.y + target.height / 2 + 10;
   await page.mouse.move(
     source.x + source.width / 2,
     source.y + source.height / 2,
   );
   await page.mouse.down();
   await page.waitForTimeout(520);
-  await page.mouse.move(
-    target.x + target.width / 2,
-    target.y + target.height / 2,
-    {
-      steps: 6,
-    },
+  assert.equal(
+    await page.locator("[data-dragging]").count(),
+    1,
+    "long press activates sortable drag",
+  );
+  await page.mouse.move(dragX, dragY, { steps: 6 });
+  await page.waitForTimeout(50);
+  assert.deepEqual((await order()).slice(0, 4), [
+    "nova",
+    "echo",
+    "sage",
+    "atlas",
+  ]);
+  const activeDuringDrag = await atlas.boundingBox();
+  const activeCenter = {
+    x: activeDuringDrag.x + activeDuringDrag.width / 2,
+    y: activeDuringDrag.y + activeDuringDrag.height / 2,
+  };
+  const activeTransform = await atlas.locator("..").evaluate((item) => ({
+    inline: item.style.transform,
+    computed: getComputedStyle(item).transform,
+  }));
+  assert.ok(
+    Math.abs(activeCenter.x - dragX) < 2 &&
+      Math.abs(activeCenter.y - dragY) < 2,
+    `the active item follows the pointer during the live preview: ${JSON.stringify({ activeCenter, pointer: { x: dragX, y: dragY }, activeTransform })}`,
+  );
+  assert.ok(
+    (await nova.boundingBox()).x < shiftedNeighborBeforeDrag.x,
+    "neighboring items shift before pointerup",
+  );
+  assert.equal(
+    await atlas.evaluate((button) => button.hasPointerCapture(1)),
+    true,
+    "pointer capture survives the active item's DOM reorder",
+  );
+  assert.equal(await page.locator("[data-drag-over]").count(), 0);
+  assert.equal(
+    await page
+      .locator('[data-agent-id="sage"]')
+      .evaluate((item) => getComputedStyle(item).outlineStyle),
+    "none",
   );
   await page.mouse.up();
   assert.deepEqual((await order()).slice(0, 4), [
@@ -170,12 +245,19 @@ try {
   const beforeCancel = await order();
   const pixel = page.locator('[data-agent-id="pixel"] button');
   const pixelBox = await pixel.boundingBox();
+  const cancelTarget = page.locator('[data-agent-id="lumen"]');
+  const cancelTargetBox = await cancelTarget.boundingBox();
   await page.mouse.move(
     pixelBox.x + pixelBox.width / 2,
     pixelBox.y + pixelBox.height / 2,
   );
   await page.mouse.down();
   await page.waitForTimeout(520);
+  await page.mouse.move(
+    cancelTargetBox.x + cancelTargetBox.width / 2,
+    cancelTargetBox.y + cancelTargetBox.height / 2,
+  );
+  assert.notDeepEqual(await order(), beforeCancel);
   await pixel.dispatchEvent("pointercancel", {
     pointerId: 1,
     pointerType: "mouse",
@@ -278,7 +360,7 @@ try {
   ]);
 
   console.log(
-    "Agent switcher browser: optional content, standalone long-press, wheel and mouse pan, click, keyboard reorder, delayed mouse/touch drag, cancellation, selection suppression, touch pan, and edge scrolling passed",
+    "Agent switcher browser: optional content, standalone long-press, wheel and mouse pan, click, keyboard reorder, live delayed mouse/touch drag, cancellation, selection suppression, touch pan, and edge scrolling passed",
   );
 } finally {
   await browser.close();

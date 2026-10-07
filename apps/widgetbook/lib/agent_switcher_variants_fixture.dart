@@ -8,7 +8,7 @@ class AgentSwitcherShowcaseFixture extends StatefulWidget {
     this.showActivity = true,
     this.showUnread = true,
     this.customColors = true,
-    this.reorderable = false,
+    this.reorderable = true,
     super.key,
   });
 

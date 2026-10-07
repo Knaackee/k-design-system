@@ -19,18 +19,12 @@
 }
 
 .k-agent-switcher__item {
+  position: relative;
   flex: none;
 }
 
 .k-agent-switcher__item[data-dragging] {
   z-index: 2;
-  opacity: var(--k-opacity-prominent);
-}
-
-.k-agent-switcher__item[data-drag-over]:not([data-dragging]) {
-  border-radius: var(--k-radius-large);
-  outline: var(--k-border-width-strong) dashed var(--k-color-border-focus);
-  outline-offset: var(--k-space-micro);
 }
 
 .k-agent-switcher__button {

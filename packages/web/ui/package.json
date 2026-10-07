@@ -88,7 +88,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@k-design-system/tokens": "file:../tokens",
     "@codemirror/autocomplete": "^6.20.3",
     "@codemirror/commands": "^6.11.1",
     "@codemirror/lang-javascript": "^6.2.5",
@@ -99,7 +98,9 @@
     "@codemirror/search": "^6.7.2",
     "@codemirror/state": "^6.7.6",
     "@codemirror/view": "^6.43.13",
+    "@dnd-kit/dom": "^0.5.0",
     "@dnd-kit/react": "^0.5.0",
+    "@k-design-system/tokens": "file:../tokens",
     "@lezer/highlight": "^1.2.3",
     "@radix-ui/react-dialog": "^1.1.23",
     "@svar-ui/react-gantt": "2.7.3",
@@ -107,11 +108,13 @@
     "@tanstack/react-table": "9.2.4",
     "@tanstack/react-virtual": "3.14.13",
     "@tanstack/table-core": "9.2.4",
+    "@tiptap/core": "3.31.4",
     "@tiptap/extension-link": "3.31.4",
     "@tiptap/extension-placeholder": "3.31.4",
     "@tiptap/extension-task-item": "3.31.4",
     "@tiptap/extension-task-list": "3.31.4",
     "@tiptap/markdown": "3.31.4",
+    "@tiptap/pm": "3.31.4",
     "@tiptap/react": "3.31.4",
     "@tiptap/starter-kit": "3.31.4",
     "apple-liquid-glass-webgl": "^2.5.0",
@@ -121,12 +124,10 @@
     "motion": "^13.4.0",
     "react-modal-sheet": "^5.6.0",
     "streamdown": "^2.6.0",
+    "vis-timeline": "8.5.4",
     "y-codemirror.next": "^0.3.6",
     "y-protocols": "^1.0.7",
-    "yjs": "^13.6.32",
-    "vis-timeline": "8.5.4",
-    "@tiptap/core": "3.31.4",
-    "@tiptap/pm": "3.31.4"
+    "yjs": "^13.6.32"
   },
   "peerDependencies": {
     "react": "^19.2.0",

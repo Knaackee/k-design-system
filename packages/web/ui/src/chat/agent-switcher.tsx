@@ -1,4 +1,18 @@
-import { useId, type CSSProperties, type ReactNode } from "react";
+import { Accessibility, PointerActivationConstraints } from "@dnd-kit/dom";
+import {
+  DragDropProvider,
+  PointerSensor,
+  useDragDropManager,
+} from "@dnd-kit/react";
+import { useSortable } from "@dnd-kit/react/sortable";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { KAvatar } from "../basic-components.js";
 import { KIcon } from "../primitives/icon.js";
 import { useAgentSwitcherReorder } from "./use-agent-switcher-reorder.js";
@@ -83,6 +97,77 @@ type SwitcherItemStyle = CSSProperties & {
   "--k-agent-selected-color"?: string;
 };
 
+const agentSwitcherSensors = [
+  PointerSensor.configure({
+    activationConstraints: [
+      new PointerActivationConstraints.Delay({
+        value: 450,
+        tolerance: 8,
+      }),
+    ],
+  }),
+];
+
+interface AgentDragData {
+  id: string;
+  name: string;
+}
+
+function AgentSwitcherSlot({
+  item,
+  index,
+  reorderable,
+  style,
+  children,
+}: {
+  item: KAgentSwitcherItem;
+  index: number;
+  reorderable: boolean;
+  style: SwitcherItemStyle;
+  children: (handleRef: (element: Element | null) => void) => ReactNode;
+}) {
+  const { ref, handleRef, isDragging, isDropping } = useSortable<AgentDragData>(
+    {
+      id: item.id,
+      index,
+      group: "k-agent-switcher",
+      type: "k-agent-switcher-item",
+      disabled: !reorderable,
+      data: { id: item.id, name: item.name },
+    },
+  );
+  return (
+    <li
+      ref={ref}
+      className="k-agent-switcher__item"
+      data-agent-id={item.id}
+      data-dragging={isDragging || undefined}
+      data-dropping={isDropping || undefined}
+      style={style}
+    >
+      {children(handleRef)}
+    </li>
+  );
+}
+
+function ExternalOrderGuard({
+  sourceIds,
+  ids,
+}: {
+  sourceIds: readonly string[] | undefined;
+  ids: readonly string[];
+}) {
+  const manager = useDragDropManager();
+  const sourceKey = sourceIds ? JSON.stringify(sourceIds) : undefined;
+  const idsKey = JSON.stringify(ids);
+  useEffect(() => {
+    if (sourceKey && sourceKey !== idsKey) {
+      manager?.actions.stop({ canceled: true });
+    }
+  }, [idsKey, manager, sourceKey]);
+  return null;
+}
+
 /**
  * Controlled agent selection strip. Supplying `onReorder` opts into delayed
  * pointer drag and Alt+Arrow keyboard reordering; apply the emitted full ID
@@ -101,6 +186,10 @@ export function KAgentSwitcher({
   const labels = { ...defaultLabels, ...labelOverrides };
   const instructionsId = useId();
   const ids = items.map((item) => item.id);
+  const dragSourceIds = useRef<readonly string[] | undefined>(undefined);
+  const [guardSourceIds, setGuardSourceIds] = useState<
+    readonly string[] | undefined
+  >(undefined);
   const reorder = useAgentSwitcherReorder({
     ids,
     onReorder,
@@ -122,158 +211,192 @@ export function KAgentSwitcher({
   };
 
   return (
-    <nav
-      ref={reorder.rootRef}
-      className="k-agent-switcher"
-      aria-label={labels.agents}
+    <DragDropProvider
+      sensors={agentSwitcherSensors}
+      plugins={(defaults) =>
+        defaults.filter((plugin) => plugin !== Accessibility)
+      }
+      onDragStart={({ operation }) => {
+        const source = operation.source?.data as AgentDragData | undefined;
+        if (!source) return;
+        const sourceIds = [...ids];
+        dragSourceIds.current = sourceIds;
+        setGuardSourceIds(sourceIds);
+        reorder.startReorder(source.id, source.name);
+      }}
+      onDragEnd={({ operation, canceled }) => {
+        const source = operation.source?.data as AgentDragData | undefined;
+        const target = operation.target?.data as AgentDragData | undefined;
+        const sourceIds = dragSourceIds.current;
+        dragSourceIds.current = undefined;
+        setGuardSourceIds(undefined);
+        if (!source || !sourceIds) return;
+        reorder.finishReorder(
+          source.id,
+          source.name,
+          target?.id,
+          sourceIds,
+          canceled,
+        );
+      }}
     >
-      <ul className="k-agent-switcher__list">
-        {items.map((item) => {
-          const selected = item.id === selectedId;
-          const unread =
-            item.unread === undefined ? undefined : Math.max(0, item.unread);
-          const generatedLabel = [
-            item.name,
-            item.connection
-              ? `${labels.connectionPrefix}: ${connectionLabels[item.connection]}`
-              : undefined,
-            item.activity
-              ? `${labels.activityPrefix}: ${activityLabels[item.activity]}`
-              : undefined,
-            unread && unread > 0 ? labels.unreadMessages(unread) : undefined,
-          ]
-            .filter(Boolean)
-            .join(", ");
-          const itemStyle: SwitcherItemStyle = {
-            "--k-agent-connection-color": item.connectionColor,
-            "--k-agent-status-color": item.statusColor,
-            "--k-agent-badge-color": item.badgeColor,
-            "--k-agent-badge-foreground": item.badgeForeground,
-            "--k-agent-selected-color": item.selectedColor,
-          };
+      <ExternalOrderGuard sourceIds={guardSourceIds} ids={ids} />
+      <nav
+        ref={reorder.rootRef}
+        className="k-agent-switcher"
+        aria-label={labels.agents}
+        onPointerMoveCapture={reorder.pointerMove}
+      >
+        <ul className="k-agent-switcher__list">
+          {items.map((item, index) => {
+            const selected = item.id === selectedId;
+            const unread =
+              item.unread === undefined ? undefined : Math.max(0, item.unread);
+            const generatedLabel = [
+              item.name,
+              item.connection
+                ? `${labels.connectionPrefix}: ${connectionLabels[item.connection]}`
+                : undefined,
+              item.activity
+                ? `${labels.activityPrefix}: ${activityLabels[item.activity]}`
+                : undefined,
+              unread && unread > 0 ? labels.unreadMessages(unread) : undefined,
+            ]
+              .filter(Boolean)
+              .join(", ");
+            const itemStyle: SwitcherItemStyle = {
+              "--k-agent-connection-color": item.connectionColor,
+              "--k-agent-status-color": item.statusColor,
+              "--k-agent-badge-color": item.badgeColor,
+              "--k-agent-badge-foreground": item.badgeForeground,
+              "--k-agent-selected-color": item.selectedColor,
+            };
 
-          return (
-            <li
-              key={item.id}
-              className="k-agent-switcher__item"
-              data-agent-id={item.id}
-              data-dragging={reorder.draggingId === item.id || undefined}
-              data-drag-over={reorder.overId === item.id || undefined}
-              style={itemStyle}
-            >
+            return (
+              <AgentSwitcherSlot
+                key={item.id}
+                item={item}
+                index={index}
+                reorderable={Boolean(onReorder)}
+                style={itemStyle}
+              >
+                {(handleRef) => (
+                  <button
+                    ref={handleRef}
+                    type="button"
+                    className="k-agent-switcher__button"
+                    aria-label={item.semanticLabel ?? generatedLabel}
+                    aria-pressed={selected}
+                    aria-describedby={onReorder ? instructionsId : undefined}
+                    onClick={() => {
+                      if (!reorder.consumeClick(item.id)) onSelect(item.id);
+                    }}
+                    onPointerDown={(event) =>
+                      reorder.pointerDown(event, item.id)
+                    }
+                    onPointerUp={reorder.pointerUp}
+                    onPointerCancel={reorder.cancelPointer}
+                    onPointerLeave={reorder.pointerLeave}
+                    onContextMenu={(event) => {
+                      if (onReorder || onLongPress) event.preventDefault();
+                    }}
+                    onKeyDown={(event) => {
+                      if (!onReorder || !event.altKey) return;
+                      if (
+                        event.key === "ArrowLeft" ||
+                        event.key === "ArrowRight"
+                      ) {
+                        event.preventDefault();
+                        reorder.keyboardMove(
+                          item.id,
+                          item.name,
+                          event.key === "ArrowLeft" ? -1 : 1,
+                        );
+                      }
+                    }}
+                  >
+                    <span className="k-agent-switcher__avatar-shell">
+                      {item.avatar == null ? (
+                        <KAvatar
+                          className="k-agent-switcher__avatar"
+                          alt={item.name}
+                          size="large"
+                        />
+                      ) : (
+                        <span
+                          className="k-agent-switcher__avatar k-agent-switcher__avatar-custom"
+                          aria-hidden="true"
+                        >
+                          {item.avatar}
+                        </span>
+                      )}
+                      {item.connection ? (
+                        <span
+                          className="k-agent-switcher__connection"
+                          data-connection={item.connection}
+                          aria-hidden="true"
+                          title={connectionLabels[item.connection]}
+                        ></span>
+                      ) : null}
+                      {item.badgeContent != null || (unread && unread > 0) ? (
+                        <span
+                          className="k-agent-switcher__unread"
+                          aria-hidden="true"
+                        >
+                          {item.badgeContent ?? (unread! > 99 ? "99+" : unread)}
+                        </span>
+                      ) : null}
+                    </span>
+                    {item.showName === false ? null : (
+                      <span
+                        className="k-agent-switcher__name"
+                        aria-hidden="true"
+                      >
+                        {item.nameContent ?? item.name}
+                      </span>
+                    )}
+                    {item.statusContent != null || item.activity ? (
+                      <span
+                        className="k-agent-switcher__activity-label"
+                        data-activity={item.activity}
+                        aria-hidden="true"
+                      >
+                        {item.statusContent ?? activityLabels[item.activity!]}
+                      </span>
+                    ) : null}
+                  </button>
+                )}
+              </AgentSwitcherSlot>
+            );
+          })}
+          {onManage ? (
+            <li className="k-agent-switcher__item">
               <button
                 type="button"
-                className="k-agent-switcher__button"
-                aria-label={item.semanticLabel ?? generatedLabel}
-                aria-pressed={selected}
-                aria-describedby={onReorder ? instructionsId : undefined}
-                onClick={() => {
-                  if (!reorder.consumeClick(item.id)) onSelect(item.id);
-                }}
-                onPointerDown={(event) =>
-                  reorder.pointerDown(event, item.id, item.name)
-                }
-                onPointerMove={reorder.pointerMove}
-                onPointerUp={reorder.pointerUp}
-                onPointerCancel={reorder.cancel}
-                onPointerLeave={reorder.pointerLeave}
-                onContextMenu={(event) => {
-                  if (onReorder || onLongPress) event.preventDefault();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape" && reorder.draggingId) {
-                    event.preventDefault();
-                    reorder.cancel();
-                    return;
-                  }
-                  if (!onReorder || !event.altKey) return;
-                  if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-                    event.preventDefault();
-                    reorder.keyboardMove(
-                      item.id,
-                      item.name,
-                      event.key === "ArrowLeft" ? -1 : 1,
-                    );
-                  }
-                }}
+                className="k-agent-switcher__button k-agent-switcher__manage"
+                aria-label={manageLabel}
+                onClick={onManage}
               >
-                <span className="k-agent-switcher__avatar-shell">
-                  {item.avatar == null ? (
-                    <KAvatar
-                      className="k-agent-switcher__avatar"
-                      alt={item.name}
-                      size="large"
-                    />
-                  ) : (
-                    <span
-                      className="k-agent-switcher__avatar k-agent-switcher__avatar-custom"
-                      aria-hidden="true"
-                    >
-                      {item.avatar}
-                    </span>
-                  )}
-                  {item.connection ? (
-                    <span
-                      className="k-agent-switcher__connection"
-                      data-connection={item.connection}
-                      aria-hidden="true"
-                      title={connectionLabels[item.connection]}
-                    ></span>
-                  ) : null}
-                  {item.badgeContent != null || (unread && unread > 0) ? (
-                    <span
-                      className="k-agent-switcher__unread"
-                      aria-hidden="true"
-                    >
-                      {item.badgeContent ?? (unread! > 99 ? "99+" : unread)}
-                    </span>
-                  ) : null}
+                <span
+                  className="k-agent-switcher__manage-icon"
+                  aria-hidden="true"
+                >
+                  <KIcon name="user-plus" />
                 </span>
-                {item.showName === false ? null : (
-                  <span className="k-agent-switcher__name" aria-hidden="true">
-                    {item.nameContent ?? item.name}
-                  </span>
-                )}
-                {item.statusContent != null || item.activity ? (
-                  <span
-                    className="k-agent-switcher__activity-label"
-                    data-activity={item.activity}
-                    aria-hidden="true"
-                  >
-                    {item.statusContent ?? activityLabels[item.activity!]}
-                  </span>
-                ) : null}
+                <span className="k-agent-switcher__name">{manageLabel}</span>
               </button>
             </li>
-          );
-        })}
-        {onManage ? (
-          <li className="k-agent-switcher__item">
-            <button
-              type="button"
-              className="k-agent-switcher__button k-agent-switcher__manage"
-              aria-label={manageLabel}
-              onClick={onManage}
-            >
-              <span
-                className="k-agent-switcher__manage-icon"
-                aria-hidden="true"
-              >
-                <KIcon name="user-plus" />
-              </span>
-              <span className="k-agent-switcher__name">{manageLabel}</span>
-            </button>
-          </li>
+          ) : null}
+        </ul>
+        {onReorder ? (
+          <p id={instructionsId} className="k-agent-switcher__sr-only">
+            {labels.reorderInstruction}
+          </p>
         ) : null}
-      </ul>
-      {onReorder ? (
-        <p id={instructionsId} className="k-agent-switcher__sr-only">
-          {labels.reorderInstruction}
+        <p className="k-agent-switcher__sr-only" aria-live="polite">
+          {reorder.announcement}
         </p>
-      ) : null}
-      <p className="k-agent-switcher__sr-only" aria-live="polite">
-        {reorder.announcement}
-      </p>
-    </nav>
+      </nav>
+    </DragDropProvider>
   );
 }
