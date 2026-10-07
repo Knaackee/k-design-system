@@ -198,7 +198,15 @@ export function KChatComposer({
               />
             ) : null}
             {running ? (
-              <KIconButton icon="x" label={labels.stop} onClick={onStop} />
+              <KIconButton
+                icon="x"
+                label={labels.stop}
+                onClick={(event) => {
+                  // Stopping can synchronously replace this control with Submit.
+                  event.preventDefault();
+                  onStop?.();
+                }}
+              />
             ) : (
               <KIconButton
                 icon="arrow-up"
