@@ -17,9 +17,17 @@ typedef KAgentToolRenderer =
     Widget Function(BuildContext context, KAgentToolPart part);
 
 class KAgentToolCall extends StatelessWidget {
-  const KAgentToolCall({required this.part, this.renderer, super.key});
+  const KAgentToolCall({
+    required this.part,
+    this.renderer,
+    this.showContentBorder = true,
+    this.wrapTitle = false,
+    super.key,
+  });
   final KAgentToolPart part;
   final KAgentToolRenderer? renderer;
+  final bool showContentBorder;
+  final bool wrapTitle;
   @override
   Widget build(BuildContext context) {
     if (renderer case final custom?) return custom(context, part);
@@ -29,11 +37,15 @@ class KAgentToolCall extends StatelessWidget {
       children: [
         KDisclosure(
           title: part.title,
+          titleLineHeight:
+              KDesignTokenVariants.typeScaleCompactFontBodyLineHeight,
           titleWidget: _AgentDisclosureTitle(
             title: part.title,
+            wrap: wrapTitle,
             running: part.state == KAgentToolState.running,
           ),
           presentation: KDisclosurePresentation.compact,
+          showContentBorder: showContentBorder,
           leadingIcon: _StateIcon(state: part.state),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -236,7 +248,8 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
     final part = widget.part;
     final headingStyle = _heading5Style(t);
     final questionIcon = SizedBox(
-      height: MediaQuery.textScalerOf(context).scale(headingStyle.fontSize!) *
+      height:
+          MediaQuery.textScalerOf(context).scale(headingStyle.fontSize!) *
           headingStyle.height!,
       child: const Center(child: KIcon(KIconName.circleQuestionMark)),
     );
@@ -695,10 +708,15 @@ class _QuestionSelectionIndicator extends StatelessWidget {
 }
 
 class _AgentDisclosureTitle extends StatefulWidget {
-  const _AgentDisclosureTitle({required this.title, required this.running});
+  const _AgentDisclosureTitle({
+    required this.title,
+    required this.running,
+    this.wrap = false,
+  });
 
   final String title;
   final bool running;
+  final bool wrap;
 
   @override
   State<_AgentDisclosureTitle> createState() => _AgentDisclosureTitleState();
@@ -745,8 +763,8 @@ class _AgentDisclosureTitleState extends State<_AgentDisclosureTitle>
     final t = _tokens(context);
     final text = Text(
       widget.title,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
+      maxLines: widget.wrap ? null : 1,
+      overflow: widget.wrap ? TextOverflow.visible : TextOverflow.ellipsis,
       style: _bodyStyle(t).copyWith(color: t.colorTextMuted),
     );
     if (!widget.running || MediaQuery.disableAnimationsOf(context)) return text;
@@ -830,7 +848,9 @@ TextStyle _heading5Style(KDesignTokens t) => TextStyle(
   fontFamily: t.fontFamily,
   fontSize: KDesignTokenVariants.typeScaleCompactFontHeading5Size,
   fontWeight: t.fontLabelWeight,
-  height: KDesignTokenVariants.typeScaleCompactFontHeading5LineHeight / KDesignTokenVariants.typeScaleCompactFontHeading5Size,
+  height:
+      KDesignTokenVariants.typeScaleCompactFontHeading5LineHeight /
+      KDesignTokenVariants.typeScaleCompactFontHeading5Size,
   letterSpacing: t.fontHeading5LetterSpacing,
 );
 TextStyle _bodyStyle(KDesignTokens t) => TextStyle(
@@ -838,7 +858,9 @@ TextStyle _bodyStyle(KDesignTokens t) => TextStyle(
   fontFamily: t.fontFamily,
   fontSize: KDesignTokenVariants.typeScaleCompactFontBodySize,
   fontWeight: t.fontBodyWeight,
-  height: KDesignTokenVariants.typeScaleCompactFontBodyLineHeight / KDesignTokenVariants.typeScaleCompactFontBodySize,
+  height:
+      KDesignTokenVariants.typeScaleCompactFontBodyLineHeight /
+      KDesignTokenVariants.typeScaleCompactFontBodySize,
   letterSpacing: t.fontBodyLetterSpacing,
 );
 TextStyle _captionStyle(KDesignTokens t) => TextStyle(
@@ -853,7 +875,9 @@ TextStyle _mutedStyle(KDesignTokens t) => TextStyle(
   color: t.colorTextMuted,
   fontFamily: t.fontFamily,
   fontSize: KDesignTokenVariants.typeScaleCompactFontBodySmallSize,
-  height: KDesignTokenVariants.typeScaleCompactFontBodySmallLineHeight / KDesignTokenVariants.typeScaleCompactFontBodySmallSize,
+  height:
+      KDesignTokenVariants.typeScaleCompactFontBodySmallLineHeight /
+      KDesignTokenVariants.typeScaleCompactFontBodySmallSize,
 );
 String _enumLabel(String value) => value.replaceAllMapped(
   RegExp(r'([A-Z])'),

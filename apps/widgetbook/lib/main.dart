@@ -53,6 +53,7 @@ import 'agent_chat_workspace_fixture.dart';
 import 'agent_switcher_variants_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
+import 'workflow_session_fixture.dart';
 import 'editor_fixtures.dart';
 import 'command_palette_fixture.dart';
 import 'animated_icon_fixture.dart';
@@ -805,6 +806,10 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'Workflow',
               children: [
+                WidgetbookUseCase(
+                  name: 'workflow-session-review',
+                  builder: (_) => const WorkflowSessionFixture(),
+                ),
                 WidgetbookUseCase(
                   name: 'workflow-responsive',
                   builder: (context) => WorkflowFixture(

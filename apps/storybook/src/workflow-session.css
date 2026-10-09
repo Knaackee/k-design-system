@@ -1,0 +1,8 @@
+.workflow-session-dialog {
+  --k-component-dialog-width: 900px;
+  height: 92dvh;
+  max-height: 92dvh;
+}
+.workflow-session-dialog .k-workflow {
+  background: transparent;
+}

@@ -10,6 +10,7 @@ class KDisclosure extends StatefulWidget {
     required this.title,
     required this.child,
     this.titleWidget,
+    this.titleLineHeight,
     this.leadingIcon,
     this.titleIcon,
     this.actions,
@@ -18,12 +19,16 @@ class KDisclosure extends StatefulWidget {
     this.onOpenChange,
     this.disabled = false,
     this.presentation = KDisclosurePresentation.normal,
+    this.showContentBorder = true,
     super.key,
   });
 
   final String title;
   final Widget child;
   final Widget? titleWidget;
+
+  /// Logical first-line height for a custom title whose style is not readable.
+  final double? titleLineHeight;
   final Widget? leadingIcon;
   final Widget? titleIcon;
   final Widget? actions;
@@ -32,6 +37,9 @@ class KDisclosure extends StatefulWidget {
   final ValueChanged<bool>? onOpenChange;
   final bool disabled;
   final KDisclosurePresentation presentation;
+
+  /// Suppress content separators in a borderless workflow composition.
+  final bool showContentBorder;
 
   @override
   State<KDisclosure> createState() => _KDisclosureState();
@@ -46,6 +54,22 @@ class _KDisclosureState extends State<KDisclosure> {
     final expanded = widget.open ?? _open;
     final radius = BorderRadius.circular(t.radiusControl);
     final compact = widget.presentation == KDisclosurePresentation.compact;
+    final customTitle = widget.titleWidget;
+    final titleStyle = customTitle is Text
+        ? DefaultTextStyle.of(context).style.merge(customTitle.style)
+        : TextStyle(
+            fontSize: t.fontBodySize,
+            height: t.fontBodyLineHeight / t.fontBodySize,
+          );
+    final firstLineHeight = MediaQuery.textScalerOf(context).scale(
+      widget.titleLineHeight ??
+          (titleStyle.fontSize ?? t.fontBodySize) *
+              (titleStyle.height ?? t.fontBodyLineHeight / t.fontBodySize),
+    );
+    Widget firstLineIcon(Widget icon) => SizedBox(
+      height: firstLineHeight,
+      child: Center(child: icon),
+    );
     void toggle() {
       final next = !expanded;
       if (widget.open == null) setState(() => _open = next);
@@ -74,9 +98,7 @@ class _KDisclosureState extends State<KDisclosure> {
                   expanded: expanded,
                   enabled: !widget.disabled,
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: compact ? t.sizeControl : t.sizeHitTarget,
-                    ),
+                    constraints: BoxConstraints(minHeight: t.sizeHitTarget),
                     child: InkWell(
                       borderRadius: radius,
                       excludeFromSemantics: true,
@@ -87,16 +109,19 @@ class _KDisclosureState extends State<KDisclosure> {
                           vertical: t.spaceControlGap,
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            KIcon(
-                              expanded
-                                  ? KIconName.chevronDown
-                                  : KIconName.chevronRight,
-                              size: 18,
+                            firstLineIcon(
+                              KIcon(
+                                expanded
+                                    ? KIconName.chevronDown
+                                    : KIconName.chevronRight,
+                                size: 18,
+                              ),
                             ),
                             if (widget.leadingIcon != null) ...[
                               SizedBox(width: t.spaceControlGap),
-                              widget.leadingIcon!,
+                              firstLineIcon(widget.leadingIcon!),
                             ],
                             SizedBox(width: t.spaceControlGap),
                             Flexible(
@@ -137,7 +162,7 @@ class _KDisclosureState extends State<KDisclosure> {
                             ),
                             if (widget.titleIcon != null) ...[
                               SizedBox(width: t.spaceControlGap),
-                              widget.titleIcon!,
+                              firstLineIcon(widget.titleIcon!),
                             ],
                           ],
                         ),
@@ -163,7 +188,9 @@ class _KDisclosureState extends State<KDisclosure> {
                   ? EdgeInsetsDirectional.only(start: t.spaceControlInsetInline)
                   : null,
               decoration: BoxDecoration(
-                border: compact
+                border: !widget.showContentBorder
+                    ? null
+                    : compact
                     ? BorderDirectional(
                         start: BorderSide(
                           color: t.colorBorderDefault,

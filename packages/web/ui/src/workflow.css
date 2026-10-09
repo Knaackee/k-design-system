@@ -9,13 +9,14 @@
   background: var(--k-color-surface-canvas);
   font-family: var(--k-font-family);
   font-size: var(--k-font-body-small-size);
+  line-height: var(--k-font-body-small-line-height);
 }
 
 .k-workflow__summary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--k-space-control-inset-inline) var(--k-space-layout-section-gap);
-  padding-bottom: var(--k-space-layout-section-gap);
+  padding-bottom: var(--k-space-control-inset-inline);
   border-bottom: var(--k-border-width-default) solid
     var(--k-color-border-default);
 }
@@ -29,6 +30,14 @@
 .k-workflow__identity h2,
 .k-workflow__heading h3 {
   margin: 0;
+}
+
+.k-workflow__toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  margin-inline-start: auto;
+  font-size: var(--k-font-caption-size);
 }
 .k-workflow__identity h2 {
   font-size: var(--k-font-heading5-size);
@@ -64,8 +73,7 @@
   display: flex;
   align-items: center;
   gap: var(--k-space-control-gap);
-  padding-block: var(--k-space-layout-section-gap)
-    var(--k-space-control-inset-inline);
+  padding-block: var(--k-space-control-inset-inline);
 }
 .k-workflow__heading h3 {
   font-size: var(--k-font-label-size);
@@ -108,28 +116,32 @@
 }
 .k-workflow__phase-content {
   min-width: 0;
-  padding-bottom: var(--k-space-layout-section-gap);
+  padding-bottom: var(--k-space-control-gap);
 }
 .k-workflow__phase-header {
   display: flex;
   min-height: var(--k-size-hit-target);
-  align-items: center;
+  align-items: flex-start;
   gap: var(--k-space-control-gap);
-  transform: translateY(calc(-1 * var(--k-border-width-strong)));
 }
 .k-workflow__phase-toggle {
   display: flex;
   min-width: 0;
   flex: 1;
-  align-items: center;
+  min-height: var(--k-size-hit-target);
+  align-items: flex-start;
   gap: var(--k-space-control-gap);
   padding: var(--k-space-control-gap);
+  padding-block: calc(
+    (var(--k-size-hit-target) - var(--k-font-body-small-line-height)) / 2
+  );
   border: 0;
   color: inherit;
   background: transparent;
   font: inherit;
-  font-size: var(--k-font-label-size);
+  font-size: var(--k-font-body-small-size);
   font-weight: var(--k-font-label-weight);
+  line-height: var(--k-font-body-small-line-height);
   text-align: start;
   cursor: pointer;
 }
@@ -139,8 +151,38 @@
 }
 .k-workflow__phase-duration {
   flex: none;
+  padding-block: calc(
+    (var(--k-size-hit-target) - var(--k-font-body-small-line-height)) / 2
+  );
   color: var(--k-color-text-muted);
   font-size: var(--k-font-caption-size);
+  line-height: var(--k-font-body-small-line-height);
+}
+
+.k-workflow__phase-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--k-motion-entry) ease,
+    visibility var(--k-motion-entry);
+}
+.k-workflow__phase-body[data-open="true"] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+.k-workflow__phase-body > div {
+  min-height: 0;
+  overflow: hidden;
+}
+.k-workflow__chevron {
+  flex-shrink: 0;
+  width: var(--k-font-body-small-line-height) !important;
+  height: var(--k-font-body-small-line-height) !important;
+  transition: transform var(--k-motion-entry) ease;
+}
+.k-workflow__phase-toggle[aria-expanded="true"] .k-workflow__chevron {
+  transform: rotate(90deg);
 }
 
 .k-workflow__events {
@@ -207,7 +249,83 @@
   line-height: 1.45;
 }
 
+.k-workflow .k-disclosure {
+  border: 0;
+  background: transparent;
+}
+.k-workflow .k-disclosure__panel {
+  border: 0;
+}
+.k-workflow .k-disclosure__toggle {
+  flex: 1 1 0;
+  min-height: var(--k-size-hit-target);
+  align-items: flex-start;
+  padding-block: calc(
+    (var(--k-size-hit-target) - var(--k-font-body-small-line-height)) / 2
+  );
+  font-size: var(--k-font-body-small-size);
+  line-height: var(--k-font-body-small-line-height);
+}
+.k-workflow .k-disclosure__toggle > .k-icon,
+.k-workflow .k-disclosure__toggle > svg {
+  flex-shrink: 0;
+  width: var(--k-font-body-small-line-height) !important;
+  height: var(--k-font-body-small-line-height) !important;
+}
+.k-workflow .k-disclosure__title {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.k-workflow__transcript {
+  display: grid;
+  gap: var(--k-space-control-inset-inline);
+  padding-block: var(--k-space-control-inset-inline);
+}
+.k-workflow__transcript strong {
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+  font-weight: var(--k-font-label-weight);
+}
+.k-workflow__transcript pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: var(--k-space-control-inset-inline);
+  border-radius: var(--k-radius-control);
+  background: var(--k-color-surface-raised);
+  font-size: var(--k-font-caption-size);
+}
+
 @container (max-width: 599px) {
+  .k-workflow[data-presentation="auto"]
+    .k-disclosure[data-workflow-step]
+    > .k-disclosure__header
+    > .k-disclosure__actions {
+    display: none;
+  }
+  .k-workflow[data-presentation="auto"] .k-workflow__phase {
+    grid-template-columns: var(--k-size-icon-default) minmax(0, 1fr);
+  }
+  .k-workflow[data-presentation="auto"] .k-workflow__phase-node {
+    width: var(--k-size-icon-default);
+  }
+  .k-workflow[data-presentation="auto"]
+    .k-workflow__phase:not(:last-child)::before {
+    left: calc(var(--k-size-icon-default) / 2);
+  }
+  .k-workflow[data-presentation="auto"] .k-workflow__phase-header,
+  .k-workflow[data-presentation="auto"] .k-workflow__phase-toggle,
+  .k-workflow[data-presentation="auto"] .k-disclosure__toggle {
+    gap: calc(var(--k-space-control-gap) / 2);
+  }
+  .k-workflow[data-presentation="auto"] .k-workflow__phase-toggle {
+    padding-inline: calc(var(--k-space-control-gap) / 2);
+  }
+  .k-workflow[data-presentation="auto"] .k-workflow__events,
+  .k-workflow[data-presentation="auto"] .k-disclosure__toggle {
+    padding-inline: 0;
+  }
   .k-workflow[data-presentation="auto"] .k-workflow__summary {
     grid-template-columns: 1fr;
   }
@@ -228,6 +346,12 @@
     display: none;
   }
   .k-workflow[data-presentation="auto"] .k-workflow-event > article {
+    padding-inline: 0;
+  }
+}
+
+@media (max-width: 599px) {
+  .k-workflow[data-presentation="auto"] {
     padding-inline: var(--k-space-control-gap);
   }
 }
@@ -252,5 +376,6 @@
 @media (prefers-reduced-motion: reduce) {
   .k-workflow * {
     scroll-behavior: auto;
+    transition: none;
   }
 }

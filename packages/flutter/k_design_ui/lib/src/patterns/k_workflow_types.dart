@@ -117,7 +117,7 @@ class KWorkflowLabels {
 }
 
 typedef KWorkflowEventBuilder =
-    Widget Function(
+    Widget? Function(
       BuildContext context,
       KWorkflowEvent event,
       KWorkflowPhase phase,

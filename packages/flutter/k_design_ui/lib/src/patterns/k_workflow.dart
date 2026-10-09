@@ -13,6 +13,8 @@ import 'k_workflow_types.dart';
 export 'k_elapsed_time.dart';
 export 'k_workflow_types.dart';
 
+part 'k_workflow_parts.dart';
+
 class KWorkflow extends StatefulWidget {
   const KWorkflow({
     required this.title,
@@ -32,6 +34,9 @@ class KWorkflow extends StatefulWidget {
     this.onEventActivate,
     this.eventBuilder,
     this.phaseIconBuilder,
+    this.toolbarActions,
+    this.summaryActions,
+    this.scrollable = true,
     this.showTechnicalEventsInCompact = false,
     this.now,
     this.durationFormatter,
@@ -56,6 +61,13 @@ class KWorkflow extends StatefulWidget {
   final KWorkflowEventCallback? onEventActivate;
   final KWorkflowEventBuilder? eventBuilder;
   final KWorkflowPhaseIconBuilder? phaseIconBuilder;
+
+  /// Consumer-controlled actions beside the timeline heading.
+  final Widget? toolbarActions;
+  final Widget? summaryActions;
+
+  /// Disable when the consumer provides the scroll controller (for a sheet).
+  final bool scrollable;
   final bool showTechnicalEventsInCompact;
   final DateTime? now;
   final KWorkflowDurationFormatter? durationFormatter;
@@ -76,6 +88,20 @@ class _KWorkflowState extends State<KWorkflow> {
           )
           .map((phase) => phase.id)
           .toSet();
+
+  @override
+  void didUpdateWidget(covariant KWorkflow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.expandedPhaseIds != null) return;
+    final previousIds = oldWidget.phases.map((phase) => phase.id).toSet();
+    _expanded = {
+      ..._expanded,
+      for (final phase in widget.phases)
+        if (!previousIds.contains(phase.id) &&
+            (phase.defaultOpen ?? phase.status != KWorkflowStatus.succeeded))
+          phase.id,
+    };
+  }
 
   void _toggle(KWorkflowPhase phase) {
     final current = widget.expandedPhaseIds ?? _expanded;
@@ -108,15 +134,20 @@ class _KWorkflowState extends State<KWorkflow> {
               PointerDeviceKind.trackpad,
             },
           ),
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
+          child: _scrollBody(
             child: Padding(
-              padding: EdgeInsets.all(t.spaceLayoutGutter),
+              padding: EdgeInsets.all(
+                compact ? t.spaceControlGap : t.spaceLayoutGutter,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _summary(context, compact),
-                  Divider(height: t.spaceLayoutSectionGap * 2),
+                  Divider(
+                    height: t.spaceControlInsetInline * 2,
+                    color: t.colorBorderDefault,
+                    thickness: t.borderWidthDefault,
+                  ),
                   Row(
                     children: [
                       if (!compact) ...[
@@ -125,8 +156,20 @@ class _KWorkflowState extends State<KWorkflow> {
                       ],
                       Text(
                         widget.labels.timeline,
-                        style: TextStyle(fontWeight: t.fontLabelWeight),
+                        style: TextStyle(
+                          fontSize: t.fontLabelSize,
+                          fontWeight: t.fontLabelWeight,
+                        ),
                       ),
+                      if (widget.toolbarActions != null) ...[
+                        SizedBox(width: t.spaceControlGap),
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: widget.toolbarActions!,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                   SizedBox(height: t.spaceControlInsetInline),
@@ -141,144 +184,24 @@ class _KWorkflowState extends State<KWorkflow> {
     );
   }
 
-  Widget _summary(BuildContext context, bool compact) {
+  Widget _scrollBody({required Widget child}) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    final identity = Wrap(
-      spacing: t.spaceControlGap,
-      runSpacing: t.spaceControlGap,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: t.fontHeading5Size,
-            fontWeight: t.fontHeadingWeight,
-          ),
-        ),
-        KBadge(
-          variant: _badgeVariant(widget.status),
-          child: Text(
-            widget.statusLabel ?? widget.labels.status(widget.status),
-          ),
-        ),
-      ],
-    );
-    final metrics = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _metric(
-          context,
-          widget.labels.steps,
-          widget.stepCountLabel ?? '${widget.phases.length}',
-        ),
-        SizedBox(width: t.spaceLayoutSectionGap),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.labels.duration,
-              style: TextStyle(color: t.colorTextMuted),
-            ),
-            KElapsedTime(
-              startedAt: widget.startedAt,
-              endedAt: widget.endedAt,
-              now: widget.now,
-              label: widget.durationLabel,
-              formatter: widget.durationFormatter,
-            ),
-          ],
-        ),
-      ],
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (compact) ...[
-          identity,
-          SizedBox(height: t.spaceControlInsetInline),
-          metrics,
-        ] else
-          Row(
-            children: [
-              Expanded(child: identity),
-              metrics,
-            ],
-          ),
-        if (widget.startedAt != null || widget.endedAt != null) ...[
-          SizedBox(height: t.spaceControlInsetInline),
-          Wrap(
-            spacing: t.spaceLayoutSectionGap,
-            runSpacing: t.spaceControlGap,
-            children: [
-              _date(
-                context,
-                widget.labels.start,
-                widget.startedAt == null
-                    ? '–'
-                    : _formatDateTime(widget.startedAt!),
-              ),
-              _date(
-                context,
-                widget.labels.end,
-                widget.endedAt == null
-                    ? widget.labels.notEnded
-                    : _formatDateTime(widget.endedAt!),
-              ),
-            ],
-          ),
-        ],
-      ],
+    return DefaultTextStyle.merge(
+      style: TextStyle(
+        fontFamily: t.fontFamily,
+        fontSize: t.fontBodySmallSize,
+        fontWeight: t.fontBodyWeight,
+        color: t.colorTextPrimary,
+        height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
+      ),
+      child: widget.scrollable
+          ? SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: child,
+            )
+          : child,
     );
   }
-
-  Widget _metric(BuildContext context, String label, String value) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: t.colorTextMuted,
-            fontSize: t.fontCaptionSize,
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: t.fontBodySmallSize,
-            fontWeight: t.fontLabelWeight,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _date(BuildContext context, String label, String value) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Text(
-        '$label  ',
-        style: TextStyle(
-          color: Theme.of(context).extension<KDesignTokens>()!.colorTextMuted,
-          fontSize: Theme.of(
-            context,
-          ).extension<KDesignTokens>()!.fontCaptionSize,
-        ),
-      ),
-      Text(
-        value,
-        style: TextStyle(
-          fontSize: Theme.of(
-            context,
-          ).extension<KDesignTokens>()!.fontBodySmallSize,
-          fontWeight: Theme.of(
-            context,
-          ).extension<KDesignTokens>()!.fontLabelWeight,
-        ),
-      ),
-    ],
-  );
 
   Widget _phase(
     BuildContext context,
@@ -287,56 +210,69 @@ class _KWorkflowState extends State<KWorkflow> {
     bool compact,
   ) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final railWidth = compact ? t.sizeIconDefault : t.sizeHitTarget;
+    final firstLineHeight = MediaQuery.textScalerOf(
+      context,
+    ).scale(t.fontBodySmallLineHeight);
+    final headerInset = ((t.sizeHitTarget - firstLineHeight) / 2)
+        .clamp(0.0, double.infinity)
+        .toDouble();
     final expanded = (widget.expandedPhaseIds ?? _expanded).contains(phase.id);
     final events = compact && !widget.showTechnicalEventsInCompact
         ? phase.events.where(
             (event) => event.importance != KWorkflowEventImportance.technical,
           )
         : phase.events;
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            width: t.sizeHitTarget,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                if (index < widget.phases.length - 1)
-                  Positioned(
-                    top: t.sizeHitTarget / 2,
-                    bottom: 0,
-                    child: Container(
-                      width: t.borderWidthDefault,
-                      color: t.colorBorderDefault,
-                    ),
-                  ),
-                Container(
-                  width: t.sizeHitTarget,
-                  height: t.sizeHitTarget,
-                  alignment: Alignment.center,
-                  color: t.colorSurfaceCanvas,
-                  child:
-                      widget.phaseIconBuilder?.call(context, phase) ??
-                      _stateIcon(context, phase.status),
-                ),
-              ],
+    return Stack(
+      children: [
+        if (index < widget.phases.length - 1)
+          PositionedDirectional(
+            start: railWidth / 2,
+            top: t.sizeHitTarget / 2,
+            bottom: 0,
+            child: Container(
+              width: t.borderWidthDefault,
+              color: t.colorBorderDefault,
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: t.spaceLayoutSectionGap),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: railWidth,
+              child: Stack(
+                alignment: Alignment.topCenter,
                 children: [
-                  Transform.translate(
-                    offset: Offset(0, -t.borderWidthStrong),
-                    child: Row(
+                  Container(
+                    width: railWidth,
+                    height: t.sizeHitTarget,
+                    alignment: Alignment.center,
+                    color: t.colorSurfaceCanvas,
+                    child:
+                        widget.phaseIconBuilder?.call(context, phase) ??
+                        _stateIcon(context, phase.status),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: t.spaceControlGap),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
+                          flex: 3,
                           child: Semantics(
                             button: true,
+                            label:
+                                '${phase.title}, ${widget.labels.status(phase.status)}',
                             expanded: expanded,
+                            excludeSemantics: true,
+                            onTap: () => _toggle(phase),
                             child: MouseRegion(
                               cursor: SystemMouseCursors.click,
                               onEnter: (_) =>
@@ -357,6 +293,7 @@ class _KWorkflowState extends State<KWorkflow> {
                                   ),
                                 ),
                                 child: InkWell(
+                                  key: ValueKey('workflow-phase-${phase.id}'),
                                   onTap: () => _toggle(phase),
                                   hoverColor: Colors.transparent,
                                   borderRadius: BorderRadius.circular(
@@ -367,22 +304,48 @@ class _KWorkflowState extends State<KWorkflow> {
                                       minHeight: t.sizeHitTarget,
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.all(
-                                        t.spaceControlGap,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: compact
+                                            ? 0
+                                            : t.spaceControlGap,
+                                        vertical: headerInset,
                                       ),
                                       child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          KIcon(
-                                            expanded
-                                                ? KIconName.chevronDown
-                                                : KIconName.chevronRight,
+                                          AnimatedRotation(
+                                            turns: expanded ? .25 : 0,
+                                            duration:
+                                                MediaQuery.disableAnimationsOf(
+                                                  context,
+                                                )
+                                                ? Duration.zero
+                                                : t.motionEntry,
+                                            child: SizedBox(
+                                              height:
+                                                  MediaQuery.textScalerOf(
+                                                    context,
+                                                  ).scale(
+                                                    t.fontBodySmallLineHeight,
+                                                  ),
+                                              child: const Center(
+                                                child: KIcon(
+                                                  KIconName.chevronRight,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          SizedBox(width: t.spaceControlGap),
+                                          SizedBox(
+                                            width: compact
+                                                ? t.spaceControlGap / 2
+                                                : t.spaceControlGap,
+                                          ),
                                           Expanded(
                                             child: Text(
                                               phase.title,
                                               style: TextStyle(
-                                                fontSize: t.fontLabelSize,
+                                                fontSize: t.fontBodySmallSize,
                                                 fontWeight: t.fontLabelWeight,
                                               ),
                                             ),
@@ -396,127 +359,65 @@ class _KWorkflowState extends State<KWorkflow> {
                             ),
                           ),
                         ),
-                        KElapsedTime(
-                          startedAt: phase.startedAt,
-                          endedAt: phase.endedAt,
-                          now: widget.now,
-                          label: phase.durationLabel,
-                          formatter: widget.durationFormatter,
-                          style: TextStyle(
-                            color: t.colorTextMuted,
-                            fontSize: t.fontCaptionSize,
+                        Flexible(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top:
+                                  headerInset +
+                                  (firstLineHeight -
+                                          MediaQuery.textScalerOf(
+                                            context,
+                                          ).scale(
+                                            t.fontCaptionSize *
+                                                t.fontBodySmallLineHeight /
+                                                t.fontBodySmallSize,
+                                          )) /
+                                      2,
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: KElapsedTime(
+                                startedAt: phase.startedAt,
+                                endedAt: phase.endedAt,
+                                now: widget.now,
+                                label: phase.durationLabel,
+                                formatter: widget.durationFormatter,
+                                style: TextStyle(
+                                  color: t.colorTextMuted,
+                                  fontSize: t.fontCaptionSize,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  if (expanded)
-                    for (final event in events)
-                      _event(context, event, phase, compact),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _event(
-    BuildContext context,
-    KWorkflowEvent event,
-    KWorkflowPhase phase,
-    bool compact,
-  ) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    final custom = widget.eventBuilder?.call(context, event, phase);
-    final child =
-        custom ??
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                KIcon(_eventIcon(event), size: 16, color: t.colorTextMuted),
-                SizedBox(width: t.spaceControlGap),
-                Expanded(
-                  child: Text(
-                    event.title.toUpperCase(),
-                    style: TextStyle(
-                      color: t.colorTextMuted,
-                      fontSize: t.fontCaptionSize,
-                      fontWeight: t.fontLabelWeight,
+                    AnimatedSize(
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : t.motionEntry,
+                      alignment: Alignment.topCenter,
+                      child: Visibility(
+                        visible: expanded,
+                        maintainState: true,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (final event in events)
+                              _event(context, event, phase, compact),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Text(
-                  '${event.sequence == null ? '' : '#${event.sequence} · '}${event.timestamp ?? ''}',
-                  style: TextStyle(
-                    color: t.colorTextMuted,
-                    fontSize: t.fontCaptionSize,
-                  ),
-                ),
-              ],
+              ),
             ),
-            if (event.description != null) ...[
-              SizedBox(height: t.spaceControlGap),
-              Text(
-                event.description!,
-                style: TextStyle(
-                  fontSize: t.fontBodySmallSize,
-                  fontWeight: t.fontBodyWeight,
-                  height:
-                      t.fontBodySmallLineHeight / t.fontBodySmallSize,
-                ),
-              ),
-            ],
-            if (event.content != null) ...[
-              SizedBox(height: t.spaceControlGap),
-              event.content!,
-            ],
-          ],
-        );
-    final decoration = BoxDecoration(
-      color: event.kind == KWorkflowEventKind.result
-          ? t.colorStatusSuccessBackground
-          : event.kind == KWorkflowEventKind.log
-          ? t.colorSurfaceRaised
-          : Colors.transparent,
-      border: event.kind == KWorkflowEventKind.result
-          ? Border.all(color: t.colorStatusSuccessBorder)
-          : null,
-      borderRadius: BorderRadius.circular(t.radiusCard),
-    );
-    final interactive = event.interactive && widget.onEventActivate != null;
-    return Padding(
-      padding: EdgeInsets.only(top: t.spaceControlGap),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: compact ? t.spaceControlGap : t.spaceControlInsetInline,
-          vertical: t.spaceControlInsetInline,
-        ),
-        decoration: decoration,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            child,
-            if (interactive)
-              Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: KIconButton(
-                  label: event.title,
-                  icon: KIconName.chevronRight,
-                  onPressed: () => widget.onEventActivate?.call(event, phase),
-                ),
-              ),
           ],
         ),
-      ),
+      ],
     );
   }
-
-  String _formatDateTime(DateTime value) =>
-      widget.dateTimeFormatter?.call(value) ?? _dateTime(value);
 }
 
 Widget _stateIcon(BuildContext context, KWorkflowStatus status) {
@@ -539,25 +440,3 @@ KIconName _statusIcon(KWorkflowStatus status) => switch (status) {
   KWorkflowStatus.paused || KWorkflowStatus.waiting => KIconName.clock,
   _ => KIconName.info,
 };
-
-KIconName _eventIcon(KWorkflowEvent event) => switch (event.kind) {
-  KWorkflowEventKind.artifact => KIconName.paperclip,
-  KWorkflowEventKind.result ||
-  KWorkflowEventKind.approval => KIconName.circleCheck,
-  KWorkflowEventKind.question => KIconName.info,
-  KWorkflowEventKind.log => KIconName.fileText,
-  _ => _statusIcon(event.status ?? KWorkflowStatus.pending),
-};
-
-KBadgeVariant _badgeVariant(KWorkflowStatus status) => switch (status) {
-  KWorkflowStatus.failed => KBadgeVariant.destructive,
-  KWorkflowStatus.succeeded => KBadgeVariant.success,
-  KWorkflowStatus.running => KBadgeVariant.info,
-  KWorkflowStatus.paused || KWorkflowStatus.waiting => KBadgeVariant.warning,
-  KWorkflowStatus.cancelled => KBadgeVariant.secondary,
-  KWorkflowStatus.pending => KBadgeVariant.outline,
-};
-
-String _dateTime(DateTime value) =>
-    '${value.day.toString().padLeft(2, '0')}.${value.month.toString().padLeft(2, '0')}.${value.year}, '
-    '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';

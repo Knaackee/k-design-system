@@ -86,6 +86,8 @@ export interface KWorkflowProps extends Omit<
   stepCountLabel?: string;
   presentation?: KWorkflowPresentation;
   labels?: KWorkflowLabels;
+  /** Consumer-owned controls beside the timeline heading. */
+  toolbarActions?: ReactNode;
   expandedPhaseIds?: readonly string[];
   defaultExpandedPhaseIds?: readonly string[];
   onExpandedPhaseIdsChange?: (phaseIds: string[]) => void;
@@ -126,6 +128,7 @@ export function KWorkflow({
   stepCountLabel,
   presentation = "auto",
   labels,
+  toolbarActions,
   expandedPhaseIds,
   defaultExpandedPhaseIds,
   onExpandedPhaseIdsChange,
@@ -213,6 +216,9 @@ export function KWorkflow({
       <div className="k-workflow__heading">
         <KIcon name="sliders-horizontal" />
         <h3>{text.timeline}</h3>
+        {toolbarActions && (
+          <div className="k-workflow__toolbar-actions">{toolbarActions}</div>
+        )}
       </div>
 
       <ol className="k-workflow__timeline">
@@ -237,7 +243,10 @@ export function KWorkflow({
                     aria-expanded={open}
                     onClick={() => updatePhase(phase, !open)}
                   >
-                    <KIcon name={open ? "chevron-down" : "chevron-right"} />
+                    <KIcon
+                      name="chevron-right"
+                      className="k-workflow__chevron"
+                    />
                     <span>{phase.title}</span>
                   </button>
                   <KElapsedTime
@@ -249,20 +258,26 @@ export function KWorkflow({
                     formatDuration={formatDuration}
                   />
                 </div>
-                {open && (
-                  <ol className="k-workflow__events">
-                    {phase.events.map((event) => (
-                      <WorkflowEventRow
-                        key={event.id}
-                        event={event}
-                        phase={phase}
-                        renderEvent={renderEvent}
-                        onActivate={onEventActivate}
-                        showTechnicalInCompact={showTechnicalEventsInCompact}
-                      />
-                    ))}
-                  </ol>
-                )}
+                <div
+                  className="k-workflow__phase-body"
+                  data-open={open}
+                  inert={!open}
+                >
+                  <div>
+                    <ol className="k-workflow__events">
+                      {phase.events.map((event) => (
+                        <WorkflowEventRow
+                          key={event.id}
+                          event={event}
+                          phase={phase}
+                          renderEvent={renderEvent}
+                          onActivate={onEventActivate}
+                          showTechnicalInCompact={showTechnicalEventsInCompact}
+                        />
+                      ))}
+                    </ol>
+                  </div>
+                </div>
               </div>
             </li>
           );
