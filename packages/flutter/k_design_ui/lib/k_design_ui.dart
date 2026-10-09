@@ -79,3 +79,6 @@ export 'src/data_display/k_orbit.dart';
 export 'src/forms/k_textarea.dart';
 
 export 'src/forms/k_dictation_action.dart';
+export 'src/chat/k_chat_bubble.dart';
+export 'src/actions/k_fab.dart';
+export 'src/actions/k_fab_attention.dart' show KFabAttention;

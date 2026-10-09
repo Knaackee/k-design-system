@@ -485,3 +485,8 @@ export type {
   KUsageWindow,
   KUsageValue,
 } from "./patterns/usage-details.js";
+export { KChatBubble } from "./chat/chat-bubble.js";
+export type { KChatBubbleProps } from "./chat/chat-bubble.js";
+export { KFab } from "./actions/fab.js";
+export type { KFabProps, KFabItem } from "./actions/fab.js";
+export type { KFabAttention } from "./actions/fab-attention.js";

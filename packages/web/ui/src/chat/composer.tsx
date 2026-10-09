@@ -145,11 +145,22 @@ export function KChatComposer({
         </div>
       ) : null}
       <div className="k-chat-composer__input">
+        <div className="k-chat-composer__tools">
+          {onAttach ? (
+            <KIconButton
+              icon="paperclip"
+              label={labels.attach}
+              onClick={onAttach}
+            />
+          ) : null}
+          {leadingTools}
+        </div>
         <label className="k-visually-hidden" htmlFor="k-chat-composer-input">
           {labels.input}
         </label>
         <textarea
           id="k-chat-composer-input"
+          data-empty={value.length === 0}
           value={value}
           disabled={disabled}
           maxLength={maxLength}
@@ -164,61 +175,49 @@ export function KChatComposer({
             composing.current = false;
           }}
         />
-        <div className="k-chat-composer__footer">
-          <div className="k-chat-composer__tools">
-            {onAttach ? (
-              <KIconButton
-                icon="paperclip"
-                label={labels.attach}
-                onClick={onAttach}
-              />
-            ) : null}
-            {leadingTools}
-          </div>
-          <div className="k-chat-composer__tools">
-            {trailingTools}
-            {models.length && onModelChange ? (
-              <div className="k-chat-composer__model">
-                <KSelect
-                  presentation="inline"
-                  options={models}
-                  value={model}
-                  onValueChange={onModelChange}
-                  label={labels.model}
-                  placeholder={labels.model}
-                />
-              </div>
-            ) : null}
-            {onVoiceInput ? (
-              <KDictationAction
-                state={dictationState}
-                label={voiceLabel}
-                audioLevel={voiceAudioLevel}
-                onPressed={disabled && !recording ? undefined : onVoiceInput}
-              />
-            ) : null}
-            {running ? (
-              <KIconButton
-                icon="x"
-                label={labels.stop}
-                onClick={(event) => {
-                  // Stopping can synchronously replace this control with Submit.
-                  event.preventDefault();
-                  onStop?.();
-                }}
-              />
-            ) : (
-              <KIconButton
-                icon="arrow-up"
-                label={labels.send}
-                variant="primary"
-                disabled={!value.trim() || disabled}
-                type="submit"
-                onClick={() => undefined}
-              />
-            )}
-          </div>
+        <div className="k-chat-composer__tools">
+          {trailingTools}
+          {onVoiceInput ? (
+            <KDictationAction
+              state={dictationState}
+              label={voiceLabel}
+              audioLevel={voiceAudioLevel}
+              onPressed={disabled && !recording ? undefined : onVoiceInput}
+            />
+          ) : null}
+          {running ? (
+            <KIconButton
+              icon="x"
+              label={labels.stop}
+              onClick={(event) => {
+                // Stopping can synchronously replace this control with Submit.
+                event.preventDefault();
+                onStop?.();
+              }}
+            />
+          ) : (
+            <KIconButton
+              icon="arrow-up"
+              label={labels.send}
+              variant="primary"
+              disabled={!value.trim() || disabled}
+              type="submit"
+              onClick={() => undefined}
+            />
+          )}
         </div>
+        {models.length && onModelChange ? (
+          <div className="k-chat-composer__model">
+            <KSelect
+              presentation="inline"
+              options={models}
+              value={model}
+              onValueChange={onModelChange}
+              label={labels.model}
+              placeholder={labels.model}
+            />
+          </div>
+        ) : null}
       </div>
     </form>
   );

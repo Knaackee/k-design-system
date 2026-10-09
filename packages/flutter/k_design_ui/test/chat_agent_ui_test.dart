@@ -146,7 +146,7 @@ void main() {
     expect(tester.getRect(attach).right, lessThan(tester.getRect(voice).left));
     expect(
       tester.getRect(send).left - tester.getRect(voice).right,
-      closeTo(t.spaceControlGap, 0.01),
+      closeTo(t.spaceControlGap / 2, 0.01),
     );
     expect(tester.getRect(voice).left, greaterThan(180));
     final sendButton = tester.widget<KIconButton>(

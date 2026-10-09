@@ -504,7 +504,7 @@ export function AgentChatWorkspaceFixture({
             placeholder:
               selected.connection === "offline"
                 ? "Offline – Entwurf bleibt erhalten"
-                : `Nachricht an ${selected.name}…`,
+                : "Nachricht …",
             send: "Nachricht senden",
             attach: "Datei anhängen (Demo)",
             removeAttachment: "Anhang entfernen",

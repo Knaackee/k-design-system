@@ -1,6 +1,22 @@
 {
   "version": 1,
   "entries": {
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionHoldDuration = const Duration(milliseconds: 324),": {
+      "count": 1,
+      "reason": "Consumer-overridable FAB peek hold matching the visually accepted Web animation; documented in docs/chat-bubble.md."
+    },
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionShowDuration = const Duration(milliseconds: 1800),": {
+      "count": 1,
+      "reason": "Consumer-overridable total FAB attention pulse matching the accepted Web rise/fall/bounce choreography."
+    },
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionPauseDuration = const Duration(milliseconds: 7000),": {
+      "count": 1,
+      "reason": "Consumer-overridable attention repetition interval matching Web; not a generic transition duration."
+    },
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab_attention.dart|motion|const Duration(milliseconds: 600).inMicroseconds;": {
+      "count": 1,
+      "reason": "Minimum movement budget for the configurable FAB rise/fall/bounce sequence, identical to Web."
+    },
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 6px;": {
       "count": 1,
       "reason": "Existing touch resize grip geometry predates this change; now detected because query parsing no longer consumes following declarations. Preserve the reviewed touch appearance."

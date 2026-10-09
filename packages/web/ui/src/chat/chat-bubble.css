@@ -1,0 +1,86 @@
+.k-chat-bubble-host {
+  display: inline-flex;
+}
+.k-button.k-chat-bubble {
+  width: max(var(--k-size-hit-target), var(--k-chat-bubble-size));
+  height: max(var(--k-size-hit-target), var(--k-chat-bubble-size));
+  padding: var(--k-space-control-gap);
+  border-radius: var(--k-radius-full);
+  box-shadow: var(--k-elevation-overlay);
+  overflow: hidden;
+}
+.k-chat-bubble .k-button__content {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+.k-fab {
+  isolation: isolate;
+  position: relative;
+  display: inline-flex;
+}
+.k-fab__trigger {
+  position: relative;
+  z-index: 2;
+}
+.k-fab__attention {
+  display: inline-flex;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transform: translateY(0);
+}
+.k-fab__attention:hover,
+.k-fab__attention:focus-within {
+  animation: none;
+  transform: translateY(var(--k-fab-attention-peek));
+}
+.k-button.k-fab__marked {
+  border-color: var(--k-color-border-focus);
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-fab__attention {
+    animation: none;
+    transform: translateY(var(--k-fab-attention-peek));
+  }
+}
+.k-fab__actions {
+  position: absolute;
+  bottom: calc(100% + var(--k-fab-item-gap) - var(--k-space-layout-gutter));
+  right: calc(-1 * var(--k-space-layout-gutter));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--k-fab-item-gap);
+  max-height: calc(
+    100dvh - 2 * var(--k-size-hit-target) - var(--k-space-layout-gutter)
+  );
+  overflow: visible;
+  padding: var(--k-space-layout-gutter);
+}
+.k-fab__actions[data-open="false"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+.k-fab__actions[data-open="true"] {
+  animation: k-fab-enter var(--k-motion-emphasis) ease-out;
+}
+.k-fab__actions > .k-chat-bubble-host {
+  flex-shrink: 0;
+}
+@keyframes k-fab-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--k-space-control-gap));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-fab__actions[data-open="true"] {
+    animation: none;
+  }
+}

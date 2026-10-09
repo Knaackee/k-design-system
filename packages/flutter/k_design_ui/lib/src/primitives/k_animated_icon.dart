@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../generated/k_icons.g.dart';
+import 'k_icon.dart';
 import 'animated_icon_core/core.dart' as morph;
 
 enum KAnimatedIconSpring { smooth, snappy, bouncy }
@@ -309,8 +310,9 @@ class _KAnimatedIconState extends State<KAnimatedIcon>
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.size.isFinite || widget.size <= 0) {
-      throw ArgumentError.value(widget.size, 'size');
+    final size = KIconSizeScope.maybeOf(context) ?? widget.size;
+    if (!size.isFinite || size <= 0) {
+      throw ArgumentError.value(size, 'size');
     }
     if (!widget.strokeWidth.isFinite || widget.strokeWidth <= 0) {
       throw ArgumentError.value(widget.strokeWidth, 'strokeWidth');
@@ -324,7 +326,7 @@ class _KAnimatedIconState extends State<KAnimatedIcon>
       excludeSemantics: true,
       child: RepaintBoundary(
         child: CustomPaint(
-          size: Size.square(widget.size),
+          size: Size.square(size),
           painter: _IconPainter(
             _path,
             widget.color ?? tokens.colorTextPrimary,

@@ -62,6 +62,7 @@ class _DictationWave extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = formTokens(context);
+    final size = KIconSizeScope.maybeOf(context) ?? t.sizeIconDefault;
     final level = audioLevel == null
         ? null
         : audioLevel!.isFinite
@@ -69,18 +70,15 @@ class _DictationWave extends StatelessWidget {
         : 0.0;
     final wave = ExcludeSemantics(
       child: SizedBox(
-        width: t.sizeIconDefault,
-        height: t.sizeIconDefault,
+        width: size,
+        height: size,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             for (final weight in [0.45, 0.75, 1.0, 0.75, 0.45])
               Container(
                 width: t.borderWidthStrong,
-                height:
-                    t.sizeIconDefault *
-                    weight *
-                    (level == null ? 1 : 0.3 + 0.7 * level),
+                height: size * weight * (level == null ? 1 : 0.3 + 0.7 * level),
                 decoration: BoxDecoration(
                   color: t.colorActionPrimaryForeground,
                   borderRadius: BorderRadius.circular(t.radiusSmall),

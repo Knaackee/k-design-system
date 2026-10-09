@@ -30,6 +30,7 @@ void main() {
     WidgetTester tester, {
     bool omitAvatars = true,
     KChatMessageMetadataMode metadata = KChatMessageMetadataMode.always,
+    List<KChatMessageValue>? testMessages,
   }) async {
     tester.view.physicalSize = const Size(400, 700);
     tester.view.devicePixelRatio = 1;
@@ -39,7 +40,7 @@ void main() {
         theme: kDesignTheme(),
         home: Scaffold(
           body: KChatConversation(
-            messages: messages,
+            messages: testMessages ?? messages,
             metadataMode: metadata,
             formatTimestamp: (_) => '12:34',
             avatarBuilder: omitAvatars ? (_, _, _) => null : null,
@@ -103,4 +104,53 @@ void main() {
       semantics.dispose();
     },
   );
+
+  testWidgets('user bubble height matches its text lines and vertical inset', (
+    tester,
+  ) async {
+    const singleLine = KChatMessageValue(
+      id: 'single-line',
+      role: KChatRole.user,
+      parts: [KChatTextPart(id: 'single-line-text', text: 'Hi')],
+    );
+    await mount(
+      tester,
+      metadata: KChatMessageMetadataMode.hidden,
+      testMessages: const [singleLine],
+    );
+    final tokens = Theme.of(
+      tester.element(find.byType(KChatMarkdown)),
+    ).extension<KDesignTokens>()!;
+    expect(
+      tester.getSize(bubbles()).height,
+      closeTo(
+        KDesignTokenVariants.typeScaleCompactFontBodyLineHeight +
+            2 * tokens.spaceControlGap +
+            2 * tokens.borderWidthDefault,
+        0.1,
+      ),
+    );
+
+    const multiline = KChatMessageValue(
+      id: 'multiline',
+      role: KChatRole.user,
+      parts: [
+        KChatTextPart(id: 'multiline-text', text: 'First line\nSecond line'),
+      ],
+    );
+    await mount(
+      tester,
+      metadata: KChatMessageMetadataMode.hidden,
+      testMessages: const [multiline],
+    );
+    expect(
+      tester.getSize(bubbles()).height,
+      closeTo(
+        2 * KDesignTokenVariants.typeScaleCompactFontBodyLineHeight +
+            2 * tokens.spaceControlGap +
+            2 * tokens.borderWidthDefault,
+        0.1,
+      ),
+    );
+  });
 }

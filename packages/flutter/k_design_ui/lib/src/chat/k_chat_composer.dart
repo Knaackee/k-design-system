@@ -1,7 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../actions/action_control.dart';
 import '../actions/k_icon_button.dart';
 import '../basic_components.dart';
 import '../primitives/k_icon.dart';
@@ -144,6 +147,32 @@ class _KChatComposerState extends State<KChatComposer> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final composerSpacing = math.min(
+      t.spaceControlGap,
+      KDesignTokenVariants.densityStandardSpaceControlGap,
+    );
+    final composerGap = composerSpacing / 2;
+    final composerTarget = math.max(t.sizeControl, t.sizeHitTarget);
+    final textInset = math.max(
+      0.0,
+      (composerTarget -
+              MediaQuery.textScalerOf(context).scale(t.fontBodyLineHeight)) /
+          2,
+    );
+    final composerVisualTarget = math.min(
+      composerTarget,
+      composerSpacing * 4.5,
+    );
+    final composerIconSize = math.min(
+      composerVisualTarget,
+      composerSpacing * 3 - t.borderWidthDefault * 2,
+    );
+    final composerTokens = t.copyWith(
+      spaceControlGap: composerGap,
+      sizeControl: composerVisualTarget,
+      sizeHitTarget: composerTarget,
+      radiusControl: composerVisualTarget / 2,
+    );
     final dictationState =
         widget.voiceState ??
         (widget.voiceActive
@@ -159,22 +188,20 @@ class _KChatComposerState extends State<KChatComposer> {
     };
     return LayoutBuilder(
       builder: (context, constraints) {
-        final mobile = MediaQuery.sizeOf(context).width <= 600;
         final inputMaxHeight =
             ((MediaQuery.sizeOf(context).height -
                         MediaQuery.viewInsetsOf(context).bottom) *
                     .25)
                 .clamp(48.0, double.infinity);
         return Material(
-          color:
-              widget.backgroundColor ??
-              (mobile ? t.colorSurfaceRaised : t.colorSurfaceCanvas),
+          color: widget.backgroundColor ?? t.colorSurfaceCanvas,
           child: Padding(
             padding:
                 widget.padding ??
-                (mobile
-                    ? EdgeInsets.only(bottom: t.spaceControlGap)
-                    : EdgeInsets.all(t.spaceControlInsetInline)),
+                EdgeInsets.symmetric(
+                  horizontal: t.spaceControlInsetInline,
+                  vertical: composerTokens.spaceControlGap,
+                ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -234,123 +261,159 @@ class _KChatComposerState extends State<KChatComposer> {
                 DecoratedBox(
                   decoration: BoxDecoration(
                     color: t.colorSurfaceRaised,
-                    border: mobile
-                        ? Border(
-                            top: BorderSide(
-                              color: t.colorBorderDefault,
-                              width: t.borderWidthDefault,
-                            ),
-                          )
-                        : Border.all(color: t.colorBorderDefault),
-                    borderRadius: mobile
-                        ? null
-                        : BorderRadius.circular(t.radiusCard),
-                    boxShadow: mobile ? null : t.elevationLow,
+                    border: Border.all(color: t.colorBorderDefault),
+                    borderRadius: BorderRadius.circular(
+                      composerTokens.sizeHitTarget / 2 + composerGap,
+                    ),
+                    boxShadow: t.elevationLow,
                   ),
                   child: Padding(
-                    padding: mobile
-                        ? EdgeInsets.only(
-                            top: t.spaceControlGap,
-                            left: t.spaceControlGap,
-                            right: t.spaceControlGap,
-                          )
-                        : EdgeInsets.all(t.spaceControlGap),
+                    padding: EdgeInsets.all(composerTokens.spaceControlGap),
                     child: Column(
                       children: [
-                        CallbackShortcuts(
-                          bindings: {
-                            const SingleActivator(LogicalKeyboardKey.enter):
-                                _submit,
-                          },
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxHeight: inputMaxHeight,
-                            ),
-                            child: TextField(
-                              controller: _controller,
-                              focusNode: widget.focusNode,
-                              enabled: !widget.disabled,
-                              style: TextStyle(
-                                fontSize: KDesignTokenVariants
-                                    .typeScaleCompactFontBodySize,
+                        if (widget.models.isNotEmpty &&
+                            widget.onModelChanged != null) ...[
+                          Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: t.layoutTableColumnWidth,
                               ),
-                              minLines: 1,
-                              maxLines: null,
-                              maxLength: widget.maxLength,
-                              decoration: InputDecoration(
-                                isDense: true,
-                                filled: false,
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: t.spaceControlGap / 2,
-                                  vertical: mobile
-                                      ? t.spaceControlGap / 2
-                                      : t.spaceControlGap,
-                                ),
-                                labelText: null,
-                                hintText: widget.labels.placeholder,
-                                border: InputBorder.none,
-                                counterText: '',
+                              child: KSelect(
+                                presentation: KSelectPresentation.inline,
+                                options: [
+                                  for (final model in widget.models)
+                                    KSelectOption(
+                                      value: model.value,
+                                      label: model.label,
+                                      icon: model.icon,
+                                      disabled: model.disabled,
+                                    ),
+                                ],
+                                value: widget.model,
+                                label: widget.labels.model,
+                                placeholder: widget.labels.model,
+                                onChanged: widget.onModelChanged,
                               ),
-                              onChanged: widget.onValueChanged,
                             ),
                           ),
-                        ),
-                        Row(
-                          spacing: t.spaceControlGap,
-                          children: [
-                            if (widget.onAttach != null)
-                              KIconButton(
-                                label: widget.labels.attach,
-                                icon: KIconName.paperclip,
-                                onPressed: widget.onAttach,
-                              ),
-                            ...?widget.leadingTools,
-                            const Spacer(),
-                            ...?widget.trailingTools,
-                            if (widget.models.isNotEmpty &&
-                                widget.onModelChanged != null)
-                              SizedBox(
-                                width: t.layoutTableColumnWidth,
-                                child: KSelect(
-                                  presentation: KSelectPresentation.inline,
-                                  options: [
-                                    for (final model in widget.models)
-                                      KSelectOption(
-                                        value: model.value,
-                                        label: model.label,
-                                        icon: model.icon,
-                                        disabled: model.disabled,
+                          SizedBox(height: composerTokens.spaceControlGap),
+                        ],
+                        Theme(
+                          data: Theme.of(
+                            context,
+                          ).copyWith(extensions: [composerTokens]),
+                          child: KActionControlVisualScope(
+                            child: KIconSizeScope(
+                              size: composerIconSize,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                spacing: composerTokens.spaceControlGap,
+                                children: [
+                                  if (widget.onAttach != null)
+                                    KIconButton(
+                                      label: widget.labels.attach,
+                                      icon: KIconName.paperclip,
+                                      onPressed: widget.onAttach,
+                                    ),
+                                  for (final tool
+                                      in widget.leadingTools ??
+                                          const <Widget>[])
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minWidth: composerTarget,
                                       ),
-                                  ],
-                                  value: widget.model,
-                                  label: widget.labels.model,
-                                  placeholder: widget.labels.model,
-                                  onChanged: widget.onModelChanged,
-                                ),
+                                      child: Center(
+                                        widthFactor: 1,
+                                        heightFactor: 1,
+                                        child: tool,
+                                      ),
+                                    ),
+                                  Expanded(
+                                    child: CallbackShortcuts(
+                                      bindings: {
+                                        const SingleActivator(
+                                          LogicalKeyboardKey.enter,
+                                        ): _submit,
+                                      },
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          minHeight: math.max(
+                                            composerTokens.sizeControl,
+                                            composerTokens.sizeHitTarget,
+                                          ),
+                                          maxHeight: inputMaxHeight,
+                                        ),
+                                        child: TextField(
+                                          controller: _controller,
+                                          focusNode: widget.focusNode,
+                                          enabled: !widget.disabled,
+                                          textAlignVertical:
+                                              TextAlignVertical.center,
+                                          style: TextStyle(
+                                            fontSize:
+                                                composerTokens.fontBodySize,
+                                            height:
+                                                composerTokens
+                                                    .fontBodyLineHeight /
+                                                composerTokens.fontBodySize,
+                                            leadingDistribution:
+                                                TextLeadingDistribution.even,
+                                          ),
+                                          minLines: 1,
+                                          maxLines: null,
+                                          maxLength: widget.maxLength,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            filled: false,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      composerTokens
+                                                          .spaceControlGap /
+                                                      2,
+                                                  vertical: textInset,
+                                                ),
+                                            labelText: null,
+                                            hintText: widget.labels.placeholder,
+                                            hintMaxLines: 1,
+                                            border: InputBorder.none,
+                                            counterText: '',
+                                          ),
+                                          onChanged: widget.onValueChanged,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  ...?widget.trailingTools,
+                                  if (widget.onVoiceInput != null)
+                                    KDictationAction(
+                                      state: dictationState,
+                                      label: voiceLabel,
+                                      audioLevel: widget.voiceAudioLevel,
+                                      onPressed: widget.disabled && !recording
+                                          ? null
+                                          : widget.onVoiceInput,
+                                    ),
+                                  KIconButton(
+                                    label: _running
+                                        ? widget.labels.stop
+                                        : widget.labels.send,
+                                    icon: _running
+                                        ? KIconName.x
+                                        : KIconName.arrowUp,
+                                    selected: !_running,
+                                    onPressed: _running
+                                        ? widget.onStop
+                                        : (_controller.text.trim().isEmpty ||
+                                                  widget.disabled
+                                              ? null
+                                              : _submit),
+                                  ),
+                                ],
                               ),
-                            if (widget.onVoiceInput != null)
-                              KDictationAction(
-                                state: dictationState,
-                                label: voiceLabel,
-                                audioLevel: widget.voiceAudioLevel,
-                                onPressed: widget.disabled && !recording
-                                    ? null
-                                    : widget.onVoiceInput,
-                              ),
-                            KIconButton(
-                              label: _running
-                                  ? widget.labels.stop
-                                  : widget.labels.send,
-                              icon: _running ? KIconName.x : KIconName.arrowUp,
-                              selected: !_running,
-                              onPressed: _running
-                                  ? widget.onStop
-                                  : (_controller.text.trim().isEmpty ||
-                                            widget.disabled
-                                        ? null
-                                        : _submit),
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),

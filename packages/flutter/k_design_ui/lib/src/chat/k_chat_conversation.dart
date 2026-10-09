@@ -430,7 +430,9 @@ class _KChatConversationState extends State<KChatConversation> {
       children.add(
         Padding(
           key: ValueKey(part.id),
-          padding: EdgeInsets.only(bottom: t.spaceControlGap),
+          padding: EdgeInsets.only(
+            bottom: index < message.parts.length - 1 ? t.spaceControlGap : 0,
+          ),
           child:
               content ??
               widget.renderPart?.call(context, part, message) ??

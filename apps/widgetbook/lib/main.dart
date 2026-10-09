@@ -4,6 +4,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
+import 'chat_bubble_fixture.dart';
 import 'neutral_design_fixture.dart';
 import 'compact_tool_activity_fixture.dart';
 import 'login_showcase.dart';
@@ -761,6 +762,19 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookComponent(
+              name: 'ChatBubble',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'basic',
+                  builder: (_) => const ChatBubbleFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'custom-content',
+                  builder: (_) => const ChatBubbleFixture(customContent: true),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'AgentChatWorkspace',
               children: [

@@ -3,6 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_icon.dart';
 
+class KActionControlVisualScope extends InheritedWidget {
+  const KActionControlVisualScope({required super.child, super.key});
+
+  static bool enabledOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<KActionControlVisualScope>() !=
+      null;
+
+  @override
+  bool updateShouldNotify(KActionControlVisualScope oldWidget) => false;
+}
+
 /// Shared internal trigger styling for labelled and icon-only actions.
 class KActionControl extends StatelessWidget {
   const KActionControl({
@@ -35,6 +46,23 @@ class KActionControl extends StatelessWidget {
         ? t.colorActionGhostForeground
         : t.colorActionSecondaryForeground;
     final target = math.max(t.sizeControl, t.sizeHitTarget);
+    final scopedVisual =
+        iconOnly && KActionControlVisualScope.enabledOf(context);
+    Color background(Set<WidgetState> states) =>
+        states.contains(WidgetState.pressed)
+        ? (selected ? t.colorActionPrimaryPressed : t.colorActionGhostPressed)
+        : states.contains(WidgetState.hovered)
+        ? (selected ? t.colorActionPrimaryHover : t.colorActionGhostHover)
+        : (selected
+              ? t.colorActionPrimaryBackground
+              : t.colorActionGhostBackground);
+    BorderSide border(Set<WidgetState> states) => BorderSide(
+      color: states.contains(WidgetState.focused)
+          ? t.colorBorderFocus
+          : selected
+          ? Colors.transparent
+          : t.colorActionGhostBorder,
+    );
     return MergeSemantics(
       child: Semantics(
         label: iconOnly ? label : null,
@@ -58,35 +86,29 @@ class KActionControl extends StatelessWidget {
                   ),
                 ),
                 backgroundColor: WidgetStateProperty.resolveWith(
-                  (states) => states.contains(WidgetState.pressed)
-                      ? (selected
-                            ? t.colorActionPrimaryPressed
-                            : iconOnly
-                            ? t.colorActionGhostPressed
-                            : t.colorActionSecondaryPressed)
+                  (states) => scopedVisual
+                      ? Colors.transparent
+                      : iconOnly
+                      ? background(states)
+                      : states.contains(WidgetState.pressed)
+                      ? t.colorActionSecondaryPressed
                       : states.contains(WidgetState.hovered)
-                      ? (selected
-                            ? t.colorActionPrimaryHover
-                            : iconOnly
-                            ? t.colorActionGhostHover
-                            : t.colorActionSecondaryHover)
-                      : (selected
-                            ? t.colorActionPrimaryBackground
-                            : iconOnly
-                            ? t.colorActionGhostBackground
-                            : t.colorActionSecondaryBackground),
+                      ? t.colorActionSecondaryHover
+                      : t.colorActionSecondaryBackground,
                 ),
                 foregroundColor: WidgetStatePropertyAll(foreground),
                 side: WidgetStateProperty.resolveWith(
-                  (states) => BorderSide(
-                    color: states.contains(WidgetState.focused)
-                        ? t.colorBorderFocus
-                        : selected
-                        ? Colors.transparent
-                        : iconOnly
-                        ? t.colorActionGhostBorder
-                        : t.colorActionSecondaryBorder,
-                  ),
+                  (states) => scopedVisual
+                      ? BorderSide.none
+                      : iconOnly
+                      ? border(states)
+                      : BorderSide(
+                          color: states.contains(WidgetState.focused)
+                              ? t.colorBorderFocus
+                              : selected
+                              ? Colors.transparent
+                              : t.colorActionSecondaryBorder,
+                        ),
                 ),
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                 elevation: const WidgetStatePropertyAll(0),
@@ -99,6 +121,24 @@ class KActionControl extends StatelessWidget {
                     borderRadius: BorderRadius.circular(t.radiusControl),
                   ),
                 ),
+                backgroundBuilder: scopedVisual
+                    ? (context, states, child) => Center(
+                        child: SizedBox.square(
+                          dimension: t.sizeControl,
+                          child: DecoratedBox(
+                            key: const ValueKey('k-action-control-visual'),
+                            decoration: BoxDecoration(
+                              color: background(states),
+                              border: Border.fromBorderSide(border(states)),
+                              borderRadius: BorderRadius.circular(
+                                t.radiusControl,
+                              ),
+                            ),
+                            child: Center(child: child),
+                          ),
+                        ),
+                      )
+                    : null,
                 textStyle: WidgetStatePropertyAll(
                   TextStyle(
                     fontFamily: t.fontFamily,

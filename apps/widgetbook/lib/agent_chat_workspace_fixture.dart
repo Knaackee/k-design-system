@@ -199,7 +199,7 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
         ),
         labels: const KChatComposerLabels(
           input: 'Demo-Nachricht',
-          placeholder: 'Lokale Vorschau schreiben…',
+          placeholder: 'Nachricht …',
           send: 'Demo-Nachricht senden',
           attach: 'Datei anhängen (Demo)',
           removeAttachment: 'Anhang entfernen',
