@@ -63,6 +63,7 @@ class KChatConversation extends StatefulWidget {
     this.onLoadOlder,
     this.labels = const KChatLabels(),
     this.emptyState,
+    this.contentPadding,
     this.renderPart,
     this.renderMessageActions,
     this.toolRenderers = const {},
@@ -89,6 +90,10 @@ class KChatConversation extends StatefulWidget {
   final VoidCallback? onLoadOlder;
   final KChatLabels labels;
   final Widget? emptyState;
+
+  /// Insets inside the message list that scroll with its content.
+  /// Empty-state content retains its own consumer-controlled spacing.
+  final EdgeInsetsGeometry? contentPadding;
   final KChatPartRenderer? renderPart;
   final Widget? Function(BuildContext context, KChatMessageValue message)?
   renderMessageActions;
@@ -297,7 +302,9 @@ class _KChatConversationState extends State<KChatConversation> {
                         onNotification: _onScrollNotification,
                         child: ListView.builder(
                           controller: _scroll,
-                          padding: EdgeInsets.all(t.spaceLayoutGutter),
+                          padding:
+                              widget.contentPadding ??
+                              EdgeInsets.all(t.spaceLayoutGutter),
                           keyboardDismissBehavior:
                               ScrollViewKeyboardDismissBehavior.onDrag,
                           itemCount: entries,
@@ -350,7 +357,11 @@ class _KChatConversationState extends State<KChatConversation> {
                                 ),
                                 child: Column(
                                   crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                      message.parts.every(
+                                        (part) => part is KChatTextPart,
+                                      )
+                                      ? CrossAxisAlignment.start
+                                      : CrossAxisAlignment.stretch,
                                   children: _buildMessageParts(
                                     context,
                                     widget.messages[messageIndex],
@@ -541,20 +552,33 @@ class _Message extends StatelessWidget {
       KChatMessageStatus.failed => labels.failed,
       null => null,
     };
+    final avatar = showMetadata
+        ? avatarBuilder == null
+              ? KAvatar(alt: author, size: KAvatarSize.small)
+              : avatarBuilder!(context, message, author)
+        : null;
     final textOnly = message.parts.every((part) => part is KChatTextPart);
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (showMetadata || (showTimestamp && message.timestamp != null)) ...[
           Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             mainAxisAlignment: message.role == KChatRole.user
                 ? MainAxisAlignment.end
                 : MainAxisAlignment.start,
             children: [
               if (showMetadata)
-                Text(author, style: TextStyle(fontWeight: t.fontLabelWeight)),
+                Text(
+                  author,
+                  style: TextStyle(
+                    fontWeight: t.fontLabelWeight,
+                    fontSize: t.fontCaptionSize,
+                  ),
+                ),
               if (showTimestamp && message.timestamp != null) ...[
-                SizedBox(width: t.spaceControlGap),
+                if (showMetadata) SizedBox(width: t.spaceControlGap),
                 Text(
                   formatTimestamp?.call(message.timestamp!) ??
                       TimeOfDay.fromDateTime(
@@ -570,7 +594,7 @@ class _Message extends StatelessWidget {
           ),
           SizedBox(height: t.spaceControlGap),
         ],
-        if (textOnly && (showMetadata || message.role == KChatRole.user))
+        if (textOnly && (message.role != KChatRole.assistant || avatar != null))
           LayoutBuilder(
             builder: (context, constraints) => Align(
               alignment: message.role == KChatRole.user
@@ -601,7 +625,9 @@ class _Message extends StatelessWidget {
         if (status != null) ...[
           SizedBox(height: t.spaceControlGap),
           Align(
-            alignment: AlignmentDirectional.centerEnd,
+            alignment: message.role == KChatRole.user
+                ? AlignmentDirectional.centerEnd
+                : AlignmentDirectional.centerStart,
             child: Text(
               status,
               style: TextStyle(
@@ -616,11 +642,6 @@ class _Message extends StatelessWidget {
         if (actions != null) ...[SizedBox(height: t.spaceControlGap), actions!],
       ],
     );
-    final avatar = showMetadata
-        ? avatarBuilder == null
-              ? KAvatar(alt: author, size: KAvatarSize.small)
-              : avatarBuilder!(context, message, author)
-        : null;
     return Semantics(
       label: author,
       container: true,

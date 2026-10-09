@@ -117,7 +117,7 @@ class KAgentSwitcherItem {
   final bool showName;
 }
 
-/// A controlled, horizontally scrolling switcher for parallel agent chats.
+/// A controlled, scrolling switcher for parallel agent chats.
 ///
 /// Selection and ordering only report intent. Starting, stopping, or resuming
 /// agent work remains the consumer's responsibility.
@@ -131,6 +131,7 @@ class KAgentSwitcher extends StatelessWidget {
     this.labels = const KAgentSwitcherLabels(),
     this.onReorder,
     this.onLongPress,
+    this.orientation = Axis.horizontal,
     super.key,
   });
 
@@ -142,6 +143,7 @@ class KAgentSwitcher extends StatelessWidget {
   final KAgentSwitcherLabels labels;
   final ValueChanged<List<String>>? onReorder;
   final ValueChanged<String>? onLongPress;
+  final Axis orientation;
 
   @override
   Widget build(BuildContext context) {
@@ -156,73 +158,103 @@ class KAgentSwitcher extends StatelessWidget {
       label: labels.agents,
       child: Container(
         width: double.infinity,
+        height: orientation == Axis.vertical ? double.infinity : null,
         padding: EdgeInsets.symmetric(
           horizontal: tokens.spaceLayoutGutter,
           vertical: tokens.spaceControlGap,
         ),
         decoration: BoxDecoration(
           color: tokens.colorSurfaceRaised,
-          border: Border(
-            bottom: BorderSide(
-              color: tokens.colorBorderDefault,
-              width: tokens.borderWidthDefault,
-            ),
-          ),
-        ),
-        child: _HorizontalAgentScroll(
-          builder: (controller) => reorderable
-              ? SizedBox(
-                  height: _switcherContentHeight(context, tokens),
-                  child: ReorderableListView.builder(
-                    scrollController: controller,
-                    scrollDirection: Axis.horizontal,
-                    buildDefaultDragHandles: false,
-                    itemCount: items.length + (onManage == null ? 0 : 1),
-                    onReorderItem: (oldIndex, newIndex) =>
-                        _reorder(context, oldIndex, newIndex),
-                    onReorderStart: (index) {
-                      if (index < items.length) {
-                        onLongPress?.call(items[index].id);
-                      }
-                    },
-                    proxyDecorator: (child, _, _) => child,
-                    itemBuilder: (context, index) =>
-                        _reorderableItem(context, index),
+          border: orientation == Axis.horizontal
+              ? Border(
+                  bottom: BorderSide(
+                    color: tokens.colorBorderDefault,
+                    width: tokens.borderWidthDefault,
                   ),
                 )
+              : BorderDirectional(
+                  end: BorderSide(
+                    color: tokens.colorBorderDefault,
+                    width: tokens.borderWidthDefault,
+                  ),
+                ),
+        ),
+        child: _AgentScroll(
+          orientation: orientation,
+          builder: (controller) => reorderable
+              ? _reorderableList(context, controller)
               : SingleChildScrollView(
                   controller: controller,
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: tokens.spaceControlGap,
-                    children: [
-                      for (var index = 0; index < items.length; index++)
-                        _bubble(context, index, reorderable: false),
-                      if (onManage != null)
-                        _ManageBubble(label: manageLabel, onPressed: onManage!),
-                    ],
-                  ),
+                  scrollDirection: orientation,
+                  child: orientation == Axis.horizontal
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: tokens.spaceControlGap,
+                          children: _children(context, reorderable: false),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: tokens.spaceControlGap,
+                          children: _children(context, reorderable: false),
+                        ),
                 ),
         ),
       ),
     );
   }
 
+  Widget _reorderableList(BuildContext context, ScrollController controller) {
+    final list = ReorderableListView.builder(
+      scrollController: controller,
+      scrollDirection: orientation,
+      buildDefaultDragHandles: false,
+      itemCount: items.length + (onManage == null ? 0 : 1),
+      onReorderItem: (oldIndex, newIndex) =>
+          _reorder(context, oldIndex, newIndex),
+      onReorderStart: (index) {
+        if (index < items.length) {
+          onLongPress?.call(items[index].id);
+        }
+      },
+      proxyDecorator: (child, _, _) => child,
+      itemBuilder: (context, index) => _reorderableItem(context, index),
+    );
+    return orientation == Axis.horizontal
+        ? SizedBox(
+            height: _switcherContentHeight(
+              context,
+              Theme.of(context).extension<KDesignTokens>()!,
+            ),
+            child: list,
+          )
+        : list;
+  }
+
+  List<Widget> _children(BuildContext context, {required bool reorderable}) => [
+    for (var index = 0; index < items.length; index++)
+      _bubble(context, index, reorderable: reorderable),
+    if (onManage != null)
+      _ManageBubble(label: manageLabel, onPressed: onManage!),
+  ];
+
   Widget _reorderableItem(BuildContext context, int index) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
     if (index == items.length) {
       return Padding(
         key: const ValueKey('k-agent-switcher-manage-slot'),
-        padding: EdgeInsetsDirectional.only(end: tokens.spaceControlGap),
+        padding: orientation == Axis.vertical
+            ? EdgeInsets.only(bottom: tokens.spaceControlGap)
+            : EdgeInsetsDirectional.only(end: tokens.spaceControlGap),
         child: _ManageBubble(label: manageLabel, onPressed: onManage!),
       );
     }
-    return ReorderableDelayedDragStartListener(
+    return _AgentReorderDragStartListener(
       key: ValueKey('k-agent-switcher-reorder-${items[index].id}'),
       index: index,
       child: Padding(
-        padding: EdgeInsetsDirectional.only(end: tokens.spaceControlGap),
+        padding: orientation == Axis.vertical
+            ? EdgeInsets.only(bottom: tokens.spaceControlGap)
+            : EdgeInsetsDirectional.only(end: tokens.spaceControlGap),
         child: _bubble(context, index, reorderable: true),
       ),
     );
@@ -238,6 +270,7 @@ class KAgentSwitcher extends StatelessWidget {
     selected: items[index].id == selectedId,
     labels: labels,
     itemCount: items.length,
+    orientation: orientation,
     reorderable: reorderable,
     onSelect: () => onSelect(items[index].id),
     onLongPress: !reorderable && onLongPress != null

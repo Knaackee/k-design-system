@@ -56,10 +56,10 @@
     },
     "action": {
       "primary": {
-        "background": { "$type": "color", "$value": "#14b8a6" },
-        "hover": { "$type": "color", "$value": "#2dd4bf" },
-        "pressed": { "$type": "color", "$value": "#0d9488" },
-        "foreground": { "$type": "color", "$value": "#042f2e" }
+        "background": { "$type": "color", "$value": "#e8e8eb" },
+        "hover": { "$type": "color", "$value": "#ffffff" },
+        "pressed": { "$type": "color", "$value": "#cfcfd4" },
+        "foreground": { "$type": "color", "$value": "#202024" }
       }
     }
   },

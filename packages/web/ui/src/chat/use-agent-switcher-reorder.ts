@@ -39,11 +39,13 @@ interface ReorderFeedback {
 
 export function useAgentSwitcherReorder({
   ids,
+  orientation,
   onReorder,
   onLongPress,
   feedback,
 }: {
   ids: readonly string[];
+  orientation: "horizontal" | "vertical";
   onReorder?: (ids: string[]) => void;
   onLongPress?: (id: string) => void;
   feedback: ReorderFeedback;
@@ -68,6 +70,7 @@ export function useAgentSwitcherReorder({
   useEffect(() => resetPointer, [resetPointer]);
 
   useEffect(() => {
+    if (orientation !== "horizontal") return;
     const list = rootRef.current?.querySelector<HTMLElement>(
       ".k-agent-switcher__list",
     );
@@ -87,7 +90,7 @@ export function useAgentSwitcherReorder({
     };
     list.addEventListener("wheel", translateVerticalWheel, { passive: false });
     return () => list.removeEventListener("wheel", translateVerticalWheel);
-  }, []);
+  }, [orientation]);
 
   const pointerDown = useCallback(
     (event: ReactPointerEvent<HTMLButtonElement>, id: string) => {
@@ -131,6 +134,13 @@ export function useAgentSwitcherReorder({
         return;
       const deltaX = event.clientX - current.startX;
       const deltaY = event.clientY - current.startY;
+      if (orientation === "vertical") {
+        if (Math.hypot(deltaX, deltaY) > movementTolerance) {
+          clearTimer();
+          gesture.current = undefined;
+        }
+        return;
+      }
       if (!current.panning) {
         if (Math.hypot(deltaX, deltaY) <= movementTolerance) return;
         clearTimer();
@@ -149,7 +159,7 @@ export function useAgentSwitcherReorder({
       );
       if (list) list.scrollLeft = current.scrollLeft - deltaX;
     },
-    [clearTimer],
+    [clearTimer, orientation],
   );
 
   const pointerUp = useCallback(

@@ -21,14 +21,17 @@ class KChatMarkdown extends StatelessWidget {
       color: t.colorTextPrimary,
       fontFamily: t.fontFamily,
       fontSize: KDesignTokenVariants.typeScaleCompactFontBodySize,
-      height: KDesignTokenVariants.typeScaleCompactFontBodyLineHeight /
+      height:
+          KDesignTokenVariants.typeScaleCompactFontBodyLineHeight /
           KDesignTokenVariants.typeScaleCompactFontBodySize,
     );
     return Semantics(
       liveRegion: streaming,
       child: MarkdownBody(
         data: text,
-        selectable: true,
+        // In phone layouts dragging a message scrolls the conversation.
+        // SelectableText otherwise captures mouse drags in compact previews.
+        selectable: MediaQuery.sizeOf(context).width > 600,
         softLineBreak: true,
         styleSheet: MarkdownStyleSheet(
           p: body,

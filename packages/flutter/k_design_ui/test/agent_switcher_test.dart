@@ -53,6 +53,7 @@ Widget _frame({
   VoidCallback? onManage,
   ValueChanged<List<String>>? onReorder,
   ValueChanged<String>? onLongPress,
+  Axis orientation = Axis.horizontal,
 }) => MaterialApp(
   theme: kDesignTheme(),
   home: Scaffold(
@@ -63,6 +64,7 @@ Widget _frame({
       onManage: onManage,
       onReorder: onReorder,
       onLongPress: onLongPress,
+      orientation: orientation,
     ),
   ),
 );
@@ -232,6 +234,63 @@ void main() {
     );
   });
 
+  testWidgets('vertical switcher uses Alt+Up/Down and keeps ordered ids', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const _ControlledReorderFixture(orientation: Axis.vertical),
+    );
+    final adaText = find.text('Ada');
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
+    await tester.pump();
+
+    expect(
+      tester.getTopLeft(adaText).dy,
+      greaterThan(tester.getTopLeft(find.text('Linus')).dy),
+    );
+  });
+
+  testWidgets('vertical switcher renders full-width roster rows', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_frame(orientation: Axis.vertical));
+
+    final ada = find.text('Ada');
+    final avatar = find.byType(KAvatar).first;
+    final row = find.byKey(const ValueKey('k-agent-switcher-ada'));
+    expect(tester.getSize(row).width, greaterThan(300));
+    expect(
+      tester.getTopLeft(ada).dx,
+      greaterThan(tester.getTopRight(avatar).dx),
+    );
+  });
+
+  testWidgets('reorder drag starts after the 450 millisecond hold', (
+    tester,
+  ) async {
+    String? longPressed;
+    await tester.pumpWidget(
+      _frame(
+        selectedId: null,
+        onLongPress: (id) => longPressed = id,
+        onReorder: (_) {},
+      ),
+    );
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Ada')),
+    );
+    await tester.pump(const Duration(milliseconds: 449));
+    expect(longPressed, isNull);
+    await tester.pump(const Duration(milliseconds: 1));
+    expect(longPressed, 'ada');
+    await gesture.up();
+  });
+
   testWidgets('mouse drag pans and vertical wheel scrolls without sorting', (
     tester,
   ) async {
@@ -274,7 +333,9 @@ void main() {
 }
 
 class _ControlledReorderFixture extends StatefulWidget {
-  const _ControlledReorderFixture();
+  const _ControlledReorderFixture({this.orientation = Axis.horizontal});
+
+  final Axis orientation;
 
   @override
   State<_ControlledReorderFixture> createState() =>
@@ -289,6 +350,7 @@ class _ControlledReorderFixtureState extends State<_ControlledReorderFixture> {
     theme: kDesignTheme(),
     home: Scaffold(
       body: KAgentSwitcher(
+        orientation: widget.orientation,
         items: _orderedItems,
         selectedId: null,
         onSelect: (_) {},

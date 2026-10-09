@@ -79,8 +79,14 @@ export function KMenuButton({
         getComputedStyle(button).getPropertyValue("--k-space-control-gap"),
       ) || 4;
     const left = align === "end" ? rect.right - bounds.width : rect.left;
+    const below = rect.bottom + gap;
+    const above = rect.top - gap - bounds.height;
+    const top =
+      below + bounds.height <= innerHeight - gutter || above < gutter
+        ? below
+        : above;
     panel.style.left = `${Math.max(gutter, Math.min(left, innerWidth - bounds.width - gutter))}px`;
-    panel.style.top = `${Math.max(gutter, Math.min(rect.bottom + gap, innerHeight - bounds.height - gutter))}px`;
+    panel.style.top = `${Math.max(gutter, Math.min(top, innerHeight - bounds.height - gutter))}px`;
   }
   function show(last = false) {
     if (disabled || actions.length === 0) return;

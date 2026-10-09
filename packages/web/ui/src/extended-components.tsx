@@ -10,7 +10,9 @@ import {
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
+  type RefObject,
 } from "react";
+import { createPortal } from "react-dom";
 import { KIcon, type KIconName } from "./primitives/icon.js";
 import { KButton } from "./primitives/button.js";
 import { KIconButton } from "./actions/icon-button.js";
@@ -429,6 +431,9 @@ export function KTabs({
 }
 
 export interface KPopoverProps {
+  showArrow?: boolean;
+  portal?: boolean;
+  anchorRef?: RefObject<HTMLElement | null>;
   trigger: ReactElement;
   children: ReactNode;
   open?: boolean;
@@ -438,6 +443,9 @@ export interface KPopoverProps {
   label?: string;
 }
 export function KPopover({
+  showArrow = false,
+  portal = false,
+  anchorRef,
   trigger,
   children,
   open,
@@ -450,15 +458,30 @@ export function KPopover({
   const shown = open ?? internal;
   const root = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const portalContainer =
+    portal && shown && typeof document !== "undefined"
+      ? (root.current?.closest<HTMLElement>('[role="dialog"]') ?? document.body)
+      : null;
   const [position, setPosition] = useState<CSSProperties>();
   const setShown = (next: boolean) => {
     if (open === undefined) setInternal(next);
     onOpenChange?.(next);
   };
   useEffect(() => {
+    if (!shown || !portal) return;
+    const frame = requestAnimationFrame(() =>
+      contentRef.current?.focus({ preventScroll: true }),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [shown, portal]);
+  useEffect(() => {
     if (!shown) return;
     const close = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setShown(false);
+      if (
+        !root.current?.contains(event.target as Node) &&
+        !contentRef.current?.contains(event.target as Node)
+      )
+        setShown(false);
     };
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
@@ -466,7 +489,9 @@ export function KPopover({
   useLayoutEffect(() => {
     if (!shown) return;
     const update = () => {
-      const anchor = root.current?.getBoundingClientRect();
+      const anchor = (
+        anchorRef?.current ?? root.current
+      )?.getBoundingClientRect();
       const content = contentRef.current;
       if (!anchor || !content) return;
       const gutter = 16;
@@ -491,10 +516,21 @@ export function KPopover({
       );
       const below = anchor.bottom + gap;
       const top =
-        below + height <= window.innerHeight - gutter
+        showArrow || below + height <= window.innerHeight - gutter
           ? below
           : Math.max(gutter, anchor.top - height - gap);
-      setPosition({ left, top, maxHeight: window.innerHeight - top - gutter });
+      const host =
+        portalContainer && portalContainer !== document.body
+          ? portalContainer
+          : null;
+      const hostRect = host?.getBoundingClientRect();
+      setPosition({
+        left: left - (hostRect?.left ?? 0) + (host?.scrollLeft ?? 0),
+        top: top - (hostRect?.top ?? 0) + (host?.scrollTop ?? 0),
+        ...(host ? { position: "absolute" } : {}),
+        maxHeight: window.innerHeight - top - gutter,
+        "--k-popover-arrow-left": `${Math.max(16, Math.min(width - 16, anchor.left + anchor.width / 2 - left))}px`,
+      } as CSSProperties);
     };
     update();
     window.addEventListener("resize", update);
@@ -503,7 +539,7 @@ export function KPopover({
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
     };
-  }, [align, shown]);
+  }, [align, shown, portalContainer, anchorRef, showArrow]);
   const anchor = isValidElement(trigger)
     ? cloneElement(
         trigger as ReactElement<{
@@ -513,21 +549,34 @@ export function KPopover({
         { onClick: () => setShown(!shown), "aria-expanded": shown },
       )
     : trigger;
+  const panel = shown ? (
+    <div
+      ref={contentRef}
+      role="dialog"
+      tabIndex={-1}
+      aria-label={label}
+      className="k-popover__content"
+      data-align={align}
+      data-arrow={showArrow || undefined}
+      style={position}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          setShown(false);
+          root.current?.querySelector<HTMLElement>("button")?.focus();
+        }
+      }}
+    >
+      {showArrow ? (
+        <div className="k-popover__scroll">{children}</div>
+      ) : (
+        children
+      )}
+    </div>
+  ) : null;
   return (
     <span className="k-popover" ref={root}>
       {anchor}
-      {shown ? (
-        <div
-          ref={contentRef}
-          role="dialog"
-          aria-label={label}
-          className="k-popover__content"
-          data-align={align}
-          style={position}
-        >
-          {children}
-        </div>
-      ) : null}
+      {portalContainer && panel ? createPortal(panel, portalContainer) : panel}
     </span>
   );
 }

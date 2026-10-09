@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 export 'feedback/k_notifications.dart';
+export 'overlays/k_popover.dart';
 
 import 'actions/k_icon_button.dart';
 import 'overlays/k_overlays.dart';
+import 'overlays/k_popover.dart';
 import 'primitives/k_button.dart';
 import 'primitives/k_icon.dart';
 
@@ -691,66 +693,6 @@ class KTabs extends StatelessWidget {
         SizedBox(height: t.spaceControlGap),
         current.content,
       ],
-    );
-  }
-}
-
-class KPopover extends StatelessWidget {
-  const KPopover({
-    required this.trigger,
-    required this.content,
-    this.label = 'Open popover',
-    super.key,
-  });
-  final Widget trigger;
-  final Widget content;
-  final String label;
-  @override
-  Widget build(BuildContext context) {
-    final tokens = Theme.of(context).extension<KDesignTokens>()!;
-    return Semantics(
-      button: true,
-      label: label,
-      child: GestureDetector(
-        onTap: () async {
-          final box = context.findRenderObject()! as RenderBox;
-          final offset = box.localToGlobal(Offset.zero);
-          final overlay =
-              Overlay.of(context).context.findRenderObject()! as RenderBox;
-          final anchor = Rect.fromLTWH(
-            offset.dx,
-            offset.dy,
-            box.size.width,
-            box.size.height,
-          );
-          await showMenu<bool>(
-            context: context,
-            position: RelativeRect.fromRect(anchor, Offset.zero & overlay.size),
-            constraints: BoxConstraints(
-              maxWidth: (overlay.size.width - 32).clamp(0, 360),
-              maxHeight: (overlay.size.height - 32).clamp(0, 560),
-            ),
-            items: [
-              PopupMenuItem<bool>(
-                enabled: false,
-                padding: EdgeInsets.zero,
-                child: DefaultTextStyle.merge(
-                  style: TextStyle(
-                    color: tokens.colorTextPrimary,
-                    fontFamily: tokens.fontFamily,
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const ClampingScrollPhysics(),
-                    child: content,
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-        child: trigger,
-      ),
     );
   }
 }

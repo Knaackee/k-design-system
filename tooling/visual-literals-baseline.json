@@ -62,6 +62,18 @@
     "packages/web/ui/src/table.css|dimension|height: 1em;": 1,
     "packages/web/ui/src/table.css|dimension|height: 1px;": 1,
     "packages/web/ui/src/table.css|dimension|width: 1px;": 2,
-    "packages/web/ui/src/workflow.css|dimension|@container (max-width: 599px) {": 1
+    "packages/web/ui/src/workflow.css|dimension|@container (max-width: 599px) {": 1,
+    "packages/flutter/k_design_ui/lib/src/chat/k_agent_chat_identity.dart|opacity|alpha:": {
+      "count": 1,
+      "reason": "Human-reviewed Agent Workspace gradient: .68 surface tint multiplied by live transition visibility and vertical band falloff, matching the Web 68% backdrop. This is compositing geometry, not a new global opacity style."
+    },
+    "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|width: 1px;": {
+      "count": 1,
+      "reason": "Screen-reader-only drawer heading: standard clipped 1px accessibility geometry; preserves the accessible dialog name without a duplicate visible heading."
+    },
+    "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|height: 1px;": {
+      "count": 1,
+      "reason": "Screen-reader-only drawer heading: standard clipped 1px accessibility geometry; preserves the accessible dialog name without a duplicate visible heading."
+    }
   }
 }

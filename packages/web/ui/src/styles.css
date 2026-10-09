@@ -18,6 +18,7 @@
 @import "./settings-page.css";
 @import "./chat.css";
 @import "./chat/agent-switcher.css";
+@import "./chat/agent-chat-workspace.css";
 @import "./workflow.css";
 @import "./link.css";
 @import "./ask-tools.css";

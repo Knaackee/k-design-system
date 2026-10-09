@@ -7,8 +7,10 @@ import '../primitives/k_icon.dart';
 import 'form_style.dart';
 import 'k_field.dart';
 import 'selection_popup.dart';
+import 'selection_popup_layout.dart';
 import 'form_clear.dart';
 import 'option_media.dart';
+part 'k_select_trigger.dart';
 
 class KSelectOption {
   const KSelectOption({
@@ -23,6 +25,7 @@ class KSelectOption {
   final String label;
   final bool disabled;
   final KIconName? icon;
+
   /// Decorative media; takes precedence over icon and imageSrc.
   final Widget? leading;
   final String? imageSrc;
@@ -47,9 +50,19 @@ class KSelect extends StatefulWidget {
     this.optionsLabel,
     this.noResultsLabel,
     this.presentation = KSelectPresentation.standard,
+    this.truncateLabel = false,
+    this.showInlineIndicator = false,
+    this.textAlign = TextAlign.start,
     super.key,
   });
   final KSelectPresentation presentation;
+  final TextAlign textAlign;
+
+  /// Ellipsize read-only labels without changing their full accessible text.
+  final bool truncateLabel;
+
+  /// Keep the dropdown indicator visible in an unfocused inline control.
+  final bool showInlineIndicator;
   final List<KSelectOption> options;
   final String? value;
   final bool multiple;
@@ -90,7 +103,7 @@ class KCombobox extends KSelect {
   bool get editable => true;
 }
 
-class _KSelectState extends State<KSelect> {
+class _KSelectState extends State<KSelect> with WidgetsBindingObserver {
   final _text = TextEditingController();
   final _focus = FocusNode();
   final _portal = OverlayPortalController();
@@ -155,7 +168,15 @@ class _KSelectState extends State<KSelect> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _text.text = _committed;
+  }
+
+  @override
+  void didChangeMetrics() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _open) setState(() {});
+    });
   }
 
   @override
@@ -169,6 +190,7 @@ class _KSelectState extends State<KSelect> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _ancestorScroll?.removeListener(_parentScrolled);
 
     _focus.dispose();
@@ -353,7 +375,7 @@ class _KSelectState extends State<KSelect> {
               SizedBox(width: t.spaceControlGap),
             ],
             Opacity(
-              opacity: inlineResting ? 0 : 1,
+              opacity: inlineResting && !widget.showInlineIndicator ? 0 : 1,
               child: KIcon(KIconName.chevronDown, color: t.colorTextMuted),
             ),
           ],
@@ -404,42 +426,7 @@ class _KSelectState extends State<KSelect> {
                 ),
                 child: Center(
                   heightFactor: 1,
-                  child: TextField(
-                    controller: _text,
-                    focusNode: _focus,
-                    enabled: widget.enabled,
-                    readOnly: !widget.editable,
-                    enableInteractiveSelection: widget.editable,
-                    showCursor: widget.editable,
-                    mouseCursor: !widget.enabled
-                        ? SystemMouseCursors.basic
-                        : widget.editable
-                        ? SystemMouseCursors.text
-                        : SystemMouseCursors.click,
-                    textAlignVertical: formInputAlignment(appearance),
-                    style: formTextStyle(context),
-                    cursorColor: t.colorBorderFocus,
-                    onTapAlwaysCalled: true,
-                    onTapOutside: (_) {
-                      if (_open) _close();
-                      _focus.unfocus();
-                    },
-                    onTap: () {
-                      if (_open && !widget.editable) {
-                        _close();
-                      } else if (!_open) {
-                        _show();
-                      }
-                    },
-                    onChanged: (value) {
-                      if (!_open) _portal.show();
-                      setState(() {
-                        _query = value;
-                        _active = _visible.indexWhere((o) => !o.disabled);
-                      });
-                    },
-                    decoration: appearance,
-                  ),
+                  child: _buildTrigger(context, appearance),
                 ),
               ),
             ),
@@ -449,29 +436,31 @@ class _KSelectState extends State<KSelect> {
     );
   }
 
+  void _updateQuery(String value) {
+    if (!_open) _portal.show();
+    setState(() {
+      _query = value;
+      _active = _visible.indexWhere((o) => !o.disabled);
+    });
+  }
+
   Widget _popup(BuildContext context) {
     final t = formTokens(context);
     final box = _anchor.currentContext!.findRenderObject()! as RenderBox;
     final overlay =
         Overlay.of(this.context).context.findRenderObject()! as RenderBox;
-    final origin = box.localToGlobal(Offset.zero, ancestor: overlay);
-    final screen = overlay.size;
-    final width = math.min(box.size.width, screen.width - 16.0);
-    final left = origin.dx.clamp(8.0, math.max(8.0, screen.width - width - 8));
-    final below =
-        screen.height - origin.dy - box.size.height - t.spaceControlGap - 8;
-    final above = origin.dy - t.spaceControlGap - 8;
-    final opensAbove = below < 120 && above > below;
-    final maxHeight = math.max(
-      0.0,
-      math.min(280.0, opensAbove ? above : below),
+    final layout = SelectionPopupLayout(
+      box,
+      overlay,
+      View.of(context),
+      t.spaceControlGap,
     );
     final options = _visible;
     return Positioned(
-      left: left.toDouble(),
-      width: width,
-      top: opensAbove ? null : origin.dy + box.size.height + t.spaceControlGap,
-      bottom: opensAbove ? screen.height - origin.dy + t.spaceControlGap : null,
+      left: layout.left,
+      width: layout.width,
+      top: layout.top,
+      bottom: layout.bottom,
       child: KSelectionPopup(
         optionsLabel: widget.optionsLabel,
         noResultsLabel: widget.noResultsLabel,
@@ -480,7 +469,7 @@ class _KSelectState extends State<KSelect> {
         value: widget.value,
         multiple: widget.multiple,
         values: widget.values,
-        maxHeight: maxHeight,
+        maxHeight: layout.maxHeight,
         optionKeys: _optionKeys,
         onActive: (index) => setState(() => _active = index),
         onSelected: _choose,

@@ -11,6 +11,7 @@
   "dependencies": {
     "@k-design-system/tokens": "workspace:*",
     "@k-design-system/ui": "workspace:*",
+    "@rive-app/canvas": "2.44.0",
     "@svar-ui/react-gantt": "2.7.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

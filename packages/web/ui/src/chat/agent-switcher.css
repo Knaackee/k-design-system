@@ -215,3 +215,49 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.k-agent-switcher[data-orientation="vertical"] {
+  height: 100%;
+  min-height: 0;
+  border-right: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  border-bottom: 0;
+}
+
+.k-agent-switcher[data-orientation="vertical"] .k-agent-switcher__list {
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-inline: auto;
+  overscroll-behavior-block: contain;
+  touch-action: pan-y;
+}
+
+.k-agent-switcher[data-orientation="vertical"] .k-agent-switcher__button {
+  width: 100%;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: min-content min-content;
+  align-content: center;
+  justify-items: start;
+  column-gap: var(--k-space-control-gap);
+  text-align: start;
+}
+
+.k-agent-switcher[data-orientation="vertical"] .k-agent-switcher__avatar-shell,
+.k-agent-switcher[data-orientation="vertical"] .k-agent-switcher__manage-icon {
+  grid-row: 1 / span 2;
+}
+
+.k-agent-switcher[data-orientation="vertical"] .k-agent-switcher__name,
+.k-agent-switcher[data-orientation="vertical"]
+  .k-agent-switcher__activity-label {
+  grid-column: 2;
+  text-align: start;
+}
+
+.k-agent-switcher[data-orientation="vertical"] .k-agent-switcher__manage {
+  grid-template-rows: auto;
+  align-items: center;
+}

@@ -2,15 +2,16 @@ part of 'k_agent_switcher.dart';
 
 typedef _AgentScrollBuilder = Widget Function(ScrollController controller);
 
-class _HorizontalAgentScroll extends StatefulWidget {
-  const _HorizontalAgentScroll({required this.builder});
+class _AgentScroll extends StatefulWidget {
+  const _AgentScroll({required this.orientation, required this.builder});
+  final Axis orientation;
   final _AgentScrollBuilder builder;
 
   @override
-  State<_HorizontalAgentScroll> createState() => _HorizontalAgentScrollState();
+  State<_AgentScroll> createState() => _AgentScrollState();
 }
 
-class _HorizontalAgentScrollState extends State<_HorizontalAgentScroll> {
+class _AgentScrollState extends State<_AgentScroll> {
   final _controller = ScrollController();
 
   @override
@@ -37,6 +38,7 @@ class _HorizontalAgentScrollState extends State<_HorizontalAgentScroll> {
   );
 
   void _onPointerSignal(PointerSignalEvent event) {
+    if (widget.orientation != Axis.horizontal) return;
     if (event is! PointerScrollEvent || !_controller.hasClients) return;
     if (event.scrollDelta.dx != 0 || event.scrollDelta.dy == 0) return;
     final position = _controller.position;

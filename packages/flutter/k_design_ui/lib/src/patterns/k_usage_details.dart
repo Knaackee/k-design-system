@@ -4,6 +4,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import '../basic_components.dart';
 import '../extended_components.dart';
 import '../primitives/k_text.dart';
+import '../primitives/k_icon.dart';
 
 @immutable
 class KUsageWindow {
@@ -131,32 +132,9 @@ class KUsageDetails extends StatelessWidget {
               if (balances.isNotEmpty)
                 _UsageValues(values: balances, stacked: narrow),
               if (extraResets.isNotEmpty)
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: tokens.colorBorderDefault,
-                        width: tokens.borderWidthDefault,
-                      ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: tokens.spaceControlInsetInline,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: _spaced(tokens.spaceControlGap, [
-                        if (extraResetsLabel case final label?)
-                          KText(
-                            label,
-                            variant: KTextVariant.bodySmall,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        _UsageValues(values: extraResets, stacked: narrow),
-                      ]),
-                    ),
-                  ),
+                _ResetDetails(
+                  label: extraResetsLabel ?? 'Additional resets',
+                  values: extraResets,
                 ),
               if (windows.isEmpty &&
                   balances.isEmpty &&
@@ -348,3 +326,87 @@ List<Widget> _spaced(double gap, List<Widget> children) => [
     child,
   ],
 ];
+
+class _ResetDetails extends StatefulWidget {
+  const _ResetDetails({required this.label, required this.values});
+  final String label;
+  final List<KUsageValue> values;
+  @override
+  State<_ResetDetails> createState() => _ResetDetailsState();
+}
+
+class _ResetDetailsState extends State<_ResetDetails> {
+  bool _open = false;
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          expanded: _open,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: t.spaceControlGap),
+              foregroundColor: t.colorTextPrimary,
+              backgroundColor: Colors.transparent,
+              overlayColor: Colors.transparent,
+              minimumSize: Size(0, t.sizeHitTarget),
+              shape: const RoundedRectangleBorder(),
+            ),
+            onPressed: () => setState(() => _open = !_open),
+            child: Row(
+              children: [
+                Expanded(
+                  child: KText(
+                    widget.label,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                KIcon(
+                  _open ? KIconName.chevronDown : KIconName.chevronRight,
+                  size: 18,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_open)
+          for (final value in widget.values)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: t.spaceControlGap),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        KText(
+                          value.label,
+                          variant: KTextVariant.bodySmall,
+                          style: TextStyle(color: t.colorTextMuted),
+                        ),
+                        if (value.detail case final detail?)
+                          KText(
+                            detail,
+                            variant: KTextVariant.caption,
+                            style: TextStyle(color: t.colorTextMuted),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: t.spaceControlGap),
+                  KText(
+                    value.valueLabel,
+                    variant: KTextVariant.bodySmall,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+      ],
+    );
+  }
+}

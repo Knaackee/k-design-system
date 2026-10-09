@@ -15,6 +15,7 @@ class KDialog extends StatelessWidget {
     this.onClose,
     this.closeLabel,
     this.maxWidth = 520,
+    this.maxHeight,
     this.expandBody = false,
     super.key,
   });
@@ -26,6 +27,10 @@ class KDialog extends StatelessWidget {
   final VoidCallback? onClose;
   final String? closeLabel;
   final double maxWidth;
+
+  /// Optional consumer height constraint, matching Web's CSS max-height.
+  /// Defaults to 80% of the viewport; keyboard and safe-area constraints remain.
+  final double? maxHeight;
   final bool expandBody;
 
   static Future<T?> show<T>({
@@ -36,6 +41,7 @@ class KDialog extends StatelessWidget {
     Widget? actions,
     String? closeLabel,
     double maxWidth = 520,
+    double? maxHeight,
     bool dismissible = true,
   }) => showDialog<T>(
     context: context,
@@ -49,6 +55,7 @@ class KDialog extends StatelessWidget {
         closeLabel: closeLabel,
         onClose: dismissible ? () => Navigator.of(routeContext).pop() : null,
         maxWidth: maxWidth,
+        maxHeight: maxHeight,
         child: child,
       ),
     ),
@@ -57,30 +64,47 @@ class KDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth,
-          maxHeight: MediaQuery.sizeOf(context).height * .8,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: KSurface(
-            radius: KSurfaceRadius.overlay,
-            elevation: KSurfaceElevation.overlay,
-            child: _OverlayBody(
-              title: title,
-              description: description,
-              actions: actions,
-              onClose: onClose,
-              closeLabel: closeLabel,
-              padding: t.spaceLayoutGutter,
-              expandBody: expandBody,
-              child: child,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final media = MediaQuery.of(context);
+        final inset = media.viewInsets.bottom;
+        // Scaffold/sheet consumers may already have reserved the keyboard.
+        final alreadyResized =
+            constraints.maxHeight <= media.size.height - inset + 1;
+        return Padding(
+          padding: EdgeInsets.only(bottom: alreadyResized ? 0 : inset),
+          child: MediaQuery.removeViewInsets(
+            context: context,
+            removeBottom: true,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: maxWidth,
+                  maxHeight:
+                      maxHeight ?? MediaQuery.sizeOf(context).height * .8,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: KSurface(
+                    radius: KSurfaceRadius.overlay,
+                    elevation: KSurfaceElevation.overlay,
+                    child: _OverlayBody(
+                      title: title,
+                      description: description,
+                      actions: actions,
+                      onClose: onClose,
+                      closeLabel: closeLabel,
+                      padding: t.spaceLayoutGutter,
+                      expandBody: expandBody,
+                      child: child,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

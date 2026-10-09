@@ -157,171 +157,210 @@ class _KChatComposerState extends State<KChatComposer> {
       KDictationState.unavailable => widget.labels.unavailableVoice,
       KDictationState.error => widget.labels.errorVoice,
     };
-    return Material(
-      color: widget.backgroundColor ?? t.colorSurfaceCanvas,
-      child: Padding(
-        padding: widget.padding ?? EdgeInsets.all(t.spaceControlInsetInline),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (widget.attachments.isNotEmpty) ...[
-              SizedBox(
-                height:
-                    t.componentAttachmentMediaSize +
-                    t.spaceControlInsetInline * 2,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.attachments.length,
-                  separatorBuilder: (_, _) =>
-                      SizedBox(width: t.spaceControlGap),
-                  itemBuilder: (context, index) {
-                    final attachment = widget.attachments[index];
-                    return SizedBox(
-                      width: t.componentAttachmentMediaSize * 4,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: KAttachment(
-                              title: Text(attachment.title),
-                              description: attachment.description == null
-                                  ? null
-                                  : Text(attachment.description!),
-                              state: _attachmentState(attachment.state),
-                              progress: attachment.progress,
-                              onActivate: widget.onAttachmentActivate == null
-                                  ? null
-                                  : () => widget.onAttachmentActivate!(
-                                      attachment,
-                                    ),
-                            ),
-                          ),
-                          if (widget.onAttachmentRemove != null)
-                            PositionedDirectional(
-                              top: 0,
-                              end: 0,
-                              child: KIconButton(
-                                label:
-                                    '${widget.labels.removeAttachment}: ${attachment.title}',
-                                icon: KIconName.x,
-                                onPressed: () =>
-                                    widget.onAttachmentRemove!(attachment),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final mobile = MediaQuery.sizeOf(context).width <= 600;
+        final inputMaxHeight =
+            ((MediaQuery.sizeOf(context).height -
+                        MediaQuery.viewInsetsOf(context).bottom) *
+                    .25)
+                .clamp(48.0, double.infinity);
+        return Material(
+          color:
+              widget.backgroundColor ??
+              (mobile ? t.colorSurfaceRaised : t.colorSurfaceCanvas),
+          child: Padding(
+            padding:
+                widget.padding ??
+                (mobile
+                    ? EdgeInsets.only(bottom: t.spaceControlGap)
+                    : EdgeInsets.all(t.spaceControlInsetInline)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (widget.attachments.isNotEmpty) ...[
+                  SizedBox(
+                    height:
+                        t.componentAttachmentMediaSize +
+                        t.spaceControlInsetInline * 2,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.attachments.length,
+                      separatorBuilder: (_, _) =>
+                          SizedBox(width: t.spaceControlGap),
+                      itemBuilder: (context, index) {
+                        final attachment = widget.attachments[index];
+                        return SizedBox(
+                          width: t.componentAttachmentMediaSize * 4,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: KAttachment(
+                                  title: Text(attachment.title),
+                                  description: attachment.description == null
+                                      ? null
+                                      : Text(attachment.description!),
+                                  state: _attachmentState(attachment.state),
+                                  progress: attachment.progress,
+                                  onActivate:
+                                      widget.onAttachmentActivate == null
+                                      ? null
+                                      : () => widget.onAttachmentActivate!(
+                                          attachment,
+                                        ),
+                                ),
                               ),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: t.spaceControlGap),
-            ],
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: t.colorSurfaceRaised,
-                border: Border.all(color: t.colorBorderDefault),
-                borderRadius: BorderRadius.circular(t.radiusCard),
-                boxShadow: t.elevationLow,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(t.spaceControlGap),
-                child: Column(
-                  children: [
-                    CallbackShortcuts(
-                      bindings: {
-                        const SingleActivator(LogicalKeyboardKey.enter):
-                            _submit,
-                      },
-                      child: TextField(
-                        controller: _controller,
-                        focusNode: widget.focusNode,
-                        enabled: !widget.disabled,
-                        style: TextStyle(
-                          fontSize:
-                              KDesignTokenVariants.typeScaleCompactFontBodySize,
-                        ),
-                        minLines: 1,
-                        maxLines: 6,
-                        maxLength: widget.maxLength,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          filled: false,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: t.spaceControlGap / 2,
-                            vertical: t.spaceControlGap,
-                          ),
-                          labelText: null,
-                          hintText: widget.labels.placeholder,
-                          border: InputBorder.none,
-                          counterText: '',
-                        ),
-                        onChanged: widget.onValueChanged,
-                      ),
-                    ),
-                    Row(
-                      spacing: t.spaceControlGap,
-                      children: [
-                        if (widget.onAttach != null)
-                          KIconButton(
-                            label: widget.labels.attach,
-                            icon: KIconName.paperclip,
-                            onPressed: widget.onAttach,
-                          ),
-                        ...?widget.leadingTools,
-                        const Spacer(),
-                        ...?widget.trailingTools,
-                        if (widget.models.isNotEmpty &&
-                            widget.onModelChanged != null)
-                          SizedBox(
-                            width: t.layoutTableColumnWidth,
-                            child: KSelect(
-                              presentation: KSelectPresentation.inline,
-                              options: [
-                                for (final model in widget.models)
-                                  KSelectOption(
-                                    value: model.value,
-                                    label: model.label,
-                                    icon: model.icon,
-                                    disabled: model.disabled,
+                              if (widget.onAttachmentRemove != null)
+                                PositionedDirectional(
+                                  top: 0,
+                                  end: 0,
+                                  child: KIconButton(
+                                    label:
+                                        '${widget.labels.removeAttachment}: ${attachment.title}',
+                                    icon: KIconName.x,
+                                    onPressed: () =>
+                                        widget.onAttachmentRemove!(attachment),
                                   ),
-                              ],
-                              value: widget.model,
-                              label: widget.labels.model,
-                              placeholder: widget.labels.model,
-                              onChanged: widget.onModelChanged,
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: t.spaceControlGap),
+                ],
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: t.colorSurfaceRaised,
+                    border: mobile
+                        ? Border(
+                            top: BorderSide(
+                              color: t.colorBorderDefault,
+                              width: t.borderWidthDefault,
+                            ),
+                          )
+                        : Border.all(color: t.colorBorderDefault),
+                    borderRadius: mobile
+                        ? null
+                        : BorderRadius.circular(t.radiusCard),
+                    boxShadow: mobile ? null : t.elevationLow,
+                  ),
+                  child: Padding(
+                    padding: mobile
+                        ? EdgeInsets.only(
+                            top: t.spaceControlGap,
+                            left: t.spaceControlGap,
+                            right: t.spaceControlGap,
+                          )
+                        : EdgeInsets.all(t.spaceControlGap),
+                    child: Column(
+                      children: [
+                        CallbackShortcuts(
+                          bindings: {
+                            const SingleActivator(LogicalKeyboardKey.enter):
+                                _submit,
+                          },
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: inputMaxHeight,
+                            ),
+                            child: TextField(
+                              controller: _controller,
+                              focusNode: widget.focusNode,
+                              enabled: !widget.disabled,
+                              style: TextStyle(
+                                fontSize: KDesignTokenVariants
+                                    .typeScaleCompactFontBodySize,
+                              ),
+                              minLines: 1,
+                              maxLines: null,
+                              maxLength: widget.maxLength,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                filled: false,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: t.spaceControlGap / 2,
+                                  vertical: mobile
+                                      ? t.spaceControlGap / 2
+                                      : t.spaceControlGap,
+                                ),
+                                labelText: null,
+                                hintText: widget.labels.placeholder,
+                                border: InputBorder.none,
+                                counterText: '',
+                              ),
+                              onChanged: widget.onValueChanged,
                             ),
                           ),
-                        if (widget.onVoiceInput != null)
-                          KDictationAction(
-                            state: dictationState,
-                            label: voiceLabel,
-                            audioLevel: widget.voiceAudioLevel,
-                            onPressed: widget.disabled && !recording
-                                ? null
-                                : widget.onVoiceInput,
-                          ),
-                        KIconButton(
-                          label: _running
-                              ? widget.labels.stop
-                              : widget.labels.send,
-                          icon: _running ? KIconName.x : KIconName.arrowUp,
-                          selected: !_running,
-                          onPressed: _running
-                              ? widget.onStop
-                              : (_controller.text.trim().isEmpty ||
-                                        widget.disabled
+                        ),
+                        Row(
+                          spacing: t.spaceControlGap,
+                          children: [
+                            if (widget.onAttach != null)
+                              KIconButton(
+                                label: widget.labels.attach,
+                                icon: KIconName.paperclip,
+                                onPressed: widget.onAttach,
+                              ),
+                            ...?widget.leadingTools,
+                            const Spacer(),
+                            ...?widget.trailingTools,
+                            if (widget.models.isNotEmpty &&
+                                widget.onModelChanged != null)
+                              SizedBox(
+                                width: t.layoutTableColumnWidth,
+                                child: KSelect(
+                                  presentation: KSelectPresentation.inline,
+                                  options: [
+                                    for (final model in widget.models)
+                                      KSelectOption(
+                                        value: model.value,
+                                        label: model.label,
+                                        icon: model.icon,
+                                        disabled: model.disabled,
+                                      ),
+                                  ],
+                                  value: widget.model,
+                                  label: widget.labels.model,
+                                  placeholder: widget.labels.model,
+                                  onChanged: widget.onModelChanged,
+                                ),
+                              ),
+                            if (widget.onVoiceInput != null)
+                              KDictationAction(
+                                state: dictationState,
+                                label: voiceLabel,
+                                audioLevel: widget.voiceAudioLevel,
+                                onPressed: widget.disabled && !recording
                                     ? null
-                                    : _submit),
+                                    : widget.onVoiceInput,
+                              ),
+                            KIconButton(
+                              label: _running
+                                  ? widget.labels.stop
+                                  : widget.labels.send,
+                              icon: _running ? KIconName.x : KIconName.arrowUp,
+                              selected: !_running,
+                              onPressed: _running
+                                  ? widget.onStop
+                                  : (_controller.text.trim().isEmpty ||
+                                            widget.disabled
+                                        ? null
+                                        : _submit),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

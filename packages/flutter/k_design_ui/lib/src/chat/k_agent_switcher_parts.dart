@@ -9,6 +9,25 @@ double _switcherContentHeight(BuildContext context, KDesignTokens tokens) {
       tokens.borderWidthDefault;
 }
 
+class _AgentReorderDragStartListener extends ReorderableDragStartListener {
+  const _AgentReorderDragStartListener({
+    required super.index,
+    required super.child,
+    super.key,
+  });
+
+  @override
+  MultiDragGestureRecognizer createRecognizer() =>
+      DelayedMultiDragGestureRecognizer(
+        delay: _agentReorderLongPressDelay,
+        debugOwner: this,
+      );
+}
+
+final _agentReorderLongPressDelay = Duration(
+  microseconds: kLongPressTimeout.inMicroseconds * 9 ~/ 10,
+);
+
 class _AgentBubble extends StatelessWidget {
   const _AgentBubble({
     required this.item,
@@ -16,6 +35,7 @@ class _AgentBubble extends StatelessWidget {
     required this.selected,
     required this.labels,
     required this.itemCount,
+    required this.orientation,
     required this.reorderable,
     required this.onSelect,
     this.onLongPress,
@@ -28,6 +48,7 @@ class _AgentBubble extends StatelessWidget {
   final bool selected;
   final KAgentSwitcherLabels labels;
   final int itemCount;
+  final Axis orientation;
   final bool reorderable;
   final VoidCallback onSelect;
   final VoidCallback? onLongPress;
@@ -38,19 +59,17 @@ class _AgentBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
     final shortcuts = <ShortcutActivator, VoidCallback>{};
+    final previousKey = orientation == Axis.horizontal
+        ? LogicalKeyboardKey.arrowLeft
+        : LogicalKeyboardKey.arrowUp;
+    final nextKey = orientation == Axis.horizontal
+        ? LogicalKeyboardKey.arrowRight
+        : LogicalKeyboardKey.arrowDown;
     if (onMovePrevious case final action?) {
-      shortcuts[const SingleActivator(
-            LogicalKeyboardKey.arrowLeft,
-            alt: true,
-          )] =
-          action;
+      shortcuts[SingleActivator(previousKey, alt: true)] = action;
     }
     if (onMoveNext case final action?) {
-      shortcuts[const SingleActivator(
-            LogicalKeyboardKey.arrowRight,
-            alt: true,
-          )] =
-          action;
+      shortcuts[SingleActivator(nextKey, alt: true)] = action;
     }
     return CallbackShortcuts(
       bindings: shortcuts,
@@ -86,22 +105,53 @@ class _AgentBubble extends StatelessWidget {
             onTap: onSelect,
             onLongPress: onLongPress,
             child: SizedBox(
-              width:
-                  tokens.componentAvatarSizeLarge +
-                  tokens.spaceControlInsetInline * 2,
+              width: orientation == Axis.horizontal
+                  ? tokens.componentAvatarSizeLarge +
+                        tokens.spaceControlInsetInline * 2
+                  : double.infinity,
               child: Padding(
                 padding: EdgeInsets.all(tokens.spaceTight),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: tokens.spaceTight,
-                  children: [
-                    _AvatarShell(item: item, selected: selected),
-                    if (item.showName)
-                      _NameContent(item: item, selected: selected),
-                    if (item.statusContent != null || item.activity != null)
-                      _StatusContent(item: item, labels: labels),
-                  ],
-                ),
+                child: orientation == Axis.horizontal
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: tokens.spaceTight,
+                        children: [
+                          _AvatarShell(item: item, selected: selected),
+                          if (item.showName)
+                            _NameContent(item: item, selected: selected),
+                          if (item.statusContent != null ||
+                              item.activity != null)
+                            _StatusContent(item: item, labels: labels),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          _AvatarShell(item: item, selected: selected),
+                          SizedBox(width: tokens.spaceControlGap),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: tokens.spaceTight,
+                              children: [
+                                if (item.showName)
+                                  _NameContent(
+                                    item: item,
+                                    selected: selected,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                if (item.statusContent != null ||
+                                    item.activity != null)
+                                  _StatusContent(
+                                    item: item,
+                                    labels: labels,
+                                    textAlign: TextAlign.start,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
               ),
             ),
           ),
@@ -172,9 +222,14 @@ class _AvatarShell extends StatelessWidget {
 }
 
 class _NameContent extends StatelessWidget {
-  const _NameContent({required this.item, required this.selected});
+  const _NameContent({
+    required this.item,
+    required this.selected,
+    this.textAlign = TextAlign.center,
+  });
   final KAgentSwitcherItem item;
   final bool selected;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +240,7 @@ class _NameContent extends StatelessWidget {
         child: DefaultTextStyle(
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
+          textAlign: textAlign,
           style: TextStyle(
             color: tokens.colorTextPrimary,
             fontFamily: tokens.fontFamily,
@@ -203,9 +258,14 @@ class _NameContent extends StatelessWidget {
 }
 
 class _StatusContent extends StatelessWidget {
-  const _StatusContent({required this.item, required this.labels});
+  const _StatusContent({
+    required this.item,
+    required this.labels,
+    this.textAlign = TextAlign.center,
+  });
   final KAgentSwitcherItem item;
   final KAgentSwitcherLabels labels;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +285,7 @@ class _StatusContent extends StatelessWidget {
           child: DefaultTextStyle(
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
+            textAlign: textAlign,
             style: TextStyle(
               color: color,
               fontFamily: tokens.fontFamily,

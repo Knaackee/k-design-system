@@ -52,6 +52,7 @@ export interface KAgentSwitcherLabels {
   activityPrefix: string;
   unreadMessages: (count: number) => string;
   reorderInstruction: string;
+  reorderInstructionVertical: string;
   reorderAnnouncement: (
     name: string,
     position: number,
@@ -68,6 +69,8 @@ export interface KAgentSwitcherProps {
   labels?: Partial<KAgentSwitcherLabels>;
   onReorder?: (ids: string[]) => void;
   onLongPress?: (id: string) => void;
+  /** Layout axis. Horizontal preserves the compact strip used by existing consumers. */
+  orientation?: "horizontal" | "vertical";
 }
 
 const defaultLabels: KAgentSwitcherLabels = {
@@ -85,6 +88,8 @@ const defaultLabels: KAgentSwitcherLabels = {
     `${count} unread ${count === 1 ? "message" : "messages"}`,
   reorderInstruction:
     "Long-press and drag to reorder. With the keyboard, use Alt plus Left or Right arrow.",
+  reorderInstructionVertical:
+    "Long-press and drag to reorder. With the keyboard, use Alt plus Up or Down arrow.",
   reorderAnnouncement: (name, position, count) =>
     `${name} moved to position ${position} of ${count}.`,
 };
@@ -182,6 +187,7 @@ export function KAgentSwitcher({
   labels: labelOverrides,
   onReorder,
   onLongPress,
+  orientation = "horizontal",
 }: KAgentSwitcherProps) {
   const labels = { ...defaultLabels, ...labelOverrides };
   const instructionsId = useId();
@@ -192,6 +198,7 @@ export function KAgentSwitcher({
   >(undefined);
   const reorder = useAgentSwitcherReorder({
     ids,
+    orientation,
     onReorder,
     onLongPress,
     feedback: {
@@ -244,6 +251,7 @@ export function KAgentSwitcher({
       <nav
         ref={reorder.rootRef}
         className="k-agent-switcher"
+        data-orientation={orientation}
         aria-label={labels.agents}
         onPointerMoveCapture={reorder.pointerMove}
       >
@@ -302,15 +310,16 @@ export function KAgentSwitcher({
                     }}
                     onKeyDown={(event) => {
                       if (!onReorder || !event.altKey) return;
-                      if (
-                        event.key === "ArrowLeft" ||
-                        event.key === "ArrowRight"
-                      ) {
+                      const previousKey =
+                        orientation === "vertical" ? "ArrowUp" : "ArrowLeft";
+                      const nextKey =
+                        orientation === "vertical" ? "ArrowDown" : "ArrowRight";
+                      if (event.key === previousKey || event.key === nextKey) {
                         event.preventDefault();
                         reorder.keyboardMove(
                           item.id,
                           item.name,
-                          event.key === "ArrowLeft" ? -1 : 1,
+                          event.key === previousKey ? -1 : 1,
                         );
                       }
                     }}
@@ -390,7 +399,9 @@ export function KAgentSwitcher({
         </ul>
         {onReorder ? (
           <p id={instructionsId} className="k-agent-switcher__sr-only">
-            {labels.reorderInstruction}
+            {orientation === "vertical"
+              ? labels.reorderInstructionVertical
+              : labels.reorderInstruction}
           </p>
         ) : null}
         <p className="k-agent-switcher__sr-only" aria-live="polite">

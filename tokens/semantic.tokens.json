@@ -89,9 +89,9 @@
     },
     "action": {
       "primary": {
-        "background": { "$type": "color", "$value": "{color.indigo.600}" },
-        "hover": { "$type": "color", "$value": "{color.indigo.700}" },
-        "pressed": { "$type": "color", "$value": "{color.indigo.700}" },
+        "background": { "$type": "color", "$value": "#242428" },
+        "hover": { "$type": "color", "$value": "#36363c" },
+        "pressed": { "$type": "color", "$value": "#141418" },
         "foreground": { "$type": "color", "$value": "{color.neutral.0}" }
       },
       "secondary": {
@@ -266,11 +266,11 @@
     "large": { "$type": "dimension", "$value": "{radius.scale.lg}" },
     "extraLarge": { "$type": "dimension", "$value": "{radius.scale.xl}" },
     "prominent": { "$type": "dimension", "$value": "{radius.scale.2xl}" },
-    "sheet": { "$type": "dimension", "$value": "{radius.scale.3xl}" },
+    "sheet": { "$type": "dimension", "$value": "{radius.scale.xl}" },
     "full": { "$type": "dimension", "$value": "{radius.scale.full}" },
     "control": { "$type": "dimension", "$value": "{radius.scale.md}" },
-    "card": { "$type": "dimension", "$value": "{radius.scale.md}" },
-    "overlay": { "$type": "dimension", "$value": "{radius.scale.lg}" }
+    "card": { "$type": "dimension", "$value": "{radius.scale.lg}" },
+    "overlay": { "$type": "dimension", "$value": "{radius.scale.xl}" }
   },
   "border": {
     "width": {

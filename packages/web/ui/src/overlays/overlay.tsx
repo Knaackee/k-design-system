@@ -51,7 +51,7 @@ export function KAdaptiveDialog(props: KOverlayProps) {
 
 export const KDialog = KAdaptiveDialog;
 
-function KDesktopDialog({
+export function KDesktopDialog({
   open,
   onOpenChange,
   title,

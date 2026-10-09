@@ -44,6 +44,9 @@ void main() {
 
     expect(find.text('41 % frei'), findsOneWidget);
     expect(find.text('+2'), findsOneWidget);
+    expect(find.text('Ablaufdatum: 22.10.26, 22:51'), findsNothing);
+    await tester.tap(find.text('Zusatz-Resets'));
+    await tester.pump();
     expect(find.text('Ablaufdatum: 22.10.26, 22:51'), findsOneWidget);
     expect(find.byType(KProgress), findsOneWidget);
     expect(tester.takeException(), isNull);

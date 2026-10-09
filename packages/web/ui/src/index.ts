@@ -296,6 +296,12 @@ export type {
   KAgentConnection,
   KAgentActivityState,
 } from "./chat/agent-switcher.js";
+export { KAgentChatWorkspace } from "./chat/agent-chat-workspace.js";
+export type {
+  KAgentChatWorkspaceProps,
+  KAgentChatWorkspaceLabels,
+  KAgentChatWorkspaceSidebarControls,
+} from "./chat/agent-chat-workspace.js";
 export {
   KAgentToolCall,
   KAgentApproval,

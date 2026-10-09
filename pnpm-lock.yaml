@@ -26,6 +26,9 @@ importers:
       '@k-design-system/ui':
         specifier: workspace:*
         version: link:../../packages/web/ui
+      '@rive-app/canvas':
+        specifier: 2.44.0
+        version: 2.44.0
       '@svar-ui/react-gantt':
         specifier: 2.7.3
         version: 2.7.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1086,6 +1089,9 @@ packages:
   '@resvg/resvg-js@2.6.2':
     resolution: {integrity: sha512-xBaJish5OeGmniDj9cW5PRa/PtmuVU3ziqrbr5xJj901ZDN4TosrVaNZpEiLZAxdfnhAe7uQ7QFWfjPe9d9K2Q==}
     engines: {node: '>= 10'}
+
+  '@rive-app/canvas@2.44.0':
+    resolution: {integrity: sha512-ak0GGwCbuWubi6rP9qB5YPy5CxYuTY3AiuTV4i1Vi7GXhuK2XB+M+4WJMuGcYGfGLzojaVMKaxtunD5OjjGzOQ==}
 
   '@rolldown/binding-android-arm-eabi@1.2.6':
     resolution: {integrity: sha512-b+jTcARdTiFLI6jB4a5XjTm0RWd6KcRfQj/I2356fxUZemiho9zQLxo0RtCuMDAyKcLo6cEltkgbQp6d1+sjjQ==}
@@ -3844,6 +3850,8 @@ snapshots:
       '@resvg/resvg-js-win32-arm64-msvc': 2.6.2
       '@resvg/resvg-js-win32-ia32-msvc': 2.6.2
       '@resvg/resvg-js-win32-x64-msvc': 2.6.2
+
+  '@rive-app/canvas@2.44.0': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.6':
     optional: true

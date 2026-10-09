@@ -4,6 +4,8 @@ import { KBadge } from "../basic-components.js";
 
 import { KProgress } from "../extended-components.js";
 
+import { KDisclosure } from "../primitives/disclosure.js";
+
 import { KText } from "../primitives/text.js";
 
 export interface KUsageWindow {
@@ -166,23 +168,15 @@ export function KUsageDetails({
       )}
 
       {extraResets.length > 0 && (
-        <section className="k-usage-details__extras">
-          {extraResetsLabel && (
-            <KText
-              as="h4"
-              variant="bodySmall"
-              className="k-usage-details__title"
-            >
-              {extraResetsLabel}
-            </KText>
-          )}
-
+        <KDisclosure
+          className="k-usage-details__extras"
+          title={extraResetsLabel ?? "Additional resets"}
+        >
           <dl className="k-usage-details__values">
             {extraResets.map((item) => (
               <div key={item.id} className="k-usage-details__value">
-                <dt>{item.label}</dt>
-                <dd>
-                  <strong>{item.valueLabel}</strong>
+                <dt>
+                  {item.label}
                   {item.detail && (
                     <KText
                       as="p"
@@ -192,11 +186,14 @@ export function KUsageDetails({
                       {item.detail}
                     </KText>
                   )}
+                </dt>
+                <dd>
+                  <strong>{item.valueLabel}</strong>
                 </dd>
               </div>
             ))}
           </dl>
-        </section>
+        </KDisclosure>
       )}
 
       {!windows.length &&

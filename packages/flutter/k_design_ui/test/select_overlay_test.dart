@@ -5,6 +5,77 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/src/forms/selection_popup.dart';
 
 void main() {
+  for (final top in [40.0, 160.0, 320.0]) {
+    testWidgets('combobox remains visible above keyboard at $top', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(360, 756);
+      addTearDown(tester.view.reset);
+      String? selected;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(extensions: [KDesignTokens.orbitLight]),
+          home: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Builder(
+              builder: (context) => MediaQuery.removeViewInsets(
+                context: context,
+                removeBottom: true,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 16,
+                      top: top,
+                      width: 328,
+                      child: KCombobox(
+                        label: 'Model',
+                        onChanged: (value) => selected = value,
+                        options: List.generate(
+                          20,
+                          (index) => KSelectOption(
+                            value: '$index',
+                            label: 'Model $index',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byType(TextField));
+      await tester.pumpAndSettle();
+      tester.view.viewInsets = const FakeViewPadding(bottom: 283);
+      await tester.pumpAndSettle();
+      final popup = tester.getRect(find.byType(KSelectionPopup));
+      final trigger = tester.getRect(find.byType(TextField));
+      expect(popup.top, greaterThanOrEqualTo(8));
+      expect(popup.bottom, lessThanOrEqualTo(756 - 283 - 8));
+      expect(popup.height, greaterThanOrEqualTo(120));
+      if (top == 320) {
+        expect(popup.bottom, lessThan(trigger.top));
+      } else {
+        expect(popup.top, greaterThan(trigger.bottom));
+      }
+      await tester.scrollUntilVisible(
+        find.text('Model 19'),
+        100,
+        scrollable: find.descendant(
+          of: find.byType(KSelectionPopup),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.tap(find.text('Model 19'));
+      await tester.pumpAndSettle();
+      expect(selected, '19');
+      expect(find.byType(KSelectionPopup), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  }
   testWidgets('custom option icon appears in trigger and popup', (
     tester,
   ) async {

@@ -1,0 +1,12 @@
+{
+  "release": "v2.0.0",
+  "source": "https://github.com/Knaackee/RiveCharacter/releases/tag/v2.0.0",
+  "commit": "7300454037e28dfd71a4d9e9242881c0c816d8fe",
+  "file": "rive-character-v2.riv",
+  "sha256": "b3770e3fb44b51568259c78bb2738bde0e4df18ece0784175bd26eaccdc3e9a3",
+  "bytes": 5081089,
+  "artboard": "Avatar",
+  "stateMachine": "Avatar",
+  "viewModel": "Avatar",
+  "instance": "Default"
+}

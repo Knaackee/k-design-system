@@ -112,3 +112,22 @@ test("moveAgentId returns complete controlled orders in either direction", () =>
     "linus",
   ]);
 });
+
+test("vertical agent switcher exposes its axis and vertical keyboard guidance", () => {
+  const html = renderToStaticMarkup(
+    h(KAgentSwitcher, {
+      items,
+      selectedId: "ada",
+      onSelect() {},
+      onReorder() {},
+      orientation: "vertical",
+      labels: {
+        reorderInstructionVertical: "Alt plus Pfeil hoch oder runter.",
+      },
+    }),
+  );
+
+  assert.match(html, /data-orientation="vertical"/);
+  assert.match(html, /Alt plus Pfeil hoch oder runter\./);
+  assert.doesNotMatch(html, /Alt plus Left or Right arrow/);
+});

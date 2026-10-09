@@ -975,3 +975,33 @@
     right: 0;
   }
 }
+
+.k-popover__content[data-arrow="true"] {
+  width: min(
+    var(--k-component-popover-max-width),
+    calc(100vw - 2 * var(--k-component-popover-viewport-inset))
+  );
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}
+.k-popover__content[data-arrow="true"]::before,
+.k-popover__content[data-arrow="true"]::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  left: var(--k-popover-arrow-left, 50%);
+  transform: translateX(-50%);
+  border-inline: var(--k-space-control-gap) solid transparent;
+  border-bottom: var(--k-space-control-gap) solid var(--k-color-border-default);
+  top: calc(-1 * var(--k-space-control-gap));
+}
+.k-popover__content[data-arrow="true"]::after {
+  top: calc(-1 * var(--k-space-control-gap) + var(--k-border-width-default));
+  border-bottom-color: var(--k-color-surface-raised);
+}
+.k-popover__scroll {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}

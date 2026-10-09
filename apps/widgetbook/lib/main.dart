@@ -4,6 +4,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
+import 'neutral_design_fixture.dart';
 import 'compact_tool_activity_fixture.dart';
 import 'login_showcase.dart';
 import 'dashboard_shell_fixture.dart';
@@ -47,6 +48,7 @@ import 'agent_ui_fixtures.dart';
 import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
 import 'agent_chat_switcher_fixture.dart';
+import 'agent_chat_workspace_fixture.dart';
 import 'agent_switcher_variants_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
@@ -760,6 +762,33 @@ class KDesignWidgetbook extends StatelessWidget {
           name: 'Patterns',
           children: [
             WidgetbookFolder(
+              name: 'AgentChatWorkspace',
+              children: [
+                WidgetbookUseCase(
+                  name: AgentChatWorkspaceFixtureNames.fullScreen,
+                  builder: (_) => const AgentChatWorkspaceFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: AgentChatWorkspaceFixtureNames.needsInput,
+                  builder: (_) => const AgentChatWorkspaceFixture(
+                    kind: AgentChatWorkspaceFixtureKind.needsInput,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: AgentChatWorkspaceFixtureNames.offline,
+                  builder: (_) => const AgentChatWorkspaceFixture(
+                    kind: AgentChatWorkspaceFixtureKind.offline,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: AgentChatWorkspaceFixtureNames.mobile,
+                  builder: (_) => const AgentChatWorkspaceFixture(
+                    kind: AgentChatWorkspaceFixtureKind.mobile,
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
               name: 'Workflow',
               children: [
                 WidgetbookUseCase(
@@ -920,6 +949,19 @@ class KDesignWidgetbook extends StatelessWidget {
               children: [
                 WidgetbookUseCase(
                   name: 'settings-page-responsive',
+                  builder: (_) => const SettingsPageFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'NeutralDesign',
+              children: [
+                WidgetbookUseCase(
+                  name: 'controls-and-dialog',
+                  builder: (_) => const NeutralDesignFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'settings',
                   builder: (_) => const SettingsPageFixture(),
                 ),
               ],

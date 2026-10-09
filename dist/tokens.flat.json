@@ -170,15 +170,15 @@
     },
     "color.action.primary.background": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "color.action.primary.hover": {
       "type": "color",
-      "value": "#3f6212"
+      "value": "#36363c"
     },
     "color.action.primary.pressed": {
       "type": "color",
-      "value": "#365314"
+      "value": "#141418"
     },
     "color.action.primary.foreground": {
       "type": "color",
@@ -682,7 +682,7 @@
     "radius.sheet": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -703,14 +703,14 @@
     "radius.card": {
       "type": "dimension",
       "value": {
-        "value": 6,
+        "value": 8,
         "unit": "px"
       }
     },
     "radius.overlay": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -1510,7 +1510,7 @@
     },
     "component.selection.selectedBackground": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "component.selection.selectedForeground": {
       "type": "color",
@@ -1518,7 +1518,7 @@
     },
     "component.selection.selectedBorder": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "component.selection.focusRing": {
       "type": "color",
@@ -1589,7 +1589,7 @@
     },
     "component.chart.seriesPrimary": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "component.chart.seriesSecondary": {
       "type": "color",
@@ -1878,11 +1878,11 @@
     },
     "component.switch.activeTrack": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "component.switch.activeBorder": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "component.switch.activeThumb": {
       "type": "color",
@@ -2060,7 +2060,7 @@
     },
     "component.badge.primary.background": {
       "type": "color",
-      "value": "#4d7c0f"
+      "value": "#242428"
     },
     "component.badge.primary.foreground": {
       "type": "color",
@@ -3003,7 +3003,7 @@
     "component.mobileAppBar.container.radius.fixed": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -3459,19 +3459,19 @@
     },
     "color.action.primary.background": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "color.action.primary.hover": {
       "type": "color",
-      "value": "#bef264"
+      "value": "#ffffff"
     },
     "color.action.primary.pressed": {
       "type": "color",
-      "value": "#84cc16"
+      "value": "#cfcfd4"
     },
     "color.action.primary.foreground": {
       "type": "color",
-      "value": "#1a2e05"
+      "value": "#202024"
     },
     "color.action.secondary.background": {
       "type": "color",
@@ -3971,7 +3971,7 @@
     "radius.sheet": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -3992,14 +3992,14 @@
     "radius.card": {
       "type": "dimension",
       "value": {
-        "value": 6,
+        "value": 8,
         "unit": "px"
       }
     },
     "radius.overlay": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -4799,15 +4799,15 @@
     },
     "component.selection.selectedBackground": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "component.selection.selectedForeground": {
       "type": "color",
-      "value": "#1a2e05"
+      "value": "#202024"
     },
     "component.selection.selectedBorder": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "component.selection.focusRing": {
       "type": "color",
@@ -4878,7 +4878,7 @@
     },
     "component.chart.seriesPrimary": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "component.chart.seriesSecondary": {
       "type": "color",
@@ -5167,15 +5167,15 @@
     },
     "component.switch.activeTrack": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "component.switch.activeBorder": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "component.switch.activeThumb": {
       "type": "color",
-      "value": "#1a2e05"
+      "value": "#202024"
     },
     "component.switch.trackWidth": {
       "type": "dimension",
@@ -5349,11 +5349,11 @@
     },
     "component.badge.primary.background": {
       "type": "color",
-      "value": "#a3e635"
+      "value": "#e8e8eb"
     },
     "component.badge.primary.foreground": {
       "type": "color",
-      "value": "#1a2e05"
+      "value": "#202024"
     },
     "component.badge.secondary.background": {
       "type": "color",
@@ -6292,7 +6292,7 @@
     "component.mobileAppBar.container.radius.fixed": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -6748,15 +6748,15 @@
     },
     "color.action.primary.background": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "color.action.primary.hover": {
       "type": "color",
-      "value": "#0f766e"
+      "value": "#36363c"
     },
     "color.action.primary.pressed": {
       "type": "color",
-      "value": "#115e59"
+      "value": "#141418"
     },
     "color.action.primary.foreground": {
       "type": "color",
@@ -7260,7 +7260,7 @@
     "radius.sheet": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -7281,14 +7281,14 @@
     "radius.card": {
       "type": "dimension",
       "value": {
-        "value": 6,
+        "value": 8,
         "unit": "px"
       }
     },
     "radius.overlay": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -8088,7 +8088,7 @@
     },
     "component.selection.selectedBackground": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "component.selection.selectedForeground": {
       "type": "color",
@@ -8096,7 +8096,7 @@
     },
     "component.selection.selectedBorder": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "component.selection.focusRing": {
       "type": "color",
@@ -8167,7 +8167,7 @@
     },
     "component.chart.seriesPrimary": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "component.chart.seriesSecondary": {
       "type": "color",
@@ -8456,11 +8456,11 @@
     },
     "component.switch.activeTrack": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "component.switch.activeBorder": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "component.switch.activeThumb": {
       "type": "color",
@@ -8638,7 +8638,7 @@
     },
     "component.badge.primary.background": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#242428"
     },
     "component.badge.primary.foreground": {
       "type": "color",
@@ -9581,7 +9581,7 @@
     "component.mobileAppBar.container.radius.fixed": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -10037,19 +10037,19 @@
     },
     "color.action.primary.background": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "color.action.primary.hover": {
       "type": "color",
-      "value": "#2dd4bf"
+      "value": "#ffffff"
     },
     "color.action.primary.pressed": {
       "type": "color",
-      "value": "#0d9488"
+      "value": "#cfcfd4"
     },
     "color.action.primary.foreground": {
       "type": "color",
-      "value": "#042f2e"
+      "value": "#202024"
     },
     "color.action.secondary.background": {
       "type": "color",
@@ -10549,7 +10549,7 @@
     "radius.sheet": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -10570,14 +10570,14 @@
     "radius.card": {
       "type": "dimension",
       "value": {
-        "value": 6,
+        "value": 8,
         "unit": "px"
       }
     },
     "radius.overlay": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
         "unit": "px"
       }
     },
@@ -11377,15 +11377,15 @@
     },
     "component.selection.selectedBackground": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "component.selection.selectedForeground": {
       "type": "color",
-      "value": "#042f2e"
+      "value": "#202024"
     },
     "component.selection.selectedBorder": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "component.selection.focusRing": {
       "type": "color",
@@ -11456,7 +11456,7 @@
     },
     "component.chart.seriesPrimary": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "component.chart.seriesSecondary": {
       "type": "color",
@@ -11745,15 +11745,15 @@
     },
     "component.switch.activeTrack": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "component.switch.activeBorder": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "component.switch.activeThumb": {
       "type": "color",
-      "value": "#042f2e"
+      "value": "#202024"
     },
     "component.switch.trackWidth": {
       "type": "dimension",
@@ -11927,11 +11927,11 @@
     },
     "component.badge.primary.background": {
       "type": "color",
-      "value": "#14b8a6"
+      "value": "#e8e8eb"
     },
     "component.badge.primary.foreground": {
       "type": "color",
-      "value": "#042f2e"
+      "value": "#202024"
     },
     "component.badge.secondary.background": {
       "type": "color",
@@ -12870,7 +12870,7 @@
     "component.mobileAppBar.container.radius.fixed": {
       "type": "dimension",
       "value": {
-        "value": 24,
+        "value": 12,
         "unit": "px"
       }
     },

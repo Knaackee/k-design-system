@@ -4,6 +4,97 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  for (final alreadyResized in [false, true]) {
+    testWidgets(
+      'tablet dialog reserves keyboard once with resized parent=$alreadyResized',
+      (tester) async {
+        tester.view.physicalSize = const Size(1024, 850);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        const lowerField = Key('lower field');
+        Widget dialog() => KAdaptiveDialog(
+          title: const Text('Configuration'),
+          actions: TextButton(onPressed: () {}, child: const Text('Save')),
+          child: const Column(
+            children: [
+              TextField(decoration: InputDecoration(labelText: 'Name')),
+              SizedBox(height: 1000),
+              TextField(key: lowerField),
+            ],
+          ),
+        );
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(),
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: alreadyResized
+                    ? dialog()
+                    : TextButton(
+                        onPressed: () => KAdaptiveDialog.show<void>(
+                          context: context,
+                          builder: (_) => dialog(),
+                        ),
+                        child: const Text('Open'),
+                      ),
+              ),
+            ),
+          ),
+        );
+        if (!alreadyResized) {
+          await tester.tap(find.text('Open'));
+          await tester.pumpAndSettle();
+        }
+        await tester.tap(find.byType(TextField).first);
+        tester.view.viewInsets = const FakeViewPadding(bottom: 283);
+        await tester.pumpAndSettle();
+        final surface = tester.getRect(find.byType(KSurface));
+        expect(surface.height, closeTo(850 - 283, .01));
+        expect(surface.bottom, lessThanOrEqualTo(850 - 283));
+        expect(tester.getBottomLeft(find.text('Save')).dy, lessThan(850 - 283));
+        expect(find.text('Save').hitTestable(), findsOneWidget);
+        await tester.scrollUntilVisible(
+          find.byKey(lowerField),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.tap(find.byKey(lowerField));
+        await tester.enterText(find.byKey(lowerField), 'Visible input');
+        await tester.pumpAndSettle();
+        final field = tester.getRect(find.byKey(lowerField));
+        expect(field.bottom, lessThan(850 - 283));
+        expect(find.text('Visible input').hitTestable(), findsOneWidget);
+        expect(find.text('Save').hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+  testWidgets('dialog honors consumer height without changing the default', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1100, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    Future<void> render(double? maxHeight) => tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: KDialog(
+          title: const Text('Editor'),
+          expandBody: true,
+          maxHeight: maxHeight,
+          actions: const Text('Save'),
+          child: const SizedBox.expand(),
+        ),
+      ),
+    );
+    await render(null);
+    expect(tester.getSize(find.byType(KSurface)).height, 720);
+    await render(852);
+    expect(tester.getSize(find.byType(KSurface)).height, 852);
+    expect(tester.getBottomLeft(find.text('Save')).dy, lessThan(900));
+    expect(tester.takeException(), isNull);
+  });
   for (final useHandle in [false, true]) {
     testWidgets(
       'phone sheet dismisses via ${useHandle ? 'handle' : 'content edge'} and respects close guard',

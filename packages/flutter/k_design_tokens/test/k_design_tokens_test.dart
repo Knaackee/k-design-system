@@ -3,10 +3,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 void main() {
-  test('Orbit and reference themes expose different action colors', () {
+  test('neutral actions stay separate from brand accents', () {
     expect(
       KDesignTokens.orbitLight.colorActionPrimaryBackground,
-      isNot(KDesignTokens.referenceLight.colorActionPrimaryBackground),
+      KDesignTokens.referenceLight.colorActionPrimaryBackground,
+    );
+    expect(
+      KDesignTokens.orbitLight.colorBrandPrimaryAccent,
+      isNot(KDesignTokens.referenceLight.colorBrandPrimaryAccent),
+    );
+    expect(
+      KDesignTokens.orbitLight.colorActionPrimaryBackground,
+      const Color(0xff242428),
+    );
+    expect(
+      KDesignTokens.orbitDark.colorActionPrimaryBackground,
+      const Color(0xffe8e8eb),
     );
   });
 
@@ -209,8 +221,10 @@ void main() {
     final tokens = KDesignTokens.orbitLight;
 
     expect(tokens.radiusSmall, 4);
-    expect(tokens.radiusCard, 6);
-    expect(tokens.radiusOverlay, 8);
+    expect(tokens.radiusControl, 6);
+    expect(tokens.radiusCard, 8);
+    expect(tokens.radiusOverlay, 12);
+    expect(tokens.radiusSheet, 12);
     expect(tokens.borderWidthDefault, 1);
     expect(tokens.elevationNone.single.color, Colors.transparent);
     expect(tokens.elevationLow, hasLength(1));
