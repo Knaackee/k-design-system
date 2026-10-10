@@ -20,6 +20,7 @@
 @import "./chat.css";
 @import "./chat/agent-switcher.css";
 @import "./chat/agent-chat-workspace.css";
+@import "./chat/web-search.css";
 @import "./workflow.css";
 @import "./link.css";
 @import "./ask-tools.css";

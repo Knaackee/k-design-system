@@ -50,6 +50,8 @@ import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
 import 'agent_chat_switcher_fixture.dart';
 import 'agent_chat_workspace_fixture.dart';
+import 'web_search_fixture.dart';
+import 'foley_sounds_fixture.dart';
 import 'agent_switcher_variants_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
@@ -763,6 +765,49 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'WebSearch',
+              children: [
+                WidgetbookUseCase(
+                  name: 'review',
+                  builder: (_) => const WebSearchFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile',
+                  builder: (_) => const WebSearchFixture(mobile: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'running',
+                  builder: (_) =>
+                      const WebSearchFixture(state: KWebSearchState.running),
+                ),
+                WidgetbookUseCase(
+                  name: 'animated-loading',
+                  builder: (_) => const WebSearchFixture(
+                    state: KWebSearchState.running,
+                    animatedLoading: true,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'empty',
+                  builder: (_) => const WebSearchFixture(empty: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'error',
+                  builder: (_) =>
+                      const WebSearchFixture(state: KWebSearchState.failed),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'FoleySounds',
+              children: [
+                WidgetbookUseCase(
+                  name: 'review',
+                  builder: buildFoleySoundsReview,
+                ),
+              ],
+            ),
             WidgetbookComponent(
               name: 'ChatBubble',
               useCases: [

@@ -1,0 +1,115 @@
+.foley-review {
+  box-sizing: border-box;
+  max-width: 960px;
+  margin: auto;
+  padding: var(--k-space-layout-section-gap);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family-body);
+}
+.foley-review__header {
+  display: grid;
+  gap: var(--k-space-control-gap);
+  margin-bottom: var(--k-space-layout-section-gap);
+}
+.foley-review__header > :first-child,
+.foley-review__card-top,
+.foley-review__description,
+.foley-review__footer {
+  color: var(--k-color-text-muted);
+}
+.foley-review__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--k-space-card-padding);
+  padding: var(--k-space-card-padding);
+  margin-bottom: var(--k-space-card-padding);
+}
+.foley-review__volume {
+  display: grid;
+  flex: 1;
+  min-width: 180px;
+  gap: var(--k-space-control-gap);
+}
+.foley-review__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--k-space-card-padding);
+}
+.foley-review__card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--k-space-card-padding);
+  padding: var(--k-space-card-padding);
+}
+.foley-review__card[data-playing] {
+  border-color: var(--k-color-border-strong);
+  background: var(--k-color-surface-subtle);
+}
+.foley-review__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+}
+.foley-review__description {
+  flex: 1;
+}
+.foley-review__events {
+  display: grid;
+  gap: var(--k-space-card-padding);
+  padding: var(--k-space-card-padding);
+  margin-bottom: var(--k-space-layout-section-gap);
+}
+.foley-review__event-switches {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--k-space-card-padding);
+}
+.foley-review__event-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+}
+.foley-review__event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+}
+@media (max-width: 700px) {
+  .foley-review__event-switches {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.foley-review__section-title {
+  display: block;
+  margin-bottom: var(--k-space-card-padding);
+}
+.foley-review__all,
+.foley-review__family {
+  margin-top: var(--k-space-layout-section-gap);
+}
+.foley-review__status {
+  display: block;
+  margin-top: var(--k-space-card-padding);
+}
+.foley-review__footer {
+  display: grid;
+  gap: var(--k-space-control-gap);
+  margin-top: var(--k-space-layout-section-gap);
+}
+@media (max-width: 700px) {
+  .foley-review__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 460px) {
+  .foley-review {
+    padding: var(--k-space-card-padding);
+  }
+  .foley-review__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

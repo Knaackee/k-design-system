@@ -490,3 +490,10 @@ export type { KChatBubbleProps } from "./chat/chat-bubble.js";
 export { KFab } from "./actions/fab.js";
 export type { KFabProps, KFabItem } from "./actions/fab.js";
 export type { KFabAttention } from "./actions/fab-attention.js";
+export { KWebSearch } from "./chat/web-search.js";
+export type {
+  KWebSearchData,
+  KWebSearchLabels,
+  KWebSearchProps,
+  KWebSearchResult,
+} from "./chat/web-search.js";
