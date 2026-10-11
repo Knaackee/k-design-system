@@ -494,6 +494,29 @@
   --k-component-mobile-app-bar-glass-web-blur: var(--k-blur-mobile-app-bar-web);
   --k-component-mobile-app-bar-glass-native-blur: var(--k-blur-mobile-app-bar-native);
   --k-component-mobile-app-bar-glass-web-saturation: var(--k-saturation-mobile-app-bar-web);
+  --k-component-files-icon-size: 18px;
+  --k-component-files-text-line-height: 1.5;
+  --k-component-files-backdrop: #0000004D;
+  --k-component-files-transition: 220ms;
+  --k-component-files-transfer-elevation: 0px 8px 32px 0px #00000033;
+  --k-component-presentation-action-size: 40px;
+  --k-component-presentation-weather-icon-size: 44px;
+  --k-component-presentation-cover-min-height: 280px;
+  --k-component-presentation-cover-inset: 120px;
+  --k-component-presentation-cover-foreground: #ffffff;
+  --k-component-presentation-cover-muted: #FFFFFFD9;
+  --k-component-presentation-cover-scrim: #000000D6;
+  --k-component-presentation-title-line-height: 1.2;
+  --k-component-presentation-collection-scroll: 300ms;
+  --k-component-presentation-timeline-dot-size: 8px;
+  --k-component-presentation-timeline-rail-width: 10px;
+  --k-component-presentation-timeline-dot-offset: 7px;
+  --k-component-editor-search-counter-width: 70px;
+  --k-component-editor-caret-foreground: #ffffff;
+  --k-component-editor-caret-line-height: 1.4;
+  --k-component-editor-caret-min-height: 1.2em;
+  --k-component-tab-strip-item-max-width: 220px;
+  --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
 }
 
 [data-theme="dark"], [data-brand="orbit"][data-theme="dark"] {
@@ -988,6 +1011,29 @@
   --k-component-mobile-app-bar-glass-web-blur: var(--k-blur-mobile-app-bar-web);
   --k-component-mobile-app-bar-glass-native-blur: var(--k-blur-mobile-app-bar-native);
   --k-component-mobile-app-bar-glass-web-saturation: var(--k-saturation-mobile-app-bar-web);
+  --k-component-files-icon-size: 18px;
+  --k-component-files-text-line-height: 1.5;
+  --k-component-files-backdrop: #0000004D;
+  --k-component-files-transition: 220ms;
+  --k-component-files-transfer-elevation: 0px 8px 32px 0px #00000033;
+  --k-component-presentation-action-size: 40px;
+  --k-component-presentation-weather-icon-size: 44px;
+  --k-component-presentation-cover-min-height: 280px;
+  --k-component-presentation-cover-inset: 120px;
+  --k-component-presentation-cover-foreground: #ffffff;
+  --k-component-presentation-cover-muted: #FFFFFFD9;
+  --k-component-presentation-cover-scrim: #000000D6;
+  --k-component-presentation-title-line-height: 1.2;
+  --k-component-presentation-collection-scroll: 300ms;
+  --k-component-presentation-timeline-dot-size: 8px;
+  --k-component-presentation-timeline-rail-width: 10px;
+  --k-component-presentation-timeline-dot-offset: 7px;
+  --k-component-editor-search-counter-width: 70px;
+  --k-component-editor-caret-foreground: #ffffff;
+  --k-component-editor-caret-line-height: 1.4;
+  --k-component-editor-caret-min-height: 1.2em;
+  --k-component-tab-strip-item-max-width: 220px;
+  --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
 }
 
 [data-brand="reference"][data-theme="light"] {
@@ -1482,6 +1528,29 @@
   --k-component-mobile-app-bar-glass-web-blur: var(--k-blur-mobile-app-bar-web);
   --k-component-mobile-app-bar-glass-native-blur: var(--k-blur-mobile-app-bar-native);
   --k-component-mobile-app-bar-glass-web-saturation: var(--k-saturation-mobile-app-bar-web);
+  --k-component-files-icon-size: 18px;
+  --k-component-files-text-line-height: 1.5;
+  --k-component-files-backdrop: #0000004D;
+  --k-component-files-transition: 220ms;
+  --k-component-files-transfer-elevation: 0px 8px 32px 0px #00000033;
+  --k-component-presentation-action-size: 40px;
+  --k-component-presentation-weather-icon-size: 44px;
+  --k-component-presentation-cover-min-height: 280px;
+  --k-component-presentation-cover-inset: 120px;
+  --k-component-presentation-cover-foreground: #ffffff;
+  --k-component-presentation-cover-muted: #FFFFFFD9;
+  --k-component-presentation-cover-scrim: #000000D6;
+  --k-component-presentation-title-line-height: 1.2;
+  --k-component-presentation-collection-scroll: 300ms;
+  --k-component-presentation-timeline-dot-size: 8px;
+  --k-component-presentation-timeline-rail-width: 10px;
+  --k-component-presentation-timeline-dot-offset: 7px;
+  --k-component-editor-search-counter-width: 70px;
+  --k-component-editor-caret-foreground: #ffffff;
+  --k-component-editor-caret-line-height: 1.4;
+  --k-component-editor-caret-min-height: 1.2em;
+  --k-component-tab-strip-item-max-width: 220px;
+  --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
 }
 
 [data-brand="reference"][data-theme="dark"] {
@@ -1976,6 +2045,29 @@
   --k-component-mobile-app-bar-glass-web-blur: var(--k-blur-mobile-app-bar-web);
   --k-component-mobile-app-bar-glass-native-blur: var(--k-blur-mobile-app-bar-native);
   --k-component-mobile-app-bar-glass-web-saturation: var(--k-saturation-mobile-app-bar-web);
+  --k-component-files-icon-size: 18px;
+  --k-component-files-text-line-height: 1.5;
+  --k-component-files-backdrop: #0000004D;
+  --k-component-files-transition: 220ms;
+  --k-component-files-transfer-elevation: 0px 8px 32px 0px #00000033;
+  --k-component-presentation-action-size: 40px;
+  --k-component-presentation-weather-icon-size: 44px;
+  --k-component-presentation-cover-min-height: 280px;
+  --k-component-presentation-cover-inset: 120px;
+  --k-component-presentation-cover-foreground: #ffffff;
+  --k-component-presentation-cover-muted: #FFFFFFD9;
+  --k-component-presentation-cover-scrim: #000000D6;
+  --k-component-presentation-title-line-height: 1.2;
+  --k-component-presentation-collection-scroll: 300ms;
+  --k-component-presentation-timeline-dot-size: 8px;
+  --k-component-presentation-timeline-rail-width: 10px;
+  --k-component-presentation-timeline-dot-offset: 7px;
+  --k-component-editor-search-counter-width: 70px;
+  --k-component-editor-caret-foreground: #ffffff;
+  --k-component-editor-caret-line-height: 1.4;
+  --k-component-editor-caret-min-height: 1.2em;
+  --k-component-tab-strip-item-max-width: 220px;
+  --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
 }
 }
 

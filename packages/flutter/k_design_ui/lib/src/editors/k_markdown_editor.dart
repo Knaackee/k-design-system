@@ -30,6 +30,8 @@ class KMarkdownEditor extends StatefulWidget {
     this.showFixedToolbar = true,
     this.showFloatingToolbar = true,
     this.showModeSwitcher = true,
+    this.showSearchButton = true,
+    this.contentMaxWidth,
     this.remoteSelections = const [],
     this.collaborationAdapter,
     this.semanticLabel = 'Markdown editor',
@@ -41,6 +43,8 @@ class KMarkdownEditor extends StatefulWidget {
     this.dictationOffset,
     this.dictationLabel = 'Dictate',
     this.onDictationPressed,
+    this.onFocus,
+    this.onBlur,
     super.key,
   });
 
@@ -57,6 +61,8 @@ class KMarkdownEditor extends StatefulWidget {
   final bool showFixedToolbar;
   final bool showFloatingToolbar;
   final bool showModeSwitcher;
+  final bool showSearchButton;
+  final double? contentMaxWidth;
   final List<KRemoteSelection> remoteSelections;
   final KEditorCollaborationAdapter? collaborationAdapter;
   final String semanticLabel;
@@ -77,6 +83,8 @@ class KMarkdownEditor extends StatefulWidget {
   final int? dictationOffset;
   final String dictationLabel;
   final VoidCallback? onDictationPressed;
+  final VoidCallback? onFocus;
+  final VoidCallback? onBlur;
 
   @override
   State<KMarkdownEditor> createState() => KMarkdownEditorState();
@@ -97,13 +105,20 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
 
   KEditorSelection get selection => _selection;
 
+  void openSearch() => _editorKey.currentState?.openSearch();
+
   /// Inserts a completed result through the source editor's undo/CRDT path.
   /// A collaborative host can supply its mapped saved selection.
-  void insertDictation(String text, {KEditorSelection? selection}) {
-    if (widget.readOnly || _mode != KEditorMode.source || text.isEmpty) return;
+  bool insertDictation(String text, {KEditorSelection? selection}) {
+    if (widget.readOnly || _mode != KEditorMode.source || text.isEmpty) {
+      return false;
+    }
     final target = selection ?? _dictationSelection ?? _selection;
-    _editorKey.currentState?.replaceRange(target.start, target.end, text);
+    final editor = _editorKey.currentState;
+    if (editor == null) return false;
+    editor.replaceRange(target.start, target.end, text);
     _dictationSelection = null;
+    return true;
   }
 
   void _dictate() {
@@ -202,32 +217,12 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
         KDesignTokens.orbitLight;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final compact = constraints.maxWidth < 600;
         final editing = _mode == KEditorMode.source;
         return Stack(
           children: [
             Positioned.fill(
               child: Column(
                 children: [
-                  if (widget.showFixedToolbar &&
-                      editing &&
-                      !widget.readOnly &&
-                      !compact &&
-                      widget.dictationState == null)
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: t.colorSurfaceRaised,
-                        border: Border(
-                          bottom: BorderSide(color: t.colorBorderDefault),
-                        ),
-                      ),
-                      child: KEditorFormatBar(
-                        labels: widget.labels,
-                        actions: widget.formatActions,
-                        onAction: _applyFormat,
-                        minimumItemExtent: widget.formatBarMinimumItemExtent,
-                      ),
-                    ),
                   Expanded(
                     child: editing
                         ? KMarkdownSourceGeometry(
@@ -246,7 +241,8 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
                                     placeholder: widget.placeholder,
                                     showLineNumbers: false,
                                     lineWrapping: true,
-                                    showSearchButton: true,
+                                    showSearchButton: widget.showSearchButton,
+                                    contentMaxWidth: widget.contentMaxWidth,
                                     searchButtonEndInset:
                                         widget.showModeSwitcher
                                         ? t.sizeHitTarget +
@@ -258,6 +254,8 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
                                         widget.collaborationAdapter,
                                     semanticLabel: widget.semanticLabel,
                                     minHeight: widget.minHeight,
+                                    onFocus: widget.onFocus,
+                                    onBlur: widget.onBlur,
                                   ),
                                 ),
                                 if (!widget.readOnly &&
@@ -293,8 +291,7 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
                   if ((widget.showFixedToolbar ||
                           widget.dictationState != null) &&
                       editing &&
-                      !widget.readOnly &&
-                      (compact || widget.dictationState != null))
+                      !widget.readOnly)
                     SafeArea(
                       top: false,
                       child: Padding(
@@ -312,7 +309,7 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
                           onAction: _applyFormat,
                           floating: true,
                           minimumItemExtent: widget.formatBarMinimumItemExtent,
-                          trailingAction: widget.dictationState == null
+                          leadingAction: widget.dictationState == null
                               ? null
                               : KDictationAction(
                                   state: widget.dictationState!,

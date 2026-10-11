@@ -24,7 +24,12 @@ import {
   search,
   searchKeymap,
 } from "@codemirror/search";
-import { EditorSelection, EditorState, Extension } from "@codemirror/state";
+import {
+  Compartment,
+  EditorSelection,
+  EditorState,
+  Extension,
+} from "@codemirror/state";
 import {
   Decoration,
   DecorationSet,
@@ -44,9 +49,18 @@ import {
   useRef,
   useState,
 } from "react";
-import { yCollab } from "y-codemirror.next";
-import * as Y from "yjs";
+import {
+  rawTextCollaboration,
+  collaborativeUndo,
+  collaborativeRedo,
+  collaborativeHistoryKeymap,
+} from "./code-collaboration.js";
+import { renderedSource } from "./code-source-map.js";
 import { KIconButton } from "../actions/icon-button.js";
+import {
+  createKDictationAnchor,
+  KDictationState,
+} from "../forms/dictation-action.js";
 import {
   resolveKEditorCollaborationDocument,
   type KEditorCollaborationDocument,
@@ -57,6 +71,7 @@ import {
   type KCodeCompletion,
   type KCodeDiagnostic,
   type KEditorLabels,
+  type KEditorParticipant,
   type KEditorSelection,
   type KEditorTransaction,
   type KRemoteSelection,
@@ -157,6 +172,40 @@ class RemoteCaretWidget extends WidgetType {
   }
 }
 
+class DictationAnchorWidget extends WidgetType {
+  constructor(private readonly state: KDictationState) {
+    super();
+  }
+
+  eq(other: DictationAnchorWidget) {
+    return other.state === this.state;
+  }
+
+  toDOM(view: EditorView) {
+    return createKDictationAnchor(this.state, view.dom.ownerDocument);
+  }
+}
+
+function dictationAnchorExtension(
+  state: KDictationState | undefined,
+  offset: number | undefined,
+): Extension {
+  if (
+    offset === undefined ||
+    (state !== KDictationState.recording &&
+      state !== KDictationState.processing)
+  )
+    return [];
+  return EditorView.decorations.compute(["doc"], (editorState) =>
+    Decoration.set([
+      Decoration.widget({
+        widget: new DictationAnchorWidget(state),
+        side: 1,
+      }).range(Math.max(0, Math.min(editorState.doc.length, offset))),
+    ]),
+  );
+}
+
 function remoteSelectionPlugin(selections: KRemoteSelection[]): Extension {
   return ViewPlugin.fromClass(
     class {
@@ -225,16 +274,21 @@ export interface KCodeEditorProps {
   diagnostics?: KCodeDiagnostic[];
   completions?: KCodeCompletion[];
   remoteSelections?: KRemoteSelection[];
+  participants?: KEditorParticipant[];
   collaborationDocument?: KEditorCollaborationDocument;
   ariaLabel?: string;
   minHeight?: number;
   className?: string;
   onFocus?: () => void;
   onBlur?: () => void;
+  /** Visual-only insertion anchor. The host maps this offset through its CRDT. */
+  dictationState?: KDictationState;
+  dictationOffset?: number;
 }
 
 export interface KCodeEditorHandle {
   focus: () => void;
+  openSearch: () => void;
   undo: () => boolean;
   redo: () => boolean;
   replaceRange: (
@@ -269,12 +323,15 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
       diagnostics: diagnosticItems = emptyDiagnostics,
       completions = emptyCompletions,
       remoteSelections = emptyRemoteSelections,
+      participants = [],
       collaborationDocument,
       ariaLabel = "Code editor",
       minHeight = 280,
       className = "",
       onFocus,
       onBlur,
+      dictationState,
+      dictationOffset,
     }: KCodeEditorProps,
     forwardedRef,
   ) {
@@ -284,6 +341,8 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
     const valueRef = useRef(value);
     const changeRef = useRef(onChange);
     const selectionRef = useRef(onSelectionChange);
+    const presenceCompartment = useRef(new Compartment());
+    const dictationCompartment = useRef(new Compartment());
     const labelKey = JSON.stringify(
       Object.entries(labelOverrides ?? {}).sort(([left], [right]) =>
         left.localeCompare(right),
@@ -303,6 +362,10 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
     useImperativeHandle(
       forwardedRef,
       () => ({
+        openSearch() {
+          const view = viewRef.current;
+          if (view) openSearchPanel(view);
+        },
         focus() {
           viewRef.current?.focus();
         },
@@ -310,13 +373,17 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           const view = viewRef.current;
           if (!view) return false;
           view.focus();
-          return undoCommand(view);
+          return collaborationDocument
+            ? collaborativeUndo(view)
+            : undoCommand(view);
         },
         redo() {
           const view = viewRef.current;
           if (!view) return false;
           view.focus();
-          return redoCommand(view);
+          return collaborationDocument
+            ? collaborativeRedo(view)
+            : redoCommand(view);
         },
         replaceRange(from, to, insert, selection) {
           const view = viewRef.current;
@@ -344,14 +411,21 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           };
         },
       }),
-      [],
+      [collaborationDocument],
     );
 
     const configuration = useMemo(() => {
       const extensions: Extension[] = [
-        history(),
-        keymap.of([...defaultKeymap, ...historyKeymap, ...searchKeymap]),
+        ...(collaborationDocument ? [] : [history()]),
+        keymap.of([
+          ...(collaborationDocument
+            ? collaborativeHistoryKeymap
+            : historyKeymap),
+          ...defaultKeymap,
+          ...searchKeymap,
+        ]),
         search({
+          top: true,
           createPanel: createKEditorSearchPanel(labels, setSearchOpen),
         }),
         languageExtension(language),
@@ -369,7 +443,14 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         }),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
-            const next = update.state.doc.toString();
+            const next = collaborationDocument
+              ? resolveKEditorCollaborationDocument(
+                  collaborationDocument,
+                  "text",
+                )
+                  .getText("content")
+                  .toString()
+              : update.state.doc.toString();
             valueRef.current = next;
             const selection = {
               anchor: update.state.selection.main.anchor,
@@ -381,14 +462,24 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
               origin: "local",
             });
           }
-          if (update.selectionSet) {
+          // A remote edit maps the focused local caret too. Publish awareness
+          // for that position without creating another text transaction.
+          if (
+            update.view.hasFocus &&
+            (update.selectionSet || update.docChanged)
+          ) {
             selectionRef.current?.({
               anchor: update.state.selection.main.anchor,
               head: update.state.selection.main.head,
             });
           }
         }),
-        remoteSelectionPlugin(remoteSelections),
+        presenceCompartment.current.of(
+          remoteSelectionPlugin(emptyRemoteSelections),
+        ),
+        dictationCompartment.current.of(
+          dictationAnchorExtension(undefined, undefined),
+        ),
       ];
       if (showDiagnosticGutter) extensions.push(lintGutter());
       if (showLineNumbers) extensions.push(lineNumbers());
@@ -415,11 +506,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           collaborationDocument,
           "text",
         );
-        extensions.push(
-          yCollab(doc.getText("content"), null, {
-            undoManager: new Y.UndoManager(doc.getText("content")),
-          }),
-        );
+        extensions.push(rawTextCollaboration(doc.getText("content")));
       }
       return extensions;
     }, [
@@ -432,7 +519,6 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
       minHeight,
       placeholder,
       readOnly,
-      remoteSelections,
       showDiagnosticGutter,
       showLineNumbers,
     ]);
@@ -449,7 +535,16 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
       }
       const view = new EditorView({
         state: EditorState.create({
-          doc: collaborationDocument ? undefined : value,
+          doc: collaborationDocument
+            ? renderedSource(
+                resolveKEditorCollaborationDocument(
+                  collaborationDocument,
+                  "text",
+                )
+                  .getText("content")
+                  .toString(),
+              )
+            : value,
           extensions: configuration,
         }),
         parent: host.current,
@@ -461,6 +556,22 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         viewRef.current = null;
       };
     }, [configuration, collaborationDocument]);
+
+    useEffect(() => {
+      viewRef.current?.dispatch({
+        effects: presenceCompartment.current.reconfigure(
+          remoteSelectionPlugin(remoteSelections),
+        ),
+      });
+    }, [configuration, remoteSelections]);
+
+    useEffect(() => {
+      viewRef.current?.dispatch({
+        effects: dictationCompartment.current.reconfigure(
+          dictationAnchorExtension(dictationState, dictationOffset),
+        ),
+      });
+    }, [configuration, dictationOffset, dictationState]);
 
     useEffect(() => {
       const view = viewRef.current;
@@ -481,7 +592,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
 
     return (
       <section
-        className={`k-code-editor ${className}`}
+        className={`k-code-editor ${language === "markdown" ? "k-markdown-editor-source" : ""} ${className}`}
         data-language={language}
         data-has-search-button={showSearchButton || undefined}
       >
@@ -517,9 +628,32 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         <div
           ref={host}
           className="k-code-editor-host"
-          onFocus={onFocus}
+          onFocus={() => {
+            onFocus?.();
+            const selection = viewRef.current?.state.selection.main;
+            if (selection)
+              selectionRef.current?.({
+                anchor: selection.anchor,
+                head: selection.head,
+              });
+          }}
           onBlur={onBlur}
         />
+        {(participants.length > 0 || remoteSelections.length > 0) && (
+          <div className="k-code-editor-presence" aria-label="Aktive Personen">
+            {(participants.length
+              ? participants
+              : remoteSelections.map((selection) => selection.participant)
+            ).map((participant) => (
+              <span
+                key={participant.id}
+                title={participant.name}
+                aria-label={participant.name}
+                style={{ backgroundColor: participant.color }}
+              />
+            ))}
+          </div>
+        )}
       </section>
     );
   },

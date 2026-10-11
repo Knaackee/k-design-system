@@ -31,6 +31,7 @@ class KFab extends StatefulWidget {
     this.onOpenChanged,
     this.visible = true,
     this.size = 64,
+    this.clipBehavior = Clip.antiAlias,
     this.itemGap = 8,
     this.style,
     this.attention = const [],
@@ -50,6 +51,7 @@ class KFab extends StatefulWidget {
   final ValueChanged<bool>? onOpenChanged;
   final bool visible;
   final double size;
+  final Clip clipBehavior;
   final double itemGap;
   final ButtonStyle? style;
   final List<KFabAttention> attention;
@@ -178,6 +180,7 @@ class _KFabState extends State<KFab> {
                                           key: ValueKey(widget.items[i].id),
                                           label: widget.items[i].label,
                                           size: widget.size,
+                                          clipBehavior: widget.clipBehavior,
                                           style:
                                               widget.attention.any(
                                                 (notice) =>
@@ -230,6 +233,7 @@ class _KFabState extends State<KFab> {
               bottom: 0,
               child: KFabAttentionBubble(
                 notices: widget.attention,
+                clipBehavior: widget.clipBehavior,
                 items: widget.items,
                 size: widget.size,
                 active: widget.visible && !_open,
@@ -266,6 +270,7 @@ class _KFabState extends State<KFab> {
                       key: _anchor,
                       label: widget.label,
                       size: widget.size,
+                      clipBehavior: widget.clipBehavior,
                       visible: widget.visible,
                       style: widget.style,
                       onPressed: () {

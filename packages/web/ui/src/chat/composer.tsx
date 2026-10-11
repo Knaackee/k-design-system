@@ -58,6 +58,8 @@ export interface KChatComposerProps {
   onStop?: () => void;
   runState?: KChatRunState;
   disabled?: boolean;
+  /** Prevent submission independently from draft editing. */
+  submitEnabled?: boolean;
   maxLength?: number;
   labels?: Partial<KChatComposerLabels>;
   leadingTools?: ReactNode;
@@ -82,6 +84,7 @@ export function KChatComposer({
   onStop,
   runState = "idle",
   disabled = false,
+  submitEnabled = true,
   maxLength,
   labels: labelsInput,
   leadingTools,
@@ -115,7 +118,7 @@ export function KChatComposer({
   const submit = (event?: FormEvent) => {
     event?.preventDefault();
     const trimmed = value.trim();
-    if (!trimmed || disabled || running) return;
+    if (!trimmed || disabled || !submitEnabled || running) return;
     onSubmit(trimmed);
   };
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -200,7 +203,7 @@ export function KChatComposer({
               icon="arrow-up"
               label={labels.send}
               variant="primary"
-              disabled={!value.trim() || disabled}
+              disabled={!value.trim() || disabled || !submitEnabled}
               type="submit"
               onClick={() => undefined}
             />

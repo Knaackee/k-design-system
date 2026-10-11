@@ -490,7 +490,30 @@ export const tokenNames = [
   "component.mobileAppBar.motion.moderate",
   "component.mobileAppBar.glass.webBlur",
   "component.mobileAppBar.glass.nativeBlur",
-  "component.mobileAppBar.glass.webSaturation"
+  "component.mobileAppBar.glass.webSaturation",
+  "component.files.iconSize",
+  "component.files.textLineHeight",
+  "component.files.backdrop",
+  "component.files.transition",
+  "component.files.transferElevation",
+  "component.presentation.actionSize",
+  "component.presentation.weatherIconSize",
+  "component.presentation.coverMinHeight",
+  "component.presentation.coverInset",
+  "component.presentation.coverForeground",
+  "component.presentation.coverMuted",
+  "component.presentation.coverScrim",
+  "component.presentation.titleLineHeight",
+  "component.presentation.collectionScroll",
+  "component.presentation.timelineDotSize",
+  "component.presentation.timelineRailWidth",
+  "component.presentation.timelineDotOffset",
+  "component.editor.searchCounterWidth",
+  "component.editor.caretForeground",
+  "component.editor.caretLineHeight",
+  "component.editor.caretMinHeight",
+  "component.tabStrip.itemMaxWidth",
+  "component.tabStrip.dragElevation"
 ] as const;
 export type KTokenName = (typeof tokenNames)[number];
 export const cssVariable = (token: KTokenName): string => `--k-${token.replace(/\./g, "-").replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}`;

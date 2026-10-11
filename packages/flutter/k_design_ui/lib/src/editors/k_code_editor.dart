@@ -8,9 +8,12 @@ import 'package:re_highlight/languages/markdown.dart';
 import 'package:re_highlight/languages/typescript.dart';
 
 import '../actions/k_icon_button.dart';
+import '../forms/k_dictation_action.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import 'k_editor_search_panel.dart';
+import 'k_code_remote_carets.dart';
+import 'k_code_source_map.dart';
 import 'k_editor_types.dart';
 import 'k_markdown_dictation_overlay.dart';
 
@@ -25,6 +28,8 @@ class KCodeEditor extends StatefulWidget {
     this.showLineNumbers = false,
     this.lineWrapping = false,
     this.showSearchButton = true,
+    this.contentMaxWidth,
+    this.embedded = false,
     this.searchButtonEndInset,
     this.fontFamily = 'packages/k_design_ui/KDesignMono',
     this.fontFamilyFallback = const [
@@ -43,6 +48,8 @@ class KCodeEditor extends StatefulWidget {
     this.minHeight = 280,
     this.onFocus,
     this.onBlur,
+    this.dictationState,
+    this.dictationOffset,
     super.key,
   });
 
@@ -55,6 +62,10 @@ class KCodeEditor extends StatefulWidget {
   final bool showLineNumbers;
   final bool lineWrapping;
   final bool showSearchButton;
+  final double? contentMaxWidth;
+
+  /// Flat, compact editor inside a workspace that owns its toolbar.
+  final bool embedded;
   final double? searchButtonEndInset;
   final String? fontFamily;
   final List<String>? fontFamilyFallback;
@@ -69,6 +80,10 @@ class KCodeEditor extends StatefulWidget {
   final VoidCallback? onFocus;
   final VoidCallback? onBlur;
 
+  /// Visual-only insertion anchor. The host maps this offset through its CRDT.
+  final KDictationState? dictationState;
+  final int? dictationOffset;
+
   @override
   State<KCodeEditor> createState() => KCodeEditorState();
 }
@@ -80,17 +95,23 @@ class KCodeEditorState extends State<KCodeEditor> {
   KEditorSelection _selection = const KEditorSelection(anchor: 0, head: 0);
   bool _searchOpen = false;
   bool _applyingExternal = false;
+  late String _lastControllerText;
+  late KCodeSourceMap _source;
+  final _remoteScroll = CodeScrollController();
+  final _paragraphs = ValueNotifier<CodeIndicatorValue?>(null);
+  final _indicatorKey = GlobalKey();
 
-  String get value => _controller.text;
+  String get value => _source.raw;
   KEditorSelection get selection => _selection;
 
   @override
   void initState() {
     super.initState();
+    _source = KCodeSourceMap(_effectiveValue);
     _controller = CodeLineEditingController(
-      codeLines: CodeLines.fromText(_effectiveValue),
-      spanBuilder: _buildCollaborativeTextSpan,
+      codeLines: CodeLines.fromText(_source.rendered),
     );
+    _lastControllerText = _controller.text;
     _findController = CodeFindController(_controller);
     _focusNode = FocusNode()..addListener(_handleFocus);
     _controller.addListener(_handleController);
@@ -104,6 +125,16 @@ class KCodeEditorState extends State<KCodeEditor> {
       widget.collaborationAdapter?.snapshot.value.remoteSelections ??
       widget.remoteSelections;
 
+  List<KEditorParticipant> get _effectiveParticipants {
+    final participants =
+        widget.collaborationAdapter?.snapshot.value.participants;
+    return participants?.isNotEmpty == true
+        ? participants!
+        : _effectiveRemoteSelections
+              .map((selection) => selection.participant)
+              .toList();
+  }
+
   @override
   void didUpdateWidget(covariant KCodeEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -113,7 +144,7 @@ class KCodeEditorState extends State<KCodeEditor> {
       );
       widget.collaborationAdapter?.snapshot.addListener(_handleCollaboration);
     }
-    if (_effectiveValue != _controller.text) {
+    if (_effectiveValue != _source.raw) {
       _replaceExternalValue(_effectiveValue);
     } else if (oldWidget.remoteSelections != widget.remoteSelections) {
       _controller.forceRepaint();
@@ -126,6 +157,8 @@ class KCodeEditorState extends State<KCodeEditor> {
     _controller.removeListener(_handleController);
     _controller.dispose();
     _findController.dispose();
+    _remoteScroll.dispose();
+    _paragraphs.dispose();
     _focusNode
       ..removeListener(_handleFocus)
       ..dispose();
@@ -133,6 +166,9 @@ class KCodeEditorState extends State<KCodeEditor> {
   }
 
   void focus() => _focusNode.requestFocus();
+
+  /// Opens document search from a consumer-owned toolbar.
+  void openSearch() => setState(() => _searchOpen = true);
 
   void undo() => _controller.undo();
 
@@ -144,7 +180,7 @@ class KCodeEditorState extends State<KCodeEditor> {
     String insert, {
     KEditorSelection? selection,
   }) {
-    final source = _controller.text;
+    final source = _source.raw;
     final safeFrom = from.clamp(0, source.length);
     final safeTo = to.clamp(safeFrom, source.length);
     final next = source.replaceRange(safeFrom, safeTo, insert);
@@ -154,7 +190,9 @@ class KCodeEditorState extends State<KCodeEditor> {
           anchor: safeFrom + insert.length,
           head: safeFrom + insert.length,
         );
-    _controller.value = _editingValue(next, nextSelection);
+    _replaceExternalValue(next, nextSelection);
+    _emitLocalTransaction();
+    widget.onSelectionChanged?.call(_selection);
     focus();
   }
 
@@ -169,144 +207,64 @@ class KCodeEditorState extends State<KCodeEditor> {
   void _handleCollaboration() {
     final snapshot = widget.collaborationAdapter?.snapshot.value;
     if (snapshot == null) return;
-    if (snapshot.value != _controller.text) {
+    if (snapshot.value != _source.raw) {
       _replaceExternalValue(snapshot.value, snapshot.selection);
+      if (mounted) setState(() {});
     } else if (mounted) {
       _controller.forceRepaint();
       setState(() {});
     }
   }
 
-  TextSpan _buildCollaborativeTextSpan({
-    required BuildContext context,
-    required int index,
-    required CodeLine codeLine,
-    required TextSpan textSpan,
-    required TextStyle style,
-  }) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    final selections = _effectiveRemoteSelections;
-    if (selections.isEmpty) return textSpan;
-
-    var lineStart = 0;
-    for (var line = 0; line < index; line++) {
-      lineStart += _controller.codeLines[line].length + 1;
-    }
-    final lineEnd = lineStart + codeLine.text.length;
-    final relevant = selections
-        .where(
-          (selection) => selection.isCollapsed
-              ? selection.start >= lineStart && selection.start <= lineEnd
-              : selection.end > lineStart && selection.start < lineEnd,
-        )
-        .toList(growable: false);
-    if (relevant.isEmpty) return textSpan;
-
-    InlineSpan caret(KRemoteSelection selection) => WidgetSpan(
-      alignment: PlaceholderAlignment.middle,
-      child: Tooltip(
-        message: selection.participant.name,
-        child: Semantics(
-          label: '${selection.participant.name} cursor',
-          child: Container(
-            width: t.borderWidthStrong,
-            height: t.fontBodyLineHeight,
-            color: selection.participant.color,
-          ),
-        ),
-      ),
-    );
-
-    if (codeLine.text.isEmpty) {
-      return TextSpan(
-        style: style,
-        children: [
-          for (final selection in relevant.where(
-            (selection) => selection.isCollapsed,
-          ))
-            caret(selection),
-        ],
-      );
-    }
-
-    final runs = <_StyledRun>[];
-    _flattenSpan(textSpan, style, runs);
-    final children = <InlineSpan>[];
-    var localOffset = 0;
-    for (final run in runs) {
-      final runStart = localOffset;
-      final runEnd = runStart + run.text.length;
-      final cuts = <int>{runStart, runEnd};
-      for (final selection in relevant) {
-        cuts
-          ..add((selection.start - lineStart).clamp(runStart, runEnd))
-          ..add((selection.end - lineStart).clamp(runStart, runEnd));
-      }
-      final boundaries = cuts.toList()..sort();
-      for (var part = 0; part < boundaries.length; part++) {
-        final from = boundaries[part];
-        for (final selection in relevant.where(
-          (selection) =>
-              selection.isCollapsed && selection.start - lineStart == from,
-        )) {
-          children.add(caret(selection));
-        }
-        if (part == boundaries.length - 1) break;
-        final to = boundaries[part + 1];
-        if (to <= from) continue;
-        final absolute = lineStart + from;
-        KRemoteSelection? active;
-        for (final selection in relevant) {
-          if (!selection.isCollapsed &&
-              selection.start <= absolute &&
-              selection.end > absolute) {
-            active = selection;
-            break;
-          }
-        }
-        children.add(
-          TextSpan(
-            text: run.text.substring(from - runStart, to - runStart),
-            style: active == null
-                ? run.style
-                : run.style.copyWith(
-                    backgroundColor: active.participant.color.withValues(
-                      alpha: t.opacityMedium,
-                    ),
-                  ),
-          ),
-        );
-      }
-      localOffset = runEnd;
-    }
-    return TextSpan(style: style, children: children);
-  }
-
   void _replaceExternalValue(String next, [KEditorSelection? nextSelection]) {
     _applyingExternal = true;
+    _source.raw = next;
+    final rawSelection =
+        nextSelection ?? _clampSelection(_selection, next.length);
+    _selection = rawSelection;
     _controller.value = _editingValue(
-      next,
-      nextSelection ?? _clampSelection(_selection, next.length),
+      _source.rendered,
+      KEditorSelection(
+        anchor: _source.toRendered(rawSelection.anchor),
+        head: _source.toRendered(rawSelection.head),
+      ),
     );
+    _lastControllerText = _controller.text;
     _applyingExternal = false;
   }
 
   void _handleController() {
-    final nextSelection = _globalSelection(_controller);
+    final textChanged = _controller.text != _lastControllerText;
+    if (!_applyingExternal) _source.acceptRendered(_controller.text);
+    final rendered = _globalSelection(_controller);
+    final nextSelection = KEditorSelection(
+      anchor: _source.toRaw(rendered.anchor),
+      head: _source.toRaw(rendered.head),
+    );
     if (nextSelection != _selection) {
       _selection = nextSelection;
-      widget.onSelectionChanged?.call(nextSelection);
+      if (!_applyingExternal && !textChanged) {
+        widget.onSelectionChanged?.call(nextSelection);
+      }
     }
   }
 
   void _handleChanged(CodeLineEditingValue _) {
-    if (_applyingExternal) return;
+    if (_applyingExternal || _controller.text == _lastControllerText) return;
+    _source.acceptRendered(_controller.text);
+    _lastControllerText = _controller.text;
+    final rendered = _globalSelection(_controller);
+    _selection = KEditorSelection(
+      anchor: _source.toRaw(rendered.anchor),
+      head: _source.toRaw(rendered.head),
+    );
     _emitLocalTransaction();
+    widget.onSelectionChanged?.call(_selection);
   }
 
   void _emitLocalTransaction() {
     final transaction = KEditorTransaction(
-      value: _controller.text,
+      value: _source.raw,
       selection: _selection,
       origin: KEditorTransactionOrigin.local,
     );
@@ -336,127 +294,218 @@ class KCodeEditorState extends State<KCodeEditor> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: t.colorSurfaceCanvas,
-                border: Border.all(color: t.colorBorderDefault),
-                borderRadius: BorderRadius.circular(t.radiusCard),
+                border: widget.embedded
+                    ? null
+                    : Border.all(color: t.colorBorderDefault),
+                borderRadius: BorderRadius.circular(
+                  widget.embedded ? 0 : t.radiusCard,
+                ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(t.radiusCard),
-                child: Stack(
+                borderRadius: BorderRadius.circular(
+                  widget.embedded ? 0 : t.radiusCard,
+                ),
+                child: Column(
                   children: [
-                    Positioned.fill(
-                      child: _withAutocomplete(
-                        CodeEditor(
-                          scrollController: markdownGeometry?.scrollController,
-                          controller: _controller,
-                          findController: _findController,
-                          focusNode: _focusNode,
-                          onChanged: _handleChanged,
-                          readOnly: widget.readOnly,
-                          wordWrap: widget.lineWrapping,
-                          hint: widget.placeholder,
-                          autofocus: false,
-                          padding: EdgeInsets.fromLTRB(
-                            t.spaceMediumInset,
-                            widget.showSearchButton
-                                ? t.sizeHitTarget + t.spaceSmallInset
-                                : t.spaceMediumInset,
-                            t.spaceMediumInset,
-                            widget.diagnostics.isEmpty
-                                ? t.spaceMediumInset
-                                : t.sizeHitTarget,
+                    if (_searchOpen)
+                      KEditorSearchPanel(
+                        controller: _findController,
+                        labels: widget.labels,
+                        readOnly: widget.readOnly,
+                        onClose: () {
+                          setState(() => _searchOpen = false);
+                          focus();
+                        },
+                      ),
+                    Expanded(
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: widget.contentMaxWidth ?? double.infinity,
                           ),
-                          style: CodeEditorStyle(
-                            fontFamily: widget.fontFamily,
-                            fontFamilyFallback: widget.fontFamilyFallback,
-                            fontSize: t.fontBodySize,
-                            fontHeight: t.fontRelaxedHeight,
-                            textColor: t.colorTextPrimary,
-                            hintTextColor: t.colorTextMuted,
-                            backgroundColor: t.colorSurfaceCanvas,
-                            cursorColor: t.colorBorderFocus,
-                            selectionColor: t.colorBrandPrimaryBackground,
-                            highlightColor: t.colorBrandSecondaryBackground,
-                            codeTheme: _codeTheme(t, widget.language),
-                          ),
-                          indicatorBuilder: widget.showLineNumbers
-                              ? (context, editing, chunk, notifier) =>
-                                    DefaultCodeLineNumber(
-                                      controller: editing,
-                                      notifier: notifier,
-                                      textStyle: TextStyle(
-                                        color: t.colorTextMuted,
-                                        fontFamily: widget.fontFamily,
-                                        fontFamilyFallback:
-                                            widget.fontFamilyFallback,
-                                        fontSize: t.fontCaptionSize,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: _withAutocomplete(
+                                  CodeEditor(
+                                    scrollController:
+                                        markdownGeometry?.scrollController ??
+                                        _remoteScroll,
+                                    controller: _controller,
+                                    findController: _findController,
+                                    focusNode: _focusNode,
+                                    onChanged: _handleChanged,
+                                    readOnly: widget.readOnly,
+                                    wordWrap: widget.lineWrapping,
+                                    hint: widget.placeholder,
+                                    autofocus: false,
+                                    padding: EdgeInsets.fromLTRB(
+                                      widget.embedded
+                                          ? t.spaceControlInsetInline + 6
+                                          : t.spaceMediumInset,
+                                      widget.showSearchButton
+                                          ? t.sizeHitTarget + t.spaceSmallInset
+                                          : widget.embedded
+                                          ? t.spaceControlInsetInline +
+                                                (widget.language ==
+                                                        KCodeLanguage.markdown
+                                                    ? 4
+                                                    : 0)
+                                          : t.spaceMediumInset,
+                                      widget.embedded
+                                          ? t.spaceControlInsetInline + 2
+                                          : t.spaceMediumInset,
+                                      widget.diagnostics.isEmpty
+                                          ? widget.embedded
+                                                ? t.spaceControlInsetInline
+                                                : t.spaceMediumInset
+                                          : t.sizeHitTarget,
+                                    ),
+                                    style: CodeEditorStyle(
+                                      fontFamily: widget.fontFamily,
+                                      fontFamilyFallback:
+                                          widget.fontFamilyFallback,
+                                      fontSize: widget.embedded
+                                          ? t.fontBodySmallSize
+                                          : t.fontBodySize,
+                                      fontHeight: widget.embedded
+                                          ? t.fontBodySmallLineHeight /
+                                                t.fontBodySmallSize
+                                          : t.fontRelaxedHeight,
+                                      textColor: t.colorTextPrimary,
+                                      hintTextColor: t.colorTextMuted,
+                                      backgroundColor: t.colorSurfaceCanvas,
+                                      cursorColor: t.colorBorderFocus,
+                                      selectionColor:
+                                          t.colorBrandPrimaryBackground,
+                                      highlightColor:
+                                          t.colorBrandSecondaryBackground,
+                                      codeTheme: _codeTheme(
+                                        t,
+                                        widget.language,
+                                        embedded: widget.embedded,
                                       ),
-                                    )
-                              : markdownGeometry == null
-                              ? null
-                              : (context, editing, chunk, notifier) =>
-                                    markdownGeometry.capture(notifier),
-                          leadingDivider: widget.showLineNumbers
-                              ? VerticalDivider(
-                                  width: t.spaceSmallInset,
-                                  color: t.colorBorderDefault,
-                                )
-                              : null,
-                          border: null,
-                          borderRadius: BorderRadius.circular(t.radiusCard),
+                                    ),
+                                    indicatorBuilder:
+                                        (
+                                          context,
+                                          editing,
+                                          chunk,
+                                          notifier,
+                                        ) => KCodeParagraphCapture(
+                                          key: _indicatorKey,
+                                          source: notifier,
+                                          target: _paragraphs,
+                                          child: widget.showLineNumbers
+                                              ? DefaultCodeLineNumber(
+                                                  controller: editing,
+                                                  notifier: notifier,
+                                                  textStyle: TextStyle(
+                                                    color: t.colorTextMuted,
+                                                    fontFamily:
+                                                        widget.fontFamily,
+                                                    fontFamilyFallback: widget
+                                                        .fontFamilyFallback,
+                                                    fontSize: t.fontCaptionSize,
+                                                  ),
+                                                )
+                                              : markdownGeometry?.capture(
+                                                      notifier,
+                                                    ) ??
+                                                    const SizedBox.shrink(),
+                                        ),
+                                    leadingDivider: widget.showLineNumbers
+                                        ? VerticalDivider(
+                                            width: t.spaceSmallInset,
+                                            color: t.colorBorderDefault,
+                                          )
+                                        : null,
+                                    border: null,
+                                    borderRadius: BorderRadius.circular(
+                                      t.radiusCard,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned.fill(
+                                child: KCodeRemoteCarets(
+                                  paragraphs: _paragraphs,
+                                  scrollController:
+                                      markdownGeometry?.scrollController ??
+                                      _remoteScroll,
+                                  selections: _effectiveRemoteSelections,
+                                  source: _source.raw,
+                                  indicatorKey: _indicatorKey,
+                                  dividerWidth: widget.showLineNumbers
+                                      ? t.spaceSmallInset
+                                      : 0,
+                                  width: t.borderWidthStrong,
+                                ),
+                              ),
+                              if (!widget.readOnly &&
+                                  widget.dictationOffset != null &&
+                                  (widget.dictationState ==
+                                          KDictationState.recording ||
+                                      widget.dictationState ==
+                                          KDictationState.processing))
+                                Positioned.fill(
+                                  child: IgnorePointer(
+                                    child: KMarkdownDictationOverlay(
+                                      scrollController:
+                                          markdownGeometry?.scrollController ??
+                                          _remoteScroll,
+                                      paragraphs: _paragraphs,
+                                      source: _source.raw,
+                                      offset: widget.dictationOffset!,
+                                      state: widget.dictationState!,
+                                    ),
+                                  ),
+                                ),
+                              if (widget.showSearchButton)
+                                PositionedDirectional(
+                                  top: t.spaceControlGap,
+                                  end:
+                                      widget.searchButtonEndInset ??
+                                      t.spaceControlGap,
+                                  child: KIconButton(
+                                    label: widget.labels.search,
+                                    icon: KIconName.search,
+                                    selected: _searchOpen,
+                                    onPressed: () {
+                                      setState(
+                                        () => _searchOpen = !_searchOpen,
+                                      );
+                                      if (!_searchOpen) {
+                                        _findController.close();
+                                        focus();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              if (widget.diagnostics.isNotEmpty)
+                                PositionedDirectional(
+                                  start: 0,
+                                  end: 0,
+                                  bottom: 0,
+                                  child: _DiagnosticBar(
+                                    items: widget.diagnostics,
+                                  ),
+                                ),
+                              if (_effectiveParticipants.isNotEmpty)
+                                PositionedDirectional(
+                                  start: t.spaceSmallInset,
+                                  bottom: widget.diagnostics.isEmpty
+                                      ? t.spaceSmallInset
+                                      : t.sizeHitTarget,
+                                  child: _PresenceBar(
+                                    participants: _effectiveParticipants,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    if (widget.showSearchButton)
-                      PositionedDirectional(
-                        top: t.spaceControlGap,
-                        end: widget.searchButtonEndInset ?? t.spaceControlGap,
-                        child: KIconButton(
-                          label: widget.labels.search,
-                          icon: KIconName.search,
-                          selected: _searchOpen,
-                          onPressed: () {
-                            setState(() => _searchOpen = !_searchOpen);
-                            if (!_searchOpen) {
-                              _findController.close();
-                              focus();
-                            }
-                          },
-                        ),
-                      ),
-                    if (_searchOpen)
-                      PositionedDirectional(
-                        bottom: widget.diagnostics.isEmpty
-                            ? 0
-                            : t.sizeHitTarget,
-                        end: 0,
-                        start: 0,
-                        child: KEditorSearchPanel(
-                          controller: _findController,
-                          labels: widget.labels,
-                          readOnly: widget.readOnly,
-                          onClose: () {
-                            setState(() => _searchOpen = false);
-                            focus();
-                          },
-                        ),
-                      ),
-                    if (widget.diagnostics.isNotEmpty)
-                      PositionedDirectional(
-                        start: 0,
-                        end: 0,
-                        bottom: 0,
-                        child: _DiagnosticBar(items: widget.diagnostics),
-                      ),
-                    if (_effectiveRemoteSelections.isNotEmpty)
-                      PositionedDirectional(
-                        start: t.spaceSmallInset,
-                        bottom: widget.diagnostics.isEmpty
-                            ? t.spaceSmallInset
-                            : t.sizeHitTarget,
-                        child: _PresenceBar(
-                          selections: _effectiveRemoteSelections,
-                        ),
-                      ),
                   ],
                 ),
               ),
@@ -567,22 +616,6 @@ class _CompletionPanel extends StatelessWidget implements PreferredSizeWidget {
   );
 }
 
-class _StyledRun {
-  const _StyledRun(this.text, this.style);
-  final String text;
-  final TextStyle style;
-}
-
-void _flattenSpan(TextSpan span, TextStyle inherited, List<_StyledRun> output) {
-  final effective = inherited.merge(span.style);
-  if (span.text case final text? when text.isNotEmpty) {
-    output.add(_StyledRun(text, effective));
-  }
-  for (final child in span.children ?? const <InlineSpan>[]) {
-    if (child is TextSpan) _flattenSpan(child, effective, output);
-  }
-}
-
 class _DiagnosticBar extends StatelessWidget {
   const _DiagnosticBar({required this.items});
   final List<KCodeDiagnostic> items;
@@ -623,8 +656,8 @@ class _DiagnosticBar extends StatelessWidget {
 }
 
 class _PresenceBar extends StatelessWidget {
-  const _PresenceBar({required this.selections});
-  final List<KRemoteSelection> selections;
+  const _PresenceBar({required this.participants});
+  final List<KEditorParticipant> participants;
 
   @override
   Widget build(BuildContext context) {
@@ -632,14 +665,14 @@ class _PresenceBar extends StatelessWidget {
     return Wrap(
       spacing: t.spaceTight,
       children: [
-        for (final selection in selections)
+        for (final participant in participants)
           Tooltip(
-            message: selection.participant.name,
+            message: participant.name,
             child: Container(
               width: t.sizeIndicatorSmall,
               height: t.sizeIndicatorSmall,
               decoration: BoxDecoration(
-                color: selection.participant.color,
+                color: participant.color,
                 shape: BoxShape.circle,
                 border: Border.all(color: t.colorSurfaceCanvas),
               ),
@@ -686,7 +719,8 @@ KEditorSelection _globalSelection(CodeLineEditingController controller) {
   int offset(CodeLinePosition position) {
     var result = 0;
     for (var index = 0; index < position.index; index++) {
-      result += controller.codeLines[index].length + 1;
+      result +=
+          controller.codeLines[index].asString(0, TextLineBreak.lf).length + 1;
     }
     return result + position.offset;
   }
@@ -697,7 +731,11 @@ KEditorSelection _globalSelection(CodeLineEditingController controller) {
   );
 }
 
-CodeHighlightTheme? _codeTheme(KDesignTokens t, KCodeLanguage language) {
+CodeHighlightTheme? _codeTheme(
+  KDesignTokens t,
+  KCodeLanguage language, {
+  bool embedded = false,
+}) {
   final mode = _highlightMode(language);
   if (mode == null) return null;
   return CodeHighlightTheme(
@@ -718,6 +756,7 @@ CodeHighlightTheme? _codeTheme(KDesignTokens t, KCodeLanguage language) {
       'section': TextStyle(
         color: t.colorSyntaxHeading,
         fontWeight: t.fontHeadingWeight,
+        fontSize: embedded ? t.fontBodySmallSize * 1.2 : null,
       ),
       'bullet': TextStyle(color: t.colorSyntaxMarkup),
       'meta': TextStyle(color: t.colorSyntaxMarkup),

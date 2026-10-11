@@ -65,6 +65,22 @@
   position: relative;
 }
 
+.k-code-editor-presence {
+  position: absolute;
+  bottom: var(--k-space-small-inset);
+  left: var(--k-space-small-inset);
+  display: flex;
+  gap: var(--k-space-tight);
+  pointer-events: none;
+}
+.k-code-editor-presence > span {
+  width: var(--k-size-indicator-small);
+  height: var(--k-size-indicator-small);
+  border: var(--k-border-width-default) solid var(--k-color-surface-canvas);
+  border-radius: var(--k-radius-full);
+  pointer-events: auto;
+}
+
 .k-markdown-editor-toolbar,
 .k-code-editor-toolbar {
   display: flex;
@@ -365,10 +381,14 @@
   caret-color: var(--k-editor-accent);
 }
 
+.k-code-editor .cm-panels {
+  border: 0;
+}
+
 .k-code-editor .cm-panel.k-editor-search-panel {
   box-sizing: border-box;
-  padding: var(--k-space-control-gap);
-  border-block-start: var(--k-border-width-default) solid var(--k-editor-border);
+  padding: var(--k-space-small-inset);
+  border-block-end: var(--k-border-width-default) solid var(--k-editor-border);
   background: var(--k-editor-toolbar-background);
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);
@@ -601,7 +621,7 @@
 @keyframes k-editor-toolbar-in {
   from {
     opacity: 0;
-    transform: translateY(4px) scale(0.98);
+    transform: translateY(var(--k-space-tight)) scale(0.98);
   }
 }
 
@@ -709,5 +729,111 @@
 @media (prefers-reduced-motion: reduce) {
   .k-editor-format-bar--floating {
     animation: none;
+  }
+}
+@font-face {
+  font-family: "KDesignMono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/JetBrainsMono-Regular.ttf") format("truetype");
+}
+
+/* Compact floating dock; microphone remains before the scrollable tools. */
+.k-markdown-editor-dictation {
+  justify-content: center;
+  padding-block: var(--k-space-control-gap);
+}
+.k-markdown-editor-dictation > .k-editor-format-bar {
+  width: max-content;
+}
+.k-editor-format-actions {
+  flex: 0 1 auto;
+  gap: var(--k-space-hairline);
+}
+.k-editor-format-bar > span {
+  flex: none;
+}
+.k-editor-format-action.k-button {
+  width: var(--k-size-control);
+  min-width: var(--k-size-control);
+  padding: 0;
+}
+.k-markdown-editor-source .k-dictation-anchor {
+  min-height: var(--k-component-editor-caret-min-height);
+  color: var(--k-color-text-primary);
+}
+.k-markdown-editor-source .k-dictation-anchor > span {
+  width: var(--k-space-control-gap);
+  height: var(--k-space-control-gap);
+}
+
+.k-editor-search-panel__compact {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--k-space-tight);
+}
+.k-editor-search-panel__fields {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: var(--k-space-tight);
+}
+.k-editor-search-panel__line {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.k-editor-search-panel__line > .k-input-target {
+  flex: 1;
+  min-width: 0;
+}
+.k-editor-search-panel__controls,
+.k-editor-search-panel__inline-options {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--k-space-hairline);
+}
+.k-editor-search-panel__count {
+  font-size: var(--k-font-caption-size);
+  color: var(--k-color-text-muted);
+  min-width: var(--k-component-editor-search-counter-width);
+  padding-inline: var(--k-space-tight);
+}
+.k-editor-search-panel__inline-options .k-icon-button {
+  width: var(--k-size-hit-target);
+  min-width: var(--k-size-hit-target);
+  height: var(--k-size-hit-target);
+  min-height: var(--k-size-hit-target);
+}
+@media (max-width: 599px) {
+  .k-editor-search-panel__line {
+    flex-wrap: wrap;
+  }
+  .k-editor-search-panel__line > .k-input-target {
+    flex-basis: 100%;
+  }
+  .k-editor-search-panel__controls {
+    margin-inline-start: auto;
+  }
+}
+
+.k-editor-search-panel__line
+  .k-input-clearable[data-trailing-action]
+  > .k-input {
+  padding-right: calc(
+    3 * var(--k-size-hit-target) + var(--k-space-control-inset-inline) + 2 *
+      var(--k-space-hairline)
+  );
+}
+
+@media (min-width: 600px) {
+  .k-editor-search-panel__line > .k-editor-search-panel__controls {
+    width: calc(
+      var(--k-component-editor-search-counter-width) + 3 *
+        var(--k-size-control) + 2 * var(--k-space-hairline)
+    );
   }
 }

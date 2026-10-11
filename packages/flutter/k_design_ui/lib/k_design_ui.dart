@@ -83,3 +83,14 @@ export 'src/chat/k_chat_bubble.dart';
 export 'src/actions/k_fab.dart';
 export 'src/actions/k_fab_attention.dart' show KFabAttention;
 export 'src/chat/k_web_search.dart';
+export 'src/components/chat_presentations.dart';
+export 'src/components/chat_presentation_media.dart';
+export 'src/components/weather_icon.dart';
+export 'src/components/chat_presentation_map.dart';
+export 'src/patterns/k_files.dart';
+export 'src/patterns/k_files_workspace.dart';
+export 'src/patterns/k_tab_strip.dart';
+export 'src/primitives/k_file_icon.dart';
+export 'src/patterns/k_media_player.dart';
+
+export 'src/feedback/k_audio_edge_glow.dart';

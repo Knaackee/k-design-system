@@ -24,6 +24,7 @@ class KInput extends StatefulWidget {
     this.clearable = false,
     this.clearLabel,
     this.trailingAction,
+    this.trailingActionWidth,
     this.dictationState,
     this.dictationOffset,
     super.key,
@@ -45,6 +46,7 @@ class KInput extends StatefulWidget {
 
   /// An end action, hidden for disabled, read-only or concealed input.
   final Widget? trailingAction;
+  final double? trailingActionWidth;
   final KDictationState? dictationState;
 
   /// Saved UTF-16 insertion offset; defaults to the current caret.
@@ -102,7 +104,8 @@ class _KInputState extends State<KInput> {
     final action = widget.enabled && !widget.readOnly && !widget.obscureText
         ? widget.trailingAction
         : null;
-    final actionWidth = math.max(t.sizeControl, t.sizeHitTarget);
+    final actionWidth =
+        widget.trailingActionWidth ?? math.max(t.sizeControl, t.sizeHitTarget);
     final appearance = formDecoration(
       context,
       placeholder: widget.placeholder,

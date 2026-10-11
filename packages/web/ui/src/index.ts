@@ -497,3 +497,20 @@ export type {
   KWebSearchProps,
   KWebSearchResult,
 } from "./chat/web-search.js";
+export * from "./patterns/files.js";
+export {
+  KTabStrip,
+  type KTabStripItem,
+  type KTabStripProps,
+} from "./patterns/tab-strip.js";
+export {
+  KAudioEdgeGlow,
+  type KAudioEdgeGlowProps,
+  type KAudioEdgeGlowState,
+} from "./feedback/audio-edge-glow.js";
+
+export * from "./chat/presentations.js";
+
+export * from "./chat/presentation-media.js";
+export * from "./chat/weather-icon.js";
+export * from "./chat/presentation-map.js";

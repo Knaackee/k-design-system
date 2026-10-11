@@ -4,7 +4,8 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
-import '../primitives/k_button.dart';
+import '../actions/k_icon_button.dart';
+import '../primitives/k_icon.dart';
 import 'k_editor_types.dart';
 
 class KEditorFormatBar extends StatelessWidget {
@@ -16,6 +17,7 @@ class KEditorFormatBar extends StatelessWidget {
     this.floating = false,
     this.minimumItemExtent,
     this.trailingAction,
+    this.leadingAction,
     super.key,
   });
 
@@ -27,6 +29,7 @@ class KEditorFormatBar extends StatelessWidget {
 
   /// Final action inside the bar, kept visible after the scrollable formatting actions.
   final Widget? trailingAction;
+  final Widget? leadingAction;
 
   /// Minimum visual and interactive size of each formatting action.
   ///
@@ -36,18 +39,18 @@ class KEditorFormatBar extends StatelessWidget {
   final double? minimumItemExtent;
 
   static const _glyphs = {
-    KMarkdownFormatAction.undo: '↶',
-    KMarkdownFormatAction.redo: '↷',
-    KMarkdownFormatAction.bold: 'B',
-    KMarkdownFormatAction.italic: 'I',
-    KMarkdownFormatAction.strike: 'S',
-    KMarkdownFormatAction.code: '</>',
-    KMarkdownFormatAction.link: '↗',
-    KMarkdownFormatAction.bulletList: '•≡',
-    KMarkdownFormatAction.orderedList: '1≡',
-    KMarkdownFormatAction.taskList: '☑',
-    KMarkdownFormatAction.quote: '❞',
-    KMarkdownFormatAction.codeBlock: '{ }',
+    KMarkdownFormatAction.undo: KIconName.undo2,
+    KMarkdownFormatAction.redo: KIconName.redo2,
+    KMarkdownFormatAction.bold: KIconName.bold,
+    KMarkdownFormatAction.italic: KIconName.italic,
+    KMarkdownFormatAction.strike: KIconName.strikethrough,
+    KMarkdownFormatAction.code: KIconName.code,
+    KMarkdownFormatAction.link: KIconName.link,
+    KMarkdownFormatAction.bulletList: KIconName.list,
+    KMarkdownFormatAction.orderedList: KIconName.listOrdered,
+    KMarkdownFormatAction.taskList: KIconName.listChecks,
+    KMarkdownFormatAction.quote: KIconName.quote,
+    KMarkdownFormatAction.codeBlock: KIconName.squareCode,
   };
 
   String _label(KMarkdownFormatAction action) => switch (action) {
@@ -72,7 +75,7 @@ class KEditorFormatBar extends StatelessWidget {
         KDesignTokens.orbitLight;
     final itemExtent = math.max(
       minimumItemExtent ?? 0,
-      math.max(t.sizeHitTarget, t.sizeControl + t.spaceControlGap * 2),
+      math.max(t.sizeHitTarget, t.sizeControl),
     );
     return Semantics(
       container: true,
@@ -84,66 +87,66 @@ class KEditorFormatBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(t.radiusOverlay),
           boxShadow: floating ? t.elevationOverlay : const [],
         ),
-        child: SizedBox(
-          height: itemExtent,
-          child: Row(
-            children: [
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: const {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse,
-                      PointerDeviceKind.stylus,
-                      PointerDeviceKind.trackpad,
-                    },
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const ClampingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: t.spaceTight),
-                    child: Row(
-                      children: [
-                        for (final action in actions)
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: t.spaceHairline,
-                            ),
-                            child: Tooltip(
-                              message: _label(action),
+        child: Padding(
+          padding: EdgeInsets.all(floating ? t.spaceControlGap : 0),
+          child: SizedBox(
+            height: itemExtent,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ?leadingAction,
+                Flexible(
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context).copyWith(
+                      dragDevices: const {
+                        PointerDeviceKind.touch,
+                        PointerDeviceKind.mouse,
+                        PointerDeviceKind.stylus,
+                        PointerDeviceKind.trackpad,
+                      },
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const ClampingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: t.spaceTight),
+                      child: Row(
+                        children: [
+                          for (final action in actions)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: t.spaceHairline / 2,
+                              ),
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(
                                   minWidth: itemExtent,
                                   minHeight: itemExtent,
                                 ),
-                                child: KButton(
-                                  label: _glyphs[action]!,
-                                  variant: activeActions.contains(action)
-                                      ? KButtonVariant.primary
-                                      : KButtonVariant.ghost,
-                                  paddingInline: 0,
+                                child: KIconButton(
+                                  label: _label(action),
+                                  icon: _glyphs[action]!,
+                                  selected: activeActions.contains(action),
                                   onPressed: () => onAction(action),
                                 ),
                               ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (trailingAction != null)
-                Padding(
-                  padding: EdgeInsetsDirectional.only(end: t.spaceTight),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: itemExtent,
-                      minHeight: itemExtent,
+                if (trailingAction != null)
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(end: t.spaceTight),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: itemExtent,
+                        minHeight: itemExtent,
+                      ),
+                      child: trailingAction!,
                     ),
-                    child: trailingAction!,
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

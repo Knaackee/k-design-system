@@ -7,15 +7,53 @@ export interface KEditorCollaborationDocument {
   readonly id: string;
 }
 
+/** Public binary boundary; transports never need the underlying Yjs object. */
+export interface KEditorCollaborationTransport {
+  applyUpdate(update: Uint8Array): void;
+  encodeStateVector(): Uint8Array;
+  encodeUpdate(stateVector?: Uint8Array): Uint8Array;
+  subscribe(listener: (update: Uint8Array) => void): () => void;
+  destroy(): void;
+}
+
+export function createKEditorCollaborationTransport(
+  handle: KEditorCollaborationDocument,
+): KEditorCollaborationTransport {
+  const document = resolveKEditorCollaborationDocument(handle, handle.kind);
+  const remoteOrigin = Symbol("transport-remote");
+  return {
+    applyUpdate: (update) => Y.applyUpdate(document, update, remoteOrigin),
+    encodeStateVector: () => Y.encodeStateVector(document),
+    encodeUpdate: (vector) => Y.encodeStateAsUpdate(document, vector),
+    subscribe(listener) {
+      const callback = (update: Uint8Array, origin: unknown) => {
+        if (origin !== remoteOrigin) listener(update);
+      };
+      document.on("update", callback);
+      return () => document.off("update", callback);
+    },
+    destroy() {
+      document.destroy();
+      documents.delete(handle);
+    },
+  };
+}
+
 const documents = new WeakMap<KEditorCollaborationDocument, Y.Doc>();
+// Keep the opaque handle usable across module refreshes and entry-point copies.
+const documentKey = Symbol.for("k-design-system.editor.document");
 
 export function createKEditorCollaborationDocument(options: {
   id: string;
   kind: KEditorDocumentKind;
   initialText?: string;
 }): KEditorCollaborationDocument {
-  const handle = Object.freeze({ kind: options.kind, id: options.id });
   const document = new Y.Doc();
+  const handle = Object.freeze(
+    Object.defineProperty({ kind: options.kind, id: options.id }, documentKey, {
+      value: document,
+    }),
+  );
   if (options.kind === "text" && options.initialText) {
     document.getText("content").insert(0, options.initialText);
   }
@@ -32,7 +70,11 @@ export function resolveKEditorCollaborationDocument(
       `Expected a ${expectedKind} collaboration document, received ${handle.kind}`,
     );
   }
-  const document = documents.get(handle);
+  const document =
+    documents.get(handle) ??
+    (handle as KEditorCollaborationDocument & { [documentKey]?: Y.Doc })[
+      documentKey
+    ];
   if (!document) {
     throw new TypeError("Unknown collaboration document handle");
   }

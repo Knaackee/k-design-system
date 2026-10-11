@@ -10,6 +10,7 @@ class KChatBubble extends StatelessWidget {
     required this.onPressed,
     this.size = 64,
     this.visible = true,
+    this.clipBehavior = Clip.antiAlias,
     this.style,
     this.onLongPress,
     super.key,
@@ -20,6 +21,9 @@ class KChatBubble extends StatelessWidget {
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
   final double size;
+
+  /// Use Clip.none for illustrations that extend beyond the circular surface.
+  final Clip clipBehavior;
 
   /// Content stays mounted and animated while waiting for consumer readiness.
   final bool visible;
@@ -53,7 +57,7 @@ class KChatBubble extends StatelessWidget {
               child: FilledButton(
                 onPressed: onPressed,
                 onLongPress: onLongPress,
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: clipBehavior,
                 style: ButtonStyle(
                   elevation: const WidgetStatePropertyAll(0),
                   surfaceTintColor: const WidgetStatePropertyAll(

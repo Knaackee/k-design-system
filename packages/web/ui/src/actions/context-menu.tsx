@@ -180,6 +180,8 @@ export function KContextMenu({
     [],
   );
   const longPressTimer = useRef<number | undefined>(undefined);
+  const longPressTriggered = useRef(false);
+  useEffect(() => () => window.clearTimeout(longPressTimer.current), []);
   const pointerStart = useRef<{ x: number; y: number } | undefined>(undefined);
   function cancelLongPress() {
     if (longPressTimer.current !== undefined) {
@@ -208,10 +210,12 @@ export function KContextMenu({
     openAt(event.clientX, event.clientY);
   }
   function startLongPress(event: PointerEvent<HTMLDivElement>) {
+    longPressTriggered.current = false;
     if (event.pointerType === "mouse") return;
     cancelLongPress();
     pointerStart.current = { x: event.clientX, y: event.clientY };
     longPressTimer.current = window.setTimeout(() => {
+      longPressTriggered.current = true;
       openAt(event.clientX, event.clientY);
       longPressTimer.current = undefined;
     }, 500);
@@ -237,6 +241,13 @@ export function KContextMenu({
         onPointerMove={trackLongPress}
         onPointerUp={cancelLongPress}
         onPointerCancel={cancelLongPress}
+        onClickCapture={(event) => {
+          if (longPressTriggered.current) {
+            event.preventDefault();
+            event.stopPropagation();
+            longPressTriggered.current = false;
+          }
+        }}
         onKeyDown={(event) => {
           if (
             event.key !== "ContextMenu" &&

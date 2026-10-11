@@ -64,6 +64,7 @@ class KChatComposer extends StatefulWidget {
     this.backgroundColor,
     this.runState = KChatRunState.idle,
     this.disabled = false,
+    this.submitEnabled = true,
     this.maxLength,
     this.labels = const KChatComposerLabels(),
     this.leadingTools,
@@ -90,6 +91,9 @@ class KChatComposer extends StatefulWidget {
   final Color? backgroundColor;
   final KChatRunState runState;
   final bool disabled;
+
+  /// Allows editing while independently preventing keyboard and button submission.
+  final bool submitEnabled;
   final int? maxLength;
   final KChatComposerLabels labels;
   final List<Widget>? leadingTools;
@@ -140,7 +144,9 @@ class _KChatComposerState extends State<KChatComposer> {
 
   void _submit() {
     final value = _controller.text.trim();
-    if (value.isEmpty || widget.disabled || _running) return;
+    if (value.isEmpty || widget.disabled || !widget.submitEnabled || _running) {
+      return;
+    }
     widget.onSubmit(value);
   }
 
@@ -406,7 +412,8 @@ class _KChatComposerState extends State<KChatComposer> {
                                     onPressed: _running
                                         ? widget.onStop
                                         : (_controller.text.trim().isEmpty ||
-                                                  widget.disabled
+                                                  widget.disabled ||
+                                                  !widget.submitEnabled
                                               ? null
                                               : _submit),
                                   ),

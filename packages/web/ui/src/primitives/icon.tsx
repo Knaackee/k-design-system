@@ -7,6 +7,7 @@ export interface KIconProps extends Omit<
 > {
   name: KIconName;
   size?: number;
+  strokeWidth?: number;
   color?: string;
   /** Omit for decorative icons; label meaningful standalone icons. */
   label?: string;
@@ -14,6 +15,7 @@ export interface KIconProps extends Omit<
 export function KIcon({
   name,
   size = 16,
+  strokeWidth,
   color,
   label,
   className = "",
@@ -22,7 +24,19 @@ export function KIcon({
 }: KIconProps) {
   if (!Number.isFinite(size) || size <= 0)
     throw new RangeError("KIcon size must be positive and finite");
-  const mask = `url("data:image/svg+xml,${encodeURIComponent(iconSvg[name])}")`;
+  if (
+    strokeWidth !== undefined &&
+    (!Number.isFinite(strokeWidth) || strokeWidth <= 0)
+  )
+    throw new RangeError("KIcon strokeWidth must be positive and finite");
+  const svg =
+    strokeWidth === undefined
+      ? iconSvg[name]
+      : iconSvg[name].replace(
+          /stroke-width="[^"]*"/g,
+          `stroke-width="${strokeWidth}"`,
+        );
+  const mask = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
   return (
     <span
       {...props}

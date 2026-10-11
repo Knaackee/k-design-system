@@ -1,3 +1,7 @@
+@import "./chat/presentations.css";
+@import "./chat/presentation-media.css";
+@import "./files.css";
+@import "./tab-strip.css";
 @import "./chat/chat-bubble.css";
 @import "./usage-details.css";
 @import "./activity.css";

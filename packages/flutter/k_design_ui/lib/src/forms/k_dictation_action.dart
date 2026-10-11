@@ -123,10 +123,10 @@ class KDictationAnchor extends StatelessWidget {
                     child: KDictationPulse(
                       phase: index / 3,
                       child: Container(
-                        width: t.spaceMicro,
-                        height: t.spaceMicro,
+                        width: t.spaceControlGap,
+                        height: t.spaceControlGap,
                         decoration: BoxDecoration(
-                          color: t.colorBorderFocus,
+                          color: t.colorTextPrimary,
                           shape: BoxShape.circle,
                         ),
                       ),

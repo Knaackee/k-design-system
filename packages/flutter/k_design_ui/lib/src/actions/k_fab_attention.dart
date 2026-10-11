@@ -29,12 +29,14 @@ class KFabAttentionBubble extends StatefulWidget {
     required this.peekFraction,
     required this.holdDuration,
     this.onSelect,
+    this.clipBehavior = Clip.antiAlias,
     super.key,
   });
 
   final List<KFabAttention> notices;
   final List<KFabItem> items;
   final double size;
+  final Clip clipBehavior;
   final bool active;
   final Duration showDuration;
   final Duration pauseDuration;
@@ -295,6 +297,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
               key: ValueKey('k-fab-attention-${notice.id}'),
               label: item.label,
               size: widget.size,
+              clipBehavior: widget.clipBehavior,
               onPressed: () {
                 widget.onSelect?.call(notice);
                 item.onSelected!();

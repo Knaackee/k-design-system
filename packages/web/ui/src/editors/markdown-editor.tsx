@@ -5,7 +5,7 @@ import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import type { Editor } from "@tiptap/react";
 import {
   KDictationAction,
@@ -29,6 +29,7 @@ import {
   kDefaultEditorLabels,
   type KEditorLabels,
   type KEditorMode,
+  type KEditorParticipant,
   type KEditorSelection,
   type KEditorTransaction,
   type KRemoteSelection,
@@ -48,8 +49,13 @@ export interface KMarkdownEditorProps {
   showFixedToolbar?: boolean;
   showFloatingToolbar?: boolean;
   showModeSwitcher?: boolean;
+  showSearchButton?: boolean;
   remoteSelections?: KRemoteSelection[];
   collaborationDocument?: KEditorCollaborationDocument;
+  participants?: KEditorParticipant[];
+  sourceEditorRef?: Ref<KCodeEditorHandle>;
+  onFocus?: () => void;
+  onBlur?: () => void;
   ariaLabel?: string;
   className?: string;
   /** Host-owned rich editor: preserves its CRDT document, history and presence. */
@@ -166,6 +172,11 @@ export function KMarkdownEditor({
   showModeSwitcher = true,
   remoteSelections = emptyRemoteSelections,
   collaborationDocument,
+  participants = [],
+  sourceEditorRef,
+  showSearchButton = true,
+  onFocus,
+  onBlur,
   ariaLabel = "Markdown editor",
   className = "",
   richEditor,
@@ -326,16 +337,6 @@ export function KMarkdownEditor({
         </>
       ) : (
         <>
-          {showFixedToolbar && !dictation && mode === "source" && !readOnly && (
-            <header className="k-markdown-editor-toolbar">
-              <KEditorFormatBar
-                labels={labels}
-                actions={formatActions}
-                onAction={applyFormat}
-              />
-            </header>
-          )}
-
           {showModeSwitcher && (
             <div className="k-editor-mode-switcher">
               <KIconButton
@@ -369,7 +370,12 @@ export function KMarkdownEditor({
                   </div>
                 )}
               <KCodeEditor
-                ref={sourceRef}
+                ref={(editor) => {
+                  sourceRef.current = editor;
+                  if (typeof sourceEditorRef === "function")
+                    sourceEditorRef(editor);
+                  else if (sourceEditorRef) sourceEditorRef.current = editor;
+                }}
                 value={sourceDraft}
                 onChange={changeSource}
                 onSelectionChange={updateSelection}
@@ -377,12 +383,16 @@ export function KMarkdownEditor({
                 readOnly={readOnly}
                 placeholder={placeholder}
                 showToolbar={false}
+                showSearchButton={showSearchButton}
                 lineNumbers={false}
                 showDiagnosticGutter={false}
                 lineWrapping
                 remoteSelections={remoteSelections}
+                participants={participants}
                 collaborationDocument={collaborationDocument}
                 ariaLabel={ariaLabel}
+                onFocus={onFocus}
+                onBlur={onBlur}
               />
               {dictationRect &&
                 (dictation?.state === KDictationState.recording ||
@@ -397,60 +407,64 @@ export function KMarkdownEditor({
               <EditorContent editor={preview} />
             </div>
           )}
-          {dictation && mode === "source" && !readOnly && (
-            <div className="k-markdown-editor-dictation">
-              <KEditorFormatBar
-                labels={labels}
-                actions={formatActions}
-                onAction={applyFormat}
-                floating
-                trailingAction={
-                  <KDictationAction
-                    state={dictation.state}
-                    audioLevel={dictation.audioLevel}
-                    label={dictation.label}
-                    onPressed={() => {
-                      if (dictation.state === KDictationState.recording) {
-                        dictation.onStop();
-                        return;
-                      }
-                      const rect = sourceRef.current?.getSelectionRect();
-                      const shell =
-                        sourceShellRef.current?.getBoundingClientRect();
-                      if (rect && shell)
-                        setDictationRect({
-                          position: "absolute",
-                          top: rect.top - shell.top,
-                          left: rect.left - shell.left,
-                        });
-                      const snapshot = sourceDraft;
-                      const target = { ...selection };
-                      dictation.onStart(
-                        (text) => {
-                          setDictationRect(undefined);
-                          if (
-                            !dictationWritable.current ||
-                            !sourceRef.current ||
-                            lastEmitted.current !== snapshot ||
-                            !text.trim()
-                          )
-                            return false;
-                          const from = Math.min(target.anchor, target.head),
-                            to = Math.max(target.anchor, target.head);
-                          sourceRef.current.replaceRange(from, to, text, {
-                            anchor: from + text.length,
-                            head: from + text.length,
-                          });
-                          return true;
-                        },
-                        () => setDictationRect(undefined),
-                      );
-                    }}
-                  />
-                }
-              />
-            </div>
-          )}
+          {(showFixedToolbar || dictation) &&
+            mode === "source" &&
+            !readOnly && (
+              <div className="k-markdown-editor-dictation">
+                <KEditorFormatBar
+                  labels={labels}
+                  actions={formatActions}
+                  onAction={applyFormat}
+                  floating
+                  leadingAction={
+                    dictation ? (
+                      <KDictationAction
+                        state={dictation.state}
+                        audioLevel={dictation.audioLevel}
+                        label={dictation.label}
+                        onPressed={() => {
+                          if (dictation.state === KDictationState.recording) {
+                            dictation.onStop();
+                            return;
+                          }
+                          const rect = sourceRef.current?.getSelectionRect();
+                          const shell =
+                            sourceShellRef.current?.getBoundingClientRect();
+                          if (rect && shell)
+                            setDictationRect({
+                              position: "absolute",
+                              top: rect.top - shell.top,
+                              left: rect.left - shell.left,
+                            });
+                          const snapshot = sourceDraft;
+                          const target = { ...selection };
+                          dictation.onStart(
+                            (text) => {
+                              setDictationRect(undefined);
+                              if (
+                                !dictationWritable.current ||
+                                !sourceRef.current ||
+                                lastEmitted.current !== snapshot ||
+                                !text.trim()
+                              )
+                                return false;
+                              const from = Math.min(target.anchor, target.head),
+                                to = Math.max(target.anchor, target.head);
+                              sourceRef.current.replaceRange(from, to, text, {
+                                anchor: from + text.length,
+                                head: from + text.length,
+                              });
+                              return true;
+                            },
+                            () => setDictationRect(undefined),
+                          );
+                        }}
+                      />
+                    ) : undefined
+                  }
+                />
+              </div>
+            )}
         </>
       )}
     </section>

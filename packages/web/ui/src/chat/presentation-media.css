@@ -1,0 +1,179 @@
+.k-presentation-media {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  font-size: var(--k-font-body-small-size);
+}
+
+.k-presentation-media__heading,
+.k-presentation-file__details {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+
+.k-presentation-media__heading,
+.k-presentation-media__caption {
+  padding: var(--k-space-card-padding);
+}
+
+.k-presentation-media strong,
+.k-presentation-media__caption,
+.k-presentation-media__meta {
+  overflow-wrap: anywhere;
+}
+
+.k-presentation-media__heading > strong,
+.k-presentation-media__heading > div,
+.k-presentation-file__details > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.k-presentation-media .k-icon {
+  flex-shrink: 0;
+}
+.k-presentation-media__meta {
+  color: var(--k-color-text-muted);
+}
+
+.k-presentation-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--k-space-control-gap);
+  padding: 0 var(--k-space-card-padding) var(--k-space-card-padding);
+}
+
+.k-presentation-gallery__grid[data-single="true"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.k-presentation-gallery__thumbnail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--k-radius-control);
+  background: var(--k-color-surface-subtle);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  overflow: hidden;
+  cursor: pointer;
+}
+.k-presentation-gallery__thumbnail:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
+}
+.k-presentation-gallery__thumbnail img,
+.k-presentation-gallery__thumbnail [data-image-unavailable] {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.k-presentation-gallery__thumbnail span:not([data-image-unavailable]) {
+  padding: 0 var(--k-space-control-gap) var(--k-space-control-gap);
+  overflow-wrap: anywhere;
+}
+.k-presentation-gallery__dialog.k-dialog {
+  width: min(90vw, var(--k-layout-content-width));
+}
+.k-presentation-gallery__full {
+  margin: 0;
+  min-width: 0;
+}
+.k-presentation-gallery__full img,
+.k-presentation-gallery__full [data-image-unavailable] {
+  display: block;
+  width: 100%;
+  max-height: 65dvh;
+  object-fit: contain;
+}
+.k-presentation-gallery__full figcaption {
+  margin-top: var(--k-space-control-gap);
+  color: var(--k-color-text-muted);
+  overflow-wrap: anywhere;
+}
+.k-presentation-gallery__full [data-image-unavailable] {
+  aspect-ratio: 4 / 3;
+}
+[data-image-unavailable] {
+  display: grid;
+  place-items: center;
+  background: var(--k-color-surface-subtle);
+  color: var(--k-color-text-muted);
+}
+.k-presentation-gallery__navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+  margin-top: var(--k-space-control-gap);
+}
+.k-presentation-video__player,
+.k-presentation-video__placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: var(--k-color-surface-subtle);
+}
+.k-presentation-video__placeholder {
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.k-presentation-video__placeholder img,
+.k-presentation-video__placeholder [data-image-unavailable] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.k-presentation-video__placeholder .k-button-target {
+  position: relative;
+  max-width: 100%;
+}
+.k-presentation-audio {
+  padding-bottom: var(--k-space-card-padding);
+}
+.k-presentation-audio audio {
+  display: block;
+  width: calc(100% - 2 * var(--k-space-card-padding));
+  min-width: 0;
+  margin-inline: var(--k-space-card-padding);
+}
+.k-presentation-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-card-padding);
+}
+.k-presentation-file__details {
+  flex: 1 1 12rem;
+}
+.k-presentation-file__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.k-presentation-file__actions .k-button-target {
+  max-width: 100%;
+}
+.k-card.k-presentation-media {
+  padding: 0;
+}
+.k-presentation-media {
+  font-size: calc(var(--k-font-body-small-size) * var(--k-text-scale, 1));
+}
+[data-theme="dark"] .k-presentation-media audio {
+  color-scheme: dark;
+}

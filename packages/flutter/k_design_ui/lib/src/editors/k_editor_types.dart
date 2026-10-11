@@ -88,11 +88,13 @@ class KEditorCollaborationSnapshot {
     required this.value,
     this.selection = const KEditorSelection(anchor: 0, head: 0),
     this.remoteSelections = const [],
+    this.participants = const [],
   });
 
   final String value;
   final KEditorSelection selection;
   final List<KRemoteSelection> remoteSelections;
+  final List<KEditorParticipant> participants;
 }
 
 /// Transport-neutral bridge for Yjs, Automerge or a consumer-owned CRDT.

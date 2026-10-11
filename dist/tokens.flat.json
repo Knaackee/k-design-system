@@ -3286,6 +3286,173 @@
     "component.mobileAppBar.glass.webSaturation": {
       "type": "number",
       "value": 1.45
+    },
+    "component.files.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.files.textLineHeight": {
+      "type": "number",
+      "value": 1.5
+    },
+    "component.files.backdrop": {
+      "type": "color",
+      "value": "#0000004D"
+    },
+    "component.files.transition": {
+      "type": "duration",
+      "value": {
+        "value": 220,
+        "unit": "ms"
+      }
+    },
+    "component.files.transferElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 32,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.presentation.actionSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.presentation.weatherIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverInset": {
+      "type": "dimension",
+      "value": {
+        "value": 120,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.presentation.coverMuted": {
+      "type": "color",
+      "value": "#FFFFFFD9"
+    },
+    "component.presentation.coverScrim": {
+      "type": "color",
+      "value": "#000000D6"
+    },
+    "component.presentation.titleLineHeight": {
+      "type": "number",
+      "value": 1.2
+    },
+    "component.presentation.collectionScroll": {
+      "type": "duration",
+      "value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "component.presentation.timelineDotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineRailWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineDotOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.editor.searchCounterWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 70,
+        "unit": "px"
+      }
+    },
+    "component.editor.caretForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.editor.caretLineHeight": {
+      "type": "number",
+      "value": 1.4
+    },
+    "component.editor.caretMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 1.2,
+        "unit": "em"
+      }
+    },
+    "component.tabStrip.itemMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 220,
+        "unit": "px"
+      }
+    },
+    "component.tabStrip.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
     }
   },
   "orbitDark": {
@@ -6575,6 +6742,173 @@
     "component.mobileAppBar.glass.webSaturation": {
       "type": "number",
       "value": 1.45
+    },
+    "component.files.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.files.textLineHeight": {
+      "type": "number",
+      "value": 1.5
+    },
+    "component.files.backdrop": {
+      "type": "color",
+      "value": "#0000004D"
+    },
+    "component.files.transition": {
+      "type": "duration",
+      "value": {
+        "value": 220,
+        "unit": "ms"
+      }
+    },
+    "component.files.transferElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 32,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.presentation.actionSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.presentation.weatherIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverInset": {
+      "type": "dimension",
+      "value": {
+        "value": 120,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.presentation.coverMuted": {
+      "type": "color",
+      "value": "#FFFFFFD9"
+    },
+    "component.presentation.coverScrim": {
+      "type": "color",
+      "value": "#000000D6"
+    },
+    "component.presentation.titleLineHeight": {
+      "type": "number",
+      "value": 1.2
+    },
+    "component.presentation.collectionScroll": {
+      "type": "duration",
+      "value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "component.presentation.timelineDotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineRailWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineDotOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.editor.searchCounterWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 70,
+        "unit": "px"
+      }
+    },
+    "component.editor.caretForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.editor.caretLineHeight": {
+      "type": "number",
+      "value": 1.4
+    },
+    "component.editor.caretMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 1.2,
+        "unit": "em"
+      }
+    },
+    "component.tabStrip.itemMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 220,
+        "unit": "px"
+      }
+    },
+    "component.tabStrip.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
     }
   },
   "referenceLight": {
@@ -9864,6 +10198,173 @@
     "component.mobileAppBar.glass.webSaturation": {
       "type": "number",
       "value": 1.45
+    },
+    "component.files.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.files.textLineHeight": {
+      "type": "number",
+      "value": 1.5
+    },
+    "component.files.backdrop": {
+      "type": "color",
+      "value": "#0000004D"
+    },
+    "component.files.transition": {
+      "type": "duration",
+      "value": {
+        "value": 220,
+        "unit": "ms"
+      }
+    },
+    "component.files.transferElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 32,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.presentation.actionSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.presentation.weatherIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverInset": {
+      "type": "dimension",
+      "value": {
+        "value": 120,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.presentation.coverMuted": {
+      "type": "color",
+      "value": "#FFFFFFD9"
+    },
+    "component.presentation.coverScrim": {
+      "type": "color",
+      "value": "#000000D6"
+    },
+    "component.presentation.titleLineHeight": {
+      "type": "number",
+      "value": 1.2
+    },
+    "component.presentation.collectionScroll": {
+      "type": "duration",
+      "value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "component.presentation.timelineDotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineRailWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineDotOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.editor.searchCounterWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 70,
+        "unit": "px"
+      }
+    },
+    "component.editor.caretForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.editor.caretLineHeight": {
+      "type": "number",
+      "value": 1.4
+    },
+    "component.editor.caretMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 1.2,
+        "unit": "em"
+      }
+    },
+    "component.tabStrip.itemMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 220,
+        "unit": "px"
+      }
+    },
+    "component.tabStrip.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
     }
   },
   "referenceDark": {
@@ -13153,6 +13654,173 @@
     "component.mobileAppBar.glass.webSaturation": {
       "type": "number",
       "value": 1.45
+    },
+    "component.files.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.files.textLineHeight": {
+      "type": "number",
+      "value": 1.5
+    },
+    "component.files.backdrop": {
+      "type": "color",
+      "value": "#0000004D"
+    },
+    "component.files.transition": {
+      "type": "duration",
+      "value": {
+        "value": 220,
+        "unit": "ms"
+      }
+    },
+    "component.files.transferElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 8,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 32,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    },
+    "component.presentation.actionSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.presentation.weatherIconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 280,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverInset": {
+      "type": "dimension",
+      "value": {
+        "value": 120,
+        "unit": "px"
+      }
+    },
+    "component.presentation.coverForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.presentation.coverMuted": {
+      "type": "color",
+      "value": "#FFFFFFD9"
+    },
+    "component.presentation.coverScrim": {
+      "type": "color",
+      "value": "#000000D6"
+    },
+    "component.presentation.titleLineHeight": {
+      "type": "number",
+      "value": 1.2
+    },
+    "component.presentation.collectionScroll": {
+      "type": "duration",
+      "value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "component.presentation.timelineDotSize": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineRailWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.presentation.timelineDotOffset": {
+      "type": "dimension",
+      "value": {
+        "value": 7,
+        "unit": "px"
+      }
+    },
+    "component.editor.searchCounterWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 70,
+        "unit": "px"
+      }
+    },
+    "component.editor.caretForeground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "component.editor.caretLineHeight": {
+      "type": "number",
+      "value": 1.4
+    },
+    "component.editor.caretMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 1.2,
+        "unit": "em"
+      }
+    },
+    "component.tabStrip.itemMaxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 220,
+        "unit": "px"
+      }
+    },
+    "component.tabStrip.dragElevation": {
+      "type": "shadow",
+      "value": {
+        "color": "#00000033",
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 4,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 12,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
     }
   },
   "variants": {

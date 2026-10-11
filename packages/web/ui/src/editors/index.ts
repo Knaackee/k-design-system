@@ -22,10 +22,14 @@ export type {
   KEditorFormatBarProps,
   KMarkdownFormatAction,
 } from "./format-bar.js";
-export { createKEditorCollaborationDocument } from "./collaboration.js";
+export {
+  createKEditorCollaborationDocument,
+  createKEditorCollaborationTransport,
+} from "./collaboration.js";
 export type {
   KEditorCollaborationDocument,
   KEditorDocumentKind,
+  KEditorCollaborationTransport,
 } from "./collaboration.js";
 export { kDefaultEditorLabels } from "./types.js";
 export type {

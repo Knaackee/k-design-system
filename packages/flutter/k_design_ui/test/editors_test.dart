@@ -6,7 +6,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
   testWidgets(
-    'dictation is the final bottom format action on compact and wide editors',
+    'dictation leads the bottom format actions on compact and wide editors',
     (tester) async {
       for (final width in [420.0, 700.0]) {
         for (final showFixedToolbar in [true, false]) {
@@ -24,7 +24,8 @@ void main() {
           final bar = tester.widget<KEditorFormatBar>(
             find.byType(KEditorFormatBar),
           );
-          expect(bar.trailingAction, isA<KDictationAction>());
+          expect(bar.leadingAction, isA<KDictationAction>());
+          expect(bar.trailingAction, isNull);
           expect(
             bar.actions,
             showFixedToolbar ? kDefaultMarkdownFormatActions : isEmpty,
@@ -50,7 +51,8 @@ void main() {
             find.byType(KEditorFormatBar),
           );
           expect(bars, hasLength(2));
-          expect(bars.where((bar) => bar.trailingAction != null), hasLength(1));
+          expect(bars.where((bar) => bar.leadingAction != null), hasLength(1));
+          expect(bars.where((bar) => bar.trailingAction != null), isEmpty);
           expect(find.byType(KDictationAction), findsOneWidget);
           FocusManager.instance.primaryFocus?.unfocus();
           await tester.pump(const Duration(milliseconds: 120));
@@ -213,6 +215,24 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
+  testWidgets(
+    'code editor shows dictation dots at the supplied insertion offset',
+    (tester) async {
+      await tester.pumpWidget(
+        const _Shell(
+          child: KCodeEditor(
+            value: 'alpha beta',
+            dictationState: KDictationState.recording,
+            dictationOffset: 6,
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(KDictationAnchor), findsOneWidget);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
   testWidgets('markdown preview is derived and remains read only', (
     tester,
   ) async {
@@ -246,11 +266,12 @@ void main() {
 
     await tester.tap(find.bySemanticsLabel('Search'));
     await tester.pump();
-    expect(find.byType(KSearchField), findsOneWidget);
+    expect(find.byType(KEditorSearchPanel), findsOneWidget);
+    expect(find.bySemanticsLabel('Find'), findsOneWidget);
 
     await tester.tap(find.bySemanticsLabel('Search'));
     await tester.pump();
-    expect(find.byType(KSearchField), findsNothing);
+    expect(find.byType(KEditorSearchPanel), findsNothing);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pump(const Duration(milliseconds: 120));
     await tester.pumpWidget(const SizedBox.shrink());

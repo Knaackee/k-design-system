@@ -263,7 +263,7 @@ export function KBottomSheet({
         </Dialog.Content>
         <Sheet.Backdrop
           className="k-overlay-backdrop"
-          style={{ zIndex: zIndex - 10 }}
+          style={{ zIndex: 1 }}
           onTap={dismissible ? () => onOpenChange(false) : undefined}
         />
       </Sheet>

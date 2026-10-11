@@ -1,0 +1,129 @@
+.k-gallery:has(.k-files-review) {
+  padding: 0;
+}
+.k-files-review {
+  --k-font-family-mono: "KDesignMono", monospace;
+  width: 100%;
+  min-width: 0;
+  height: 100dvh;
+  min-height: 0;
+}
+.k-files-review-dialog {
+  --k-component-dialog-width: 460px;
+}
+.k-files-rename-form {
+  display: grid;
+  gap: var(--k-space-control-gap);
+  font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
+}
+.k-files-rename-form label {
+  font-weight: 500;
+}
+.k-files-review__body {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.k-files-review__tab-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.k-files-review__tab-panel[hidden] {
+  display: none;
+}
+.k-files-review__sidebar-footer {
+  display: grid;
+  gap: var(--k-space-hairline);
+}
+.k-files-review__body > [role="status"] {
+  margin: 0;
+  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
+  font-size: var(--k-font-control-size);
+}
+.k-files-review__editor {
+  flex: 1;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+.k-files-review__editor .k-code-editor-host {
+  flex: 1;
+  min-height: 0;
+}
+.k-files-review__editor .cm-editor {
+  height: 100%;
+}
+.k-files-review__editor .cm-content {
+  padding: var(--k-space-control-inset-inline);
+}
+.k-files-review__viewer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--k-space-control-inset-inline);
+}
+.k-files-review__viewer img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.k-files-review__media-empty {
+  flex-direction: column;
+  font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
+}
+.k-files-review__folder,
+.k-files-reference-agents {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-control-inset-inline);
+}
+.k-files-review__folder .k-button,
+.k-files-reference-agents .k-button {
+  justify-content: flex-start;
+}
+.k-files-reference-agents .k-button .k-icon:last-child {
+  margin-inline-start: auto;
+}
+
+.k-files-review__editor.k-markdown-editor {
+  position: relative;
+}
+.k-files-review__editor .k-markdown-editor-source {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.k-files-review__editor .k-markdown-editor-source > .k-code-editor {
+  flex: 1;
+  min-height: 0;
+  border: 0;
+}
+/* Leave room for the active Markdown dock; other file types retain the default. */
+.k-files-review:has(
+    .k-files-review__tab-panel:not([hidden]) .k-markdown-editor-dictation
+  )
+  .k-file-transfer-panel {
+  bottom: calc(
+    16px + var(--k-space-control-inset-inline) + var(--k-size-hit-target) + 4 *
+      var(--k-space-control-gap) + var(--k-space-small-inset)
+  );
+}
+
+/* Editor chrome spans the workspace; document text retains its reading width. */
+.k-files-review__editor .cm-scroller {
+  width: 100%;
+  max-width: var(--k-layout-content-width);
+  margin-inline: auto;
+}

@@ -14,6 +14,7 @@ class KMenuAction {
     this.onSelect,
     this.children = const [],
     this.icon,
+    this.iconContent,
     this.disabled = false,
     this.destructive = false,
     this.separatorBefore = false,
@@ -23,6 +24,7 @@ class KMenuAction {
   final VoidCallback? onSelect;
   final List<KMenuAction> children;
   final KIconName? icon;
+  final Widget? iconContent;
   final bool disabled;
   final bool destructive;
   final bool separatorBefore;
@@ -404,13 +406,15 @@ class _KMenuButtonState extends State<KMenuButton> {
                                 ),
                                 child: Row(
                                   children: [
-                                    if (action.icon != null) ...[
-                                      KIcon(
-                                        action.icon!,
-                                        color: action.destructive
-                                            ? t.colorStatusErrorForeground
-                                            : t.colorTextPrimary,
-                                      ),
+                                    if (action.iconContent != null ||
+                                        action.icon != null) ...[
+                                      action.iconContent ??
+                                          KIcon(
+                                            action.icon!,
+                                            color: action.destructive
+                                                ? t.colorStatusErrorForeground
+                                                : t.colorTextPrimary,
+                                          ),
                                       SizedBox(width: t.spaceControlGap),
                                     ],
                                     Expanded(child: Text(action.label)),

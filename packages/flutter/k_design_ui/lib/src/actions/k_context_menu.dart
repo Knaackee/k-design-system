@@ -136,14 +136,16 @@ class _KContextMenuState extends State<KContextMenu> {
         children: [
           SizedBox(
             width: t.componentContextMenuIconSize,
-            child: action.icon == null
-                ? null
-                : KIcon(
-                    action.icon!,
-                    color: action.destructive
-                        ? t.colorStatusErrorForeground
-                        : t.colorTextPrimary,
-                  ),
+            child:
+                action.iconContent ??
+                (action.icon == null
+                    ? null
+                    : KIcon(
+                        action.icon!,
+                        color: action.destructive
+                            ? t.colorStatusErrorForeground
+                            : t.colorTextPrimary,
+                      )),
           ),
           SizedBox(width: t.spaceControlGap),
           Expanded(child: Text(action.label)),

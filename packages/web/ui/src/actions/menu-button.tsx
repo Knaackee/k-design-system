@@ -13,6 +13,8 @@ export interface KMenuAction {
   id: string;
   label: string;
   icon?: KIconName;
+  /** Consumer-provided leading visual, e.g. a file-type icon. */
+  iconContent?: ReactNode;
   disabled?: boolean;
   destructive?: boolean;
   separatorBefore?: boolean;
@@ -245,9 +247,10 @@ export function KMenuButton({
                 action.onSelect?.();
               }}
             >
-              {action.icon ? (
-                <KIcon name={action.icon} color="currentColor" />
-              ) : null}
+              {action.iconContent ??
+                (action.icon ? (
+                  <KIcon name={action.icon} color="currentColor" />
+                ) : null)}
               <span>{action.label}</span>
             </button>
           </Fragment>

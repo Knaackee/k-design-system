@@ -1,3 +1,6 @@
+import 'audio_edge_glow_fixture.dart';
+import 'files_fixture.dart';
+import 'chat_presentations_fixture.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
@@ -104,6 +107,14 @@ class KDesignWidgetbook extends StatelessWidget {
           ],
         ),
         ViewportAddon(const [
+          Viewports.none,
+          ViewportData(
+            name: 'Small phone · 320',
+            width: 320,
+            height: 568,
+            pixelRatio: 1,
+            platform: TargetPlatform.android,
+          ),
           ViewportData(
             name: 'Compact · 375',
             width: 375,
@@ -117,6 +128,34 @@ class KDesignWidgetbook extends StatelessWidget {
             height: 900,
             pixelRatio: 1,
             platform: TargetPlatform.android,
+          ),
+          ViewportData(
+            name: 'Phone · 390',
+            width: 390,
+            height: 844,
+            pixelRatio: 1,
+            platform: TargetPlatform.android,
+          ),
+          ViewportData(
+            name: 'Large phone · 430',
+            width: 430,
+            height: 932,
+            pixelRatio: 1,
+            platform: TargetPlatform.android,
+          ),
+          ViewportData(
+            name: 'Tablet · 768',
+            width: 768,
+            height: 1024,
+            pixelRatio: 1,
+            platform: TargetPlatform.android,
+          ),
+          ViewportData(
+            name: 'Desktop · 1280',
+            width: 1280,
+            height: 900,
+            pixelRatio: 1,
+            platform: TargetPlatform.windows,
           ),
           ViewportData(
             name: 'Expanded · 1024',
@@ -139,6 +178,13 @@ class KDesignWidgetbook extends StatelessWidget {
             pixelRatio: 1,
             platform: TargetPlatform.windows,
           ),
+          ViewportData(
+            name: 'Full HD · 1920',
+            width: 1920,
+            height: 1080,
+            pixelRatio: 1,
+            platform: TargetPlatform.windows,
+          ),
         ]),
         KDesignConfigurationAddon(),
         KLanguageAddon(),
@@ -148,6 +194,23 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Showcase',
           children: [
+            WidgetbookFolder(
+              name: 'Files',
+              children: [
+                WidgetbookUseCase(
+                  name: 'files-review',
+                  builder: (_) => const FilesFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'tab-strip-review',
+                  builder: (_) => const TabStripFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'storage-review',
+                  builder: (_) => const FilesStorageFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Dashboard App Shell',
               children: [
@@ -423,6 +486,38 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Feedback',
           children: [
+            WidgetbookFolder(
+              name: 'Audio edge glow',
+              children: [
+                WidgetbookUseCase(
+                  name: 'audio-edge-glow-quiet',
+                  builder: (_) => const AudioEdgeGlowFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'audio-edge-glow-speaking',
+                  builder: (_) => const AudioEdgeGlowFixture(audioLevel: .35),
+                ),
+                WidgetbookUseCase(
+                  name: 'audio-edge-glow-processing',
+                  builder: (_) => const AudioEdgeGlowFixture(
+                    state: KAudioEdgeGlowState.processing,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'audio-edge-glow-reduced-motion',
+                  builder: (_) => const AudioEdgeGlowFixture(
+                    audioLevel: .35,
+                    reducedMotion: true,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'audio-edge-glow-inactive',
+                  builder: (_) => const AudioEdgeGlowFixture(
+                    state: KAudioEdgeGlowState.inactive,
+                  ),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Toast',
               children: [
@@ -765,6 +860,20 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'Chat Presentations',
+              children: [
+                WidgetbookUseCase(
+                  name: 'review',
+                  builder: (_) => const ChatPresentationsFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'in-chat',
+                  builder: (_) =>
+                      const ChatPresentationsFixture(initialChat: true),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'WebSearch',
               children: [

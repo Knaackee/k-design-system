@@ -5,6 +5,40 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets('overflow is opt-in and preserves the circular hit target', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: KFab(
+            label: 'Main',
+            clipBehavior: Clip.none,
+            onPressed: () {},
+            items: [
+              KFabItem(
+                id: 'other',
+                label: 'Other',
+                child: const Text('B'),
+                onSelected: () {},
+              ),
+            ],
+            child: const Text('A'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('A'));
+    await tester.pumpAndSettle();
+    for (final bubble in tester.widgetList<KChatBubble>(
+      find.byType(KChatBubble),
+    )) {
+      expect(bubble.clipBehavior, Clip.none);
+      expect(bubble.size, 64);
+    }
+  });
+
   for (final activation in KFabActivation.values) {
     testWidgets('$activation separates menu activation from main action', (
       tester,

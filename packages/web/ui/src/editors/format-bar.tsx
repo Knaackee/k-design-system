@@ -1,3 +1,4 @@
+import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KButton } from "../primitives/button.js";
 import type { ReactNode } from "react";
 import { useHorizontalDragScroll } from "../util/use-horizontal-drag-scroll.js";
@@ -32,19 +33,19 @@ export const kDefaultMarkdownFormatActions: KMarkdownFormatAction[] = [
   "codeBlock",
 ];
 
-const actionGlyph: Record<KMarkdownFormatAction, string> = {
-  undo: "↶",
-  redo: "↷",
-  bold: "B",
-  italic: "I",
-  strike: "S",
-  code: "</>",
-  link: "↗",
-  bulletList: "•≡",
-  orderedList: "1≡",
-  taskList: "☑",
-  quote: "❞",
-  codeBlock: "{ }",
+const actionIcon: Record<KMarkdownFormatAction, KIconName> = {
+  undo: "undo-2",
+  redo: "redo-2",
+  bold: "bold",
+  italic: "italic",
+  strike: "strikethrough",
+  code: "code",
+  link: "link",
+  bulletList: "list",
+  orderedList: "list-ordered",
+  taskList: "list-checks",
+  quote: "quote",
+  codeBlock: "square-code",
 };
 
 export interface KEditorFormatBarProps {
@@ -53,6 +54,7 @@ export interface KEditorFormatBarProps {
   activeActions?: KMarkdownFormatAction[];
   onAction: (action: KMarkdownFormatAction) => void;
   floating?: boolean;
+  leadingAction?: ReactNode;
   trailingAction?: ReactNode;
 }
 
@@ -62,6 +64,7 @@ export function KEditorFormatBar({
   activeActions = [],
   onAction,
   floating = false,
+  leadingAction,
   trailingAction,
 }: KEditorFormatBarProps) {
   const dragScroll = useHorizontalDragScroll<HTMLDivElement>();
@@ -76,20 +79,19 @@ export function KEditorFormatBar({
       onMouseDown={(event) => event.preventDefault()}
       onClick={() => onAction(action)}
     >
-      <span aria-hidden="true" data-action={action}>
-        {actionGlyph[action]}
-      </span>
+      <KIcon name={actionIcon[action]} />
     </KButton>
   ));
   return (
     <div
-      {...(trailingAction ? {} : dragScroll)}
-      data-has-trailing-action={Boolean(trailingAction)}
+      {...(leadingAction || trailingAction ? {} : dragScroll)}
+      data-has-trailing-action={Boolean(leadingAction || trailingAction)}
       className={`k-editor-format-bar k-scrollbar${floating ? " k-editor-format-bar--floating" : ""}`}
       role="toolbar"
       aria-label="Text formatting"
     >
-      {trailingAction ? (
+      {leadingAction}
+      {leadingAction || trailingAction ? (
         <div {...dragScroll} className="k-editor-format-actions">
           {formatButtons}
         </div>

@@ -14,6 +14,7 @@ class KAdaptiveDialog extends StatelessWidget {
     this.onClose,
     this.closeLabel,
     this.maxWidth = 520,
+    this.expandBody = true,
     super.key,
   });
 
@@ -25,6 +26,7 @@ class KAdaptiveDialog extends StatelessWidget {
   final VoidCallback? onClose;
   final String? closeLabel;
   final double maxWidth;
+  final bool expandBody;
 
   static Future<T?> show<T>({
     required BuildContext context,
@@ -106,6 +108,24 @@ class KAdaptiveDialog extends StatelessWidget {
       child: child,
     );
     if (MediaQuery.sizeOf(context).width < breakpoint) {
+      if (!expandBody) {
+        return KBottomSheet(
+          title: title,
+          description: description,
+          actions: actions,
+          maxWidth: double.infinity,
+          onDragEnd: (details) {
+            if ((details.primaryVelocity ?? 0) > 300) {
+              if (onClose != null) {
+                onClose!();
+              } else {
+                Navigator.of(context).maybePop();
+              }
+            }
+          },
+          child: child,
+        );
+      }
       return _DraggableDialog(
         dialog: this,
         padding: padding,
@@ -115,13 +135,13 @@ class KAdaptiveDialog extends StatelessWidget {
     }
     return KDialog(
       title: title,
-      description: descriptionContent,
-      actions: actionContent,
+      description: expandBody ? descriptionContent : description,
+      actions: expandBody ? actionContent : actions,
       onClose: onClose,
       closeLabel: closeLabel,
       maxWidth: maxWidth,
-      expandBody: true,
-      child: body,
+      expandBody: expandBody,
+      child: expandBody ? body : child,
     );
   }
 }

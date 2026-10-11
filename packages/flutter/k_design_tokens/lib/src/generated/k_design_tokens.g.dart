@@ -564,6 +564,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentMobileAppBarGlassWebBlur,
     required this.componentMobileAppBarGlassNativeBlur,
     required this.componentMobileAppBarGlassWebSaturation,
+    required this.componentFilesIconSize,
+    required this.componentFilesTextLineHeight,
+    required this.componentFilesBackdrop,
+    required this.componentFilesTransition,
+    required this.componentFilesTransferElevation,
+    required this.componentPresentationActionSize,
+    required this.componentPresentationWeatherIconSize,
+    required this.componentPresentationCoverMinHeight,
+    required this.componentPresentationCoverInset,
+    required this.componentPresentationCoverForeground,
+    required this.componentPresentationCoverMuted,
+    required this.componentPresentationCoverScrim,
+    required this.componentPresentationTitleLineHeight,
+    required this.componentPresentationCollectionScroll,
+    required this.componentPresentationTimelineDotSize,
+    required this.componentPresentationTimelineRailWidth,
+    required this.componentPresentationTimelineDotOffset,
+    required this.componentEditorSearchCounterWidth,
+    required this.componentEditorCaretForeground,
+    required this.componentEditorCaretLineHeight,
+    required this.componentEditorCaretMinHeight,
+    required this.componentTabStripItemMaxWidth,
+    required this.componentTabStripDragElevation,
   });
 
   final Color colorSurfaceCanvas;
@@ -1057,6 +1080,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentMobileAppBarGlassWebBlur;
   final double componentMobileAppBarGlassNativeBlur;
   final double componentMobileAppBarGlassWebSaturation;
+  final double componentFilesIconSize;
+  final double componentFilesTextLineHeight;
+  final Color componentFilesBackdrop;
+  final Duration componentFilesTransition;
+  final List<BoxShadow> componentFilesTransferElevation;
+  final double componentPresentationActionSize;
+  final double componentPresentationWeatherIconSize;
+  final double componentPresentationCoverMinHeight;
+  final double componentPresentationCoverInset;
+  final Color componentPresentationCoverForeground;
+  final Color componentPresentationCoverMuted;
+  final Color componentPresentationCoverScrim;
+  final double componentPresentationTitleLineHeight;
+  final Duration componentPresentationCollectionScroll;
+  final double componentPresentationTimelineDotSize;
+  final double componentPresentationTimelineRailWidth;
+  final double componentPresentationTimelineDotOffset;
+  final double componentEditorSearchCounterWidth;
+  final Color componentEditorCaretForeground;
+  final double componentEditorCaretLineHeight;
+  final double componentEditorCaretMinHeight;
+  final double componentTabStripItemMaxWidth;
+  final List<BoxShadow> componentTabStripDragElevation;
 
   static const orbitLight = KDesignTokens(
     colorSurfaceCanvas: Color(0xFFF7F7F8),
@@ -1550,6 +1596,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarGlassWebBlur: 22.0,
     componentMobileAppBarGlassNativeBlur: 18.0,
     componentMobileAppBarGlassWebSaturation: 1.45,
+    componentFilesIconSize: 18.0,
+    componentFilesTextLineHeight: 1.5,
+    componentFilesBackdrop: Color(0x4D000000),
+    componentFilesTransition: Duration(milliseconds: 220),
+    componentFilesTransferElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 8.0), blurRadius: 32.0, spreadRadius: 0.0)],
+    componentPresentationActionSize: 40.0,
+    componentPresentationWeatherIconSize: 44.0,
+    componentPresentationCoverMinHeight: 280.0,
+    componentPresentationCoverInset: 120.0,
+    componentPresentationCoverForeground: Color(0xFFFFFFFF),
+    componentPresentationCoverMuted: Color(0xD9FFFFFF),
+    componentPresentationCoverScrim: Color(0xD6000000),
+    componentPresentationTitleLineHeight: 1.2,
+    componentPresentationCollectionScroll: Duration(milliseconds: 300),
+    componentPresentationTimelineDotSize: 8.0,
+    componentPresentationTimelineRailWidth: 10.0,
+    componentPresentationTimelineDotOffset: 7.0,
+    componentEditorSearchCounterWidth: 70.0,
+    componentEditorCaretForeground: Color(0xFFFFFFFF),
+    componentEditorCaretLineHeight: 1.4,
+    componentEditorCaretMinHeight: 1.2,
+    componentTabStripItemMaxWidth: 220.0,
+    componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
   );
 
   static const orbitDark = KDesignTokens(
@@ -2044,6 +2113,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarGlassWebBlur: 22.0,
     componentMobileAppBarGlassNativeBlur: 18.0,
     componentMobileAppBarGlassWebSaturation: 1.45,
+    componentFilesIconSize: 18.0,
+    componentFilesTextLineHeight: 1.5,
+    componentFilesBackdrop: Color(0x4D000000),
+    componentFilesTransition: Duration(milliseconds: 220),
+    componentFilesTransferElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 8.0), blurRadius: 32.0, spreadRadius: 0.0)],
+    componentPresentationActionSize: 40.0,
+    componentPresentationWeatherIconSize: 44.0,
+    componentPresentationCoverMinHeight: 280.0,
+    componentPresentationCoverInset: 120.0,
+    componentPresentationCoverForeground: Color(0xFFFFFFFF),
+    componentPresentationCoverMuted: Color(0xD9FFFFFF),
+    componentPresentationCoverScrim: Color(0xD6000000),
+    componentPresentationTitleLineHeight: 1.2,
+    componentPresentationCollectionScroll: Duration(milliseconds: 300),
+    componentPresentationTimelineDotSize: 8.0,
+    componentPresentationTimelineRailWidth: 10.0,
+    componentPresentationTimelineDotOffset: 7.0,
+    componentEditorSearchCounterWidth: 70.0,
+    componentEditorCaretForeground: Color(0xFFFFFFFF),
+    componentEditorCaretLineHeight: 1.4,
+    componentEditorCaretMinHeight: 1.2,
+    componentTabStripItemMaxWidth: 220.0,
+    componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
   );
 
   static const referenceLight = KDesignTokens(
@@ -2538,6 +2630,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarGlassWebBlur: 22.0,
     componentMobileAppBarGlassNativeBlur: 18.0,
     componentMobileAppBarGlassWebSaturation: 1.45,
+    componentFilesIconSize: 18.0,
+    componentFilesTextLineHeight: 1.5,
+    componentFilesBackdrop: Color(0x4D000000),
+    componentFilesTransition: Duration(milliseconds: 220),
+    componentFilesTransferElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 8.0), blurRadius: 32.0, spreadRadius: 0.0)],
+    componentPresentationActionSize: 40.0,
+    componentPresentationWeatherIconSize: 44.0,
+    componentPresentationCoverMinHeight: 280.0,
+    componentPresentationCoverInset: 120.0,
+    componentPresentationCoverForeground: Color(0xFFFFFFFF),
+    componentPresentationCoverMuted: Color(0xD9FFFFFF),
+    componentPresentationCoverScrim: Color(0xD6000000),
+    componentPresentationTitleLineHeight: 1.2,
+    componentPresentationCollectionScroll: Duration(milliseconds: 300),
+    componentPresentationTimelineDotSize: 8.0,
+    componentPresentationTimelineRailWidth: 10.0,
+    componentPresentationTimelineDotOffset: 7.0,
+    componentEditorSearchCounterWidth: 70.0,
+    componentEditorCaretForeground: Color(0xFFFFFFFF),
+    componentEditorCaretLineHeight: 1.4,
+    componentEditorCaretMinHeight: 1.2,
+    componentTabStripItemMaxWidth: 220.0,
+    componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
   );
 
   static const referenceDark = KDesignTokens(
@@ -3032,6 +3147,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarGlassWebBlur: 22.0,
     componentMobileAppBarGlassNativeBlur: 18.0,
     componentMobileAppBarGlassWebSaturation: 1.45,
+    componentFilesIconSize: 18.0,
+    componentFilesTextLineHeight: 1.5,
+    componentFilesBackdrop: Color(0x4D000000),
+    componentFilesTransition: Duration(milliseconds: 220),
+    componentFilesTransferElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 8.0), blurRadius: 32.0, spreadRadius: 0.0)],
+    componentPresentationActionSize: 40.0,
+    componentPresentationWeatherIconSize: 44.0,
+    componentPresentationCoverMinHeight: 280.0,
+    componentPresentationCoverInset: 120.0,
+    componentPresentationCoverForeground: Color(0xFFFFFFFF),
+    componentPresentationCoverMuted: Color(0xD9FFFFFF),
+    componentPresentationCoverScrim: Color(0xD6000000),
+    componentPresentationTitleLineHeight: 1.2,
+    componentPresentationCollectionScroll: Duration(milliseconds: 300),
+    componentPresentationTimelineDotSize: 8.0,
+    componentPresentationTimelineRailWidth: 10.0,
+    componentPresentationTimelineDotOffset: 7.0,
+    componentEditorSearchCounterWidth: 70.0,
+    componentEditorCaretForeground: Color(0xFFFFFFFF),
+    componentEditorCaretLineHeight: 1.4,
+    componentEditorCaretMinHeight: 1.2,
+    componentTabStripItemMaxWidth: 220.0,
+    componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
   );
 
   @override
@@ -3527,6 +3665,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentMobileAppBarGlassWebBlur,
     double? componentMobileAppBarGlassNativeBlur,
     double? componentMobileAppBarGlassWebSaturation,
+    double? componentFilesIconSize,
+    double? componentFilesTextLineHeight,
+    Color? componentFilesBackdrop,
+    Duration? componentFilesTransition,
+    List<BoxShadow>? componentFilesTransferElevation,
+    double? componentPresentationActionSize,
+    double? componentPresentationWeatherIconSize,
+    double? componentPresentationCoverMinHeight,
+    double? componentPresentationCoverInset,
+    Color? componentPresentationCoverForeground,
+    Color? componentPresentationCoverMuted,
+    Color? componentPresentationCoverScrim,
+    double? componentPresentationTitleLineHeight,
+    Duration? componentPresentationCollectionScroll,
+    double? componentPresentationTimelineDotSize,
+    double? componentPresentationTimelineRailWidth,
+    double? componentPresentationTimelineDotOffset,
+    double? componentEditorSearchCounterWidth,
+    Color? componentEditorCaretForeground,
+    double? componentEditorCaretLineHeight,
+    double? componentEditorCaretMinHeight,
+    double? componentTabStripItemMaxWidth,
+    List<BoxShadow>? componentTabStripDragElevation,
   }) {
     return KDesignTokens(
       colorSurfaceCanvas: colorSurfaceCanvas ?? this.colorSurfaceCanvas,
@@ -4020,6 +4181,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentMobileAppBarGlassWebBlur: componentMobileAppBarGlassWebBlur ?? blurMobileAppBarWeb ?? this.componentMobileAppBarGlassWebBlur,
       componentMobileAppBarGlassNativeBlur: componentMobileAppBarGlassNativeBlur ?? blurMobileAppBarNative ?? this.componentMobileAppBarGlassNativeBlur,
       componentMobileAppBarGlassWebSaturation: componentMobileAppBarGlassWebSaturation ?? saturationMobileAppBarWeb ?? this.componentMobileAppBarGlassWebSaturation,
+      componentFilesIconSize: componentFilesIconSize ?? this.componentFilesIconSize,
+      componentFilesTextLineHeight: componentFilesTextLineHeight ?? this.componentFilesTextLineHeight,
+      componentFilesBackdrop: componentFilesBackdrop ?? this.componentFilesBackdrop,
+      componentFilesTransition: componentFilesTransition ?? this.componentFilesTransition,
+      componentFilesTransferElevation: componentFilesTransferElevation ?? this.componentFilesTransferElevation,
+      componentPresentationActionSize: componentPresentationActionSize ?? this.componentPresentationActionSize,
+      componentPresentationWeatherIconSize: componentPresentationWeatherIconSize ?? this.componentPresentationWeatherIconSize,
+      componentPresentationCoverMinHeight: componentPresentationCoverMinHeight ?? this.componentPresentationCoverMinHeight,
+      componentPresentationCoverInset: componentPresentationCoverInset ?? this.componentPresentationCoverInset,
+      componentPresentationCoverForeground: componentPresentationCoverForeground ?? this.componentPresentationCoverForeground,
+      componentPresentationCoverMuted: componentPresentationCoverMuted ?? this.componentPresentationCoverMuted,
+      componentPresentationCoverScrim: componentPresentationCoverScrim ?? this.componentPresentationCoverScrim,
+      componentPresentationTitleLineHeight: componentPresentationTitleLineHeight ?? this.componentPresentationTitleLineHeight,
+      componentPresentationCollectionScroll: componentPresentationCollectionScroll ?? this.componentPresentationCollectionScroll,
+      componentPresentationTimelineDotSize: componentPresentationTimelineDotSize ?? this.componentPresentationTimelineDotSize,
+      componentPresentationTimelineRailWidth: componentPresentationTimelineRailWidth ?? this.componentPresentationTimelineRailWidth,
+      componentPresentationTimelineDotOffset: componentPresentationTimelineDotOffset ?? this.componentPresentationTimelineDotOffset,
+      componentEditorSearchCounterWidth: componentEditorSearchCounterWidth ?? this.componentEditorSearchCounterWidth,
+      componentEditorCaretForeground: componentEditorCaretForeground ?? this.componentEditorCaretForeground,
+      componentEditorCaretLineHeight: componentEditorCaretLineHeight ?? this.componentEditorCaretLineHeight,
+      componentEditorCaretMinHeight: componentEditorCaretMinHeight ?? this.componentEditorCaretMinHeight,
+      componentTabStripItemMaxWidth: componentTabStripItemMaxWidth ?? this.componentTabStripItemMaxWidth,
+      componentTabStripDragElevation: componentTabStripDragElevation ?? this.componentTabStripDragElevation,
     );
   }
 
@@ -4518,6 +4702,29 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentMobileAppBarGlassWebBlur: lerpDouble(componentMobileAppBarGlassWebBlur, other.componentMobileAppBarGlassWebBlur, t)!,
       componentMobileAppBarGlassNativeBlur: lerpDouble(componentMobileAppBarGlassNativeBlur, other.componentMobileAppBarGlassNativeBlur, t)!,
       componentMobileAppBarGlassWebSaturation: lerpDouble(componentMobileAppBarGlassWebSaturation, other.componentMobileAppBarGlassWebSaturation, t)!,
+      componentFilesIconSize: lerpDouble(componentFilesIconSize, other.componentFilesIconSize, t)!,
+      componentFilesTextLineHeight: lerpDouble(componentFilesTextLineHeight, other.componentFilesTextLineHeight, t)!,
+      componentFilesBackdrop: Color.lerp(componentFilesBackdrop, other.componentFilesBackdrop, t)!,
+      componentFilesTransition: t < 0.5 ? componentFilesTransition : other.componentFilesTransition,
+      componentFilesTransferElevation: BoxShadow.lerpList(componentFilesTransferElevation, other.componentFilesTransferElevation, t)!,
+      componentPresentationActionSize: lerpDouble(componentPresentationActionSize, other.componentPresentationActionSize, t)!,
+      componentPresentationWeatherIconSize: lerpDouble(componentPresentationWeatherIconSize, other.componentPresentationWeatherIconSize, t)!,
+      componentPresentationCoverMinHeight: lerpDouble(componentPresentationCoverMinHeight, other.componentPresentationCoverMinHeight, t)!,
+      componentPresentationCoverInset: lerpDouble(componentPresentationCoverInset, other.componentPresentationCoverInset, t)!,
+      componentPresentationCoverForeground: Color.lerp(componentPresentationCoverForeground, other.componentPresentationCoverForeground, t)!,
+      componentPresentationCoverMuted: Color.lerp(componentPresentationCoverMuted, other.componentPresentationCoverMuted, t)!,
+      componentPresentationCoverScrim: Color.lerp(componentPresentationCoverScrim, other.componentPresentationCoverScrim, t)!,
+      componentPresentationTitleLineHeight: lerpDouble(componentPresentationTitleLineHeight, other.componentPresentationTitleLineHeight, t)!,
+      componentPresentationCollectionScroll: t < 0.5 ? componentPresentationCollectionScroll : other.componentPresentationCollectionScroll,
+      componentPresentationTimelineDotSize: lerpDouble(componentPresentationTimelineDotSize, other.componentPresentationTimelineDotSize, t)!,
+      componentPresentationTimelineRailWidth: lerpDouble(componentPresentationTimelineRailWidth, other.componentPresentationTimelineRailWidth, t)!,
+      componentPresentationTimelineDotOffset: lerpDouble(componentPresentationTimelineDotOffset, other.componentPresentationTimelineDotOffset, t)!,
+      componentEditorSearchCounterWidth: lerpDouble(componentEditorSearchCounterWidth, other.componentEditorSearchCounterWidth, t)!,
+      componentEditorCaretForeground: Color.lerp(componentEditorCaretForeground, other.componentEditorCaretForeground, t)!,
+      componentEditorCaretLineHeight: lerpDouble(componentEditorCaretLineHeight, other.componentEditorCaretLineHeight, t)!,
+      componentEditorCaretMinHeight: lerpDouble(componentEditorCaretMinHeight, other.componentEditorCaretMinHeight, t)!,
+      componentTabStripItemMaxWidth: lerpDouble(componentTabStripItemMaxWidth, other.componentTabStripItemMaxWidth, t)!,
+      componentTabStripDragElevation: BoxShadow.lerpList(componentTabStripDragElevation, other.componentTabStripDragElevation, t)!,
     );
   }
 }

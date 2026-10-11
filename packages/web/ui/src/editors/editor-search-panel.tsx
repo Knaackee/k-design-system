@@ -6,16 +6,13 @@ import {
   getSearchQuery,
   replaceAll,
   replaceNext,
-  selectMatches,
   setSearchQuery,
 } from "@codemirror/search";
 import type { EditorView, Panel, ViewUpdate } from "@codemirror/view";
 import { useEffect, useState, type KeyboardEvent } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { KIconButton } from "../actions/icon-button.js";
-import { KCheckbox } from "../forms/checkbox.js";
-import { KInput, KSearchField } from "../forms/input.js";
-import { KButton } from "../primitives/button.js";
+import { KInput } from "../forms/input.js";
 import type { KEditorLabels } from "./types.js";
 
 export interface KEditorSearchPanelProps {
@@ -30,7 +27,6 @@ export function KEditorSearchPanel({
   externalQuery,
 }: KEditorSearchPanelProps) {
   const [query, setQuery] = useState(externalQuery);
-  const [showOptions, setShowOptions] = useState(false);
   const [showReplace, setShowReplace] = useState(false);
 
   useEffect(() => {
@@ -62,114 +58,120 @@ export function KEditorSearchPanel({
 
   const mainField = { "main-field": "true" } as const;
 
+  const cursor = query.valid ? query.getCursor(view.state.doc) : null;
+  let total = 0;
+  let current = 0;
+  if (cursor) {
+    for (let match = cursor.next(); !match.done; match = cursor.next()) {
+      total++;
+      if (
+        match.value.from === view.state.selection.main.from &&
+        match.value.to === view.state.selection.main.to
+      )
+        current = total;
+    }
+  }
   return (
-    <div className="k-editor-search-panel__content">
-      <div className="k-editor-search-panel__search-row">
-        <KSearchField
-          {...mainField}
-          name="search"
-          value={query.search}
-          placeholder={labels.searchFind}
-          aria-label={labels.searchFind}
-          autoComplete="off"
-          onChange={(event) => updateQuery({ search: event.target.value })}
-          onKeyDown={(event) =>
-            runFromField(event, event.shiftKey ? findPrevious : findNext)
-          }
-        />
+    <div className="k-editor-search-panel__compact">
+      <div className="k-editor-search-panel__toggle">
+        {!view.state.readOnly && (
+          <KIconButton
+            icon={showReplace ? "chevron-down" : "chevron-right"}
+            label={labels.searchShowReplace}
+            aria-expanded={showReplace}
+            onClick={() => setShowReplace(!showReplace)}
+          />
+        )}
       </div>
-
-      <div className="k-editor-search-panel__actions-row">
-        <div className="k-editor-search-panel__navigation">
-          <KIconButton
-            icon="chevron-up"
-            label={labels.searchPrevious}
-            disabled={!query.valid}
-            onClick={() => findPrevious(view)}
-          />
-          <KIconButton
-            icon="chevron-down"
-            label={labels.searchNext}
-            disabled={!query.valid}
-            onClick={() => findNext(view)}
-          />
-          <KIconButton
-            icon="sliders-horizontal"
-            label={labels.searchOptions}
-            aria-pressed={showOptions}
-            onClick={() => setShowOptions((visible) => !visible)}
-          />
-          {!view.state.readOnly && (
-            <KIconButton
-              icon="pen"
-              label={labels.searchShowReplace}
-              aria-pressed={showReplace}
-              onClick={() => setShowReplace((visible) => !visible)}
-            />
-          )}
-          <KIconButton
-            icon="x"
-            label={labels.searchClose}
-            onClick={() => closeSearchPanel(view)}
-          />
-        </div>
-      </div>
-
-      {showOptions && (
-        <div className="k-editor-search-panel__options">
-          <KCheckbox
-            label={labels.searchMatchCase}
-            value={query.caseSensitive}
-            onValueChange={(caseSensitive) => updateQuery({ caseSensitive })}
-          />
-          <KCheckbox
-            label={labels.searchRegexp}
-            value={query.regexp}
-            onValueChange={(regexp) => updateQuery({ regexp })}
-          />
-          <KCheckbox
-            label={labels.searchWholeWord}
-            value={query.wholeWord}
-            onValueChange={(wholeWord) => updateQuery({ wholeWord })}
-          />
-          <KButton
-            className="k-editor-search-panel__all"
-            variant="ghost"
-            disabled={!query.valid}
-            onClick={() => selectMatches(view)}
-          >
-            {labels.searchAll}
-          </KButton>
-        </div>
-      )}
-
-      {!view.state.readOnly && showReplace && (
-        <div className="k-editor-search-panel__replace">
+      <div className="k-editor-search-panel__fields">
+        <div className="k-editor-search-panel__line">
           <KInput
-            name="replace"
-            value={query.replace}
-            placeholder={labels.searchReplace}
-            aria-label={labels.searchReplace}
+            {...mainField}
+            name="search"
+            value={query.search}
+            placeholder={labels.searchFind}
+            aria-label={labels.searchFind}
             autoComplete="off"
-            onChange={(event) => updateQuery({ replace: event.target.value })}
-            onKeyDown={(event) => runFromField(event, replaceNext)}
+            onChange={(event) => updateQuery({ search: event.target.value })}
+            onKeyDown={(event) =>
+              runFromField(event, event.shiftKey ? findPrevious : findNext)
+            }
+            trailingAction={
+              <div className="k-editor-search-panel__inline-options">
+                <KIconButton
+                  icon="case-sensitive"
+                  label={labels.searchMatchCase}
+                  aria-pressed={query.caseSensitive}
+                  onClick={() =>
+                    updateQuery({ caseSensitive: !query.caseSensitive })
+                  }
+                />
+                <KIconButton
+                  icon="whole-word"
+                  label={labels.searchWholeWord}
+                  aria-pressed={query.wholeWord}
+                  onClick={() => updateQuery({ wholeWord: !query.wholeWord })}
+                />
+                <KIconButton
+                  icon="regex"
+                  label={labels.searchRegexp}
+                  aria-pressed={query.regexp}
+                  onClick={() => updateQuery({ regexp: !query.regexp })}
+                />
+              </div>
+            }
           />
-          <KButton
-            variant="secondary"
-            disabled={!query.valid}
-            onClick={() => replaceNext(view)}
-          >
-            {labels.searchReplace}
-          </KButton>
-          <KButton
-            variant="ghost"
-            disabled={!query.valid}
-            onClick={() => replaceAll(view)}
-          >
-            {labels.searchReplaceAll}
-          </KButton>
+          <div className="k-editor-search-panel__controls">
+            <span className="k-editor-search-panel__count" role="status">
+              {total ? `${current} / ${total}` : "0 / 0"}
+            </span>
+            <KIconButton
+              icon="arrow-up"
+              label={labels.searchPrevious}
+              disabled={!total}
+              onClick={() => findPrevious(view)}
+            />
+            <KIconButton
+              icon="arrow-down"
+              label={labels.searchNext}
+              disabled={!total}
+              onClick={() => findNext(view)}
+            />
+            <KIconButton
+              icon="x"
+              label={labels.searchClose}
+              onClick={() => closeSearchPanel(view)}
+            />
+          </div>
         </div>
-      )}
+        {!view.state.readOnly && showReplace && (
+          <div className="k-editor-search-panel__line">
+            <KInput
+              name="replace"
+              value={query.replace}
+              placeholder={labels.searchReplace}
+              aria-label={labels.searchReplace}
+              autoComplete="off"
+              onChange={(event) => updateQuery({ replace: event.target.value })}
+              onKeyDown={(event) => runFromField(event, replaceNext)}
+            />
+            <div className="k-editor-search-panel__controls">
+              <KIconButton
+                icon="replace"
+                label={labels.searchReplace}
+                disabled={!total}
+                onClick={() => replaceNext(view)}
+              />
+              <KIconButton
+                icon="replace-all"
+                label={labels.searchReplaceAll}
+                disabled={!total}
+                onClick={() => replaceAll(view)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -196,6 +198,7 @@ export function createKEditorSearchPanel(
     render();
     return {
       dom,
+      top: true,
       mount() {
         onOpenChange?.(true);
         queueMicrotask(() => {
@@ -206,6 +209,8 @@ export function createKEditorSearchPanel(
       },
       update(update: ViewUpdate) {
         if (
+          update.docChanged ||
+          update.selectionSet ||
           update.transactions.some((transaction) =>
             transaction.effects.some((effect) => effect.is(setSearchQuery)),
           )
