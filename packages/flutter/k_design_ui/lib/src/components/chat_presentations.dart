@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'chat_presentation_image.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../primitives/k_button.dart';
@@ -418,18 +418,4 @@ Widget _value(String text, KDesignTokens t) => KText(
   ),
 );
 Widget _image(String src, {String? alt, BoxFit fit = BoxFit.cover}) =>
-    Uri.tryParse(src)?.path.toLowerCase().endsWith('.svg') == true
-    ? SvgPicture.network(
-        src,
-        fit: fit,
-        semanticsLabel: alt,
-        excludeFromSemantics: alt == null || alt.isEmpty,
-        errorBuilder: (context, error, stack) => SizedBox.shrink(),
-      )
-    : Image.network(
-        src,
-        fit: fit,
-        semanticLabel: alt,
-        excludeFromSemantics: alt == null || alt.isEmpty,
-        errorBuilder: (context, error, stack) => SizedBox.shrink(),
-      );
+    KPresentationNetworkImage(src: src, alt: alt, fit: fit);

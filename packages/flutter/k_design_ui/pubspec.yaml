@@ -16,6 +16,7 @@ dependencies:
   k_design_tokens:
     path: ../k_design_tokens
   flutter_svg: ^2.3.0
+  http: ^1.6.0
   timezone: 0.11.1
   two_dimensional_scrollables: 0.5.4
   intl: ^0.20.3

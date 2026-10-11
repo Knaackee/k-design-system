@@ -5,6 +5,7 @@ import '../primitives/k_icon.dart';
 import '../primitives/k_surface.dart';
 import '../overlays/k_adaptive_dialog.dart';
 import 'chat_presentations.dart' show KPresentationImage;
+import 'chat_presentation_image.dart';
 
 /// A real platform player supplied by the host; playback remains host-owned.
 typedef KPresentationPlayerBuilder =
@@ -90,9 +91,9 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
                       constraints: BoxConstraints(
                         maxHeight: MediaQuery.sizeOf(context).height * .65,
                       ),
-                      child: Image.network(
-                        image.src,
-                        semanticLabel: image.alt,
+                      child: KPresentationNetworkImage(
+                        src: image.src,
+                        alt: image.alt,
                         fit: BoxFit.contain,
                         errorBuilder: _imageError,
                       ),
@@ -229,10 +230,9 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
             children: [
               AspectRatio(
                 aspectRatio: 4 / 3,
-                child: Image.network(
-                  image.thumbnailSrc ?? image.src,
-                  fit: BoxFit.cover,
-                  excludeFromSemantics: true,
+                child: KPresentationNetworkImage(
+                  src: image.thumbnailSrc ?? image.src,
+                  fit: image.fit,
                   errorBuilder: _imageError,
                 ),
               ),
