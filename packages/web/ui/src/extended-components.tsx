@@ -554,6 +554,7 @@ export function KPopover({
       ref={contentRef}
       role="dialog"
       tabIndex={-1}
+      data-k-escape-boundary=""
       aria-label={label}
       className="k-popover__content"
       data-align={align}
@@ -561,6 +562,8 @@ export function KPopover({
       style={position}
       onKeyDown={(event) => {
         if (event.key === "Escape") {
+          event.preventDefault();
+          event.stopPropagation();
           setShown(false);
           root.current?.querySelector<HTMLElement>("button")?.focus();
         }

@@ -3,6 +3,18 @@ import { Sheet, type SheetRef } from "react-modal-sheet";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { KIconButton } from "../actions/icon-button.js";
 
+// Radix observes Escape in the capture phase, before a nested popover can
+// consume it. Leave dismissal to that focused child surface first.
+function handleEscape(event: KeyboardEvent, dismissible: boolean) {
+  if (
+    !dismissible ||
+    (event.target instanceof Element &&
+      event.target.closest("[data-k-escape-boundary]"))
+  ) {
+    event.preventDefault();
+  }
+}
+
 export type KOverlayProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -80,9 +92,7 @@ export function KDesktopDialog({
           className={["k-dialog", className].filter(Boolean).join(" ")}
           data-adaptive-surface="dialog"
           style={{ zIndex }}
-          onEscapeKeyDown={
-            dismissible ? undefined : (event) => event.preventDefault()
-          }
+          onEscapeKeyDown={(event) => handleEscape(event, dismissible)}
           onPointerDownOutside={
             dismissible ? undefined : (event) => event.preventDefault()
           }
@@ -192,9 +202,7 @@ export function KBottomSheet({
             event.preventDefault();
             (closeRef.current ?? containerRef.current)?.focus();
           }}
-          onEscapeKeyDown={
-            dismissible ? undefined : (event) => event.preventDefault()
-          }
+          onEscapeKeyDown={(event) => handleEscape(event, dismissible)}
           onPointerDownOutside={
             dismissible ? undefined : (event) => event.preventDefault()
           }
