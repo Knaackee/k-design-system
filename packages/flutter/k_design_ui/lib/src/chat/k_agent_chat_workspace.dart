@@ -44,6 +44,8 @@ class KAgentChatWorkspace extends StatefulWidget {
     required this.title,
     required this.conversation,
     required this.composer,
+    this.dockBuilder,
+    this.dockMaximized = false,
     this.sidebar,
     this.sidebarBuilder,
     this.status,
@@ -112,6 +114,12 @@ class KAgentChatWorkspace extends StatefulWidget {
   sidebarToggleBuilder;
   final Widget conversation;
   final Widget composer;
+
+  /// Mounted between the scrolling conversation and composer. The supplied
+  /// height is the available workspace height, including the dock itself.
+  final Widget Function(BuildContext context, double availableHeight)?
+  dockBuilder;
+  final bool dockMaximized;
   final KAgentChatWorkspaceLabels labels;
 
   @override
@@ -176,7 +184,7 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                           ? Duration.zero
                           : tokens.motionEmphasis,
                       curve: Curves.easeInOut,
-                      width: _collapsed
+                      width: _collapsed || widget.dockMaximized
                           ? 0
                           : KAgentChatWorkspace.desktopSidebarWidth,
                       child: ClipRect(
@@ -185,11 +193,11 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                           minWidth: KAgentChatWorkspace.desktopSidebarWidth,
                           maxWidth: KAgentChatWorkspace.desktopSidebarWidth,
                           child: ExcludeSemantics(
-                            excluding: _collapsed,
+                            excluding: _collapsed || widget.dockMaximized,
                             child: ExcludeFocus(
-                              excluding: _collapsed,
+                              excluding: _collapsed || widget.dockMaximized,
                               child: IgnorePointer(
-                                ignoring: _collapsed,
+                                ignoring: _collapsed || widget.dockMaximized,
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
@@ -273,133 +281,170 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
       final reducedMotion = MediaQuery.disableAnimationsOf(context);
       return Column(
         children: [
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: widget.contentMaxWidth + 2 * tokens.spaceLayoutGutter,
-              ),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  tokens.spaceLayoutGutter,
-                  tokens.spaceControlGap,
-                  tokens.spaceLayoutGutter + tokens.spaceControlGap,
-                  tokens.spaceControlGap,
-                ),
-                child: Row(
-                  children: [
-                    widget.sidebarToggleBuilder != null && desktop
-                        ? widget.sidebarToggleBuilder!(
-                            context,
-                            _collapsed,
-                            _toggleSidebar,
-                          )
-                        : KIconButton(
-                            key: const ValueKey(
-                              'k-agent-chat-workspace-agents',
-                            ),
-                            label: desktop && !_collapsed
-                                ? widget.labels.closeAgents
-                                : widget.labels.agents,
-                            icon: KIconName.arrowRight,
-                            iconContent: KAnimatedIcon(
-                              desktop && !_collapsed
-                                  ? KIconName.arrowLeft
-                                  : KIconName.arrowRight,
-                            ),
-                            onPressed: () => desktop
-                                ? _toggleSidebar()
-                                : _scaffoldKey.currentState?.openDrawer(),
-                          ),
-                    if (widget.actions case final actions?)
-                      Expanded(child: actions),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, stage) {
-                final duration = reducedMotion
-                    ? Duration.zero
-                    : widget.avatarTransitionDuration ?? tokens.motionLong;
-                final targetSize = widget.conversationEmpty && !compact
-                    ? math.min(
-                        widget.avatarSizeEmpty,
-                        math.min(
-                          stage.maxWidth * .6,
-                          MediaQuery.sizeOf(context).height * .4,
-                        ),
-                      )
-                    : avatarSize;
-                return Stack(
-                  children: [
-                    Positioned.fill(
-                      child: Align(
-                        child: SizedBox(
-                          width: math.min(
-                            stage.maxWidth,
-                            widget.contentMaxWidth +
-                                2 * tokens.spaceLayoutGutter,
-                          ),
-                          height: stage.maxHeight,
-                          child: widget.conversation,
-                        ),
-                      ),
-                    ),
-                    if (!widget.showTitle)
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: IgnorePointer(
-                          child: Opacity(
-                            opacity: 0,
-                            alwaysIncludeSemantics: true,
-                            child: Semantics(header: true, child: widget.title),
-                          ),
-                        ),
-                      ),
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        ignoring: widget.avatarPopover == null,
-                        child: AnimatedAlign(
-                          alignment: widget.conversationEmpty
-                              ? Alignment.center
-                              : Alignment.topCenter,
-                          duration: duration,
-                          curve: Curves.easeInOut,
-                          child: TweenAnimationBuilder<double>(
-                            tween: Tween<double>(end: targetSize),
-                            duration: duration,
-                            curve: Curves.easeInOut,
-                            child: widget.avatar,
-                            builder: (context, size, avatar) =>
-                                _floatingIdentity(
-                                  context,
-                                  size,
-                                  avatar!,
-                                  duration,
-                                ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          ColoredBox(
-            color: tokens.colorSurfaceCanvas,
-            child: Align(
-              heightFactor: 1,
+          Offstage(
+            offstage: widget.dockMaximized,
+            child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth:
                       widget.contentMaxWidth + 2 * tokens.spaceLayoutGutter,
                 ),
-                child: widget.composer,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    tokens.spaceLayoutGutter,
+                    tokens.spaceControlGap,
+                    tokens.spaceLayoutGutter + tokens.spaceControlGap,
+                    tokens.spaceControlGap,
+                  ),
+                  child: Row(
+                    children: [
+                      widget.sidebarToggleBuilder != null && desktop
+                          ? widget.sidebarToggleBuilder!(
+                              context,
+                              _collapsed,
+                              _toggleSidebar,
+                            )
+                          : KIconButton(
+                              key: const ValueKey(
+                                'k-agent-chat-workspace-agents',
+                              ),
+                              label: desktop && !_collapsed
+                                  ? widget.labels.closeAgents
+                                  : widget.labels.agents,
+                              icon: KIconName.arrowRight,
+                              iconContent: KAnimatedIcon(
+                                desktop && !_collapsed
+                                    ? KIconName.arrowLeft
+                                    : KIconName.arrowRight,
+                              ),
+                              onPressed: () => desktop
+                                  ? _toggleSidebar()
+                                  : _scaffoldKey.currentState?.openDrawer(),
+                            ),
+                      if (widget.actions case final actions?)
+                        Expanded(
+                          child: ExcludeFocus(
+                            excluding: widget.dockMaximized,
+                            child: actions,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Offstage(
+              offstage: widget.dockMaximized,
+              child: LayoutBuilder(
+                builder: (context, stage) {
+                  final duration = reducedMotion
+                      ? Duration.zero
+                      : widget.avatarTransitionDuration ?? tokens.motionLong;
+                  final targetSize = widget.conversationEmpty && !compact
+                      ? math.min(
+                          widget.avatarSizeEmpty,
+                          math.min(
+                            stage.maxWidth * .6,
+                            MediaQuery.sizeOf(context).height * .4,
+                          ),
+                        )
+                      : avatarSize;
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Align(
+                          child: SizedBox(
+                            width: math.min(
+                              stage.maxWidth,
+                              widget.contentMaxWidth +
+                                  2 * tokens.spaceLayoutGutter,
+                            ),
+                            height: stage.maxHeight,
+                            child: ExcludeFocus(
+                              excluding: widget.dockMaximized,
+                              child: widget.conversation,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (!widget.showTitle)
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: IgnorePointer(
+                            child: Opacity(
+                              opacity: 0,
+                              alwaysIncludeSemantics: true,
+                              child: Semantics(
+                                header: true,
+                                child: widget.title,
+                              ),
+                            ),
+                          ),
+                        ),
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          ignoring: widget.avatarPopover == null,
+                          child: AnimatedAlign(
+                            alignment: widget.conversationEmpty
+                                ? Alignment.center
+                                : Alignment.topCenter,
+                            duration: duration,
+                            curve: Curves.easeInOut,
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween<double>(end: targetSize),
+                              duration: duration,
+                              curve: Curves.easeInOut,
+                              child: widget.avatar,
+                              builder: (context, size, avatar) => ExcludeFocus(
+                                excluding: widget.dockMaximized,
+                                child: _floatingIdentity(
+                                  context,
+                                  size,
+                                  avatar!,
+                                  duration,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+          if (widget.dockBuilder != null)
+            Align(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: widget.dockMaximized
+                      ? constraints.maxWidth
+                      : widget.contentMaxWidth + 2 * tokens.spaceLayoutGutter,
+                ),
+                child: widget.dockBuilder!(context, constraints.maxHeight),
+              ),
+            ),
+          Offstage(
+            offstage: widget.dockMaximized,
+            child: ColoredBox(
+              color: tokens.colorSurfaceCanvas,
+              child: Align(
+                heightFactor: 1,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth:
+                        widget.contentMaxWidth + 2 * tokens.spaceLayoutGutter,
+                  ),
+                  child: ExcludeFocus(
+                    excluding: widget.dockMaximized,
+                    child: widget.composer,
+                  ),
+                ),
               ),
             ),
           ),

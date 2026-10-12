@@ -69,7 +69,7 @@
   color: var(--k-color-text-muted);
   font-size: calc(var(--k-font-caption-size) * var(--k-text-scale, 1));
   font-weight: var(--k-font-label-weight);
-  line-height: 1;
+  line-height: calc(var(--k-font-caption-line-height) * var(--k-text-scale, 1));
 }
 
 .k-sidebar-group__label {
@@ -154,7 +154,7 @@
   font-family: var(--k-font-family);
   font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
   font-weight: var(--k-font-body-weight);
-  line-height: 1;
+  line-height: calc(var(--k-font-label-line-height) * var(--k-text-scale, 1));
   cursor: pointer;
   transition:
     background var(--k-motion-fast) ease,

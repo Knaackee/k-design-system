@@ -123,7 +123,7 @@ export function KChatConversation({
 }: KChatConversationProps) {
   const labels = { ...defaultLabels, ...labelsInput };
   const scrollRef = useRef<HTMLDivElement>(null);
-  const previousHeight = useRef(0);
+  const dimensions = useRef({ height: 0, viewport: 0 });
   const following = useRef(true);
   const [showNewest, setShowNewest] = useState(false);
   const lastMessage = messages.at(-1);
@@ -136,12 +136,48 @@ export function KChatConversation({
     if (!node) return;
     if (following.current) node.scrollTop = node.scrollHeight;
     setShowNewest(!following.current);
-    previousHeight.current = node.scrollHeight;
+    dimensions.current = {
+      height: node.scrollHeight,
+      viewport: node.clientHeight,
+    };
   }, [messages.length, streamMarker]);
+
+  useLayoutEffect(() => {
+    const node = scrollRef.current;
+    if (!node || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      if (!node.clientHeight) return;
+      if (following.current) node.scrollTop = node.scrollHeight;
+      dimensions.current = {
+        height: node.scrollHeight,
+        viewport: node.clientHeight,
+      };
+      setShowNewest(
+        !following.current &&
+          node.scrollHeight - node.scrollTop - node.clientHeight >= 32,
+      );
+    });
+    observer.observe(node);
+    // Cards and media can finish laying out without a new message arriving.
+    for (const child of node.children) observer.observe(child);
+    return () => observer.disconnect();
+  }, [messages]);
 
   const onScroll = useCallback(() => {
     const node = scrollRef.current;
     if (!node) return;
+    if (!node.clientHeight) return;
+    const resized =
+      dimensions.current.height !== node.scrollHeight ||
+      dimensions.current.viewport !== node.clientHeight;
+    dimensions.current = {
+      height: node.scrollHeight,
+      viewport: node.clientHeight,
+    };
+    if (resized && following.current) {
+      node.scrollTop = node.scrollHeight;
+      return;
+    }
     following.current =
       node.scrollHeight - node.scrollTop - node.clientHeight < 32;
     setShowNewest(!following.current);
@@ -151,7 +187,7 @@ export function KChatConversation({
     const node = scrollRef.current;
     if (!node) return;
     following.current = true;
-    node.scrollTo({ top: node.scrollHeight, behavior: "smooth" });
+    node.scrollTop = node.scrollHeight;
     setShowNewest(false);
   };
 

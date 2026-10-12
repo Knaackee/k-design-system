@@ -1,8 +1,10 @@
 import 'browser_permissions_fixture.dart';
 import 'browser_permission_ask_fixture.dart';
 import 'browser_cards_fixture.dart';
+import 'personal_agent_browser_fixture.dart';
 import 'agent_cursor_fixture.dart';
 import 'audio_edge_glow_fixture.dart';
+import 'activity_dot_fixture.dart';
 import 'files_fixture.dart';
 import 'chat_presentations_fixture.dart';
 import 'package:flutter/material.dart';
@@ -512,6 +514,36 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Feedback',
           children: [
+            WidgetbookFolder(
+              name: 'Activity dot',
+              children: [
+                WidgetbookUseCase(
+                  name: 'activity-dot-playground',
+                  builder: buildActivityDotPlayground,
+                ),
+                WidgetbookUseCase(
+                  name: 'activity-dot-states',
+                  builder: (_) => const ActivityDotStatesFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'activity-dot-consumer-theme',
+                  builder: buildActivityDotConsumerTheme,
+                ),
+                WidgetbookUseCase(
+                  name: 'activity-dot-reduced-motion',
+                  builder: (_) => const Center(
+                    child: KActivityDot(
+                      state: KActivityDotState.working,
+                      label: 'Working activity',
+                      size: 16,
+                      coreSize: 8,
+                      ringWidth: 2,
+                      reducedMotion: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Audio edge glow',
               children: [
@@ -1025,6 +1057,28 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'Mobile',
                   builder: (_) => const BrowserCardsFixture(mobile: true),
                 ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'PersonalAgentBrowser',
+              children: [
+                for (final scenario in [
+                  'review',
+                  'permission',
+                  'human-control',
+                  'disconnected',
+                ])
+                  WidgetbookUseCase(
+                    name: scenario,
+                    builder: (context) => PersonalAgentBrowserFixture(
+                      key: ValueKey(scenario),
+                      scenario: scenario,
+                      fullWidth: context.knobs.boolean(
+                        label: 'Full content width',
+                        initialValue: false,
+                      ),
+                    ),
+                  ),
               ],
             ),
             WidgetbookFolder(

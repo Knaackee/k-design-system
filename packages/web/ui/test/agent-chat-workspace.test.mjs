@@ -34,6 +34,21 @@ test("agent chat workspace exposes consumer slots and mobile agents trigger", ()
   assert.match(html, /data-right-sidebar-open="false"/);
 });
 
+test("full content width uses the available width for conversation and composer slots", () => {
+  const html = renderToStaticMarkup(
+    h(KAgentChatWorkspace, {
+      title: "Ada",
+      sidebar: "Agents",
+      avatar: "Avatar",
+      contentMaxWidth: "full",
+      composer: h("div", {}, "Browser and composer"),
+      children: "Conversation",
+    }),
+  );
+  assert.match(html, /--k-agent-chat-workspace-content-max-width:100%/);
+  assert.match(html, /Browser and composer/);
+});
+
 test("agent chat workspace CSS keeps the responsive shell contract", async () => {
   const css = await readFile(
     new URL("../src/chat/agent-chat-workspace.css", import.meta.url),

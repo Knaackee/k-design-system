@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KButton } from "@k-design-system/ui";
+import { KActivityDot, KButton } from "@k-design-system/ui";
 import "./browser-workspace.css";
 import { BrowserTaskCards } from "./browser-task-cards.js";
 
@@ -65,8 +65,17 @@ function BrowserWorkspace({
           </header>
           <div className="browser-demo__control">
             <span role="status">
-              <i data-mode={mode} />
-              {status}
+              <KActivityDot
+                label={status}
+                title={status}
+                animation="none"
+                state={mode === "offline" ? "error" : "idle"}
+                dotColor={
+                  mode === "offline"
+                    ? undefined
+                    : `var(--k-color-${mode === "human" ? "status-info-accent" : mode === "stopped" ? "text-muted" : "status-success-accent"})`
+                }
+              />
             </span>
             {mode === "watching" && (
               <KButton onClick={() => setMode("human")}>Übernehmen</KButton>

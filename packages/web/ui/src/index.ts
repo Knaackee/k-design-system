@@ -394,6 +394,12 @@ export type {
   KNotificationTone,
   KToastViewportProps,
 } from "./feedback/notifications.js";
+export {
+  KActivityDot,
+  type KActivityDotAnimation,
+  type KActivityDotProps,
+  type KActivityDotState,
+} from "./feedback/activity-dot.js";
 
 export { KThemeSwitcher } from "./actions/theme-switcher.js";
 export { KUserMenu } from "./actions/user-menu.js";

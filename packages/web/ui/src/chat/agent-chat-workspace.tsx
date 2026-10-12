@@ -22,7 +22,7 @@ export interface KAgentChatWorkspaceProps {
   avatarLabel?: ReactNode;
   avatarPopover?: ReactNode;
   avatarPopoverLabel?: string;
-  contentMaxWidth?: number;
+  contentMaxWidth?: number | "full";
   rightSidebar?: ReactNode;
   rightSidebarOpen?: boolean;
   rightSidebarWidth?: number;
@@ -177,7 +177,8 @@ export function KAgentChatWorkspace({
           "--k-agent-chat-workspace-avatar-blur": `${avatarBackdropBlur}px`,
           "--k-agent-chat-workspace-avatar-transition": `${avatarTransitionDuration}ms`,
           "--k-agent-chat-workspace-avatar-empty-size": `${avatarSizeEmpty}px`,
-          "--k-agent-chat-workspace-content-max-width": `${contentMaxWidth}px`,
+          "--k-agent-chat-workspace-content-max-width":
+            contentMaxWidth === "full" ? "100%" : `${contentMaxWidth}px`,
           ...(rightSidebarWidth !== undefined
             ? {
                 "--k-agent-chat-workspace-right-sidebar-width": `${rightSidebarWidth}px`,

@@ -1,0 +1,119 @@
+.k-activity-dot {
+  --k-activity-dot-state-color: var(--k-color-border-strong);
+  --k-activity-dot-resolved-color: var(
+    --k-activity-dot-color,
+    var(--k-activity-dot-state-color)
+  );
+  --k-activity-dot-resolved-ring-color: var(
+    --k-activity-dot-ring-color,
+    var(--k-activity-dot-state-color)
+  );
+
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--k-activity-dot-size, var(--k-size-indicator-small));
+  height: var(--k-activity-dot-size, var(--k-size-indicator-small));
+  vertical-align: middle;
+}
+
+.k-activity-dot[data-state="working"] {
+  --k-activity-dot-state-color: var(--k-color-status-info-accent);
+}
+
+.k-activity-dot[data-state="question"] {
+  --k-activity-dot-state-color: var(--k-color-status-warning-accent);
+}
+
+.k-activity-dot[data-state="error"] {
+  --k-activity-dot-state-color: var(--k-color-status-error-accent);
+}
+
+.k-activity-dot__ring {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+}
+
+.k-activity-dot__ring::before,
+.k-activity-dot__ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border: var(--k-activity-dot-ring-width, var(--k-border-width-strong)) solid
+    var(--k-activity-dot-ring-track-color, var(--k-color-border-default));
+  border-radius: var(--k-radius-full);
+}
+
+.k-activity-dot__ring::after {
+  content: "";
+  border-color: var(--k-activity-dot-resolved-ring-color);
+}
+
+.k-activity-dot__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(
+    --k-activity-dot-core-size,
+    calc(var(--k-size-indicator-tiny) - var(--k-border-width-strong) * 2)
+  );
+  height: var(
+    --k-activity-dot-core-size,
+    calc(var(--k-size-indicator-tiny) - var(--k-border-width-strong) * 2)
+  );
+  border-radius: var(--k-radius-full);
+  background: var(--k-activity-dot-resolved-color);
+}
+
+.k-activity-dot[data-state="idle"] .k-activity-dot__ring {
+  display: none;
+}
+
+.k-activity-dot[data-state="working"] .k-activity-dot__ring::after {
+  border-inline-end-color: transparent;
+}
+
+.k-activity-dot[data-state="error"] .k-activity-dot__ring::after {
+  border-color: var(--k-activity-dot-resolved-ring-color);
+  border-style: dashed;
+}
+
+.k-activity-dot[data-state="error"] .k-activity-dot__ring::before {
+  display: none;
+}
+
+.k-activity-dot[data-animation="spin"] .k-activity-dot__ring {
+  animation: k-activity-dot-spin
+    var(--k-activity-dot-animation-duration, var(--k-motion-spinner))
+    var(--k-activity-dot-animation-timing, linear)
+    var(--k-activity-dot-animation-iteration-count, infinite);
+}
+
+.k-activity-dot[data-animation="pulse"] .k-activity-dot__ring {
+  animation: k-activity-dot-pulse
+    var(--k-activity-dot-animation-duration, var(--k-motion-progress))
+    var(--k-activity-dot-animation-timing, ease-in-out)
+    var(--k-activity-dot-animation-iteration-count, infinite);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-activity-dot__ring {
+    animation: none !important;
+  }
+}
+
+@keyframes k-activity-dot-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes k-activity-dot-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}

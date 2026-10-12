@@ -21,6 +21,7 @@
 @import "./scrollbars.css";
 @import "./basic-components.css";
 @import "./feedback/notifications.css";
+@import "./feedback/activity-dot.css";
 @import "./sidebar.css";
 @import "./mobile-app-bar.css";
 @import "./settings-page.css";

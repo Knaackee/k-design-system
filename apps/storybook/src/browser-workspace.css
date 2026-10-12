@@ -92,17 +92,6 @@
   gap: 12px;
   padding: 12px 20px;
 }
-.browser-demo__control i {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--k-color-text-muted);
-  border-radius: 50%;
-  margin-right: 8px;
-}
-.browser-demo__control i[data-mode="human"] {
-  background: var(--k-color-action-primary-background);
-}
 .browser-demo__hint {
   padding: 0 20px 16px;
   color: var(--k-color-text-muted);
