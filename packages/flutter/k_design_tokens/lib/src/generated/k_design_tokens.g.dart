@@ -294,6 +294,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.layoutContentWidth,
     required this.layoutPickerWideWidth,
     required this.layoutOverlayMaxHeight,
+    required this.componentBrowserViewerCursorAvatarSize,
+    required this.componentBrowserViewerDisconnectedOpacity,
+    required this.componentActivityDotPulseOpacity,
     required this.componentSelectionBackground,
     required this.componentSelectionForeground,
     required this.componentSelectionBorder,
@@ -810,6 +813,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double layoutContentWidth;
   final double layoutPickerWideWidth;
   final double layoutOverlayMaxHeight;
+  final double componentBrowserViewerCursorAvatarSize;
+  final double componentBrowserViewerDisconnectedOpacity;
+  final double componentActivityDotPulseOpacity;
   final Color componentSelectionBackground;
   final Color componentSelectionForeground;
   final Color componentSelectionBorder;
@@ -1326,6 +1332,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentBrowserViewerCursorAvatarSize: 32.0,
+    componentBrowserViewerDisconnectedOpacity: 0.9,
+    componentActivityDotPulseOpacity: 0.35,
     componentSelectionBackground: Color(0xFFFFFFFF),
     componentSelectionForeground: Color(0xFF202024),
     componentSelectionBorder: Color(0xFF727278),
@@ -1843,6 +1852,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentBrowserViewerCursorAvatarSize: 32.0,
+    componentBrowserViewerDisconnectedOpacity: 0.9,
+    componentActivityDotPulseOpacity: 0.35,
     componentSelectionBackground: Color(0xFF202022),
     componentSelectionForeground: Color(0xFFEEEEEF),
     componentSelectionBorder: Color(0xFF99999F),
@@ -2360,6 +2372,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentBrowserViewerCursorAvatarSize: 32.0,
+    componentBrowserViewerDisconnectedOpacity: 0.9,
+    componentActivityDotPulseOpacity: 0.35,
     componentSelectionBackground: Color(0xFFFFFFFF),
     componentSelectionForeground: Color(0xFF134E4A),
     componentSelectionBorder: Color(0xFF52706D),
@@ -2877,6 +2892,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentBrowserViewerCursorAvatarSize: 32.0,
+    componentBrowserViewerDisconnectedOpacity: 0.9,
+    componentActivityDotPulseOpacity: 0.35,
     componentSelectionBackground: Color(0xFF0B2925),
     componentSelectionForeground: Color(0xFFECFDF5),
     componentSelectionBorder: Color(0xFF91B8B2),
@@ -3395,6 +3413,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? layoutContentWidth,
     double? layoutPickerWideWidth,
     double? layoutOverlayMaxHeight,
+    double? componentBrowserViewerCursorAvatarSize,
+    double? componentBrowserViewerDisconnectedOpacity,
+    double? componentActivityDotPulseOpacity,
     Color? componentSelectionBackground,
     Color? componentSelectionForeground,
     Color? componentSelectionBorder,
@@ -3911,6 +3932,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutContentWidth: layoutContentWidth ?? this.layoutContentWidth,
       layoutPickerWideWidth: layoutPickerWideWidth ?? this.layoutPickerWideWidth,
       layoutOverlayMaxHeight: layoutOverlayMaxHeight ?? this.layoutOverlayMaxHeight,
+      componentBrowserViewerCursorAvatarSize: componentBrowserViewerCursorAvatarSize ?? this.componentBrowserViewerCursorAvatarSize,
+      componentBrowserViewerDisconnectedOpacity: componentBrowserViewerDisconnectedOpacity ?? this.componentBrowserViewerDisconnectedOpacity,
+      componentActivityDotPulseOpacity: componentActivityDotPulseOpacity ?? this.componentActivityDotPulseOpacity,
       componentSelectionBackground: componentSelectionBackground ?? colorSurfaceRaised ?? this.componentSelectionBackground,
       componentSelectionForeground: componentSelectionForeground ?? colorTextPrimary ?? this.componentSelectionForeground,
       componentSelectionBorder: componentSelectionBorder ?? colorTextMuted ?? this.componentSelectionBorder,
@@ -4432,6 +4456,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutContentWidth: lerpDouble(layoutContentWidth, other.layoutContentWidth, t)!,
       layoutPickerWideWidth: lerpDouble(layoutPickerWideWidth, other.layoutPickerWideWidth, t)!,
       layoutOverlayMaxHeight: lerpDouble(layoutOverlayMaxHeight, other.layoutOverlayMaxHeight, t)!,
+      componentBrowserViewerCursorAvatarSize: lerpDouble(componentBrowserViewerCursorAvatarSize, other.componentBrowserViewerCursorAvatarSize, t)!,
+      componentBrowserViewerDisconnectedOpacity: lerpDouble(componentBrowserViewerDisconnectedOpacity, other.componentBrowserViewerDisconnectedOpacity, t)!,
+      componentActivityDotPulseOpacity: lerpDouble(componentActivityDotPulseOpacity, other.componentActivityDotPulseOpacity, t)!,
       componentSelectionBackground: Color.lerp(componentSelectionBackground, other.componentSelectionBackground, t)!,
       componentSelectionForeground: Color.lerp(componentSelectionForeground, other.componentSelectionForeground, t)!,
       componentSelectionBorder: Color.lerp(componentSelectionBorder, other.componentSelectionBorder, t)!,

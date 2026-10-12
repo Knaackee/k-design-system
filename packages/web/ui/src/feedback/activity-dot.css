@@ -114,6 +114,6 @@
 
 @keyframes k-activity-dot-pulse {
   50% {
-    opacity: 0.35;
+    opacity: var(--k-component-activity-dot-pulse-opacity);
   }
 }

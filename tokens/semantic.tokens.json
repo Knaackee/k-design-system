@@ -968,6 +968,16 @@
     }
   },
   "component": {
+    "browserViewer": {
+      "cursorAvatarSize": {
+        "$type": "dimension",
+        "$value": { "value": 32, "unit": "px" }
+      },
+      "disconnectedOpacity": { "$type": "number", "$value": 0.9 }
+    },
+    "activityDot": {
+      "pulseOpacity": { "$type": "number", "$value": 0.35 }
+    },
     "selection": {
       "background": {
         "$type": "color",

@@ -96,7 +96,7 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
       height: compact ? 180 : widget.height,
       duration: MediaQuery.disableAnimationsOf(context) || !_animateHeight
           ? Duration.zero
-          : const Duration(milliseconds: 180),
+          : t.motionModerate,
       curve: Curves.easeOut,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -285,7 +285,8 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
                                 : Transform.translate(
                                     offset: const Offset(-6, -8),
                                     child: SizedBox.square(
-                                      dimension: 32,
+                                      dimension: t
+                                          .componentBrowserViewerCursorAvatarSize,
                                       child: FittedBox(
                                         child: widget.cursorAvatar,
                                       ),
@@ -295,7 +296,9 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
                         ),
                       if (!widget.connected)
                         ColoredBox(
-                          color: t.colorSurfaceCanvas.withValues(alpha: .9),
+                          color: t.colorSurfaceCanvas.withValues(
+                            alpha: t.componentBrowserViewerDisconnectedOpacity,
+                          ),
                           child: Center(
                             child: KButton(
                               label: 'Erneut verbinden',

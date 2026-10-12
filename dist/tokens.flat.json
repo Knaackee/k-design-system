@@ -1496,6 +1496,21 @@
         "unit": "px"
       }
     },
+    "component.browserViewer.cursorAvatarSize": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.browserViewer.disconnectedOpacity": {
+      "type": "number",
+      "value": 0.9
+    },
+    "component.activityDot.pulseOpacity": {
+      "type": "number",
+      "value": 0.35
+    },
     "component.selection.background": {
       "type": "color",
       "value": "#ffffff"
@@ -4951,6 +4966,21 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.browserViewer.cursorAvatarSize": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.browserViewer.disconnectedOpacity": {
+      "type": "number",
+      "value": 0.9
+    },
+    "component.activityDot.pulseOpacity": {
+      "type": "number",
+      "value": 0.35
     },
     "component.selection.background": {
       "type": "color",
@@ -8408,6 +8438,21 @@
         "unit": "px"
       }
     },
+    "component.browserViewer.cursorAvatarSize": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.browserViewer.disconnectedOpacity": {
+      "type": "number",
+      "value": 0.9
+    },
+    "component.activityDot.pulseOpacity": {
+      "type": "number",
+      "value": 0.35
+    },
     "component.selection.background": {
       "type": "color",
       "value": "#ffffff"
@@ -11863,6 +11908,21 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.browserViewer.cursorAvatarSize": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.browserViewer.disconnectedOpacity": {
+      "type": "number",
+      "value": 0.9
+    },
+    "component.activityDot.pulseOpacity": {
+      "type": "number",
+      "value": 0.35
     },
     "component.selection.background": {
       "type": "color",

@@ -224,6 +224,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-browser-viewer-cursor-avatar-size: 32px;
+  --k-component-browser-viewer-disconnected-opacity: 0.9;
+  --k-component-activity-dot-pulse-opacity: 0.35;
   --k-component-selection-background: var(--k-color-surface-raised);
   --k-component-selection-foreground: var(--k-color-text-primary);
   --k-component-selection-border: var(--k-color-text-muted);
@@ -741,6 +744,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-browser-viewer-cursor-avatar-size: 32px;
+  --k-component-browser-viewer-disconnected-opacity: 0.9;
+  --k-component-activity-dot-pulse-opacity: 0.35;
   --k-component-selection-background: var(--k-color-surface-raised);
   --k-component-selection-foreground: var(--k-color-text-primary);
   --k-component-selection-border: var(--k-color-text-muted);
@@ -1258,6 +1264,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-browser-viewer-cursor-avatar-size: 32px;
+  --k-component-browser-viewer-disconnected-opacity: 0.9;
+  --k-component-activity-dot-pulse-opacity: 0.35;
   --k-component-selection-background: var(--k-color-surface-raised);
   --k-component-selection-foreground: var(--k-color-text-primary);
   --k-component-selection-border: var(--k-color-text-muted);
@@ -1775,6 +1784,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-browser-viewer-cursor-avatar-size: 32px;
+  --k-component-browser-viewer-disconnected-opacity: 0.9;
+  --k-component-activity-dot-pulse-opacity: 0.35;
   --k-component-selection-background: var(--k-color-surface-raised);
   --k-component-selection-foreground: var(--k-color-text-primary);
   --k-component-selection-border: var(--k-color-text-muted);

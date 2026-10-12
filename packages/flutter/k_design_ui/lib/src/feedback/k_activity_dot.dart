@@ -140,7 +140,7 @@ class _KActivityDotState extends State<KActivityDot>
             ? curve.transform(rawProgress * 2)
             : curve.transform((1 - rawProgress) * 2);
         final opacity = _resolvedAnimation == KActivityDotAnimation.pulse
-            ? 1 - .65 * pulseProgress
+            ? 1 - (1 - tokens.componentActivityDotPulseOpacity) * pulseProgress
             : 1.0;
         return CustomPaint(
           size: Size.square(size),
