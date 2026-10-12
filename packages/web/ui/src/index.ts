@@ -25,6 +25,8 @@ export type {
   KLayoutAlign,
 } from "./primitives/layout.js";
 export { KCard } from "./primitives/card.js";
+export { KBrowserTaskCard } from "./patterns/browser-task-card.js";
+export type { KBrowserTaskCardProps } from "./patterns/browser-task-card.js";
 export { KDialog, KAdaptiveDialog, KBottomSheet } from "./overlays/overlay.js";
 export type { KOverlayProps, KBottomSheetProps } from "./overlays/overlay.js";
 export type { KCardProps } from "./primitives/card.js";
@@ -513,4 +515,10 @@ export * from "./chat/presentations.js";
 
 export * from "./chat/presentation-media.js";
 export * from "./chat/weather-icon.js";
+export * from "./patterns/browser-permissions.js";
 export * from "./chat/presentation-map.js";
+export {
+  KAgentCursor,
+  type KAgentCursorProps,
+  type KAgentCursorState,
+} from "./feedback/agent-cursor.js";

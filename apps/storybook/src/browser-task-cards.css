@@ -1,0 +1,32 @@
+.browser-tasks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--k-space-layout-gutter);
+  width: 100%;
+  max-width: 1200px;
+  padding: var(--k-space-layout-gutter);
+  margin-inline: auto;
+}
+.browser-demo:has(.browser-tasks) {
+  height: auto;
+  min-height: 100dvh;
+  align-items: flex-start;
+}
+.browser-demo--phone .browser-tasks {
+  grid-template-columns: 1fr;
+}
+.browser-task__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.browser-task__overflow {
+  margin-left: auto;
+}
+@media (max-width: 850px) {
+  .browser-tasks {
+    grid-template-columns: 1fr;
+    max-width: 430px;
+  }
+}

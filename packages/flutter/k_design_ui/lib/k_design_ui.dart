@@ -94,3 +94,6 @@ export 'src/primitives/k_file_icon.dart';
 export 'src/patterns/k_media_player.dart';
 
 export 'src/feedback/k_audio_edge_glow.dart';
+export 'src/feedback/k_agent_cursor.dart';
+export 'src/patterns/k_browser_task_card.dart';
+export 'src/patterns/k_browser_permissions.dart';

@@ -1,3 +1,7 @@
+import 'browser_permissions_fixture.dart';
+import 'browser_permission_ask_fixture.dart';
+import 'browser_cards_fixture.dart';
+import 'agent_cursor_fixture.dart';
 import 'audio_edge_glow_fixture.dart';
 import 'files_fixture.dart';
 import 'chat_presentations_fixture.dart';
@@ -191,6 +195,28 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        WidgetbookCategory(
+          name: 'Components',
+          children: [
+            WidgetbookFolder(
+              name: 'AgentCursor',
+              children: [
+                for (final variant in [
+                  'Default',
+                  'WithAvatar',
+                  'Clicking',
+                  'DarkSurface',
+                  'ReducedMotion',
+                  'Hidden',
+                ])
+                  WidgetbookUseCase(
+                    name: variant,
+                    builder: (_) => AgentCursorFixture(variant: variant),
+                  ),
+              ],
+            ),
+          ],
+        ),
         WidgetbookCategory(
           name: 'Showcase',
           children: [
@@ -927,6 +953,77 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'custom-content',
                   builder: (_) => const ChatBubbleFixture(customContent: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'BrowserPermissions',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Rule Management',
+                  builder: (_) => const BrowserPermissionsFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'Empty',
+                  builder: (_) => const BrowserPermissionsFixture(empty: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'Mobile Rules',
+                  builder: (_) => const BrowserPermissionsFixture(mobile: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'BrowserPermissionAsk',
+              children: [
+                WidgetbookUseCase(
+                  name: 'browser-permission',
+                  builder: (_) => const BrowserPermissionAskFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'browser-permission-once-only',
+                  builder: (_) => const BrowserPermissionAskFixture(
+                    state: BrowserPermissionAskState.onceOnly,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'browser-permission-manual',
+                  builder: (_) => const BrowserPermissionAskFixture(
+                    state: BrowserPermissionAskState.manual,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'browser-permission-submitted',
+                  builder: (_) => const BrowserPermissionAskFixture(
+                    state: BrowserPermissionAskState.submitted,
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'BrowserWorkspace',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Human Control',
+                  builder: (_) => const BrowserCardsFixture(
+                    key: ValueKey('browser-human'),
+                    initialControl: true,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'Disconnected',
+                  builder: (_) => const BrowserCardsFixture(
+                    key: ValueKey('browser-disconnected'),
+                    disconnected: true,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'Watching',
+                  builder: (_) => const BrowserCardsFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'Mobile',
+                  builder: (_) => const BrowserCardsFixture(mobile: true),
                 ),
               ],
             ),

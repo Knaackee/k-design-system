@@ -1,0 +1,28 @@
+.browser-permissions-demo {
+  width: min(100%, 42rem);
+  min-width: 0;
+  font-family: var(--k-font-family);
+  font-size: var(--k-font-body-size);
+  line-height: var(--k-font-body-line-height);
+}
+.browser-permissions-demo--mobile {
+  width: min(100%, 22rem);
+}
+.browser-permissions-demo__context {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+  margin-bottom: calc(var(--k-space-control-gap) * 2);
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+}
+.browser-permissions-demo__context > :first-child {
+  color: var(--k-color-text-primary);
+  font-weight: var(--k-font-heading-weight);
+}
+.browser-permissions-demo__status {
+  margin: calc(var(--k-space-control-gap) * 2) 0 0;
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+}
