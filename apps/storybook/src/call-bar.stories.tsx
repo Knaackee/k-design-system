@@ -21,9 +21,11 @@ const status = {
 function CallFixture({
   state = "listening",
   composition = false,
+  mobile = false,
 }: {
   state?: State;
   composition?: boolean;
+  mobile?: boolean;
 }) {
   const [muted, setMuted] = useState(state === "muted"),
     [draft, setDraft] = useState("");
@@ -46,7 +48,7 @@ function CallFixture({
   );
   if (!composition) return bar;
   return (
-    <div className="call-pattern-fixture">
+    <div className="call-pattern-fixture" data-mobile={mobile}>
       <KAgentChatWorkspace
         title="Alex"
         avatar={
@@ -61,7 +63,13 @@ function CallFixture({
         sidebar={<p>Persönliche Agenten</p>}
         defaultSidebarCollapsed
         actions={
-          <KIconButton icon="phone-off" label="Auflegen" onClick={() => {}} />
+          <KIconButton
+            icon="phone-off"
+            label="Auflegen"
+            variant="ghost"
+            className="call-pattern-end"
+            onClick={() => {}}
+          />
         }
         composer={
           <KChatComposer
@@ -129,7 +137,7 @@ export const ChatCall: Story = {
   parameters: { fixtureId: "chat-call-speaking" },
 };
 export const ChatCallMobile: Story = {
-  args: { state: "listening", composition: true },
+  args: { state: "listening", composition: true, mobile: true },
   parameters: {
     fixtureId: "chat-call-mobile",
     viewport: { defaultViewport: "mobile1" },

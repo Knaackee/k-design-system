@@ -1,5 +1,18 @@
 .call-pattern-fixture {
   height: 100dvh;
+  width: 100%;
+}
+.k-gallery:has(.call-pattern-fixture) {
+  padding: 0;
+  justify-items: stretch;
+}
+.call-pattern-fixture[data-mobile="true"] {
+  width: min(390px, 100%);
+  justify-self: center;
+}
+.k-button.call-pattern-end {
+  color: var(--k-color-status-error-accent);
+  border-radius: 0;
 }
 .call-pattern-stage {
   flex: 1;

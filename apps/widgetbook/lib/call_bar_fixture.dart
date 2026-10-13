@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 class CallBarFixture extends StatefulWidget {
@@ -79,6 +80,12 @@ class _CallBarFixtureState extends State<CallBarFixture>
         children: [
           KIconButton(
             icon: KIconName.phoneOff,
+            iconContent: KIcon(
+              KIconName.phoneOff,
+              color: Theme.of(
+                context,
+              ).extension<KDesignTokens>()!.colorStatusErrorAccent,
+            ),
             label: 'Auflegen',
             onPressed: () {},
           ),
