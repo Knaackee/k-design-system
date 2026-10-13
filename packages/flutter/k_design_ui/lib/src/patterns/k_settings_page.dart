@@ -49,24 +49,29 @@ class KSettingsPage extends StatelessWidget {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
     return Material(
       color: tokens.colorSurfaceCanvas,
-      child: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final compact = constraints.maxWidth < breakpoint;
-            if (!compact) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(width: tokens.layoutPanelWidth, child: navigation),
-                  Expanded(child: _contentPane(context, compact: false)),
-                ],
-              );
-            }
-            return detailVisible
-                ? _contentPane(context, compact: true)
-                : SizedBox(width: constraints.maxWidth, child: navigation);
-          },
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < breakpoint;
+          final navigationPane = ColoredBox(
+            color: tokens.colorSurfaceRaised,
+            child: SafeArea(child: navigation),
+          );
+          final contentPane = SafeArea(
+            child: _contentPane(context, compact: compact),
+          );
+          if (!compact) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(width: tokens.layoutPanelWidth, child: navigationPane),
+                Expanded(child: contentPane),
+              ],
+            );
+          }
+          return detailVisible
+              ? contentPane
+              : SizedBox(width: constraints.maxWidth, child: navigationPane);
+        },
       ),
     );
   }

@@ -4,6 +4,52 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  for (final width in [390.0, 1024.0]) {
+    for (final brightness in Brightness.values) {
+      testWidgets(
+        'settings safe areas retain pane surfaces at $width $brightness',
+        (tester) async {
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.padding = const FakeViewPadding(top: 32);
+          addTearDown(tester.view.reset);
+          final theme = kDesignTheme(brightness: brightness);
+          final tokens = theme.extension<KDesignTokens>()!;
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: theme,
+              home: const KSettingsPage(
+                navigation: SizedBox(key: ValueKey('navigation')),
+                content: SizedBox(key: ValueKey('content'), height: 40),
+              ),
+            ),
+          );
+          final navigationSurface = find.ancestor(
+            of: find.byKey(const ValueKey('navigation')),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is ColoredBox &&
+                  widget.color == tokens.colorSurfaceRaised,
+            ),
+          );
+          expect(navigationSurface, findsOneWidget);
+          expect(tester.getTopLeft(navigationSurface).dy, 0);
+          expect(
+            tester.getTopLeft(find.byKey(const ValueKey('navigation'))).dy,
+            32,
+          );
+          if (width >= KSettingsPage.breakpoint) {
+            expect(
+              tester.getTopLeft(find.byKey(const ValueKey('content'))).dy,
+              greaterThanOrEqualTo(32),
+            );
+          }
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
   testWidgets(
     'consumer content padding aligns settings content without shifting navigation',
     (tester) async {

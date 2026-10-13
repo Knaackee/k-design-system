@@ -1,6 +1,7 @@
 import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../basic_components.dart';
@@ -167,6 +168,8 @@ class _KChatConversationState extends State<KChatConversation> {
       return;
     }
     final following = position.extentAfter < 32;
+    // Content growth and our own animation must not cancel follow mode.
+    if (!following && !_userScrolling) return;
     if (following == _following) return;
     setState(() {
       _following = following;
@@ -182,6 +185,11 @@ class _KChatConversationState extends State<KChatConversation> {
       _userScrolling = true;
     } else if (notification is ScrollEndNotification) {
       _userScrolling = false;
+    } else if (notification is UserScrollNotification &&
+        notification.direction != ScrollDirection.idle) {
+      _scrollIntent++;
+      _userScrolling = true;
+      _onScroll();
     }
     return false;
   }
@@ -215,7 +223,9 @@ class _KChatConversationState extends State<KChatConversation> {
           !_userScrolling &&
           _following &&
           _focusedScrollableContext() == null) {
-        _jumpToEnd();
+        // Streaming content changes the target continuously; animate only an
+        // explicit jump requested by the user.
+        _jumpToEnd(jump: true);
       }
     });
   }

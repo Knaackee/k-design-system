@@ -35,6 +35,10 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      // Reading older messages is a user gesture; programmatic movement must
+      // not disable following while streamed content changes its height.
+      await tester.drag(find.byType(ListView), const Offset(0, 1200));
+      await tester.pumpAndSettle();
       final scrollable = tester.state<ScrollableState>(find.byType(Scrollable));
       scrollable.position.jumpTo(0);
       await tester.pumpAndSettle();

@@ -4,6 +4,68 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets(
+    'stream follows bottom but preserves deliberate reading position',
+    (tester) async {
+      tester.view.physicalSize = const Size(360, 500);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      Future<void> render(int lines) => tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: Scaffold(
+            body: KChatConversation(
+              messages: [
+                KChatMessageValue(
+                  id: 'stream',
+                  role: KChatRole.assistant,
+                  parts: [
+                    KChatTextPart(
+                      id: 'text',
+                      text: List.filled(
+                        lines,
+                        'Streaming answer line.',
+                      ).join('\n\n'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await render(30);
+      await tester.pumpAndSettle();
+      final list = find.byType(ListView);
+      final position = tester
+          .state<ScrollableState>(
+            find.descendant(of: list, matching: find.byType(Scrollable)).first,
+          )
+          .position;
+      await render(40);
+      await tester.pumpAndSettle();
+      expect(position.extentAfter, lessThan(1));
+      expect(find.text('Jump to newest message'), findsNothing);
+      await tester.drag(list, const Offset(0, 200));
+      await tester.pumpAndSettle();
+      final readingOffset = position.pixels;
+      await render(50);
+      await tester.pumpAndSettle();
+      expect(position.pixels, closeTo(readingOffset, 1));
+      expect(find.text('Jump to newest message'), findsOneWidget);
+      await tester.tap(find.text('Jump to newest message'));
+      await tester.pump(const Duration(milliseconds: 30));
+      await render(60);
+      await tester.pumpAndSettle();
+      expect(position.extentAfter, lessThan(1));
+      expect(find.text('Jump to newest message'), findsNothing);
+      tester.view.physicalSize = const Size(360, 350);
+      await tester.pumpAndSettle();
+      expect(position.extentAfter, lessThan(1));
+      expect(find.text('Jump to newest message'), findsNothing);
+    },
+  );
   KAgentToolPart tool(
     String id, [
     KAgentToolState state = KAgentToolState.succeeded,
