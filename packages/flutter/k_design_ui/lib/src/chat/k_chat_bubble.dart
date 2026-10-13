@@ -25,7 +25,7 @@ class KChatBubble extends StatelessWidget {
   /// Use Clip.none for illustrations that extend beyond the circular surface.
   final Clip clipBehavior;
 
-  /// Content stays mounted and animated while waiting for consumer readiness.
+  /// Content stays mounted while hidden, with child animation tickers paused.
   final bool visible;
   final ButtonStyle? style;
 
@@ -83,7 +83,10 @@ class KChatBubble extends StatelessWidget {
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   visualDensity: VisualDensity.standard,
                 ).merge(style),
-                child: Center(child: child),
+                child: TickerMode(
+                  enabled: visible,
+                  child: Center(child: child),
+                ),
               ),
             ),
           ),

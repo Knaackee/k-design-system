@@ -111,102 +111,111 @@ class _KFabState extends State<KFab> {
             excluding: !_open,
             child: ExcludeFocus(
               excluding: !_open,
-              child: Offstage(
-                offstage: !_open,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () => _change(false),
-                        onSecondaryTap: () => _change(false),
+              child: TickerMode(
+                enabled: _open,
+                child: Offstage(
+                  offstage: !_open,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _change(false),
+                          onSecondaryTap: () => _change(false),
+                        ),
                       ),
-                    ),
-                    CompositedTransformFollower(
-                      link: _link,
-                      showWhenUnlinked: false,
-                      targetAnchor: Alignment.topRight,
-                      followerAnchor: Alignment.bottomRight,
-                      offset: Offset(
-                        tokens.spaceLayoutGutter,
-                        -itemGap + tokens.spaceLayoutGutter,
-                      ),
-                      child: CallbackShortcuts(
-                        bindings: {
-                          const SingleActivator(
-                            LogicalKeyboardKey.escape,
-                          ): () =>
-                              _change(false),
-                        },
-                        child: Focus(
-                          autofocus: _open,
-                          child: TweenAnimationBuilder<double>(
-                            tween: Tween(begin: 0, end: _open ? 1 : 0),
-                            duration: MediaQuery.disableAnimationsOf(context)
-                                ? Duration.zero
-                                : tokens.motionEmphasis,
-                            builder: (_, value, child) => Opacity(
-                              opacity: value,
-                              child: Transform.translate(
-                                offset: Offset(0, (1 - value) * itemGap),
-                                child: child,
-                              ),
-                            ),
-                            child: SizedBox(
-                              width:
-                                  math.max(widget.size, tokens.sizeHitTarget) +
-                                  2 * tokens.spaceLayoutGutter,
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: math.max(
-                                    0,
-                                    top - itemGap - tokens.spaceControlGap,
-                                  ),
+                      CompositedTransformFollower(
+                        link: _link,
+                        showWhenUnlinked: false,
+                        targetAnchor: Alignment.topRight,
+                        followerAnchor: Alignment.bottomRight,
+                        offset: Offset(
+                          tokens.spaceLayoutGutter,
+                          -itemGap + tokens.spaceLayoutGutter,
+                        ),
+                        child: CallbackShortcuts(
+                          bindings: {
+                            const SingleActivator(
+                              LogicalKeyboardKey.escape,
+                            ): () =>
+                                _change(false),
+                          },
+                          child: Focus(
+                            autofocus: _open,
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0, end: _open ? 1 : 0),
+                              duration: MediaQuery.disableAnimationsOf(context)
+                                  ? Duration.zero
+                                  : tokens.motionEmphasis,
+                              builder: (_, value, child) => Opacity(
+                                opacity: value,
+                                child: Transform.translate(
+                                  offset: Offset(0, (1 - value) * itemGap),
+                                  child: child,
                                 ),
-                                child: SingleChildScrollView(
-                                  padding: EdgeInsets.all(
-                                    tokens.spaceLayoutGutter,
+                              ),
+                              child: SizedBox(
+                                width:
+                                    math.max(
+                                      widget.size,
+                                      tokens.sizeHitTarget,
+                                    ) +
+                                    2 * tokens.spaceLayoutGutter,
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxHeight: math.max(
+                                      0,
+                                      top - itemGap - tokens.spaceControlGap,
+                                    ),
                                   ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (
-                                        var i = 0;
-                                        i < widget.items.length;
-                                        i++
-                                      ) ...[
-                                        if (i > 0) SizedBox(height: itemGap),
-                                        KChatBubble(
-                                          key: ValueKey(widget.items[i].id),
-                                          label: widget.items[i].label,
-                                          size: widget.size,
-                                          clipBehavior: widget.clipBehavior,
-                                          style:
-                                              widget.attention.any(
-                                                (notice) =>
-                                                    notice.itemId ==
-                                                    widget.items[i].id,
-                                              )
-                                              ? ButtonStyle(
-                                                  side: WidgetStatePropertyAll(
-                                                    BorderSide(
-                                                      color: tokens
-                                                          .colorBorderFocus,
-                                                    ),
-                                                  ),
+                                  child: SingleChildScrollView(
+                                    padding: EdgeInsets.all(
+                                      tokens.spaceLayoutGutter,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        for (
+                                          var i = 0;
+                                          i < widget.items.length;
+                                          i++
+                                        ) ...[
+                                          if (i > 0) SizedBox(height: itemGap),
+                                          KChatBubble(
+                                            key: ValueKey(widget.items[i].id),
+                                            label: widget.items[i].label,
+                                            size: widget.size,
+                                            clipBehavior: widget.clipBehavior,
+                                            style:
+                                                widget.attention.any(
+                                                  (notice) =>
+                                                      notice.itemId ==
+                                                      widget.items[i].id,
                                                 )
-                                              : null,
-                                          onPressed:
-                                              widget.items[i].onSelected == null
-                                              ? null
-                                              : () {
-                                                  _change(false);
-                                                  widget.items[i].onSelected!();
-                                                },
-                                          child: widget.items[i].child,
-                                        ),
+                                                ? ButtonStyle(
+                                                    side: WidgetStatePropertyAll(
+                                                      BorderSide(
+                                                        color: tokens
+                                                            .colorBorderFocus,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : null,
+                                            onPressed:
+                                                widget.items[i].onSelected ==
+                                                    null
+                                                ? null
+                                                : () {
+                                                    _change(false);
+                                                    widget
+                                                        .items[i]
+                                                        .onSelected!();
+                                                  },
+                                            child: widget.items[i].child,
+                                          ),
+                                        ],
                                       ],
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -214,8 +223,8 @@ class _KFabState extends State<KFab> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
