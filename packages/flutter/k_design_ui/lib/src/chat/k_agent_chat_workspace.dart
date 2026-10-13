@@ -49,6 +49,7 @@ class KAgentChatWorkspace extends StatefulWidget {
     this.sidebar,
     this.sidebarBuilder,
     this.status,
+    this.conversationHeader,
     this.actions,
     this.avatarSizeMobile = 80,
     this.avatarSizeDesktop = 104,
@@ -86,6 +87,9 @@ class KAgentChatWorkspace extends StatefulWidget {
   final Widget avatar;
   final Widget title;
   final Widget? status;
+
+  /// Consumer call/session strip below the toolbar and above the avatar stage.
+  final Widget? conversationHeader;
   final Widget? actions;
   final double avatarSizeMobile, avatarSizeDesktop, avatarSizeCompact;
   final double avatarBackdropBlur;
@@ -334,6 +338,7 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
               ),
             ),
           ),
+          ?widget.conversationHeader,
           Expanded(
             child: Offstage(
               offstage: widget.dockMaximized,

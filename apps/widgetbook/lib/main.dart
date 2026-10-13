@@ -1,4 +1,5 @@
 import 'screen_switcher_prototype.dart';
+import 'call_bar_fixture.dart';
 import 'screen_switcher_reference_fixture.dart';
 import 'browser_permissions_fixture.dart';
 import 'browser_permission_ask_fixture.dart';
@@ -1184,6 +1185,37 @@ class KDesignWidgetbook extends StatelessWidget {
                       ),
                     ),
                   ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'CallBar',
+              children: [
+                for (final state in [
+                  'connecting',
+                  'listening',
+                  'speaking',
+                  'muted',
+                  'ending',
+                ])
+                  WidgetbookUseCase(
+                    name: 'call-bar-$state',
+                    builder: (_) =>
+                        CallBarFixture(key: ValueKey(state), state: state),
+                  ),
+                WidgetbookUseCase(
+                  name: 'chat-call-speaking',
+                  builder: (_) => const CallBarFixture(
+                    state: 'speaking',
+                    composition: true,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'chat-call-mobile',
+                  builder: (_) => const SizedBox(
+                    width: 390,
+                    child: CallBarFixture(composition: true),
+                  ),
+                ),
               ],
             ),
             WidgetbookFolder(

@@ -1,0 +1,42 @@
+.call-pattern-fixture {
+  height: 100dvh;
+}
+.call-pattern-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 64px;
+}
+.call-pattern-stage > .k-call-bar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+}
+.call-pattern-stage > .k-chat-conversation {
+  flex: 1;
+  min-height: 0;
+}
+.call-pattern-fixture .k-agent-chat-workspace__identity {
+  inset-block-start: 64px;
+}
+.call-pattern-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.call-pattern-avatar[data-speaking="true"] {
+  animation: call-pattern-speaking 0.35s ease-in-out infinite alternate;
+}
+@keyframes call-pattern-speaking {
+  to {
+    transform: scaleY(0.94);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .call-pattern-avatar {
+    animation: none !important;
+  }
+}

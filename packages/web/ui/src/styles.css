@@ -1,4 +1,5 @@
 @import "./navigation/screen-switcher.css";
+@import "./chat/call-bar.css";
 @import "./chat/presentations.css";
 @import "./chat/presentation-media.css";
 @import "./files.css";

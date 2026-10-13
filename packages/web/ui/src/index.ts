@@ -293,6 +293,8 @@ export type {
   KChatAvatarRenderer,
 } from "./chat/conversation.js";
 export { KChatComposer } from "./chat/composer.js";
+export { KCallBar } from "./chat/call-bar.js";
+export type { KCallBarProps } from "./chat/call-bar.js";
 export type {
   KChatComposerProps,
   KChatComposerLabels,

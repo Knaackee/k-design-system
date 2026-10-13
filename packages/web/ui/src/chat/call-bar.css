@@ -1,0 +1,53 @@
+.k-call-bar {
+  height: calc(var(--k-size-icon-default) * 2 + var(--k-space-control-gap) * 2);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-control-gap) var(--k-space-layout-gutter);
+  background: var(--k-color-surface-raised);
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  border-radius: 0;
+}
+.k-call-bar__identity {
+  flex: 1;
+  min-width: calc(var(--k-size-icon-default) * 2);
+}
+.k-call-bar__identity strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k-call-bar__identity p {
+  margin: 0;
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-body-small-size);
+}
+.k-call-bar__waveform {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--k-space-control-gap) / 4);
+  flex: 0 1 calc(var(--k-size-icon-default) * 5);
+  height: var(--k-size-icon-default);
+  min-width: 0;
+  justify-content: flex-end;
+  overflow: hidden;
+  color: var(--k-color-status-success-accent);
+}
+.k-call-bar__waveform span {
+  flex: 0 0 calc(var(--k-space-control-gap) / 4);
+  background: currentColor;
+}
+.k-call-bar__waveform[data-muted="true"] {
+  color: var(--k-color-text-muted);
+  opacity: var(--k-opacity-disabled);
+}
+.k-call-bar__duration {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.k-call-bar > .k-button-target {
+  flex: 0 0 auto;
+}

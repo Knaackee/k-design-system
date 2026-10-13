@@ -82,6 +82,7 @@ export 'src/forms/k_textarea.dart';
 
 export 'src/forms/k_dictation_action.dart';
 export 'src/chat/k_chat_bubble.dart';
+export 'src/chat/k_call_bar.dart';
 export 'src/actions/k_fab.dart';
 export 'src/actions/k_fab_attention.dart' show KFabAttention;
 export 'src/chat/k_web_search.dart';
