@@ -27,12 +27,16 @@ class KCalendar<T extends Object> extends StatefulWidget {
     this.monthEventDisplay = KCalendarMonthEventDisplay.auto,
     this.onMonthDayOpen,
     this.onEventMove,
+    this.onEventDropOutside,
     this.onEventResize,
     this.onCreate,
+    this.pendingCreateSelection,
+    this.onPendingCreateSelectionChange,
     this.onInteraction,
     this.selectedEventId,
     this.onSelectedEventChange,
     this.canMove,
+    this.canDropOutside,
     this.canResize,
     this.canCreate,
     this.locale,
@@ -53,6 +57,9 @@ class KCalendar<T extends Object> extends StatefulWidget {
   });
   final DateTime date;
   final KCalendarView view;
+
+  /// Controlled event data. Values with a null start remain valid payloads for
+  /// an external [LongPressDraggable<T>] but are not painted until scheduled.
   final List<T> events;
   final String Function(T) eventId;
   final DateTime? Function(T) eventStart, eventEnd;
@@ -67,8 +74,18 @@ class KCalendar<T extends Object> extends StatefulWidget {
   final KCalendarMonthEventDisplay monthEventDisplay;
   final void Function(DateTime date, List<T> events)? onMonthDayOpen;
   final ValueChanged<KCalendarMove<T>>? onEventMove;
+
+  /// Receives an active event move released outside every calendar drop target.
+  /// Consumers may use [KCalendarDropOutside.globalPosition] to test their own
+  /// public drop surface.
+  final ValueChanged<KCalendarDropOutside<T>>? onEventDropOutside;
   final ValueChanged<KCalendarResize<T>>? onEventResize;
   final ValueChanged<KCalendarSelection>? onCreate;
+
+  /// Controlled create preview when [onPendingCreateSelectionChange] is set.
+  /// Set this to null when the consumer-owned create flow is canceled.
+  final KCalendarSelection? pendingCreateSelection;
+  final ValueChanged<KCalendarSelection?>? onPendingCreateSelectionChange;
   final ValueChanged<KCalendarInteraction<T>>? onInteraction;
 
   /// With [onSelectedEventChange], controls the touch editing selection.
@@ -78,6 +95,7 @@ class KCalendar<T extends Object> extends StatefulWidget {
   /// When omitted, the calendar manages touch selection internally.
   final ValueChanged<String?>? onSelectedEventChange;
   final bool Function(KCalendarMove<T>)? canMove;
+  final bool Function(KCalendarDropOutside<T>)? canDropOutside;
   final bool Function(KCalendarResize<T>)? canResize;
   final bool Function(KCalendarSelection)? canCreate;
   final String? locale, timeZone;
@@ -115,9 +133,22 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   int? _pagePointer;
   Offset? _pageOrigin;
   bool _pageAtStart = false, _pageAtEnd = false;
+  bool _pageEditDragActive = false;
   String? get selectedEventId => widget.onSelectedEventChange != null
       ? widget.selectedEventId
       : _selectedEventId;
+  KCalendarSelection? get pendingSelection =>
+      widget.onPendingCreateSelectionChange != null
+      ? widget.pendingCreateSelection
+      : _pendingSelection;
+  void setPendingSelection(KCalendarSelection? value) {
+    if (widget.onPendingCreateSelectionChange != null) {
+      widget.onPendingCreateSelectionChange!(value);
+    } else {
+      setState(() => _pendingSelection = value);
+    }
+  }
+
   void selectEvent(String? id) {
     if (selectedEventId == id) return;
     if (widget.onSelectedEventChange != null) {
@@ -132,6 +163,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   void didUpdateWidget(covariant KCalendar<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.date != oldWidget.date || widget.view != oldWidget.view) {
+      _pendingSelection = null;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_horizontal.hasClients) _horizontal.jumpTo(0);
       });
@@ -142,12 +174,13 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   }
 
   void requestCreate(KCalendarSelection selection) {
-    setState(() => _pendingSelection = selection);
+    setPendingSelection(selection);
     widget.onCreate?.call(selection);
   }
 
   void pagePointerDown(PointerDownEvent event) {
     if (widget.onNavigate == null) return;
+    _pageEditDragActive = false;
     final position = _horizontal.hasClients ? _horizontal.position : null;
     _pagePointer = event.pointer;
     _pageOrigin = event.position;
@@ -159,9 +192,12 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
   void pagePointerUp(PointerUpEvent event) {
     final origin = _pageOrigin;
     final matches = _pagePointer == event.pointer;
+    final editedEvent = _pageEditDragActive;
     _pagePointer = null;
     _pageOrigin = null;
+    _pageEditDragActive = false;
     if (!matches || origin == null || widget.onNavigate == null) return;
+    if (editedEvent) return;
     if (_previewMoveId != null || _previewResizeId != null) return;
     final delta = event.position - origin;
     if (delta.dx.abs() < 48 || delta.dx.abs() <= delta.dy.abs() * 1.2) return;
@@ -264,6 +300,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
 
   void beginResizePreview(String eventId) {
     if (!mounted) return;
+    if (pendingSelection != null) setPendingSelection(null);
     final event = widget.events
         .where((value) => widget.eventId(value) == eventId)
         .firstOrNull;
@@ -295,6 +332,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
 
   void beginMovePreview(String eventId) {
     if (!mounted) return;
+    if (pendingSelection != null) setPendingSelection(null);
     final event = widget.events
         .where((value) => widget.eventId(value) == eventId)
         .firstOrNull;
@@ -346,6 +384,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
     // Holding selects an event; only actual movement starts a move request.
     if (_touchArmedId == widget.eventId(event)) return false;
     final change = movement(event, slot);
+    if (preview && pendingSelection != null) setPendingSelection(null);
     final allowed =
         !_moveCancelled &&
         widget.onEventMove != null &&
@@ -443,6 +482,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
         zone: zone,
         scrollAt: scrollAt,
         startMove: () {
+          _pageEditDragActive = true;
           _touchArmedId = null;
           // A drag that is interrupted before Flutter delivers its end event
           // must not leak its preview into the next interaction.
@@ -454,7 +494,10 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
           clearMovePreview();
         },
         moveUpdate: (global) => moveAtAllDay(value, global),
-        startResize: () => beginResizePreview(widget.eventId(value)),
+        startResize: () {
+          _pageEditDragActive = true;
+          beginResizePreview(widget.eventId(value));
+        },
         previewResize: updateResizePreview,
         endResize: clearResizePreview,
         resizeUnits: (edge, global) => resizeUnitsAtAllDay(value, edge, global),
@@ -543,6 +586,7 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                   onPointerCancel: (_) {
                     _pagePointer = null;
                     _pageOrigin = null;
+                    _pageEditDragActive = false;
                   },
                   child: SingleChildScrollView(
                     controller: _horizontal,
@@ -606,7 +650,9 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                         move: move,
                                         scrollAt: scrollAt,
                                         scrollBy: scrollBy,
-                                        pendingSelection: _pendingSelection,
+                                        pendingSelection: pendingSelection,
+                                        clearPendingSelection: () =>
+                                            setPendingSelection(null),
                                         requestCreate: requestCreate,
                                         previewMove: _previewMove,
                                         previewMoveId: _previewMoveId,
@@ -630,6 +676,9 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                     ),
                                     child: Text(
                                       widget.labels.allDay,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: t.fontCaptionSize,
                                       ),
@@ -657,7 +706,12 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                     move: move,
                                     scrollAt: scrollAt,
                                     scrollBy: scrollBy,
-                                    pendingSelection: _pendingSelection,
+                                    pendingSelection:
+                                        pendingSelection?.start.allDay == true
+                                        ? pendingSelection
+                                        : null,
+                                    clearPendingSelection: () =>
+                                        setPendingSelection(null),
                                     requestCreate: requestCreate,
                                     previewMove: _previewMove,
                                     previewMoveId: _previewMoveId,
@@ -723,7 +777,9 @@ class _KCalendarState<T extends Object> extends State<KCalendar<T>> {
                                             move: move,
                                             scrollAt: scrollAt,
                                             scrollBy: scrollBy,
-                                            pendingSelection: _pendingSelection,
+                                            pendingSelection: pendingSelection,
+                                            clearPendingSelection: () =>
+                                                setPendingSelection(null),
                                             requestCreate: requestCreate,
                                             previewMove: _previewMove,
                                             previewMoveId: _previewMoveId,

@@ -128,3 +128,6 @@ export function CalendarEvent<T>({
     </div>
   );
 }
+
+/** Native browser drag payload type; the body is the plain calendar event ID. */
+export const K_CALENDAR_EVENT_MIME = "text/k-calendar-event";

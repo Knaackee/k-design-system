@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/src/patterns/k_calendar_time_day.dart';
+import 'package:k_design_ui/src/patterns/k_calendar_days.dart';
 
 void main() {
   test('slots preserve civil all-day dates and resolve named time zones', () {
@@ -120,6 +121,70 @@ void main() {
         expect(find.text('Design review'), findsOneWidget);
         expect(tester.takeException(), isNull);
       }
+    },
+  );
+
+  testWidgets(
+    'create preview is scoped to one day and controlled cancellation clears it',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      KCalendarSelection? pending;
+      late StateSetter update;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                update = setState;
+                return KCalendar<_Event>(
+                  date: DateTime.utc(2026, 9, 21),
+                  view: KCalendarView.week,
+                  events: const [],
+                  eventId: (_) => 'event',
+                  eventStart: (event) => event.start,
+                  eventEnd: (event) => event.end,
+                  eventBuilder: (_, _) => const SizedBox.shrink(),
+                  onCreate: (_) {},
+                  pendingCreateSelection: pending,
+                  onPendingCreateSelectionChange: (value) =>
+                      setState(() => pending = value),
+                  requireLongPress: true,
+                  timeZone: 'UTC',
+                  startHour: 0,
+                  endHour: 8,
+                  height: 700,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+
+      final allDay = tester.getRect(find.byType(KCalendarDays<_Event>));
+      await tester.tapAt(Offset(allDay.left + 40, allDay.center.dy));
+      await tester.pump();
+      expect(find.text('Create event'), findsOneWidget);
+      expect(pending?.start.allDay, isTrue);
+
+      final timeDays = find.byType(KCalendarTimeDay<_Event>);
+      final thirdDay = tester.getRect(timeDays.at(2));
+      await tester.tapAt(Offset(thirdDay.center.dx, thirdDay.top + 112));
+      await tester.pump();
+      expect(find.text('Create event'), findsOneWidget);
+      expect(pending?.start.date, '2026-09-23');
+      expect(pending?.start.allDay, isFalse);
+
+      final fifthDay = tester.getRect(timeDays.at(4));
+      await tester.tapAt(Offset(fifthDay.center.dx, fifthDay.top + 168));
+      await tester.pump();
+      expect(find.text('Create event'), findsOneWidget);
+      expect(pending?.start.date, '2026-09-25');
+
+      update(() => pending = null);
+      await tester.pump();
+      expect(find.text('Create event'), findsNothing);
     },
   );
 }

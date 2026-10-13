@@ -15,6 +15,7 @@ void main() {
         addTearDown(() => tester.binding.setSurfaceSize(null));
         final moves = <KCalendarMove<String>>[];
         final resizes = <KCalendarResize<String>>[];
+        final navigations = <int>[];
         var opens = 0;
         await tester.pumpWidget(
           MaterialApp(
@@ -34,6 +35,7 @@ void main() {
                 onEventMove: moves.add,
                 onEventResize: resizes.add,
                 onEventOpen: (_) => opens++,
+                onNavigate: navigations.add,
                 timeZone: 'UTC',
                 startHour: 7,
                 endHour: 19,
@@ -97,6 +99,7 @@ void main() {
         expect(resizes.single.end.minutes, allDay ? 0 : 630);
         expect(resizes.single.edge, KCalendarResizeEdge.end);
         expect(resizes.single.end.date, allDay ? '2026-09-23' : '2026-09-21');
+        expect(navigations, isEmpty);
         expect(
           find.byWidgetPredicate(
             (w) => w is KCalendarTouchHandles && w.selected,
@@ -120,6 +123,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(moves, hasLength(1));
         expect(moves.single.target.date, '2026-09-22');
+        expect(navigations, isEmpty);
         expect(tester.takeException(), isNull);
       });
     }

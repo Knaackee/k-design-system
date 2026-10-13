@@ -20,6 +20,7 @@ class KCalendarTimeDay<T extends Object> extends StatefulWidget {
     required this.scrollAt,
     required this.scrollBy,
     required this.pendingSelection,
+    required this.clearPendingSelection,
     required this.requestCreate,
     required this.previewMove,
     required this.previewMoveId,
@@ -36,6 +37,7 @@ class KCalendarTimeDay<T extends Object> extends StatefulWidget {
   final ValueChanged<Offset?> scrollAt;
   final ValueChanged<Offset> scrollBy;
   final KCalendarSelection? pendingSelection;
+  final VoidCallback clearPendingSelection;
   final ValueChanged<KCalendarSelection> requestCreate;
   final KCalendarSelection? previewMove;
   final String? previewMoveId;
@@ -92,6 +94,7 @@ class _KCalendarTimeDayState<T extends Object>
   void begin(double y, {bool tap = false}) {
     if (c.requireLongPress && !tap) return;
     if (c.onCreate == null) return;
+    widget.clearPendingSelection();
     _focus.requestFocus();
     setState(() {
       _anchor = minutesAt(y);
@@ -129,6 +132,7 @@ class _KCalendarTimeDayState<T extends Object>
   void cancel() {
     if (_anchor != null) emit(KCalendarInteractionPhase.cancel);
     widget.scrollAt(null);
+    widget.clearPendingSelection();
     setState(() {
       _anchor = null;
       _last = null;
@@ -208,7 +212,28 @@ class _KCalendarTimeDayState<T extends Object>
         lanes: math.max(1, lanes),
       );
     }).toList();
-    final shownSelection = selection ?? widget.pendingSelection;
+    final pending = widget.pendingSelection;
+    final shownSelection =
+        selection ??
+        (pending != null &&
+                !pending.start.allDay &&
+                pending.start.date == calendarDateKey(widget.day)
+            ? pending
+            : null);
+    final shownSelectionMinutes = shownSelection == null
+        ? c.defaultDurationMinutes
+        : (DateTime.parse(shownSelection.end.date)
+                      .difference(DateTime.parse(shownSelection.start.date))
+                      .inMinutes +
+                  shownSelection.end.minutes -
+                  shownSelection.start.minutes)
+              .clamp(
+                c.stepMinutes,
+                math.max(
+                  c.stepMinutes,
+                  c.endHour * 60 - shownSelection.start.minutes,
+                ),
+              );
     final preview = widget.previewMove;
     final active = widget.previewEvent;
     int previewMinutes(KCalendarSlot value) =>
@@ -402,21 +427,10 @@ class _KCalendarTimeDayState<T extends Object>
                             c.startHour * 60) /
                         60 *
                         c.hourHeight,
-                    height:
-                        ((shownSelection == null
-                                    ? c.defaultDurationMinutes
-                                    : DateTime.parse(shownSelection.end.date)
-                                              .difference(
-                                                DateTime.parse(
-                                                  shownSelection.start.date,
-                                                ),
-                                              )
-                                              .inMinutes +
-                                          shownSelection.end.minutes -
-                                          shownSelection.start.minutes) /
-                                60 *
-                                c.hourHeight)
-                            .clamp(12, double.infinity),
+                    height: (shownSelectionMinutes / 60 * c.hourHeight).clamp(
+                      12,
+                      double.infinity,
+                    ),
                     child: IgnorePointer(
                       child: Container(
                         decoration: BoxDecoration(

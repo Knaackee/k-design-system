@@ -12,10 +12,12 @@ import {
   slotNumber,
   kCalendarSlotToDate,
   instantSlot,
+  calendarMoveDuration,
   type CalendarEntry,
 } from "./calendar-model.js";
 import type {
   KCalendarProps,
+  KCalendarMove,
   KCalendarSelection,
   KCalendarSlot,
 } from "./calendar-types.js";
@@ -45,6 +47,9 @@ export function useCalendarInteraction<T>(
   current.current = props;
   const [preview, setPreview] = useState<KCalendarSelection | null>(null);
   const [previewEntryId, setPreviewEntryId] = useState<string | null>(null);
+  const [previewEntry, setPreviewEntry] = useState<CalendarEntry<T> | null>(
+    null,
+  );
   const [previewPoint, setPreviewPoint] = useState<{
     x: number;
     y: number;
@@ -97,6 +102,15 @@ export function useCalendarInteraction<T>(
   }, [root]);
   const step = props.stepMinutes ?? 30;
   function hit(x: number, y: number): KCalendarSlot | null {
+    const rootRect = root.current?.getBoundingClientRect();
+    if (
+      !rootRect ||
+      x < rootRect.left ||
+      x >= rootRect.right ||
+      y < rootRect.top ||
+      y >= rootRect.bottom
+    )
+      return null;
     for (const node of root.current?.querySelectorAll<HTMLElement>(
       "[data-calendar-slot]",
     ) ?? []) {
@@ -122,6 +136,30 @@ export function useCalendarInteraction<T>(
   }
   const hitRef = useRef(hit);
   hitRef.current = hit;
+  function moveFor(
+    event: T,
+    target: KCalendarSlot,
+    durationOverride?: number,
+  ): KCalendarMove<T> {
+    const p = current.current;
+    const start = p.getEventStart(event),
+      end = p.getEventEnd(event);
+    const sourceAllDay = p.getEventAllDay?.(event) ?? false;
+    return {
+      event,
+      eventId: p.getEventId(event),
+      target,
+      durationMinutes: calendarMoveDuration(
+        start,
+        end,
+        sourceAllDay,
+        target.allDay,
+        durationOverride,
+        p.defaultDurationMinutes ?? step,
+        step,
+      ),
+    };
+  }
   function emit(
     g: Gesture<T>,
     phase: "start" | "preview" | "commit" | "cancel",
@@ -170,8 +208,10 @@ export function useCalendarInteraction<T>(
       return;
     }
     const p = current.current;
-    if (g.kind === "create") p.onCreate?.(g.selection);
-    else if (g.kind === "move")
+    if (g.kind === "create") {
+      p.onPendingCreateSelectionChange?.(g.selection);
+      p.onCreate?.(g.selection);
+    } else if (g.kind === "move")
       p.onEventMove?.({
         event: g.entry!.event,
         eventId: g.entry!.id,
@@ -189,6 +229,93 @@ export function useCalendarInteraction<T>(
   }
   const handlers = useRef({ emit, commit });
   handlers.current = { emit, commit };
+  const committedExternalId = useRef<string | null>(null);
+  const activeExternalId = useRef<string | null>(null);
+  useEffect(() => {
+    const drag = props.externalDrag;
+    const clearExternal = () => {
+      if (activeExternalId.current == null) return;
+      activeExternalId.current = null;
+      setPreview(null);
+      setPreviewEntryId(null);
+      setPreviewEntry(null);
+      setPreviewPoint(null);
+    };
+    if (!drag || drag.phase === "cancel") {
+      clearExternal();
+      committedExternalId.current = null;
+      return;
+    }
+    const target = hitRef.current(drag.clientX, drag.clientY);
+    if (drag.phase === "commit") {
+      if (committedExternalId.current === drag.id) return;
+      committedExternalId.current = drag.id;
+      if (target) {
+        const move = moveFor(drag.event, target, drag.durationMinutes);
+        const selection = {
+          start: target,
+          end: shiftSlot(target, move.durationMinutes),
+        };
+        const valid =
+          kCalendarSlotToDate(selection.start) != null &&
+          kCalendarSlotToDate(selection.end) != null;
+        const allowed =
+          valid &&
+          current.current.onEventMove != null &&
+          current.current.canMove?.(move) !== false;
+        current.current.onInteraction?.({
+          kind: "move",
+          phase: allowed ? "commit" : "cancel",
+          selection,
+          event: drag.event,
+        });
+        if (allowed) current.current.onEventMove?.(move);
+      }
+      clearExternal();
+      return;
+    }
+    if (activeExternalId.current !== drag.id) {
+      committedExternalId.current = null;
+      current.current.onPendingCreateSelectionChange?.(null);
+    }
+    activeExternalId.current = drag.id;
+    if (!target) {
+      setPreview(null);
+      setPreviewEntryId(null);
+      setPreviewEntry(null);
+      setPreviewPoint(null);
+      return;
+    }
+    const move = moveFor(drag.event, target, drag.durationMinutes);
+    const selection = {
+      start: target,
+      end: shiftSlot(target, move.durationMinutes),
+    };
+    if (
+      !kCalendarSlotToDate(selection.start) ||
+      !kCalendarSlotToDate(selection.end)
+    ) {
+      clearExternal();
+      return;
+    }
+    setPreview(selection);
+    setPreviewEntryId(move.eventId);
+    setPreviewEntry({ event: drag.event, id: move.eventId, ...selection });
+    setPreviewPoint({ x: drag.clientX, y: drag.clientY });
+    current.current.onInteraction?.({
+      kind: "move",
+      phase: "preview",
+      selection,
+      event: drag.event,
+    });
+  }, [
+    props.externalDrag?.id,
+    props.externalDrag?.event,
+    props.externalDrag?.phase,
+    props.externalDrag?.clientX,
+    props.externalDrag?.clientY,
+    props.externalDrag?.durationMinutes,
+  ]);
   useEffect(() => {
     let frame = 0;
     function update(g: Gesture<T>) {
@@ -306,16 +433,39 @@ export function useCalendarInteraction<T>(
       if (!g) return;
       gesture.current = null;
       setPreviewEntryId(null);
+      setPreviewEntry(null);
       setPreviewPoint(null);
       const p = current.current;
       const keepCreatePreview =
         g.kind === "create" &&
+        !p.onPendingCreateSelectionChange &&
         (p.requireLongPress || portraitRef.current) &&
         !g.moved &&
         !g.active;
       if (!keepCreatePreview) setPreview(null);
       if (e.type === "pointercancel") {
         if (g.active) handlers.current.emit(g, "cancel");
+        return;
+      }
+      if (
+        g.active &&
+        g.moved &&
+        g.kind === "move" &&
+        !hitRef.current(e.clientX, e.clientY)
+      ) {
+        const drop = {
+          event: g.entry!.event,
+          eventId: g.entry!.id,
+          clientX: e.clientX,
+          clientY: e.clientY,
+        };
+        if (p.onEventDropOutside && p.canDropOutside?.(drop) !== false) {
+          p.onEventDropOutside(drop);
+          handlers.current.emit(g, "commit");
+        } else {
+          handlers.current.emit(g, "cancel");
+        }
+        selectRef.current(null);
         return;
       }
       if (!g.moved && g.entry && g.kind === "move") {
@@ -345,12 +495,14 @@ export function useCalendarInteraction<T>(
     function escape(e: KeyboardEvent) {
       if (e.key !== "Escape") return;
       selectRef.current(null);
+      current.current.onPendingCreateSelectionChange?.(null);
       if (!gesture.current) return;
       handlers.current.emit(gesture.current, "cancel");
       gesture.current = null;
       clearTimeout(timer.current);
       setPreview(null);
       setPreviewEntryId(null);
+      setPreviewEntry(null);
       setPreviewPoint(null);
     }
     function touchMove(e: TouchEvent) {
@@ -393,8 +545,11 @@ export function useCalendarInteraction<T>(
     root.current?.setPointerCapture?.(e.pointerId);
     const kind = edge ? "resize" : entry ? "move" : "create";
     if (kind === "create" && !p.onCreate) return;
+    if (kind === "move" && !p.onEventMove && !p.onEventDropOutside) return;
+    p.onPendingCreateSelectionChange?.(null);
     setPreview(null);
     setPreviewEntryId(null);
+    setPreviewEntry(null);
     setPreviewPoint({ x: e.clientX, y: e.clientY });
     const selection = entry
       ? { start: entry.start, end: entry.end }
@@ -451,6 +606,7 @@ export function useCalendarInteraction<T>(
     setPreview(selection);
     emit(g, "start");
     commit(g);
+    if (current.current.onPendingCreateSelectionChange) setPreview(null);
   }
   function change(
     kind: "move" | "resize",
@@ -458,13 +614,19 @@ export function useCalendarInteraction<T>(
     selection: KCalendarSelection,
     edge?: "start" | "end",
   ) {
+    current.current.onPendingCreateSelectionChange?.(null);
     const g = { kind, entry, selection, edge } as Gesture<T>;
     emit(g, "start");
     commit(g);
   }
   return {
-    preview,
+    preview:
+      preview ??
+      (props.onPendingCreateSelectionChange
+        ? (props.pendingCreateSelection ?? null)
+        : null),
     previewEntryId,
+    previewEntry,
     previewPoint,
     begin,
     create,

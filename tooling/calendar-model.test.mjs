@@ -22,6 +22,7 @@ const hook = registerHooks({
 });
 const {
   calendarDays,
+  calendarMoveDuration,
   instantSlot,
   intersects,
   kCalendarSlotToDate,
@@ -172,5 +173,23 @@ test("selection orders reversed drags and includes the final selected cell", () 
   assert.deepEqual(
     orderedSelection(at("2026-09-21", 1410), at("2026-09-21", 1410), 30),
     { start: at("2026-09-21", 1410), end: at("2026-09-22", 0) },
+  );
+});
+
+test("external move duration preserves all-day spans and resets timed duration", () => {
+  const start = new Date("2026-09-21T00:00:00Z");
+  const end = new Date("2026-09-24T00:00:00Z");
+  assert.equal(
+    calendarMoveDuration(start, end, true, true, undefined, 30, 30),
+    4320,
+  );
+  assert.equal(
+    calendarMoveDuration(start, end, true, false, undefined, 30, 30),
+    30,
+  );
+  assert.equal(calendarMoveDuration(null, null, false, false, 90, 30, 30), 90);
+  assert.equal(
+    calendarMoveDuration(null, null, false, false, Number.NaN, 30, 30),
+    30,
   );
 });

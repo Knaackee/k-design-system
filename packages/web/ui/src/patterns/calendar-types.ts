@@ -18,6 +18,21 @@ export interface KCalendarMove<T> {
   target: KCalendarSlot;
   durationMinutes: number;
 }
+/** A host-owned pointer/touch drag into the calendar. Keep id stable per gesture. */
+export interface KCalendarExternalDrag<T> {
+  id: string;
+  event: T;
+  phase: "preview" | "commit" | "cancel";
+  clientX: number;
+  clientY: number;
+  durationMinutes?: number;
+}
+export interface KCalendarDropOutside<T> {
+  event: T;
+  eventId: string;
+  clientX: number;
+  clientY: number;
+}
 export interface KCalendarResize<T> extends KCalendarSelection {
   event: T;
   eventId: string;
@@ -60,11 +75,22 @@ export interface KCalendarProps<T> {
   onMonthDayOpen?: (date: string, events: readonly T[]) => void;
   onEventOpen?: (event: T) => void;
   onEventMove?: (move: KCalendarMove<T>) => void;
+  /** Controlled host drag input. The calendar owns slot hit-testing and preview. */
+  externalDrag?: KCalendarExternalDrag<T> | null;
+  /** Receives a moved calendar event released outside every calendar slot. */
+  onEventDropOutside?: (drop: KCalendarDropOutside<T>) => void;
   onEventResize?: (resize: KCalendarResize<T>) => void;
   onCreate?: (selection: KCalendarSelection) => void;
+  /** Controlled create preview when onPendingCreateSelectionChange is set. */
+  pendingCreateSelection?: KCalendarSelection | null;
+  /** Set the controlled selection to null when a consumer create flow cancels. */
+  onPendingCreateSelectionChange?: (
+    selection: KCalendarSelection | null,
+  ) => void;
   onInteraction?: (interaction: KCalendarInteraction<T>) => void;
   canCreate?: (selection: KCalendarSelection) => boolean;
   canMove?: (move: KCalendarMove<T>) => boolean;
+  canDropOutside?: (drop: KCalendarDropOutside<T>) => boolean;
   canResize?: (resize: KCalendarResize<T>) => boolean;
   locale?: string;
   timeZone?: string;

@@ -56,6 +56,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
   double _delta = 0;
   KCalendarResizeEdge? _edge;
   bool _cancelled = false;
+  Offset? _lastDragPosition;
   bool _moving = false;
   bool _resizePointerDown = false;
   final _focus = FocusNode();
@@ -211,6 +212,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       void start() {
         if (_resizePointerDown) return;
         _cancelled = false;
+        _lastDragPosition = null;
         _moving = true;
         _focus.requestFocus();
         widget.startMove();
@@ -224,20 +226,37 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
       }
 
       void end(DraggableDetails details) {
+        final moved = _moving;
         _moving = false;
         widget.scrollAt(null);
         if (!details.wasAccepted || _cancelled) {
           widget.cancelMove();
         }
-        if (!details.wasAccepted && !_cancelled) {
+        if (!details.wasAccepted && !_cancelled && moved) {
+          final position = _lastDragPosition;
+          final drop = position == null
+              ? null
+              : KCalendarDropOutside<T>(
+                  event: widget.event,
+                  eventId: c.eventId(widget.event),
+                  globalPosition: position,
+                );
+          final accepted =
+              drop != null &&
+              c.onEventDropOutside != null &&
+              c.canDropOutside?.call(drop) != false;
+          if (accepted) c.onEventDropOutside!(drop);
           c.onInteraction?.call(
             KCalendarInteraction(
               kind: KCalendarInteractionKind.move,
-              phase: KCalendarInteractionPhase.cancel,
+              phase: accepted
+                  ? KCalendarInteractionPhase.commit
+                  : KCalendarInteractionPhase.cancel,
               event: widget.event,
             ),
           );
         }
+        _lastDragPosition = null;
       }
 
       movable = Listener(
@@ -251,6 +270,7 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
             // platform drag feedback empty avoids a second free-floating card.
             onStart: start,
             onUpdate: (d) {
+              _lastDragPosition = d.globalPosition;
               widget.scrollAt(d.globalPosition);
               widget.moveUpdate(d.globalPosition);
             },

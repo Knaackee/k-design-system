@@ -48,6 +48,18 @@ class KCalendarMove<T> {
 }
 
 @immutable
+class KCalendarDropOutside<T> {
+  const KCalendarDropOutside({
+    required this.event,
+    required this.eventId,
+    required this.globalPosition,
+  });
+  final T event;
+  final String eventId;
+  final Offset globalPosition;
+}
+
+@immutable
 class KCalendarResize<T> {
   const KCalendarResize({
     required this.event,

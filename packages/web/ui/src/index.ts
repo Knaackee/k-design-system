@@ -104,12 +104,18 @@ export type {
   KKanbanCardContext,
   KKanbanMove,
 } from "./patterns/kanban.js";
-export { KCalendar, kCalendarSlotToDate } from "./patterns/calendar.js";
+export {
+  KCalendar,
+  K_CALENDAR_EVENT_MIME,
+  kCalendarSlotToDate,
+} from "./patterns/calendar.js";
 export type {
   KCalendarProps,
   KCalendarView,
   KCalendarSlot,
   KCalendarMove,
+  KCalendarExternalDrag,
+  KCalendarDropOutside,
   KCalendarResize,
   KCalendarSelection,
   KCalendarInteraction,

@@ -38,6 +38,33 @@ export function shiftSlot(value: KCalendarSlot, minutes: number) {
     value.timeZone,
   );
 }
+export function calendarMoveDuration(
+  start: Date | null,
+  end: Date | null,
+  sourceAllDay: boolean,
+  targetAllDay: boolean,
+  durationOverride: number | undefined,
+  defaultDuration: number,
+  step: number,
+) {
+  const override =
+    durationOverride != null &&
+    Number.isFinite(durationOverride) &&
+    durationOverride > 0
+      ? durationOverride
+      : null;
+  const sourceDuration =
+    start && end
+      ? Math.max(step, (end.getTime() - start.getTime()) / 60000)
+      : null;
+  const requested =
+    override ??
+    (!targetAllDay && sourceAllDay ? null : sourceDuration) ??
+    defaultDuration;
+  return targetAllDay
+    ? Math.max(1440, Math.ceil(requested / 1440) * 1440)
+    : requested;
+}
 export function instantSlot(
   value: Date,
   allDay: boolean,

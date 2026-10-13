@@ -1,4 +1,4 @@
-import { CalendarEvent } from "./calendar-event.js";
+import { CalendarEvent, K_CALENDAR_EVENT_MIME } from "./calendar-event.js";
 import {
   useEffect,
   useRef,
@@ -17,12 +17,14 @@ import {
   timeLanes,
   fromDateKey,
   addDays,
+  calendarMoveDuration,
   type CalendarEntry,
 } from "./calendar-model.js";
 import { useCalendarInteraction } from "./calendar-interaction.js";
 import type { KCalendarProps, KCalendarSelection } from "./calendar-types.js";
 export type * from "./calendar-types.js";
 export { kCalendarSlotToDate } from "./calendar-model.js";
+export { K_CALENDAR_EVENT_MIME } from "./calendar-event.js";
 
 /** Controlled calendar surface. Compose navigation, filters and panels outside it. */
 export function KCalendar<T>(props: KCalendarProps<T>) {
@@ -200,7 +202,7 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
           const event = events.find(
             (item) =>
               getEventId(item) ===
-              e.dataTransfer.getData("text/k-calendar-event"),
+              e.dataTransfer.getData(K_CALENDAR_EVENT_MIME),
           );
           if (!event) return;
           const minute = allDay
@@ -221,15 +223,20 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
               );
           const start = getEventStart(event),
             end = getEventEnd(event);
+          const sourceAllDay = props.getEventAllDay?.(event) ?? false;
           const value = {
             event,
             eventId: getEventId(event),
             target: slot(key, minute, allDay, zone),
-            durationMinutes: allDay
-              ? 1440
-              : start && end
-                ? (end.getTime() - start.getTime()) / 60000
-                : (props.defaultDurationMinutes ?? step),
+            durationMinutes: calendarMoveDuration(
+              start,
+              end,
+              sourceAllDay,
+              allDay,
+              undefined,
+              props.defaultDurationMinutes ?? step,
+              step,
+            ),
           };
           if (props.canMove?.(value) !== false) props.onEventMove?.(value);
         }}
@@ -400,14 +407,13 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
           })}
         {preview &&
           interaction.previewEntryId &&
-          entries.find((entry) => entry.id === interaction.previewEntryId) &&
-          (!allDayOnly ||
-            entries.find((entry) => entry.id === interaction.previewEntryId)
-              ?.start.allDay) &&
+          (interaction.previewEntry ??
+            entries.find((entry) => entry.id === interaction.previewEntryId)) &&
+          (!allDayOnly || preview.start.allDay) &&
           (() => {
-            const entry = entries.find(
-              (item) => item.id === interaction.previewEntryId,
-            )!;
+            const entry =
+              interaction.previewEntry ??
+              entries.find((item) => item.id === interaction.previewEntryId)!;
             const base = slotNumber(slot(week[0], 0, true, zone));
             const start = Math.max(
               0,
@@ -519,9 +525,10 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
                   const lanes = timeLanes(dayEntries);
                   const positioned = lanes;
                   const activeEntry = interaction.previewEntryId
-                    ? entries.find(
+                    ? (interaction.previewEntry ??
+                      entries.find(
                         (entry) => entry.id === interaction.previewEntryId,
-                      )
+                      ))
                     : undefined;
                   const activeRange =
                     activeEntry && interaction.preview

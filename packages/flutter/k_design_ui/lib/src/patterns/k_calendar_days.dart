@@ -23,6 +23,7 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
     required this.scrollAt,
     required this.scrollBy,
     required this.pendingSelection,
+    required this.clearPendingSelection,
     required this.requestCreate,
     required this.previewMove,
     required this.previewMoveId,
@@ -44,6 +45,7 @@ class KCalendarDays<T extends Object> extends StatefulWidget {
   final ValueChanged<Offset?> scrollAt;
   final ValueChanged<Offset> scrollBy;
   final KCalendarSelection? pendingSelection;
+  final VoidCallback clearPendingSelection;
   final ValueChanged<KCalendarSelection> requestCreate;
   final KCalendarSelection? previewMove;
   final String? previewMoveId;
@@ -99,6 +101,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
   void begin(int index, {bool tap = false}) {
     if (c.requireLongPress && !tap) return;
     if (c.onCreate == null) return;
+    widget.clearPendingSelection();
     _focus.requestFocus();
     setState(() {
       _anchor = index;
@@ -135,6 +138,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
   void cancel() {
     if (_anchor != null) emit(KCalendarInteractionPhase.cancel);
     widget.scrollAt(null);
+    widget.clearPendingSelection();
     setState(() => _anchor = null);
   }
 
