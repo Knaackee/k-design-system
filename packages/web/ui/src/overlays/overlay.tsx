@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Sheet, type SheetRef } from "react-modal-sheet";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { KIconButton } from "../actions/icon-button.js";
+import { usePageSheetEffect } from "./use-page-sheet-effect.js";
 
 // Radix observes Escape in the capture phase, before a nested popover can
 // consume it. Leave dismissal to that focused child surface first.
@@ -145,7 +146,10 @@ export function KDesktopDialog({
   );
 }
 
-export type KBottomSheetProps = KOverlayProps;
+export type KBottomSheetProps = KOverlayProps & {
+  /** Dedicated viewport-sized app surface, outside the sheet portal. Enables page presentation. */
+  presentationRootId?: string;
+};
 
 export function KBottomSheet({
   open,
@@ -164,12 +168,19 @@ export function KBottomSheet({
   leading,
   bodyClassName,
   zIndex = 3010,
+  presentationRootId,
 }: KBottomSheetProps) {
   const sheetRef = useRef<SheetRef>(null);
+  const [effectActive, setEffectActive] = useState(open);
+  useEffect(() => {
+    if (open) setEffectActive(true);
+  }, [open]);
+  usePageSheetEffect(sheetRef, presentationRootId, effectActive);
   const latestOpen = useRef(open);
   latestOpen.current = open;
   const containerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -179,7 +190,8 @@ export function KBottomSheet({
         initialSnap={1}
         unstyled
         style={{ zIndex }}
-        detent="content"
+        detent={presentationRootId ? "default" : "content"}
+        onCloseEnd={() => setEffectActive(false)}
         isOpen={open}
         onClose={() => {
           if (dismissible) onOpenChange(false);
@@ -200,7 +212,17 @@ export function KBottomSheet({
           asChild
           onOpenAutoFocus={(event) => {
             event.preventDefault();
+            openerRef.current =
+              document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
             (closeRef.current ?? containerRef.current)?.focus();
+          }}
+          onCloseAutoFocus={(event) => {
+            if (presentationRootId && openerRef.current?.isConnected) {
+              event.preventDefault();
+              openerRef.current.focus();
+            }
           }}
           onEscapeKeyDown={(event) => handleEscape(event, dismissible)}
           onPointerDownOutside={
@@ -212,7 +234,7 @@ export function KBottomSheet({
             ref={containerRef}
             tabIndex={-1}
             className={["k-bottom-sheet", className].filter(Boolean).join(" ")}
-            data-adaptive-surface="sheet"
+            data-adaptive-surface={presentationRootId ? "page-sheet" : "sheet"}
           >
             <Sheet.Header className="k-bottom-sheet-handle">
               <span className="k-bottom-sheet-grip" />

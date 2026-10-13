@@ -1,0 +1,23 @@
+.k-gallery:has(.screen-switcher-demo) {
+  padding: 0;
+}
+.screen-switcher-demo {
+  height: 100dvh;
+  width: 100%;
+}
+.screen-switcher-demo__content {
+  display: grid;
+  gap: var(--k-space-layout-gutter);
+}
+.screen-switcher-demo__image {
+  aspect-ratio: 1.8;
+  display: grid;
+  place-items: center;
+  background: var(--k-color-action-primary-background);
+  color: var(--k-color-action-primary-foreground);
+  border-radius: var(--k-radius-overlay);
+}
+.screen-switcher-demo__section {
+  padding-bottom: var(--k-space-control-gap);
+  border-bottom: 1px solid var(--k-color-border-default);
+}

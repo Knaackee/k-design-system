@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  card_stack_widget:
+    dependency: transitive
+    description:
+      name: card_stack_widget
+      sha256: bdc10158edc3b781c386c0ef694728b67806e3021cb3588d3a26e2a5a0e27288
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   characters:
     dependency: transitive
     description:
@@ -169,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1+1"
+  coverflow_carousel:
+    dependency: transitive
+    description:
+      name: coverflow_carousel
+      sha256: "6483dd958e35ff640599989805d7c501c0ae7a48b0f81f32a19454a35e7c4981"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   crypto:
     dependency: transitive
     description:
@@ -185,6 +201,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  dicebear_core:
+    dependency: transitive
+    description:
+      name: dicebear_core
+      sha256: f90d71dcee69c70433e9e1a472b6ece0facc10e302e7f8406363904a767ae4a1
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.7.0"
+  dicebear_schema:
+    dependency: transitive
+    description:
+      name: dicebear_schema
+      sha256: "50661490fc75251d5fac4960cda307ddd4ab5f43b104dfab2faf85aaa6d12a90"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.1"
   equatable:
     dependency: transitive
     description:
@@ -392,6 +424,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.12.0"
+  json_schema:
+    dependency: transitive
+    description:
+      name: json_schema
+      sha256: f37d9c3fdfe8c9aae55fdfd5af815d24ce63c3a0f6a2c1f0982c30f43643fa1a
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.2"
   leak_tracker:
     dependency: transitive
     description:
@@ -528,6 +568,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      sha256: bbb1934c0cbb03091af082a6389ca2080345291ef07a5fa6d6e078ba8682f977
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   path_parsing:
     dependency: transitive
     description:
@@ -656,6 +704,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   re_editor:
     dependency: transitive
     description:
@@ -688,6 +744,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  rfc_6901:
+    dependency: transitive
+    description:
+      name: rfc_6901
+      sha256: "6a43b1858dca2febaf93e15639aa6b0c49ccdfd7647775f15a499f872b018154"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   rive:
     dependency: transitive
     description:
@@ -789,6 +853,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  uri:
+    dependency: transitive
+    description:
+      name: uri
+      sha256: "889eea21e953187c6099802b7b4cf5219ba8f3518f604a1033064d45b1b8268a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   url_launcher:
     dependency: transitive
     description:

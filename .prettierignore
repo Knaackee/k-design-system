@@ -6,6 +6,8 @@ packages/flutter/k_design_tokens/lib/src/generated/
 node_modules/
 pnpm-lock.yaml
 pubspec.lock
+packages/flutter/k_design_ui/assets/dicebear/
+packages/flutter/k_design_ui/test/fixtures/dicebear-svg-parity.json
 docs/plans/orbit-ds2-strategic-master-plan.md
 
 # Canonical index generated and validated by Skillset.
@@ -29,3 +31,5 @@ docs/adr/0001-orbit-rendering-parity.md
 docs/adr/0002-orbit-nested-hierarchy.md
 docs/adr/index.md
 docs/adr/evidence/
+
+**/flutter/ephemeral/

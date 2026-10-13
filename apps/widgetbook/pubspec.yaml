@@ -18,8 +18,10 @@ dependencies:
   timezone: 0.11.1
   rive: 0.14.11
   audioplayers: 6.8.1
+  url_launcher: ^6.3.2
   web: ^1.1.1
-
+  card_stack_widget: 0.1.6
+  coverflow_carousel: ^2.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

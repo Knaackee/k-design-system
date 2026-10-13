@@ -1,3 +1,5 @@
+import 'screen_switcher_prototype.dart';
+import 'screen_switcher_reference_fixture.dart';
 import 'browser_permissions_fixture.dart';
 import 'browser_permission_ask_fixture.dart';
 import 'browser_cards_fixture.dart';
@@ -73,6 +75,7 @@ import 'user_menu_fixture.dart';
 import 'notification_fixture.dart';
 import 'orbit_fixture.dart';
 import 'activity_fixture.dart';
+import 'dicebear_avatar_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -330,6 +333,95 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Data display',
           children: [
+            WidgetbookFolder(
+              name: 'DiceBear Avatar',
+              children: [
+                WidgetbookUseCase(
+                  name: 'dicebear-avatar-animation',
+                  builder: (context) {
+                    final styleId = context.knobs.object.dropdown<String>(
+                      label: 'Style',
+                      options: kDiceBearAnimatedStyleIds,
+                      initialOption: 'critters',
+                    );
+                    final speed = context.knobs.object.dropdown<String>(
+                      label: 'Animation speed',
+                      options: const [
+                        'none',
+                        'slowest',
+                        'slow',
+                        'medium',
+                        'fast',
+                        'fastest',
+                      ],
+                      initialOption: 'fastest',
+                    );
+                    try {
+                      return DiceBearAvatarFixture(
+                        styleId: styleId,
+                        seed: context.knobs.string(
+                          label: 'Seed',
+                          initialValue: 'K Design System',
+                        ),
+                        options: {
+                          ...parseDiceBearOptions(
+                            context.knobs.string(
+                              label: 'Options JSON',
+                              initialValue: '{}',
+                            ),
+                          ),
+                          'animationVariant': [speed],
+                        },
+                        motionPaused: context.knobs.boolean(
+                          label: 'Paused',
+                          initialValue: false,
+                        ),
+                      );
+                    } on FormatException catch (error) {
+                      return Center(child: KText(error.message));
+                    }
+                  },
+                ),
+                WidgetbookUseCase(
+                  name: 'dicebear-avatar-playground',
+                  builder: (context) {
+                    final styleId = context.knobs.object.dropdown<String>(
+                      label: 'Style',
+                      options: kDiceBearStyleIds,
+                      initialOption: 'adventurer',
+                    );
+                    final seed = context.knobs.string(
+                      label: 'Seed',
+                      initialValue: 'K Design System',
+                    );
+                    final optionsSource = context.knobs.string(
+                      label: 'Options JSON',
+                      initialValue: '{}',
+                    );
+                    final size = context.knobs.object.dropdown<KAvatarSize>(
+                      label: 'Size',
+                      options: KAvatarSize.values,
+                      initialOption: KAvatarSize.large,
+                      labelBuilder: (value) => value.name,
+                    );
+                    try {
+                      return DiceBearAvatarFixture(
+                        styleId: styleId,
+                        seed: seed,
+                        options: parseDiceBearOptions(optionsSource),
+                        size: size,
+                      );
+                    } on FormatException catch (error) {
+                      return Center(child: Text(error.message));
+                    }
+                  },
+                ),
+                WidgetbookUseCase(
+                  name: 'dicebear-avatar-catalogue',
+                  builder: (_) => const DiceBearAvatarCatalogueFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Orbit',
               children: [
@@ -622,6 +714,19 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Navigation',
           children: [
+            WidgetbookFolder(
+              name: 'ScreenSwitcher',
+              children: [
+                WidgetbookUseCase(
+                  name: 'screen-switcher-prototype',
+                  builder: (_) => const ScreenSwitcherPrototypeDemo(),
+                ),
+                WidgetbookUseCase(
+                  name: 'screen-switcher-reference',
+                  builder: (_) => const ScreenSwitcherReferenceFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'MobileAppBar',
               children: [

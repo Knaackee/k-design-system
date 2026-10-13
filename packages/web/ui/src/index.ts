@@ -28,6 +28,8 @@ export { KCard } from "./primitives/card.js";
 export { KBrowserTaskCard } from "./patterns/browser-task-card.js";
 export type { KBrowserTaskCardProps } from "./patterns/browser-task-card.js";
 export { KDialog, KAdaptiveDialog, KBottomSheet } from "./overlays/overlay.js";
+export { KPageSheet } from "./overlays/page-sheet.js";
+export type { KPageSheetProps } from "./overlays/page-sheet.js";
 export type { KOverlayProps, KBottomSheetProps } from "./overlays/overlay.js";
 export type { KCardProps } from "./primitives/card.js";
 export { KDisclosure, KAccordion } from "./primitives/disclosure.js";
@@ -528,3 +530,18 @@ export {
   type KAgentCursorProps,
   type KAgentCursorState,
 } from "./feedback/agent-cursor.js";
+export { KDiceBearAvatar } from "./data-display/dicebear-avatar.js";
+export type { KDiceBearAvatarProps } from "./data-display/dicebear-avatar.js";
+export {
+  kDiceBearStyleIds,
+  loadKDiceBearStyle,
+  getKDiceBearOptions,
+} from "./data-display/dicebear-catalog.js";
+export type { KDiceBearStyleId } from "./data-display/dicebear-catalog.js";
+export { kDiceBearAnimatedStyleIds } from "./generated/dicebear-motion-styles.js";
+export { KScreenSwitcher } from "./navigation/screen-switcher.js";
+export type {
+  KScreenSwitcherProps,
+  KScreenSwitcherItem,
+  KScreenSwitcherMode,
+} from "./navigation/screen-switcher.js";

@@ -1,0 +1,37 @@
+.k-gallery:has(.page-sheet-demo) {
+  padding: 0;
+}
+.page-sheet-demo {
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--k-color-scrim-modal);
+}
+.page-sheet-demo__app {
+  height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+  background: var(--k-color-surface-canvas);
+  padding: var(--k-space-layout-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-layout-gutter);
+}
+.page-sheet-demo__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-layout-gutter);
+}
+.page-sheet-demo__card,
+.page-sheet-demo__fields {
+  display: grid;
+  gap: var(--k-space-layout-gutter);
+}
+.page-sheet-demo__card {
+  padding: var(--k-space-layout-gutter);
+}
+.page-sheet-demo__fields label {
+  display: grid;
+  gap: var(--k-space-layout-gutter);
+}

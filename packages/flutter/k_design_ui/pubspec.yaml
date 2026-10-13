@@ -23,6 +23,9 @@ dependencies:
   flutter_markdown_plus: ^1.0.12
   re_editor: 0.10.0
   re_highlight: 0.0.3
+  dicebear_core: 10.7.0
+  path_drawing: ^1.0.1
+  xml: ^7.0.1
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +35,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/great-icons/
+    - assets/dicebear/
+    - assets/dicebear/styles/
   shaders:
     - shaders/orbit_center.frag
   fonts:
