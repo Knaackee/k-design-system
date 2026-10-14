@@ -318,7 +318,15 @@ class KCallBar extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: t.spaceControlGap),
-                if (avatar == null || bounds.maxWidth > 420) ...[
+                // At narrow widths, enlarged text takes priority over the meter.
+                if (bounds.maxWidth > 420 ||
+                    (avatar == null &&
+                        MediaQuery.textScalerOf(context).scale(
+                              KDesignTokenVariants
+                                  .typeScaleStandardFontBodySize,
+                            ) <=
+                            KDesignTokenVariants
+                                .typeScaleStandardFontBodySize)) ...[
                   SizedBox(
                     width: t.sizeIconDefault * 5,
                     height: t.sizeIconDefault,
