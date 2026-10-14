@@ -1,17 +1,15 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   KCallBar,
-  KAgentChatWorkspace,
-  KIcon,
-  KIconButton,
+  KButton,
   KChatComposer,
   KChatConversation,
 } from "@k-design-system/ui";
+import { AgentWorkspaceAvatar } from "./agent-workspace-avatar.js";
 import "./call-bar-fixture.css";
-
 type State = "connecting" | "listening" | "speaking" | "muted" | "ending";
-const status = {
+const statuses = {
   connecting: "Verbindung wird aufgebaut …",
   listening: "Hört zu",
   speaking: "Spricht",
@@ -27,81 +25,137 @@ function CallFixture({
   composition?: boolean;
   mobile?: boolean;
 }) {
-  const [muted, setMuted] = useState(state === "muted"),
-    [draft, setDraft] = useState("");
+  const [muted, setMuted] = useState(state === "muted");
+  const [expanded, setExpanded] = useState(true);
+  const [ended, setEnded] = useState(false);
+  const [activity, setActivity] = useState<"tool" | "delegation" | undefined>();
+  const [draft, setDraft] = useState("");
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const runActivity = (kind: "tool" | "delegation") => {
+    clearTimeout(timer.current);
+    setActivity(kind);
+    timer.current = setTimeout(() => setExpanded(false), 900);
+  };
   const bar = (
     <KCallBar
       name="Alex"
-      status={muted ? status.muted : status[state]}
+      status={
+        ended
+          ? "Anruf beendet"
+          : activity
+            ? activity === "tool"
+              ? "Prüft deinen Kalender"
+              : "Arbeitet mit Mira"
+            : muted
+              ? statuses.muted
+              : statuses[state]
+      }
       duration={state === "connecting" ? "00:00" : "02:14"}
       muted={muted}
       microphoneLevel={state === "listening" ? 0.7 : 0.15}
       onMutedChange={setMuted}
-      muteDisabled={state === "connecting" || state === "ending"}
+      muteDisabled={ended || state === "connecting" || state === "ending"}
+      expanded={composition && expanded && !ended}
+      avatar={
+        composition ? (
+          <AgentWorkspaceAvatar
+            shape="squircle"
+            color="#8c9cf0"
+            status={state === "speaking" ? "speaking" : "idle"}
+            size={240}
+            label="Alex"
+          />
+        ) : undefined
+      }
+      onExpandedChange={composition ? setExpanded : undefined}
+      onEndCall={
+        composition && !ended
+          ? () => {
+              clearTimeout(timer.current);
+              setEnded(true);
+              setExpanded(false);
+            }
+          : undefined
+      }
       labels={{
         region: "Anruf",
         duration: "Anrufdauer",
         mute: "Mikrofon stummschalten",
         unmute: "Mikrofon einschalten",
+        minimize: "Anruf minimieren",
+        expand: "Zum Anruf zurückkehren",
+        end: "Auflegen",
       }}
     />
   );
   if (!composition) return bar;
   return (
     <div className="call-pattern-fixture" data-mobile={mobile}>
-      <KAgentChatWorkspace
-        title="Alex"
-        avatar={
-          <span
-            className="call-pattern-avatar"
-            data-speaking={state === "speaking"}
-          >
-            <KIcon name="bot" size={96} />
-          </span>
-        }
-        avatarLabel="Alex"
-        sidebar={<p>Persönliche Agenten</p>}
-        defaultSidebarCollapsed
-        actions={
-          <KIconButton
-            icon="phone-off"
-            label="Auflegen"
-            variant="ghost"
-            className="call-pattern-end"
-            onClick={() => {}}
-          />
-        }
-        composer={
-          <KChatComposer
-            value={draft}
-            onValueChange={setDraft}
-            onSubmit={() => {}}
-            labels={{ input: "Nachricht", placeholder: "Nachricht …" }}
-          />
-        }
-      >
-        <div className="call-pattern-stage">
-          {bar}
-          <KChatConversation
-            messages={Array.from({ length: 12 }, (_, i) => ({
-              id: String(i),
-              role: i % 2 ? ("assistant" as const) : ("user" as const),
+      <div className="call-pattern-stage" data-expanded={expanded && !ended}>
+        {bar}
+        <KChatConversation
+          messages={[
+            {
+              id: "request",
+              role: "user",
+              parts: [
+                { id: "question", type: "text", text: "Was steht heute an?" },
+              ],
+            },
+            {
+              id: "reply",
+              role: "assistant",
               parts: [
                 {
-                  id: `text-${i}`,
-                  type: "text" as const,
+                  id: "answer",
+                  type: "text",
                   text:
-                    i % 2
-                      ? "Ich schaue mir die Aufgabe an."
-                      : "Was steht heute an?",
+                    activity === "delegation"
+                      ? "Mira prüft die Aufgaben. Du kannst währenddessen weitersprechen."
+                      : "Ich schaue in deinen Kalender und sortiere die nächsten Schritte.",
                 },
+                ...(activity
+                  ? [
+                      {
+                        id: "activity",
+                        type: "text" as const,
+                        text:
+                          activity === "tool"
+                            ? "Kalender · Termine werden geladen …"
+                            : "Mira · Aufgaben werden geprüft …",
+                      },
+                    ]
+                  : []),
               ],
-            }))}
-            renderAvatar={() => null}
-            showTimestamps={false}
-          />
-        </div>
-      </KAgentChatWorkspace>
+            },
+          ]}
+          renderAvatar={() => null}
+          showTimestamps={false}
+        />
+      </div>
+      <div className="call-pattern-demo">
+        <KButton
+          variant="secondary"
+          disabled={ended}
+          onClick={() => runActivity("tool")}
+        >
+          Tool starten
+        </KButton>
+        <KButton
+          variant="secondary"
+          disabled={ended}
+          onClick={() => runActivity("delegation")}
+        >
+          An Mira delegieren
+        </KButton>
+      </div>
+      <KChatComposer
+        value={draft}
+        onValueChange={setDraft}
+        onSubmit={() => setDraft("")}
+        labels={{ input: "Nachricht", placeholder: "Nachricht an Alex …" }}
+      />
     </div>
   );
 }

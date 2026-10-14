@@ -103,3 +103,38 @@
 .agent-chat-workspace-fixture__context p {
   color: var(--k-color-text-muted);
 }
+
+.agent-chat-workspace-fixture--calling .k-agent-chat-workspace__identity {
+  visibility: hidden;
+  pointer-events: none;
+}
+.agent-chat-workspace-fixture--calling .k-agent-chat-workspace__conversation {
+  flex-direction: column;
+}
+.agent-chat-workspace-fixture__call[data-expanded="true"] {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.agent-chat-workspace-fixture__call[data-expanded="false"] {
+  flex: 0 0 auto;
+}
+
+.agent-chat-workspace-fixture__call-start {
+  color: var(--k-color-status-success-accent);
+}
+
+.agent-chat-workspace-fixture__pattern {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.agent-chat-workspace-fixture__chat-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}

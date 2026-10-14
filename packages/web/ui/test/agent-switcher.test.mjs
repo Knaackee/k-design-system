@@ -21,6 +21,34 @@ const items = [
   },
 ];
 
+test("settings rows expose configured avatars, sibling controls and disabled unpinned handles", () => {
+  const html = renderToStaticMarkup(
+    h(KAgentSwitcher, {
+      variant: "settings",
+      orientation: "vertical",
+      selectedId: null,
+      onSelect() {},
+      onReorder() {},
+      items: [
+        {
+          id: "ada",
+          name: "Ada",
+          avatar: h("span", {}, "Configured avatar"),
+          controlContent: h("button", { role: "switch" }, "Pin Ada"),
+        },
+        { id: "linus", name: "Linus", reorderable: false },
+      ],
+    }),
+  );
+  assert.match(html, /Configured avatar/);
+  assert.match(
+    html,
+    /role="switch">Pin Ada<\/button><button[^>]*class="k-agent-switcher__settings-handle"/,
+  );
+  assert.match(html, /aria-label="Linus:[^"]*"[^>]*disabled=""/);
+  assert.doesNotMatch(html, /aria-pressed=/);
+});
+
 test("agent switcher exposes selection and independent status semantics", () => {
   const html = renderToStaticMarkup(
     h(KAgentSwitcher, {

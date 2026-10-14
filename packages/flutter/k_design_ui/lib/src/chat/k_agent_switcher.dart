@@ -9,6 +9,7 @@ import '../primitives/k_icon.dart';
 
 part 'k_agent_switcher_parts.dart';
 part 'k_agent_switcher_scroll.dart';
+part 'k_agent_switcher_settings.dart';
 
 enum KAgentConnection { online, offline, unknown, sleeping }
 
@@ -89,6 +90,8 @@ class KAgentSwitcherItem {
     this.badgeForeground,
     this.selectedColor,
     this.showName = true,
+    this.controlContent,
+    this.reorderable = true,
   }) : assert(unread == null || unread >= 0, 'unread must not be negative'),
        assert(
          semanticLabel != null || statusContent == null || activity != null,
@@ -115,6 +118,8 @@ class KAgentSwitcherItem {
   final Color? badgeForeground;
   final Color? selectedColor;
   final bool showName;
+  final Widget? controlContent;
+  final bool reorderable;
 }
 
 /// A controlled, scrolling switcher for parallel agent chats.
@@ -132,6 +137,7 @@ class KAgentSwitcher extends StatelessWidget {
     this.onReorder,
     this.onLongPress,
     this.orientation = Axis.horizontal,
+    this.settings = false,
     super.key,
   });
 
@@ -144,6 +150,7 @@ class KAgentSwitcher extends StatelessWidget {
   final ValueChanged<List<String>>? onReorder;
   final ValueChanged<String>? onLongPress;
   final Axis orientation;
+  final bool settings;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +159,7 @@ class KAgentSwitcher extends StatelessWidget {
       'KAgentSwitcher item ids must be unique.',
     );
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
+    if (settings) return _settingsList(context, tokens);
     final reorderable = onReorder != null && items.length > 1;
     return Semantics(
       container: true,
@@ -290,6 +298,11 @@ class KAgentSwitcher extends StatelessWidget {
   }
 
   void _move(BuildContext context, int oldIndex, int newIndex) {
+    if (settings) {
+      final lastReorderable = items.lastIndexWhere((item) => item.reorderable);
+      if (lastReorderable < 0 || !items[oldIndex].reorderable) return;
+      newIndex = newIndex.clamp(0, lastReorderable);
+    }
     if (oldIndex == newIndex) return;
     final ids = items.map((item) => item.id).toList();
     final name = items[oldIndex].name;
@@ -299,7 +312,13 @@ class KAgentSwitcher extends StatelessWidget {
     if (MediaQuery.supportsAnnounceOf(context)) {
       SemanticsService.sendAnnouncement(
         View.of(context),
-        labels.reorderAnnouncement(name, newIndex + 1, items.length),
+        labels.reorderAnnouncement(
+          name,
+          newIndex + 1,
+          settings
+              ? items.where((item) => item.reorderable).length
+              : items.length,
+        ),
         Directionality.of(context),
       );
     }

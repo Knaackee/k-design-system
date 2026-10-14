@@ -10,25 +10,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Fullscreen: Story = {
-  args: { variant: "fullscreen" },
-  parameters: { fixtureId: "agent-chat-workspace-fullscreen" },
-};
-
-export const NeedsInput: Story = {
-  args: { variant: "needs-input" },
-  parameters: { fixtureId: "agent-chat-workspace-needs-input" },
-};
-
-export const Offline: Story = {
-  args: { variant: "offline" },
-  parameters: { fixtureId: "agent-chat-workspace-offline" },
-};
-
-export const Mobile: Story = {
-  args: { variant: "mobile" },
-  parameters: {
-    fixtureId: "agent-chat-workspace-mobile",
-    viewport: { defaultViewport: "mobile1" },
-  },
+export const EmptySession: Story = {
+  name: "Chat & Anruf – interaktiv",
+  args: { variant: "empty" },
+  parameters: { fixtureId: "agent-chat-workspace-empty-session" },
 };

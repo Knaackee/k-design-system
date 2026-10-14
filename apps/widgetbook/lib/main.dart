@@ -1,4 +1,5 @@
 import 'screen_switcher_prototype.dart';
+import 'agent_switcher_settings_fixture.dart';
 import 'call_bar_fixture.dart';
 import 'screen_switcher_reference_fixture.dart';
 import 'browser_permissions_fixture.dart';
@@ -1226,6 +1227,12 @@ class KDesignWidgetbook extends StatelessWidget {
               name: 'AgentChatWorkspace',
               children: [
                 WidgetbookUseCase(
+                  name: AgentChatWorkspaceFixtureNames.empty,
+                  builder: (_) => const AgentChatWorkspaceFixture(
+                    kind: AgentChatWorkspaceFixtureKind.empty,
+                  ),
+                ),
+                WidgetbookUseCase(
                   name: AgentChatWorkspaceFixtureNames.fullScreen,
                   builder: (_) => const AgentChatWorkspaceFixture(),
                 ),
@@ -1306,6 +1313,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'agent-switcher-reorder',
                   builder: (_) =>
                       const AgentSwitcherShowcaseFixture(reorderable: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'agent-switcher-settings',
+                  builder: (_) => const AgentSwitcherSettingsFixture(),
                 ),
                 WidgetbookUseCase(
                   name: 'chat-composer-controls',

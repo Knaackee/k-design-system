@@ -12,6 +12,8 @@ import '../overlays/k_overlays.dart';
 part 'k_agent_chat_identity.dart';
 part 'k_agent_chat_right_sidebar.dart';
 
+enum KAgentAvatarPopoverActivation { tap, longPress }
+
 typedef KAgentChatWorkspaceSidebarBuilder =
     Widget Function(
       BuildContext context,
@@ -57,11 +59,13 @@ class KAgentChatWorkspace extends StatefulWidget {
     this.avatarBackdropBlur = 12,
     this.avatarTransitionDuration,
     this.showTitle = false,
+    this.showIdentity = true,
     this.conversationEmpty = false,
-    this.avatarSizeEmpty = 240,
+    this.avatarSizeEmpty = 420,
     this.avatarLabel,
     this.avatarPopover,
     this.avatarPopoverLabel = 'Account and usage',
+    this.avatarPopoverActivation = KAgentAvatarPopoverActivation.longPress,
     this.contentMaxWidth = 920,
     this.rightSidebar,
     this.rightSidebarOpen = false,
@@ -97,10 +101,14 @@ class KAgentChatWorkspace extends StatefulWidget {
 
   /// Hide the visual heading while retaining the conversation identity for AT.
   final bool showTitle;
+
+  /// Hide the floating identity when a consumer call strip supplies it.
+  final bool showIdentity;
   final bool conversationEmpty;
   final double avatarSizeEmpty;
   final Widget? avatarLabel, avatarPopover;
   final String avatarPopoverLabel;
+  final KAgentAvatarPopoverActivation avatarPopoverActivation;
   final double contentMaxWidth;
   final Widget? rightSidebar;
   final bool rightSidebarOpen;
@@ -131,6 +139,9 @@ class KAgentChatWorkspace extends StatefulWidget {
 }
 
 class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
+  bool _avatarInfoOpen = false;
+  void _changeAvatarInfoOpen(bool open) =>
+      setState(() => _avatarInfoOpen = open);
   final _avatarPopoverAnchor = GlobalKey();
   final _rightContent = ValueNotifier<Widget>(const SizedBox.shrink());
   BuildContext? _rightRouteContext;
@@ -347,12 +358,14 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                   final duration = reducedMotion
                       ? Duration.zero
                       : widget.avatarTransitionDuration ?? tokens.motionLong;
-                  final targetSize = widget.conversationEmpty && !compact
+                  final emptyStage =
+                      widget.conversationEmpty && !_avatarInfoOpen;
+                  final targetSize = emptyStage && !keyboardVisible
                       ? math.min(
                           widget.avatarSizeEmpty,
                           math.min(
-                            stage.maxWidth * .6,
-                            MediaQuery.sizeOf(context).height * .4,
+                            MediaQuery.sizeOf(context).width * .72,
+                            MediaQuery.sizeOf(context).height * .52,
                           ),
                         )
                       : avatarSize;
@@ -390,33 +403,35 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                             ),
                           ),
                         ),
-                      Positioned.fill(
-                        child: IgnorePointer(
-                          ignoring: widget.avatarPopover == null,
-                          child: AnimatedAlign(
-                            alignment: widget.conversationEmpty
-                                ? Alignment.center
-                                : Alignment.topCenter,
-                            duration: duration,
-                            curve: Curves.easeInOut,
-                            child: TweenAnimationBuilder<double>(
-                              tween: Tween<double>(end: targetSize),
+                      if (widget.showIdentity)
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            ignoring: widget.avatarPopover == null,
+                            child: AnimatedAlign(
+                              alignment: emptyStage
+                                  ? Alignment.center
+                                  : Alignment.topCenter,
                               duration: duration,
                               curve: Curves.easeInOut,
-                              child: widget.avatar,
-                              builder: (context, size, avatar) => ExcludeFocus(
-                                excluding: widget.dockMaximized,
-                                child: _floatingIdentity(
-                                  context,
-                                  size,
-                                  avatar!,
-                                  duration,
-                                ),
+                              child: TweenAnimationBuilder<double>(
+                                tween: Tween<double>(end: targetSize),
+                                duration: duration,
+                                curve: Curves.easeInOut,
+                                child: widget.avatar,
+                                builder: (context, size, avatar) =>
+                                    ExcludeFocus(
+                                      excluding: widget.dockMaximized,
+                                      child: _floatingIdentity(
+                                        context,
+                                        size,
+                                        avatar!,
+                                        duration,
+                                      ),
+                                    ),
                               ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   );
                 },

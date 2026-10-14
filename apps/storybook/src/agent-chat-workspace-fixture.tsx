@@ -1,6 +1,14 @@
-import { useMemo, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   KAgentChatWorkspace,
+  KCallBar,
+  KButton,
   KUsageDetails,
   KAgentSwitcher,
   KSelect,
@@ -19,7 +27,8 @@ import {
 import { AgentWorkspaceAvatar } from "./agent-workspace-avatar.js";
 import "./agent-chat-workspace-fixture.css";
 
-type FixtureVariant = "fullscreen" | "needs-input" | "offline" | "mobile";
+type FixtureVariant =
+  "fullscreen" | "needs-input" | "offline" | "mobile" | "empty";
 type AvatarShape = "circle" | "squircle" | "star" | "capsule";
 type AvatarStatus = "idle" | "working" | "waiting" | "blocked";
 
@@ -219,6 +228,21 @@ export function AgentChatWorkspaceFixture({
     variant === "needs-input" ? "mira" : variant === "offline" ? "pi" : "ada";
   const [agents, setAgents] = useState(initialAgents);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(true);
+  const [callOpen, setCallOpen] = useState(false);
+  const [callExpanded, setCallExpanded] = useState(true);
+  const [callMuted, setCallMuted] = useState(false);
+  const [callSeconds, setCallSeconds] = useState(0);
+  const callOrigin = useRef<DOMRect | null>(null);
+  const pattern = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!callOpen) return;
+    const timer = setInterval(
+      () => setCallSeconds((seconds) => seconds + 1),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [callOpen]);
   const [selectedId, setSelectedId] = useState(initialSelected);
   const [selectedSessions, setSelectedSessions] = useState<
     Record<string, string>
@@ -230,20 +254,26 @@ export function AgentChatWorkspaceFixture({
     Record<string, KChatAttachmentPart[]>
   >({});
   const [voiceKey, setVoiceKey] = useState<string | null>(null);
-  const [drafts, setDrafts] = useState<Record<string, string>>({
-    "ada/Aktuelles Gespräch": "Prüfe auch den kleinen Bildschirm.",
-    linus: "",
-    "mira/Aktuelles Gespräch": "Beginne mit der mobilen Ansicht.",
-    nova: "",
-    "pi/Aktuelles Gespräch": "Dieser Entwurf bleibt lokal.",
-  });
+  const [drafts, setDrafts] = useState<Record<string, string>>(
+    variant === "empty"
+      ? {}
+      : {
+          "ada/Aktuelles Gespräch": "Prüfe auch den kleinen Bildschirm.",
+          linus: "",
+          "mira/Aktuelles Gespräch": "Beginne mit der mobilen Ansicht.",
+          nova: "",
+          "pi/Aktuelles Gespräch": "Dieser Entwurf bleibt lokal.",
+        },
+  );
   const [messages, setMessages] = useState<Record<string, KChatMessageValue[]>>(
-    Object.fromEntries(
-      Object.entries(baseMessages).map(([id, value]) => [
-        `${id}/${sessions[0]}`,
-        value,
-      ]),
-    ),
+    variant === "empty"
+      ? {}
+      : Object.fromEntries(
+          Object.entries(baseMessages).map(([id, value]) => [
+            `${id}/${sessions[0]}`,
+            value,
+          ]),
+        ),
   );
   const selected = useMemo(
     () => agents.find((agent) => agent.id === selectedId) ?? agents[0],
@@ -303,6 +333,7 @@ export function AgentChatWorkspaceFixture({
     }));
 
   const submit = (text: string) => {
+    if (callOpen) setCallExpanded(false);
     setMessages((current) => ({
       ...current,
       [conversationKey]: [
@@ -324,210 +355,288 @@ export function AgentChatWorkspaceFixture({
     setDrafts((current) => ({ ...current, [conversationKey]: "" }));
   };
 
+  if (!chatOpen)
+    return <KButton onClick={() => setChatOpen(true)}>Chat öffnen</KButton>;
+
   return (
-    <KAgentChatWorkspace
-      conversationEmpty={(messages[conversationKey] ?? []).length === 0}
-      avatarTransitionDuration={550}
-      contentMaxWidth={920}
-      rightSidebarOpen={detailsOpen}
-      onRightSidebarOpenChange={setDetailsOpen}
-      rightSidebarTitle="Kontext"
-      rightSidebar={
-        <div className="agent-chat-workspace-fixture__context">
-          <h2>Kontext</h2>
-          <p>
-            Platzhalter für Dateien, Ergebnisse und Informationen zum aktuellen
-            Gespräch.
-          </p>
-          <h3>Dateien</h3>
-          <p>Projektbrief.pdf</p>
-          <h3>Ergebnisse</h3>
-          <p>Hier erscheinen später geteilte Inhalte des Agenten.</p>
-        </div>
-      }
-      sidebar={({ close }) => renderSidebar(close)}
-      avatar={
-        <AgentWorkspaceAvatar
-          shape={selected.shape}
-          color={selected.color}
-          status={selected.heroStatus}
-          size={240}
-          label={`${selected.name}, ${selected.statusLabel}`}
-        />
-      }
-      title={selected.name}
-      avatarLabel={selected.name}
-      avatarPopoverLabel={`${selected.name}: Zugang und Kontingente`}
-      avatarPopover={
-        <div className="agent-chat-workspace-fixture__usage-preview">
-          <KUsageDetails
-            extraResetsLabel="Zusatzresets"
-            extraResets={resetExpiries.map((expiry) => ({
-              id: expiry,
-              label: `Verfällt am ${expiry}`,
-              valueLabel: "1 Reset",
-            }))}
-            title="Codex"
-            sourceLabel="demo@example.com"
-            statusLabel="Beispieldaten · Verbunden"
-            observedLabel="Gerade eben · Demo"
-            windows={[
-              {
-                id: "week",
-                label: "7 Tage",
-                valueLabel: "68 % Rest",
-                progress: 68,
-                extraResetCount: resetExpiries.length,
-                renewalLabel: "Reset in 3 Tagen 13 Std.",
-              },
-            ]}
+    <div ref={pattern} className="agent-chat-workspace-fixture__pattern">
+      <KAgentChatWorkspace
+        defaultSidebarCollapsed
+        className={
+          callOpen ? "agent-chat-workspace-fixture--calling" : undefined
+        }
+        avatarPopoverActivation="tap"
+        avatarSizeCompact={52}
+        conversationEmpty={(messages[conversationKey] ?? []).length === 0}
+        avatarTransitionDuration={900}
+        avatarSizeEmpty={420}
+        contentMaxWidth={920}
+        rightSidebarOpen={detailsOpen}
+        onRightSidebarOpenChange={setDetailsOpen}
+        rightSidebarTitle="Kontext"
+        rightSidebar={
+          <div className="agent-chat-workspace-fixture__context">
+            <h2>Kontext</h2>
+            <p>
+              Platzhalter für Dateien, Ergebnisse und Informationen zum
+              aktuellen Gespräch.
+            </p>
+            <h3>Dateien</h3>
+            <p>Projektbrief.pdf</p>
+            <h3>Ergebnisse</h3>
+            <p>Hier erscheinen später geteilte Inhalte des Agenten.</p>
+          </div>
+        }
+        sidebar={({ close }) => renderSidebar(close)}
+        avatar={
+          <AgentWorkspaceAvatar
+            shape={selected.shape}
+            color={selected.color}
+            status={selected.heroStatus}
+            size={420}
+            label={`${selected.name}, ${selected.statusLabel}`}
           />
-        </div>
-      }
-      status={
-        selected.statusLabel === "Bereit" ||
-        selected.statusLabel === "In Ruhe" ? null : (
-          <span
-            className="agent-chat-workspace-fixture__status"
-            style={{ "--agent-status-color": selected.color } as CSSProperties}
-            role="status"
-            aria-live={
-              selected.activity === "needs-input" ||
-              selected.connection === "offline"
-                ? "polite"
-                : "off"
-            }
-          >
-            {selected.statusLabel} · {selectedSession}
-          </span>
-        )
-      }
-      actions={
-        <>
-          <KSelect
-            presentation="inline"
-            label="Letzte Sessions"
-            optionsLabel="Letzte Sessions"
-            value={selectedSession}
-            options={recentSessions.map((session) => ({
-              value: session,
-              label: session,
-            }))}
-            onValueChange={(session) => {
-              setVoiceKey(null);
-              setSelectedSessions((current) => ({
-                ...current,
-                [selected.id]: session,
-              }));
-            }}
-          />
-          <KIconButton
-            icon="plus"
-            label="Neue Session"
-            onClick={() => {
-              const session = `Neue Session ${recentSessions.length - 1}`;
-              setSessionLists((current) => ({
-                ...current,
-                [selected.id]: [session, ...recentSessions],
-              }));
-              setSelectedSessions((current) => ({
-                ...current,
-                [selected.id]: session,
-              }));
-              setVoiceKey(null);
-            }}
-          />
-          <KIconButton
-            icon="info"
-            label={detailsOpen ? "Kontext schließen" : "Kontext öffnen"}
-            aria-expanded={detailsOpen}
-            onClick={() => setDetailsOpen((open) => !open)}
-          />
-        </>
-      }
-      labels={{ agents: "Agenten", closeAgents: "Agenten schließen" }}
-      composer={
-        <KChatComposer
-          value={drafts[conversationKey] ?? ""}
-          onValueChange={(value) =>
-            setDrafts((current) => ({ ...current, [conversationKey]: value }))
-          }
-          onSubmit={submit}
-          onStop={() => undefined}
-          runState={selected.runState}
-          disabled={selected.connection === "offline"}
-          attachments={attachments[conversationKey] ?? []}
-          leadingTools={
-            <KMenuButton
-              label="Anhängen"
-              triggerVariant="ghost"
-              triggerContent={<KIcon name="paperclip" />}
-              actions={[
+        }
+        title={selected.name}
+        avatarLabel={selected.name}
+        avatarPopoverLabel={`${selected.name}: Zugang und Kontingente`}
+        avatarPopover={
+          <div className="agent-chat-workspace-fixture__usage-preview">
+            <KUsageDetails
+              extraResetsLabel="Zusatzresets"
+              extraResets={resetExpiries.map((expiry) => ({
+                id: expiry,
+                label: `Verfällt am ${expiry}`,
+                valueLabel: "1 Reset",
+              }))}
+              title="Codex"
+              sourceLabel="demo@example.com"
+              statusLabel="Beispieldaten · Verbunden"
+              observedLabel="Gerade eben · Demo"
+              windows={[
                 {
-                  id: "image",
-                  label: "Bild auswählen",
-                  icon: "image",
-                  onSelect: () => addAttachment("Bild.jpg", "image/jpeg"),
-                },
-                {
-                  id: "camera",
-                  label: "Neues Bild aufnehmen",
-                  icon: "camera",
-                  onSelect: () => addAttachment("Aufnahme.jpg", "image/jpeg"),
-                },
-                {
-                  id: "document",
-                  label: "Dokument auswählen",
-                  icon: "file",
-                  onSelect: () =>
-                    addAttachment("Projektbrief.pdf", "application/pdf"),
+                  id: "week",
+                  label: "7 Tage",
+                  valueLabel: "68 % Rest",
+                  progress: 68,
+                  extraResetCount: resetExpiries.length,
+                  renewalLabel: "Reset in 3 Tagen 13 Std.",
                 },
               ]}
             />
-          }
-          onAttachmentRemove={(file) =>
-            setAttachments((current) => ({
-              ...current,
-              [conversationKey]: (current[conversationKey] ?? []).filter(
-                (item) => item.id !== file.id,
-              ),
-            }))
-          }
-          voiceActive={voiceKey === conversationKey}
-          onVoiceInput={() =>
-            setVoiceKey((current) =>
-              current === conversationKey ? null : conversationKey,
-            )
-          }
-          labels={{
-            input: `Nachricht an ${selected.name}`,
-            placeholder:
-              selected.connection === "offline"
-                ? "Offline – Entwurf bleibt erhalten"
-                : "Nachricht …",
-            send: "Nachricht senden",
-            attach: "Datei anhängen (Demo)",
-            removeAttachment: "Anhang entfernen",
-            voice: "Audio starten (Demo)",
-            stopVoice: "Audio stoppen (Demo)",
-          }}
-        />
-      }
-    >
-      {(messages[conversationKey] ?? []).length > 0 && (
-        <KChatConversation
-          className="agent-chat-workspace-fixture__conversation"
-          messages={messages[conversationKey] ?? []}
-          runState={selected.runState}
-          metadataMode="hidden"
-          labels={{
-            assistant: selected.name,
-            user: "Du",
-            emptyTitle: "Noch keine Demo-Nachrichten",
-            emptyDescription: "Schreibe eine lokale Vorschau-Nachricht.",
-          }}
-        />
-      )}
-    </KAgentChatWorkspace>
+          </div>
+        }
+        status={
+          selected.statusLabel === "Bereit" ||
+          selected.statusLabel === "In Ruhe" ? null : (
+            <span
+              className="agent-chat-workspace-fixture__status"
+              style={
+                { "--agent-status-color": selected.color } as CSSProperties
+              }
+              role="status"
+              aria-live={
+                selected.activity === "needs-input" ||
+                selected.connection === "offline"
+                  ? "polite"
+                  : "off"
+              }
+            >
+              {selected.statusLabel} · {selectedSession}
+            </span>
+          )
+        }
+        actions={
+          <>
+            <KSelect
+              presentation="inline"
+              label="Letzte Sessions"
+              optionsLabel="Letzte Sessions"
+              value={selectedSession}
+              options={recentSessions.map((session) => ({
+                value: session,
+                label: session,
+              }))}
+              onValueChange={(session) => {
+                setVoiceKey(null);
+                setSelectedSessions((current) => ({
+                  ...current,
+                  [selected.id]: session,
+                }));
+              }}
+            />
+            <KIconButton
+              icon="plus"
+              label="Neue Session"
+              onClick={() => {
+                const session = `Neue Session ${recentSessions.length - 1}`;
+                setSessionLists((current) => ({
+                  ...current,
+                  [selected.id]: [session, ...recentSessions],
+                }));
+                setSelectedSessions((current) => ({
+                  ...current,
+                  [selected.id]: session,
+                }));
+                setVoiceKey(null);
+              }}
+            />
+            <KIconButton
+              className="agent-chat-workspace-fixture__call-start"
+              icon="phone"
+              variant="ghost"
+              label={callOpen ? "Zum Anruf zurückkehren" : "Anrufen"}
+              onClick={() => {
+                if (!callOpen) {
+                  callOrigin.current =
+                    pattern.current
+                      ?.querySelector(".k-agent-chat-workspace__avatar")
+                      ?.getBoundingClientRect() ?? null;
+                  setCallSeconds(0);
+                  setCallMuted(false);
+                }
+                setCallOpen(true);
+                setCallExpanded(true);
+              }}
+            />
+            <KIconButton
+              icon="x"
+              label="Chat schließen"
+              onClick={() => {
+                setCallOpen(false);
+                setChatOpen(false);
+              }}
+            />
+          </>
+        }
+        labels={{ agents: "Agenten", closeAgents: "Agenten schließen" }}
+        composer={
+          <KChatComposer
+            value={drafts[conversationKey] ?? ""}
+            onValueChange={(value) =>
+              setDrafts((current) => ({ ...current, [conversationKey]: value }))
+            }
+            onSubmit={submit}
+            onStop={() => undefined}
+            runState={selected.runState}
+            disabled={selected.connection === "offline"}
+            attachments={attachments[conversationKey] ?? []}
+            leadingTools={
+              <KMenuButton
+                label="Anhängen"
+                triggerVariant="ghost"
+                triggerContent={<KIcon name="paperclip" />}
+                actions={[
+                  {
+                    id: "image",
+                    label: "Bild auswählen",
+                    icon: "image",
+                    onSelect: () => addAttachment("Bild.jpg", "image/jpeg"),
+                  },
+                  {
+                    id: "camera",
+                    label: "Neues Bild aufnehmen",
+                    icon: "camera",
+                    onSelect: () => addAttachment("Aufnahme.jpg", "image/jpeg"),
+                  },
+                  {
+                    id: "document",
+                    label: "Dokument auswählen",
+                    icon: "file",
+                    onSelect: () =>
+                      addAttachment("Projektbrief.pdf", "application/pdf"),
+                  },
+                ]}
+              />
+            }
+            onAttachmentRemove={(file) =>
+              setAttachments((current) => ({
+                ...current,
+                [conversationKey]: (current[conversationKey] ?? []).filter(
+                  (item) => item.id !== file.id,
+                ),
+              }))
+            }
+            voiceActive={voiceKey === conversationKey}
+            onVoiceInput={() =>
+              setVoiceKey((current) =>
+                current === conversationKey ? null : conversationKey,
+              )
+            }
+            labels={{
+              input: `Nachricht an ${selected.name}`,
+              placeholder:
+                selected.connection === "offline"
+                  ? "Offline – Entwurf bleibt erhalten"
+                  : "Nachricht …",
+              send: "Nachricht senden",
+              attach: "Datei anhängen (Demo)",
+              removeAttachment: "Anhang entfernen",
+              voice: "Audio starten (Demo)",
+              stopVoice: "Audio stoppen (Demo)",
+            }}
+          />
+        }
+      >
+        {callOpen && (
+          <KCallBar
+            className="agent-chat-workspace-fixture__call"
+            name={selected.name}
+            status={callMuted ? "Mikrofon stumm" : "Hört zu"}
+            duration={`${Math.floor(callSeconds / 60)
+              .toString()
+              .padStart(
+                2,
+                "0",
+              )}:${(callSeconds % 60).toString().padStart(2, "0")}`}
+            muted={callMuted}
+            microphoneLevel={0}
+            onMutedChange={setCallMuted}
+            expanded={callExpanded}
+            avatarOrigin={callOrigin.current}
+            onExpandedChange={setCallExpanded}
+            onEndCall={() => setCallOpen(false)}
+            avatar={
+              <AgentWorkspaceAvatar
+                shape={selected.shape}
+                color={selected.color}
+                status="idle"
+                size={420}
+                label={selected.name}
+              />
+            }
+            labels={{
+              region: "Anruf",
+              duration: "Anrufdauer",
+              mute: "Mikrofon stummschalten",
+              unmute: "Mikrofon einschalten",
+              minimize: "Zum Chat",
+              expand: "Anruf öffnen",
+              end: "Auflegen",
+            }}
+          />
+        )}
+        <div
+          className="agent-chat-workspace-fixture__chat-content"
+          inert={callOpen && callExpanded}
+          aria-hidden={callOpen && callExpanded ? true : undefined}
+        >
+          {(messages[conversationKey] ?? []).length > 0 && (
+            <KChatConversation
+              className="agent-chat-workspace-fixture__conversation"
+              messages={messages[conversationKey] ?? []}
+              runState={selected.runState}
+              metadataMode="hidden"
+              labels={{
+                assistant: selected.name,
+                user: "Du",
+                emptyTitle: "Noch keine Demo-Nachrichten",
+                emptyDescription: "Schreibe eine lokale Vorschau-Nachricht.",
+              }}
+            />
+          )}
+        </div>
+      </KAgentChatWorkspace>
+    </div>
   );
 }

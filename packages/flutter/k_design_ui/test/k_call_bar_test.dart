@@ -4,6 +4,58 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets('call can mute, minimize, return and end at mobile width', (
+    tester,
+  ) async {
+    bool expanded = true, muted = false, ended = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(configuration: KDesignConfiguration.mobileApp),
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 320,
+              height: 600,
+              child: StatefulBuilder(
+                builder: (context, change) => KCallBar(
+                  name: 'Alex',
+                  status: 'Hört zu',
+                  duration: '02:14',
+                  muted: muted,
+                  microphoneLevel: .7,
+                  avatar: const SizedBox.square(dimension: 240),
+                  expanded: expanded,
+                  onMutedChanged: (value) => change(() => muted = value),
+                  onExpandedChanged: (value) => change(() => expanded = value),
+                  onEndCall: () => ended = true,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    Finder action(String label) => find.byWidgetPredicate(
+      (widget) =>
+          (widget is KIconButton && widget.label == label) ||
+          (widget is KButton && widget.label == label),
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pump(const Duration(milliseconds: 920));
+    await tester.tap(action('Mute microphone'));
+    await tester.pump();
+    expect(muted, isTrue);
+    await tester.tap(action('Back to chat'));
+    await tester.pump();
+    expect(expanded, isFalse);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('Alex'));
+    await tester.pump();
+    expect(expanded, isTrue);
+    await tester.pump(const Duration(milliseconds: 920));
+    await tester.tap(action('End call'));
+    expect(ended, isTrue);
+  });
   testWidgets('call bar fits host mobile tokens at 320 pixels', (tester) async {
     bool? requested;
     final tokens = kDesignTokens(configuration: KDesignConfiguration.mobileApp);

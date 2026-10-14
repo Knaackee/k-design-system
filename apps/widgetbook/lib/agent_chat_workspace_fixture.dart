@@ -1,21 +1,30 @@
+import 'dart:async';
 import 'agent_workspace_usage.dart';
 import 'agent_workspace_details.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:k_design_ui/k_design_ui.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 
 import 'agent_workspace_avatar.dart';
 part 'agent_workspace_demo_agents.dart';
 
-enum AgentChatWorkspaceFixtureKind { fullScreen, needsInput, offline, mobile }
+enum AgentChatWorkspaceFixtureKind {
+  fullScreen,
+  needsInput,
+  offline,
+  mobile,
+  empty,
+}
 
 abstract final class AgentChatWorkspaceFixtureNames {
   static const fullScreen = 'Fullscreen';
   static const needsInput = 'NeedsInput';
   static const offline = 'Offline';
   static const mobile = 'Mobile';
-  static const all = [fullScreen, needsInput, offline, mobile];
+  static const empty = 'agent-chat-workspace-empty-session';
+  static const all = [fullScreen, needsInput, offline, mobile, empty];
 }
 
 class AgentChatWorkspaceFixture extends StatefulWidget {
@@ -41,6 +50,48 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
   final _attachments = <String, List<KChatAttachmentPart>>{};
   String? _voiceKey;
   bool _rightSidebarOpen = false;
+  bool _chatOpen = true;
+  bool _callExpanded = true, _callMuted = false;
+  int _callSeconds = 0;
+  Timer? _callTimer;
+  Rect? _callOrigin;
+  final _workspaceKey = GlobalKey();
+  final _callAvatarKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _callTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startCall() {
+    if (_voiceKey != _draftKey) {
+      final box =
+          _workspaceKey.currentContext?.findRenderObject() as RenderBox?;
+      // The workspace exposes the character anchor for the gallery transition.
+      _callOrigin = box == null
+          ? null
+          : Rect.fromPoints(
+              box.localToGlobal(Offset.zero),
+              box.localToGlobal(box.size.bottomRight(Offset.zero)),
+            );
+      _callTimer?.cancel();
+      _callSeconds = 0;
+      _callMuted = false;
+      _callTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (mounted) setState(() => _callSeconds++);
+      });
+    }
+    setState(() {
+      _voiceKey = _draftKey;
+      _callExpanded = true;
+    });
+  }
+
+  void _endCall() {
+    _callTimer?.cancel();
+    setState(() => _voiceKey = null);
+  }
 
   @override
   void initState() {
@@ -51,6 +102,9 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
       AgentChatWorkspaceFixtureKind.offline => 'pi',
       _ => 'ada',
     };
+    if (widget.kind == AgentChatWorkspaceFixtureKind.empty) {
+      _messages['ada/${_sessionNames.first}'] = [];
+    }
   }
 
   _DemoAgent get _agent =>
@@ -63,16 +117,34 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_chatOpen) {
+      return Center(
+        child: KButton(
+          label: 'Chat öffnen',
+          onPressed: () => setState(() => _chatOpen = true),
+        ),
+      );
+    }
     final workspace = KAgentChatWorkspace(
-      conversationEmpty: _messagesFor(_draftKey).isEmpty,
-      avatarTransitionDuration: const Duration(milliseconds: 550),
+      defaultSidebarCollapsed: true,
+      avatarPopoverActivation: KAgentAvatarPopoverActivation.tap,
+      avatarSizeCompact: 52,
+      avatarSizeEmpty: 420,
+      showIdentity: _voiceKey != _draftKey,
+      conversationEmpty:
+          _messagesFor(_draftKey).isEmpty && (_drafts[_draftKey] ?? '').isEmpty,
+      avatarTransitionDuration: const Duration(milliseconds: 900),
+      conversationHeader: _voiceKey == _draftKey && !_callExpanded
+          ? _callBar(expanded: false)
+          : null,
       labels: const KAgentChatWorkspaceLabels(
         agents: 'Agenten',
         closeAgents: 'Agenten schließen',
       ),
       sidebarBuilder: (context, controls) => _sidebar(controls.close),
       avatar: AgentWorkspaceAvatar(
-        key: ValueKey('workspace-avatar-${_agent.id}'),
+        size: 420,
+        key: _workspaceKey,
         shape: _agent.shape,
         color: _agent.color,
         status: _agent.avatarStatus,
@@ -110,6 +182,7 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
                   if (session != null) {
                     setState(() {
                       _selectedSession[_selectedAgent] = session;
+                      _callTimer?.cancel();
                       _voiceKey = null;
                     });
                   }
@@ -127,32 +200,53 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
               _sessionLists[_selectedAgent] = [name, ...sessions];
               _selectedSession[_selectedAgent] = name;
               _messages[_draftKey] = [];
+              _callTimer?.cancel();
               _voiceKey = null;
             }),
           ),
           KIconButton(
-            icon: KIconName.info,
-            label: 'Kontext',
-            onPressed: () =>
-                setState(() => _rightSidebarOpen = !_rightSidebarOpen),
+            icon: KIconName.phone,
+            iconContent: KIcon(
+              KIconName.phone,
+              color: Theme.of(
+                context,
+              ).extension<KDesignTokens>()!.colorStatusSuccessAccent,
+            ),
+            label: _voiceKey == _draftKey
+                ? 'Zum Anruf zurückkehren'
+                : 'Anrufen',
+            onPressed: _startCall,
+          ),
+          KIconButton(
+            icon: KIconName.x,
+            label: 'Chat schließen',
+            onPressed: () {
+              _callTimer?.cancel();
+              setState(() {
+                _voiceKey = null;
+                _chatOpen = false;
+              });
+            },
           ),
         ],
       ),
-      conversation: KChatConversation(
-        emptyState: const SizedBox.shrink(),
-        contentPadding: const EdgeInsets.fromLTRB(16, 144, 16, 16),
-        key: ValueKey('conversation-$_draftKey'),
-        messages: _messagesFor(_draftKey),
-        runState: _agent.runState,
-        metadataMode: KChatMessageMetadataMode.hidden,
-        showTimestamps: false,
-        labels: const KChatLabels(
-          assistant: 'Agent',
-          user: 'Du',
-          emptyTitle: 'Noch keine Demo-Nachrichten',
-          emptyDescription: 'Schreibe eine lokale Vorschau-Nachricht.',
-        ),
-      ),
+      conversation: _voiceKey == _draftKey && _callExpanded
+          ? _callBar(expanded: true)
+          : KChatConversation(
+              emptyState: const SizedBox.shrink(),
+              contentPadding: const EdgeInsets.fromLTRB(16, 144, 16, 16),
+              key: ValueKey('conversation-$_draftKey'),
+              messages: _messagesFor(_draftKey),
+              runState: _agent.runState,
+              metadataMode: KChatMessageMetadataMode.hidden,
+              showTimestamps: false,
+              labels: const KChatLabels(
+                assistant: 'Agent',
+                user: 'Du',
+                emptyTitle: 'Noch keine Demo-Nachrichten',
+                emptyDescription: 'Schreibe eine lokale Vorschau-Nachricht.',
+              ),
+            ),
       composer: KChatComposer(
         key: ValueKey('composer-$_draftKey'),
         value: _drafts[_draftKey] ?? '',
@@ -194,9 +288,7 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
           ),
         ),
         voiceActive: _voiceKey == _draftKey,
-        onVoiceInput: () => setState(
-          () => _voiceKey = _voiceKey == _draftKey ? null : _draftKey,
-        ),
+        onVoiceInput: _startCall,
         labels: const KChatComposerLabels(
           input: 'Demo-Nachricht',
           placeholder: 'Nachricht …',
@@ -220,6 +312,47 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
       ),
     );
   }
+
+  Widget _callBar({required bool expanded}) => KCallBar(
+    name: _agent.name,
+    status: _callMuted ? 'Mikrofon stumm' : 'Hört zu',
+    duration:
+        '${(_callSeconds ~/ 60).toString().padLeft(2, '0')}:${(_callSeconds % 60).toString().padLeft(2, '0')}',
+    muted: _callMuted,
+    microphoneLevel: .7,
+    onMutedChanged: (value) => setState(() => _callMuted = value),
+    expanded: expanded,
+    avatarOrigin: _callOrigin,
+    avatar: AgentWorkspaceAvatar(
+      size: 420,
+      key: _callAvatarKey,
+      shape: _agent.shape,
+      color: _agent.color,
+      status: _callMuted ? 'idle' : 'listening',
+      label: _agent.name,
+    ),
+    onExpandedChanged: (value) {
+      final box =
+          _callAvatarKey.currentContext?.findRenderObject() as RenderBox?;
+      setState(() {
+        _callOrigin = value && box != null
+            ? Rect.fromPoints(
+                box.localToGlobal(Offset.zero),
+                box.localToGlobal(box.size.bottomRight(Offset.zero)),
+              )
+            : null;
+        _callExpanded = value;
+      });
+    },
+    onEndCall: _endCall,
+    regionLabel: 'Anruf',
+    durationLabel: 'Anrufdauer',
+    muteLabel: 'Mikrofon stummschalten',
+    unmuteLabel: 'Mikrofon einschalten',
+    minimizeLabel: 'Zum Chat',
+    expandLabel: 'Anruf öffnen',
+    endLabel: 'Auflegen',
+  );
 
   Widget _sidebar(VoidCallback closeDrawer) => KSidebar(
     mode: KSidebarMode.expanded,
@@ -307,6 +440,7 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
         ),
       ]);
       _drafts[key] = '';
+      if (_voiceKey == key) _callExpanded = false;
     });
   }
 }
@@ -326,8 +460,11 @@ const _demoConversation = <(KChatRole, String)>[
     '''Wir sollten die Vorschau an drei konkreten Aufgaben prüfen: ein Gespräch beginnen, zwischen zwei Agenten wechseln und eine laufende Antwort stoppen. Für jede Aufgabe halten wir fest, was die Person sehen und tun können muss.
 
 1. Öffne die Agentenliste und wähle eine andere Person aus. Der Entwurf des bisherigen Gesprächs bleibt erhalten.
+
 2. Schreibe eine kurze Nachricht und danach einen längeren Absatz. Die Eingabe darf die Antwortgeschichte nicht verdecken.
+
 3. Öffne die Tastatur, scrolle zu einer früheren Antwort und kehre zur neuesten Nachricht zurück.
+
 4. Trenne die Verbindung. Die Oberfläche erklärt den Zustand, ohne einen erfolgreichen Versand vorzutäuschen.
 
 Für die Abnahme brauchen wir zusätzlich ein schmales Telefon und ein Tablet. Ein einzelnes Bildschirmfoto zeigt die Abstände, aber erst das Scrollen macht sichtbar, ob Avatar, Text und Eingabe dauerhaft zusammenpassen.''',
@@ -345,9 +482,13 @@ Wenn die Tastatur erscheint, wird der Avatar kleiner. Die Gesprächsauswahl, die
     '''Ein kurzer Test reicht:
 
 - Schreibe bei Ada „Termin am Donnerstag“ und sende noch nicht.
+
 - Wechsle zu Linus und schreibe „Build prüfen“.
+
 - Kehre zu Ada zurück. Dort muss wieder „Termin am Donnerstag“ stehen.
+
 - Öffne bei Ada ein neues Gespräch. Dieses beginnt mit einer leeren Eingabe.
+
 - Wähle das erste Gespräch erneut. Sein bisheriger Entwurf erscheint wieder.
 
 Die Vorschau verwendet ausschließlich lokale Beispieldaten. Es werden keine echten Agenten angeschrieben und keine Änderungen an einer produktiven Unterhaltung gespeichert.''',

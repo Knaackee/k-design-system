@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { AgentSwitcherSettingsFixture } from "./agent-switcher-settings-fixture.js";
 import {
   AgentSwitcherFixture,
   AgentSwitcherShowcaseFixture,
@@ -16,6 +17,12 @@ type Story = StoryObj<typeof meta>;
 export const PersonalAgents: Story = {
   name: "agent-chat-switcher",
   parameters: { fixtureId: "agent-chat-switcher" },
+};
+
+export const Settings: Story = {
+  name: "agent-switcher-settings",
+  render: () => <AgentSwitcherSettingsFixture />,
+  parameters: { fixtureId: "agent-switcher-settings" },
 };
 
 export const CustomContent: StoryObj<typeof AgentSwitcherShowcaseFixture> = {

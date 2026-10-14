@@ -39,3 +39,26 @@ test("call bar clips full-scale microphone amplitude", () => {
   assert.deepEqual(heights(2), heights(1));
   assert.ok(Math.max(...heights(2)) > 23.9);
 });
+
+test("expanded call exposes minimize and end controls, compact call exposes return", () => {
+  const props = {
+    name: "Alex",
+    status: "Listening",
+    duration: "02:14",
+    muted: false,
+    microphoneLevel: 0.7,
+    onMutedChange() {},
+    onExpandedChange() {},
+    onEndCall() {},
+    avatar: h("span", {}, "Avatar"),
+  };
+  const expanded = renderToStaticMarkup(
+    h(KCallBar, { ...props, expanded: true }),
+  );
+  assert.match(expanded, /aria-label="Minimize call"/);
+  assert.match(expanded, /aria-label="End call"/);
+  assert.doesNotMatch(expanded, /aria-label="Return to call"/);
+  const compact = renderToStaticMarkup(h(KCallBar, props));
+  assert.match(compact, /aria-label="Return to call"/);
+  assert.match(compact, /aria-label="End call"/);
+});

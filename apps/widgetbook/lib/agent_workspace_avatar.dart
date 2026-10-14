@@ -112,9 +112,16 @@ class _AgentWorkspaceAvatarState extends State<AgentWorkspaceAvatar> {
                 : const SizedBox.shrink())
           : IgnorePointer(
               child: RepaintBoundary(
-                child: rive.RiveWidget(
-                  controller: _controller!,
-                  fit: rive.Fit.contain,
+                // Web draws into a 200% canvas with 30% internal margins.
+                // Its visible artboard therefore occupies 80% of this frame.
+                child: LayoutBuilder(
+                  builder: (context, bounds) => Padding(
+                    padding: EdgeInsets.all(bounds.biggest.shortestSide * .1),
+                    child: rive.RiveWidget(
+                      controller: _controller!,
+                      fit: rive.Fit.contain,
+                    ),
+                  ),
                 ),
               ),
             ),

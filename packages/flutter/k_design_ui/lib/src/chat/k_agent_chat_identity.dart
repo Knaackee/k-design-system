@@ -152,10 +152,16 @@ extension _KAgentChatIdentity on _KAgentChatWorkspaceState {
         ? IgnorePointer(child: trigger)
         : KPopover(
             label: widget.avatarPopoverLabel,
-            openOnLongPress: true,
+            openOnLongPress:
+                widget.avatarPopoverActivation ==
+                KAgentAvatarPopoverActivation.longPress,
+            onOpenChanged: _changeAvatarInfoOpen,
             belowAnchor: true,
             showArrow: true,
             anchorKey: _avatarPopoverAnchor,
+            anchorTransitionDuration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : widget.avatarTransitionDuration ?? tokens.motionLong,
             trigger: trigger,
             content: widget.avatarPopover!,
           );

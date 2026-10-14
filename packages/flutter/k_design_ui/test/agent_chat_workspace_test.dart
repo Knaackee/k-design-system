@@ -217,9 +217,10 @@ void main() {
       );
       final stage = tester.getRect(find.byKey(const ValueKey('conversation')));
       final initial = tester.getRect(avatarFinder);
-      expect(initial.width, lessThanOrEqualTo(240));
-      expect(initial.width, lessThanOrEqualTo(stage.width * .6));
-      expect(initial.width, lessThanOrEqualTo(stage.height * .4));
+      // Approved empty identity: min(420, 72vw, 52vh).
+      expect(initial.width, closeTo(390 * .72, .01));
+      expect(initial.width, lessThanOrEqualTo(420));
+      expect(initial.width, lessThanOrEqualTo(844 * .52));
       expect(initial.center.dy, closeTo(stage.center.dy, .01));
       expect(mounts, 1);
       await tester.pumpWidget(

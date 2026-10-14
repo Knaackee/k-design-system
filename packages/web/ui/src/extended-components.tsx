@@ -533,9 +533,15 @@ export function KPopover({
       } as CSSProperties);
     };
     update();
+    // Follow anchors that resize during layout transitions (for example the
+    // chat avatar shrinking when its usage popover opens).
+    const resizeObserver = new ResizeObserver(update);
+    const anchorElement = anchorRef?.current ?? root.current;
+    if (anchorElement) resizeObserver.observe(anchorElement);
     window.addEventListener("resize", update);
     window.addEventListener("scroll", update, true);
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
     };

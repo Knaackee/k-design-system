@@ -22,6 +22,7 @@ export interface KAgentChatWorkspaceProps {
   avatarLabel?: ReactNode;
   avatarPopover?: ReactNode;
   avatarPopoverLabel?: string;
+  avatarPopoverActivation?: "tap" | "longPress";
   contentMaxWidth?: number | "full";
   rightSidebar?: ReactNode;
   rightSidebarOpen?: boolean;
@@ -72,6 +73,7 @@ export function KAgentChatWorkspace({
   avatarLabel,
   avatarPopover,
   avatarPopoverLabel = "Account and usage",
+  avatarPopoverActivation = "longPress",
   contentMaxWidth = 920,
   rightSidebar,
   rightSidebarOpen = false,
@@ -96,7 +98,7 @@ export function KAgentChatWorkspace({
   avatarTransitionDuration = 180,
   showTitle = false,
   conversationEmpty = false,
-  avatarSizeEmpty = 240,
+  avatarSizeEmpty = 420,
   debugAvatarBounds = false,
 }: KAgentChatWorkspaceProps) {
   const labels = { ...defaultLabels, ...labelOverrides };
@@ -233,6 +235,7 @@ export function KAgentChatWorkspace({
           <div className="k-agent-chat-workspace__conversation">{children}</div>
           <header className="k-agent-chat-workspace__identity">
             <AgentAvatarInfo
+              activation={avatarPopoverActivation}
               avatar={avatar}
               label={avatarLabel}
               content={avatarPopover}

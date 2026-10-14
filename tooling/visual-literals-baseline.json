@@ -90,6 +90,38 @@
     "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|height: 1px;": {
       "count": 1,
       "reason": "Screen-reader-only drawer heading: standard clipped 1px accessibility geometry; preserves the accessible dialog name without a duplicate visible heading."
+    },
+    "packages/web/ui/src/chat/call-bar.css|dimension|width: min(340px, 64vw, 40cqh);": {
+      "count": 1,
+      "reason": "Approved Agent Workspace call character maximum340px, capped by viewport width and available call height; matches accepted Storybook design. No existing semantic character-size token provides this geometry."
+    },
+    "packages/web/ui/src/chat/call-bar.css|dimension|height: min(340px, 64vw, 40cqh);": {
+      "count": 1,
+      "reason": "Approved Agent Workspace call character maximum340px, capped by viewport width and available call height; matches accepted Storybook design. No existing semantic character-size token provides this geometry."
+    },
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 220ms;": {
+      "count": 1,
+      "reason": "Approved Agent Workspace expanded-call bounce stagger:220ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
+    },
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 280ms;": {
+      "count": 1,
+      "reason": "Approved Agent Workspace expanded-call bounce stagger:280ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
+    },
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 340ms;": {
+      "count": 1,
+      "reason": "Approved Agent Workspace expanded-call bounce stagger:340ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
+    },
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 400ms;": {
+      "count": 1,
+      "reason": "Approved Agent Workspace expanded-call bounce stagger:400ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
+    },
+    "packages/web/ui/src/chat/call-bar.css|motion|animation: k-call-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) both;": {
+      "count": 1,
+      "reason": "Approved Agent Workspace expanded-call520ms bounce timing, preserving accepted Storybook choreography without fade and disabled for reduced motion. No existing motion token matches this duration."
+    },
+    "packages/flutter/k_design_ui/lib/src/chat/k_call_bar.dart|motion|duration: const Duration(milliseconds: 900),": {
+      "count": 1,
+      "reason": "Approved Agent Workspace call-character900ms resize, matching the accepted Web call transition; preserves Rive character state and honors reduced motion. Existing general motion tokens do not match this duration."
     }
   }
 }

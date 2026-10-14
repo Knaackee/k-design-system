@@ -241,8 +241,8 @@
 }
 .k-agent-chat-workspace[data-conversation-empty="true"]
   .k-agent-chat-workspace__avatar {
-  width: min(var(--k-agent-chat-workspace-avatar-empty-size), 60vw, 40dvh);
-  height: min(var(--k-agent-chat-workspace-avatar-empty-size), 60vw, 40dvh);
+  width: min(var(--k-agent-chat-workspace-avatar-empty-size), 72vw, 52dvh);
+  height: min(var(--k-agent-chat-workspace-avatar-empty-size), 72vw, 52dvh);
 }
 .k-agent-chat-workspace[data-conversation-empty="true"]
   .k-agent-chat-workspace__identity::before {
@@ -349,4 +349,36 @@ button.k-agent-chat-workspace__avatar-label {
     )
   );
   margin-inline: auto;
+}
+
+/* The quota view uses exactly the normal chat identity, even in an empty session. */
+.k-agent-chat-workspace
+  .k-agent-chat-workspace__identity:has([data-info-open="true"]) {
+  inset-block-start: 0;
+  transform: translateY(0);
+}
+.k-agent-chat-workspace__avatar-info[data-info-open="true"]
+  .k-agent-chat-workspace__avatar {
+  width: var(--k-agent-chat-workspace-avatar-mobile-size);
+  height: var(--k-agent-chat-workspace-avatar-mobile-size);
+}
+@media (min-width: 768px) {
+  .k-agent-chat-workspace__avatar-info[data-info-open="true"]
+    .k-agent-chat-workspace__avatar {
+    width: var(--k-agent-chat-workspace-avatar-desktop-size);
+    height: var(--k-agent-chat-workspace-avatar-desktop-size);
+  }
+}
+@media (max-height: 620px) {
+  .k-agent-chat-workspace__avatar-info[data-info-open="true"]
+    .k-agent-chat-workspace__avatar {
+    width: var(--k-agent-chat-workspace-avatar-compact-size);
+    height: var(--k-agent-chat-workspace-avatar-compact-size);
+  }
+}
+.k-agent-chat-workspace[data-compact="true"]
+  .k-agent-chat-workspace__avatar-info[data-info-open="true"]
+  .k-agent-chat-workspace__avatar {
+  width: var(--k-agent-chat-workspace-avatar-compact-size);
+  height: var(--k-agent-chat-workspace-avatar-compact-size);
 }

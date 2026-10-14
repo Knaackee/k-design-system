@@ -4,11 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
-Widget frame({bool open = false, ValueChanged<bool>? onChange}) => MaterialApp(
+Widget frame({
+  bool open = false,
+  bool empty = false,
+  ValueChanged<bool>? onChange,
+}) => MaterialApp(
   theme: kDesignTheme(),
   home: KAgentChatWorkspace(
     sidebar: const SizedBox.expand(),
     defaultSidebarCollapsed: true,
+    avatarPopoverActivation: KAgentAvatarPopoverActivation.tap,
+    conversationEmpty: empty,
     avatar: const SizedBox.square(dimension: 144),
     title: const Text('Ada'),
     avatarLabel: const Text('Ada label'),
@@ -30,6 +36,25 @@ Widget frame({bool open = false, ValueChanged<bool>? onChange}) => MaterialApp(
 );
 
 void main() {
+  testWidgets('single tap shrinks empty character and quota stays below it', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(frame(empty: true));
+    final figure = find.byKey(const ValueKey('k-agent-chat-workspace-avatar'));
+    final before = tester.getSize(figure).width;
+    await tester.tap(find.byType(KPopover));
+    await tester.pumpAndSettle();
+    expect(find.text('Demo quota'), findsOneWidget);
+    expect(tester.getSize(figure).width, lessThan(before));
+    final popup = tester.getRect(find.byType(PopupMenuItem<bool>));
+    expect(popup.top, closeTo(tester.getRect(figure).bottom, 1));
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(tester.getSize(figure).width, before);
+  });
   testWidgets('speech bubble centers on avatar in an inset gallery navigator', (
     tester,
   ) async {
@@ -44,7 +69,7 @@ void main() {
     final avatar = tester.getRect(
       find.byKey(const ValueKey('k-agent-chat-workspace-avatar')),
     );
-    await tester.longPress(find.byType(KPopover));
+    await tester.tap(find.byType(KPopover));
     await tester.pumpAndSettle();
     final popup = tester.getRect(find.byType(PopupMenuItem<bool>));
     expect(popup.center.dx, closeTo(avatar.center.dx, 1));
@@ -54,7 +79,7 @@ void main() {
     'avatar speech bubble anchors to figure and supports keyboard activation',
     (tester) async {
       await tester.pumpWidget(frame());
-      await tester.longPress(find.byType(KPopover));
+      await tester.tap(find.byType(KPopover));
       await tester.pumpAndSettle();
       expect(find.text('Demo quota'), findsOneWidget);
       final popup = tester.getRect(find.byType(PopupMenuItem<bool>));
@@ -84,6 +109,38 @@ void main() {
       expect(tester.takeException(), null);
     },
   );
+
+  testWidgets('moving quota remains bounded when viewport narrows', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: KAgentChatWorkspace(
+          sidebar: const SizedBox(),
+          avatar: const SizedBox.square(dimension: 240),
+          title: const Text('Ada'),
+          conversation: const SizedBox(),
+          composer: const SizedBox(height: 40),
+          conversationEmpty: true,
+          avatarPopoverActivation: KAgentAvatarPopoverActivation.tap,
+          avatarTransitionDuration: const Duration(milliseconds: 900),
+          avatarPopover: const Text('Quota resize'),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(KPopover));
+    await tester.pump(const Duration(milliseconds: 120));
+    tester.view.physicalSize = const Size(240, 900);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    final popup = tester.getRect(find.byType(PopupMenuItem<bool>));
+    expect(popup.left, greaterThanOrEqualTo(0));
+    expect(popup.right, lessThanOrEqualTo(240));
+  });
 
   testWidgets('reading area and composer center while right column animates', (
     tester,

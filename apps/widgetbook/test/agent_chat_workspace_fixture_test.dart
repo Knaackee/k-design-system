@@ -11,6 +11,7 @@ void main() {
       'NeedsInput',
       'Offline',
       'Mobile',
+      'agent-chat-workspace-empty-session',
     ]);
   });
 
@@ -26,6 +27,10 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(frame(AgentChatWorkspaceFixtureKind.fullScreen));
     await tester.pump();
+    await tester.tap(
+      find.byKey(const ValueKey('k-agent-chat-workspace-agents')),
+    );
+    await tester.pumpAndSettle();
 
     final nova = tester.getSemantics(
       find.byKey(const ValueKey('k-agent-switcher-nova')),
@@ -81,7 +86,9 @@ void main() {
     expect(composer().controller!.text, 'Ada-Entwurf');
     semantics.dispose();
   });
-  testWidgets('mobile toolbar opens context without overflow', (tester) async {
+  testWidgets('mobile toolbar closes and reopens chat without overflow', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -90,12 +97,59 @@ void main() {
     expect(tester.takeException(), null);
     await tester.tap(
       find.byWidgetPredicate(
-        (widget) => widget is KIconButton && widget.label == 'Kontext',
+        (widget) => widget is KIconButton && widget.label == 'Chat schließen',
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.byType(KBottomSheet), findsOneWidget);
-    expect(find.text('Projektbrief.pdf'), findsOneWidget);
+    expect(find.text('Chat öffnen'), findsOneWidget);
+    await tester.tap(find.text('Chat öffnen'));
+    await tester.pump();
+    expect(find.byType(KChatComposer), findsOneWidget);
     expect(tester.takeException(), null);
+  });
+  testWidgets('empty session calls, mutes, minimizes, expands and sends', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(frame(AgentChatWorkspaceFixtureKind.empty));
+    await tester.pump();
+    Finder icon(String label) => find.byWidgetPredicate(
+      (widget) => widget is KIconButton && widget.label == label,
+    );
+    await tester.tap(icon('Anrufen'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 950));
+    expect(tester.widget<KCallBar>(find.byType(KCallBar)).expanded, isTrue);
+    await tester.tap(icon('Mikrofon stummschalten'));
+    await tester.pump();
+    expect(tester.widget<KCallBar>(find.byType(KCallBar)).muted, isTrue);
+    await tester.tap(find.text('Zum Chat'));
+    await tester.pump();
+    expect(tester.widget<KCallBar>(find.byType(KCallBar)).expanded, isFalse);
+    expect(find.text('Mikrofon stumm · Anruf öffnen'), findsOneWidget);
+    await tester.tap(find.text('Mikrofon stumm · Anruf öffnen'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 950));
+    expect(tester.widget<KCallBar>(find.byType(KCallBar)).expanded, isTrue);
+    // Composer stays available during the expanded call; submitting minimizes it.
+    await tester.enterText(
+      find.descendant(
+        of: find.byType(KChatComposer),
+        matching: find.byType(TextField),
+      ),
+      'Hallo Ada',
+    );
+    await tester.pump();
+    await tester.tap(icon('Demo-Nachricht senden'));
+    await tester.pump(const Duration(milliseconds: 950));
+    expect(tester.widget<KCallBar>(find.byType(KCallBar)).expanded, isFalse);
+    expect(find.text('Hallo Ada'), findsOneWidget);
+    await tester.tap(icon('Auflegen'));
+    await tester.pump();
+    expect(find.byType(KCallBar), findsNothing);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
   });
 }
