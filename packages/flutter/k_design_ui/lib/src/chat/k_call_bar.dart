@@ -35,14 +35,19 @@ class KCallBar extends StatelessWidget {
     final t =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
-    final level = muted || !microphoneLevel.isFinite
+    final amplitude = muted || !microphoneLevel.isFinite
         ? 0.0
         : microphoneLevel.clamp(0.0, 1.0);
+    final level = amplitude == 0
+        ? 0.0
+        : ((20 * math.log(amplitude) / math.log(10) + 60) / 60).clamp(0.0, 1.0);
     return Semantics(
       label: regionLabel,
       container: true,
       child: Container(
-        height: t.sizeIconDefault * 2 + t.spaceControlGap * 2,
+        constraints: BoxConstraints(
+          minHeight: t.sizeIconDefault * 2 + t.spaceControlGap * 2,
+        ),
         padding: EdgeInsets.symmetric(
           horizontal: t.spaceLayoutGutter,
           vertical: t.spaceControlGap,
@@ -55,6 +60,7 @@ class KCallBar extends StatelessWidget {
           children: [
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -83,38 +89,42 @@ class KCallBar extends StatelessWidget {
                 width: t.sizeIconDefault * 5,
                 height: t.sizeIconDefault,
                 child: ClipRect(
-                  child: OverflowBox(
-                    alignment: Alignment.centerRight,
-                    minWidth: t.sizeIconDefault * 5,
-                    maxWidth: t.sizeIconDefault * 5,
-                    child: ExcludeSemantics(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          for (var i = 0; i < 25; i++)
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: t.spaceControlGap / 4,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      const barCount = 25;
+                      final unit = math.min(
+                        t.spaceControlGap / 4,
+                        constraints.maxWidth / (barCount * 2),
+                      );
+                      return ExcludeSemantics(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            for (var i = 0; i < barCount; i++)
+                              Padding(
+                                padding: EdgeInsets.only(left: unit),
+                                child: Container(
+                                  key: ValueKey('k-call-bar-level-$i'),
+                                  width: unit,
+                                  height:
+                                      t.sizeIconDefault *
+                                      (0.125 +
+                                          0.875 *
+                                              level *
+                                              (0.3 +
+                                                  0.7 *
+                                                      math.sin(i * 1.7).abs())),
+                                  color: muted
+                                      ? t.colorTextMuted.withValues(
+                                          alpha: t.opacityDisabled,
+                                        )
+                                      : t.colorStatusSuccessAccent,
+                                ),
                               ),
-                              child: Container(
-                                width: t.spaceControlGap / 4,
-                                height:
-                                    t.sizeIconDefault *
-                                    (0.125 +
-                                        0.875 *
-                                            level *
-                                            (0.3 +
-                                                0.7 * math.sin(i * 1.7).abs())),
-                                color: muted
-                                    ? t.colorTextMuted.withValues(
-                                        alpha: t.opacityDisabled,
-                                      )
-                                    : t.colorStatusSuccessAccent,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

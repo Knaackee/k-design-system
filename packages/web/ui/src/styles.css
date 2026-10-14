@@ -10,6 +10,7 @@
 @import "./chat/chat-bubble.css";
 @import "./usage-details.css";
 @import "./activity.css";
+@import "./feedback/text-shimmer.css";
 @import "./charts/charts.css";
 @import "./table.css";
 @import "./pickers.css";

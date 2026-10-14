@@ -55,8 +55,8 @@
   justify-content: space-between;
   gap: var(--k-space-control-gap);
   padding: var(--k-space-control-gap)
-    calc(var(--k-space-layout-gutter) + var(--k-space-control-gap)) 0
-    var(--k-space-layout-gutter);
+    calc(var(--k-space-layout-gutter) + var(--k-space-control-gap))
+    var(--k-space-control-gap) var(--k-space-layout-gutter);
 }
 
 .k-agent-chat-workspace__actions {

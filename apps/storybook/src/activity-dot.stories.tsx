@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   KActivityDot,
+  KTextShimmer,
   type KActivityDotProps,
   type KActivityDotState,
 } from "@k-design-system/ui";
@@ -127,4 +128,31 @@ export const ReducedMotion: Story = {
   name: "activity-dot-reduced-motion",
   parameters: { fixtureId: "activity-dot-reduced-motion" },
   args: { state: "working", reducedMotion: true },
+};
+
+export const CollapsedAgents: Story = {
+  name: "agents-collapsed-activity",
+  parameters: { fixtureId: "agents-collapsed-activity" },
+  render: () => (
+    <div style={{ display: "grid", gap: "var(--k-space-control-gap)" }}>
+      {states.map((state) => (
+        <div
+          key={state}
+          style={{ display: "flex", gap: "var(--k-space-control-gap)" }}
+        >
+          <KActivityDot
+            state={state}
+            dotColor="#ffbb55"
+            label={state}
+            size="16px"
+          />
+          <KTextShimmer
+            text="Agenten"
+            active={state !== "idle"}
+            label={`Agenten: ${state}`}
+          />
+        </div>
+      ))}
+    </div>
+  ),
 };

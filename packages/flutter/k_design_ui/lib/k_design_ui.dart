@@ -1,4 +1,5 @@
 library;
+export 'src/feedback/k_text_shimmer.dart';
 
 export 'src/primitives/k_button.dart';
 export 'src/primitives/k_link.dart';

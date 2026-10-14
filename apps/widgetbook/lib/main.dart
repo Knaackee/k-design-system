@@ -615,6 +615,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   builder: buildActivityDotPlayground,
                 ),
                 WidgetbookUseCase(
+                  name: 'agents-collapsed-activity',
+                  builder: buildCollapsedAgentsActivity,
+                ),
+                WidgetbookUseCase(
                   name: 'activity-dot-states',
                   builder: (_) => const ActivityDotStatesFixture(),
                 ),

@@ -1,3 +1,4 @@
+export { KTextShimmer } from "./feedback/text-shimmer.js";
 export { KButton } from "./primitives/button.js";
 export type { KButtonProps, KButtonVariant } from "./primitives/button.js";
 export { KLink } from "./primitives/link.js";

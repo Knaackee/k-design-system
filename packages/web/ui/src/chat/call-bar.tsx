@@ -6,7 +6,7 @@ export type KCallBarProps = {
   status: string;
   duration: string;
   muted: boolean;
-  /** Measured microphone amplitude, normalized to 0..1. */
+  /** Measured raw PCM microphone amplitude, normalized to 0..1. */
   microphoneLevel: number;
   onMutedChange: (muted: boolean) => void;
   muteDisabled?: boolean;
@@ -31,10 +31,14 @@ export function KCallBar({
   className,
   labels,
 }: KCallBarProps) {
-  const level =
+  const amplitude =
     muted || !Number.isFinite(microphoneLevel)
       ? 0
       : Math.max(0, Math.min(1, microphoneLevel));
+  const level =
+    amplitude === 0
+      ? 0
+      : Math.max(0, Math.min(1, (20 * Math.log10(amplitude) + 60) / 60));
   return (
     <div
       className={`k-call-bar ${className ?? ""}`}

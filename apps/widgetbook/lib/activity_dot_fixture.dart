@@ -4,6 +4,35 @@ import 'package:widgetbook/widgetbook.dart';
 
 const _purple = Color(0xff8b5cf6);
 
+Widget buildCollapsedAgentsActivity(BuildContext context) => Center(
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (final state in KActivityDotState.values)
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              KActivityDot(
+                state: state,
+                dotColor: const Color(0xffffbb55),
+                size: 16,
+                label: state.name,
+              ),
+              const SizedBox(width: 8),
+              KTextShimmer(
+                text: 'Agenten',
+                active: state != KActivityDotState.idle,
+                label: 'Agenten: ${state.name}',
+              ),
+            ],
+          ),
+        ),
+    ],
+  ),
+);
+
 enum _ActivityDotEasing { linear, easeInOut, easeOutCubic }
 
 Widget buildActivityDotPlayground(BuildContext context) {
