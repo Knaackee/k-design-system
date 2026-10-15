@@ -136,3 +136,26 @@ test("recording wave uses only supplied level and clamps its range", () => {
   assert.equal(render(NaN), low);
   assert.doesNotMatch(render(undefined), /data-audio-level=/);
 });
+
+test("dictation can render its label without icon-button sizing", () => {
+  const html = renderToStaticMarkup(
+    h(KDictationAction, {
+      state: KDictationState.recording,
+      label: "Stop recording",
+      showLabel: true,
+      onPressed() {},
+    }),
+  );
+  assert.match(html, />Stop recording</);
+  assert.doesNotMatch(html, /k-icon-button/);
+  assert.match(html, /k-dictation-wave/);
+  const idle = renderToStaticMarkup(
+    h(KDictationAction, {
+      state: KDictationState.ready,
+      label: "Record voice",
+      showLabel: true,
+      onPressed() {},
+    }),
+  );
+  assert.match(idle, /k-button--secondary/);
+});

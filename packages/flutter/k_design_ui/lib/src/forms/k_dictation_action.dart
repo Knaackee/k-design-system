@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'form_style.dart';
 import 'package:flutter/material.dart';
 import '../actions/k_icon_button.dart';
+import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 
 enum KDictationState { ready, recording, processing, unavailable, error }
@@ -13,47 +14,67 @@ class KDictationAction extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.audioLevel,
+    this.showLabel = false,
     super.key,
   });
 
   final KDictationState state;
   final String label;
   final VoidCallback? onPressed;
+  final bool showLabel;
 
   /// Genuine consumer audio level, normalized to 0..1. No audio is sampled here.
   final double? audioLevel;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    selected: state == KDictationState.recording,
-    liveRegion: state == KDictationState.processing,
-    child: KIconButton(
-      label: label,
-      icon: switch (state) {
-        KDictationState.ready => KIconName.mic,
-        KDictationState.recording => KIconName.square,
-        KDictationState.processing => KIconName.loaderCircle,
-        KDictationState.unavailable => KIconName.micOff,
-        KDictationState.error => KIconName.circleAlert,
-      },
-      iconContent: state == KDictationState.recording
-          ? _DictationWave(audioLevel: audioLevel)
-          : state == KDictationState.processing
-          ? KDictationPulse(
-              child: KIcon(
-                KIconName.loaderCircle,
-                color: formTokens(context).colorActionGhostForeground,
-              ),
-            )
-          : null,
+  Widget build(BuildContext context) {
+    final icon = switch (state) {
+      KDictationState.ready => KIconName.mic,
+      KDictationState.recording => KIconName.square,
+      KDictationState.processing => KIconName.loaderCircle,
+      KDictationState.unavailable => KIconName.micOff,
+      KDictationState.error => KIconName.circleAlert,
+    };
+    final blocked =
+        state == KDictationState.processing ||
+        state == KDictationState.unavailable;
+    final iconContent = state == KDictationState.recording
+        ? _DictationWave(audioLevel: audioLevel)
+        : state == KDictationState.processing
+        ? KDictationPulse(
+            child: KIcon(
+              KIconName.loaderCircle,
+              color: showLabel
+                  ? formTokens(context).colorActionSecondaryForeground
+                  : formTokens(context).colorActionGhostForeground,
+            ),
+          )
+        : KIcon(icon);
+    return Semantics(
       selected: state == KDictationState.recording,
-      onPressed:
-          state == KDictationState.processing ||
-              state == KDictationState.unavailable
-          ? null
-          : onPressed,
-    ),
-  );
+      liveRegion: state == KDictationState.processing,
+      child: showLabel
+          ? KButton(
+              label: label,
+              leading: iconContent,
+              variant: state == KDictationState.recording
+                  ? KButtonVariant.primary
+                  : KButtonVariant.secondary,
+              onPressed: blocked ? null : onPressed,
+            )
+          : KIconButton(
+              label: label,
+              icon: icon,
+              iconContent:
+                  state == KDictationState.recording ||
+                      state == KDictationState.processing
+                  ? iconContent
+                  : null,
+              selected: state == KDictationState.recording,
+              onPressed: blocked ? null : onPressed,
+            ),
+    );
+  }
 }
 
 class _DictationWave extends StatelessWidget {

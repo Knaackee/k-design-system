@@ -44,6 +44,43 @@ void main() {
     }
   });
 
+  testWidgets('dictation can render as a labeled button', (tester) async {
+    await tester.pumpWidget(
+      screen(
+        KDictationAction(
+          state: KDictationState.recording,
+          label: 'Aufnahme beenden',
+          showLabel: true,
+          audioLevel: .5,
+          onPressed: () {},
+        ),
+      ),
+    );
+
+    expect(find.text('Aufnahme beenden'), findsOneWidget);
+    expect(find.byType(KButton), findsOneWidget);
+    expect(find.byType(KIconButton), findsNothing);
+    expect(
+      tester.widget<KButton>(find.byType(KButton)).variant,
+      KButtonVariant.primary,
+    );
+
+    await tester.pumpWidget(
+      screen(
+        KDictationAction(
+          state: KDictationState.ready,
+          label: 'Stimme aufnehmen',
+          showLabel: true,
+          onPressed: () {},
+        ),
+      ),
+    );
+    expect(
+      tester.widget<KButton>(find.byType(KButton)).variant,
+      KButtonVariant.secondary,
+    );
+  });
+
   testWidgets(
     'clear and dictation coexist without overlapping or altering dictation text',
     (tester) async {

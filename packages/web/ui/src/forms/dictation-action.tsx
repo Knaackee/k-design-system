@@ -16,6 +16,8 @@ export interface KDictationActionProps {
   onPressed?: () => void;
   /** Genuine consumer audio level, normalized to 0..1. No audio is sampled here. */
   audioLevel?: number;
+  /** Render the visible label beside the state icon or recording wave. */
+  showLabel?: boolean;
 }
 
 /** Presentation only. Consumers own recording, permission and transcription. */
@@ -24,6 +26,7 @@ export function KDictationAction({
   label,
   onPressed,
   audioLevel,
+  showLabel = false,
 }: KDictationActionProps) {
   const icon = {
     ready: "mic",
@@ -41,12 +44,18 @@ export function KDictationAction({
   return (
     <span aria-busy={state === KDictationState.processing || undefined}>
       <KButton
-        className="k-icon-button k-dictation-action"
+        className={`${showLabel ? "" : "k-icon-button "}k-dictation-action`}
         data-dictation-state={state}
         data-audio-level={level === undefined ? undefined : "provided"}
         aria-label={label}
         title={label}
-        variant={state === KDictationState.recording ? "primary" : "ghost"}
+        variant={
+          state === KDictationState.recording
+            ? "primary"
+            : showLabel
+              ? "secondary"
+              : "ghost"
+        }
         disabled={
           !onPressed ||
           state === KDictationState.processing ||
@@ -69,6 +78,7 @@ export function KDictationAction({
         ) : (
           <KIcon name={icon[state]} color="currentColor" />
         )}
+        {showLabel && <span>{label}</span>}
       </KButton>
     </span>
   );
