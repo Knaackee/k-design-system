@@ -1496,6 +1496,24 @@
         "unit": "px"
       }
     },
+    "component.coverFlow.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 420,
+        "unit": "ms"
+      }
+    },
+    "component.coverFlow.countFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 0.8,
+        "unit": "em"
+      }
+    },
+    "component.progressDots.inactiveOpacity": {
+      "type": "number",
+      "value": 0.35
+    },
     "component.browserViewer.cursorAvatarSize": {
       "type": "dimension",
       "value": {
@@ -4966,6 +4984,24 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.coverFlow.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 420,
+        "unit": "ms"
+      }
+    },
+    "component.coverFlow.countFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 0.8,
+        "unit": "em"
+      }
+    },
+    "component.progressDots.inactiveOpacity": {
+      "type": "number",
+      "value": 0.35
     },
     "component.browserViewer.cursorAvatarSize": {
       "type": "dimension",
@@ -8438,6 +8474,24 @@
         "unit": "px"
       }
     },
+    "component.coverFlow.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 420,
+        "unit": "ms"
+      }
+    },
+    "component.coverFlow.countFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 0.8,
+        "unit": "em"
+      }
+    },
+    "component.progressDots.inactiveOpacity": {
+      "type": "number",
+      "value": 0.35
+    },
     "component.browserViewer.cursorAvatarSize": {
       "type": "dimension",
       "value": {
@@ -11908,6 +11962,24 @@
         "value": 760,
         "unit": "px"
       }
+    },
+    "component.coverFlow.transitionDuration": {
+      "type": "duration",
+      "value": {
+        "value": 420,
+        "unit": "ms"
+      }
+    },
+    "component.coverFlow.countFontSize": {
+      "type": "dimension",
+      "value": {
+        "value": 0.8,
+        "unit": "em"
+      }
+    },
+    "component.progressDots.inactiveOpacity": {
+      "type": "number",
+      "value": 0.35
     },
     "component.browserViewer.cursorAvatarSize": {
       "type": "dimension",

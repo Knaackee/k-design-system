@@ -74,7 +74,7 @@ class KCallBar extends StatelessWidget {
               ),
             );
             return ColoredBox(
-              color: t.colorSurfaceRaised,
+              color: t.colorSurfaceCanvas,
               child: Stack(
                 children: [
                   Center(

@@ -95,6 +95,7 @@
   height: 100%;
 }
 .k-call-bar[data-expanded="true"] {
+  background: var(--k-color-surface-canvas);
   height: 100%;
   min-height: 0;
   container-type: size;

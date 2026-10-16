@@ -484,12 +484,12 @@
   justify-content: center;
 }
 .k-progress-dots > span {
-  border-radius: 999px;
+  border-radius: var(--k-radius-full);
   background: var(--k-progress-dot-color, var(--k-color-text-muted));
-  opacity: 0.35;
+  opacity: var(--k-component-progress-dots-inactive-opacity);
   transition:
-    width 180ms ease,
-    opacity 180ms ease;
+    width var(--k-motion-moderate) ease,
+    opacity var(--k-motion-moderate) ease;
 }
 .k-progress-dots > span[data-active] {
   background: var(--k-progress-active-color, var(--k-color-text-primary));

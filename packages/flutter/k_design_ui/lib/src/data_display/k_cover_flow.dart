@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_text.dart';
@@ -91,6 +92,9 @@ class _KCoverFlowState extends State<KCoverFlow> {
 
   @override
   Widget build(BuildContext context) {
+    final tokens =
+        Theme.of(context).extension<KDesignTokens>() ??
+        KDesignTokens.orbitLight;
     final selected = _selected;
     final reduced =
         widget.reducedMotion || MediaQuery.disableAnimationsOf(context);
@@ -133,7 +137,7 @@ class _KCoverFlowState extends State<KCoverFlow> {
                     tween: Tween(end: target),
                     duration: reduced || _dragging
                         ? Duration.zero
-                        : const Duration(milliseconds: 420),
+                        : tokens.componentCoverFlowTransitionDuration,
                     curve: const Cubic(.2, .8, .2, 1),
                     builder: (context, position, _) {
                       final indices =
@@ -289,7 +293,9 @@ class _KCoverFlowState extends State<KCoverFlow> {
                 child: ExcludeSemantics(
                   child: widget.showCaption
                       ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: tokens.spaceLayoutGutter,
+                          ),
                           child: Column(
                             children: [
                               KText(

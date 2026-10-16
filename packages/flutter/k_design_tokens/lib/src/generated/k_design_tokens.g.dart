@@ -294,6 +294,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.layoutContentWidth,
     required this.layoutPickerWideWidth,
     required this.layoutOverlayMaxHeight,
+    required this.componentCoverFlowTransitionDuration,
+    required this.componentCoverFlowCountFontSize,
+    required this.componentProgressDotsInactiveOpacity,
     required this.componentBrowserViewerCursorAvatarSize,
     required this.componentBrowserViewerDisconnectedOpacity,
     required this.componentActivityDotPulseOpacity,
@@ -813,6 +816,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double layoutContentWidth;
   final double layoutPickerWideWidth;
   final double layoutOverlayMaxHeight;
+  final Duration componentCoverFlowTransitionDuration;
+  final double componentCoverFlowCountFontSize;
+  final double componentProgressDotsInactiveOpacity;
   final double componentBrowserViewerCursorAvatarSize;
   final double componentBrowserViewerDisconnectedOpacity;
   final double componentActivityDotPulseOpacity;
@@ -1332,6 +1338,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
+    componentCoverFlowCountFontSize: 0.8,
+    componentProgressDotsInactiveOpacity: 0.35,
     componentBrowserViewerCursorAvatarSize: 32.0,
     componentBrowserViewerDisconnectedOpacity: 0.9,
     componentActivityDotPulseOpacity: 0.35,
@@ -1852,6 +1861,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
+    componentCoverFlowCountFontSize: 0.8,
+    componentProgressDotsInactiveOpacity: 0.35,
     componentBrowserViewerCursorAvatarSize: 32.0,
     componentBrowserViewerDisconnectedOpacity: 0.9,
     componentActivityDotPulseOpacity: 0.35,
@@ -2372,6 +2384,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
+    componentCoverFlowCountFontSize: 0.8,
+    componentProgressDotsInactiveOpacity: 0.35,
     componentBrowserViewerCursorAvatarSize: 32.0,
     componentBrowserViewerDisconnectedOpacity: 0.9,
     componentActivityDotPulseOpacity: 0.35,
@@ -2892,6 +2907,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
+    componentCoverFlowCountFontSize: 0.8,
+    componentProgressDotsInactiveOpacity: 0.35,
     componentBrowserViewerCursorAvatarSize: 32.0,
     componentBrowserViewerDisconnectedOpacity: 0.9,
     componentActivityDotPulseOpacity: 0.35,
@@ -3413,6 +3431,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? layoutContentWidth,
     double? layoutPickerWideWidth,
     double? layoutOverlayMaxHeight,
+    Duration? componentCoverFlowTransitionDuration,
+    double? componentCoverFlowCountFontSize,
+    double? componentProgressDotsInactiveOpacity,
     double? componentBrowserViewerCursorAvatarSize,
     double? componentBrowserViewerDisconnectedOpacity,
     double? componentActivityDotPulseOpacity,
@@ -3932,6 +3953,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutContentWidth: layoutContentWidth ?? this.layoutContentWidth,
       layoutPickerWideWidth: layoutPickerWideWidth ?? this.layoutPickerWideWidth,
       layoutOverlayMaxHeight: layoutOverlayMaxHeight ?? this.layoutOverlayMaxHeight,
+      componentCoverFlowTransitionDuration: componentCoverFlowTransitionDuration ?? this.componentCoverFlowTransitionDuration,
+      componentCoverFlowCountFontSize: componentCoverFlowCountFontSize ?? this.componentCoverFlowCountFontSize,
+      componentProgressDotsInactiveOpacity: componentProgressDotsInactiveOpacity ?? this.componentProgressDotsInactiveOpacity,
       componentBrowserViewerCursorAvatarSize: componentBrowserViewerCursorAvatarSize ?? this.componentBrowserViewerCursorAvatarSize,
       componentBrowserViewerDisconnectedOpacity: componentBrowserViewerDisconnectedOpacity ?? this.componentBrowserViewerDisconnectedOpacity,
       componentActivityDotPulseOpacity: componentActivityDotPulseOpacity ?? this.componentActivityDotPulseOpacity,
@@ -4456,6 +4480,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutContentWidth: lerpDouble(layoutContentWidth, other.layoutContentWidth, t)!,
       layoutPickerWideWidth: lerpDouble(layoutPickerWideWidth, other.layoutPickerWideWidth, t)!,
       layoutOverlayMaxHeight: lerpDouble(layoutOverlayMaxHeight, other.layoutOverlayMaxHeight, t)!,
+      componentCoverFlowTransitionDuration: t < 0.5 ? componentCoverFlowTransitionDuration : other.componentCoverFlowTransitionDuration,
+      componentCoverFlowCountFontSize: lerpDouble(componentCoverFlowCountFontSize, other.componentCoverFlowCountFontSize, t)!,
+      componentProgressDotsInactiveOpacity: lerpDouble(componentProgressDotsInactiveOpacity, other.componentProgressDotsInactiveOpacity, t)!,
       componentBrowserViewerCursorAvatarSize: lerpDouble(componentBrowserViewerCursorAvatarSize, other.componentBrowserViewerCursorAvatarSize, t)!,
       componentBrowserViewerDisconnectedOpacity: lerpDouble(componentBrowserViewerDisconnectedOpacity, other.componentBrowserViewerDisconnectedOpacity, t)!,
       componentActivityDotPulseOpacity: lerpDouble(componentActivityDotPulseOpacity, other.componentActivityDotPulseOpacity, t)!,

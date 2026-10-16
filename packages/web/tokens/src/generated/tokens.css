@@ -224,6 +224,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-cover-flow-transition-duration: 420ms;
+  --k-component-cover-flow-count-font-size: 0.8em;
+  --k-component-progress-dots-inactive-opacity: 0.35;
   --k-component-browser-viewer-cursor-avatar-size: 32px;
   --k-component-browser-viewer-disconnected-opacity: 0.9;
   --k-component-activity-dot-pulse-opacity: 0.35;
@@ -744,6 +747,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-cover-flow-transition-duration: 420ms;
+  --k-component-cover-flow-count-font-size: 0.8em;
+  --k-component-progress-dots-inactive-opacity: 0.35;
   --k-component-browser-viewer-cursor-avatar-size: 32px;
   --k-component-browser-viewer-disconnected-opacity: 0.9;
   --k-component-activity-dot-pulse-opacity: 0.35;
@@ -1264,6 +1270,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-cover-flow-transition-duration: 420ms;
+  --k-component-cover-flow-count-font-size: 0.8em;
+  --k-component-progress-dots-inactive-opacity: 0.35;
   --k-component-browser-viewer-cursor-avatar-size: 32px;
   --k-component-browser-viewer-disconnected-opacity: 0.9;
   --k-component-activity-dot-pulse-opacity: 0.35;
@@ -1784,6 +1793,9 @@
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
+  --k-component-cover-flow-transition-duration: 420ms;
+  --k-component-cover-flow-count-font-size: 0.8em;
+  --k-component-progress-dots-inactive-opacity: 0.35;
   --k-component-browser-viewer-cursor-avatar-size: 32px;
   --k-component-browser-viewer-disconnected-opacity: 0.9;
   --k-component-activity-dot-pulse-opacity: 0.35;

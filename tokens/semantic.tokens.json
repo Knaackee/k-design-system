@@ -968,6 +968,19 @@
     }
   },
   "component": {
+    "coverFlow": {
+      "transitionDuration": {
+        "$type": "duration",
+        "$value": { "value": 420, "unit": "ms" }
+      },
+      "countFontSize": {
+        "$type": "dimension",
+        "$value": { "value": 0.8, "unit": "em" }
+      }
+    },
+    "progressDots": {
+      "inactiveOpacity": { "$type": "number", "$value": 0.35 }
+    },
     "browserViewer": {
       "cursorAvatarSize": {
         "$type": "dimension",

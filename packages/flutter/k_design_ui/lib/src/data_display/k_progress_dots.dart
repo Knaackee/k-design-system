@@ -22,10 +22,10 @@ class KProgressDots extends StatelessWidget {
   Widget build(BuildContext context) {
     if (count <= 0) return const SizedBox.shrink();
     final current = activeIndex.clamp(0, count - 1);
-    final foreground =
-        (Theme.of(context).extension<KDesignTokens>() ??
-                KDesignTokens.orbitLight)
-            .colorTextPrimary;
+    final tokens =
+        Theme.of(context).extension<KDesignTokens>() ??
+        KDesignTokens.orbitLight;
+    final foreground = tokens.colorTextPrimary;
     return Semantics(
       label: label,
       value: '${current + 1} / $count',
@@ -37,14 +37,17 @@ class KProgressDots extends StatelessWidget {
             AnimatedContainer(
               duration: MediaQuery.disableAnimationsOf(context)
                   ? Duration.zero
-                  : const Duration(milliseconds: 180),
+                  : tokens.motionModerate,
               width: i == current ? activeWidth : dotSize,
               height: dotSize,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(999),
+                borderRadius: BorderRadius.circular(tokens.radiusFull),
                 color: i == current
                     ? activeColor ?? foreground
-                    : color ?? foreground.withValues(alpha: .35),
+                    : color ??
+                          foreground.withValues(
+                            alpha: tokens.componentProgressDotsInactiveOpacity,
+                          ),
               ),
             ),
           ],
