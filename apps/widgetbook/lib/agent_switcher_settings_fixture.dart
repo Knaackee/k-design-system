@@ -30,6 +30,7 @@ class _SettingsState extends State<AgentSwitcherSettingsFixture> {
               reorderable: pins.contains(id),
               controlContent: KSwitch(
                 label: 'Pin ${agents[id]}',
+                showLabel: false,
                 value: pins.contains(id),
                 onChanged: (enabled) => setState(
                   () => pins = enabled

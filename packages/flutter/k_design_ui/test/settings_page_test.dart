@@ -170,6 +170,7 @@ void main() {
                 control: KSwitch(
                   key: ValueKey('compact-control'),
                   label: 'Product updates',
+                  showLabel: false,
                   value: true,
                   onChanged: null,
                 ),

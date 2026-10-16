@@ -1,4 +1,5 @@
 @import "./navigation/screen-switcher.css";
+@import "./data-display/cover-flow.css";
 @import "./chat/call-bar.css";
 @import "./chat/presentations.css";
 @import "./chat/presentation-media.css";
@@ -475,4 +476,44 @@
 }
 .k-truncated:focus-visible {
   outline: var(--k-border-width-default) solid var(--k-color-border-focus);
+}
+
+.k-progress-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.k-progress-dots > span {
+  border-radius: 999px;
+  background: var(--k-progress-dot-color, var(--k-color-text-muted));
+  opacity: 0.35;
+  transition:
+    width 180ms ease,
+    opacity 180ms ease;
+}
+.k-progress-dots > span[data-active] {
+  background: var(--k-progress-active-color, var(--k-color-text-primary));
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-progress-dots > span {
+    transition: none;
+  }
+}
+
+.k-switch-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  cursor: pointer;
+}
+.k-switch-field > .k-switch {
+  flex-shrink: 0;
+}
+.k-switch-field__label {
+  font: inherit;
+  color: inherit;
+}
+.k-switch-field[data-disabled] {
+  cursor: not-allowed;
 }

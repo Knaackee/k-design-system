@@ -105,6 +105,7 @@ class _WorkflowSessionReviewState extends State<WorkflowSessionReview> {
             SizedBox(width: t.spaceControlGap),
             KSwitch(
               label: 'Session-Details',
+              showLabel: false,
               value: _details,
               onChanged: (value) => setState(() => _details = value),
             ),

@@ -139,16 +139,19 @@ export interface KSwitchProps extends Omit<
   onCheckedChange: (checked: boolean) => void;
   label: string;
   disabled?: boolean;
+  /** Hide visible text when a surrounding settings row already supplies it. */
+  showLabel?: boolean;
 }
 export function KSwitch({
   checked,
   onCheckedChange,
   label,
+  showLabel = true,
   disabled,
   className,
   ...props
 }: KSwitchProps) {
-  return (
+  const control = (
     <button
       type="button"
       role="switch"
@@ -161,6 +164,14 @@ export function KSwitch({
     >
       <span className="k-switch__thumb" />
     </button>
+  );
+  return showLabel ? (
+    <label className="k-switch-field" data-disabled={disabled || undefined}>
+      {control}
+      <span className="k-switch-field__label">{label}</span>
+    </label>
+  ) : (
+    control
   );
 }
 

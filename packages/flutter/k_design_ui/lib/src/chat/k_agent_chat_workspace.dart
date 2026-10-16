@@ -67,6 +67,7 @@ class KAgentChatWorkspace extends StatefulWidget {
     this.avatarPopoverLabel = 'Account and usage',
     this.avatarPopoverActivation = KAgentAvatarPopoverActivation.longPress,
     this.contentMaxWidth = 920,
+    this.toolbarMaxWidth,
     this.rightSidebar,
     this.rightSidebarOpen = false,
     this.rightSidebarWidth,
@@ -110,6 +111,9 @@ class KAgentChatWorkspace extends StatefulWidget {
   final String avatarPopoverLabel;
   final KAgentAvatarPopoverActivation avatarPopoverActivation;
   final double contentMaxWidth;
+
+  /// Optional toolbar width independent of the conversation column.
+  final double? toolbarMaxWidth;
   final Widget? rightSidebar;
   final bool rightSidebarOpen;
   final double? rightSidebarWidth;
@@ -302,6 +306,7 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth:
+                      widget.toolbarMaxWidth ??
                       widget.contentMaxWidth + 2 * tokens.spaceLayoutGutter,
                 ),
                 child: Padding(
@@ -313,7 +318,7 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                   ),
                   child: Row(
                     children: [
-                      widget.sidebarToggleBuilder != null && desktop
+                      widget.sidebarToggleBuilder != null
                           ? widget.sidebarToggleBuilder!(
                               context,
                               _collapsed,

@@ -2,6 +2,9 @@
   width: max(var(--k-size-control), var(--k-size-hit-target));
   padding-inline: 0;
 }
+.k-icon-button[aria-busy="true"] > .k-button__content {
+  display: none;
+}
 .k-icon-button > span {
   display: flex;
 }

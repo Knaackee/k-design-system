@@ -12,6 +12,7 @@ import 'overlays/k_overlays.dart';
 import 'overlays/k_popover.dart';
 import 'primitives/k_button.dart';
 import 'primitives/k_icon.dart';
+import 'primitives/k_text.dart';
 
 class KKbd extends StatelessWidget {
   const KKbd({required this.child, super.key});
@@ -205,11 +206,16 @@ class KSwitch extends StatelessWidget {
     required this.value,
     required this.onChanged,
     required this.label,
+    this.showLabel = true,
     super.key,
   });
   final bool value;
   final ValueChanged<bool>? onChanged;
   final String label;
+
+  /// Shows [label] beside the track. Defaults to true for Flutter/Web API parity.
+  final bool showLabel;
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
@@ -223,48 +229,69 @@ class KSwitch extends StatelessWidget {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: onChanged == null ? null : () => onChanged!(!value),
-          child: SizedBox(
-            width: t.componentSwitchTrackWidth,
-            height: t.sizeHitTarget.clamp(
-              t.componentSwitchTrackHeight,
-              double.infinity,
-            ),
-            child: Center(
-              child: AnimatedContainer(
-                duration: t.componentSwitchTransitionDuration,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
                 width: t.componentSwitchTrackWidth,
-                height: t.componentSwitchTrackHeight,
-                padding: EdgeInsets.all(t.componentSwitchTrackInset),
-                decoration: BoxDecoration(
-                  color: value
-                      ? t.componentSwitchActiveTrack
-                      : t.componentSwitchInactiveTrack,
-                  border: Border.all(
-                    color: value
-                        ? t.componentSwitchActiveTrack
-                        : t.componentSwitchInactiveBorder,
-                  ),
-                  borderRadius: BorderRadius.circular(t.radiusFull),
+                height: t.sizeHitTarget.clamp(
+                  t.componentSwitchTrackHeight,
+                  double.infinity,
                 ),
-                child: AnimatedAlign(
-                  duration: t.componentSwitchTransitionDuration,
-                  alignment: value
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Container(
-                    width: t.componentSwitchThumbSize,
-                    height: t.componentSwitchThumbSize,
+                child: Center(
+                  child: AnimatedContainer(
+                    duration: t.componentSwitchTransitionDuration,
+                    width: t.componentSwitchTrackWidth,
+                    height: t.componentSwitchTrackHeight,
+                    padding: EdgeInsets.all(t.componentSwitchTrackInset),
                     decoration: BoxDecoration(
                       color: value
-                          ? t.componentSwitchActiveThumb
-                          : t.componentSwitchInactiveThumb,
-                      shape: BoxShape.circle,
-                      boxShadow: t.componentSwitchNativeThumbElevation,
+                          ? t.componentSwitchActiveTrack
+                          : t.componentSwitchInactiveTrack,
+                      border: Border.all(
+                        color: value
+                            ? t.componentSwitchActiveTrack
+                            : t.componentSwitchInactiveBorder,
+                      ),
+                      borderRadius: BorderRadius.circular(t.radiusFull),
+                    ),
+                    child: AnimatedAlign(
+                      duration: t.componentSwitchTransitionDuration,
+                      alignment: value
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        width: t.componentSwitchThumbSize,
+                        height: t.componentSwitchThumbSize,
+                        decoration: BoxDecoration(
+                          color: value
+                              ? t.componentSwitchActiveThumb
+                              : t.componentSwitchInactiveThumb,
+                          shape: BoxShape.circle,
+                          boxShadow: t.componentSwitchNativeThumbElevation,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+              if (showLabel) ...[
+                SizedBox(width: t.spaceControlGap),
+                Flexible(
+                  child: ExcludeSemantics(
+                    child: KText(
+                      label,
+                      variant: KTextVariant.label,
+                      style: TextStyle(
+                        color: onChanged == null
+                            ? t.colorTextMuted
+                            : t.colorTextPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),

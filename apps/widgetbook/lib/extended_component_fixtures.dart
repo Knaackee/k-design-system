@@ -229,17 +229,10 @@ class _ExtendedComponentFixtureState extends State<ExtendedComponentFixture> {
         Text('Processing payment…'),
       ],
     ),
-    'switch' => Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        KSwitch(
-          value: enabled,
-          onChanged: (value) => setState(() => enabled = value),
-          label: 'Share across devices',
-        ),
-        const SizedBox(width: 12),
-        const Text('Share across devices'),
-      ],
+    'switch' => KSwitch(
+      value: enabled,
+      onChanged: (value) => setState(() => enabled = value),
+      label: 'Share across devices',
     ),
     'tabs' => KTabs(
       value: tab,

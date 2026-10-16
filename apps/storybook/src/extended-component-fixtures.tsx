@@ -230,7 +230,6 @@ export function SwitchFixture() {
         onCheckedChange={setChecked}
         label="Share across devices"
       />
-      <span>Share across devices</span>
     </div>
   );
 }

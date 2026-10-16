@@ -185,6 +185,7 @@ function SessionReview() {
             <>
               <span>Session-Details</span>
               <KSwitch
+                showLabel={false}
                 label="Session-Details"
                 checked={details}
                 onCheckedChange={setDetails}

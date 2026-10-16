@@ -199,6 +199,7 @@ export function FoleySoundsFixture() {
           <div className="foley-review__event-switch">
             <KText variant="label">Ereignistöne aktivieren</KText>
             <KSwitch
+              showLabel={false}
               label="Ereignistöne aktivieren"
               checked={eventsEnabled}
               onCheckedChange={(value) => {
@@ -210,6 +211,7 @@ export function FoleySoundsFixture() {
           <div className="foley-review__event-switch">
             <KText variant="label">Chat</KText>
             <KSwitch
+              showLabel={false}
               label="Chat"
               checked={chatEnabled}
               disabled={!eventsEnabled}
@@ -222,6 +224,7 @@ export function FoleySoundsFixture() {
           <div className="foley-review__event-switch">
             <KText variant="label">Tool-Aktivitäten</KText>
             <KSwitch
+              showLabel={false}
               label="Tool-Aktivitäten"
               checked={toolsEnabled}
               disabled={!eventsEnabled}

@@ -29,7 +29,12 @@ class FoleyEventPreview extends StatelessWidget {
           children: [
             Expanded(child: KText(label, variant: KTextVariant.label)),
             SizedBox(width: t.spaceControlGap),
-            KSwitch(label: label, value: value, onChanged: onChanged),
+            KSwitch(
+              label: label,
+              showLabel: false,
+              value: value,
+              onChanged: onChanged,
+            ),
           ],
         );
     return KSurface(

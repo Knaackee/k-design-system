@@ -1,4 +1,5 @@
 import 'screen_switcher_prototype.dart';
+import 'cover_flow_fixture.dart';
 import 'agent_switcher_settings_fixture.dart';
 import 'call_bar_fixture.dart';
 import 'screen_switcher_reference_fixture.dart';
@@ -527,6 +528,14 @@ class KDesignWidgetbook extends StatelessWidget {
                   ),
                 ],
               ),
+            WidgetbookFolder(name: 'ProgressDots', children: [
+              WidgetbookUseCase(name: 'steps', builder: (context) => Center(child: KProgressDots(
+                count: 4, activeIndex: context.knobs.int.slider(label: 'Active index', initialValue: 1, min: 0, max: 3), label: 'Einrichtung',
+              ))),
+            ]),
+            WidgetbookFolder(name: 'CoverFlow', children: [
+              WidgetbookUseCase(name: 'cover-flow-characters', builder: (_) => const CoverFlowFixture()),
+            ]),
             WidgetbookFolder(
               name: 'Table',
               children: [

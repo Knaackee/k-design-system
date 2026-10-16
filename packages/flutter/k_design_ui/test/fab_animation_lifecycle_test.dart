@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
@@ -75,6 +76,107 @@ void main() {
     expect(ticks, stoppedAt);
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets(
+    'lifecycle and visibility changes do not measure a stale anchor',
+    (tester) async {
+      var visible = true;
+      var calls = 0;
+      final transformKey = GlobalKey();
+      late StateSetter rebuild;
+      Widget buildFab() => MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+              return _LayoutSensitiveProxy(
+                key: transformKey,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: KFab(
+                    label: 'Main',
+                    visible: visible,
+                    items: [
+                      KFabItem(
+                        id: 'other',
+                        label: 'Other',
+                        child: const Text('B'),
+                        onSelected: () => calls++,
+                      ),
+                    ],
+                    child: const Text('A'),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(buildFab());
+      await tester.pump();
+      await tester.tap(find.text('A'));
+      await tester.pumpAndSettle();
+      expect(find.text('B'), findsOneWidget);
+      (transformKey.currentContext!.findRenderObject()!
+              as _LayoutSensitiveRenderBox)
+          .invalidateSize();
+      rebuild(() {});
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      await tester.pump();
+      expect(find.text('B'), findsOneWidget);
+      visible = false;
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      await tester.pumpWidget(buildFab());
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await tester.pump();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      visible = true;
+      await tester.pumpWidget(buildFab());
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('B'), findsOneWidget);
+      await tester.tap(find.text('B'));
+      await tester.pumpAndSettle();
+      expect(calls, 1);
+      expect(find.text('B'), findsNothing);
+    },
+  );
+}
+
+class _LayoutSensitiveProxy extends SingleChildRenderObjectWidget {
+  const _LayoutSensitiveProxy({super.key, required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _LayoutSensitiveRenderBox();
+}
+
+class _LayoutSensitiveRenderBox extends RenderProxyBox {
+  bool _layoutReady = true;
+
+  @override
+  bool get hasSize => _layoutReady && super.hasSize;
+
+  void invalidateSize() {
+    _layoutReady = false;
+    markNeedsLayout();
+  }
+
+  @override
+  void performLayout() {
+    _layoutReady = true;
+    super.performLayout();
+  }
+
+  @override
+  void applyPaintTransform(RenderBox child, Matrix4 transform) {
+    if (!_layoutReady) throw FlutterError('RenderBox was not laid out');
+    super.applyPaintTransform(child, transform);
+  }
 }
 
 class _TickProbe extends StatefulWidget {

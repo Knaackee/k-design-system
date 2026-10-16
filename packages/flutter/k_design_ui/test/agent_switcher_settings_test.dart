@@ -30,6 +30,7 @@ void main() {
                         avatar: const Text('Configured avatar'),
                         controlContent: KSwitch(
                           label: 'Pin Ada',
+                          showLabel: false,
                           value: true,
                           onChanged: (value) => pinned = value,
                         ),

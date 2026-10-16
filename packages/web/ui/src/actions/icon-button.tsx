@@ -9,19 +9,27 @@ export interface KIconButtonProps extends Omit<KButtonProps, "children"> {
 
 export const KIconButton = forwardRef<HTMLButtonElement, KIconButtonProps>(
   function KIconButton(
-    { icon, label, className = "", variant = "ghost", ...props },
+    {
+      icon,
+      label,
+      className = "",
+      variant = "ghost",
+      loading = false,
+      ...props
+    },
     ref,
   ) {
     return (
       <KButton
         {...props}
         ref={ref}
+        loading={loading}
         variant={variant}
         aria-label={label}
         title={label}
         className={`k-icon-button ${className}`}
       >
-        <KIcon name={icon} color="currentColor" />
+        {loading ? null : <KIcon name={icon} color="currentColor" />}
       </KButton>
     );
   },

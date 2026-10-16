@@ -1,4 +1,9 @@
 export { KTextShimmer } from "./feedback/text-shimmer.js";
+export { KCoverFlow } from "./data-display/cover-flow.js";
+export type {
+  KCoverFlowProps,
+  KCoverFlowItem,
+} from "./data-display/cover-flow.js";
 export { KButton } from "./primitives/button.js";
 export type { KButtonProps, KButtonVariant } from "./primitives/button.js";
 export { KLink } from "./primitives/link.js";
@@ -554,3 +559,6 @@ export type {
   KScreenSwitcherItem,
   KScreenSwitcherMode,
 } from "./navigation/screen-switcher.js";
+
+export { KProgressDots } from "./data-display/progress-dots.js";
+export type { KProgressDotsProps } from "./data-display/progress-dots.js";

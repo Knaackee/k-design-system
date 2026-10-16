@@ -284,6 +284,7 @@ class _SettingsContent extends StatelessWidget {
               layout: KSettingsRowLayout.compact,
               control: KSwitch(
                 label: 'Product updates',
+                showLabel: false,
                 value: updates,
                 onChanged: onUpdatesChanged,
               ),

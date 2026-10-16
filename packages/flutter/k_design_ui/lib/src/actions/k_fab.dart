@@ -69,11 +69,35 @@ class _KFabState extends State<KFab> {
   final _link = LayerLink();
   final _portal = OverlayPortalController();
   bool _localOpen = false;
+  bool _measureRetryPending = false;
   bool get _open =>
       widget.visible && widget.items.isNotEmpty && (widget.open ?? _localOpen);
   void _change(bool value) {
     setState(() => _localOpen = value);
     widget.onOpenChanged?.call(value);
+  }
+
+  bool _canMeasure(RenderObject anchor, RenderObject overlay) {
+    if (!anchor.attached || !overlay.attached) return false;
+    RenderObject? current = anchor;
+    while (current != null) {
+      if (current is RenderBox && !current.hasSize) {
+        return false;
+      }
+      if (identical(current, overlay)) return true;
+      final parent = current.parent;
+      current = parent is RenderObject ? parent : null;
+    }
+    return false;
+  }
+
+  void _retryMeasureAfterLayout(RenderObject anchor, RenderObject overlay) {
+    if (_measureRetryPending) return;
+    _measureRetryPending = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _measureRetryPending = false;
+      if (mounted && _canMeasure(anchor, overlay)) setState(() {});
+    });
   }
 
   @override
@@ -101,9 +125,18 @@ class _KFabState extends State<KFab> {
     return OverlayPortal(
       controller: _portal,
       overlayChildBuilder: (context) {
-        final box = _anchor.currentContext!.findRenderObject()! as RenderBox;
-        final overlay =
-            Overlay.of(context).context.findRenderObject()! as RenderBox;
+        final anchorObject = _anchor.currentContext?.findRenderObject();
+        final overlayObject = Overlay.of(context).context.findRenderObject();
+        if (anchorObject is! RenderBox ||
+            overlayObject is! RenderBox ||
+            !_canMeasure(anchorObject, overlayObject)) {
+          if (anchorObject is RenderObject && overlayObject is RenderObject) {
+            _retryMeasureAfterLayout(anchorObject, overlayObject);
+          }
+          return const SizedBox.shrink();
+        }
+        final box = anchorObject;
+        final overlay = overlayObject;
         final top = box.localToGlobal(Offset.zero, ancestor: overlay).dy;
         return IgnorePointer(
           ignoring: !_open,

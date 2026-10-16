@@ -202,6 +202,7 @@ function SettingsContent() {
           layout="compact"
           control={
             <KSwitch
+              showLabel={false}
               label="Product updates"
               checked={updates}
               onCheckedChange={setUpdates}

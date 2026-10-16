@@ -1,0 +1,102 @@
+.k-cover-flow {
+  width: 100%;
+  color: var(--k-color-text-primary);
+}
+.k-cover-flow__viewport {
+  position: relative;
+  overflow: visible;
+  perspective: var(--k-cover-flow-perspective);
+  touch-action: pan-y;
+  cursor: grab;
+  outline: none;
+  user-select: none;
+}
+.k-cover-flow__viewport[data-clip-sides] {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.k-cover-flow__viewport:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
+  border-radius: var(--k-radius-card);
+}
+.k-cover-flow__viewport[data-dragging] {
+  cursor: grabbing;
+}
+.k-cover-flow__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(
+    var(--k-cover-flow-item-fraction, 66%),
+    var(--k-cover-flow-item-width)
+  );
+  height: 90%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.k-cover-flow__content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  box-sizing: border-box;
+  padding: var(--k-cover-flow-content-padding);
+  min-width: 0;
+  min-height: 0;
+}
+.k-cover-flow__content > * {
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+.k-cover-flow__content[inert] {
+  pointer-events: none;
+}
+.k-cover-flow__content img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+.k-cover-flow__viewport[data-dragging] .k-cover-flow__item {
+  transition: none;
+}
+.k-cover-flow__navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--k-space-control-gap);
+  padding-block: var(--k-space-control-gap);
+}
+.k-cover-flow__caption {
+  min-width: 10ch;
+  text-align: center;
+  font-weight: var(--k-font-weight);
+}
+.k-cover-flow__count {
+  display: block;
+  color: var(--k-color-text-muted);
+  font-weight: normal;
+  font-size: 0.8em;
+  margin-top: calc(var(--k-space-control-gap) / 2);
+}
+.k-cover-flow__announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.k-cover-flow[data-reduced-motion] .k-cover-flow__item {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-cover-flow__item {
+    transition: none;
+  }
+}

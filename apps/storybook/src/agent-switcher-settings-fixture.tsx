@@ -25,6 +25,7 @@ export function AgentSwitcherSettingsFixture() {
           reorderable: pins.includes(agent.id),
           controlContent: (
             <KSwitch
+              showLabel={false}
               label={`Pin ${agent.name}`}
               checked={pins.includes(agent.id)}
               onCheckedChange={(enabled) =>
