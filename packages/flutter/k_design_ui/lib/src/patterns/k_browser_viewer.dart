@@ -74,8 +74,9 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
   @override
   void didUpdateWidget(KBrowserViewer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Fullscreen also hides/restores chat chrome, so its height must snap.
-    _animateHeight = widget.maximized == oldWidget.maximized;
+    // Fullscreen follows the keyboard insets; animating an old height overflows the viewport.
+    _animateHeight =
+        !widget.maximized && widget.maximized == oldWidget.maximized;
     if (widget.permissionPending != oldWidget.permissionPending) {
       _minimized = widget.permissionPending;
     }

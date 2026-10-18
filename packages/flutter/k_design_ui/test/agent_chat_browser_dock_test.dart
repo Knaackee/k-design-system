@@ -4,6 +4,43 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets('fullscreen viewer follows keyboard resize without overflow', (
+    tester,
+  ) async {
+    double height = 600;
+    late StateSetter update;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: StatefulBuilder(
+          builder: (context, setState) {
+            update = setState;
+            return Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                height: height,
+                child: KBrowserViewer(
+                  height: height,
+                  maximized: true,
+                  status: 'Live verbunden',
+                  onTakeControl: () {},
+                  onPause: () {},
+                  onStop: () {},
+                  onClose: () {},
+                  child: const ColoredBox(color: Colors.white),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+    update(() => height = 320);
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(tester.takeException(), isNull);
+  });
   testWidgets('leaving fullscreen does not overflow restored composer', (
     tester,
   ) async {
