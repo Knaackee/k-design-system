@@ -61,6 +61,7 @@ class KFileTree extends StatelessWidget {
         _FileTreeRow(
           node: node,
           depth: depth,
+          reserveToggle: items.any((item) => item.folder),
           selected: node.id == selectedId,
           expanded: expandedIds.contains(node.id),
           actions: actions?.call(node),
@@ -93,6 +94,7 @@ class _FileTreeRow extends StatefulWidget {
   const _FileTreeRow({
     required this.node,
     required this.depth,
+    required this.reserveToggle,
     required this.selected,
     required this.expanded,
     required this.onToggle,
@@ -102,6 +104,7 @@ class _FileTreeRow extends StatefulWidget {
   });
   final KFileNode node;
   final int depth;
+  final bool reserveToggle;
   final bool selected, expanded;
   final VoidCallback onToggle, onSelect;
   final List<KMenuAction> menuActions;
@@ -133,24 +136,25 @@ class _FileTreeRowState extends State<_FileTreeRow> {
               ),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: t.componentFilesIconSize,
-                    height: t.sizeControl,
-                    child: widget.node.folder
-                        ? InkWell(
-                            onTap: widget.onToggle,
-                            child: Center(
-                              child: KIcon(
-                                widget.expanded
-                                    ? KIconName.chevronDown
-                                    : KIconName.chevronRight,
-                                size: 12,
+                  if (widget.reserveToggle)
+                    SizedBox(
+                      width: t.componentFilesIconSize,
+                      height: t.sizeControl,
+                      child: widget.node.folder
+                          ? InkWell(
+                              onTap: widget.onToggle,
+                              child: Center(
+                                child: KIcon(
+                                  widget.expanded
+                                      ? KIconName.chevronDown
+                                      : KIconName.chevronRight,
+                                  size: 12,
+                                ),
                               ),
-                            ),
-                          )
-                        : null,
-                  ),
-                  SizedBox(width: t.spaceSmallInset),
+                            )
+                          : null,
+                    ),
+                  if (widget.reserveToggle) SizedBox(width: t.spaceSmallInset),
                   Expanded(
                     child: InkWell(
                       onTap: widget.onSelect,
