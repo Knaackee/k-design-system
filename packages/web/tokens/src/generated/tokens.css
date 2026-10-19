@@ -341,7 +341,8 @@
   --k-component-badge-destructive-foreground: var(--k-color-status-error-foreground);
   --k-component-badge-destructive-border: var(--k-color-status-error-border);
   --k-component-badge-min-height: var(--k-size-compact);
-  --k-component-badge-padding-inline: var(--k-space-control-gap);
+  --k-component-badge-padding-inline: var(--k-space-control-inset-inline);
+  --k-component-badge-padding-block: var(--k-space-tight);
   --k-component-badge-content-gap: var(--k-space-tight);
   --k-component-badge-icon-size: var(--k-size-indicator-tiny);
   --k-component-carousel-slide-height: var(--k-size-carousel);
@@ -864,7 +865,8 @@
   --k-component-badge-destructive-foreground: var(--k-color-status-error-foreground);
   --k-component-badge-destructive-border: var(--k-color-status-error-border);
   --k-component-badge-min-height: var(--k-size-compact);
-  --k-component-badge-padding-inline: var(--k-space-control-gap);
+  --k-component-badge-padding-inline: var(--k-space-control-inset-inline);
+  --k-component-badge-padding-block: var(--k-space-tight);
   --k-component-badge-content-gap: var(--k-space-tight);
   --k-component-badge-icon-size: var(--k-size-indicator-tiny);
   --k-component-carousel-slide-height: var(--k-size-carousel);
@@ -1387,7 +1389,8 @@
   --k-component-badge-destructive-foreground: var(--k-color-status-error-foreground);
   --k-component-badge-destructive-border: var(--k-color-status-error-border);
   --k-component-badge-min-height: var(--k-size-compact);
-  --k-component-badge-padding-inline: var(--k-space-control-gap);
+  --k-component-badge-padding-inline: var(--k-space-control-inset-inline);
+  --k-component-badge-padding-block: var(--k-space-tight);
   --k-component-badge-content-gap: var(--k-space-tight);
   --k-component-badge-icon-size: var(--k-size-indicator-tiny);
   --k-component-carousel-slide-height: var(--k-size-carousel);
@@ -1910,7 +1913,8 @@
   --k-component-badge-destructive-foreground: var(--k-color-status-error-foreground);
   --k-component-badge-destructive-border: var(--k-color-status-error-border);
   --k-component-badge-min-height: var(--k-size-compact);
-  --k-component-badge-padding-inline: var(--k-space-control-gap);
+  --k-component-badge-padding-inline: var(--k-space-control-inset-inline);
+  --k-component-badge-padding-block: var(--k-space-tight);
   --k-component-badge-content-gap: var(--k-space-tight);
   --k-component-badge-icon-size: var(--k-size-indicator-tiny);
   --k-component-carousel-slide-height: var(--k-size-carousel);

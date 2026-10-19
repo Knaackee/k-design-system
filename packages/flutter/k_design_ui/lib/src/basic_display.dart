@@ -358,7 +358,10 @@ class KBadge extends StatelessWidget {
         : icon;
     return Container(
       constraints: BoxConstraints(minHeight: t.componentBadgeMinHeight),
-      padding: EdgeInsets.symmetric(horizontal: t.componentBadgePaddingInline),
+      padding: EdgeInsets.symmetric(
+        horizontal: t.componentBadgePaddingInline,
+        vertical: t.componentBadgePaddingBlock,
+      ),
       decoration: BoxDecoration(
         color: background,
         border: Border.all(color: border),

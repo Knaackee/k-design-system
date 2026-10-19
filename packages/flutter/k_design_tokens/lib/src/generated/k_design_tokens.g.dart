@@ -412,6 +412,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentBadgeDestructiveBorder,
     required this.componentBadgeMinHeight,
     required this.componentBadgePaddingInline,
+    required this.componentBadgePaddingBlock,
     required this.componentBadgeContentGap,
     required this.componentBadgeIconSize,
     required this.componentCarouselSlideHeight,
@@ -934,6 +935,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final Color componentBadgeDestructiveBorder;
   final double componentBadgeMinHeight;
   final double componentBadgePaddingInline;
+  final double componentBadgePaddingBlock;
   final double componentBadgeContentGap;
   final double componentBadgeIconSize;
   final double componentCarouselSlideHeight;
@@ -1455,7 +1457,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentBadgeDestructiveForeground: Color(0xFF7F1D1D),
     componentBadgeDestructiveBorder: Color(0xFFFECACA),
     componentBadgeMinHeight: 22.0,
-    componentBadgePaddingInline: 8.0,
+    componentBadgePaddingInline: 12.0,
+    componentBadgePaddingBlock: 4.0,
     componentBadgeContentGap: 4.0,
     componentBadgeIconSize: 12.0,
     componentCarouselSlideHeight: 180.0,
@@ -1978,7 +1981,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentBadgeDestructiveForeground: Color(0xFFFEE2E2),
     componentBadgeDestructiveBorder: Color(0xFF74333D),
     componentBadgeMinHeight: 22.0,
-    componentBadgePaddingInline: 8.0,
+    componentBadgePaddingInline: 12.0,
+    componentBadgePaddingBlock: 4.0,
     componentBadgeContentGap: 4.0,
     componentBadgeIconSize: 12.0,
     componentCarouselSlideHeight: 180.0,
@@ -2501,7 +2505,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentBadgeDestructiveForeground: Color(0xFF991B1B),
     componentBadgeDestructiveBorder: Color(0xFFFECACA),
     componentBadgeMinHeight: 22.0,
-    componentBadgePaddingInline: 8.0,
+    componentBadgePaddingInline: 12.0,
+    componentBadgePaddingBlock: 4.0,
     componentBadgeContentGap: 4.0,
     componentBadgeIconSize: 12.0,
     componentCarouselSlideHeight: 180.0,
@@ -3024,7 +3029,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentBadgeDestructiveForeground: Color(0xFFFFE4E6),
     componentBadgeDestructiveBorder: Color(0xFF793743),
     componentBadgeMinHeight: 22.0,
-    componentBadgePaddingInline: 8.0,
+    componentBadgePaddingInline: 12.0,
+    componentBadgePaddingBlock: 4.0,
     componentBadgeContentGap: 4.0,
     componentBadgeIconSize: 12.0,
     componentCarouselSlideHeight: 180.0,
@@ -3549,6 +3555,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     Color? componentBadgeDestructiveBorder,
     double? componentBadgeMinHeight,
     double? componentBadgePaddingInline,
+    double? componentBadgePaddingBlock,
     double? componentBadgeContentGap,
     double? componentBadgeIconSize,
     double? componentCarouselSlideHeight,
@@ -4070,7 +4077,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentBadgeDestructiveForeground: componentBadgeDestructiveForeground ?? colorStatusErrorForeground ?? this.componentBadgeDestructiveForeground,
       componentBadgeDestructiveBorder: componentBadgeDestructiveBorder ?? colorStatusErrorBorder ?? this.componentBadgeDestructiveBorder,
       componentBadgeMinHeight: componentBadgeMinHeight ?? sizeCompact ?? this.componentBadgeMinHeight,
-      componentBadgePaddingInline: componentBadgePaddingInline ?? spaceControlGap ?? this.componentBadgePaddingInline,
+      componentBadgePaddingInline: componentBadgePaddingInline ?? spaceControlInsetInline ?? this.componentBadgePaddingInline,
+      componentBadgePaddingBlock: componentBadgePaddingBlock ?? spaceTight ?? this.componentBadgePaddingBlock,
       componentBadgeContentGap: componentBadgeContentGap ?? spaceTight ?? this.componentBadgeContentGap,
       componentBadgeIconSize: componentBadgeIconSize ?? sizeIndicatorTiny ?? this.componentBadgeIconSize,
       componentCarouselSlideHeight: componentCarouselSlideHeight ?? sizeCarousel ?? this.componentCarouselSlideHeight,
@@ -4598,6 +4606,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentBadgeDestructiveBorder: Color.lerp(componentBadgeDestructiveBorder, other.componentBadgeDestructiveBorder, t)!,
       componentBadgeMinHeight: lerpDouble(componentBadgeMinHeight, other.componentBadgeMinHeight, t)!,
       componentBadgePaddingInline: lerpDouble(componentBadgePaddingInline, other.componentBadgePaddingInline, t)!,
+      componentBadgePaddingBlock: lerpDouble(componentBadgePaddingBlock, other.componentBadgePaddingBlock, t)!,
       componentBadgeContentGap: lerpDouble(componentBadgeContentGap, other.componentBadgeContentGap, t)!,
       componentBadgeIconSize: lerpDouble(componentBadgeIconSize, other.componentBadgeIconSize, t)!,
       componentCarouselSlideHeight: lerpDouble(componentCarouselSlideHeight, other.componentCarouselSlideHeight, t)!,

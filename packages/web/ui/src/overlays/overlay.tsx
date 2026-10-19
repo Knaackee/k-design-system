@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Sheet, type SheetRef } from "react-modal-sheet";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { KIconButton } from "../actions/icon-button.js";
 import { usePageSheetEffect } from "./use-page-sheet-effect.js";
 
@@ -170,6 +170,8 @@ export function KBottomSheet({
   zIndex = 3010,
   presentationRootId,
 }: KBottomSheetProps) {
+  const titleId = useId();
+  const descriptionId = useId();
   const sheetRef = useRef<SheetRef>(null);
   const [effectActive, setEffectActive] = useState(open);
   useEffect(() => {
@@ -210,6 +212,9 @@ export function KBottomSheet({
       >
         <Dialog.Content
           asChild
+          aria-label={typeof title === "string" ? title : undefined}
+          aria-labelledby={titleId}
+          aria-describedby={description ? descriptionId : undefined}
           onOpenAutoFocus={(event) => {
             event.preventDefault();
             openerRef.current =
@@ -228,11 +233,13 @@ export function KBottomSheet({
           onPointerDownOutside={
             dismissible ? undefined : (event) => event.preventDefault()
           }
-          aria-describedby={description ? undefined : ""}
         >
           <Sheet.Container
             ref={containerRef}
             tabIndex={-1}
+            aria-label={typeof title === "string" ? title : undefined}
+            aria-labelledby={titleId}
+            aria-describedby={description ? descriptionId : undefined}
             className={["k-bottom-sheet", className].filter(Boolean).join(" ")}
             data-adaptive-surface={presentationRootId ? "page-sheet" : "sheet"}
           >
@@ -248,9 +255,14 @@ export function KBottomSheet({
             >
               {leading}
               <div className="k-overlay-heading">
-                <Dialog.Title className="k-overlay-title">{title}</Dialog.Title>
+                <Dialog.Title id={titleId} className="k-overlay-title">
+                  {title}
+                </Dialog.Title>
                 {description && (
-                  <Dialog.Description className="k-overlay-description">
+                  <Dialog.Description
+                    id={descriptionId}
+                    className="k-overlay-description"
+                  >
                     {description}
                   </Dialog.Description>
                 )}

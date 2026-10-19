@@ -2177,7 +2177,14 @@
     "component.badge.paddingInline": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
         "unit": "px"
       }
     },
@@ -5666,7 +5673,14 @@
     "component.badge.paddingInline": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
         "unit": "px"
       }
     },
@@ -9155,7 +9169,14 @@
     "component.badge.paddingInline": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
         "unit": "px"
       }
     },
@@ -12644,7 +12665,14 @@
     "component.badge.paddingInline": {
       "type": "dimension",
       "value": {
-        "value": 8,
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.badge.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
         "unit": "px"
       }
     },

@@ -769,7 +769,8 @@
   align-items: center;
   gap: var(--k-component-badge-content-gap);
   min-height: var(--k-component-badge-min-height);
-  padding: 0 var(--k-component-badge-padding-inline);
+  padding: var(--k-component-badge-padding-block)
+    var(--k-component-badge-padding-inline);
   border: var(--k-border-width-default) solid transparent;
   border-radius: var(--k-radius-full);
   font: var(--k-font-control-weight)

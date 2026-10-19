@@ -339,6 +339,7 @@ export const tokenNames = [
   "component.badge.destructive.border",
   "component.badge.minHeight",
   "component.badge.paddingInline",
+  "component.badge.paddingBlock",
   "component.badge.contentGap",
   "component.badge.iconSize",
   "component.carousel.slideHeight",
