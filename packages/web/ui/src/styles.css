@@ -5,6 +5,7 @@
 @import "./chat/presentations.css";
 @import "./chat/presentation-media.css";
 @import "./files.css";
+@import "./files-home.css";
 @import "./browser-task-card.css";
 @import "./browser-permissions.css";
 @import "./agent-cursor.css";

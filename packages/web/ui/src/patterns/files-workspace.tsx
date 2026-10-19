@@ -13,6 +13,8 @@ export interface KFilesWorkspaceProps {
   onSidebarOpenChange: (open: boolean) => void;
   navigation: ReactNode;
   sidebarHeader?: ReactNode;
+  /** Persistent content-area header above file tabs and actions. */
+  header?: ReactNode;
   search?: ReactNode;
   title?: ReactNode;
   tabs?: ReactNode;
@@ -31,6 +33,7 @@ export function KFilesWorkspace({
   onSidebarOpenChange,
   navigation,
   sidebarHeader,
+  header,
   search,
   title,
   tabs,
@@ -72,7 +75,7 @@ export function KFilesWorkspace({
             aria-label={closeLabel}
             onClick={() => onSidebarOpenChange(false)}
           >
-            <KIcon name="panel-left-close" />
+            <KIcon name="menu" />
           </KButton>
         </div>
         {search && <div className="k-files-workspace__search">{search}</div>}
@@ -104,35 +107,61 @@ export function KFilesWorkspace({
           </aside>
         )}
         <div className="k-files-workspace__stage">
-          <header
-            className="k-files-workspace__toolbar"
-            data-tabs={!!tabs || undefined}
-          >
-            {!sidebarOpen && (
-              <KButton
-                variant="ghost"
-                aria-label={openLabel}
-                aria-expanded={false}
-                onClick={() => onSidebarOpenChange(true)}
-              >
-                <KIcon name="panel-left-open" />
-              </KButton>
-            )}
-            {tabs ? (
-              <div className="k-files-workspace__tabs">{tabs}</div>
-            ) : (
-              <div className="k-files-workspace__title">{title}</div>
-            )}
-            {actions && (
-              <div
-                className="k-files-workspace__actions"
-                role="group"
-                aria-label="Dateiaktionen"
-              >
-                {actions}
-              </div>
-            )}
-          </header>
+          {header && (
+            <div style={{ flexShrink: 0, position: "relative" }}>
+              {header}
+              {!sidebarOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    insetInlineStart: "var(--k-space-control-inset-inline)",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                  }}
+                >
+                  <KButton
+                    variant="ghost"
+                    aria-label={openLabel}
+                    aria-expanded={false}
+                    onClick={() => onSidebarOpenChange(true)}
+                  >
+                    <KIcon name="menu" />
+                  </KButton>
+                </div>
+              )}
+            </div>
+          )}
+          {(tabs || title || actions || (!header && !sidebarOpen)) && (
+            <header
+              className="k-files-workspace__toolbar"
+              data-tabs={!!tabs || undefined}
+            >
+              {!header && !sidebarOpen && (
+                <KButton
+                  variant="ghost"
+                  aria-label={openLabel}
+                  aria-expanded={false}
+                  onClick={() => onSidebarOpenChange(true)}
+                >
+                  <KIcon name="menu" />
+                </KButton>
+              )}
+              {tabs ? (
+                <div className="k-files-workspace__tabs">{tabs}</div>
+              ) : (
+                <div className="k-files-workspace__title">{title}</div>
+              )}
+              {actions && (
+                <div
+                  className="k-files-workspace__actions"
+                  role="group"
+                  aria-label="Dateiaktionen"
+                >
+                  {actions}
+                </div>
+              )}
+            </header>
+          )}
           <main className="k-files-workspace__content">
             <div
               className="k-files-workspace__content-inner"

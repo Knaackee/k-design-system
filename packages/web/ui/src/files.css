@@ -100,6 +100,8 @@
 .k-file-tree__toggle {
   display: grid;
   place-items: center;
+  padding: 0;
+  box-sizing: border-box;
   width: var(--k-size-control);
   min-height: var(--k-size-control);
   flex-shrink: 0;
@@ -315,6 +317,9 @@
   display: grid;
   gap: var(--k-space-hairline);
 }
+.k-files-workspace__sidebar-footer .k-sidebar-item__control {
+  padding-inline: var(--k-space-control-inset-inline);
+}
 .k-files-workspace__content {
   flex: 1;
   min-height: 0;
@@ -432,7 +437,7 @@
   padding-inline-end: var(--k-space-tight);
 }
 .k-file-tree__toggle {
-  width: var(--k-component-files-icon-size);
+  width: max(var(--k-component-files-icon-size), var(--k-size-icon-default));
 }
 .k-file-tree__select {
   gap: var(--k-space-small-inset);
