@@ -529,6 +529,7 @@ export type {
   KWebSearchResult,
 } from "./chat/web-search.js";
 export * from "./patterns/files.js";
+export * from "./patterns/integrations.js";
 export {
   KTabStrip,
   type KTabStripItem,

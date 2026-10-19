@@ -12,6 +12,7 @@
 @import "./tab-strip.css";
 @import "./chat/chat-bubble.css";
 @import "./usage-details.css";
+@import "./integrations.css";
 @import "./activity.css";
 @import "./feedback/text-shimmer.css";
 @import "./charts/charts.css";

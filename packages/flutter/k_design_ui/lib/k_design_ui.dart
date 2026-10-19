@@ -108,3 +108,7 @@ export 'src/feedback/k_activity_dot.dart';
 export 'src/data_display/k_progress_dots.dart';
 
 export 'src/patterns/k_files_home.dart';
+export 'src/patterns/k_integrations.dart';
+export 'src/patterns/k_integration_connection_card.dart';
+export 'src/patterns/k_integration_admin_catalog.dart';
+export 'src/patterns/k_integration_editor.dart';

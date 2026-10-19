@@ -33,6 +33,7 @@ flutter:
     - assets/cover-flow/
     - assets/foley/
     - assets/rive/rive-character-v2.riv
+    - assets/integrations/
     - fixtures/chart-line-reference.json
     - fixtures/chart-families.json
     - fixtures/chart-candlestick.json

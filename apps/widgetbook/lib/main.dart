@@ -80,6 +80,7 @@ import 'notification_fixture.dart';
 import 'orbit_fixture.dart';
 import 'activity_fixture.dart';
 import 'dicebear_avatar_fixture.dart';
+import 'integrations_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -1072,6 +1073,27 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'Integrations',
+              children: [
+                WidgetbookUseCase(
+                  name: integrationFixtureIds.marketplace,
+                  builder: (_) => const IntegrationsMarketplaceFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: integrationFixtureIds.chatConnection,
+                  builder: (_) => const IntegrationChatConnectionFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: integrationFixtureIds.connectionStates,
+                  builder: (_) => const IntegrationConnectionStatesFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: integrationFixtureIds.adminCatalog,
+                  builder: (_) => const IntegrationAdminCatalogFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Chat Presentations',
               children: [
