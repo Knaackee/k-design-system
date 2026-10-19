@@ -7,9 +7,15 @@ import 'actions/k_icon_button.dart';
 import 'primitives/k_icon.dart';
 
 class KBreadcrumbItem {
-  const KBreadcrumbItem({required this.id, required this.label, this.onSelect});
+  const KBreadcrumbItem({
+    required this.id,
+    required this.label,
+    this.icon,
+    this.onSelect,
+  });
   final String id;
   final String label;
+  final KIconName? icon;
   final VoidCallback? onSelect;
 }
 
@@ -18,14 +24,38 @@ class KBreadcrumb extends StatelessWidget {
     required this.items,
     this.label = 'Breadcrumb',
     this.separator,
+    this.iconStrokeWidth = 1.5,
     super.key,
   });
   final List<KBreadcrumbItem> items;
   final String label;
   final Widget? separator;
+  final double iconStrokeWidth;
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    Widget content(KBreadcrumbItem item, bool current) {
+      final color = current ? t.colorTextPrimary : t.colorTextMuted;
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (item.icon != null) ...[
+            KIcon(
+              item.icon!,
+              size: 16,
+              strokeWidth: iconStrokeWidth,
+              color: color,
+            ),
+            SizedBox(width: t.spaceTight),
+          ],
+          Text(
+            item.label,
+            style: _textStyle(t, t.fontControlSize, t.fontControlWeight, color),
+          ),
+        ],
+      );
+    }
+
     return Semantics(
       label: label,
       container: true,
@@ -36,30 +66,25 @@ class KBreadcrumb extends StatelessWidget {
         children: [
           for (final (index, item) in items.indexed) ...[
             if (index == items.length - 1)
-              Semantics(
-                selected: true,
-                child: Text(
-                  item.label,
-                  style: _textStyle(
-                    t,
-                    t.fontControlSize,
-                    t.fontControlWeight,
-                    t.colorTextPrimary,
-                  ),
-                ),
-              )
+              Semantics(selected: true, child: content(item, true))
             else
               TextButton(
                 onPressed: item.onSelect,
                 style: TextButton.styleFrom(
                   minimumSize: Size(0, t.sizeHitTarget),
-                  padding: EdgeInsets.symmetric(horizontal: t.spaceControlGap),
+                  padding: EdgeInsets.zero,
                   foregroundColor: t.colorTextMuted,
                 ),
-                child: Text(item.label),
+                child: content(item, false),
               ),
             if (index != items.length - 1)
-              separator ?? const KIcon(KIconName.chevronRight, size: 14),
+              separator ??
+                  KIcon(
+                    KIconName.chevronRight,
+                    size: 14,
+                    strokeWidth: iconStrokeWidth,
+                    color: t.colorTextMuted,
+                  ),
           ],
         ],
       ),

@@ -137,11 +137,17 @@ export function BreadcrumbFixture() {
     <div style={fixtureStyle}>
       <KBreadcrumb
         items={[
-          { id: "home", label: "Home", onSelect: () => undefined },
+          {
+            id: "home",
+            label: "Home",
+            icon: "house",
+            onSelect: () => undefined,
+          },
           { id: "projects", label: "Projects", onSelect: () => undefined },
           { id: "orbit", label: "Orbit redesign" },
         ]}
       />
+      <KBreadcrumb items={[{ id: "home", label: "Home", icon: "house" }]} />
     </div>
   );
 }

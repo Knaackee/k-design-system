@@ -177,11 +177,26 @@ class _BasicComponentFixtureState extends State<BasicComponentFixture> {
     ],
   );
 
-  Widget _breadcrumb() => KBreadcrumb(
-    items: [
-      KBreadcrumbItem(id: 'home', label: 'Home', onSelect: () {}),
-      KBreadcrumbItem(id: 'projects', label: 'Projects', onSelect: () {}),
-      const KBreadcrumbItem(id: 'orbit', label: 'Orbit redesign'),
+  Widget _breadcrumb() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      KBreadcrumb(
+        items: [
+          KBreadcrumbItem(
+            id: 'home',
+            label: 'Home',
+            icon: KIconName.house,
+            onSelect: () {},
+          ),
+          KBreadcrumbItem(id: 'projects', label: 'Projects', onSelect: () {}),
+          const KBreadcrumbItem(id: 'orbit', label: 'Orbit redesign'),
+        ],
+      ),
+      const KBreadcrumb(
+        items: [
+          KBreadcrumbItem(id: 'home', label: 'Home', icon: KIconName.house),
+        ],
+      ),
     ],
   );
 

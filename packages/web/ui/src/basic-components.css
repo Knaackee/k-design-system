@@ -839,6 +839,11 @@
   color: var(--k-color-text-muted);
   text-decoration: none;
 }
+.k-breadcrumb__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-space-tight);
+}
 .k-breadcrumb a:hover {
   color: var(--k-color-text-primary);
   text-decoration: underline;

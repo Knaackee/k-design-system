@@ -304,6 +304,7 @@ export function KBadge({
 export interface KBreadcrumbItem {
   id: string;
   label: ReactNode;
+  icon?: KIconName;
   href?: string;
   onSelect?: () => void;
 }
@@ -311,22 +312,36 @@ export interface KBreadcrumbProps {
   items: readonly KBreadcrumbItem[];
   label?: string;
   separator?: ReactNode;
+  iconStrokeWidth?: number;
 }
 
 export function KBreadcrumb({
   items,
   label = "Breadcrumb",
   separator,
+  iconStrokeWidth = 1.5,
 }: KBreadcrumbProps) {
   return (
     <nav className="k-breadcrumb" aria-label={label}>
       <ol>
         {items.map((item, index) => {
           const current = index === items.length - 1;
+          const content = (
+            <span className="k-breadcrumb__content">
+              {item.icon ? (
+                <KIcon
+                  name={item.icon}
+                  size={16}
+                  strokeWidth={iconStrokeWidth}
+                />
+              ) : null}
+              {item.label}
+            </span>
+          );
           return (
             <li key={item.id}>
               {current ? (
-                <span aria-current="page">{item.label}</span>
+                <span aria-current="page">{content}</span>
               ) : (
                 <a
                   href={item.href ?? "#"}
@@ -335,12 +350,14 @@ export function KBreadcrumb({
                     item.onSelect?.();
                   }}
                 >
-                  {item.label}
+                  {content}
                 </a>
               )}
               {!current ? (
                 <span className="k-breadcrumb__separator" aria-hidden="true">
-                  {separator ?? <KIcon name="chevron-right" />}
+                  {separator ?? (
+                    <KIcon name="chevron-right" strokeWidth={iconStrokeWidth} />
+                  )}
                 </span>
               ) : null}
             </li>

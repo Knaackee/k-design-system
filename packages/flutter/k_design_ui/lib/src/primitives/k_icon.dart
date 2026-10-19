@@ -17,9 +17,17 @@ class KIconSizeScope extends InheritedWidget {
 }
 
 class KIcon extends StatelessWidget {
-  const KIcon(this.name, {this.size = 16, this.color, this.label, super.key});
+  const KIcon(
+    this.name, {
+    this.size = 16,
+    this.strokeWidth,
+    this.color,
+    this.label,
+    super.key,
+  });
   final KIconName name;
   final double size;
+  final double? strokeWidth;
   final Color? color;
 
   /// Omit for decorative icons; label meaningful standalone icons.
@@ -37,8 +45,21 @@ class KIcon extends StatelessWidget {
     final tokens =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
+    if (strokeWidth != null && (!strokeWidth!.isFinite || strokeWidth! <= 0)) {
+      throw ArgumentError.value(
+        strokeWidth,
+        'strokeWidth',
+        'Must be positive and finite',
+      );
+    }
+    final svg = strokeWidth == null
+        ? kIconSvg[name]!
+        : kIconSvg[name]!.replaceAll(
+            RegExp('stroke-width="[^"]*"'),
+            'stroke-width="$strokeWidth"',
+          );
     return SvgPicture.string(
-      kIconSvg[name]!,
+      svg,
       width: resolvedSize,
       height: resolvedSize,
       colorFilter: ColorFilter.mode(

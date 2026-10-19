@@ -9,6 +9,42 @@ Widget frame(Widget child) => MaterialApp(
 );
 
 void main() {
+  testWidgets(
+    'breadcrumb icon shares state, spacing and activation with label',
+    (tester) async {
+      var selected = false;
+      await tester.pumpWidget(
+        frame(
+          KBreadcrumb(
+            items: [
+              KBreadcrumbItem(
+                id: 'home',
+                label: 'Home',
+                icon: KIconName.house,
+                onSelect: () => selected = true,
+              ),
+              const KBreadcrumbItem(
+                id: 'settings',
+                label: 'Settings',
+                icon: KIconName.settings,
+              ),
+            ],
+          ),
+        ),
+      );
+      final icons = tester.widgetList<KIcon>(find.byType(KIcon)).toList();
+      expect(icons.first.color, KDesignTokens.orbitLight.colorTextMuted);
+      expect(icons.last.color, KDesignTokens.orbitLight.colorTextPrimary);
+      expect(icons.first.strokeWidth, 1.5);
+      expect(
+        tester.getTopLeft(find.text('Home')).dx -
+            tester.getTopRight(find.byType(KIcon).first).dx,
+        KDesignTokens.orbitLight.spaceTight,
+      );
+      await tester.tap(find.byType(KIcon).first);
+      expect(selected, isTrue);
+    },
+  );
   testWidgets('attachment exposes activation without owning navigation', (
     tester,
   ) async {
