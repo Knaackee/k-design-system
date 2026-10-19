@@ -14,6 +14,7 @@ class KFilesWorkspace extends StatelessWidget {
     required this.navigation,
     required this.child,
     this.sidebarHeader,
+    this.header,
     this.search,
     this.tabs,
     this.title,
@@ -26,6 +27,9 @@ class KFilesWorkspace extends StatelessWidget {
   final bool sidebarOpen;
   final ValueChanged<bool> onSidebarOpenChange;
   final Widget navigation, child;
+
+  /// Persistent content-area header above file tabs and actions.
+  final Widget? header;
   final Widget? sidebarHeader, search, tabs, title, sidebarFooter, actions;
   final bool constrainContentWidth;
 
@@ -66,7 +70,7 @@ class KFilesWorkspace extends StatelessWidget {
                             Expanded(child: sidebarHeader ?? SizedBox()),
                             KIconButton(
                               label: 'Dateien schließen',
-                              icon: KIconName.panelLeftClose,
+                              icon: KIconName.menu,
                               onPressed: () => onSidebarOpenChange(false),
                             ),
                           ],
@@ -93,36 +97,58 @@ class KFilesWorkspace extends StatelessWidget {
             excluding: mobile && sidebarOpen,
             child: Column(
               children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: t.colorBorderDefault),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: t.spaceControlInsetInline,
-                    ),
-                    child: Row(
-                      spacing: 4,
-                      children: [
-                        if (!sidebarOpen)
-                          SizedBox(
-                            width:
-                                t.componentFilesIconSize +
-                                t.spaceControlInsetInline * 2,
-                            child: KIconButton(
-                              label: 'Dateien öffnen',
-                              icon: KIconName.panelLeftOpen,
-                              onPressed: () => onSidebarOpenChange(true),
-                            ),
+                if (header != null)
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      header!,
+                      if (!sidebarOpen)
+                        Positioned(
+                          left: t.spaceControlInsetInline,
+                          child: KIconButton(
+                            label: 'Dateien öffnen',
+                            icon: KIconName.menu,
+                            onPressed: () => onSidebarOpenChange(true),
                           ),
-                        Expanded(child: tabs ?? title ?? const Text('Dateien')),
-                        ?actions,
-                      ],
+                        ),
+                    ],
+                  ),
+                if (tabs != null ||
+                    title != null ||
+                    actions != null ||
+                    (header == null && !sidebarOpen))
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: t.colorBorderDefault),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: t.spaceControlInsetInline,
+                      ),
+                      child: Row(
+                        spacing: 4,
+                        children: [
+                          if (!sidebarOpen && header == null)
+                            SizedBox(
+                              width:
+                                  t.componentFilesIconSize +
+                                  t.spaceControlInsetInline * 2,
+                              child: KIconButton(
+                                label: 'Dateien öffnen',
+                                icon: KIconName.menu,
+                                onPressed: () => onSidebarOpenChange(true),
+                              ),
+                            ),
+                          Expanded(
+                            child: tabs ?? title ?? const SizedBox.shrink(),
+                          ),
+                          ?actions,
+                        ],
+                      ),
                     ),
                   ),
-                ),
                 Expanded(
                   child: mobile || !constrainContentWidth
                       ? child

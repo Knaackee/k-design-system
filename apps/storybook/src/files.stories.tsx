@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  KFilesHome,
+  kFilesHomeCategory,
+  type KFilesHomeCategory,
   KFileTree,
   KFileInfo,
   KFileShare,
@@ -93,21 +96,34 @@ function ReviewMarkdown({
     />
   );
 }
-function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
+function FilesReview({
+  initialMode = "files",
+  showShared = true,
+  appLabel = "App",
+}: {
+  initialMode?: string;
+  showShared?: boolean;
+  appLabel?: string;
+}) {
+  const workspace = initialMode === "home";
   const [tree, setTree] = useState(nodes);
   const picker = useRef<HTMLInputElement>(null);
   const editors = useRef<Record<string, KCodeEditorHandle | null>>({});
   const uploadFolder = useRef("notes");
   const [uploads, setUploads] = useState<Record<string, File>>({});
-  const [transfers, setTransfers] = useState<KFileTransfer[]>([
-    {
-      id: "demo-done",
-      name: "Willkommen.md",
-      progress: 1,
-      status: "Abgeschlossen",
-    },
-  ]);
-  const [transferVisible, setTransferVisible] = useState(true);
+  const [transfers, setTransfers] = useState<KFileTransfer[]>(
+    workspace
+      ? []
+      : [
+          {
+            id: "demo-done",
+            name: "Willkommen.md",
+            progress: 1,
+            status: "Abgeschlossen",
+          },
+        ],
+  );
+  const [transferVisible, setTransferVisible] = useState(!workspace);
   const [transferCollapsed, setTransferCollapsed] = useState(false);
   const running = transfers.some((item) => item.progress < 1);
   useEffect(() => {
@@ -153,8 +169,13 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
       return children.length ? [{ ...node, children }] : [];
     });
   const visibleNodes = query ? filterNodes(tree) : tree;
-  const [selected, setSelected] = useState("welcome");
-  const [openTabs, setOpenTabs] = useState(["welcome", "project", "code"]);
+  const [selected, setSelected] = useState(
+    initialMode === "home" ? "home" : "welcome",
+  );
+  const [homeFilter, setHomeFilter] = useState<KFilesHomeCategory>("all");
+  const [openTabs, setOpenTabs] = useState<string[]>(
+    workspace ? [] : ["welcome", "project", "code"],
+  );
   const [mobile, setMobile] = useState(
     () =>
       typeof matchMedia === "function" &&
@@ -179,7 +200,7 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
     if (ids.includes(selected))
       setSelected(
         remaining[Math.min(openTabs.indexOf(selected), remaining.length - 1)] ??
-          "",
+          "home",
       );
   }
   const [expanded, expand] = useState(["notes", "media"]);
@@ -275,6 +296,22 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
     expand((previous) => [...new Set([...previous, folder.id])]);
     setNotice("");
   }
+  function createEntry(kind: "file" | "folder") {
+    const id = `created-${kind}-${allNodes(tree).length}`;
+    const entry: KFileNode = {
+      id,
+      name: kind === "file" ? "Neue Datei.md" : "Neuer Ordner",
+      kind,
+      ...(kind === "folder" ? { children: [] } : {}),
+    };
+    setTree((previous) => [...previous, entry]);
+    if (kind === "file") {
+      setDocuments((previous) => ({ ...previous, [id]: "# Neue Datei\n\n" }));
+      setOpenTabs((previous) => [...previous, id]);
+    }
+    setSelected(id);
+    if (mobile) setSidebarOpen(false);
+  }
   function download(node = current) {
     const blob =
       documents[node.id] !== undefined
@@ -359,6 +396,15 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
         }}
       />
       <KFilesWorkspace
+        header={
+          (!workspace || mobile) && (
+            <header
+              style={{ textAlign: "center", padding: 16, fontWeight: 500 }}
+            >
+              Dateien
+            </header>
+          )
+        }
         constrainContentWidth={false}
         sidebarOpen={sidebarOpen}
         onSidebarOpenChange={setSidebarOpen}
@@ -366,90 +412,144 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
         tabs={
           mode !== "storage" && (
             <KTabStrip
-              items={openTabs
-                .map((id) => allNodes(tree).find((node) => node.id === id)!)
-                .filter(Boolean)
-                .map((node) => ({
-                  id: node.id,
-                  label: node.name,
-                  icon: <KFileIcon name={node.name} />,
-                }))}
+              items={[
+                {
+                  id: "home",
+                  label: "Übersicht",
+                  icon: <KIcon name="house" />,
+                  closable: false,
+                },
+                ...openTabs
+                  .map((id) => allNodes(tree).find((node) => node.id === id)!)
+                  .filter(Boolean)
+                  .map((node) => ({
+                    id: node.id,
+                    label: node.name,
+                    icon: <KFileIcon name={node.name} />,
+                  })),
+              ]}
               selectedId={selected}
               onSelect={select}
               onClose={(id) => closeTabs([id])}
-              onReorder={setOpenTabs}
-              menuActions={(item, presentation) => [
-                ...fileActions(
-                  allNodes(tree).find((node) => node.id === item.id)!,
-                ),
-                {
-                  id: "close",
-                  label: "Schließen",
-                  separatorBefore: true,
-                  onSelect: () => closeTabs([item.id]),
-                },
-                {
-                  id: "others",
-                  label: "Andere schließen",
-                  onSelect: () =>
-                    closeTabs(openTabs.filter((id) => id !== item.id)),
-                },
-                ...(presentation === "tabs"
-                  ? [
+              onReorder={(ids) =>
+                setOpenTabs(ids.filter((id) => id !== "home"))
+              }
+              menuActions={(item, presentation) =>
+                item.id === "home"
+                  ? []
+                  : [
+                      ...fileActions(
+                        allNodes(tree).find((node) => node.id === item.id)!,
+                      ),
                       {
-                        id: "right",
-                        label: "Rechts schließen",
+                        id: "close",
+                        label: "Schließen",
+                        separatorBefore: true,
+                        onSelect: () => closeTabs([item.id]),
+                      },
+                      {
+                        id: "others",
+                        label: "Andere schließen",
                         onSelect: () =>
-                          closeTabs(
-                            openTabs.slice(openTabs.indexOf(item.id) + 1),
-                          ),
+                          closeTabs(openTabs.filter((id) => id !== item.id)),
+                      },
+                      ...(presentation === "tabs"
+                        ? [
+                            {
+                              id: "right",
+                              label: "Rechts schließen",
+                              onSelect: () =>
+                                closeTabs(
+                                  openTabs.slice(openTabs.indexOf(item.id) + 1),
+                                ),
+                            },
+                          ]
+                        : []),
+                      {
+                        id: "all",
+                        label: "Alle schließen",
+                        onSelect: () => closeTabs(openTabs),
                       },
                     ]
-                  : []),
-                {
-                  id: "all",
-                  label: "Alle schließen",
-                  onSelect: () => closeTabs(openTabs),
-                },
-              ]}
+              }
             />
           )
         }
         sidebarHeader={
           <KSidebarItem
-            label="Zurück zur App"
+            label={
+              appLabel === "App" ? "Zurück zur App" : `Zurück zu ${appLabel}`
+            }
             leading={<KIcon name="arrow-left" />}
             onSelect={() => setNotice("Demo: zurück zur App")}
           />
         }
         sidebarFooter={
           <div className="k-files-review__sidebar-footer">
-            <KSidebarItem
-              label="Mit mir geteilt"
-              leading={<KIcon name="users" />}
-              onSelect={() => setNotice("Demo: Mit mir geteilt")}
-            />
+            {workspace ? (
+              <KMenuButton
+                label="Datei hinzufügen"
+                fullWidth
+                triggerVariant="ghost"
+                triggerClassName="k-files-review__add"
+                triggerContent={
+                  <span className="k-files-review__add-content">
+                    <KIcon name="file-plus" />
+                    <span>Datei hinzufügen</span>
+                    <KIcon name="chevron-up" />
+                  </span>
+                }
+                actions={[
+                  {
+                    id: "new-file",
+                    label: "Neue Datei",
+                    icon: "file-plus",
+                    onSelect: () => createEntry("file"),
+                  },
+                  {
+                    id: "new-folder",
+                    label: "Neuer Ordner",
+                    icon: "folder-plus",
+                    onSelect: () => createEntry("folder"),
+                  },
+                  {
+                    id: "upload",
+                    label: "Hochladen",
+                    icon: "upload",
+                    onSelect: () => chooseUpload(tree[0]),
+                  },
+                ]}
+              />
+            ) : (
+              <KSidebarItem
+                label="Dateien hochladen"
+                leading={<KIcon name="upload" />}
+                onSelect={() => chooseUpload()}
+                disabled={
+                  !writable(
+                    current.kind === "folder"
+                      ? current
+                      : (parentOf(current.id) ?? current),
+                  )
+                }
+              />
+            )}
+            {showShared && (
+              <KSidebarItem
+                label="Mit mir geteilt"
+                leading={<KIcon name="users" />}
+                onSelect={() => setNotice("Demo: Mit mir geteilt")}
+              />
+            )}
             <KSidebarItem
               label="Papierkorb"
               leading={<KIcon name="trash" />}
               onSelect={() => setNotice("Demo: Papierkorb")}
             />
-            <KSidebarItem
-              label="Dateien hochladen"
-              leading={<KIcon name="upload" />}
-              onSelect={() => chooseUpload()}
-              disabled={
-                !writable(
-                  current.kind === "folder"
-                    ? current
-                    : (parentOf(current.id) ?? current),
-                )
-              }
-            />
           </div>
         }
         actions={
-          mode === "storage" ? undefined : (
+          mode === "storage" || selected === "home" ? undefined : (
             <>
               {!mobile && (
                 <>
@@ -522,68 +622,77 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
           />
         }
         navigation={
-          <KFileTree
-            nodes={visibleNodes}
-            selectedId={selected}
-            expandedIds={query ? [...expanded, "notes", "media"] : expanded}
-            emptyContent="Keine Dateien gefunden"
-            onFilesDrop={receiveFiles}
-            canDropFiles={writable}
-            menuActions={(node) => [
-              ...(writable(node)
-                ? [
-                    {
-                      id: "upload",
-                      label: "Dateien hochladen",
-                      icon: "upload" as const,
-                      onSelect: () => chooseUpload(node),
-                    },
-                  ]
-                : []),
-              ...(node.kind === "file"
-                ? [
-                    {
-                      id: "download",
-                      label: "Herunterladen",
-                      icon: "download" as const,
-                      onSelect: () => download(node),
-                    },
-                  ]
-                : []),
-              {
-                id: "info",
-                label: "Datei-Info",
-                icon: "info",
-                onSelect: () => openDialog("info", node),
-              },
-              {
-                id: "rename",
-                label: "Umbenennen",
-                icon: "pencil",
-                onSelect: () => openDialog("rename", node),
-              },
-              {
-                id: "share",
-                label: "Freigeben",
-                icon: "share-2",
-                onSelect: () => openDialog("share", node),
-              },
-              {
-                id: "trash",
-                label: "In Papierkorb",
-                icon: "trash",
-                destructive: true,
-                separatorBefore: true,
-                onSelect: () =>
-                  setNotice(`Demo: ${node.name} in den Papierkorb verschieben`),
-              },
-            ]}
-            onExpandedChange={expand}
-            onSelect={(id) => {
-              select(id);
-              setMode("files");
-            }}
-          />
+          <>
+            <KSidebarItem
+              label="Übersicht"
+              leading={<KIcon name="house" />}
+              onSelect={() => select("home")}
+            />
+            <KFileTree
+              nodes={visibleNodes}
+              selectedId={selected}
+              expandedIds={query ? [...expanded, "notes", "media"] : expanded}
+              emptyContent="Keine Dateien gefunden"
+              onFilesDrop={receiveFiles}
+              canDropFiles={writable}
+              menuActions={(node) => [
+                ...(writable(node)
+                  ? [
+                      {
+                        id: "upload",
+                        label: "Dateien hochladen",
+                        icon: "upload" as const,
+                        onSelect: () => chooseUpload(node),
+                      },
+                    ]
+                  : []),
+                ...(node.kind === "file"
+                  ? [
+                      {
+                        id: "download",
+                        label: "Herunterladen",
+                        icon: "download" as const,
+                        onSelect: () => download(node),
+                      },
+                    ]
+                  : []),
+                {
+                  id: "info",
+                  label: "Datei-Info",
+                  icon: "info",
+                  onSelect: () => openDialog("info", node),
+                },
+                {
+                  id: "rename",
+                  label: "Umbenennen",
+                  icon: "pencil",
+                  onSelect: () => openDialog("rename", node),
+                },
+                {
+                  id: "share",
+                  label: "Freigeben",
+                  icon: "share-2",
+                  onSelect: () => openDialog("share", node),
+                },
+                {
+                  id: "trash",
+                  label: "In Papierkorb",
+                  icon: "trash",
+                  destructive: true,
+                  separatorBefore: true,
+                  onSelect: () =>
+                    setNotice(
+                      `Demo: ${node.name} in den Papierkorb verschieben`,
+                    ),
+                },
+              ]}
+              onExpandedChange={expand}
+              onSelect={(id) => {
+                select(id);
+                setMode("files");
+              }}
+            />
+          </>
         }
       >
         <div className="k-files-review__body">
@@ -607,6 +716,32 @@ function FilesReview({ initialMode = "files" }: { initialMode?: string }) {
             />
           ) : (
             <>
+              {selected === "home" && (
+                <div className="k-files-review__home">
+                  <KFilesHome
+                    files={allNodes(tree)
+                      .filter((node) => node.kind === "file")
+                      .map((node) => ({
+                        id: node.id,
+                        name: node.name,
+                        parentLabel: parentOf(node.id)?.name ?? "Dateien",
+                        updatedLabel: "10. Okt., 14:00",
+                        updatedAt: "2026-10-10T14:00:00Z",
+                        category: kFilesHomeCategory(node.name) as Exclude<
+                          KFilesHomeCategory,
+                          "all"
+                        >,
+                      }))}
+                    filter={homeFilter}
+                    onFilterChange={setHomeFilter}
+                    onOpen={select}
+                    onCreateFile={() => createEntry("file")}
+                    onCreateFolder={() => createEntry("folder")}
+                    onUpload={() => chooseUpload(tree[0])}
+                    onRetry={() => setNotice("Demo: Erneut geladen")}
+                  />
+                </div>
+              )}
               {!selected && (
                 <div className="k-files-empty">
                   Öffne eine Datei in der Sidebar.
@@ -926,4 +1061,66 @@ export const Empty: StoryObj = {
       onExpandedChange={() => undefined}
     />
   ),
+};
+
+export const Workspace: StoryObj<typeof FilesReview> = {
+  args: { initialMode: "home", showShared: true, appLabel: "Tasks" },
+  argTypes: {
+    showShared: { control: "boolean" },
+    appLabel: { control: "text" },
+  },
+  parameters: { fixtureId: "files-workspace" },
+};
+function HomeFixture({ empty = false }: { empty?: boolean }) {
+  const [filter, setFilter] = useState<KFilesHomeCategory>("all");
+  const [notice, setNotice] = useState("");
+  return (
+    <>
+      <KFilesHome
+        files={
+          empty
+            ? []
+            : [
+                {
+                  id: "welcome",
+                  name: "Willkommen.md",
+                  parentLabel: "Notizen",
+                  updatedLabel: "10. Okt., 14:00",
+                  updatedAt: "2026-10-10T14:00:00Z",
+                },
+                {
+                  id: "photo",
+                  name: "Entwurf.svg",
+                  parentLabel: "Medien",
+                  updatedLabel: "09. Okt., 09:30",
+                  updatedAt: "2026-10-09T09:30:00Z",
+                },
+                {
+                  id: "code",
+                  name: "example.ts",
+                  parentLabel: "Notizen",
+                  updatedLabel: "08. Okt., 16:15",
+                  updatedAt: "2026-10-08T16:15:00Z",
+                },
+              ]
+        }
+        filter={filter}
+        onFilterChange={setFilter}
+        onOpen={(id) => setNotice(`Datei geöffnet: ${id}`)}
+        onCreateFile={() => setNotice("Neue Datei erstellen")}
+        onCreateFolder={() => setNotice("Neuen Ordner erstellen")}
+        onUpload={() => setNotice("Dateien hochladen")}
+        onRetry={() => setNotice("Erneut laden")}
+      />
+      {notice && <p role="status">{notice}</p>}
+    </>
+  );
+}
+export const Home: StoryObj = {
+  render: () => <HomeFixture />,
+  parameters: { fixtureId: "files-home" },
+};
+export const HomeEmpty: StoryObj = {
+  render: () => <HomeFixture empty />,
+  parameters: { fixtureId: "files-home-empty" },
 };

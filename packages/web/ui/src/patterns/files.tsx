@@ -595,3 +595,11 @@ export function KMediaPlayer({
     </figure>
   );
 }
+
+export {
+  KFilesHome,
+  kFilesHomeCategory,
+  type KFilesHomeEntry,
+  type KFilesHomeProps,
+  type KFilesHomeCategory,
+} from "./files-home.js";

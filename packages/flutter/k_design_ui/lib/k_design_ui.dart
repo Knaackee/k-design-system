@@ -1,4 +1,5 @@
 library;
+
 export 'src/data_display/k_cover_flow.dart';
 export 'src/feedback/k_text_shimmer.dart';
 
@@ -105,3 +106,5 @@ export 'src/patterns/k_browser_permissions.dart';
 export 'src/feedback/k_activity_dot.dart';
 
 export 'src/data_display/k_progress_dots.dart';
+
+export 'src/patterns/k_files_home.dart';

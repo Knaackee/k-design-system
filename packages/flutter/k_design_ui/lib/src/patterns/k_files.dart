@@ -138,23 +138,24 @@ class _FileTreeRowState extends State<_FileTreeRow> {
                 children: [
                   if (widget.reserveToggle)
                     SizedBox(
-                      width: t.componentFilesIconSize,
+                      width: t.componentFilesIconSize + t.spaceTight * 2,
                       height: t.sizeControl,
                       child: widget.node.folder
                           ? InkWell(
+                              key: ValueKey('files-toggle-${widget.node.id}'),
                               onTap: widget.onToggle,
                               child: Center(
                                 child: KIcon(
                                   widget.expanded
                                       ? KIconName.chevronDown
                                       : KIconName.chevronRight,
-                                  size: 12,
+                                  size: t.componentFilesIconSize,
                                 ),
                               ),
                             )
                           : null,
                     ),
-                  if (widget.reserveToggle) SizedBox(width: t.spaceSmallInset),
+                  if (widget.reserveToggle) SizedBox(width: t.spaceTight),
                   Expanded(
                     child: InkWell(
                       onTap: widget.onSelect,

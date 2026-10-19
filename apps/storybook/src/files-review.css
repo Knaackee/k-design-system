@@ -127,3 +127,29 @@
   max-width: var(--k-layout-content-width);
   margin-inline: auto;
 }
+
+.k-files-review__home {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.k-files-review__add .k-button__content {
+  justify-content: flex-start;
+  width: 100%;
+}
+.k-files-review__add .k-truncated {
+  width: 100%;
+}
+.k-files-review__add .k-truncated__content {
+  display: block;
+}
+.k-files-review__add-content {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  width: 100%;
+}
+.k-files-review__add-content > .k-icon:last-child {
+  margin-inline-start: auto;
+}
