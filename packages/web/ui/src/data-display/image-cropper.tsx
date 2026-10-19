@@ -57,6 +57,8 @@ export interface KImageCropperProps extends Omit<
 > {
   src: string;
   alt: string;
+  /** Visual crop mask; export remains square so changing shape is non-destructive. */
+  shape?: "round" | "square";
   outputSize?: number;
   initialCrop?: KImageCropRect;
   labels?: Partial<KImageCropperLabels>;
@@ -116,6 +118,7 @@ export function KImageCropper({
   src,
   alt,
   outputSize = DEFAULT_OUTPUT_SIZE,
+  shape = "round",
   initialCrop,
   labels,
   disabled = false,
@@ -251,6 +254,7 @@ export function KImageCropper({
         aria-describedby={instructionsId}
         tabIndex={crop && !disabled ? 0 : -1}
         data-disabled={disabled || undefined}
+        data-shape={shape}
         onKeyDown={handleKeyDown}
         onPointerDown={(event) => {
           if (!crop || disabled || applying || event.button !== 0) return;

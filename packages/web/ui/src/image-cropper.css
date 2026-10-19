@@ -62,3 +62,7 @@
   gap: var(--k-space-control-gap);
   flex-wrap: wrap;
 }
+
+.k-image-cropper__viewport[data-shape="square"] {
+  border-radius: var(--k-radius-card);
+}

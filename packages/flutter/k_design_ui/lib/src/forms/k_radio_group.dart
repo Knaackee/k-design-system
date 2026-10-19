@@ -39,8 +39,10 @@ class KRadioGroup<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: formTextStyle(context)),
-          SizedBox(height: t.spaceControlGap),
+          if (label.isNotEmpty) ...[
+            Text(label, style: formTextStyle(context)),
+            SizedBox(height: t.spaceControlGap),
+          ],
           RadioGroup<T>(
             groupValue: value,
             onChanged: (next) => onChanged?.call(next),
