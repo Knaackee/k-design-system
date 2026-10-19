@@ -4,6 +4,13 @@ export type {
   KCoverFlowProps,
   KCoverFlowItem,
 } from "./data-display/cover-flow.js";
+export { KImageCropper } from "./data-display/image-cropper.js";
+export type {
+  KImageCropperProps,
+  KImageCropperLabels,
+  KImageCropResult,
+  KImageCropRect,
+} from "./data-display/image-cropper.js";
 export { KButton } from "./primitives/button.js";
 export type { KButtonProps, KButtonVariant } from "./primitives/button.js";
 export { KLink } from "./primitives/link.js";

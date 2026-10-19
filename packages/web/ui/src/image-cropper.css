@@ -1,0 +1,64 @@
+.k-image-cropper {
+  display: grid;
+  gap: var(--k-space-content-action-gap);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+
+.k-image-cropper__viewport {
+  position: relative;
+  width: 100%;
+  max-width: calc(var(--k-size-hit-target) * 7);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  overflow: hidden;
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-surface-subtle);
+  cursor: grab;
+  touch-action: none;
+}
+
+.k-image-cropper__viewport[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.k-image-cropper__viewport[data-disabled="true"] {
+  cursor: default;
+  opacity: var(--k-opacity-disabled);
+}
+
+.k-image-cropper__viewport:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-space-micro);
+}
+
+.k-image-cropper__viewport img {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.k-image-cropper__instructions {
+  text-align: center;
+  color: var(--k-color-text-muted);
+}
+
+.k-image-cropper__zoom {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+
+.k-image-cropper__error {
+  color: var(--k-color-status-error-foreground);
+}
+
+.k-image-cropper__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--k-space-control-gap);
+  flex-wrap: wrap;
+}
