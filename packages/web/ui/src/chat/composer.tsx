@@ -1,5 +1,6 @@
 import {
   useRef,
+  useId,
   type FormEvent,
   type KeyboardEvent,
   type ReactNode,
@@ -13,6 +14,7 @@ import { KSelect } from "../forms/selection.js";
 import type { KIconName } from "../primitives/icon.js";
 import type { KChatAttachmentPart, KChatRunState } from "./types.js";
 import { KAgentAttachment } from "./agent-parts.js";
+import { KIcon } from "../primitives/icon.js";
 
 export interface KChatComposerLabels {
   input: string;
@@ -27,6 +29,9 @@ export interface KChatComposerLabels {
   unavailableVoice?: string;
   errorVoice?: string;
   model: string;
+  cancelVoice: string;
+  sendVoice: string;
+  call: string;
 }
 
 const defaultLabels: KChatComposerLabels = {
@@ -42,6 +47,9 @@ const defaultLabels: KChatComposerLabels = {
   unavailableVoice: "Voice input unavailable",
   errorVoice: "Retry voice input",
   model: "Model",
+  cancelVoice: "Discard recording",
+  sendVoice: "Transcribe and send",
+  call: "Start call",
 };
 
 export interface KChatComposerModel {
@@ -72,6 +80,15 @@ export interface KChatComposerProps {
   voiceActive?: boolean;
   voiceState?: KDictationState;
   voiceAudioLevel?: number;
+  /** Opt-in inline capture. Host owns audio, draft preservation and async work. */
+  voiceCapture?: {
+    /** Actual normalized audio history, oldest first. Empty means silence. */
+    samples: readonly number[];
+    onCancel: () => void;
+    onSend: () => void;
+    error?: string;
+  };
+  onStartCall?: () => void;
   models?: readonly KChatComposerModel[];
   model?: string | null;
   onModelChange?: (model: string) => void;
@@ -97,6 +114,8 @@ export function KChatComposer({
   voiceActive = false,
   voiceState,
   voiceAudioLevel,
+  voiceCapture,
+  onStartCall,
   models = [],
   model = null,
   onModelChange,
@@ -106,6 +125,14 @@ export function KChatComposer({
     voiceState ??
     (voiceActive ? KDictationState.recording : KDictationState.ready);
   const recording = dictationState === KDictationState.recording;
+  const capturing = Boolean(
+    voiceCapture &&
+    (recording ||
+      dictationState === KDictationState.processing ||
+      dictationState === KDictationState.error),
+  );
+  const inputId = useId();
+  const captureSamples = voiceCapture?.samples.slice(-80) ?? [];
   const voiceLabel = {
     ready: labels.voice,
     recording: labels.stopVoice,
@@ -118,7 +145,7 @@ export function KChatComposer({
   const submit = (event?: FormEvent) => {
     event?.preventDefault();
     const trimmed = value.trim();
-    if (!trimmed || disabled || !submitEnabled || running) return;
+    if (!trimmed || disabled || !submitEnabled || running || capturing) return;
     onSubmit(trimmed);
   };
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -149,38 +176,124 @@ export function KChatComposer({
       ) : null}
       <div className="k-chat-composer__input">
         <div className="k-chat-composer__tools">
-          {onAttach ? (
+          {capturing ? (
             <KIconButton
-              icon="paperclip"
+              icon="x"
+              label={labels.cancelVoice}
+              onClick={voiceCapture!.onCancel}
+            />
+          ) : onAttach ? (
+            <KIconButton
+              icon={voiceCapture ? "plus" : "paperclip"}
               label={labels.attach}
               onClick={onAttach}
             />
           ) : null}
-          {leadingTools}
+          {!capturing && leadingTools}
         </div>
-        <label className="k-visually-hidden" htmlFor="k-chat-composer-input">
+        <label className="k-visually-hidden" htmlFor={inputId}>
           {labels.input}
         </label>
-        <textarea
-          id="k-chat-composer-input"
-          data-empty={value.length === 0}
-          value={value}
-          disabled={disabled}
-          maxLength={maxLength}
-          placeholder={labels.placeholder}
-          rows={1}
-          onChange={(event) => onValueChange(event.target.value)}
-          onKeyDown={onKeyDown}
-          onCompositionStart={() => {
-            composing.current = true;
-          }}
-          onCompositionEnd={() => {
-            composing.current = false;
-          }}
-        />
+        {capturing ? (
+          <div
+            className="k-chat-composer__capture"
+            aria-busy={dictationState === KDictationState.processing}
+          >
+            {recording ? (
+              <>
+                <span className="k-visually-hidden" role="status">
+                  {labels.voice}
+                </span>
+                <svg
+                  className="k-chat-composer__wave"
+                  viewBox="0 0 480 40"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  {Array.from({ length: 80 }, (_, index) => {
+                    const sample = captureSamples[index] ?? 0;
+                    // Display quiet speech on a decibel scale; audio stays unchanged.
+                    const level =
+                      Number.isFinite(sample) && sample > 0
+                        ? Math.max(
+                            0,
+                            Math.min(
+                              1,
+                              (20 * Math.log10(Math.min(1, sample)) + 60) / 48,
+                            ),
+                          )
+                        : 0;
+                    return (
+                      <line
+                        key={index}
+                        x1={index * 6 + 3}
+                        x2={index * 6 + 3}
+                        y1={20 - (1 + level * 17)}
+                        y2={20 + (1 + level * 17)}
+                      />
+                    );
+                  })}
+                </svg>
+              </>
+            ) : (
+              <span
+                className="k-chat-composer__capture-status"
+                role={
+                  dictationState === KDictationState.error ? "alert" : "status"
+                }
+              >
+                <KIcon
+                  name={
+                    dictationState === KDictationState.error
+                      ? "circle-alert"
+                      : "loader-circle"
+                  }
+                />
+                {dictationState === KDictationState.error
+                  ? (voiceCapture!.error ?? labels.errorVoice)
+                  : labels.processingVoice}
+              </span>
+            )}
+          </div>
+        ) : (
+          <textarea
+            id={inputId}
+            data-empty={value.length === 0}
+            value={value}
+            disabled={disabled}
+            maxLength={maxLength}
+            placeholder={labels.placeholder}
+            rows={1}
+            onChange={(event) => onValueChange(event.target.value)}
+            onKeyDown={onKeyDown}
+            onCompositionStart={() => {
+              composing.current = true;
+            }}
+            onCompositionEnd={() => {
+              composing.current = false;
+            }}
+          />
+        )}
         <div className="k-chat-composer__tools">
-          {trailingTools}
-          {onVoiceInput ? (
+          {!capturing && trailingTools}
+          {capturing ? (
+            <KIconButton
+              icon={
+                dictationState === KDictationState.error
+                  ? "rotate-cw"
+                  : "square"
+              }
+              label={
+                dictationState === KDictationState.error
+                  ? labels.errorVoice!
+                  : labels.stopVoice
+              }
+              disabled={
+                dictationState === KDictationState.processing || !onVoiceInput
+              }
+              onClick={onVoiceInput}
+            />
+          ) : onVoiceInput ? (
             <KDictationAction
               state={dictationState}
               label={voiceLabel}
@@ -188,7 +301,15 @@ export function KChatComposer({
               onPressed={disabled && !recording ? undefined : onVoiceInput}
             />
           ) : null}
-          {running ? (
+          {capturing ? (
+            <KIconButton
+              icon="arrow-up"
+              label={labels.sendVoice}
+              variant="primary"
+              disabled={!recording || disabled || !submitEnabled || running}
+              onClick={voiceCapture!.onSend}
+            />
+          ) : running ? (
             <KIconButton
               icon="x"
               label={labels.stop}
@@ -197,6 +318,14 @@ export function KChatComposer({
                 event.preventDefault();
                 onStop?.();
               }}
+            />
+          ) : onStartCall && !value.trim() ? (
+            <KIconButton
+              icon="phone"
+              label={labels.call}
+              variant="primary"
+              disabled={disabled}
+              onClick={onStartCall}
             />
           ) : (
             <KIconButton
@@ -209,7 +338,7 @@ export function KChatComposer({
             />
           )}
         </div>
-        {models.length && onModelChange ? (
+        {!capturing && models.length && onModelChange ? (
           <div className="k-chat-composer__model">
             <KSelect
               presentation="inline"

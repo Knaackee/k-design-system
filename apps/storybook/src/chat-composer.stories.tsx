@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { KChatComposer, KDictationState, KStack } from "@k-design-system/ui";
+import { VoiceComposerFixture } from "./chat-composer-voice-fixture";
 
 function ComposerFixture({ mobile = false }: { mobile?: boolean }) {
   const [voiceActive, setVoiceActive] = useState(false);
@@ -78,4 +79,14 @@ export const Mobile: Story = {
   name: "chat-composer-mobile",
   args: { mobile: true },
   parameters: { fixtureId: "chat-composer-mobile" },
+};
+export const CompactVoice: Story = {
+  name: "Kompakte Spracheingabe",
+  render: () => <VoiceComposerFixture />,
+  parameters: { fixtureId: "chat-composer-compact-voice" },
+};
+export const CompactVoiceMobile: Story = {
+  name: "Kompakte Spracheingabe · Mobil",
+  render: () => <VoiceComposerFixture mobile />,
+  parameters: { fixtureId: "chat-composer-compact-voice-mobile" },
 };

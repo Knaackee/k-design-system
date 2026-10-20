@@ -118,7 +118,7 @@ void main() {
     Finder icon(String label) => find.byWidgetPredicate(
       (widget) => widget is KIconButton && widget.label == label,
     );
-    await tester.tap(icon('Anrufen'));
+    await tester.tap(icon('Telefonat starten'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 950));
     expect(tester.widget<KCallBar>(find.byType(KCallBar)).expanded, isTrue);

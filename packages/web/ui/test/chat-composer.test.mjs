@@ -17,6 +17,27 @@ const render = (props = {}) =>
     }),
   );
 
+test("waveform distinguishes quiet speech from silence without invalid geometry", () => {
+  const html = render({
+    voiceState: KDictationState.recording,
+    voiceCapture: {
+      samples: [0, 0.03, Number.NaN],
+      onCancel() {},
+      onSend() {},
+    },
+  });
+  const tops = [...html.matchAll(/<line[^>]*y1="([^"]+)"/g)].map((match) =>
+    Number(match[1]),
+  );
+  assert.equal(tops.length, 80);
+  assert.equal(tops[0], 19);
+  assert.ok(
+    tops[1] < 10,
+    "quiet speech should have a clearly visible amplitude",
+  );
+  assert.equal(tops[2], 19);
+});
+
 test("composer places microphone directly before primary Send and keeps attachments left", () => {
   const html = render();
   const labels = [...html.matchAll(/aria-label="([^"]+)"/g)].map(
@@ -74,5 +95,46 @@ test("composer renders the shared dictation action and explicit states", () => {
   assert.match(
     render({ voiceState: KDictationState.error }),
     /aria-label="Retry voice input"/,
+  );
+});
+
+test("inline recording replaces input and tools without requiring a text draft", () => {
+  const html = render({
+    value: "",
+    voiceState: KDictationState.recording,
+    voiceCapture: { samples: [0, 0.5, NaN, 9], onCancel() {}, onSend() {} },
+  });
+  assert.doesNotMatch(html, /<textarea/);
+  assert.match(html, /k-chat-composer__wave/);
+  assert.doesNotMatch(html, /NaN/);
+  assert.doesNotMatch(html, /aria-label="Attach files"/);
+  assert.match(html, /aria-label="Discard recording"/);
+  assert.match(html, /aria-label="Stop voice input"/);
+  const send = html.match(
+    /<button[^>]*aria-label="Transcribe and send"[^>]*>/,
+  )?.[0];
+  assert.ok(send);
+  assert.doesNotMatch(send, /disabled=/);
+});
+
+test("processing blocks repeated sends but remains cancellable; empty ready state offers call", () => {
+  const capture = { samples: [], onCancel() {}, onSend() {} };
+  const html = render({
+    voiceState: KDictationState.processing,
+    voiceCapture: capture,
+  });
+  assert.match(html, /aria-busy="true"/);
+  assert.match(html, /aria-label="Transcribe and send"[^>]*disabled=""/);
+  assert.doesNotMatch(
+    html.match(/<button[^>]*aria-label="Discard recording"[^>]*>/)?.[0] ?? "",
+    /disabled=/,
+  );
+  assert.match(
+    render({ value: "", onStartCall() {}, voiceCapture: capture }),
+    /aria-label="Start call"/,
+  );
+  assert.doesNotMatch(
+    render({ value: "Draft", onStartCall() {}, voiceCapture: capture }),
+    /aria-label="Start call"/,
   );
 });

@@ -481,24 +481,26 @@ export function AgentChatWorkspaceFixture({
                 setVoiceKey(null);
               }}
             />
-            <KIconButton
-              className="agent-chat-workspace-fixture__call-start"
-              icon="phone"
-              variant="ghost"
-              label={callOpen ? "Zum Anruf zurückkehren" : "Anrufen"}
-              onClick={() => {
-                if (!callOpen) {
-                  callOrigin.current =
-                    pattern.current
-                      ?.querySelector(".k-agent-chat-workspace__avatar")
-                      ?.getBoundingClientRect() ?? null;
-                  setCallSeconds(0);
-                  setCallMuted(false);
-                }
-                setCallOpen(true);
-                setCallExpanded(true);
-              }}
-            />
+            {callOpen && (
+              <KIconButton
+                className="agent-chat-workspace-fixture__call-start"
+                icon="phone"
+                variant="ghost"
+                label={callOpen ? "Zum Anruf zurückkehren" : "Anrufen"}
+                onClick={() => {
+                  if (!callOpen) {
+                    callOrigin.current =
+                      pattern.current
+                        ?.querySelector(".k-agent-chat-workspace__avatar")
+                        ?.getBoundingClientRect() ?? null;
+                    setCallSeconds(0);
+                    setCallMuted(false);
+                  }
+                  setCallOpen(true);
+                  setCallExpanded(true);
+                }}
+              />
+            )}
             <KIconButton
               icon="x"
               label="Chat schließen"
@@ -525,24 +527,25 @@ export function AgentChatWorkspaceFixture({
               <KMenuButton
                 label="Anhängen"
                 triggerVariant="ghost"
-                triggerContent={<KIcon name="paperclip" />}
+                overflow
+                triggerContent={<KIcon name="plus" />}
                 actions={[
                   {
                     id: "image",
                     label: "Bild auswählen",
-                    icon: "image",
+                    iconContent: <KIcon name="image" strokeWidth={1.5} />,
                     onSelect: () => addAttachment("Bild.jpg", "image/jpeg"),
                   },
                   {
                     id: "camera",
                     label: "Neues Bild aufnehmen",
-                    icon: "camera",
+                    iconContent: <KIcon name="camera" strokeWidth={1.5} />,
                     onSelect: () => addAttachment("Aufnahme.jpg", "image/jpeg"),
                   },
                   {
                     id: "document",
                     label: "Dokument auswählen",
-                    icon: "file",
+                    iconContent: <KIcon name="file" strokeWidth={1.5} />,
                     onSelect: () =>
                       addAttachment("Projektbrief.pdf", "application/pdf"),
                   },
@@ -558,11 +561,42 @@ export function AgentChatWorkspaceFixture({
               }))
             }
             voiceActive={voiceKey === conversationKey}
-            onVoiceInput={() =>
-              setVoiceKey((current) =>
-                current === conversationKey ? null : conversationKey,
-              )
-            }
+            voiceCapture={{
+              samples: [0.001, 0.008, 0.03, 0.12, 0.008, 0.004, 0.06, 0.02],
+              onCancel: () => setVoiceKey(null),
+              onSend: () => {
+                setVoiceKey(null);
+                submit(
+                  [drafts[conversationKey], "Dies ist ein Demo-Diktat."]
+                    .filter(Boolean)
+                    .join(" "),
+                );
+              },
+            }}
+            onStartCall={() => {
+              callOrigin.current =
+                pattern.current
+                  ?.querySelector(".k-agent-chat-workspace__avatar")
+                  ?.getBoundingClientRect() ?? null;
+              setCallSeconds(0);
+              setCallMuted(false);
+              setCallOpen(true);
+              setCallExpanded(true);
+            }}
+            onVoiceInput={() => {
+              if (voiceKey === conversationKey) {
+                setVoiceKey(null);
+                setDrafts((current) => ({
+                  ...current,
+                  [conversationKey]: [
+                    current[conversationKey],
+                    "Dies ist ein Demo-Diktat.",
+                  ]
+                    .filter(Boolean)
+                    .join(" "),
+                }));
+              } else setVoiceKey(conversationKey);
+            }}
             labels={{
               input: `Nachricht an ${selected.name}`,
               placeholder:
@@ -574,6 +608,9 @@ export function AgentChatWorkspaceFixture({
               removeAttachment: "Anhang entfernen",
               voice: "Audio starten (Demo)",
               stopVoice: "Audio stoppen (Demo)",
+              cancelVoice: "Aufnahme verwerfen",
+              sendVoice: "Diktat direkt senden",
+              call: "Telefonat starten",
             }}
           />
         }
