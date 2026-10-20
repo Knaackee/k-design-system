@@ -81,6 +81,10 @@ import 'orbit_fixture.dart';
 import 'activity_fixture.dart';
 import 'dicebear_avatar_fixture.dart';
 import 'integrations_fixture.dart';
+import 'map_fixture.dart';
+import 'map_day_fixture.dart';
+import 'map_location_picker_fixture.dart';
+import 'map_overlays_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -205,6 +209,83 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        WidgetbookCategory(
+          name: 'Maps',
+          children: [
+            WidgetbookFolder(
+              name: 'Map Overlays',
+              children: [
+                WidgetbookUseCase(name: 'Pins', builder: buildMapOverlaysPins),
+                WidgetbookUseCase(
+                  name: 'Logo Pins',
+                  builder: buildMapOverlaysLogoPins,
+                ),
+                WidgetbookUseCase(
+                  name: 'Custom Pins',
+                  builder: buildMapOverlaysCustomPins,
+                ),
+                WidgetbookUseCase(
+                  name: 'Routes',
+                  builder: buildMapOverlaysRoutes,
+                ),
+                WidgetbookUseCase(
+                  name: 'Pins And Route',
+                  builder: buildMapOverlaysPinsAndRoute,
+                ),
+                WidgetbookUseCase(
+                  name: 'Traffic Segments',
+                  builder: buildMapOverlaysTrafficSegments,
+                ),
+                WidgetbookUseCase(
+                  name: 'Draggable Pins',
+                  builder: buildMapOverlaysDraggablePins,
+                ),
+                WidgetbookUseCase(
+                  name: 'Long Press Pins',
+                  builder: buildMapOverlaysLongPressPins,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Day view',
+              children: [
+                WidgetbookUseCase(name: 'Day', builder: buildMapDayDesktop),
+                WidgetbookUseCase(name: 'Tablet', builder: buildMapDayTablet),
+                WidgetbookUseCase(name: 'Mobile', builder: buildMapDayMobile),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Location Picker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Desktop',
+                  builder: buildMapLocationPickerDesktop,
+                ),
+                WidgetbookUseCase(
+                  name: 'Mobile',
+                  builder: buildMapLocationPickerMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'Custom leading',
+                  builder: buildMapLocationPickerCustomLeading,
+                ),
+                WidgetbookUseCase(
+                  name: 'Bare pin',
+                  builder: buildMapLocationPickerBarePin,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Map',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Map',
+                  builder: MapFixtureSession().build,
+                ),
+              ],
+            ),
+          ],
+        ),
         WidgetbookCategory(
           name: 'Components',
           children: [

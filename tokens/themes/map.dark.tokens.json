@@ -1,0 +1,48 @@
+{
+  "map": {
+    "color": {
+      "background": { "$type": "color", "$value": "#1F2125" },
+      "water": { "$type": "color", "$value": "#17263C" },
+      "waterLabel": { "$type": "color", "$value": "#6F8FB3" },
+      "park": { "$type": "color", "$value": "#1F3326" },
+      "wood": { "$type": "color", "$value": "#1C3023" },
+      "grass": { "$type": "color", "$value": "#21352A" },
+      "cemetery": { "$type": "color", "$value": "#22342A" },
+      "landuseResidential": { "$type": "color", "$value": "#212327" },
+      "landuseIndustrial": { "$type": "color", "$value": "#24262B" },
+      "landuseCommercial": { "$type": "color", "$value": "#25252A" },
+      "landuseHospital": { "$type": "color", "$value": "#2E2426" },
+      "landuseSchool": { "$type": "color", "$value": "#2B2924" },
+      "sand": { "$type": "color", "$value": "#2C2A24" },
+      "aeroway": { "$type": "color", "$value": "#2A2D32" },
+      "building": { "$type": "color", "$value": "#2A2C31" },
+      "buildingOutline": { "$type": "color", "$value": "#33363C" },
+      "road": { "$type": "color", "$value": "#3C4043" },
+      "roadCasing": { "$type": "color", "$value": "#2B2E33" },
+      "roadMinor": { "$type": "color", "$value": "#34373B" },
+      "roadMinorCasing": { "$type": "color", "$value": "#2A2D31" },
+      "path": { "$type": "color", "$value": "#4A4E54" },
+      "motorway": { "$type": "color", "$value": "#8A7333" },
+      "motorwayCasing": { "$type": "color", "$value": "#5C4C22" },
+      "trunk": { "$type": "color", "$value": "#5E5640" },
+      "trunkCasing": { "$type": "color", "$value": "#3F3A2C" },
+      "rail": { "$type": "color", "$value": "#4E535A" },
+      "boundary": { "$type": "color", "$value": "#5F646B" },
+      "label": { "$type": "color", "$value": "#B4B8BE" },
+      "labelStrong": { "$type": "color", "$value": "#E2E4E7" },
+      "labelSubtle": { "$type": "color", "$value": "#8A8F96" },
+      "labelHalo": { "$type": "color", "$value": "#1F2125" },
+      "poiFood": { "$type": "color", "$value": "#F29A3A" },
+      "poiShop": { "$type": "color", "$value": "#6FA0EE" },
+      "poiHealth": { "$type": "color", "$value": "#EE7A76" },
+      "poiEducation": { "$type": "color", "$value": "#A68BE6" },
+      "poiLeisure": { "$type": "color", "$value": "#4FB880" },
+      "poiTransport": { "$type": "color", "$value": "#6E99EA" },
+      "poiOther": { "$type": "color", "$value": "#9AA0A8" },
+      "poiStroke": { "$type": "color", "$value": "#1F2125" }
+    },
+    "opacity": {
+      "tunnel": { "$type": "number", "$value": 0.5 }
+    }
+  }
+}

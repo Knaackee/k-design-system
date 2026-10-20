@@ -1,0 +1,128 @@
+.k-map {
+  width: 100%;
+  min-width: 0;
+  height: var(--k-map-height, 75vh);
+  min-height: calc(360 * var(--k-space-hairline));
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--k-radius-card);
+  background: var(--k-color-surface-subtle);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+.k-map > .k-map__canvas {
+  position: absolute;
+  inset: 0;
+}
+.k-map__controls {
+  position: absolute;
+  top: var(--k-space-card-padding);
+  right: var(--k-space-card-padding);
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+}
+.k-map__status {
+  position: absolute;
+  left: var(--k-space-card-padding);
+  bottom: var(--k-size-switch);
+  padding: var(--k-space-card-padding);
+  background: var(--k-color-surface-raised);
+  border-radius: var(--k-radius-card);
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-map__pin {
+  display: grid;
+  place-items: center;
+  width: max(
+    calc(44 * var(--k-space-hairline)),
+    var(--k-map-pin-size, calc(40 * var(--k-space-hairline)))
+  );
+  height: max(
+    calc(44 * var(--k-space-hairline)),
+    var(--k-map-pin-size, calc(40 * var(--k-space-hairline)))
+  );
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.k-map__pin-face {
+  box-sizing: border-box;
+  width: var(--k-map-pin-size, calc(40 * var(--k-space-hairline)));
+  height: var(--k-map-pin-size, calc(40 * var(--k-space-hairline)));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--k-color-surface-raised);
+  color: var(--k-map-pin-color, var(--k-color-brand-primary-accent));
+  border: calc(3 * var(--k-space-hairline)) solid currentColor;
+  border-radius: var(--k-radius-full);
+  box-shadow: var(--k-elevation-medium);
+}
+.k-map__pin-motion {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
+  transition: transform var(--k-map-pin-drag-duration, var(--k-motion-standard))
+    ease-out;
+}
+.k-map__pin[data-shape="pin"] .k-map__pin-motion {
+  transform-origin: 50%
+    calc(
+      50% + var(--k-map-pin-size, calc(40 * var(--k-space-hairline))) /
+        1.41421356
+    );
+}
+.k-map__pin[data-draggable="true"] {
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+.k-map__pin[data-dragging="true"] {
+  cursor: grabbing;
+}
+.k-map__pin[data-dragging="true"] .k-map__pin-motion {
+  transform: scale(var(--k-map-pin-drag-scale, 1.15));
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-map__pin-motion {
+    transition: none;
+  }
+}
+.k-map__pin[data-shape="pin"] .k-map__pin-face {
+  border-bottom-right-radius: 0;
+  transform: rotate(45deg);
+}
+.k-map__pin[data-shape="pin"] .k-map__pin-face > * {
+  transform: rotate(-45deg);
+}
+.k-map__pin[data-shape="square"] .k-map__pin-face {
+  border-radius: var(--k-radius-control);
+}
+.k-map__pin-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.k-map__pin-content {
+  display: grid;
+  place-items: center;
+  width: var(--k-map-pin-size, calc(40 * var(--k-space-hairline)));
+  height: var(--k-map-pin-size, calc(40 * var(--k-space-hairline)));
+  color: var(--k-map-pin-color, var(--k-color-brand-primary-accent));
+}
+.k-map__pin[aria-pressed="true"] .k-map__pin-face {
+  outline: calc(3 * var(--k-space-hairline)) solid
+    var(--k-color-brand-primary-accent);
+  outline-offset: calc(3 * var(--k-space-hairline));
+}
+.k-map__pin:focus-visible {
+  outline: calc(2 * var(--k-space-hairline)) solid var(--k-color-border-focus);
+  outline-offset: calc(6 * var(--k-space-hairline));
+  border-radius: var(--k-radius-control);
+}

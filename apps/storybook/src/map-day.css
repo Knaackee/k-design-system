@@ -1,0 +1,3 @@
+.k-gallery:has(.k-day-map) {
+  padding: 0;
+}

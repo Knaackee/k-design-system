@@ -281,6 +281,57 @@
       }
     }
   },
+  "map": {
+    "color": {
+      "background": { "$type": "color", "$value": "#F5F5F5" },
+      "water": { "$type": "color", "$value": "#AADAFF" },
+      "waterLabel": { "$type": "color", "$value": "#4A86B8" },
+      "park": { "$type": "color", "$value": "#CEEAD6" },
+      "wood": { "$type": "color", "$value": "#C3E3CC" },
+      "grass": { "$type": "color", "$value": "#D8EFDD" },
+      "cemetery": { "$type": "color", "$value": "#DCEBDF" },
+      "landuseResidential": { "$type": "color", "$value": "#F1F1F1" },
+      "landuseIndustrial": { "$type": "color", "$value": "#ECECF0" },
+      "landuseCommercial": { "$type": "color", "$value": "#F3F0F0" },
+      "landuseHospital": { "$type": "color", "$value": "#F8E3E3" },
+      "landuseSchool": { "$type": "color", "$value": "#F4EFDF" },
+      "sand": { "$type": "color", "$value": "#F4EEDB" },
+      "aeroway": { "$type": "color", "$value": "#E4E6EA" },
+      "building": { "$type": "color", "$value": "#E9E9E9" },
+      "buildingOutline": { "$type": "color", "$value": "#DCDCDE" },
+      "road": { "$type": "color", "$value": "{color.neutral.0}" },
+      "roadCasing": { "$type": "color", "$value": "#DADCE0" },
+      "roadMinor": { "$type": "color", "$value": "{color.neutral.0}" },
+      "roadMinorCasing": { "$type": "color", "$value": "#E3E5E8" },
+      "path": { "$type": "color", "$value": "#C9CCD1" },
+      "motorway": { "$type": "color", "$value": "#FDE293" },
+      "motorwayCasing": { "$type": "color", "$value": "#F1C64B" },
+      "trunk": { "$type": "color", "$value": "#FFF1BF" },
+      "trunkCasing": { "$type": "color", "$value": "#EDCF7B" },
+      "rail": { "$type": "color", "$value": "#BDC1C6" },
+      "boundary": { "$type": "color", "$value": "#B5B8BD" },
+      "label": { "$type": "color", "$value": "#5F6368" },
+      "labelStrong": { "$type": "color", "$value": "#3C4043" },
+      "labelSubtle": { "$type": "color", "$value": "#80868B" },
+      "labelHalo": { "$type": "color", "$value": "{color.neutral.0}" },
+      "poiFood": { "$type": "color", "$value": "#E37400" },
+      "poiShop": { "$type": "color", "$value": "#3F7FDB" },
+      "poiHealth": { "$type": "color", "$value": "#D9534F" },
+      "poiEducation": { "$type": "color", "$value": "#7E63C6" },
+      "poiLeisure": { "$type": "color", "$value": "#2E8B57" },
+      "poiTransport": { "$type": "color", "$value": "#3B6FD4" },
+      "poiOther": { "$type": "color", "$value": "#7A8088" },
+      "poiStroke": { "$type": "color", "$value": "{color.neutral.0}" }
+    },
+    "opacity": {
+      "tunnel": { "$type": "number", "$value": 0.55 }
+    },
+    "font": {
+      "regular": { "$type": "string", "$value": "Noto Sans Regular" },
+      "bold": { "$type": "string", "$value": "Noto Sans Bold" },
+      "italic": { "$type": "string", "$value": "Noto Sans Italic" }
+    }
+  },
   "space": {
     "chartAxisGutter": {
       "$type": "dimension",

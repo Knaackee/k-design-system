@@ -33,3 +33,4 @@ docs/adr/index.md
 docs/adr/evidence/
 
 **/flutter/ephemeral/
+packages/flutter/k_design_ui/test/fixtures/map-style-parity.json
