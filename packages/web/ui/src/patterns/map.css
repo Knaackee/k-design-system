@@ -24,14 +24,22 @@
 }
 .k-map__status {
   position: absolute;
-  left: var(--k-space-card-padding);
-  bottom: var(--k-size-switch);
-  padding: var(--k-space-card-padding);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: calc(100% - 2 * var(--k-space-card-padding));
+  box-sizing: border-box;
+  padding: var(--k-space-control-gap) var(--k-space-card-padding);
   background: var(--k-color-surface-raised);
   border-radius: var(--k-radius-card);
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: var(--k-space-control-gap);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  box-shadow: var(--k-elevation-medium);
 }
 .k-map__pin {
   display: grid;

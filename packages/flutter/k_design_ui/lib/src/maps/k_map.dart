@@ -15,6 +15,8 @@ import 'k_map_attribution.dart';
 import 'k_map_blur.dart';
 import 'k_map_controller.dart';
 import 'k_map_overlays.dart';
+import 'k_map_polygon.dart';
+import 'k_map_gesture_surface.dart';
 
 typedef KMapViewChangeCallback = void Function(KMapView view);
 typedef KMapOverlayBuilder =
@@ -40,25 +42,41 @@ class KMap extends StatefulWidget {
     this.controlsPadding = const EdgeInsetsDirectional.all(16),
     this.pins = const [],
     this.routes = const [],
+    this.zones = const [],
     this.selectedPinId,
     this.selectionControlled = false,
     this.defaultSelectedPinId,
     this.selectedRouteId,
+    this.selectedZoneId,
+    this.invalidZoneIds = const {},
     this.onPinTap,
+    this.onZoneClick,
+    this.onMapTap,
+    this.zoneFillOpacity = .16,
+    this.selectedZoneFillOpacity = .30,
+    this.zoneStrokeWidth = 2,
+    this.selectedZoneStrokeWidth = 4,
     this.onSelectionChanged,
     this.onPinMove,
     this.pinDrag = const KMapPinDragOptions(),
     this.onPinDragStart,
     this.onPinDrag,
     this.onPinDragEnd,
+    this.onPinDragCancel,
     this.pinBuilder,
     this.fitContent = false,
+    this.fitContentOnLoad = false,
     this.fitPadding = 64,
+    this.fitContentPadding,
     this.overlayBuilder,
     this.blurSigma = 0,
     super.key,
   }) : assert(zoom >= 0 && zoom <= 22),
        assert(fitPadding >= 0),
+       assert(zoneFillOpacity >= 0 && zoneFillOpacity <= 1),
+       assert(selectedZoneFillOpacity >= 0 && selectedZoneFillOpacity <= 1),
+       assert(zoneStrokeWidth > 0),
+       assert(selectedZoneStrokeWidth > 0),
        assert(blurSigma >= 0);
 
   final String mapStyle;
@@ -73,20 +91,32 @@ class KMap extends StatefulWidget {
   final EdgeInsetsDirectional controlsPadding;
   final List<KMapPin> pins;
   final List<KMapRoute> routes;
+  final List<KMapZone> zones;
   final String? selectedPinId;
   final bool selectionControlled;
   final String? defaultSelectedPinId;
   final String? selectedRouteId;
+  final String? selectedZoneId;
+  final Set<String> invalidZoneIds;
   final KMapPinCallback? onPinTap;
+  final KMapZoneCallback? onZoneClick;
+  final KMapTapCallback? onMapTap;
+  final double zoneFillOpacity;
+  final double selectedZoneFillOpacity;
+  final double zoneStrokeWidth;
+  final double selectedZoneStrokeWidth;
   final KMapPinCallback? onSelectionChanged;
   final KMapPinMoveCallback? onPinMove;
   final KMapPinDragOptions pinDrag;
   final KMapPinDragCallback? onPinDragStart;
   final KMapPinDragCallback? onPinDrag;
   final KMapPinDragCallback? onPinDragEnd;
+  final KMapPinDragCallback? onPinDragCancel;
   final KMapPinBuilder? pinBuilder;
   final bool fitContent;
+  final bool fitContentOnLoad;
   final double fitPadding;
+  final EdgeInsets? fitContentPadding;
   final KMapOverlayBuilder? overlayBuilder;
 
   /// Scoped backdrop blur above this map renderer, including Web platform views.
@@ -99,6 +129,7 @@ class KMap extends StatefulWidget {
 enum _KMapStatus { loading, ready, error }
 
 class _KMapState extends State<KMap> {
+  final _viewportKey = GlobalKey();
   static const _loadTimeout = Duration(seconds: 20);
 
   maplibre.MapController? _controller;
@@ -152,7 +183,9 @@ class _KMapState extends State<KMap> {
     if (widget.fitContent &&
         (oldWidget.pins != widget.pins ||
             oldWidget.routes != widget.routes ||
-            oldWidget.fitPadding != widget.fitPadding)) {
+            oldWidget.zones != widget.zones ||
+            oldWidget.fitPadding != widget.fitPadding ||
+            oldWidget.fitContentPadding != widget.fitContentPadding)) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _fitContent());
     }
   }
@@ -163,6 +196,7 @@ class _KMapState extends State<KMap> {
     final delegate = _controller;
     if (delegate != null) {
       applyKMapBlur(delegate, 0);
+      releaseKMapRendererResize(delegate);
       _publicController.detachDelegate(delegate);
     }
     if (_ownsPublicController) _publicController.dispose();
@@ -196,8 +230,29 @@ class _KMapState extends State<KMap> {
     if (mounted && _status != _KMapStatus.ready) {
       setState(() => _status = _KMapStatus.ready);
     }
-    _scheduleRendererSync(camera: true, blur: true);
-    _fitContent();
+    if (widget.fitContentOnLoad || widget.fitContent) {
+      // A camera sync queued by onMapCreated must not overwrite the one-time
+      // content fit after the style becomes ready.
+      _syncCamera = false;
+      _scheduleRendererSync(blur: true);
+      unawaited(_fitAfterRendererLayout());
+    } else {
+      _scheduleRendererSync(camera: true, blur: true);
+    }
+  }
+
+  Future<void> _fitAfterRendererLayout() async {
+    final controller = _controller;
+    WidgetsBinding.instance.scheduleFrame();
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted || controller == null || !identical(_controller, controller)) {
+      return;
+    }
+    requestKMapRendererResize(controller);
+    WidgetsBinding.instance.scheduleFrame();
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted || !identical(_controller, controller)) return;
+    await _fitContent(force: widget.fitContentOnLoad);
   }
 
   void _scheduleRendererSync({bool camera = false, bool blur = false}) {
@@ -223,6 +278,19 @@ class _KMapState extends State<KMap> {
   }
 
   void _onMapEvent(maplibre.MapEvent event) {
+    if (event is maplibre.MapEventClick) {
+      final position = KMapCenter(
+        longitude: event.point.lon,
+        latitude: event.point.lat,
+      );
+      final zoneId = hitTestKMapZones(widget.zones, position);
+      if (zoneId != null && widget.onZoneClick != null) {
+        widget.onZoneClick?.call(zoneId);
+      } else {
+        widget.onMapTap?.call(position);
+      }
+    }
+    if (event is maplibre.MapEventMoveCamera) _publicController.updateView();
     if (event is! maplibre.MapEventCameraIdle) return;
     final view = _publicController.updateView();
     if (view != null) widget.onViewChange?.call(view);
@@ -274,12 +342,14 @@ class _KMapState extends State<KMap> {
     }
   }
 
-  Future<void> _fitContent() async {
-    if (!widget.fitContent || !_publicController.isReady) return;
+  Future<void> _fitContent({bool force = false}) async {
+    if ((!widget.fitContent && !force) || !_publicController.isReady) return;
     await _publicController.fitCoordinates([
       for (final pin in widget.pins) pin.position,
       for (final route in widget.routes) ...route.coordinates,
-    ], padding: EdgeInsets.all(widget.fitPadding));
+      for (final zone in widget.zones)
+        for (final polygon in zone.geometry) ...polygon.outer,
+    ], padding: widget.fitContentPadding ?? EdgeInsets.all(widget.fitPadding));
   }
 
   void _zoomBy(double delta) {
@@ -321,7 +391,13 @@ class _KMapState extends State<KMap> {
         KDesignTokens.orbitLight;
     final radius = BorderRadius.circular(tokens.radiusCard);
 
-    return Listener(
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final box = _viewportKey.currentContext?.findRenderObject();
+      if (box is RenderBox && box.hasSize) {
+        _publicController.viewport = box.localToGlobal(Offset.zero) & box.size;
+      }
+    });
+    final surface = Listener(
       key: const ValueKey('k-map-pointer-signals'),
       behavior: HitTestBehavior.opaque,
       onPointerSignal: widget.interactive ? _onPointerSignal : null,
@@ -331,6 +407,7 @@ class _KMapState extends State<KMap> {
         child: ClipRRect(
           borderRadius: radius,
           child: ColoredBox(
+            key: _viewportKey,
             color: tokens.colorSurfaceSubtle,
             child: Stack(
               fit: StackFit.expand,
@@ -352,11 +429,23 @@ class _KMapState extends State<KMap> {
                     onMapCreated: _onMapCreated,
                     onStyleLoaded: _onStyleLoaded,
                     onEvent: _onMapEvent,
-                    layers: buildKMapRouteLayers(
-                      widget.routes,
-                      tokens,
-                      selectedRouteId: widget.selectedRouteId,
-                    ),
+                    layers: [
+                      ...buildKMapZoneLayers(
+                        widget.zones,
+                        tokens,
+                        selectedZoneId: widget.selectedZoneId,
+                        fillOpacity: widget.zoneFillOpacity,
+                        selectedFillOpacity: widget.selectedZoneFillOpacity,
+                        strokeWidth: widget.zoneStrokeWidth,
+                        selectedStrokeWidth: widget.selectedZoneStrokeWidth,
+                        invalidZoneIds: widget.invalidZoneIds,
+                      ),
+                      ...buildKMapRouteLayers(
+                        widget.routes,
+                        tokens,
+                        selectedRouteId: widget.selectedRouteId,
+                      ),
+                    ],
                     children: [
                       KMapOverlays(
                         controller: _publicController,
@@ -373,6 +462,7 @@ class _KMapState extends State<KMap> {
                         onPinDragStart: widget.onPinDragStart,
                         onPinDrag: widget.onPinDrag,
                         onPinDragEnd: widget.onPinDragEnd,
+                        onPinDragCancel: widget.onPinDragCancel,
                         pinBuilder: widget.pinBuilder,
                       ),
                       if (widget.overlayBuilder case final builder?)
@@ -394,6 +484,9 @@ class _KMapState extends State<KMap> {
         ),
       ),
     );
+    return widget.interactive && widget.pins.any((pin) => pin.draggable)
+        ? KMapGestureSurface(controller: _publicController, child: surface)
+        : surface;
   }
 
   List<Widget> _overlays(BuildContext context, KDesignTokens tokens) => [

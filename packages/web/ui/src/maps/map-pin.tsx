@@ -3,20 +3,23 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type PointerEvent,
+  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { createPortal } from "react-dom";
 import { Marker, type Map } from "maplibre-gl";
 import { KIcon } from "../primitives/icon.js";
 import type { KMapOverlayProps, KMapPin, KMapPinMove } from "./map-overlays.js";
-import type { resolvePinDrag } from "./map-pin-drag.js";
+import { edgePanVelocity, type resolvePinDrag } from "./map-pin-drag.js";
 
 type Position = [number, number];
 type Gesture = {
   id: number;
+  target: HTMLButtonElement;
   x: number;
   y: number;
   start: Position;
+  grabX: number;
+  grabY: number;
   active: boolean;
   timer?: ReturnType<typeof setTimeout>;
 };
@@ -32,6 +35,7 @@ export function Pin({
   onDragStart,
   onDrag,
   onDragEnd,
+  onDragCancel,
 }: {
   map: Map;
   pin: KMapPin;
@@ -43,11 +47,14 @@ export function Pin({
   onDragStart?: KMapOverlayProps["onPinDragStart"];
   onDrag?: KMapOverlayProps["onPinDrag"];
   onDragEnd?: KMapOverlayProps["onPinDragEnd"];
+  onDragCancel?: KMapOverlayProps["onPinDragCancel"];
 }) {
   const [element] = useState(() => document.createElement("div"));
   const marker = useRef<Marker | null>(null);
   const gesture = useRef<Gesture | null>(null);
   const animation = useRef(0);
+  const edgeAnimation = useRef(0);
+  const edgeFrameTime = useRef(0);
   const revision = useRef(0);
   const suppressClick = useRef(false);
   const [dragging, setDragging] = useState(false);
@@ -58,8 +65,17 @@ export function Pin({
     onDragStart,
     onDrag,
     onDragEnd,
+    onDragCancel,
   });
-  latest.current = { pin, onMove, dragOptions, onDragStart, onDrag, onDragEnd };
+  latest.current = {
+    pin,
+    onMove,
+    dragOptions,
+    onDragStart,
+    onDrag,
+    onDragEnd,
+    onDragCancel,
+  };
   const [lng, lat] = pin.position;
   const eventFor = (position: Position): KMapPinMove => ({
     id: pin.id,
@@ -72,8 +88,58 @@ export function Pin({
   };
   const cancelGesture = () => {
     clearTimeout(gesture.current?.timer);
+    cancelAnimationFrame(edgeAnimation.current);
+    edgeFrameTime.current = 0;
     gesture.current = null;
     setDragging(false);
+  };
+  const positionAtPointer = (value: Gesture): Position => {
+    const rect = map.getContainer().getBoundingClientRect();
+    const next = map
+      .unproject([
+        value.x - rect.left + value.grabX,
+        value.y - rect.top + value.grabY,
+      ])
+      .wrap();
+    return [next.lng, Math.max(-85.051129, Math.min(85.051129, next.lat))];
+  };
+  const previewAtPointer = () => {
+    const value = gesture.current;
+    if (!value?.active) return;
+    const position = positionAtPointer(value);
+    marker.current?.setLngLat(position);
+    latest.current.onDrag?.(eventFor(position));
+  };
+  const edgeFrame = (time: number) => {
+    const value = gesture.current;
+    const options = latest.current.dragOptions.edgePan;
+    if (!value?.active || !options) return;
+    const rect = map.getContainer().getBoundingClientRect();
+    const velocity = edgePanVelocity(
+      { x: value.x - rect.left, y: value.y - rect.top },
+      { width: rect.width, height: rect.height },
+      options.padding,
+      options.maxSpeed,
+    );
+    const elapsed = edgeFrameTime.current
+      ? Math.min(32, time - edgeFrameTime.current)
+      : 16;
+    edgeFrameTime.current = time;
+    if (velocity.x || velocity.y) {
+      map.panBy(
+        [(velocity.x * elapsed) / 1000, (velocity.y * elapsed) / 1000],
+        { duration: 0 },
+      );
+      if (options.zoomOutPerSecond && map.getZoom() > options.minZoom)
+        map.setZoom(
+          Math.max(
+            options.minZoom,
+            map.getZoom() - (options.zoomOutPerSecond * elapsed) / 1000,
+          ),
+        );
+      previewAtPointer();
+    }
+    edgeAnimation.current = requestAnimationFrame(edgeFrame);
   };
   const returnToHost = () => {
     const instance = marker.current;
@@ -111,23 +177,34 @@ export function Pin({
   };
 
   useEffect(() => {
-    marker.current = new Marker({ element, anchor: "bottom" })
+    marker.current = new Marker({ element, anchor: pin.anchor ?? "bottom" })
       .setLngLat([lng, lat])
       .addTo(map);
     return () => {
       ++revision.current;
       clearTimeout(gesture.current?.timer);
       cancelAnimationFrame(animation.current);
+      cancelAnimationFrame(edgeAnimation.current);
       marker.current?.remove();
       marker.current = null;
     };
-  }, [map, element]);
+  }, [map, element, pin.anchor]);
   useEffect(() => {
+    // Controlled previews echo the marker position while the pointer is still
+    // down. Keep that render from cancelling the gesture after its first frame.
+    if (gesture.current?.active) return;
     ++revision.current;
     cancelAnimationFrame(animation.current);
     if (gesture.current) cancelGesture();
     marker.current?.setLngLat([lng, lat]);
   }, [lng, lat]);
+  useEffect(() => {
+    const reanchor = () => previewAtPointer();
+    map.on("move", reanchor);
+    return () => {
+      map.off("move", reanchor);
+    };
+  }, [map]);
   useEffect(() => {
     const size = pin.size ?? 40;
     const tipOffset =
@@ -146,11 +223,17 @@ export function Pin({
   const activate = (value: Gesture) => {
     if (gesture.current !== value) return;
     value.active = true;
+    const rect = map.getContainer().getBoundingClientRect();
+    const projected = map.project(value.start);
+    value.grabX = projected.x - (value.x - rect.left);
+    value.grabY = projected.y - (value.y - rect.top);
     suppressClick.current = true;
     setDragging(true);
     latest.current.onDragStart?.(eventFor(value.start));
+    if (latest.current.dragOptions.edgePan)
+      edgeAnimation.current = requestAnimationFrame(edgeFrame);
   };
-  const down = (event: PointerEvent<HTMLButtonElement>) => {
+  const down = (event: ReactPointerEvent<HTMLButtonElement>) => {
     if (
       !pin.draggable ||
       event.button !== 0 ||
@@ -167,16 +250,19 @@ export function Pin({
     suppressClick.current = false;
     const value: Gesture = {
       id: event.pointerId,
+      target: event.currentTarget,
       x: event.clientX,
       y: event.clientY,
       start: currentPosition(),
+      grabX: 0,
+      grabY: 0,
       active: false,
     };
     gesture.current = value;
     if (dragOptions.activation === "longPress")
       value.timer = setTimeout(() => activate(value), dragOptions.longPressMs);
   };
-  const move = (event: PointerEvent<HTMLButtonElement>) => {
+  const move = (event: ReactPointerEvent<HTMLButtonElement>) => {
     const value = gesture.current;
     if (!value || event.pointerId !== value.id) return;
     const dx = event.clientX - value.x,
@@ -189,17 +275,12 @@ export function Pin({
       if (Math.hypot(dx, dy) < 3) return;
       activate(value);
     }
-    const start = map.project(value.start);
-    const next = map.unproject([start.x + dx, start.y + dy]).wrap();
-    const position: Position = [
-      next.lng,
-      Math.max(-85.051129, Math.min(85.051129, next.lat)),
-    ];
-    marker.current?.setLngLat(position);
-    latest.current.onDrag?.(eventFor(position));
+    value.x = event.clientX;
+    value.y = event.clientY;
+    previewAtPointer();
   };
   const finish = (
-    event: PointerEvent<HTMLButtonElement>,
+    event: ReactPointerEvent<HTMLButtonElement>,
     cancelled = false,
   ) => {
     const value = gesture.current;
@@ -210,12 +291,35 @@ export function Pin({
       event.currentTarget.releasePointerCapture(event.pointerId);
     if (!value.active) return;
     if (cancelled) {
+      latest.current.onDragCancel?.(eventFor(position));
       returnToHost();
       return;
     }
     latest.current.onDragEnd?.(eventFor(position));
     commit(position, "drag");
   };
+  useEffect(() => {
+    const cancelForAdditionalPointer = (event: globalThis.PointerEvent) => {
+      const value = gesture.current;
+      if (!value || event.pointerId === value.id) return;
+      const position = currentPosition();
+      const active = value.active;
+      cancelGesture();
+      if (value.target.hasPointerCapture(value.id))
+        value.target.releasePointerCapture(value.id);
+      // A cancelled midpoint gesture must not fall through to its click action.
+      suppressClick.current = true;
+      if (active) latest.current.onDragCancel?.(eventFor(position));
+      returnToHost();
+    };
+    window.addEventListener("pointerdown", cancelForAdditionalPointer, true);
+    return () =>
+      window.removeEventListener(
+        "pointerdown",
+        cancelForAdditionalPointer,
+        true,
+      );
+  }, []);
   return createPortal(
     <button
       type="button"
@@ -237,7 +341,9 @@ export function Pin({
         if (pin.draggable) event.stopPropagation();
       }}
       onTouchStart={(event) => {
-        if (pin.draggable) event.stopPropagation();
+        // The second touchstart contains both touches and must reach MapLibre so
+        // its native pinch recognizer can take over after the pin drag cancels.
+        if (pin.draggable && event.touches.length < 2) event.stopPropagation();
       }}
       onPointerDown={down}
       onPointerMove={move}
@@ -255,7 +361,10 @@ export function Pin({
       onKeyDown={(event) => {
         if (event.key === "Escape" && gesture.current) {
           event.stopPropagation();
+          const value = gesture.current;
           cancelGesture();
+          if (value.active)
+            latest.current.onDragCancel?.(eventFor(currentPosition()));
           returnToHost();
           return;
         }

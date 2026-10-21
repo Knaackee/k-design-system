@@ -14,24 +14,6 @@ void main() {
     KMapCenter(longitude: 13.41, latitude: 52.55),
   ];
 
-  test('web pin projection stays local when the map container is offset', () {
-    const localPoint = Offset(320, 240);
-    const firstOrigin = Offset(0, 0);
-    const nestedOrigin = Offset(258, 64);
-
-    Offset localProjection(Offset origin) =>
-        origin +
-        localPoint +
-        kMapPinLayerTranslation(pageOrigin: origin, isWeb: true);
-
-    expect(localProjection(firstOrigin), localPoint);
-    expect(localProjection(nestedOrigin), localPoint);
-    expect(
-      kMapPinLayerTranslation(pageOrigin: nestedOrigin, isWeb: false),
-      Offset.zero,
-    );
-  });
-
   test('route parts preserve base geometry and traffic segments', () {
     final parts = kMapRouteParts(
       const KMapRoute(

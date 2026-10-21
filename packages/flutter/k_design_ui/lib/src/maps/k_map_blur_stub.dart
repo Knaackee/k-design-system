@@ -5,6 +5,14 @@ import 'package:maplibre/maplibre.dart' as maplibre;
 
 void applyKMapBlur(maplibre.MapController controller, double sigma) {}
 
+void requestKMapRendererResize(maplibre.MapController controller) {}
+
+Future<void> waitForKMapRendererResize(
+  maplibre.MapController controller,
+) async {}
+
+void releaseKMapRendererResize(maplibre.MapController controller) {}
+
 class KMapNativeBlurOverlay extends StatelessWidget {
   const KMapNativeBlurOverlay({required this.sigma, super.key});
   final double sigma;

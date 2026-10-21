@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Map, type StyleSpecification } from "maplibre-gl";
 import { KButton } from "../primitives/button.js";
 import { KIcon } from "../primitives/icon.js";
+import { KSpinner } from "../extended-components.js";
 import { MapOverlays, type KMapOverlayProps } from "../maps/map-overlays.js";
 export type {
   KMapPin,
@@ -9,6 +10,7 @@ export type {
   KMapRouteSegment,
   KMapPinMove,
   KMapPinDragOptions,
+  KMapZone,
 } from "../maps/map-overlays.js";
 
 function collapseAttribution(instance: Map) {
@@ -21,6 +23,77 @@ function collapseAttribution(instance: Map) {
     ?.click();
 }
 
+export interface KMapAttributionState {
+  open: boolean;
+  height: number;
+}
+
+export interface KMapView {
+  center: [number, number];
+  zoom: number;
+  /** Visible geographic extent as west, south, east, north. */
+  bounds?: [number, number, number, number];
+}
+
+function observeAttribution(
+  container: HTMLElement,
+  onChange: (state: KMapAttributionState) => void,
+) {
+  let element: HTMLElement | null = null;
+  let discovered = false;
+  let previous = "";
+  const publish = () => {
+    const style = element ? getComputedStyle(element) : null;
+    const height = element
+      ? Math.ceil(
+          element.getBoundingClientRect().height +
+            Number.parseFloat(style?.marginBlockStart || "0") +
+            Number.parseFloat(style?.marginBlockEnd || "0"),
+        )
+      : 0;
+    const state = {
+      open: !!element?.classList.contains("maplibregl-compact-show"),
+      height,
+    };
+    const serialized = `${state.open}:${state.height}`;
+    if (serialized !== previous) {
+      previous = serialized;
+      onChange(state);
+    }
+  };
+  const resize = new ResizeObserver(publish);
+  const attributes = new MutationObserver(publish);
+  const discover = () => {
+    const next = container.querySelector<HTMLElement>(
+      ".maplibregl-ctrl-attrib",
+    );
+    if (discovered && next === element) return;
+    discovered = true;
+    resize.disconnect();
+    attributes.disconnect();
+    element = next;
+    if (element) {
+      resize.observe(element);
+      attributes.observe(element, {
+        attributes: true,
+        attributeFilter: ["class", "style"],
+      });
+    }
+    publish();
+  };
+  const children = new MutationObserver(discover);
+  children.observe(container, {
+    childList: true,
+    subtree: true,
+  });
+  discover();
+  return () => {
+    children.disconnect();
+    attributes.disconnect();
+    resize.disconnect();
+  };
+}
+
 export interface KMapProps extends KMapOverlayProps {
   mapStyle: string | StyleSpecification;
   center: [number, number];
@@ -30,7 +103,9 @@ export interface KMapProps extends KMapOverlayProps {
   interactive?: boolean;
   /** Camera movement when center/zoom changes. Zero preserves immediate updates. */
   cameraTransitionMs?: number;
-  onViewChange?: (view: { center: [number, number]; zoom: number }) => void;
+  onViewChange?: (view: KMapView) => void;
+  onMapClick?: (position: [number, number]) => void;
+  onAttributionChange?: (state: KMapAttributionState) => void;
 }
 
 /** The host supplies tiles and configures the MapLibre worker and stylesheet. */
@@ -43,6 +118,8 @@ export function KMap({
   interactive = true,
   cameraTransitionMs = 0,
   onViewChange,
+  onMapClick,
+  onAttributionChange,
   ...overlays
 }: KMapProps) {
   const canvas = useRef<HTMLDivElement>(null);
@@ -57,6 +134,10 @@ export function KMap({
   const appliedStyle = useRef(mapStyle);
   const viewChange = useRef(onViewChange);
   viewChange.current = onViewChange;
+  const mapClick = useRef(onMapClick);
+  mapClick.current = onMapClick;
+  const attributionChange = useRef(onAttributionChange);
+  attributionChange.current = onAttributionChange;
 
   useEffect(() => {
     if (!canvas.current) return;
@@ -78,18 +159,32 @@ export function KMap({
     setInstance(instance);
     appliedStyle.current = initial.current.mapStyle;
     const timeout = window.setTimeout(() => setStatus("error"), 20000);
+    const publishView = () => {
+      const position = instance.getCenter();
+      const bounds = instance.getBounds();
+      viewChange.current?.({
+        center: [position.lng, position.lat],
+        zoom: instance.getZoom(),
+        bounds: [
+          bounds.getWest(),
+          bounds.getSouth(),
+          bounds.getEast(),
+          bounds.getNorth(),
+        ],
+      });
+    };
     instance.on("load", () => {
       window.clearTimeout(timeout);
       collapseAttribution(instance);
       setStatus("ready");
+      publishView();
     });
     instance.on("error", () => setStatus("error"));
-    instance.on("moveend", () => {
-      const position = instance.getCenter();
-      viewChange.current?.({
-        center: [position.lng, position.lat],
-        zoom: instance.getZoom(),
-      });
+    instance.on("moveend", publishView);
+    instance.on("click", (event) => {
+      const position: [number, number] = [event.lngLat.lng, event.lngLat.lat];
+      // Layer-specific click handlers run in the same dispatch and may claim the click.
+      queueMicrotask(() => mapClick.current?.(position));
     });
     instance.on("idle", () => {
       if (instance.isStyleLoaded()) {
@@ -99,9 +194,14 @@ export function KMap({
     });
     const resize = new ResizeObserver(() => instance.resize());
     resize.observe(canvas.current);
+    const stopObservingAttribution = observeAttribution(
+      instance.getContainer(),
+      (state) => attributionChange.current?.(state),
+    );
     return () => {
       window.clearTimeout(timeout);
       resize.disconnect();
+      stopObservingAttribution();
       setInstance(null);
       instance.remove();
       map.current = null;
@@ -184,6 +284,7 @@ export function KMap({
       )}
       {status !== "ready" && (
         <div className="k-map__status" role="status">
+          {status === "loading" && <KSpinner aria-hidden="true" />}
           {status === "loading"
             ? "Karte wird geladen …"
             : "Karte konnte nicht geladen werden."}

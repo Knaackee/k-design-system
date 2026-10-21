@@ -1,10 +1,14 @@
 import { useEffect, useId, useState, type ReactNode } from "react";
-import { LngLatBounds, type Map } from "maplibre-gl";
+import { LngLatBounds, type Map, type PaddingOptions } from "maplibre-gl";
 import { type KIconName } from "../primitives/icon.js";
 
 import { Pin } from "./map-pin.js";
+import { MapZoneLayer } from "./map-zone-layer.js";
+import type { KMapZone } from "./map-zone-geometry.js";
+import { zonePositions } from "./map-zone-shape.js";
 import { resolvePinDrag, type KMapPinDragOptions } from "./map-pin-drag.js";
 export type { KMapPinDragOptions } from "./map-pin-drag.js";
+export type { KMapZone } from "./map-zone-geometry.js";
 
 export interface KMapPin {
   id: string;
@@ -16,6 +20,8 @@ export interface KMapPin {
   color?: string;
   size?: number;
   shape?: "pin" | "circle" | "square";
+  /** Marker alignment to the coordinate. Location pins default to bottom. */
+  anchor?: "center" | "bottom";
   /** Position stays controlled; accept onPinMove by updating position. */
   draggable?: boolean;
   drag?: KMapPinDragOptions;
@@ -51,17 +57,23 @@ export interface KMapPinMove {
 export interface KMapOverlayProps {
   pins?: readonly KMapPin[];
   routes?: readonly KMapRoute[];
+  zones?: readonly KMapZone[];
   selectedPinId?: string | null;
   defaultSelectedPinId?: string | null;
   selectedRouteId?: string | null;
+  selectedZoneId?: string | null;
+  /** Display-only validation state; zone data remains consumer controlled. */
+  invalidZoneIds?: readonly string[];
   onPinClick?: (id: string) => void;
   onSelectionChange?: (id: string) => void;
+  onZoneClick?: (id: string) => void;
   /** Return false (also asynchronously) to reject and animate back. */
   onPinMove?: (event: KMapPinMove) => void | boolean | Promise<void | boolean>;
   pinDrag?: KMapPinDragOptions;
   onPinDragStart?: (event: KMapPinMove) => void;
   onPinDrag?: (event: KMapPinMove) => void;
   onPinDragEnd?: (event: KMapPinMove) => void;
+  onPinDragCancel?: (event: KMapPinMove) => void;
   /** Visual content only (including Rive); KMap owns the accessible button and dragging. */
   renderPin?: (
     pin: KMapPin,
@@ -69,7 +81,15 @@ export interface KMapOverlayProps {
   ) => ReactNode;
   /** Reframes when overlay geometry changes, not when a pin is selected. */
   fitContent?: boolean;
-  fitPadding?: number;
+  /** Optional subset used for framing while all overlays remain rendered. */
+  fitCoordinates?: readonly [number, number][];
+  fitPadding?: number | PaddingOptions;
+  /** Maximum zoom applied by automatic framing. */
+  fitMaxZoom?: number;
+  /** Automatic framing duration. Reduced-motion preference always forces zero. */
+  fitDurationMs?: number;
+  /** Retriggers framing after a layout change without changing geometry. */
+  fitRevision?: string | number;
 }
 
 /** Base geometry preserves gaps; ordered, non-overlapping segments paint above it. */
@@ -115,6 +135,7 @@ export function routeParts(route: KMapRoute) {
 export function overlayCoordinates(
   pins: readonly KMapPin[],
   routes: readonly KMapRoute[],
+  zones: readonly KMapZone[] = [],
 ): [number, number][] {
   for (const collection of [pins, routes]) {
     const ids = new Set<string>();
@@ -142,9 +163,20 @@ export function overlayCoordinates(
       throw new RangeError("KMap route width must be positive and finite");
     routeParts(route);
   }
+  const zoneIds = new Set<string>();
+  for (const zone of zones) {
+    if (!zone.id || zoneIds.has(zone.id))
+      throw new Error("KMap zone IDs must be nonempty and unique");
+    zoneIds.add(zone.id);
+    if (!zone.name.trim())
+      throw new Error("KMap zones need an accessible name");
+    if (zonePositions(zone).length < 3)
+      throw new RangeError("KMap zones need at least three positions");
+  }
   const positions = [
     ...pins.map((pin) => pin.position),
     ...routes.flatMap((route) => route.coordinates),
+    ...zones.flatMap(zonePositions),
   ];
   for (const [lng, lat] of positions) {
     if (
@@ -160,41 +192,102 @@ export function overlayCoordinates(
 
 const EMPTY_PINS: readonly KMapPin[] = [];
 const EMPTY_ROUTES: readonly KMapRoute[] = [];
+const EMPTY_ZONES: readonly KMapZone[] = [];
 
 export function MapOverlays({
   map,
   pins = EMPTY_PINS,
   routes = EMPTY_ROUTES,
+  zones = EMPTY_ZONES,
   selectedPinId,
   defaultSelectedPinId = null,
   selectedRouteId,
+  selectedZoneId,
+  invalidZoneIds,
   onPinClick,
   onSelectionChange,
+  onZoneClick,
   onPinMove,
   pinDrag,
   onPinDragStart,
   onPinDrag,
   onPinDragEnd,
+  onPinDragCancel,
   renderPin,
   fitContent = false,
+  fitCoordinates,
   fitPadding = 64,
+  fitMaxZoom = 16,
+  fitDurationMs = 0,
+  fitRevision,
 }: KMapOverlayProps & { map: Map | null }) {
   const prefix = useId().replaceAll(":", "");
   const [localSelection, setLocalSelection] = useState(defaultSelectedPinId);
   const selected = selectedPinId === undefined ? localSelection : selectedPinId;
-  const positions = overlayCoordinates(pins, routes);
-  if (!Number.isFinite(fitPadding) || fitPadding < 0)
+  const positions = overlayCoordinates(pins, routes, zones);
+  const fitPositions = fitCoordinates ?? positions;
+  for (const [lng, lat] of fitPositions) {
+    if (
+      !Number.isFinite(lng) ||
+      !Number.isFinite(lat) ||
+      Math.abs(lng) > 180 ||
+      Math.abs(lat) > 90
+    )
+      throw new RangeError(
+        "KMap fit coordinates must be valid WGS84 positions",
+      );
+  }
+  const paddingValues =
+    typeof fitPadding === "number"
+      ? [fitPadding]
+      : [
+          fitPadding.top ?? 0,
+          fitPadding.right ?? 0,
+          fitPadding.bottom ?? 0,
+          fitPadding.left ?? 0,
+        ];
+  if (paddingValues.some((value) => !Number.isFinite(value) || value < 0))
     throw new RangeError("KMap fitPadding must be nonnegative and finite");
-  const geometryKey = JSON.stringify(positions);
+  if (!Number.isFinite(fitMaxZoom) || fitMaxZoom < 0)
+    throw new RangeError("KMap fitMaxZoom must be nonnegative and finite");
+  if (!Number.isFinite(fitDurationMs) || fitDurationMs < 0)
+    throw new RangeError("KMap fitDurationMs must be nonnegative and finite");
+  const geometryKey = JSON.stringify(fitPositions);
+  const paddingKey = JSON.stringify(fitPadding);
 
   useEffect(() => {
-    if (!map || !fitContent || !positions.length) return;
-    const bounds = positions.reduce(
-      (result, point) => result.extend(point),
-      new LngLatBounds(),
-    );
-    map.fitBounds(bounds, { padding: fitPadding, maxZoom: 16, duration: 0 });
-  }, [map, fitContent, fitPadding, geometryKey]);
+    if (!map || !fitContent || !fitPositions.length) return;
+    let settledFrame = 0;
+    const layoutFrame = requestAnimationFrame(() => {
+      settledFrame = requestAnimationFrame(() => {
+        map.resize();
+        const bounds = fitPositions.reduce(
+          (result, point) => result.extend(point),
+          new LngLatBounds(),
+        );
+        const reducedMotion = window.matchMedia?.(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        map.fitBounds(bounds, {
+          padding: fitPadding,
+          maxZoom: fitMaxZoom,
+          duration: reducedMotion ? 0 : fitDurationMs,
+        });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(layoutFrame);
+      cancelAnimationFrame(settledFrame);
+    };
+  }, [
+    map,
+    fitContent,
+    paddingKey,
+    fitMaxZoom,
+    fitDurationMs,
+    fitRevision,
+    geometryKey,
+  ]);
 
   useEffect(() => {
     if (!map) return;
@@ -271,25 +364,37 @@ export function MapOverlays({
   }, [map, routes, selectedRouteId, prefix]);
 
   if (!map) return null;
-  return pins.map((pin) => (
-    <Pin
-      key={pin.id}
-      map={map}
-      pin={pin}
-      selected={selected === pin.id}
-      onMove={onPinMove}
-      dragOptions={resolvePinDrag({ ...pinDrag, ...pin.drag })}
-      onDragStart={onPinDragStart}
-      onDrag={onPinDrag}
-      onDragEnd={onPinDragEnd}
-      renderPin={renderPin}
-      onClick={() => {
-        if (selected !== pin.id) {
-          setLocalSelection(pin.id);
-          onSelectionChange?.(pin.id);
-        }
-        onPinClick?.(pin.id);
-      }}
-    />
-  ));
+  return (
+    <>
+      <MapZoneLayer
+        map={map}
+        zones={zones}
+        selectedZoneId={selectedZoneId}
+        invalidZoneIds={invalidZoneIds}
+        onZoneClick={onZoneClick}
+      />
+      {pins.map((pin) => (
+        <Pin
+          key={pin.id}
+          map={map}
+          pin={pin}
+          selected={selected === pin.id}
+          onMove={onPinMove}
+          dragOptions={resolvePinDrag({ ...pinDrag, ...pin.drag })}
+          onDragStart={onPinDragStart}
+          onDrag={onPinDrag}
+          onDragEnd={onPinDragEnd}
+          onDragCancel={onPinDragCancel}
+          renderPin={renderPin}
+          onClick={() => {
+            if (selected !== pin.id) {
+              setLocalSelection(pin.id);
+              onSelectionChange?.(pin.id);
+            }
+            onPinClick?.(pin.id);
+          }}
+        />
+      ))}
+    </>
+  );
 }

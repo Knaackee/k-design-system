@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:maplibre/maplibre.dart' as maplibre;
+import 'k_map_blur.dart' show waitForKMapRendererResize;
 
 /// A longitude/latitude pair used by [KMapController].
 @immutable
@@ -23,21 +24,55 @@ class KMapCenter {
   int get hashCode => Object.hash(longitude, latitude);
 }
 
-/// Camera values reported after map movement finishes.
+/// Visible geographic extent of a map viewport.
 @immutable
-class KMapView {
-  const KMapView({required this.center, required this.zoom});
+class KMapBounds {
+  const KMapBounds({
+    required this.west,
+    required this.south,
+    required this.east,
+    required this.north,
+  });
 
-  final KMapCenter center;
-  final double zoom;
+  final double west;
+  final double south;
+  final double east;
+  final double north;
+
+  List<double> toList() => [west, south, east, north];
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is KMapView && center == other.center && zoom == other.zoom;
+      other is KMapBounds &&
+          west == other.west &&
+          south == other.south &&
+          east == other.east &&
+          north == other.north;
 
   @override
-  int get hashCode => Object.hash(center, zoom);
+  int get hashCode => Object.hash(west, south, east, north);
+}
+
+/// Camera values reported after map movement finishes.
+@immutable
+class KMapView {
+  const KMapView({required this.center, required this.zoom, this.bounds});
+
+  final KMapCenter center;
+  final double zoom;
+  final KMapBounds? bounds;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is KMapView &&
+          center == other.center &&
+          zoom == other.zoom &&
+          bounds == other.bounds;
+
+  @override
+  int get hashCode => Object.hash(center, zoom, bounds);
 }
 
 /// Host-facing camera and projection controller for [KMap].
@@ -47,6 +82,10 @@ class KMapView {
 class KMapController extends ChangeNotifier {
   maplibre.MapController? _delegate;
   KMapView? _view;
+
+  /// Logical-pixel viewport in global Flutter coordinates for drag anchoring.
+  @internal
+  Rect? viewport;
 
   bool get isReady => _delegate != null;
   KMapView? get view => _view;
@@ -101,6 +140,15 @@ class KMapController extends ChangeNotifier {
     final delegate = _delegate;
     final points = coordinates.map(_geographic).toList(growable: false);
     if (delegate == null || points.isEmpty) return;
+    if (kIsWeb) {
+      // HtmlElementView attaches after Flutter layout. endOfFrame requests the
+      // next frame itself, unlike registering a second postframe callback.
+      WidgetsBinding.instance.scheduleFrame();
+      await WidgetsBinding.instance.endOfFrame;
+      if (!identical(_delegate, delegate)) return;
+      await waitForKMapRendererResize(delegate);
+      if (!identical(_delegate, delegate)) return;
+    }
     if (points.length == 1) {
       await animateCamera(
         center: _center(points.single),
@@ -138,13 +186,21 @@ class KMapController extends ChangeNotifier {
     final delegate = _delegate;
     if (delegate == null) return _view;
     final camera = delegate.getCamera();
+    final visible = delegate.getVisibleRegion();
     _view = KMapView(
       center: KMapCenter(
         longitude: camera.center.lon,
         latitude: camera.center.lat,
       ),
       zoom: camera.zoom,
+      bounds: KMapBounds(
+        west: visible.longitudeWest,
+        south: visible.latitudeSouth,
+        east: visible.longitudeEast,
+        north: visible.latitudeNorth,
+      ),
     );
+    notifyListeners();
     return _view;
   }
 }

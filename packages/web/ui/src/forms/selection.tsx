@@ -151,6 +151,10 @@ function Selection({
     }
   }
   function choose(next: string) {
+    // Close before dispatching the controlled change callback. Consumers may
+    // synchronously rerender this control, so closing afterwards can leave the
+    // previous popup alive through that update.
+    if (!multiple) close();
     if (native.current) {
       if (multiple) {
         for (const option of native.current.options)
@@ -161,7 +165,6 @@ function Selection({
       } else native.current.value = next;
       native.current.dispatchEvent(new Event("change", { bubbles: true }));
     }
-    if (!multiple) close();
     input.current?.focus();
   }
   useEffect(() => {
@@ -472,7 +475,11 @@ function Selection({
               onPointerMove={() => {
                 if (!option.disabled) setActive(option.value);
               }}
-              onClick={() => {
+              onClick={(event) => {
+                // This popup can be composed inside a consumer-owned <label>.
+                // Suppress label activation so the forwarded click cannot
+                // reopen the trigger immediately after a single selection.
+                event.preventDefault();
                 if (!option.disabled) choose(option.value);
               }}
             >

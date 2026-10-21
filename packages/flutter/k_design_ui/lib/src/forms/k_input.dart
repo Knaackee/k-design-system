@@ -16,6 +16,8 @@ class KInput extends StatefulWidget {
     this.onSubmitted,
     this.autofocus = false,
     this.placeholder,
+    this.leading,
+    this.pill = false,
     this.enabled = true,
     this.readOnly = false,
     this.obscureText = false,
@@ -34,6 +36,8 @@ class KInput extends StatefulWidget {
   final ValueChanged<String>? onSubmitted;
   final bool autofocus;
   final String? placeholder;
+  final Widget? leading;
+  final bool pill;
   final bool enabled;
   final bool readOnly;
 
@@ -51,7 +55,7 @@ class KInput extends StatefulWidget {
 
   /// Saved UTF-16 insertion offset; defaults to the current caret.
   final int? dictationOffset;
-  Widget? prefix(BuildContext context) => null;
+  Widget? prefix(BuildContext context) => leading;
   @override
   State<KInput> createState() => _KInputState();
 }
@@ -106,7 +110,7 @@ class _KInputState extends State<KInput> {
         : null;
     final actionWidth =
         widget.trailingActionWidth ?? math.max(t.sizeControl, t.sizeHitTarget);
-    final appearance = formDecoration(
+    var appearance = formDecoration(
       context,
       placeholder: widget.placeholder,
       invalid: field?.invalid ?? false,
@@ -124,6 +128,19 @@ class _KInputState extends State<KInput> {
             )
           : null,
     );
+    if (widget.pill) {
+      InputBorder? rounded(InputBorder? border) => border is OutlineInputBorder
+          ? border.copyWith(borderRadius: BorderRadius.circular(t.radiusFull))
+          : border;
+      appearance = appearance.copyWith(
+        border: rounded(appearance.border),
+        enabledBorder: rounded(appearance.enabledBorder),
+        focusedBorder: rounded(appearance.focusedBorder),
+        errorBorder: rounded(appearance.errorBorder),
+        focusedErrorBorder: rounded(appearance.focusedErrorBorder),
+        disabledBorder: rounded(appearance.disabledBorder),
+      );
+    }
     return KDictationFieldOverlay(
       controller: _controller,
       state: widget.enabled && !widget.readOnly && !widget.obscureText

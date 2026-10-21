@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { overlayCoordinates, routeParts } from "./dist/maps/map-overlays.js";
+import { edgePanVelocity, resolvePinDrag } from "./dist/maps/map-pin-drag.js";
 
 const pin = { id: "a", label: "Start", position: [13, 52] };
 const route = {
@@ -10,6 +11,29 @@ const route = {
     [14, 53],
   ],
 };
+
+test("edge pan stays still inside the safe area and accelerates toward bounds", () => {
+  assert.deepEqual(
+    edgePanVelocity({ x: 160, y: 120 }, { width: 320, height: 240 }, 48, 180),
+    { x: 0, y: 0 },
+  );
+  const edge = edgePanVelocity(
+    { x: 12, y: 230 },
+    { width: 320, height: 240 },
+    48,
+    180,
+  );
+  assert.ok(edge.x < 0);
+  assert.ok(edge.y > 0);
+  assert.ok(Math.abs(edge.x) <= 180 && Math.abs(edge.y) <= 180);
+  assert.equal(resolvePinDrag().edgePan, null);
+  assert.deepEqual(resolvePinDrag({ edgePan: {} }).edgePan, {
+    padding: 56,
+    maxSpeed: 180,
+    zoomOutPerSecond: 0.18,
+    minZoom: 8,
+  });
+});
 
 test("fit geometry includes all pins and route points; empty overlays are valid", () => {
   assert.deepEqual(overlayCoordinates([pin], [route]), [
@@ -131,13 +155,13 @@ test("segment ranges reject overlaps and out-of-range or duplicate entries", () 
   );
 });
 
-test("pin drag defaults and consumer overrides remain bounded", async () => {
-  const { resolvePinDrag } = await import("./dist/maps/map-pin-drag.js");
+test("pin drag defaults and consumer overrides remain bounded", () => {
   assert.deepEqual(resolvePinDrag(), {
     activation: "drag",
     longPressMs: 400,
     scale: 1.15,
     durationMs: 160,
+    edgePan: null,
   });
   assert.equal(
     resolvePinDrag({ activation: "longPress", durationMs: 0, scale: 1 })

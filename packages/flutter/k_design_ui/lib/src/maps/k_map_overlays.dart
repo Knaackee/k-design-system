@@ -11,11 +11,27 @@ import 'k_map_pin.dart';
 
 enum KMapPinShape { pin, circle, square }
 
+enum KMapPinAnchor { center, bottom }
+
 enum KMapTraffic { free, slow, congested }
 
 enum KMapPinMoveSource { drag, keyboard }
 
 enum KMapPinDragActivation { drag, longPress }
+
+@immutable
+class KMapPinEdgePanOptions {
+  const KMapPinEdgePanOptions({
+    this.padding = 56,
+    this.maxSpeed = 180,
+    this.zoomOutPerSecond = .18,
+    this.minZoom = 8,
+  }) : assert(padding > 0),
+       assert(maxSpeed >= 0),
+       assert(zoomOutPerSecond >= 0),
+       assert(minZoom >= 0 && minZoom <= 22);
+  final double padding, maxSpeed, zoomOutPerSecond, minZoom;
+}
 
 @immutable
 class KMapPinDragOptions {
@@ -25,6 +41,7 @@ class KMapPinDragOptions {
     this.animationDuration,
     this.scale = 1.15,
     this.keyboardStep = 12,
+    this.edgePan,
   }) : assert(scale > 0),
        assert(keyboardStep > 0);
 
@@ -35,6 +52,7 @@ class KMapPinDragOptions {
   final Duration? animationDuration;
   final double scale;
   final double keyboardStep;
+  final KMapPinEdgePanOptions? edgePan;
 
   KMapPinDragOptions merge(KMapPinDragOptions? override) => override ?? this;
 }
@@ -51,6 +69,7 @@ class KMapPin {
     this.color,
     this.size = 40,
     this.shape = KMapPinShape.pin,
+    this.anchor = KMapPinAnchor.bottom,
     this.draggable = false,
     this.drag,
   }) : assert(id != ''),
@@ -66,6 +85,7 @@ class KMapPin {
   final Color? color;
   final double size;
   final KMapPinShape shape;
+  final KMapPinAnchor anchor;
   final bool draggable;
   final KMapPinDragOptions? drag;
 }
@@ -239,6 +259,7 @@ class KMapOverlays extends StatefulWidget {
     this.onPinDragStart,
     this.onPinDrag,
     this.onPinDragEnd,
+    this.onPinDragCancel,
     this.pinBuilder,
     super.key,
   });
@@ -257,6 +278,7 @@ class KMapOverlays extends StatefulWidget {
   final KMapPinDragCallback? onPinDragStart;
   final KMapPinDragCallback? onPinDrag;
   final KMapPinDragCallback? onPinDragEnd;
+  final KMapPinDragCallback? onPinDragCancel;
   final KMapPinBuilder? pinBuilder;
 
   @override
@@ -288,6 +310,7 @@ class _KMapOverlaysState extends State<KMapOverlays> {
       onDragStart: widget.onPinDragStart,
       onDrag: widget.onPinDrag,
       onDragEnd: widget.onPinDragEnd,
+      onDragCancel: widget.onPinDragCancel,
       pinBuilder: widget.pinBuilder,
       onTap: (id) {
         if (selected != id) {

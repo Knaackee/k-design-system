@@ -92,6 +92,11 @@
       "types": "./dist/localization/provider.d.ts",
       "import": "./dist/localization/provider.js"
     },
+    "./editors/map-zone-editor": {
+      "types": "./dist/editors/map-zone-editor.d.ts",
+      "import": "./dist/editors/map-zone-editor.js"
+    },
+    "./map-zone-editor.css": "./src/editors/map-zone-editor.css",
     "./maps.css": "./src/patterns/map.css",
     "./map-day-view.css": "./src/patterns/map-day-view.css",
     "./map-location-picker.css": "./src/patterns/map-location-picker.css"
@@ -145,6 +150,7 @@
     "maplibre-gl": "6.15.0",
     "morphicons": "1.7.1",
     "motion": "^13.4.0",
+    "polygon-clipping": "0.15.7",
     "react-modal-sheet": "^5.6.0",
     "streamdown": "^2.6.0",
     "vis-timeline": "8.5.4",

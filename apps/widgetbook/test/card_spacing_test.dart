@@ -117,7 +117,14 @@ void main() {
                     );
                     expect(
                       tester.getSize(visible).height,
-                      closeTo(tokens.sizeControl, .5),
+                      closeTo(
+                        math.max(
+                          tokens.sizeControl,
+                          tester.getSize(find.text(action)).height +
+                              2 * tokens.borderWidthDefault,
+                        ),
+                        .5,
+                      ),
                     );
                     final card = tester.getRect(cards.at(index));
                     expect(

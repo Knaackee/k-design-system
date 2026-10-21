@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 import { KIconButton } from "../actions/icon-button.js";
 
 export type KNotificationTone = "neutral" | "success" | "warning" | "error";
@@ -93,21 +93,64 @@ export function KSnackbar({ message, ...props }: KSnackbarProps) {
 export interface KToastViewportProps {
   children: ReactNode;
   label?: string;
+  /** Occupied height in CSS pixels, including exit motion; zero once cleared. */
+  onHeightChange?: (height: number) => void;
   position?: "bottom-end" | "top-end" | "bottom-center";
 }
 /** Non-modal overlay. Mount inside the application's theme provider. */
 export function KToastViewport({
   children,
   label = "Notifications",
+  onHeightChange,
   position = "bottom-end",
 }: KToastViewportProps) {
+  const visible = Children.toArray(children).length > 0;
+  const [retained, setRetained] = useState(children);
+  const viewport = useRef<HTMLElement>(null);
+  const heightCallback = useRef(onHeightChange);
+  heightCallback.current = onHeightChange;
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const report = () =>
+      heightCallback.current?.(element.getBoundingClientRect().height);
+    report();
+    const observer = new ResizeObserver(report);
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+      heightCallback.current?.(0);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (visible) {
+      setRetained(children);
+      return;
+    }
+    const durations = viewport.current
+      ? getComputedStyle(viewport.current).transitionDuration.split(",")
+      : [];
+    const milliseconds = Math.max(
+      0,
+      ...durations.map(
+        (value) => parseFloat(value) * (value.trim().endsWith("ms") ? 1 : 1000),
+      ),
+    );
+    const timer = window.setTimeout(() => setRetained(null), milliseconds);
+    return () => window.clearTimeout(timer);
+  }, [visible, children]);
   return (
     <section
+      ref={viewport}
       className="k-toast-viewport"
+      data-visible={visible || undefined}
+      inert={!visible}
+      aria-hidden={!visible}
       data-position={position}
       aria-label={label}
     >
-      {children}
+      {visible ? children : retained}
     </section>
   );
 }

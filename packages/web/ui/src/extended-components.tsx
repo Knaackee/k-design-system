@@ -444,6 +444,8 @@ export function KTabs({
 export interface KPopoverProps {
   showArrow?: boolean;
   portal?: boolean;
+  /** Keep a controlled popover open while a nested modal is active. */
+  closeOnInteractOutside?: boolean;
   anchorRef?: RefObject<HTMLElement | null>;
   trigger: ReactElement;
   children: ReactNode;
@@ -451,11 +453,13 @@ export interface KPopoverProps {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   align?: "start" | "center" | "end";
+  placement?: "auto" | "top";
   label?: string;
 }
 export function KPopover({
   showArrow = false,
   portal = false,
+  closeOnInteractOutside = true,
   anchorRef,
   trigger,
   children,
@@ -463,6 +467,7 @@ export function KPopover({
   defaultOpen = false,
   onOpenChange,
   align = "center",
+  placement = "auto",
   label,
 }: KPopoverProps) {
   const [internal, setInternal] = useState(defaultOpen);
@@ -486,7 +491,7 @@ export function KPopover({
     return () => cancelAnimationFrame(frame);
   }, [shown, portal]);
   useEffect(() => {
-    if (!shown) return;
+    if (!shown || !closeOnInteractOutside) return;
     const close = (event: PointerEvent) => {
       if (
         !root.current?.contains(event.target as Node) &&
@@ -496,7 +501,7 @@ export function KPopover({
     };
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
-  }, [shown]);
+  }, [shown, closeOnInteractOutside]);
   useLayoutEffect(() => {
     if (!shown) return;
     const update = () => {
@@ -526,22 +531,38 @@ export function KPopover({
         Math.min(window.innerWidth - width - gutter, preferredLeft),
       );
       const below = anchor.bottom + gap;
-      const top =
-        showArrow || below + height <= window.innerHeight - gutter
-          ? below
-          : Math.max(gutter, anchor.top - height - gap);
+      const placeAbove =
+        placement === "top" ||
+        (!showArrow && below + height > window.innerHeight - gutter);
+      const top = placeAbove
+        ? Math.max(gutter, anchor.top - height - gap)
+        : below;
       const host =
         portalContainer && portalContainer !== document.body
           ? portalContainer
           : null;
       const hostRect = host?.getBoundingClientRect();
-      setPosition({
+      const vertical =
+        placeAbove && !host
+          ? {
+              bottom: window.innerHeight - anchor.top + gap,
+              maxHeight: anchor.top - gap - gutter,
+            }
+          : {
+              top: top - (hostRect?.top ?? 0) + (host?.scrollTop ?? 0),
+              maxHeight: window.innerHeight - top - gutter,
+            };
+      const next: CSSProperties & { "--k-popover-arrow-left": string } = {
         left: left - (hostRect?.left ?? 0) + (host?.scrollLeft ?? 0),
-        top: top - (hostRect?.top ?? 0) + (host?.scrollTop ?? 0),
+        ...vertical,
         ...(host ? { position: "absolute" } : {}),
-        maxHeight: window.innerHeight - top - gutter,
         "--k-popover-arrow-left": `${Math.max(16, Math.min(width - 16, anchor.left + anchor.width / 2 - left))}px`,
-      } as CSSProperties);
+      };
+      setPosition((current) => {
+        if (current && JSON.stringify(current) === JSON.stringify(next))
+          return current;
+        return next;
+      });
     };
     update();
     // Follow anchors that resize during layout transitions (for example the
@@ -549,6 +570,7 @@ export function KPopover({
     const resizeObserver = new ResizeObserver(update);
     const anchorElement = anchorRef?.current ?? root.current;
     if (anchorElement) resizeObserver.observe(anchorElement);
+    if (contentRef.current) resizeObserver.observe(contentRef.current);
     window.addEventListener("resize", update);
     window.addEventListener("scroll", update, true);
     return () => {
@@ -556,7 +578,7 @@ export function KPopover({
       window.removeEventListener("resize", update);
       window.removeEventListener("scroll", update, true);
     };
-  }, [align, shown, portalContainer, anchorRef, showArrow]);
+  }, [align, shown, portalContainer, anchorRef, showArrow, placement]);
   const anchor = isValidElement(trigger)
     ? cloneElement(
         trigger as ReactElement<{

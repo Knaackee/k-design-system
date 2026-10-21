@@ -85,6 +85,7 @@ import 'map_fixture.dart';
 import 'map_day_fixture.dart';
 import 'map_location_picker_fixture.dart';
 import 'map_overlays_fixture.dart';
+import 'map_zone_editor_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -272,6 +273,19 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'Bare pin',
                   builder: buildMapLocationPickerBarePin,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Zone Editor',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Desktop',
+                  builder: buildMapZoneEditorDesktop,
+                ),
+                WidgetbookUseCase(
+                  name: 'Mobile',
+                  builder: buildMapZoneEditorMobile,
                 ),
               ],
             ),

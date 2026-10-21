@@ -141,7 +141,7 @@ function MapPlayground({
               (value, index) => Math.abs(value - args.center[index]) > 1e-8,
             )
           )
-            update(view);
+            update({ center: view.center, zoom: view.zoom });
         }}
         interactive={args.interactive}
         showZoomControls={args.showZoomControls}

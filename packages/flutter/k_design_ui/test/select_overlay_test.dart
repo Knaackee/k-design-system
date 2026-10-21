@@ -133,6 +133,35 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(KSelectionPopup), findsNothing);
   });
+  testWidgets('controlled single select closes immediately after selection', (
+    tester,
+  ) async {
+    var value = 'open';
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(extensions: [KDesignTokens.orbitLight]),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, update) => KSelect(
+              label: 'Status',
+              value: value,
+              onChanged: (next) => update(() => value = next!),
+              options: const [
+                KSelectOption(value: 'open', label: 'Open'),
+                KSelectOption(value: 'done', label: 'Done'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(value, 'done');
+    expect(find.byType(KSelectionPopup), findsNothing);
+  });
   testWidgets('empty select exposes its label and placeholder', (tester) async {
     final semantics = tester.ensureSemantics();
     Widget select(String? value) => MaterialApp(
