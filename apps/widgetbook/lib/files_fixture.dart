@@ -51,6 +51,12 @@ class _FilesFixtureState extends State<_FilesCanvas> {
         KFileNode(id: 'welcome', name: 'Willkommen.md'),
         KFileNode(id: 'project', name: 'Projektplan.md'),
         KFileNode(id: 'code', name: 'example.ts'),
+        KFileNode(
+          id: 'archive',
+          name: 'Archiv',
+          folder: true,
+          children: [KFileNode(id: 'archived', name: 'Notiz.md')],
+        ),
       ],
     ),
     KFileNode(
