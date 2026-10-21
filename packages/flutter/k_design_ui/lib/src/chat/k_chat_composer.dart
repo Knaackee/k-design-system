@@ -12,47 +12,8 @@ import '../forms/k_select.dart';
 import '../forms/k_dictation_action.dart';
 import 'k_chat_types.dart';
 
-class KChatComposerModel {
-  const KChatComposerModel({
-    required this.value,
-    required this.label,
-    this.icon,
-    this.disabled = false,
-  });
-  final String value;
-  final String label;
-  final KIconName? icon;
-  final bool disabled;
-}
-
-class KChatComposerLabels {
-  const KChatComposerLabels({
-    this.input = 'Message',
-    this.placeholder = 'Ask anything…',
-    this.send = 'Send message',
-    this.stop = 'Stop response',
-    this.removeAttachment = 'Remove attachment',
-    this.attach = 'Attach files',
-    this.voice = 'Start voice input',
-    this.stopVoice = 'Stop voice input',
-    this.processingVoice = 'Transcribing voice input',
-    this.unavailableVoice = 'Voice input unavailable',
-    this.errorVoice = 'Retry voice input',
-    this.model = 'Model',
-  });
-  final String input;
-  final String placeholder;
-  final String send;
-  final String stop;
-  final String removeAttachment;
-  final String attach;
-  final String voice;
-  final String stopVoice;
-  final String processingVoice;
-  final String unavailableVoice;
-  final String errorVoice;
-  final String model;
-}
+part 'k_chat_composer_voice_capture.dart';
+part 'k_chat_composer_types.dart';
 
 class KChatComposer extends StatefulWidget {
   const KChatComposer({
@@ -65,6 +26,7 @@ class KChatComposer extends StatefulWidget {
     this.runState = KChatRunState.idle,
     this.disabled = false,
     this.submitEnabled = true,
+    this.allowSubmitWhileRunning = false,
     this.maxLength,
     this.labels = const KChatComposerLabels(),
     this.leadingTools,
@@ -78,6 +40,8 @@ class KChatComposer extends StatefulWidget {
     this.voiceActive = false,
     this.voiceState,
     this.voiceAudioLevel,
+    this.voiceCapture,
+    this.onStartCall,
     this.models = const [],
     this.model,
     this.onModelChanged,
@@ -94,6 +58,9 @@ class KChatComposer extends StatefulWidget {
 
   /// Allows editing while independently preventing keyboard and button submission.
   final bool submitEnabled;
+
+  /// Host accepts follow-up messages while a response is active.
+  final bool allowSubmitWhileRunning;
   final int? maxLength;
   final KChatComposerLabels labels;
   final List<Widget>? leadingTools;
@@ -107,6 +74,8 @@ class KChatComposer extends StatefulWidget {
   final bool voiceActive;
   final KDictationState? voiceState;
   final double? voiceAudioLevel;
+  final KChatVoiceCapture? voiceCapture;
+  final VoidCallback? onStartCall;
   final List<KChatComposerModel> models;
   final String? model;
   final ValueChanged<String?>? onModelChanged;
@@ -144,7 +113,10 @@ class _KChatComposerState extends State<KChatComposer> {
 
   void _submit() {
     final value = _controller.text.trim();
-    if (value.isEmpty || widget.disabled || !widget.submitEnabled || _running) {
+    if (value.isEmpty ||
+        widget.disabled ||
+        !widget.submitEnabled ||
+        (_running && !widget.allowSubmitWhileRunning)) {
       return;
     }
     widget.onSubmit(value);
@@ -167,11 +139,12 @@ class _KChatComposerState extends State<KChatComposer> {
     );
     final composerVisualTarget = math.min(
       composerTarget,
-      composerSpacing * 4.5,
+      KDesignTokenVariants.densityStandardSpaceControlGap * 4.5,
     );
     final composerIconSize = math.min(
       composerVisualTarget,
-      composerSpacing * 3 - t.borderWidthDefault * 2,
+      KDesignTokenVariants.densityStandardSpaceControlGap * 3 -
+          t.borderWidthDefault * 2,
     );
     final composerTokens = t.copyWith(
       spaceControlGap: composerGap,
@@ -185,6 +158,11 @@ class _KChatComposerState extends State<KChatComposer> {
             ? KDictationState.recording
             : KDictationState.ready);
     final recording = dictationState == KDictationState.recording;
+    final capturing =
+        widget.voiceCapture != null &&
+        (recording ||
+            dictationState == KDictationState.processing ||
+            dictationState == KDictationState.error);
     final voiceLabel = switch (dictationState) {
       KDictationState.ready => widget.labels.voice,
       KDictationState.recording => widget.labels.stopVoice,
@@ -277,7 +255,8 @@ class _KChatComposerState extends State<KChatComposer> {
                     padding: EdgeInsets.all(composerTokens.spaceControlGap),
                     child: Column(
                       children: [
-                        if (widget.models.isNotEmpty &&
+                        if (!capturing &&
+                            widget.models.isNotEmpty &&
                             widget.onModelChanged != null) ...[
                           Align(
                             alignment: AlignmentDirectional.centerEnd,
@@ -316,83 +295,153 @@ class _KChatComposerState extends State<KChatComposer> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 spacing: composerTokens.spaceControlGap,
                                 children: [
-                                  if (widget.onAttach != null)
+                                  if (capturing)
+                                    KIconButton(
+                                      label: widget.labels.cancelVoice,
+                                      icon: KIconName.x,
+                                      onPressed: widget.voiceCapture!.onCancel,
+                                    )
+                                  else if (widget.onAttach != null)
                                     KIconButton(
                                       label: widget.labels.attach,
-                                      icon: KIconName.paperclip,
+                                      icon: widget.voiceCapture == null
+                                          ? KIconName.paperclip
+                                          : KIconName.plus,
                                       onPressed: widget.onAttach,
                                     ),
-                                  for (final tool
-                                      in widget.leadingTools ??
-                                          const <Widget>[])
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        minWidth: composerTarget,
-                                      ),
-                                      child: Center(
-                                        widthFactor: 1,
-                                        heightFactor: 1,
-                                        child: tool,
-                                      ),
-                                    ),
-                                  Expanded(
-                                    child: CallbackShortcuts(
-                                      bindings: {
-                                        const SingleActivator(
-                                          LogicalKeyboardKey.enter,
-                                        ): _submit,
-                                      },
-                                      child: ConstrainedBox(
+                                  if (!capturing)
+                                    for (final tool
+                                        in widget.leadingTools ??
+                                            const <Widget>[])
+                                      ConstrainedBox(
                                         constraints: BoxConstraints(
-                                          minHeight: math.max(
-                                            composerTokens.sizeControl,
-                                            composerTokens.sizeHitTarget,
-                                          ),
-                                          maxHeight: inputMaxHeight,
+                                          minWidth: composerTarget,
                                         ),
-                                        child: TextField(
-                                          controller: _controller,
-                                          focusNode: widget.focusNode,
-                                          enabled: !widget.disabled,
-                                          textAlignVertical:
-                                              TextAlignVertical.center,
-                                          style: TextStyle(
-                                            fontSize:
-                                                composerTokens.fontBodySize,
-                                            height:
-                                                composerTokens
-                                                    .fontBodyLineHeight /
-                                                composerTokens.fontBodySize,
-                                            leadingDistribution:
-                                                TextLeadingDistribution.even,
-                                          ),
-                                          minLines: 1,
-                                          maxLines: null,
-                                          maxLength: widget.maxLength,
-                                          decoration: InputDecoration(
-                                            isDense: true,
-                                            filled: false,
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      composerTokens
-                                                          .spaceControlGap /
-                                                      2,
-                                                  vertical: textInset,
-                                                ),
-                                            labelText: null,
-                                            hintText: widget.labels.placeholder,
-                                            hintMaxLines: 1,
-                                            border: InputBorder.none,
-                                            counterText: '',
-                                          ),
-                                          onChanged: widget.onValueChanged,
+                                        child: Center(
+                                          widthFactor: 1,
+                                          heightFactor: 1,
+                                          child: tool,
                                         ),
                                       ),
-                                    ),
+                                  Expanded(
+                                    child: capturing
+                                        ? ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                              minHeight: composerTarget,
+                                            ),
+                                            child: Center(
+                                              child: _KChatVoiceCaptureView(
+                                                state: dictationState,
+                                                samples: widget
+                                                    .voiceCapture!
+                                                    .samples,
+                                                processingLabel: widget
+                                                    .labels
+                                                    .processingVoice,
+                                                recordingLabel:
+                                                    widget.labels.voice,
+                                                errorLabel:
+                                                    widget
+                                                        .voiceCapture!
+                                                        .error ??
+                                                    widget.labels.errorVoice,
+                                              ),
+                                            ),
+                                          )
+                                        : CallbackShortcuts(
+                                            bindings: {
+                                              const SingleActivator(
+                                                LogicalKeyboardKey.enter,
+                                              ): _submit,
+                                            },
+                                            child: ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                minHeight: math.max(
+                                                  composerTokens.sizeControl,
+                                                  composerTokens.sizeHitTarget,
+                                                ),
+                                                maxHeight: inputMaxHeight,
+                                              ),
+                                              child: TextField(
+                                                controller: _controller,
+                                                focusNode: widget.focusNode,
+                                                enabled: !widget.disabled,
+                                                textAlignVertical:
+                                                    TextAlignVertical.center,
+                                                style: TextStyle(
+                                                  fontSize: composerTokens
+                                                      .fontBodySize,
+                                                  height:
+                                                      composerTokens
+                                                          .fontBodyLineHeight /
+                                                      composerTokens
+                                                          .fontBodySize,
+                                                  leadingDistribution:
+                                                      TextLeadingDistribution
+                                                          .even,
+                                                ),
+                                                minLines: 1,
+                                                maxLines: null,
+                                                maxLength: widget.maxLength,
+                                                decoration: InputDecoration(
+                                                  isDense: true,
+                                                  filled: false,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            composerTokens
+                                                                .spaceControlGap /
+                                                            2,
+                                                        vertical: textInset,
+                                                      ),
+                                                  labelText: null,
+                                                  hintText:
+                                                      widget.labels.placeholder,
+                                                  hintMaxLines: 1,
+                                                  border: InputBorder.none,
+                                                  counterText: '',
+                                                ),
+                                                onChanged:
+                                                    widget.onValueChanged,
+                                              ),
+                                            ),
+                                          ),
                                   ),
-                                  ...?widget.trailingTools,
-                                  if (widget.onVoiceInput != null)
+                                  if (!capturing) ...?widget.trailingTools,
+                                  if (!capturing &&
+                                      _running &&
+                                      widget.allowSubmitWhileRunning &&
+                                      _controller.text.trim().isNotEmpty)
+                                    KIconButton(
+                                      label: widget.labels.send,
+                                      icon: KIconName.arrowUp,
+                                      selected: true,
+                                      onPressed:
+                                          widget.disabled ||
+                                              !widget.submitEnabled
+                                          ? null
+                                          : _submit,
+                                    ),
+                                  if (capturing)
+                                    KIconButton(
+                                      label:
+                                          dictationState ==
+                                              KDictationState.error
+                                          ? widget.labels.errorVoice
+                                          : widget.labels.stopVoice,
+                                      icon:
+                                          dictationState ==
+                                              KDictationState.error
+                                          ? KIconName.rotateCw
+                                          : KIconName.square,
+                                      onPressed:
+                                          dictationState ==
+                                                  KDictationState.processing ||
+                                              widget.onVoiceInput == null
+                                          ? null
+                                          : widget.onVoiceInput,
+                                    )
+                                  else if (widget.onVoiceInput != null)
                                     KDictationAction(
                                       state: dictationState,
                                       label: voiceLabel,
@@ -401,22 +450,47 @@ class _KChatComposerState extends State<KChatComposer> {
                                           ? null
                                           : widget.onVoiceInput,
                                     ),
-                                  KIconButton(
-                                    label: _running
-                                        ? widget.labels.stop
-                                        : widget.labels.send,
-                                    icon: _running
-                                        ? KIconName.x
-                                        : KIconName.arrowUp,
-                                    selected: !_running,
-                                    onPressed: _running
-                                        ? widget.onStop
-                                        : (_controller.text.trim().isEmpty ||
-                                                  widget.disabled ||
-                                                  !widget.submitEnabled
-                                              ? null
-                                              : _submit),
-                                  ),
+                                  if (capturing)
+                                    KIconButton(
+                                      label: widget.labels.sendVoice,
+                                      icon: KIconName.arrowUp,
+                                      selected: true,
+                                      onPressed:
+                                          !recording ||
+                                              widget.disabled ||
+                                              !widget.submitEnabled ||
+                                              _running
+                                          ? null
+                                          : widget.voiceCapture!.onSend,
+                                    )
+                                  else if (_running)
+                                    KIconButton(
+                                      label: widget.labels.stop,
+                                      icon: KIconName.x,
+                                      onPressed: widget.onStop,
+                                    )
+                                  else if (widget.onStartCall != null &&
+                                      _controller.text.trim().isEmpty)
+                                    KIconButton(
+                                      label: widget.labels.call,
+                                      icon: KIconName.phone,
+                                      selected: true,
+                                      onPressed: widget.disabled
+                                          ? null
+                                          : widget.onStartCall,
+                                    )
+                                  else
+                                    KIconButton(
+                                      label: widget.labels.send,
+                                      icon: KIconName.arrowUp,
+                                      selected: true,
+                                      onPressed:
+                                          _controller.text.trim().isEmpty ||
+                                              widget.disabled ||
+                                              !widget.submitEnabled
+                                          ? null
+                                          : _submit,
+                                    ),
                                 ],
                               ),
                             ),

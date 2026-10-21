@@ -49,6 +49,7 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
   final _sessionLists = <String, List<String>>{};
   final _attachments = <String, List<KChatAttachmentPart>>{};
   String? _voiceKey;
+  String? _dictationKey;
   bool _rightSidebarOpen = false;
   bool _chatOpen = true;
   bool _callExpanded = true, _callMuted = false;
@@ -204,19 +205,18 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
               _voiceKey = null;
             }),
           ),
-          KIconButton(
-            icon: KIconName.phone,
-            iconContent: KIcon(
-              KIconName.phone,
-              color: Theme.of(
-                context,
-              ).extension<KDesignTokens>()!.colorStatusSuccessAccent,
+          if (_voiceKey == _draftKey)
+            KIconButton(
+              icon: KIconName.phone,
+              iconContent: KIcon(
+                KIconName.phone,
+                color: Theme.of(
+                  context,
+                ).extension<KDesignTokens>()!.colorStatusSuccessAccent,
+              ),
+              label: 'Zum Anruf zurückkehren',
+              onPressed: _startCall,
             ),
-            label: _voiceKey == _draftKey
-                ? 'Zum Anruf zurückkehren'
-                : 'Anrufen',
-            onPressed: _startCall,
-          ),
           KIconButton(
             icon: KIconName.x,
             label: 'Chat schließen',
@@ -258,24 +258,25 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
         leadingTools: [
           KMenuButton(
             label: 'Anhängen',
-            triggerContent: const KIcon(KIconName.paperclip),
+            overflow: true,
+            triggerContent: const KIcon(KIconName.plus),
             actions: [
               KMenuAction(
                 id: 'image',
                 label: 'Bild auswählen',
-                icon: KIconName.image,
+                iconContent: const KIcon(KIconName.image, strokeWidth: 1.5),
                 onSelect: () => _addAttachment('Bild.jpg', 'image/jpeg'),
               ),
               KMenuAction(
                 id: 'camera',
                 label: 'Neues Bild aufnehmen',
-                icon: KIconName.camera,
+                iconContent: const KIcon(KIconName.camera, strokeWidth: 1.5),
                 onSelect: () => _addAttachment('Aufnahme.jpg', 'image/jpeg'),
               ),
               KMenuAction(
                 id: 'document',
                 label: 'Dokument auswählen',
-                icon: KIconName.file,
+                iconContent: const KIcon(KIconName.file, strokeWidth: 1.5),
                 onSelect: () =>
                     _addAttachment('Projektbrief.pdf', 'application/pdf'),
               ),
@@ -287,8 +288,33 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
             (item) => item.id == file.id,
           ),
         ),
-        voiceActive: _voiceKey == _draftKey,
-        onVoiceInput: _startCall,
+        voiceState: _dictationKey == _draftKey
+            ? KDictationState.recording
+            : KDictationState.ready,
+        voiceCapture: KChatVoiceCapture(
+          samples: const [.001, .008, .03, .12, .008, .004, .06, .02],
+          onCancel: () => setState(() => _dictationKey = null),
+          onSend: () {
+            final text = [
+              _drafts[_draftKey],
+              'Dies ist ein Demo-Diktat.',
+            ].whereType<String>().where((part) => part.isNotEmpty).join(' ');
+            setState(() => _dictationKey = null);
+            _submit(text);
+          },
+        ),
+        onStartCall: _startCall,
+        onVoiceInput: () => setState(() {
+          if (_dictationKey == _draftKey) {
+            _drafts[_draftKey] = [
+              _drafts[_draftKey],
+              'Dies ist ein Demo-Diktat.',
+            ].whereType<String>().where((part) => part.isNotEmpty).join(' ');
+            _dictationKey = null;
+          } else {
+            _dictationKey = _draftKey;
+          }
+        }),
         labels: const KChatComposerLabels(
           input: 'Demo-Nachricht',
           placeholder: 'Nachricht …',
@@ -297,6 +323,9 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
           removeAttachment: 'Anhang entfernen',
           voice: 'Audio starten (Demo)',
           stopVoice: 'Audio stoppen (Demo)',
+          cancelVoice: 'Aufnahme verwerfen',
+          sendVoice: 'Diktat direkt senden',
+          call: 'Telefonat starten',
         ),
       ),
     );

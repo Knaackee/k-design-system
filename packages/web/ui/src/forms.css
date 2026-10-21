@@ -566,3 +566,19 @@
   background: currentColor;
   border-radius: var(--k-radius-small);
 }
+
+.k-select-option__text {
+  display: grid;
+  min-width: 0;
+}
+.k-select-list[data-expanded] .k-select-option__title,
+.k-select-option__description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k-select-option__description {
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+  line-height: var(--k-font-caption-line-height);
+}

@@ -106,9 +106,9 @@ export function KFileTree({
                 strokeWidth={1.5}
               />
             </button>
-          ) : items.some((item) => item.kind === "folder") ? (
-            <span className="k-file-tree__toggle" />
-          ) : null}
+          ) : (
+            <span className="k-file-tree__toggle" aria-hidden="true" />
+          )}
           <button
             type="button"
             className="k-file-tree__select"

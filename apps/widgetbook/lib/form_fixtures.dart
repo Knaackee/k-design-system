@@ -325,6 +325,22 @@ class _FormFixtureState extends State<FormFixture> {
           align: KLayoutAlign.stretch,
           gap: KLayoutGap.section,
           children: [
+            if (widget.kind == 'select')
+              KSelect(
+                expandedPopup: true,
+                label: 'Conversation',
+                value: 'conversation',
+                onChanged: (_) {},
+                options: const [
+                  KSelectOption(
+                    value: 'conversation',
+                    label:
+                        'A long conversation about open tasks and recent changes',
+                    description: '21.10.2026, 17:30',
+                  ),
+                ],
+              ),
+
             KField(
               label: 'Assignee',
               helperText: 'Sam is unavailable.',

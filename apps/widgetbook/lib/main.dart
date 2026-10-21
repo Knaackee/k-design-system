@@ -1487,6 +1487,14 @@ class KDesignWidgetbook extends StatelessWidget {
                   builder: (_) => const ChatComposerFixture(mobile: true),
                 ),
                 WidgetbookUseCase(
+                  name: 'chat-composer-compact-voice',
+                  builder: (_) => const VoiceComposerFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'chat-composer-compact-voice-mobile',
+                  builder: (_) => const VoiceComposerFixture(mobile: true),
+                ),
+                WidgetbookUseCase(
                   name: 'agent-ui-conversation',
                   builder: (_) => const AgentUiFixture(),
                 ),

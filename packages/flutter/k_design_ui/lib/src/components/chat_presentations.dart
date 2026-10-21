@@ -6,6 +6,7 @@ import 'chat_presentation_image.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../primitives/k_button.dart';
+import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_surface.dart';
 import '../primitives/k_text.dart';
@@ -61,50 +62,66 @@ class KPresentationCard extends StatelessWidget {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final cover = variant == KPresentationCardVariant.cover;
     final gap = t.spaceControlGap;
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (eyebrow != null) ...[
+          _meta(eyebrow!, t, cover: cover),
+          SizedBox(height: cover ? gap : gap * .5),
+        ],
+        KText(
+          title,
+          variant: cover ? KTextVariant.heading4 : KTextVariant.bodySmall,
+          style: cover
+              ? TextStyle(color: t.componentPresentationCoverForeground)
+              : TextStyle(fontWeight: t.fontHeadingWeight),
+        ),
+        if (description != null) ...[
+          SizedBox(height: cover ? gap : gap * .5),
+          KText(
+            description!,
+            variant: cover ? KTextVariant.body : KTextVariant.bodySmall,
+            style: TextStyle(
+              color: cover
+                  ? t.componentPresentationCoverMuted
+                  : t.colorTextMuted,
+            ),
+          ),
+        ],
+        if (cover && action != null) ...[
+          SizedBox(height: gap * 2),
+          KButton(
+            label: action!.label,
+            onPressed: action!.onPressed,
+            variant: KButtonVariant.secondary,
+            trailing: const KIcon(KIconName.arrowUpRight),
+          ),
+        ],
+      ],
+    );
     final body = Padding(
       padding: EdgeInsets.fromLTRB(
-        gap * 2,
-        cover ? 120 : gap * 2,
-        gap * 2,
-        gap * 2,
+        cover ? gap * 2 : gap,
+        cover ? 120 : gap,
+        cover ? gap * 2 : gap,
+        cover ? gap * 2 : gap,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (eyebrow != null) ...[
-            _meta(eyebrow!, t, cover: cover),
-            SizedBox(height: gap),
-          ],
-          KText(
-            title,
-            variant: KTextVariant.heading4,
-            style: cover
-                ? TextStyle(color: t.componentPresentationCoverForeground)
-                : null,
-          ),
-          if (description != null) ...[
-            SizedBox(height: gap),
-            KText(
-              description!,
-              style: TextStyle(
-                color: cover
-                    ? t.componentPresentationCoverMuted
-                    : t.colorTextMuted,
-              ),
+      child: cover
+          ? content
+          : Row(
+              children: [
+                Expanded(child: content),
+                if (action != null) ...[
+                  SizedBox(width: gap),
+                  KIconButton(
+                    label: action!.label,
+                    icon: KIconName.arrowUpRight,
+                    onPressed: action!.onPressed,
+                  ),
+                ],
+              ],
             ),
-          ],
-          if (action != null) ...[
-            SizedBox(height: gap * 2),
-            KButton(
-              label: action!.label,
-              onPressed: action!.onPressed,
-              variant: KButtonVariant.secondary,
-              trailing: const KIcon(KIconName.arrowUpRight),
-            ),
-          ],
-        ],
-      ),
     );
     return ClipRRect(
       borderRadius: BorderRadius.circular(t.radiusCard),

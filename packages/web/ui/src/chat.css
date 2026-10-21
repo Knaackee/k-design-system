@@ -596,6 +596,50 @@
   gap: var(--k-chat-composer-inset);
 }
 
+.k-chat-composer__capture {
+  min-width: 0;
+  height: var(--k-chat-composer-target);
+  display: flex;
+  align-items: center;
+  color: var(--k-color-text-muted);
+}
+
+.k-chat-composer__wave {
+  width: 100%;
+  height: min(
+    var(--k-chat-composer-target),
+    calc(var(--k-size-icon-default) * 1.5)
+  );
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.k-chat-composer__capture-status {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  font-size: var(--k-font-body-small-size);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.k-chat-composer__capture[aria-busy="true"] .k-icon {
+  animation: k-composer-processing var(--k-motion-slow) linear infinite;
+}
+
+@keyframes k-composer-processing {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-chat-composer__capture[aria-busy="true"] .k-icon {
+    animation: none;
+  }
+}
+
 .k-chat-composer__tools .k-button-target {
   width: var(--k-chat-composer-target);
   height: var(--k-chat-composer-target);
