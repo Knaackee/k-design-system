@@ -61,7 +61,6 @@ class KFileTree extends StatelessWidget {
         _FileTreeRow(
           node: node,
           depth: depth,
-          reserveToggle: items.any((item) => item.folder),
           selected: node.id == selectedId,
           expanded: expandedIds.contains(node.id),
           actions: actions?.call(node),
@@ -94,7 +93,6 @@ class _FileTreeRow extends StatefulWidget {
   const _FileTreeRow({
     required this.node,
     required this.depth,
-    required this.reserveToggle,
     required this.selected,
     required this.expanded,
     required this.onToggle,
@@ -104,7 +102,6 @@ class _FileTreeRow extends StatefulWidget {
   });
   final KFileNode node;
   final int depth;
-  final bool reserveToggle;
   final bool selected, expanded;
   final VoidCallback onToggle, onSelect;
   final List<KMenuAction> menuActions;
@@ -136,26 +133,25 @@ class _FileTreeRowState extends State<_FileTreeRow> {
               ),
               child: Row(
                 children: [
-                  if (widget.reserveToggle)
-                    SizedBox(
-                      width: t.componentFilesIconSize + t.spaceTight * 2,
-                      height: t.sizeControl,
-                      child: widget.node.folder
-                          ? InkWell(
-                              key: ValueKey('files-toggle-${widget.node.id}'),
-                              onTap: widget.onToggle,
-                              child: Center(
-                                child: KIcon(
-                                  widget.expanded
-                                      ? KIconName.chevronDown
-                                      : KIconName.chevronRight,
-                                  size: t.componentFilesIconSize,
-                                ),
+                  SizedBox(
+                    width: t.componentFilesIconSize + t.spaceTight * 2,
+                    height: t.sizeControl,
+                    child: widget.node.folder
+                        ? InkWell(
+                            key: ValueKey('files-toggle-${widget.node.id}'),
+                            onTap: widget.onToggle,
+                            child: Center(
+                              child: KIcon(
+                                widget.expanded
+                                    ? KIconName.chevronDown
+                                    : KIconName.chevronRight,
+                                size: t.componentFilesIconSize,
                               ),
-                            )
-                          : null,
-                    ),
-                  if (widget.reserveToggle) SizedBox(width: t.spaceTight),
+                            ),
+                          )
+                        : null,
+                  ),
+                  SizedBox(width: t.spaceMicro),
                   Expanded(
                     child: InkWell(
                       onTap: widget.onSelect,
