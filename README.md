@@ -164,6 +164,23 @@ the full contract.
 - [Release process](docs/integration/releasing.md)
 - [Changelog](CHANGELOG.md)
 
+### Agent instructions for consuming projects
+
+Add this single line to your application's `AGENTS.md` (adjust the submodule path):
+
+> For every UI change, read and follow `vendor/k-design-system/.agents/skills/k-design-system-workflow/SKILL.md` and its linked composition contract before implementing controls, layouts or styling.
+
+This works without Dennis's local Skillset installation. The repository Skill
+loads [UI composition](docs/integration/ui-composition.md): mandatory K controls,
+spacing ownership, density, responsive checks and completion evidence.
+Run `node vendor/k-design-system/tooling/check-consumer-ui.mjs src` (`lib` for
+Flutter) on the migrated consumer boundary; findings require review.
+
+For Skillset users, the global `dk-design-system-workflow` entry and
+`design-system/k-design-system-consumer` Reference route to these repository-owned
+rules. Global catalog changes require candidate approval and synchronization;
+updating this repository alone does not update installed harness copies.
+
 ## Status and licensing
 
 Package versions remain pre-release until the release checklist is complete.
