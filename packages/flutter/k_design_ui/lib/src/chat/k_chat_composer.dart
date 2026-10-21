@@ -26,6 +26,7 @@ class KChatComposer extends StatefulWidget {
     this.runState = KChatRunState.idle,
     this.disabled = false,
     this.submitEnabled = true,
+    this.allowSubmitWhileRunning = false,
     this.maxLength,
     this.labels = const KChatComposerLabels(),
     this.leadingTools,
@@ -57,6 +58,9 @@ class KChatComposer extends StatefulWidget {
 
   /// Allows editing while independently preventing keyboard and button submission.
   final bool submitEnabled;
+
+  /// Host accepts follow-up messages while a response is active.
+  final bool allowSubmitWhileRunning;
   final int? maxLength;
   final KChatComposerLabels labels;
   final List<Widget>? leadingTools;
@@ -109,7 +113,10 @@ class _KChatComposerState extends State<KChatComposer> {
 
   void _submit() {
     final value = _controller.text.trim();
-    if (value.isEmpty || widget.disabled || !widget.submitEnabled || _running) {
+    if (value.isEmpty ||
+        widget.disabled ||
+        !widget.submitEnabled ||
+        (_running && !widget.allowSubmitWhileRunning)) {
       return;
     }
     widget.onSubmit(value);
@@ -401,6 +408,20 @@ class _KChatComposerState extends State<KChatComposer> {
                                           ),
                                   ),
                                   if (!capturing) ...?widget.trailingTools,
+                                  if (!capturing &&
+                                      _running &&
+                                      widget.allowSubmitWhileRunning &&
+                                      _controller.text.trim().isNotEmpty)
+                                    KIconButton(
+                                      label: widget.labels.send,
+                                      icon: KIconName.arrowUp,
+                                      selected: true,
+                                      onPressed:
+                                          widget.disabled ||
+                                              !widget.submitEnabled
+                                          ? null
+                                          : _submit,
+                                    ),
                                   if (capturing)
                                     KIconButton(
                                       label:

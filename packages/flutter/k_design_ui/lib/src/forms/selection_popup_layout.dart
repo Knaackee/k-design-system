@@ -8,8 +8,9 @@ class SelectionPopupLayout {
     RenderBox anchor,
     RenderBox overlay,
     FlutterView view,
-    double gap,
-  ) {
+    double gap, {
+    double? preferredWidth,
+  }) {
     final origin = anchor.localToGlobal(Offset.zero, ancestor: overlay);
     final overlayOrigin = overlay.localToGlobal(Offset.zero);
     final screen = overlay.size;
@@ -35,7 +36,13 @@ class SelectionPopupLayout {
     final below = viewportBottom - belowTop;
     final above = aboveBottom - viewportTop;
     final opensAbove = below < 120 && above > below;
-    width = math.max(0.0, math.min(anchor.size.width, screen.width - 16));
+    width = math.max(
+      0.0,
+      math.min(
+        math.max(anchor.size.width, preferredWidth ?? 0),
+        screen.width - 16,
+      ),
+    );
     left = origin.dx.clamp(8.0, math.max(8.0, screen.width - width - 8));
     top = opensAbove ? null : belowTop;
     bottom = opensAbove ? screen.height - aboveBottom : null;

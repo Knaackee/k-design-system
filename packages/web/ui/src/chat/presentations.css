@@ -44,6 +44,31 @@
 .k-presentation-card__body > .k-button-target {
   margin-top: var(--k-space-control-gap);
 }
+.k-presentation-card__content {
+  display: grid;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.k-presentation-card--standard .k-presentation-card__body {
+  flex-direction: row;
+  align-items: center;
+  padding: var(--k-space-control-gap);
+  font-size: calc(var(--k-font-body-small-size) * var(--k-text-scale, 1));
+  line-height: var(--k-font-body-small-line-height);
+}
+.k-presentation-card--standard .k-presentation-card__content {
+  flex: 1;
+  gap: calc(var(--k-space-control-gap) * 0.5);
+}
+.k-presentation-card--standard h3 {
+  font-size: inherit;
+  line-height: inherit;
+}
+.k-presentation-card--standard .k-presentation-card__body > .k-button-target {
+  margin-top: 0;
+  flex-shrink: 0;
+}
 .k-presentation-card--cover {
   position: relative;
   display: grid;

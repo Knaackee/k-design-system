@@ -17,6 +17,28 @@ const render = (props = {}) =>
     }),
   );
 
+test("follow-ups opt in without removing Stop or overriding submission gates", () => {
+  const props = {
+    runState: "streaming",
+    allowSubmitWhileRunning: true,
+    onStop() {},
+  };
+  assert.match(render(props), /aria-label="Send message"/);
+  assert.match(render(props), /aria-label="Stop response"/);
+  assert.doesNotMatch(
+    render({ ...props, value: "" }),
+    /aria-label="Send message"/,
+  );
+  assert.match(
+    render({ ...props, submitEnabled: false }),
+    /aria-label="Send message"[^>]*disabled=""/,
+  );
+  assert.doesNotMatch(
+    render({ ...props, allowSubmitWhileRunning: false }),
+    /aria-label="Send message"/,
+  );
+});
+
 test("waveform distinguishes quiet speech from silence without invalid geometry", () => {
   const html = render({
     voiceState: KDictationState.recording,

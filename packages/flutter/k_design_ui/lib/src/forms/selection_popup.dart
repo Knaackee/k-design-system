@@ -11,6 +11,7 @@ class KSelectionPopup extends StatelessWidget {
     required this.options,
     required this.active,
     required this.value,
+    this.truncateLabels = false,
     this.multiple = false,
     this.values = const [],
     required this.maxHeight,
@@ -26,6 +27,7 @@ class KSelectionPopup extends StatelessWidget {
   final int active;
   final String? value;
   final bool multiple;
+  final bool truncateLabels;
   final List<String> values;
   bool _selected(String candidate) =>
       multiple ? values.contains(candidate) : value == candidate;
@@ -128,9 +130,36 @@ class KSelectionPopup extends StatelessWidget {
                                     SizedBox(width: t.spaceControlGap),
                                   ],
                                   Expanded(
-                                    child: Text(
-                                      options[i].label,
-                                      style: formTextStyle(context),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          options[i].label,
+                                          maxLines: truncateLabels ? 1 : null,
+                                          overflow: truncateLabels
+                                              ? TextOverflow.ellipsis
+                                              : null,
+                                          style: formTextStyle(context),
+                                        ),
+                                        if (options[i].description != null)
+                                          Text(
+                                            options[i].description!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style:
+                                                formTextStyle(
+                                                  context,
+                                                  color: t.colorTextMuted,
+                                                ).copyWith(
+                                                  fontSize: t.fontCaptionSize,
+                                                  height:
+                                                      t.fontCaptionLineHeight /
+                                                      t.fontCaptionSize,
+                                                ),
+                                          ),
+                                      ],
                                     ),
                                   ),
                                   if (multiple ||

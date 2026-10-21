@@ -1,6 +1,7 @@
 import { useRef, type ReactNode } from "react";
 import { KCard } from "../primitives/card.js";
 import { KButton } from "../primitives/button.js";
+import { KIconButton } from "../actions/icon-button.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KPresentationPicture } from "./presentation-picture.js";
 
@@ -34,15 +35,24 @@ export function KPresentationCard({
         />
       )}
       <div className="k-presentation-card__body">
-        {eyebrow && <span className="k-presentation__meta">{eyebrow}</span>}
-        <h3>{title}</h3>
-        {description && <p>{description}</p>}
-        {action && (
-          <KButton variant="secondary" onClick={action.onClick}>
-            {action.label}
-            <KIcon name="arrow-up-right" />
-          </KButton>
-        )}
+        <div className="k-presentation-card__content">
+          {eyebrow && <span className="k-presentation__meta">{eyebrow}</span>}
+          <h3>{title}</h3>
+          {description && <p>{description}</p>}
+        </div>
+        {action &&
+          (variant === "standard" ? (
+            <KIconButton
+              icon="arrow-up-right"
+              label={action.label}
+              onClick={action.onClick}
+            />
+          ) : (
+            <KButton variant="secondary" onClick={action.onClick}>
+              {action.label}
+              <KIcon name="arrow-up-right" />
+            </KButton>
+          ))}
       </div>
     </KCard>
   );

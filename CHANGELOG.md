@@ -7,6 +7,12 @@ version is tagged.
 ## Unreleased
 
 - Final visual acceptance and the release tag remain pending.
+- Added opt-in follow-up submission during active chat responses on Web and
+  Flutter, preserving the stop action and submission controls.
+- Made standard presentation cards compact with accessible icon actions while
+  preserving full content and cover-card actions.
+- Added expanded select popups with optional option descriptions on Web and
+  Flutter, bounded by the viewport.
 
 ## 1.0.0-rc.1 - 2026-09-25
 
