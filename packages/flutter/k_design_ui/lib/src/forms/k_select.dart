@@ -16,6 +16,7 @@ class KSelectOption {
   const KSelectOption({
     required this.value,
     required this.label,
+    this.description,
     this.disabled = false,
     this.icon,
     this.leading,
@@ -23,6 +24,7 @@ class KSelectOption {
   });
   final String value;
   final String label;
+  final String? description;
   final bool disabled;
   final KIconName? icon;
 
@@ -51,6 +53,7 @@ class KSelect extends StatefulWidget {
     this.noResultsLabel,
     this.presentation = KSelectPresentation.standard,
     this.truncateLabel = false,
+    this.expandedPopup = false,
     this.showInlineIndicator = false,
     this.textAlign = TextAlign.start,
     super.key,
@@ -60,6 +63,9 @@ class KSelect extends StatefulWidget {
 
   /// Ellipsize read-only labels without changing their full accessible text.
   final bool truncateLabel;
+
+  /// Use the picker width, bounded by the viewport, with concise option labels.
+  final bool expandedPopup;
 
   /// Keep the dropdown indicator visible in an unfocused inline control.
   final bool showInlineIndicator;
@@ -454,6 +460,7 @@ class _KSelectState extends State<KSelect> with WidgetsBindingObserver {
       overlay,
       View.of(context),
       t.spaceControlGap,
+      preferredWidth: widget.expandedPopup ? t.layoutPickerWidth : null,
     );
     final options = _visible;
     return Positioned(
@@ -462,6 +469,7 @@ class _KSelectState extends State<KSelect> with WidgetsBindingObserver {
       top: layout.top,
       bottom: layout.bottom,
       child: KSelectionPopup(
+        truncateLabels: widget.expandedPopup,
         optionsLabel: widget.optionsLabel,
         noResultsLabel: widget.noResultsLabel,
         options: options,

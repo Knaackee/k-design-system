@@ -66,6 +66,15 @@ class _ChatComposerFixtureState extends State<ChatComposerFixture> {
               onStop: () {},
               onVoiceInput: () {},
             ),
+            KChatComposer(
+              value: value,
+              onValueChanged: (next) => setState(() => value = next),
+              onSubmit: (_) => setState(() => value = ''),
+              runState: KChatRunState.streaming,
+              allowSubmitWhileRunning: true,
+              onStop: () {},
+              onVoiceInput: () {},
+            ),
             for (final state in [
               KDictationState.processing,
               KDictationState.unavailable,

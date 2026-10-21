@@ -239,6 +239,14 @@ class _ChatPresentationsFixtureState extends State<ChatPresentationsFixture> {
   Widget _catalog(bool narrow) {
     final sections = [
       _section('01', 'Bild, Titel & Text', [
+        KPresentationCard(
+          title: 'Offener Befund',
+          description: '25 Ereignisse · Heute aktiv',
+          action: KPresentationAction(
+            label: 'Befund öffnen',
+            onPressed: () => _open('Offener Befund'),
+          ),
+        ),
         _card(
           0,
           title: 'Ein Wochenende am See',

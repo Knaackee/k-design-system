@@ -68,6 +68,8 @@ export interface KChatComposerProps {
   disabled?: boolean;
   /** Prevent submission independently from draft editing. */
   submitEnabled?: boolean;
+  /** Host accepts follow-up messages while a response is active. */
+  allowSubmitWhileRunning?: boolean;
   maxLength?: number;
   labels?: Partial<KChatComposerLabels>;
   leadingTools?: ReactNode;
@@ -102,6 +104,7 @@ export function KChatComposer({
   runState = "idle",
   disabled = false,
   submitEnabled = true,
+  allowSubmitWhileRunning = false,
   maxLength,
   labels: labelsInput,
   leadingTools,
@@ -145,7 +148,14 @@ export function KChatComposer({
   const submit = (event?: FormEvent) => {
     event?.preventDefault();
     const trimmed = value.trim();
-    if (!trimmed || disabled || !submitEnabled || running || capturing) return;
+    if (
+      !trimmed ||
+      disabled ||
+      !submitEnabled ||
+      (running && !allowSubmitWhileRunning) ||
+      capturing
+    )
+      return;
     onSubmit(trimmed);
   };
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -276,6 +286,16 @@ export function KChatComposer({
         )}
         <div className="k-chat-composer__tools">
           {!capturing && trailingTools}
+          {!capturing && running && allowSubmitWhileRunning && value.trim() ? (
+            <KIconButton
+              icon="arrow-up"
+              label={labels.send}
+              variant="primary"
+              disabled={disabled || !submitEnabled}
+              type="submit"
+              onClick={() => undefined}
+            />
+          ) : null}
           {capturing ? (
             <KIconButton
               icon={
