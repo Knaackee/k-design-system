@@ -125,12 +125,18 @@
   position: relative;
   display: flex;
   justify-content: center;
-  padding-top: calc(12 * var(--k-space-hairline));
+  padding-top: calc(
+    12 * var(--k-space-hairline) +
+      (var(--k-size-control) - 28 * var(--k-space-hairline)) / 2
+  );
 }
 .k-day-entry__rail::after {
   content: "";
   position: absolute;
-  top: calc(40 * var(--k-space-hairline));
+  top: calc(
+    12 * var(--k-space-hairline) +
+      (var(--k-size-control) + 28 * var(--k-space-hairline)) / 2
+  );
   bottom: calc(-12 * var(--k-space-hairline));
   left: calc(15 * var(--k-space-hairline));
   border-left: calc(2 * var(--k-space-hairline)) solid
@@ -177,14 +183,23 @@
   background: var(--k-color-surface-subtle);
 }
 .k-day-entry__content[aria-pressed="true"] {
-  border-color: var(--k-color-status-info-accent);
+  background: var(--k-color-status-info-background);
+}
+.k-day-entry[data-selected="true"] .k-day-entry__rail > span {
+  background: var(--k-color-status-info-accent);
+  color: var(--k-color-surface-raised);
+}
+.k-day-entry__content:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-status-info-accent);
+  outline-offset: var(--k-space-hairline);
 }
 .k-day-entry__top {
   display: flex;
   justify-content: space-between;
   gap: calc(8 * var(--k-space-hairline));
   font-size: calc(var(--k-font-size) * 14 / 14);
-  align-items: baseline;
+  align-items: center;
+  min-height: var(--k-size-control);
 }
 .k-day-entry__top time {
   font-size: calc(var(--k-font-size) * 12 / 14);
@@ -409,4 +424,29 @@
 }
 .k-day-now-summary {
   cursor: default;
+}
+
+.k-day-entry__time {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  flex-shrink: 0;
+}
+
+.k-day-entry__main {
+  position: relative;
+}
+.k-day-entry__main[data-route-info="true"] .k-day-entry__top {
+  padding-inline-end: calc(40 * var(--k-space-hairline));
+}
+.k-day-entry__info {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(12 * var(--k-space-hairline));
+}
+.k-day-route-info {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  max-width: min(var(--k-component-popover-max-width), 80vw);
+  padding: var(--k-space-control-gap);
 }

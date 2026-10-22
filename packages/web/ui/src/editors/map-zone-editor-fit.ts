@@ -1,18 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KMapPosition, KMapZone } from "../maps/map-zone-geometry.js";
 import { zoneCoordinates } from "./map-zone-editor-state.js";
+
+export function zoneEditorFitCoordinates(
+  zones: readonly KMapZone[],
+  selectedZoneId: string | null,
+  initial: boolean,
+) {
+  const selected = initial
+    ? undefined
+    : zones.find((zone) => zone.id === selectedZoneId);
+  return zoneCoordinates(selected ? [selected] : zones);
+}
 
 export function useZoneEditorFit(
   zones: readonly KMapZone[],
   selectedZoneId: string | null,
   draft: KMapZone | null,
 ) {
-  const [coordinates, setCoordinates] = useState<readonly KMapPosition[]>(
-    () => {
-      const selected = zones.find((zone) => zone.id === selectedZoneId);
-      return zoneCoordinates(selected ? [selected] : zones);
-    },
+  const [coordinates, setCoordinates] = useState<readonly KMapPosition[]>(() =>
+    zoneEditorFitCoordinates(zones, selectedZoneId, true),
   );
+  const initialFitComplete = useRef(false);
   const geometryRevision = JSON.stringify(
     zones.map(({ id, coordinates: points, polygons, circle }) => ({
       id,
@@ -23,8 +32,12 @@ export function useZoneEditorFit(
   );
   useEffect(() => {
     if (draft) return;
-    const selected = zones.find((zone) => zone.id === selectedZoneId);
-    setCoordinates(zoneCoordinates(selected ? [selected] : zones));
+    if (!initialFitComplete.current && zones.length > 0) {
+      initialFitComplete.current = true;
+      setCoordinates(zoneEditorFitCoordinates(zones, selectedZoneId, true));
+      return;
+    }
+    setCoordinates(zoneEditorFitCoordinates(zones, selectedZoneId, false));
   }, [draft, selectedZoneId, geometryRevision]);
   return [coordinates, setCoordinates] as const;
 }

@@ -6,6 +6,7 @@ export type DayEntry = {
   end: number;
   title: string;
   detail: string;
+  routeDescription?: string;
   icon: KIconName;
   kind: "stop" | "travel";
   center: [number, number];
@@ -38,6 +39,8 @@ export const dayEntries: DayEntry[] = [
     start: 550,
     end: 570,
     title: "Mit dem Auto",
+    routeDescription:
+      "Von: Parkplatz am Museum\nInvalidenstraße 44, 10115 Berlin\n\nNach: Parkplatz am Ziel\nKollwitzplatz, 10405 Berlin",
     detail: "20 Min. · 6,4 km · zum Parkplatz am Ziel",
     icon: "car",
     kind: "travel",

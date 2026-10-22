@@ -161,5 +161,10 @@ class _KMapDayViewState extends State<KMapDayView> {
 }
 
 String formatKMapDayTime(int minutes) =>
-    '${(minutes ~/ 60).toString().padLeft(2, '0')}:'
-    '${(minutes % 60).toString().padLeft(2, '0')}';
+    '${((((minutes % 1440) + 1440) % 1440) ~/ 60).toString().padLeft(2, '0')}:'
+    '${(((minutes % 1440) + 1440) % 1440 % 60).toString().padLeft(2, '0')}'
+    '${minutes < 0
+        ? ' (Vortag)'
+        : minutes >= 1440
+        ? ' (Folgetag)'
+        : ''}';

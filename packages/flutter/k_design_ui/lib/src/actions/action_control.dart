@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_button.dart';
 
 class KActionControlVisualScope extends InheritedWidget {
   const KActionControlVisualScope({required super.child, super.key});
@@ -24,6 +25,7 @@ class KActionControl extends StatelessWidget {
     this.iconContent,
     this.iconOnly = false,
     this.selected = false,
+    this.variant = KButtonVariant.ghost,
     super.key,
   });
   final String label;
@@ -33,6 +35,7 @@ class KActionControl extends StatelessWidget {
   final Widget? iconContent;
   final bool iconOnly;
   final bool selected;
+  final KButtonVariant variant;
 
   @override
   Widget build(BuildContext context) {
@@ -40,28 +43,50 @@ class KActionControl extends StatelessWidget {
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
     final scaled = MediaQuery.textScalerOf(context).scale(t.fontControlSize);
-    final foreground = selected
-        ? t.colorActionPrimaryForeground
-        : iconOnly
-        ? t.colorActionGhostForeground
-        : t.colorActionSecondaryForeground;
+    final effectiveVariant = selected ? KButtonVariant.primary : variant;
+    final foreground = !iconOnly
+        ? t.colorActionSecondaryForeground
+        : switch (effectiveVariant) {
+            KButtonVariant.primary => t.colorActionPrimaryForeground,
+            KButtonVariant.secondary => t.colorActionSecondaryForeground,
+            KButtonVariant.ghost => t.colorActionGhostForeground,
+          };
     final target = math.max(t.sizeControl, t.sizeHitTarget);
     final scopedVisual =
         iconOnly && KActionControlVisualScope.enabledOf(context);
-    Color background(Set<WidgetState> states) =>
-        states.contains(WidgetState.pressed)
-        ? (selected ? t.colorActionPrimaryPressed : t.colorActionGhostPressed)
-        : states.contains(WidgetState.hovered)
-        ? (selected ? t.colorActionPrimaryHover : t.colorActionGhostHover)
-        : (selected
-              ? t.colorActionPrimaryBackground
-              : t.colorActionGhostBackground);
+    Color background(Set<WidgetState> states) {
+      final pressed = states.contains(WidgetState.pressed);
+      final hovered = states.contains(WidgetState.hovered);
+      return switch (effectiveVariant) {
+        KButtonVariant.primary =>
+          pressed
+              ? t.colorActionPrimaryPressed
+              : hovered
+              ? t.colorActionPrimaryHover
+              : t.colorActionPrimaryBackground,
+        KButtonVariant.secondary =>
+          pressed
+              ? t.colorActionSecondaryPressed
+              : hovered
+              ? t.colorActionSecondaryHover
+              : t.colorActionSecondaryBackground,
+        KButtonVariant.ghost =>
+          pressed
+              ? t.colorActionGhostPressed
+              : hovered
+              ? t.colorActionGhostHover
+              : t.colorActionGhostBackground,
+      };
+    }
+
     BorderSide border(Set<WidgetState> states) => BorderSide(
       color: states.contains(WidgetState.focused)
           ? t.colorBorderFocus
-          : selected
-          ? Colors.transparent
-          : t.colorActionGhostBorder,
+          : switch (effectiveVariant) {
+              KButtonVariant.primary => Colors.transparent,
+              KButtonVariant.secondary => t.colorActionSecondaryBorder,
+              KButtonVariant.ghost => t.colorActionGhostBorder,
+            },
     );
     return MergeSemantics(
       child: Semantics(

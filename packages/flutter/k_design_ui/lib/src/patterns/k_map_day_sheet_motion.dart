@@ -182,7 +182,15 @@ class _KMapDaySheetMotionState extends State<KMapDaySheetMotion>
       _expandedFraction = widget.heights.expanded;
       if (oldCompact != _compactFraction ||
           oldBodyMinimum != _bodyMinimumFraction) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => _emitPosition());
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          if (widget.state != KMapDayPanelState.compact &&
+              _animation.value < _bodyMinimumFraction) {
+            _animation.value = _renderedSnap(widget.state);
+          } else {
+            _emitPosition();
+          }
+        });
       }
       return Align(
         alignment: Alignment.bottomCenter,

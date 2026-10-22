@@ -257,27 +257,64 @@ export function MapOverlays({
 
   useEffect(() => {
     if (!map || !fitContent || !fitPositions.length) return;
-    let settledFrame = 0;
-    const layoutFrame = requestAnimationFrame(() => {
-      settledFrame = requestAnimationFrame(() => {
-        map.resize();
-        const bounds = fitPositions.reduce(
-          (result, point) => result.extend(point),
-          new LngLatBounds(),
-        );
-        const reducedMotion = window.matchMedia?.(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-        map.fitBounds(bounds, {
-          padding: fitPadding,
-          maxZoom: fitMaxZoom,
-          duration: reducedMotion ? 0 : fitDurationMs,
-        });
+    let frame = 0;
+    let stableFrames = 0;
+    let sampledFrames = 0;
+    let previousSize = "";
+    let cancelled = false;
+    let running = false;
+    const container = map.getContainer();
+    const resize = new ResizeObserver(() => scheduleFit());
+    const fitWhenLayoutSettles = () => {
+      if (cancelled) return;
+      sampledFrames += 1;
+      map.resize();
+      const bounds = container.getBoundingClientRect();
+      if (bounds.width <= 0 || bounds.height <= 0) {
+        running = false;
+        return;
+      }
+      const size = `${bounds.width}:${bounds.height}`;
+      stableFrames = size === previousSize ? stableFrames + 1 : 0;
+      previousSize = size;
+      if (stableFrames < 2 && sampledFrames < 60) {
+        frame = requestAnimationFrame(fitWhenLayoutSettles);
+        return;
+      }
+      if (stableFrames < 2) {
+        running = false;
+        return;
+      }
+      resize.disconnect();
+      const coordinateBounds = fitPositions.reduce(
+        (result, point) => result.extend(point),
+        new LngLatBounds(),
+      );
+      const reducedMotion = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      map.fitBounds(coordinateBounds, {
+        padding: fitPadding,
+        maxZoom: fitMaxZoom,
+        duration: reducedMotion ? 0 : fitDurationMs,
       });
-    });
+    };
+    function scheduleFit() {
+      if (cancelled || running) return;
+      const bounds = container.getBoundingClientRect();
+      if (bounds.width <= 0 || bounds.height <= 0) return;
+      running = true;
+      stableFrames = 0;
+      sampledFrames = 0;
+      previousSize = "";
+      frame = requestAnimationFrame(fitWhenLayoutSettles);
+    }
+    resize.observe(container);
+    scheduleFit();
     return () => {
-      cancelAnimationFrame(layoutFrame);
-      cancelAnimationFrame(settledFrame);
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      resize.disconnect();
     };
   }, [
     map,
@@ -355,9 +392,11 @@ export function MapOverlays({
       });
     };
     if (map.isStyleLoaded()) draw();
+    else map.once("idle", draw);
     map.on("style.load", draw);
     return () => {
       map.off("style.load", draw);
+      map.off("idle", draw);
       map.off("remove", onRemove);
       clear();
     };

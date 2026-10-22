@@ -203,7 +203,9 @@ class _KCalendarEventState<T extends Object> extends State<KCalendarEvent<T>> {
         widget.start != null &&
         widget.end != null &&
         (!allDay || c.view != KCalendarView.day) &&
-        (!widget.compact || allDay);
+        // Compact timed events still live in the time grid and remain resizable.
+        // Only month cells lack the time-axis geometry needed for timed resizing.
+        (c.view != KCalendarView.month || allDay);
     Widget movable = GestureDetector(
       onLongPress: c.onEventResize != null ? widget.select : null,
       child: base,

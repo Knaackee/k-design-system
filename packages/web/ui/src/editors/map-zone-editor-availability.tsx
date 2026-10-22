@@ -418,7 +418,7 @@ export function ZoneAvailabilityFields({
 
                 allowTextInput
 
-                value={recurring.startDate}
+                value={recurring.startDate || null}
 
                 onValueChange={(value) => updateStartDate(value ?? "")}
               />
@@ -487,7 +487,7 @@ export function ZoneAvailabilityFields({
 
                   allowTextInput
 
-                  value={recurring.startDate}
+                  value={recurring.startDate || null}
 
                   onValueChange={(value) => updateStartDate(value ?? "")}
                 />
@@ -503,7 +503,7 @@ export function ZoneAvailabilityFields({
 
                   allowTextInput
 
-                  value={rule.endDate ?? ""}
+                  value={rule.endDate || null}
 
                   onValueChange={(value) =>
                     updateRule({ endDate: value || undefined })
@@ -561,7 +561,7 @@ export function ZoneAvailabilityFields({
 
               allowTextInput
 
-              value={range.from}
+              value={range.from || null}
 
               onValueChange={(date) => {
                 const value = { ...range, from: date ?? "" };
@@ -583,7 +583,7 @@ export function ZoneAvailabilityFields({
 
               allowTextInput
 
-              value={range.to}
+              value={range.to || null}
 
               onValueChange={(date) => {
                 const value = { ...range, to: date ?? "" };

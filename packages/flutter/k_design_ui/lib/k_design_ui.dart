@@ -112,3 +112,5 @@ export 'src/patterns/k_integrations.dart';
 export 'src/patterns/k_integration_connection_card.dart';
 export 'src/patterns/k_integration_admin_catalog.dart';
 export 'src/patterns/k_integration_editor.dart';
+
+export 'src/patterns/k_payment_setup.dart';

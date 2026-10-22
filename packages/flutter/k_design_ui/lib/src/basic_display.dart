@@ -357,14 +357,21 @@ class KBadge extends StatelessWidget {
           )
         : icon;
     return Container(
-      constraints: BoxConstraints(minHeight: t.componentBadgeMinHeight),
+      // Web's badge min-height describes the content box, outside its padding
+      // and border. Preserve that shared geometry for every input mode.
+      constraints: BoxConstraints(
+        minHeight:
+            t.componentBadgeMinHeight +
+            2 * t.componentBadgePaddingBlock +
+            2 * t.borderWidthDefault,
+      ),
       padding: EdgeInsets.symmetric(
         horizontal: t.componentBadgePaddingInline,
         vertical: t.componentBadgePaddingBlock,
       ),
       decoration: BoxDecoration(
         color: background,
-        border: Border.all(color: border),
+        border: Border.all(color: border, width: t.borderWidthDefault),
         borderRadius: BorderRadius.circular(t.radiusFull),
       ),
       child: Row(
@@ -386,7 +393,7 @@ class KBadge extends StatelessWidget {
               t.fontCaptionSize,
               t.fontControlWeight,
               foreground,
-            ),
+            ).copyWith(height: t.fontTightHeight),
             child: child,
           ),
           if (trailing != null) ...[

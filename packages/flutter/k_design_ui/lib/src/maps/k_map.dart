@@ -142,6 +142,8 @@ class _KMapState extends State<KMap> {
   bool _rendererSyncScheduled = false;
   bool _syncCamera = false;
   bool _syncBlur = false;
+  bool _initialFitComplete = false;
+  bool _initialFitRunning = false;
 
   static bool _isValidStyle(String style) {
     try {
@@ -180,13 +182,23 @@ class _KMapState extends State<KMap> {
       _publicController = widget.controller ?? KMapController();
       if (delegate != null) _publicController.attachDelegate(delegate);
     }
-    if (widget.fitContent &&
-        (oldWidget.pins != widget.pins ||
-            oldWidget.routes != widget.routes ||
-            oldWidget.zones != widget.zones ||
-            oldWidget.fitPadding != widget.fitPadding ||
-            oldWidget.fitContentPadding != widget.fitContentPadding)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _fitContent());
+    if (!oldWidget.fitContentOnLoad && widget.fitContentOnLoad) {
+      _initialFitComplete = false;
+      _scheduleInitialFit();
+    }
+    final fitInputChanged =
+        oldWidget.pins != widget.pins ||
+        oldWidget.routes != widget.routes ||
+        oldWidget.zones != widget.zones ||
+        oldWidget.fitPadding != widget.fitPadding ||
+        oldWidget.fitContentPadding != widget.fitContentPadding;
+    if (fitInputChanged) {
+      if (widget.fitContent) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _fitContent());
+      }
+      if (widget.fitContentOnLoad && !_initialFitComplete) {
+        _scheduleInitialFit();
+      }
     }
   }
 
@@ -235,7 +247,11 @@ class _KMapState extends State<KMap> {
       // content fit after the style becomes ready.
       _syncCamera = false;
       _scheduleRendererSync(blur: true);
-      unawaited(_fitAfterRendererLayout());
+      if (widget.fitContentOnLoad && !_initialFitComplete) {
+        _scheduleInitialFit();
+      } else if (widget.fitContent) {
+        unawaited(_fitAfterRendererLayout());
+      }
     } else {
       _scheduleRendererSync(camera: true, blur: true);
     }
@@ -252,7 +268,41 @@ class _KMapState extends State<KMap> {
     WidgetsBinding.instance.scheduleFrame();
     await WidgetsBinding.instance.endOfFrame;
     if (!mounted || !identical(_controller, controller)) return;
-    await _fitContent(force: widget.fitContentOnLoad);
+    await _fitContent();
+  }
+
+  void _scheduleInitialFit() {
+    if (_initialFitComplete || _initialFitRunning) return;
+    _initialFitRunning = true;
+    unawaited(_fitInitialContentAfterStableLayout());
+  }
+
+  Future<void> _fitInitialContentAfterStableLayout() async {
+    try {
+      final controller = _controller;
+      if (_status != _KMapStatus.ready || controller == null) return;
+      Size? previousSize;
+      var stableFrames = 0;
+      var sampledFrames = 0;
+      while (mounted && stableFrames < 2 && sampledFrames < 60) {
+        sampledFrames += 1;
+        WidgetsBinding.instance.scheduleFrame();
+        await WidgetsBinding.instance.endOfFrame;
+        if (!mounted || !identical(_controller, controller)) return;
+        final box = _viewportKey.currentContext?.findRenderObject();
+        if (box is! RenderBox || !box.hasSize || box.size.isEmpty) return;
+        stableFrames = box.size == previousSize ? stableFrames + 1 : 0;
+        previousSize = box.size;
+      }
+      if (stableFrames < 2) return;
+      requestKMapRendererResize(controller);
+      WidgetsBinding.instance.scheduleFrame();
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted || !identical(_controller, controller)) return;
+      _initialFitComplete = await _fitContent(force: true);
+    } finally {
+      _initialFitRunning = false;
+    }
   }
 
   void _scheduleRendererSync({bool camera = false, bool blur = false}) {
@@ -342,14 +392,22 @@ class _KMapState extends State<KMap> {
     }
   }
 
-  Future<void> _fitContent({bool force = false}) async {
-    if ((!widget.fitContent && !force) || !_publicController.isReady) return;
-    await _publicController.fitCoordinates([
+  Future<bool> _fitContent({bool force = false}) async {
+    if ((!widget.fitContent && !force) || !_publicController.isReady) {
+      return false;
+    }
+    final coordinates = [
       for (final pin in widget.pins) pin.position,
       for (final route in widget.routes) ...route.coordinates,
       for (final zone in widget.zones)
         for (final polygon in zone.geometry) ...polygon.outer,
-    ], padding: widget.fitContentPadding ?? EdgeInsets.all(widget.fitPadding));
+    ];
+    if (coordinates.isEmpty) return false;
+    await _publicController.fitCoordinates(
+      coordinates,
+      padding: widget.fitContentPadding ?? EdgeInsets.all(widget.fitPadding),
+    );
+    return _publicController.isReady;
   }
 
   void _zoomBy(double delta) {
@@ -395,6 +453,9 @@ class _KMapState extends State<KMap> {
       final box = _viewportKey.currentContext?.findRenderObject();
       if (box is RenderBox && box.hasSize) {
         _publicController.viewport = box.localToGlobal(Offset.zero) & box.size;
+        if (widget.fitContentOnLoad && !_initialFitComplete) {
+          _scheduleInitialFit();
+        }
       }
     });
     final surface = Listener(

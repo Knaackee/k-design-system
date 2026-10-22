@@ -50,6 +50,16 @@ export function CalendarEvent<T>({
         className="k-calendar-event-content"
         role="button"
         tabIndex={0}
+        onClick={(event) => {
+          if (
+            (event.target as HTMLElement).closest(
+              "button,input,select,textarea,a,[contenteditable=true]",
+            )
+          )
+            return;
+          if (!props.onEventMove && !props.onEventDropOutside)
+            props.onEventOpen?.(entry.event);
+        }}
         onKeyDown={(e) => {
           if (e.target !== e.currentTarget) return;
           if (e.key === "Enter" || e.key === " ") {

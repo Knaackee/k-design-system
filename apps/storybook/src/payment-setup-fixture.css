@@ -1,0 +1,11 @@
+.k-payment-setup-fixture {
+  width: 100%;
+  max-width: var(--k-layout-content-width);
+  min-width: 0;
+  margin-inline: auto;
+  padding-block: var(--k-space-layout-section-gap);
+}
+
+.k-payment-setup-fixture__muted {
+  color: var(--k-color-text-muted);
+}

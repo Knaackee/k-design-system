@@ -41,6 +41,27 @@ void main() {
     expect(changed, KMapDayPanelState.compact);
   });
 
+  testWidgets('medium sheet keeps timeline visible on short phones', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(width: 390, height: 490));
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getSize(find.byKey(const ValueKey('k-map-day-sheet'))).height,
+      360,
+    );
+    expect(find.byKey(const ValueKey('k-map-day-timeline')), findsOneWidget);
+    expect(find.byKey(const ValueKey('k-map-day-item-travel')), findsOneWidget);
+
+    await tester.tap(find.bySemanticsLabel('Ansicht verkleinern'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('k-map-day-timeline')), findsNothing);
+    await tester.tap(find.bySemanticsLabel('Ansicht vergrößern'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('k-map-day-timeline')), findsOneWidget);
+  });
+
   testWidgets('reports list and map selection through separate callbacks', (
     tester,
   ) async {
@@ -83,6 +104,165 @@ void main() {
 
     expect(event?.itemId, 'stop');
     expect(event?.actionId, 'details');
+  });
+
+  testWidgets('opens touch-friendly route information next to the time', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(width: 900));
+
+    final trigger = find.bySemanticsLabel('Routeninformationen anzeigen');
+    expect(trigger, findsOneWidget);
+    expect(tester.getSize(trigger).shortestSide, greaterThanOrEqualTo(44));
+    await tester.tap(trigger);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Von: Betrieb\n\nNach: Kundin'), findsOneWidget);
+    await tester.tapAt(const Offset(4, 4));
+    await tester.pumpAndSettle();
+    expect(find.text('Von: Betrieb\n\nNach: Kundin'), findsNothing);
+  });
+
+  testWidgets('system back dismisses route information without leaving day', (
+    tester,
+  ) async {
+    var backAttempts = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(extensions: const [KDesignTokens.orbitLight]),
+        home: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) backAttempts++;
+          },
+          child: SizedBox(
+            width: 390,
+            height: 800,
+            child: KMapDayView(
+              items: _items,
+              currentTime: 615,
+              title: 'Mein Tag',
+              dayLabel: 'Donnerstag, 22. Oktober',
+              mapBuilder: (context, mapContext) =>
+                  const ColoredBox(color: Colors.blueGrey),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.bySemanticsLabel('Routeninformationen anzeigen'));
+    await tester.pumpAndSettle();
+    expect(find.text('Von: Betrieb\n\nNach: Kundin'), findsOneWidget);
+
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Von: Betrieb\n\nNach: Kundin'), findsNothing);
+    expect(find.byType(KMapDayView), findsOneWidget);
+    expect(backAttempts, 0);
+  });
+
+  testWidgets('aligns item title, time, and route info on the first line', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(width: 390));
+
+    final title = tester.getRect(find.text('Mit dem Auto'));
+    final time = tester.getRect(find.text('10:00'));
+    final routeInfo = tester.getRect(
+      find.byKey(const ValueKey('k-map-day-route-info-travel')),
+    );
+    final routeHeader = tester.getRect(
+      find.byKey(const ValueKey('k-map-day-item-header-travel')),
+    );
+    final routeIcon = tester.getRect(
+      find.byKey(const ValueKey('k-map-day-item-icon-travel')),
+    );
+    final plainHeader = tester.getRect(
+      find.byKey(const ValueKey('k-map-day-item-header-stop')),
+    );
+    final plainIcon = tester.getRect(
+      find.byKey(const ValueKey('k-map-day-item-icon-stop')),
+    );
+    expect(title.center.dy, closeTo(time.center.dy, .01));
+    expect(title.center.dy, closeTo(routeInfo.center.dy, .01));
+    expect(routeIcon.center.dy, closeTo(routeHeader.center.dy, .01));
+    expect(plainIcon.center.dy, closeTo(plainHeader.center.dy, .01));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('selection uses a subtle fill and accent station circle', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(width: 390, defaultSelectedItemId: 'travel'));
+
+    final card = tester.widget<Container>(
+      find.byKey(const ValueKey('k-map-day-item-card-travel')),
+    );
+    final circle = tester.widget<Container>(
+      find.byKey(const ValueKey('k-map-day-item-icon-travel')),
+    );
+    final cardDecoration = card.decoration! as BoxDecoration;
+    final circleDecoration = circle.decoration! as BoxDecoration;
+    expect(
+      cardDecoration.color,
+      KDesignTokens.orbitLight.colorStatusInfoBackground,
+    );
+    expect(cardDecoration.border, isNull);
+    expect(
+      circleDecoration.color,
+      KDesignTokens.orbitLight.colorStatusInfoAccent,
+    );
+  });
+
+  testWidgets('only truncates details backed by accessible route info', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(width: 900));
+
+    final routeDetail = tester.widget<Text>(find.text('20 Min. · 6,4 km'));
+    final plainDetail = tester.widget<Text>(
+      find.text('Kollwitzstraße 30 · 45 Min.'),
+    );
+    expect(routeDetail.maxLines, 2);
+    expect(routeDetail.overflow, TextOverflow.ellipsis);
+    expect(plainDetail.maxLines, isNull);
+    expect(plainDetail.overflow, isNull);
+  });
+
+  testWidgets('uses compact item typography only in the mobile sheet', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(width: 390));
+    var title = tester.widget<Text>(find.text('Mit dem Auto'));
+    var detail = tester.widget<Text>(find.text('20 Min. · 6,4 km'));
+    expect(title.style?.fontSize, KDesignTokens.orbitLight.fontBodySmallSize);
+    expect(title.style?.fontWeight, FontWeight.w500);
+    expect(detail.style?.fontSize, KDesignTokens.orbitLight.fontCaptionSize);
+
+    await tester.pumpWidget(_app(width: 900));
+    title = tester.widget<Text>(find.text('Mit dem Auto'));
+    detail = tester.widget<Text>(find.text('20 Min. · 6,4 km'));
+    expect(title.style?.fontSize, KDesignTokens.orbitLight.fontBodySize);
+    expect(detail.style?.fontSize, KDesignTokens.orbitLight.fontBodySmallSize);
+  });
+
+  test('formats entries crossing the selected civil day', () {
+    expect(formatKMapDayTime(-30), '23:30 (Vortag)');
+    expect(formatKMapDayTime(1470), '00:30 (Folgetag)');
+    expect(
+      () => const KMapDayItem(
+        id: 'overnight',
+        start: -30,
+        end: 30,
+        title: 'Nachtfahrt',
+        detail: '60 Min.',
+        icon: KIconName.car,
+        kind: KMapDayItemKind.travel,
+      ),
+      returnsNormally,
+    );
   });
 
   testWidgets('controller reports actual extent without controlled snapback', (
@@ -234,6 +414,7 @@ const _items = [
     detail: '20 Min. · 6,4 km',
     icon: KIconName.car,
     kind: KMapDayItemKind.travel,
+    routeDescription: 'Von: Betrieb\n\nNach: Kundin',
   ),
   KMapDayItem(
     id: 'stop',

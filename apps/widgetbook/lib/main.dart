@@ -1,3 +1,4 @@
+import 'payment_setup_fixture.dart';
 import 'files_home_fixture.dart';
 import 'screen_switcher_prototype.dart';
 import 'cover_flow_fixture.dart';
@@ -286,6 +287,18 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'Mobile',
                   builder: buildMapZoneEditorMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'Fullscreen · Desktop',
+                  builder: buildMapZoneEditorFullscreenDesktop,
+                ),
+                WidgetbookUseCase(
+                  name: 'Fullscreen · Mobile',
+                  builder: buildMapZoneEditorFullscreenMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'Fullscreen · Empty',
+                  builder: buildMapZoneEditorFullscreenEmpty,
                 ),
               ],
             ),
@@ -1168,6 +1181,48 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'PaymentSetup',
+              children: [
+                WidgetbookUseCase(
+                  name: 'payment-setup-needs-correction',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.needsCorrection,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-connected',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.connected,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-action-required',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.actionRequired,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-pending',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.pending,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-ready',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.ready,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-long-content',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.needsCorrection,
+                    longContent: true,
+                  ),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Integrations',
               children: [

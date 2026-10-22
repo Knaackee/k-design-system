@@ -5,6 +5,8 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { KPopover } from "../extended-components.js";
+import { KIconButton } from "../actions/icon-button.js";
 import { KButton } from "../primitives/button.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import {
@@ -22,6 +24,8 @@ export interface KMapDayItem {
   expectedStart?: number;
   title: string;
   detail: string;
+  /** Human-readable route endpoints, exposed beside the time. */
+  routeDescription?: string;
   icon: KIconName;
   kind: "stop" | "travel";
   actions?: readonly { id: string; label: string; icon?: KIconName }[];
@@ -310,6 +314,7 @@ export function KMapDayView({
                   key={item.id}
                   className={`k-day-entry k-day-entry--${item.kind}`}
                   data-past={item.end <= currentTime && !active}
+                  data-selected={selected === item.id}
                   aria-current={active ? "step" : undefined}
                 >
                   <div className="k-day-entry__rail">
@@ -317,7 +322,10 @@ export function KMapDayView({
                       <KIcon name={item.icon} size={18} />
                     </span>
                   </div>
-                  <div className="k-day-entry__main">
+                  <div
+                    className="k-day-entry__main"
+                    data-route-info={!!item.routeDescription}
+                  >
                     <button
                       data-item-id={item.id}
                       className="k-day-entry__content"
@@ -326,7 +334,9 @@ export function KMapDayView({
                     >
                       <span className="k-day-entry__top">
                         <strong>{item.title}</strong>
-                        <time>{formatTime(item.start)}</time>
+                        <span className="k-day-entry__time">
+                          <time>{formatTime(item.start)}</time>
+                        </span>
                       </span>
                       <span className="k-day-muted">{item.detail}</span>
                       {forecast && (
@@ -346,6 +356,26 @@ export function KMapDayView({
                         </span>
                       )}
                     </button>
+                    {item.routeDescription && (
+                      <span className="k-day-entry__info">
+                        <KPopover
+                          portal
+                          align="end"
+                          label="Routendetails"
+                          trigger={
+                            <KIconButton
+                              icon="info"
+                              label={`Routendetails: ${item.title}`}
+                              variant="ghost"
+                            />
+                          }
+                        >
+                          <div className="k-day-route-info">
+                            {item.routeDescription}
+                          </div>
+                        </KPopover>
+                      </span>
+                    )}
                     {renderItemDetails?.(item)}
                     {item.actions?.length ? (
                       <div className="k-day-entry__actions">

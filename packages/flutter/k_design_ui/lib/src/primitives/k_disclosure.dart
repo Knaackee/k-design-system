@@ -91,7 +91,9 @@ class _KDisclosureState extends State<KDisclosure> {
       }
     }
 
-    return DecoratedBox(
+    // Container includes the normal disclosure border in layout, as Web does.
+    // Compact presentation has no border and keeps its existing geometry.
+    return Container(
       decoration: BoxDecoration(
         color: compact ? Colors.transparent : t.colorSurfaceCanvas,
         border: compact

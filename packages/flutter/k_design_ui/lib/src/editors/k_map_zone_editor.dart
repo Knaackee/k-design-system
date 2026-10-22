@@ -158,6 +158,7 @@ class KMapZoneEditor extends StatefulWidget {
     this.onValidationError,
     this.selectedZoneId,
     this.zoom = 13,
+    this.showZoomControls = true,
     this.labels = const KMapZoneEditorLabels(),
     this.disabled = false,
     this.postalAreas = const [],
@@ -172,6 +173,7 @@ class KMapZoneEditor extends StatefulWidget {
     this.panelOpen,
     this.defaultPanelOpen = false,
     this.onPanelOpenChange,
+    this.onExitRequested,
     this.fitMaxZoom = 17.5,
     this.fitDuration = const Duration(milliseconds: 320),
     super.key,
@@ -179,6 +181,7 @@ class KMapZoneEditor extends StatefulWidget {
   final String mapStyle;
   final KMapCenter center;
   final double zoom;
+  final bool showZoomControls;
   final List<KMapZone> zones;
   final String? selectedZoneId;
   final KMapZonesChanged onChange;
@@ -197,6 +200,10 @@ class KMapZoneEditor extends StatefulWidget {
   final bool? panelOpen;
   final bool defaultPanelOpen;
   final ValueChanged<bool>? onPanelOpenChange;
+
+  /// Called after internal panels and unsaved editor changes have been handled.
+  /// The consumer owns the route or host-screen exit that follows.
+  final VoidCallback? onExitRequested;
 
   /// Extra logical pixels reserved for a consumer-owned bottom overlay.
   final double bottomOverlayInset;
@@ -1097,7 +1104,7 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
       });
     }
     return PopScope(
-      canPop: !_open && !_dirty,
+      canPop: widget.onExitRequested == null && !_open && !_dirty,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
           if (_open) {
@@ -1105,7 +1112,13 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
             return;
           }
           _guard(() {
-            if (mounted) Navigator.of(context).pop(result);
+            if (!mounted) return;
+            final onExitRequested = widget.onExitRequested;
+            if (onExitRequested != null) {
+              onExitRequested();
+            } else {
+              Navigator.of(context).pop(result);
+            }
           });
         }
       },
@@ -1162,6 +1175,7 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
                           blurSigma: emptyIdle ? 6 : 0,
                           center: widget.center,
                           zoom: widget.zoom,
+                          showZoomControls: widget.showZoomControls,
                           controller: _mapController,
                           onViewChange: (view) {
                             if (_view != view && mounted) {

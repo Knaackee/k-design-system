@@ -151,6 +151,8 @@ class _KCalendarTimeDayState<T extends Object>
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final compactEventHeight =
+        t.fontLabelLineHeight + t.fontCaptionLineHeight + t.spaceTight * 2;
     final visible = widget.events.where((e) {
       final a = widget.start(e);
       final b = widget.end(e);
@@ -371,52 +373,71 @@ class _KCalendarTimeDayState<T extends Object>
                   ),
                 ),
                 for (final rect in laidOut)
-                  Positioned(
-                    top:
-                        (math.max(c.startHour * 60, rect.start) -
-                            c.startHour * 60) /
-                        60 *
-                        c.hourHeight,
-                    left: rect.lane / rect.lanes * size.maxWidth + 4,
-                    width: size.maxWidth / rect.lanes - 8,
-                    height: math.max(
-                      24,
-                      (math.min(c.endHour * 60, rect.end) -
-                              math.max(c.startHour * 60, rect.start)) /
-                          60 *
-                          c.hourHeight,
-                    ),
-                    child: Opacity(
-                      // Preserve the active event's layout slot while its
-                      // floating feedback follows the pointer.
-                      opacity:
-                          widget.previewMoveId != null &&
-                              c.eventId(rect.event) == widget.previewMoveId
-                          ? 0
-                          : 1,
-                      child: widget.eventWidget(rect.event, compact: false),
-                    ),
+                  Builder(
+                    builder: (context) {
+                      final eventHeight = math.max(
+                        t.componentCalendarEventMinHeight,
+                        (math.min(c.endHour * 60, rect.end) -
+                                math.max(c.startHour * 60, rect.start)) /
+                            60 *
+                            c.hourHeight,
+                      );
+                      return Positioned(
+                        top:
+                            (math.max(c.startHour * 60, rect.start) -
+                                c.startHour * 60) /
+                            60 *
+                            c.hourHeight,
+                        left: rect.lane / rect.lanes * size.maxWidth + 4,
+                        width: size.maxWidth / rect.lanes - 8,
+                        height: eventHeight,
+                        child: Opacity(
+                          // Preserve the active event's layout slot while its
+                          // floating feedback follows the pointer.
+                          opacity:
+                              widget.previewMoveId != null &&
+                                  c.eventId(rect.event) == widget.previewMoveId
+                              ? 0
+                              : 1,
+                          child: widget.eventWidget(
+                            rect.event,
+                            compact: eventHeight < compactEventHeight,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 if (active != null &&
                     previewIntersects &&
                     !preview.start.allDay &&
                     previewEnd > previewStart)
-                  Positioned(
-                    left: t.spaceTight,
-                    right: t.spaceTight,
-                    top: (previewStart - c.startHour * 60) / 60 * c.hourHeight,
-                    height: math.max(
-                      t.componentCalendarEventMinHeight,
-                      (previewEnd - previewStart) / 60 * c.hourHeight,
-                    ),
-                    child: IgnorePointer(
-                      child: SizedBox.expand(
-                        child: Opacity(
-                          opacity: t.componentCalendarDragOpacity,
-                          child: widget.eventWidget(active, compact: false),
+                  Builder(
+                    builder: (context) {
+                      final previewHeight = math.max(
+                        t.componentCalendarEventMinHeight,
+                        (previewEnd - previewStart) / 60 * c.hourHeight,
+                      );
+                      return Positioned(
+                        left: t.spaceTight,
+                        right: t.spaceTight,
+                        top:
+                            (previewStart - c.startHour * 60) /
+                            60 *
+                            c.hourHeight,
+                        height: previewHeight,
+                        child: IgnorePointer(
+                          child: SizedBox.expand(
+                            child: Opacity(
+                              opacity: t.componentCalendarDragOpacity,
+                              child: widget.eventWidget(
+                                active,
+                                compact: previewHeight < compactEventHeight,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 if (shownSelection != null || shownHover != null)
                   Positioned(

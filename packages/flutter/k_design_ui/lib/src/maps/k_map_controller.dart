@@ -160,7 +160,12 @@ class KMapController extends ChangeNotifier {
     await delegate.fitBounds(
       bounds: maplibre.LngLatBounds.fromPoints(points),
       padding: padding,
-      nativeDuration: duration,
+      // Android MapLibre rejects a zero millisecond native camera animation.
+      // Keep reduced-motion fits effectively immediate while supplying the
+      // positive duration required by the native API.
+      nativeDuration: duration == Duration.zero
+          ? const Duration(milliseconds: 1)
+          : duration,
       webMaxDuration: duration,
       webMaxZoom: maxZoom,
     );

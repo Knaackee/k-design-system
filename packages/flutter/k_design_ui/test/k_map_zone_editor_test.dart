@@ -32,6 +32,8 @@ Future<ValueNotifier<KMapZoneUndoAction?>> mount(
   ValueChanged<bool>? pendingChanged,
   ValueChanged<String?>? selectedChanged,
   bool open = false,
+  bool showZoomControls = true,
+  VoidCallback? onExitRequested,
   Size size = const Size(1200, 850),
   List<KMapPostalArea> postalAreas = const [],
 }) async {
@@ -49,6 +51,8 @@ Future<ValueNotifier<KMapZoneUndoAction?>> mount(
             zones: zones,
             postalAreas: postalAreas,
             selectedZoneId: zones.isEmpty ? null : zones.first.id,
+            showZoomControls: showZoomControls,
+            onExitRequested: onExitRequested,
             defaultPanelOpen: open,
             propertyOptions: options,
             onPendingChangesChanged: pendingChanged,
@@ -220,6 +224,13 @@ void main() {
         zones.value = [zone];
         await tester.pumpAndSettle();
         expect(bar, findsOneWidget);
+        final asynchronouslyLoadedMap = tester.widget<KMap>(find.byType(KMap));
+        expect(asynchronouslyLoadedMap.fitContentOnLoad, isTrue);
+        expect(asynchronouslyLoadedMap.zones.single.id, zone.id);
+        expect(
+          asynchronouslyLoadedMap.zones.single.coordinates,
+          zone.coordinates,
+        );
         tester.widget<KMap>(find.byType(KMap)).onZoneClick!(zone.id);
         await tester.pumpAndSettle();
         expect(bar, findsOneWidget);
@@ -958,6 +969,31 @@ void main() {
       expect(find.byKey(const ValueKey('zone-dirty-feedback')), findsOneWidget);
       expect(find.text('Übernehmen'), findsOneWidget);
       expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('host can hide map zoom controls for a fullscreen composition', (
+    tester,
+  ) async {
+    await mount(tester, showZoomControls: false);
+
+    expect(tester.widget<KMap>(find.byType(KMap)).showZoomControls, isFalse);
+  });
+
+  testWidgets(
+    'fullscreen back closes the editor panel before requesting exit',
+    (tester) async {
+      var exitRequests = 0;
+      await mount(tester, open: true, onExitRequested: () => exitRequests++);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(exitRequests, 0);
+      expect(find.byTooltip('Zone hinzufügen'), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(exitRequests, 1);
     },
   );
 }

@@ -32,10 +32,10 @@ class KMapDayItem {
     required this.detail,
     required this.icon,
     required this.kind,
+    this.routeDescription,
     this.expectedStart,
     this.actions = const [],
-  }) : assert(start >= 0 && start <= 1440),
-       assert(end >= start && end <= 1440),
+  }) : assert(end >= start),
        assert(expectedStart == null || expectedStart >= 0);
 
   final String id;
@@ -44,6 +44,7 @@ class KMapDayItem {
   final int? expectedStart;
   final String title;
   final String detail;
+  final String? routeDescription;
   final KIconName icon;
   final KMapDayItemKind kind;
   final List<KMapDayAction> actions;

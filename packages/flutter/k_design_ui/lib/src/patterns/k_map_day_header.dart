@@ -24,10 +24,10 @@ Widget buildKMapDayHeader({
   final current = currentKMapDayItem(items, currentTime);
   return Padding(
     padding: EdgeInsets.fromLTRB(
-      tokens.spaceHairline * (sheet ? 20 : 24),
-      tokens.spaceHairline * (sheet ? 0 : 24),
-      tokens.spaceHairline * (sheet ? 20 : 24),
-      tokens.spaceHairline * (sheet ? 12 : 16),
+      tokens.spaceLayoutGutter,
+      sheet ? 0 : tokens.spaceLayoutGutter,
+      tokens.spaceLayoutGutter,
+      tokens.spaceControlGap,
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,21 +39,15 @@ Widget buildKMapDayHeader({
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  KText(
-                    dayLabel,
-                    variant: KTextVariant.bodySmall,
-                    style: TextStyle(color: tokens.colorTextMuted),
-                  ),
-                  SizedBox(height: tokens.spaceHairline * 5),
-                  KText(
-                    title,
-                    variant: KTextVariant.heading3,
-                    style: TextStyle(
-                      fontSize:
-                          tokens.fontBodySize * (sheet ? 21 / 14 : 23 / 14),
-                      letterSpacing: tokens.spaceHairline * -.6,
+                  if (dayLabel.isNotEmpty) ...[
+                    KText(
+                      dayLabel,
+                      variant: KTextVariant.caption,
+                      style: TextStyle(color: tokens.colorTextMuted),
                     ),
-                  ),
+                    SizedBox(height: tokens.spaceTight),
+                  ],
+                  KText(title, variant: KTextVariant.heading6),
                 ],
               ),
             ),
@@ -76,42 +70,40 @@ Widget buildKMapDayHeader({
           ],
         ),
         if (summary != null) ...[
-          SizedBox(height: tokens.spaceHairline * 8),
+          SizedBox(height: tokens.spaceTight),
           DefaultTextStyle.merge(
             style: TextStyle(
               color: tokens.colorTextMuted,
               fontFamily: tokens.fontFamily,
-              fontSize: tokens.fontCaptionSize,
+              fontSize: tokens.fontBodySmallSize,
+              height: tokens.fontBodySmallLineHeight / tokens.fontBodySmallSize,
             ),
             child: summary,
           ),
         ],
         if (showCurrentTime) ...[
-          SizedBox(height: tokens.spaceHairline * 18),
+          SizedBox(height: tokens.spaceContentActionGap),
           DecoratedBox(
             decoration: BoxDecoration(
               color: tokens.colorStatusInfoBackground,
               borderRadius: BorderRadius.circular(tokens.radiusControl),
             ),
             child: Padding(
-              padding: EdgeInsets.all(tokens.spaceHairline * 12),
+              padding: EdgeInsets.all(tokens.spaceControlInsetInline),
               child: Row(
                 children: [
                   KIcon(
                     KIconName.clock,
-                    size: 16,
+                    size: tokens.sizeContent,
                     color: tokens.colorStatusInfoForeground,
                   ),
-                  SizedBox(width: tokens.spaceHairline * 12),
+                  SizedBox(width: tokens.spaceControlGap),
                   Expanded(
                     child: KText(
                       '${formatTime(currentTime)} · ${labels.now}\n'
                       '${current?.title ?? labels.outside}',
                       variant: KTextVariant.caption,
-                      style: TextStyle(
-                        color: tokens.colorStatusInfoForeground,
-                        height: tokens.spaceHairline * 1.6,
-                      ),
+                      style: TextStyle(color: tokens.colorStatusInfoForeground),
                     ),
                   ),
                 ],

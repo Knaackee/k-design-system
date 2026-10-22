@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
+import 'package:k_design_ui/src/patterns/k_calendar_event.dart';
 import 'package:k_design_ui/src/patterns/k_calendar_time_day.dart';
 import 'package:k_design_ui/src/patterns/k_calendar_days.dart';
 
@@ -123,6 +124,60 @@ void main() {
       }
     },
   );
+
+  testWidgets('thirty-minute week events use the compact event layout', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(412, 915));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    bool? compact;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(brightness: Brightness.light),
+        home: Scaffold(
+          body: KCalendar<_Event>(
+            date: DateTime(2026, 9, 21),
+            view: KCalendarView.week,
+            events: [
+              _Event(
+                start: DateTime(2026, 9, 21, 9),
+                end: DateTime(2026, 9, 21, 9, 30),
+              ),
+            ],
+            eventId: (_) => 'short-event',
+            eventStart: (event) => event.start,
+            eventEnd: (event) => event.end,
+            eventBuilder: (_, event) {
+              compact = event.compact;
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Short appointment',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (!event.compact) const Text('Appointment details'),
+                ],
+              );
+            },
+            startHour: 7,
+            endHour: 19,
+            height: 680,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(compact, isTrue);
+    expect(find.text('Short appointment'), findsOneWidget);
+    expect(find.text('Appointment details'), findsNothing);
+    expect(tester.getSize(find.byType(KCalendarEvent<_Event>)).height, 28);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets(
     'create preview is scoped to one day and controlled cancellation clears it',

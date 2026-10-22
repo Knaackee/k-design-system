@@ -1,6 +1,10 @@
 {
   "version": 1,
   "entries": {
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_controller.dart|motion|? const Duration(milliseconds: 1)": {
+      "count": 1,
+      "reason": "Native Android MapLibre requires a positive fitBounds duration; 1ms is an API compatibility minimum for reduced motion, not a visual animation duration."
+    },
     "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionHoldDuration = const Duration(milliseconds: 324),": {
       "count": 1,
       "reason": "Consumer-overridable FAB peek hold matching the visually accepted Web animation; documented in docs/chat-bubble.md."

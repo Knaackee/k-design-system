@@ -1,6 +1,6 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@k-design-system/ui/maps.css";
-import { useMemo, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { action } from "storybook/actions";
@@ -18,7 +18,13 @@ import {
   LIGHT_MAP_TOKENS,
 } from "@k-design-system/ui/maps";
 
-import { KButton, KSnackbar, KToastViewport } from "@k-design-system/ui";
+import {
+  KAdaptiveDialog,
+  KButton,
+  KIconButton,
+  KSnackbar,
+  KToastViewport,
+} from "@k-design-system/ui";
 
 setWorkerUrl(workerUrl);
 
@@ -177,6 +183,7 @@ interface Args {
   zones: readonly KMapZone[];
   selectedZoneId: string | null;
   compact: boolean;
+  fullscreen: boolean;
   startCenter: [number, number];
 }
 
@@ -190,6 +197,21 @@ function Example({
   update: (values: Partial<Args>) => void;
 }) {
   const [undoAction, setUndoAction] = useState<KMapZoneUndoAction | null>(null);
+  const [saved, setSaved] = useState(() => JSON.stringify(args.zones));
+  const [pending, setPending] = useState(false);
+  const [editorReset, setEditorReset] = useState(0);
+  const [confirmExit, setConfirmExit] = useState(false);
+  const [notice, setNotice] = useState("");
+  const hasChanges = JSON.stringify(args.zones) !== saved;
+  const save = () => {
+    setSaved(JSON.stringify(args.zones));
+    setNotice("Gebiete gespeichert");
+    action("onSave")(args.zones);
+  };
+  const exit = () => {
+    action("onExit")();
+    setNotice("Zurück zur Verwaltung – Navigation im Storybook-Beispiel");
+  };
   const mapStyle = useMemo(
     () => createMapStyle({ tokens: dark ? DARK_MAP_TOKENS : LIGHT_MAP_TOKENS }),
     [dark],
@@ -197,12 +219,57 @@ function Example({
   return (
     <div
       style={
-        args.compact
-          ? { width: "100%", maxWidth: 390, minWidth: 0, overflow: "clip" }
-          : { width: "calc(100vw - 32px)", maxWidth: "100%", minWidth: 0 }
+        args.fullscreen
+          ? ({
+              position: "fixed",
+              inset: 0,
+              overflow: "hidden",
+              "--k-map-zone-editor-height": "100dvh",
+            } as CSSProperties)
+          : args.compact
+            ? { width: "100%", maxWidth: 390, minWidth: 0, overflow: "clip" }
+            : { width: "calc(100vw - 32px)", maxWidth: "100%", minWidth: 0 }
       }
     >
+      {args.fullscreen && (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 2,
+            top: "max(env(safe-area-inset-top), var(--k-space-card-padding))",
+            left: "var(--k-space-card-padding)",
+          }}
+        >
+          <KIconButton
+            icon="arrow-left"
+            label="Zurück zur Verwaltung"
+            variant="secondary"
+            onClick={() => {
+              if (hasChanges || pending) setConfirmExit(true);
+              else exit();
+            }}
+          />
+        </div>
+      )}
+      {args.fullscreen && hasChanges && !pending && (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 2,
+            top: "max(env(safe-area-inset-top), var(--k-space-card-padding))",
+            right: "var(--k-space-card-padding)",
+          }}
+        >
+          <KIconButton
+            icon="cloud-upload"
+            label="Gebiete speichern"
+            variant="secondary"
+            onClick={save}
+          />
+        </div>
+      )}
       <KMapZoneEditor
+        key={editorReset}
         zones={args.zones}
         selectedZoneId={args.selectedZoneId}
         postalAreas={postalAreas}
@@ -245,6 +312,7 @@ function Example({
           zoom: 13.6,
           fitContent: true,
           fitPadding: 64,
+          showZoomControls: !args.fullscreen,
         }}
         onChange={(zones) => {
           action("onChange")(zones);
@@ -254,10 +322,57 @@ function Example({
           action("onSelect")(selectedZoneId);
           update({ selectedZoneId });
         }}
+        onPendingChangesChanged={setPending}
         onValidationError={action("onValidationError")}
         onUndoActionChange={setUndoAction}
       />
+      {args.fullscreen && (
+        <KAdaptiveDialog
+          open={confirmExit}
+          onOpenChange={setConfirmExit}
+          title="Änderungen speichern?"
+          actions={
+            <>
+              <KButton
+                variant="secondary"
+                onClick={() => setConfirmExit(false)}
+              >
+                Weiter bearbeiten
+              </KButton>
+              <KButton
+                variant="secondary"
+                onClick={() => {
+                  update({ zones: JSON.parse(saved) });
+                  setEditorReset((value) => value + 1);
+                  setPending(false);
+                  setConfirmExit(false);
+                  exit();
+                }}
+              >
+                Verwerfen
+              </KButton>
+              <KButton
+                disabled={pending}
+                onClick={() => {
+                  save();
+                  setConfirmExit(false);
+                  exit();
+                }}
+              >
+                Speichern
+              </KButton>
+            </>
+          }
+        >
+          {pending
+            ? "Übernimm zuerst die Änderungen im Karteneditor oder verwirf sie beim Verlassen."
+            : "Deine Änderungen gelten nach dem Speichern direkt für neue Buchungen."}
+        </KAdaptiveDialog>
+      )}
       <KToastViewport position="bottom-center">
+        {notice && (
+          <KSnackbar message={notice} onDismiss={() => setNotice("")} />
+        )}
         {undoAction && (
           <KSnackbar
             message={undoAction.message}
@@ -296,6 +411,7 @@ const meta = {
     zones: berlinZones,
     selectedZoneId: null,
     compact: false,
+    fullscreen: false,
     startCenter: [13.397, 52.5205],
   },
   argTypes: {
@@ -402,5 +518,31 @@ export const OverlapMobile: Story = {
         },
       },
     },
+  },
+};
+
+// Consumer navigation/persistence are simulated here; geometry editing remains
+// entirely in the delivered KMapZoneEditor, ready for later host integration.
+export const FullscreenDesktop: Story = {
+  name: "Vollbild · Desktop",
+  args: { fullscreen: true, selectedZoneId: null },
+  parameters: { fixtureId: "map-zone-editor-fullscreen-desktop" },
+};
+export const FullscreenMobile: Story = {
+  ...Mobile,
+  name: "Vollbild · Mobil",
+  args: { fullscreen: true, compact: true, selectedZoneId: null },
+  parameters: {
+    ...Mobile.parameters,
+    fixtureId: "map-zone-editor-fullscreen-mobile",
+  },
+};
+export const FullscreenEmpty: Story = {
+  ...FullscreenMobile,
+  name: "Vollbild · Erste Zone",
+  args: { fullscreen: true, compact: true, zones: [], selectedZoneId: null },
+  parameters: {
+    ...Mobile.parameters,
+    fixtureId: "map-zone-editor-fullscreen-empty",
   },
 };

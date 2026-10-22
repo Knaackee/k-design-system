@@ -3,6 +3,7 @@ import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { KMapZoneEditor } from "./dist/editors/index.js";
+import { zoneEditorFitCoordinates } from "./dist/editors/map-zone-editor-fit.js";
 import { kDefaultMapZoneEditorLabels } from "./dist/editors/map-zone-editor-labels.js";
 import {
   screenSpacedRingHandles,
@@ -99,6 +100,17 @@ test("a concrete selection adds properties to the bounded bottom pill", () => {
   assert.match(html, />Mitte<\/span>/);
   assert.match(html, /aria-label="Zoneneigenschaften bearbeiten"/);
   assert.doesNotMatch(html, /k-map-zone-editor__name-bar/);
+});
+
+test("initial framing includes every zone before selection-driven fits", () => {
+  assert.deepEqual(
+    zoneEditorFitCoordinates(zones, "mitte", true),
+    zones.flatMap((zone) => zone.coordinates),
+  );
+  assert.deepEqual(
+    zoneEditorFitCoordinates(zones, "mitte", false),
+    zones[1].coordinates,
+  );
 });
 
 test("a single selected zone keeps the normal toolbar visible in SSR", () => {

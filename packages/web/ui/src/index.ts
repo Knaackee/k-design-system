@@ -39,6 +39,13 @@ export type {
 } from "./primitives/layout.js";
 export { KCard } from "./primitives/card.js";
 export { KBrowserTaskCard } from "./patterns/browser-task-card.js";
+export { KPaymentSetup } from "./patterns/payment-setup.js";
+export type {
+  KPaymentSetupProps,
+  KPaymentSetupState,
+  KPaymentSetupStep,
+  KPaymentSetupAction,
+} from "./patterns/payment-setup.js";
 export type { KBrowserTaskCardProps } from "./patterns/browser-task-card.js";
 export { KDialog, KAdaptiveDialog, KBottomSheet } from "./overlays/overlay.js";
 export { KPageSheet } from "./overlays/page-sheet.js";

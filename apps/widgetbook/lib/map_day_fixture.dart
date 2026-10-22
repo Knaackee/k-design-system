@@ -252,6 +252,9 @@ const _dayStops = <_DayStop>[
       end: 570,
       title: 'Mit dem Auto',
       detail: '20 Min. · 6,4 km · zum Parkplatz am Ziel',
+      routeDescription:
+          'Von: Parkplatz am Museum\nInvalidenstraße 44, 10115 Berlin\n\n'
+          'Nach: Parkplatz am Ziel\nKollwitzplatz, 10405 Berlin',
       icon: KIconName.car,
       kind: KMapDayItemKind.travel,
     ),
