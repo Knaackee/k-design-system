@@ -233,6 +233,23 @@ export function FormFixture({
     const Control = kind === "select" ? KSelect : KCombobox;
     content = (
       <KStack align="stretch" gap="section">
+        {kind === "select" && (
+          <KSelect
+            expandedPopup
+            label="Conversation"
+            value="conversation"
+            onValueChange={() => {}}
+            options={[
+              {
+                value: "conversation",
+                label:
+                  "A long conversation about open tasks and recent changes",
+                description: "21.10.2026, 17:30",
+              },
+            ]}
+          />
+        )}
+
         <KField label="Assignee" helperText="Sam is unavailable.">
           <Control
             options={people}

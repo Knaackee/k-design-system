@@ -537,6 +537,8 @@ export function useCalendarInteraction<T>(
       target.closest("button,input,select,textarea,a,[contenteditable=true]")
     )
       return;
+    // Read-only events use native click activation without capturing scroll gestures.
+    if (entry && !edge && !p.onEventMove && !p.onEventDropOutside) return;
     const origin = hit(e.clientX, e.clientY);
     if (!origin) return;
     e.stopPropagation();

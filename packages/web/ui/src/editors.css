@@ -1,3 +1,5 @@
+@import "./editors/map-zone-editor.css";
+
 .k-markdown-editor,
 .k-code-editor {
   --k-editor-background: var(--k-color-surface-canvas);

@@ -41,6 +41,15 @@ function ComposerFixture({ mobile = false }: { mobile?: boolean }) {
           onStop={() => undefined}
           onVoiceInput={() => undefined}
         />
+        <KChatComposer
+          value={value}
+          onValueChange={setValue}
+          onSubmit={() => setValue("")}
+          runState="streaming"
+          allowSubmitWhileRunning
+          onStop={() => undefined}
+          onVoiceInput={() => undefined}
+        />
         {[
           KDictationState.processing,
           KDictationState.unavailable,

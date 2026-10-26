@@ -10,6 +10,7 @@ const sourceFiles = {
   semantic: "tokens/semantic.tokens.json",
   orbitLight: "tokens/themes/orbit.light.tokens.json",
   orbitDark: "tokens/themes/orbit.dark.tokens.json",
+  mapDark: "tokens/themes/map.dark.tokens.json",
   referenceLight: "tokens/themes/reference.light.tokens.json",
   referenceDark: "tokens/themes/reference.dark.tokens.json",
 };
@@ -193,6 +194,7 @@ function dartType(token) {
     number: "double",
     duration: "Duration",
     fontFamily: "String",
+    string: "String",
     fontWeight: "FontWeight",
     shadow: "List<BoxShadow>",
   }[token.type];
@@ -222,6 +224,8 @@ function dartValue(token) {
       return JSON.stringify(
         `packages/k_design_tokens/${String(token.value).split(",")[0].trim()}`,
       );
+    case "string":
+      return JSON.stringify(token.value);
     case "fontWeight":
       return `FontWeight.w${token.value}`;
     case "shadow":
@@ -333,9 +337,15 @@ export async function generate() {
   const semantic = flattenTokens(sources.semantic);
   const themeOverrides = {
     orbitLight: flattenTokens(sources.orbitLight),
-    orbitDark: flattenTokens(sources.orbitDark),
+    orbitDark: new Map([
+      ...flattenTokens(sources.mapDark),
+      ...flattenTokens(sources.orbitDark),
+    ]),
     referenceLight: flattenTokens(sources.referenceLight),
-    referenceDark: flattenTokens(sources.referenceDark),
+    referenceDark: new Map([
+      ...flattenTokens(sources.mapDark),
+      ...flattenTokens(sources.referenceDark),
+    ]),
   };
   const themes = {
     orbitLight: resolvedSemantic(
@@ -368,7 +378,20 @@ export async function generate() {
   const themeCss = `${cssBlock(':root, [data-brand="orbit"][data-theme="light"]', themes.orbitLight, semantic, themeOverrides.orbitLight)}\n\n${cssBlock('[data-theme="dark"], [data-brand="orbit"][data-theme="dark"]', themes.orbitDark, semantic, themeOverrides.orbitDark)}\n\n${cssBlock('[data-brand="reference"][data-theme="light"]', themes.referenceLight, semantic, themeOverrides.referenceLight)}\n\n${cssBlock('[data-brand="reference"][data-theme="dark"]', themes.referenceDark, semantic, themeOverrides.referenceDark)}`;
   const css = `/* GENERATED FILE. DO NOT EDIT. */\n@layer k-design-theme, k-design-mode;\n\n@layer k-design-theme {\n${themeCss}\n}\n\n@layer k-design-mode {\n${variantCss}\n}\n`;
   const names = [...semantic.keys()];
-  const typescript = `// GENERATED FILE. DO NOT EDIT.\nexport const tokenNames = ${JSON.stringify(names, null, 2)} as const;\nexport type KTokenName = (typeof tokenNames)[number];\nexport const cssVariable = (token: KTokenName): string => \`--k-\${token.replace(/\\./g, "-").replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}\`;\n`;
+  const mapTokenValues = Object.fromEntries(
+    [
+      ["light", themes.orbitLight],
+      ["dark", themes.orbitDark],
+    ].map(([theme, values]) => [
+      theme,
+      Object.fromEntries(
+        [...values]
+          .filter(([path]) => path.startsWith("map."))
+          .map(([path, token]) => [path, token.value]),
+      ),
+    ]),
+  );
+  const typescript = `// GENERATED FILE. DO NOT EDIT.\nexport const tokenNames = ${JSON.stringify(names, null, 2)} as const;\nexport type KTokenName = (typeof tokenNames)[number];\nexport const mapTokenValues = ${JSON.stringify(mapTokenValues, null, 2)} as const;\nexport const cssVariable = (token: KTokenName): string => \`--k-\${token.replace(/\\./g, "-").replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}\`;\n`;
   const flat = `${JSON.stringify(
     {
       ...Object.fromEntries(

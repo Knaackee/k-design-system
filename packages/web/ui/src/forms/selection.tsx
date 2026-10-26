@@ -15,6 +15,7 @@ import { ClearButton } from "./clear-button.js";
 export interface KSelectOption {
   value: string;
   label: string;
+  description?: string;
   disabled?: boolean;
   icon?: KIconName;
   /** Decorative media; takes precedence over icon and imageSrc. */
@@ -28,6 +29,8 @@ export interface KSelectProps {
   onValuesChange?: (values: string[]) => void;
   selectionLabel?: string;
   presentation?: "standard" | "inline";
+  /** Picker-width popup, bounded by the viewport, with concise option labels. */
+  expandedPopup?: boolean;
   options: readonly KSelectOption[];
   value?: string | null;
   defaultValue?: string;
@@ -75,6 +78,7 @@ function Selection({
   optionsLabel,
   noResultsLabel,
   onClear,
+  expandedPopup = false,
   presentation = "standard",
   searchable,
 }: KSelectProps & { searchable: boolean }) {
@@ -151,6 +155,10 @@ function Selection({
     }
   }
   function choose(next: string) {
+    // Close before dispatching the controlled change callback. Consumers may
+    // synchronously rerender this control, so closing afterwards can leave the
+    // previous popup alive through that update.
+    if (!multiple) close();
     if (native.current) {
       if (multiple) {
         for (const option of native.current.options)
@@ -161,7 +169,6 @@ function Selection({
       } else native.current.value = next;
       native.current.dispatchEvent(new Event("change", { bubbles: true }));
     }
-    if (!multiple) close();
     input.current?.focus();
   }
   useEffect(() => {
@@ -199,8 +206,17 @@ function Selection({
     panel.showPopover();
     function position() {
       const rect = target.current!.getBoundingClientRect();
-      panel!.style.width = `${Math.min(rect.width, innerWidth - 16)}px`;
-      panel!.style.left = `${Math.max(8, Math.min(rect.left, innerWidth - rect.width - 8))}px`;
+      const pickerWidth = parseFloat(
+        getComputedStyle(target.current!).getPropertyValue(
+          "--k-layout-picker-width",
+        ),
+      );
+      const width = Math.min(
+        Math.max(rect.width, expandedPopup ? pickerWidth : 0),
+        innerWidth - 16,
+      );
+      panel!.style.width = `${width}px`;
+      panel!.style.left = `${Math.max(8, Math.min(rect.left, innerWidth - width - 8))}px`;
       const gap = parseFloat(
         getComputedStyle(target.current!).getPropertyValue(
           "--k-space-control-gap",
@@ -240,7 +256,7 @@ function Selection({
       window.removeEventListener("resize", position);
       window.removeEventListener("scroll", onScroll, true);
     };
-  }, [open]);
+  }, [open, expandedPopup]);
   useEffect(() => {
     if (open)
       document
@@ -454,6 +470,7 @@ function Selection({
           ref={popup}
           popover="manual"
           className="k-select-list"
+          data-expanded={expandedPopup || undefined}
           id={`${id}-list`}
           role="listbox"
           aria-multiselectable={multiple || undefined}
@@ -472,13 +489,24 @@ function Selection({
               onPointerMove={() => {
                 if (!option.disabled) setActive(option.value);
               }}
-              onClick={() => {
+              onClick={(event) => {
+                // This popup can be composed inside a consumer-owned <label>.
+                // Suppress label activation so the forwarded click cannot
+                // reopen the trigger immediately after a single selection.
+                event.preventDefault();
                 if (!option.disabled) choose(option.value);
               }}
             >
               <span className="k-select-option__label">
                 <OptionMedia {...option} />
-                <span>{option.label}</span>
+                <span className="k-select-option__text">
+                  <span className="k-select-option__title">{option.label}</span>
+                  {option.description && (
+                    <span className="k-select-option__description">
+                      {option.description}
+                    </span>
+                  )}
+                </span>
               </span>
               {multiple ? (
                 <KIcon

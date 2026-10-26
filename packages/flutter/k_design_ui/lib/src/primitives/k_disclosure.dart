@@ -16,6 +16,7 @@ class KDisclosure extends StatefulWidget {
     this.actions,
     this.open,
     this.defaultOpen = false,
+    this.scrollOnOpen = false,
     this.onOpenChange,
     this.disabled = false,
     this.presentation = KDisclosurePresentation.normal,
@@ -34,6 +35,7 @@ class KDisclosure extends StatefulWidget {
   final Widget? actions;
   final bool? open;
   final bool defaultOpen;
+  final bool scrollOnOpen;
   final ValueChanged<bool>? onOpenChange;
   final bool disabled;
   final KDisclosurePresentation presentation;
@@ -74,9 +76,24 @@ class _KDisclosureState extends State<KDisclosure> {
       final next = !expanded;
       if (widget.open == null) setState(() => _open = next);
       widget.onOpenChange?.call(next);
+      if (next && widget.scrollOnOpen) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Scrollable.ensureVisible(
+            context,
+            alignment: 0,
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : t.motionEntry,
+            curve: Curves.easeOutCubic,
+          );
+        });
+      }
     }
 
-    return DecoratedBox(
+    // Container includes the normal disclosure border in layout, as Web does.
+    // Compact presentation has no border and keeps its existing geometry.
+    return Container(
       decoration: BoxDecoration(
         color: compact ? Colors.transparent : t.colorSurfaceCanvas,
         border: compact

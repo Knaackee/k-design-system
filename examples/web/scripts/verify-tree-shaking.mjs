@@ -51,6 +51,13 @@ const bundledBytes = result.outputFiles.reduce(
   0,
 );
 assert.ok(
+  !contributions.some(
+    ({ input, bytes }) =>
+      bytes > 0 && /maplibre|\/maps\/|\/patterns\/map\.js/.test(input),
+  ),
+  "A button-only consumer must not include MapLibre or map style code.",
+);
+assert.ok(
   bundledBytes < 10_000,
   `The isolated KButton bundle is unexpectedly large (${bundledBytes} bytes).`,
 );
@@ -58,3 +65,23 @@ assert.ok(
 console.log(
   `Tree-shaking verified: KButton retained; Calendar and charts removed (${bundledBytes} bytes).`,
 );
+
+const styleOnly = await build({
+  stdin: {
+    contents: 'export { createMapStyle } from "@k-design-system/ui/maps";',
+    resolveDir: projectDirectory,
+    sourcefile: "map-style-consumer.ts",
+  },
+  bundle: true,
+  format: "esm",
+  metafile: true,
+  platform: "browser",
+  write: false,
+});
+assert.ok(
+  !Object.keys(styleOnly.metafile.inputs).some((input) =>
+    /maplibre-gl[\\/](dist|src)[\\/]/.test(input),
+  ),
+  "The standalone style factory must not load the MapLibre renderer.",
+);
+console.log("Map style factory verified: no MapLibre renderer in its bundle.");

@@ -62,6 +62,14 @@
       "types": "./dist/patterns/*.d.ts",
       "import": "./dist/patterns/*.js"
     },
+    "./maps/*": {
+      "types": "./dist/maps/*.d.ts",
+      "import": "./dist/maps/*.js"
+    },
+    "./maps": {
+      "types": "./dist/maps/index.d.ts",
+      "import": "./dist/maps/index.js"
+    },
     "./pickers/*": {
       "types": "./dist/pickers/*.d.ts",
       "import": "./dist/pickers/*.js"
@@ -74,7 +82,24 @@
       "types": "./dist/extended-components.d.ts",
       "import": "./dist/extended-components.js"
     },
-    "./styles.css": "./src/styles.css"
+    "./styles.css": "./src/styles.css",
+    "./core.css": "./src/core.css",
+    "./forms.css": "./src/forms.css",
+    "./actions.css": "./src/actions.css",
+    "./overlays.css": "./src/overlays.css",
+    "./basic-components.css": "./src/basic-components.css",
+    "./localization": {
+      "types": "./dist/localization/provider.d.ts",
+      "import": "./dist/localization/provider.js"
+    },
+    "./editors/map-zone-editor": {
+      "types": "./dist/editors/map-zone-editor.d.ts",
+      "import": "./dist/editors/map-zone-editor.js"
+    },
+    "./map-zone-editor.css": "./src/editors/map-zone-editor.css",
+    "./maps.css": "./src/patterns/map.css",
+    "./map-day-view.css": "./src/patterns/map-day-view.css",
+    "./map-location-picker.css": "./src/patterns/map-location-picker.css"
   },
   "files": [
     "dist",
@@ -122,8 +147,10 @@
     "apple-liquid-glass-webgl": "^2.5.0",
     "cmdk": "^1.1.1",
     "codemirror": "^6.0.2",
+    "maplibre-gl": "6.15.0",
     "morphicons": "1.7.1",
     "motion": "^13.4.0",
+    "polygon-clipping": "0.15.7",
     "react-modal-sheet": "^5.6.0",
     "streamdown": "^2.6.0",
     "vis-timeline": "8.5.4",

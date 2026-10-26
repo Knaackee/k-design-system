@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_button.dart';
 import 'action_control.dart';
 
 class KIconButton extends StatefulWidget {
@@ -9,6 +10,7 @@ class KIconButton extends StatefulWidget {
     required this.onPressed,
     this.iconContent,
     this.selected = false,
+    this.variant = KButtonVariant.ghost,
     super.key,
   });
   final String label;
@@ -18,6 +20,7 @@ class KIconButton extends StatefulWidget {
   final Widget? iconContent;
   final VoidCallback? onPressed;
   final bool selected;
+  final KButtonVariant variant;
   @override
   State<KIconButton> createState() => _KIconButtonState();
 }
@@ -40,6 +43,7 @@ class _KIconButtonState extends State<KIconButton> {
       iconContent: widget.iconContent,
       iconOnly: true,
       selected: widget.selected,
+      variant: widget.variant,
       focusNode: _focus,
       onPressed: widget.onPressed,
     ),

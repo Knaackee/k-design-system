@@ -1,3 +1,4 @@
+import 'payment_setup_fixture.dart';
 import 'files_home_fixture.dart';
 import 'screen_switcher_prototype.dart';
 import 'cover_flow_fixture.dart';
@@ -81,6 +82,11 @@ import 'orbit_fixture.dart';
 import 'activity_fixture.dart';
 import 'dicebear_avatar_fixture.dart';
 import 'integrations_fixture.dart';
+import 'map_fixture.dart';
+import 'map_day_fixture.dart';
+import 'map_location_picker_fixture.dart';
+import 'map_overlays_fixture.dart';
+import 'map_zone_editor_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -205,6 +211,108 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        WidgetbookCategory(
+          name: 'Maps',
+          children: [
+            WidgetbookFolder(
+              name: 'Map Overlays',
+              children: [
+                WidgetbookUseCase(name: 'Pins', builder: buildMapOverlaysPins),
+                WidgetbookUseCase(
+                  name: 'Logo Pins',
+                  builder: buildMapOverlaysLogoPins,
+                ),
+                WidgetbookUseCase(
+                  name: 'Custom Pins',
+                  builder: buildMapOverlaysCustomPins,
+                ),
+                WidgetbookUseCase(
+                  name: 'Routes',
+                  builder: buildMapOverlaysRoutes,
+                ),
+                WidgetbookUseCase(
+                  name: 'Pins And Route',
+                  builder: buildMapOverlaysPinsAndRoute,
+                ),
+                WidgetbookUseCase(
+                  name: 'Traffic Segments',
+                  builder: buildMapOverlaysTrafficSegments,
+                ),
+                WidgetbookUseCase(
+                  name: 'Draggable Pins',
+                  builder: buildMapOverlaysDraggablePins,
+                ),
+                WidgetbookUseCase(
+                  name: 'Long Press Pins',
+                  builder: buildMapOverlaysLongPressPins,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Day view',
+              children: [
+                WidgetbookUseCase(name: 'Day', builder: buildMapDayDesktop),
+                WidgetbookUseCase(name: 'Tablet', builder: buildMapDayTablet),
+                WidgetbookUseCase(name: 'Mobile', builder: buildMapDayMobile),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Location Picker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Desktop',
+                  builder: buildMapLocationPickerDesktop,
+                ),
+                WidgetbookUseCase(
+                  name: 'Mobile',
+                  builder: buildMapLocationPickerMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'Custom leading',
+                  builder: buildMapLocationPickerCustomLeading,
+                ),
+                WidgetbookUseCase(
+                  name: 'Bare pin',
+                  builder: buildMapLocationPickerBarePin,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Zone Editor',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Desktop',
+                  builder: buildMapZoneEditorDesktop,
+                ),
+                WidgetbookUseCase(
+                  name: 'Mobile',
+                  builder: buildMapZoneEditorMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'Fullscreen · Desktop',
+                  builder: buildMapZoneEditorFullscreenDesktop,
+                ),
+                WidgetbookUseCase(
+                  name: 'Fullscreen · Mobile',
+                  builder: buildMapZoneEditorFullscreenMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'Fullscreen · Empty',
+                  builder: buildMapZoneEditorFullscreenEmpty,
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'Map',
+              children: [
+                WidgetbookUseCase(
+                  name: 'Map',
+                  builder: MapFixtureSession().build,
+                ),
+              ],
+            ),
+          ],
+        ),
         WidgetbookCategory(
           name: 'Components',
           children: [
@@ -1073,6 +1181,48 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(
+              name: 'PaymentSetup',
+              children: [
+                WidgetbookUseCase(
+                  name: 'payment-setup-needs-correction',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.needsCorrection,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-connected',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.connected,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-action-required',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.actionRequired,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-pending',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.pending,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-ready',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.ready,
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'payment-setup-long-content',
+                  builder: (_) => const PaymentSetupFixture(
+                    state: KPaymentSetupState.needsCorrection,
+                    longContent: true,
+                  ),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Integrations',
               children: [

@@ -98,8 +98,9 @@ class KButton extends StatelessWidget {
               TextStyle(
                 fontFamily: tokens.fontFamily,
                 fontSize: tokens.fontControlSize,
-                // Match the Web control line box while allowing scaled text growth.
-                height: tokens.fontTightHeight,
+                // Keep glyph descenders inside the line box used by Web and
+                // Flutter overflow handling.
+                height: tokens.fontRelaxedHeight,
                 // CSS centers leading evenly above and below the font metrics.
                 leadingDistribution: TextLeadingDistribution.even,
                 fontWeight: tokens.fontControlWeight,

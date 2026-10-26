@@ -244,6 +244,178 @@
       "type": "color",
       "value": "#ffffff1a"
     },
+    "map.color.background": {
+      "type": "color",
+      "value": "#F5F5F5"
+    },
+    "map.color.water": {
+      "type": "color",
+      "value": "#AADAFF"
+    },
+    "map.color.waterLabel": {
+      "type": "color",
+      "value": "#4A86B8"
+    },
+    "map.color.park": {
+      "type": "color",
+      "value": "#CEEAD6"
+    },
+    "map.color.wood": {
+      "type": "color",
+      "value": "#C3E3CC"
+    },
+    "map.color.grass": {
+      "type": "color",
+      "value": "#D8EFDD"
+    },
+    "map.color.cemetery": {
+      "type": "color",
+      "value": "#DCEBDF"
+    },
+    "map.color.landuseResidential": {
+      "type": "color",
+      "value": "#F1F1F1"
+    },
+    "map.color.landuseIndustrial": {
+      "type": "color",
+      "value": "#ECECF0"
+    },
+    "map.color.landuseCommercial": {
+      "type": "color",
+      "value": "#F3F0F0"
+    },
+    "map.color.landuseHospital": {
+      "type": "color",
+      "value": "#F8E3E3"
+    },
+    "map.color.landuseSchool": {
+      "type": "color",
+      "value": "#F4EFDF"
+    },
+    "map.color.sand": {
+      "type": "color",
+      "value": "#F4EEDB"
+    },
+    "map.color.aeroway": {
+      "type": "color",
+      "value": "#E4E6EA"
+    },
+    "map.color.building": {
+      "type": "color",
+      "value": "#E9E9E9"
+    },
+    "map.color.buildingOutline": {
+      "type": "color",
+      "value": "#DCDCDE"
+    },
+    "map.color.road": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.color.roadCasing": {
+      "type": "color",
+      "value": "#DADCE0"
+    },
+    "map.color.roadMinor": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.color.roadMinorCasing": {
+      "type": "color",
+      "value": "#E3E5E8"
+    },
+    "map.color.path": {
+      "type": "color",
+      "value": "#C9CCD1"
+    },
+    "map.color.motorway": {
+      "type": "color",
+      "value": "#FDE293"
+    },
+    "map.color.motorwayCasing": {
+      "type": "color",
+      "value": "#F1C64B"
+    },
+    "map.color.trunk": {
+      "type": "color",
+      "value": "#FFF1BF"
+    },
+    "map.color.trunkCasing": {
+      "type": "color",
+      "value": "#EDCF7B"
+    },
+    "map.color.rail": {
+      "type": "color",
+      "value": "#BDC1C6"
+    },
+    "map.color.boundary": {
+      "type": "color",
+      "value": "#B5B8BD"
+    },
+    "map.color.label": {
+      "type": "color",
+      "value": "#5F6368"
+    },
+    "map.color.labelStrong": {
+      "type": "color",
+      "value": "#3C4043"
+    },
+    "map.color.labelSubtle": {
+      "type": "color",
+      "value": "#80868B"
+    },
+    "map.color.labelHalo": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.color.poiFood": {
+      "type": "color",
+      "value": "#E37400"
+    },
+    "map.color.poiShop": {
+      "type": "color",
+      "value": "#3F7FDB"
+    },
+    "map.color.poiHealth": {
+      "type": "color",
+      "value": "#D9534F"
+    },
+    "map.color.poiEducation": {
+      "type": "color",
+      "value": "#7E63C6"
+    },
+    "map.color.poiLeisure": {
+      "type": "color",
+      "value": "#2E8B57"
+    },
+    "map.color.poiTransport": {
+      "type": "color",
+      "value": "#3B6FD4"
+    },
+    "map.color.poiOther": {
+      "type": "color",
+      "value": "#7A8088"
+    },
+    "map.color.poiStroke": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.opacity.tunnel": {
+      "type": "number",
+      "value": 0.55
+    },
+    "map.font.regular": {
+      "type": "string",
+      "value": "Noto Sans Regular"
+    },
+    "map.font.bold": {
+      "type": "string",
+      "value": "Noto Sans Bold"
+    },
+    "map.font.italic": {
+      "type": "string",
+      "value": "Noto Sans Italic"
+    },
     "space.chartAxisGutter": {
       "type": "dimension",
       "value": {
@@ -3739,6 +3911,178 @@
     "color.glass.border": {
       "type": "color",
       "value": "#ffffff1a"
+    },
+    "map.color.background": {
+      "type": "color",
+      "value": "#1F2125"
+    },
+    "map.color.water": {
+      "type": "color",
+      "value": "#17263C"
+    },
+    "map.color.waterLabel": {
+      "type": "color",
+      "value": "#6F8FB3"
+    },
+    "map.color.park": {
+      "type": "color",
+      "value": "#1F3326"
+    },
+    "map.color.wood": {
+      "type": "color",
+      "value": "#1C3023"
+    },
+    "map.color.grass": {
+      "type": "color",
+      "value": "#21352A"
+    },
+    "map.color.cemetery": {
+      "type": "color",
+      "value": "#22342A"
+    },
+    "map.color.landuseResidential": {
+      "type": "color",
+      "value": "#212327"
+    },
+    "map.color.landuseIndustrial": {
+      "type": "color",
+      "value": "#24262B"
+    },
+    "map.color.landuseCommercial": {
+      "type": "color",
+      "value": "#25252A"
+    },
+    "map.color.landuseHospital": {
+      "type": "color",
+      "value": "#2E2426"
+    },
+    "map.color.landuseSchool": {
+      "type": "color",
+      "value": "#2B2924"
+    },
+    "map.color.sand": {
+      "type": "color",
+      "value": "#2C2A24"
+    },
+    "map.color.aeroway": {
+      "type": "color",
+      "value": "#2A2D32"
+    },
+    "map.color.building": {
+      "type": "color",
+      "value": "#2A2C31"
+    },
+    "map.color.buildingOutline": {
+      "type": "color",
+      "value": "#33363C"
+    },
+    "map.color.road": {
+      "type": "color",
+      "value": "#3C4043"
+    },
+    "map.color.roadCasing": {
+      "type": "color",
+      "value": "#2B2E33"
+    },
+    "map.color.roadMinor": {
+      "type": "color",
+      "value": "#34373B"
+    },
+    "map.color.roadMinorCasing": {
+      "type": "color",
+      "value": "#2A2D31"
+    },
+    "map.color.path": {
+      "type": "color",
+      "value": "#4A4E54"
+    },
+    "map.color.motorway": {
+      "type": "color",
+      "value": "#8A7333"
+    },
+    "map.color.motorwayCasing": {
+      "type": "color",
+      "value": "#5C4C22"
+    },
+    "map.color.trunk": {
+      "type": "color",
+      "value": "#5E5640"
+    },
+    "map.color.trunkCasing": {
+      "type": "color",
+      "value": "#3F3A2C"
+    },
+    "map.color.rail": {
+      "type": "color",
+      "value": "#4E535A"
+    },
+    "map.color.boundary": {
+      "type": "color",
+      "value": "#5F646B"
+    },
+    "map.color.label": {
+      "type": "color",
+      "value": "#B4B8BE"
+    },
+    "map.color.labelStrong": {
+      "type": "color",
+      "value": "#E2E4E7"
+    },
+    "map.color.labelSubtle": {
+      "type": "color",
+      "value": "#8A8F96"
+    },
+    "map.color.labelHalo": {
+      "type": "color",
+      "value": "#1F2125"
+    },
+    "map.color.poiFood": {
+      "type": "color",
+      "value": "#F29A3A"
+    },
+    "map.color.poiShop": {
+      "type": "color",
+      "value": "#6FA0EE"
+    },
+    "map.color.poiHealth": {
+      "type": "color",
+      "value": "#EE7A76"
+    },
+    "map.color.poiEducation": {
+      "type": "color",
+      "value": "#A68BE6"
+    },
+    "map.color.poiLeisure": {
+      "type": "color",
+      "value": "#4FB880"
+    },
+    "map.color.poiTransport": {
+      "type": "color",
+      "value": "#6E99EA"
+    },
+    "map.color.poiOther": {
+      "type": "color",
+      "value": "#9AA0A8"
+    },
+    "map.color.poiStroke": {
+      "type": "color",
+      "value": "#1F2125"
+    },
+    "map.opacity.tunnel": {
+      "type": "number",
+      "value": 0.5
+    },
+    "map.font.regular": {
+      "type": "string",
+      "value": "Noto Sans Regular"
+    },
+    "map.font.bold": {
+      "type": "string",
+      "value": "Noto Sans Bold"
+    },
+    "map.font.italic": {
+      "type": "string",
+      "value": "Noto Sans Italic"
     },
     "space.chartAxisGutter": {
       "type": "dimension",
@@ -7236,6 +7580,178 @@
       "type": "color",
       "value": "#ffffff1a"
     },
+    "map.color.background": {
+      "type": "color",
+      "value": "#F5F5F5"
+    },
+    "map.color.water": {
+      "type": "color",
+      "value": "#AADAFF"
+    },
+    "map.color.waterLabel": {
+      "type": "color",
+      "value": "#4A86B8"
+    },
+    "map.color.park": {
+      "type": "color",
+      "value": "#CEEAD6"
+    },
+    "map.color.wood": {
+      "type": "color",
+      "value": "#C3E3CC"
+    },
+    "map.color.grass": {
+      "type": "color",
+      "value": "#D8EFDD"
+    },
+    "map.color.cemetery": {
+      "type": "color",
+      "value": "#DCEBDF"
+    },
+    "map.color.landuseResidential": {
+      "type": "color",
+      "value": "#F1F1F1"
+    },
+    "map.color.landuseIndustrial": {
+      "type": "color",
+      "value": "#ECECF0"
+    },
+    "map.color.landuseCommercial": {
+      "type": "color",
+      "value": "#F3F0F0"
+    },
+    "map.color.landuseHospital": {
+      "type": "color",
+      "value": "#F8E3E3"
+    },
+    "map.color.landuseSchool": {
+      "type": "color",
+      "value": "#F4EFDF"
+    },
+    "map.color.sand": {
+      "type": "color",
+      "value": "#F4EEDB"
+    },
+    "map.color.aeroway": {
+      "type": "color",
+      "value": "#E4E6EA"
+    },
+    "map.color.building": {
+      "type": "color",
+      "value": "#E9E9E9"
+    },
+    "map.color.buildingOutline": {
+      "type": "color",
+      "value": "#DCDCDE"
+    },
+    "map.color.road": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.color.roadCasing": {
+      "type": "color",
+      "value": "#DADCE0"
+    },
+    "map.color.roadMinor": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.color.roadMinorCasing": {
+      "type": "color",
+      "value": "#E3E5E8"
+    },
+    "map.color.path": {
+      "type": "color",
+      "value": "#C9CCD1"
+    },
+    "map.color.motorway": {
+      "type": "color",
+      "value": "#FDE293"
+    },
+    "map.color.motorwayCasing": {
+      "type": "color",
+      "value": "#F1C64B"
+    },
+    "map.color.trunk": {
+      "type": "color",
+      "value": "#FFF1BF"
+    },
+    "map.color.trunkCasing": {
+      "type": "color",
+      "value": "#EDCF7B"
+    },
+    "map.color.rail": {
+      "type": "color",
+      "value": "#BDC1C6"
+    },
+    "map.color.boundary": {
+      "type": "color",
+      "value": "#B5B8BD"
+    },
+    "map.color.label": {
+      "type": "color",
+      "value": "#5F6368"
+    },
+    "map.color.labelStrong": {
+      "type": "color",
+      "value": "#3C4043"
+    },
+    "map.color.labelSubtle": {
+      "type": "color",
+      "value": "#80868B"
+    },
+    "map.color.labelHalo": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.color.poiFood": {
+      "type": "color",
+      "value": "#E37400"
+    },
+    "map.color.poiShop": {
+      "type": "color",
+      "value": "#3F7FDB"
+    },
+    "map.color.poiHealth": {
+      "type": "color",
+      "value": "#D9534F"
+    },
+    "map.color.poiEducation": {
+      "type": "color",
+      "value": "#7E63C6"
+    },
+    "map.color.poiLeisure": {
+      "type": "color",
+      "value": "#2E8B57"
+    },
+    "map.color.poiTransport": {
+      "type": "color",
+      "value": "#3B6FD4"
+    },
+    "map.color.poiOther": {
+      "type": "color",
+      "value": "#7A8088"
+    },
+    "map.color.poiStroke": {
+      "type": "color",
+      "value": "#ffffff"
+    },
+    "map.opacity.tunnel": {
+      "type": "number",
+      "value": 0.55
+    },
+    "map.font.regular": {
+      "type": "string",
+      "value": "Noto Sans Regular"
+    },
+    "map.font.bold": {
+      "type": "string",
+      "value": "Noto Sans Bold"
+    },
+    "map.font.italic": {
+      "type": "string",
+      "value": "Noto Sans Italic"
+    },
     "space.chartAxisGutter": {
       "type": "dimension",
       "value": {
@@ -10731,6 +11247,178 @@
     "color.glass.border": {
       "type": "color",
       "value": "#ffffff1a"
+    },
+    "map.color.background": {
+      "type": "color",
+      "value": "#1F2125"
+    },
+    "map.color.water": {
+      "type": "color",
+      "value": "#17263C"
+    },
+    "map.color.waterLabel": {
+      "type": "color",
+      "value": "#6F8FB3"
+    },
+    "map.color.park": {
+      "type": "color",
+      "value": "#1F3326"
+    },
+    "map.color.wood": {
+      "type": "color",
+      "value": "#1C3023"
+    },
+    "map.color.grass": {
+      "type": "color",
+      "value": "#21352A"
+    },
+    "map.color.cemetery": {
+      "type": "color",
+      "value": "#22342A"
+    },
+    "map.color.landuseResidential": {
+      "type": "color",
+      "value": "#212327"
+    },
+    "map.color.landuseIndustrial": {
+      "type": "color",
+      "value": "#24262B"
+    },
+    "map.color.landuseCommercial": {
+      "type": "color",
+      "value": "#25252A"
+    },
+    "map.color.landuseHospital": {
+      "type": "color",
+      "value": "#2E2426"
+    },
+    "map.color.landuseSchool": {
+      "type": "color",
+      "value": "#2B2924"
+    },
+    "map.color.sand": {
+      "type": "color",
+      "value": "#2C2A24"
+    },
+    "map.color.aeroway": {
+      "type": "color",
+      "value": "#2A2D32"
+    },
+    "map.color.building": {
+      "type": "color",
+      "value": "#2A2C31"
+    },
+    "map.color.buildingOutline": {
+      "type": "color",
+      "value": "#33363C"
+    },
+    "map.color.road": {
+      "type": "color",
+      "value": "#3C4043"
+    },
+    "map.color.roadCasing": {
+      "type": "color",
+      "value": "#2B2E33"
+    },
+    "map.color.roadMinor": {
+      "type": "color",
+      "value": "#34373B"
+    },
+    "map.color.roadMinorCasing": {
+      "type": "color",
+      "value": "#2A2D31"
+    },
+    "map.color.path": {
+      "type": "color",
+      "value": "#4A4E54"
+    },
+    "map.color.motorway": {
+      "type": "color",
+      "value": "#8A7333"
+    },
+    "map.color.motorwayCasing": {
+      "type": "color",
+      "value": "#5C4C22"
+    },
+    "map.color.trunk": {
+      "type": "color",
+      "value": "#5E5640"
+    },
+    "map.color.trunkCasing": {
+      "type": "color",
+      "value": "#3F3A2C"
+    },
+    "map.color.rail": {
+      "type": "color",
+      "value": "#4E535A"
+    },
+    "map.color.boundary": {
+      "type": "color",
+      "value": "#5F646B"
+    },
+    "map.color.label": {
+      "type": "color",
+      "value": "#B4B8BE"
+    },
+    "map.color.labelStrong": {
+      "type": "color",
+      "value": "#E2E4E7"
+    },
+    "map.color.labelSubtle": {
+      "type": "color",
+      "value": "#8A8F96"
+    },
+    "map.color.labelHalo": {
+      "type": "color",
+      "value": "#1F2125"
+    },
+    "map.color.poiFood": {
+      "type": "color",
+      "value": "#F29A3A"
+    },
+    "map.color.poiShop": {
+      "type": "color",
+      "value": "#6FA0EE"
+    },
+    "map.color.poiHealth": {
+      "type": "color",
+      "value": "#EE7A76"
+    },
+    "map.color.poiEducation": {
+      "type": "color",
+      "value": "#A68BE6"
+    },
+    "map.color.poiLeisure": {
+      "type": "color",
+      "value": "#4FB880"
+    },
+    "map.color.poiTransport": {
+      "type": "color",
+      "value": "#6E99EA"
+    },
+    "map.color.poiOther": {
+      "type": "color",
+      "value": "#9AA0A8"
+    },
+    "map.color.poiStroke": {
+      "type": "color",
+      "value": "#1F2125"
+    },
+    "map.opacity.tunnel": {
+      "type": "number",
+      "value": 0.5
+    },
+    "map.font.regular": {
+      "type": "string",
+      "value": "Noto Sans Regular"
+    },
+    "map.font.bold": {
+      "type": "string",
+      "value": "Noto Sans Bold"
+    },
+    "map.font.italic": {
+      "type": "string",
+      "value": "Noto Sans Italic"
     },
     "space.chartAxisGutter": {
       "type": "dimension",

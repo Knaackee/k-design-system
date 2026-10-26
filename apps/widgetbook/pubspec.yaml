@@ -23,6 +23,7 @@ dependencies:
   web: ^1.1.1
   card_stack_widget: 0.1.6
   coverflow_carousel: ^2.1.0
+  cupertino_icons: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -158,6 +158,14 @@ function Review({
         <div className="presentation-review__grid">
           <Section id="01" title="Bild, Titel & Text">
             <KPresentationCard
+              title="Offener Befund"
+              description="25 Ereignisse · Heute aktiv"
+              action={{
+                label: "Befund öffnen",
+                onClick: () => open("Offener Befund"),
+              }}
+            />
+            <KPresentationCard
               image={images[0]}
               eyebrow="Inspiration · 4 Minuten"
               title="Ein Wochenende am See"

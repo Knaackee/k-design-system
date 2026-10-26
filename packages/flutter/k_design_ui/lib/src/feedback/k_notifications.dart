@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../actions/k_icon_button.dart';
+import 'k_notification_height.dart';
 import '../primitives/k_icon.dart';
 
 enum KNotificationPosition { bottomEnd, topEnd, bottomCenter }
@@ -18,9 +19,12 @@ class KToastController {
   final VoidCallback? _onDismiss;
   late final OverlayEntry _entry;
   Timer? _timer;
+  Duration _exitDuration = Duration.zero;
+  ValueChanged<double>? _onHeightChanged;
   Stopwatch? _elapsed;
   Duration? _remaining;
   bool _dismissed = false, _visible = false, _hovered = false, _focused = false;
+  bool _removed = false;
   void _activate() {
     if (!_overlay.mounted) {
       dismiss();
@@ -45,6 +49,7 @@ class KToastController {
   }
 
   void _pause(bool hover, bool value) {
+    if (_dismissed) return;
     if (hover) {
       _hovered = value;
     } else {
@@ -64,14 +69,27 @@ class KToastController {
     if (_dismissed) return;
     _dismissed = true;
     _timer?.cancel();
+    if (_visible && _overlay.mounted && _exitDuration > Duration.zero) {
+      _entry.markNeedsBuild();
+      _timer = Timer(_exitDuration, _remove);
+    } else {
+      _remove();
+    }
+    _onDismiss?.call();
+  }
+
+  void _remove() {
+    if (_removed) return;
+    _removed = true;
+    _timer?.cancel();
     if (_visible) {
       if (_overlay.mounted) _entry.remove();
     }
     _entry.dispose();
+    if (_visible) _onHeightChanged?.call(0);
     final queue = _queues[_overlay];
     queue?.remove(this);
     if (_visible && queue != null && queue.isNotEmpty) queue.first._activate();
-    _onDismiss?.call();
   }
 }
 
@@ -80,12 +98,20 @@ KToastController _show(
   Duration duration,
   VoidCallback? onDismiss,
   Widget Function(VoidCallback) builder,
-  KNotificationPosition position,
-) {
+  KNotificationPosition position, {
+  double? bottomOffset,
+  double? maxWidth,
+  bool animateExit = false,
+  ValueChanged<double>? onHeightChanged,
+}) {
   final overlay = Overlay.of(context);
   final themes = InheritedTheme.capture(from: context, to: overlay.context);
   final t = Theme.of(context).extension<KDesignTokens>()!;
-  final controller = KToastController._(overlay, duration, onDismiss);
+  final controller = KToastController._(overlay, duration, onDismiss)
+    .._onHeightChanged = onHeightChanged
+    .._exitDuration = animateExit && !MediaQuery.disableAnimationsOf(context)
+        ? t.componentToastEntryDuration
+        : Duration.zero;
   controller._entry = OverlayEntry(
     builder: (context) => Positioned(
       left: t.componentToastViewportInset,
@@ -95,7 +121,7 @@ KToastController _show(
           : null,
       bottom: position == KNotificationPosition.topEnd
           ? null
-          : t.componentToastViewportInset,
+          : bottomOffset ?? t.componentToastViewportInset,
       child: SafeArea(
         child: Align(
           alignment: position == KNotificationPosition.bottomCenter
@@ -103,7 +129,7 @@ KToastController _show(
               : AlignmentDirectional.bottomEnd,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: math.max(0, t.componentToastViewportWidth),
+              maxWidth: math.max(0, maxWidth ?? t.componentToastViewportWidth),
             ),
             child: themes.wrap(
               Material(
@@ -116,7 +142,10 @@ KToastController _show(
                     child: Semantics(
                       liveRegion: true,
                       child: TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0, end: 1),
+                        tween: Tween(
+                          begin: 0,
+                          end: controller._dismissed ? 0 : 1,
+                        ),
                         duration: MediaQuery.disableAnimationsOf(context)
                             ? Duration.zero
                             : t.componentToastEntryDuration,
@@ -128,7 +157,23 @@ KToastController _show(
                             child: child,
                           ),
                         ),
-                        child: builder(controller.dismiss),
+                        child: KNotificationHeight(
+                          onHeightChanged: (height) {
+                            if (!controller._dismissed) {
+                              onHeightChanged?.call(height);
+                            }
+                          },
+                          child: IgnorePointer(
+                            ignoring: controller._dismissed,
+                            child: ExcludeSemantics(
+                              excluding: controller._dismissed,
+                              child: ExcludeFocus(
+                                excluding: controller._dismissed,
+                                child: builder(controller.dismiss),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -333,6 +378,10 @@ class KSnackbar extends StatelessWidget {
     KToastTone tone = KToastTone.neutral,
     Duration duration = const Duration(seconds: 4),
     KNotificationPosition position = KNotificationPosition.bottomCenter,
+    double? bottomOffset,
+    double? maxWidth,
+    bool animateExit = false,
+    ValueChanged<double>? onHeightChanged,
   }) => _show(
     context,
     duration,
@@ -346,6 +395,10 @@ class KSnackbar extends StatelessWidget {
       onDismiss: dismiss,
     ),
     position,
+    bottomOffset: bottomOffset,
+    maxWidth: maxWidth,
+    animateExit: animateExit,
+    onHeightChanged: onHeightChanged,
   );
   @override
   Widget build(BuildContext context) => KToast._snackbar(

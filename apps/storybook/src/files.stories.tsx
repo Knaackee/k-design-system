@@ -42,6 +42,12 @@ const nodes: KFileNode[] = [
       { id: "welcome", name: "Willkommen.md", kind: "file", detail: "2 KB" },
       { id: "project", name: "Projektplan.md", kind: "file", detail: "8 KB" },
       { id: "code", name: "example.ts", kind: "file" },
+      {
+        id: "archive",
+        name: "Archiv",
+        kind: "folder",
+        children: [{ id: "archived", name: "Notiz.md", kind: "file" }],
+      },
     ],
   },
   {

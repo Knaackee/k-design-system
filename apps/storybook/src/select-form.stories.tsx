@@ -15,6 +15,7 @@ const options = [
 ];
 export function NativeForm() {
   const [controlled, setControlled] = useState("de");
+  const [wrapped, setWrapped] = useState("de");
   const [changes, setChanges] = useState(0);
   const [submitted, setSubmitted] = useState("");
   return (
@@ -41,6 +42,15 @@ export function NativeForm() {
             onValueChange={setControlled}
           />
         </KField>
+        <label>
+          Wrapped
+          <KSelect
+            label="Wrapped"
+            options={options}
+            value={wrapped}
+            onValueChange={setWrapped}
+          />
+        </label>
         <KField label="Search">
           <KCombobox name="search" options={options} defaultValue="fr" />
         </KField>

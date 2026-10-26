@@ -42,6 +42,7 @@ try {
   );
   await country.click();
   await page.getByRole("option", { name: "France", exact: true }).click();
+  assert.equal(await country.getAttribute("aria-expanded"), "false");
   assert.equal(
     await page.getByLabel("Changes", { exact: true }).textContent(),
     "1",
@@ -52,6 +53,11 @@ try {
   });
   await controlled.click();
   await page.getByRole("option", { name: "France", exact: true }).click();
+  assert.equal(await controlled.getAttribute("aria-expanded"), "false");
+  const wrapped = page.getByRole("combobox", { name: "Wrapped", exact: true });
+  await wrapped.click();
+  await page.getByRole("option", { name: "France", exact: true }).click();
+  assert.equal(await wrapped.getAttribute("aria-expanded"), "false");
   await page.getByRole("button", { name: "Submit", exact: true }).click();
   assert.deepEqual(
     JSON.parse(
@@ -68,8 +74,17 @@ try {
   assert.equal(await page.locator('select[name="country"]').inputValue(), "");
   assert.equal(
     await page.getByLabel("Changes", { exact: true }).textContent(),
-    "2",
+    "3",
   );
+  await page.goto(
+    "http://localhost:6006/iframe.html?id=forms-select--multiple&viewMode=story",
+  );
+  const multiple = page.getByRole("combobox").first();
+  await multiple.waitFor();
+  await multiple.click();
+  const firstOption = page.getByRole("option").first();
+  await firstOption.click();
+  assert.equal(await multiple.getAttribute("aria-expanded"), "true");
   console.log(
     "PASS select: native validation, focus, submission, change bubbling, controlled/uncontrolled reset, disabled omission",
   );

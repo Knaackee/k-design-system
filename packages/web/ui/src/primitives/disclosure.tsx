@@ -1,4 +1,11 @@
-import { useId, useState, type HTMLAttributes, type ReactNode } from "react";
+import {
+  useId,
+  useState,
+  useRef,
+  useEffect,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import { KIcon } from "./icon.js";
 
 export interface KDisclosureProps extends Omit<
@@ -12,6 +19,8 @@ export interface KDisclosureProps extends Omit<
   actions?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
+  /** Reveal newly expanded content within its nearest scroll container. */
+  scrollOnOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
 }
@@ -24,6 +33,7 @@ export function KDisclosure({
   actions,
   open,
   defaultOpen = false,
+  scrollOnOpen = false,
   onOpenChange,
   disabled = false,
   className,
@@ -32,6 +42,39 @@ export function KDisclosure({
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const expanded = open ?? internalOpen;
   const id = useId();
+  const root = useRef<HTMLElement>(null);
+  const previouslyExpanded = useRef(expanded);
+  useEffect(() => {
+    const opening = expanded && !previouslyExpanded.current;
+    previouslyExpanded.current = expanded;
+    if (!opening || !scrollOnOpen) return;
+    const frame = requestAnimationFrame(() => {
+      const element = root.current;
+      if (!element) return;
+      let parent = element.parentElement;
+      while (
+        parent &&
+        !/(auto|scroll)/.test(getComputedStyle(parent).overflowY)
+      )
+        parent = parent.parentElement;
+      if (!parent) return;
+      const bounds = element.getBoundingClientRect();
+      const viewport = parent.getBoundingClientRect();
+      if (bounds.bottom <= viewport.bottom && bounds.top >= viewport.top)
+        return;
+      const distance = Math.min(
+        bounds.top - viewport.top,
+        bounds.bottom - viewport.bottom,
+      );
+      parent.scrollTo({
+        top: parent.scrollTop + distance,
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+      });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [expanded, scrollOnOpen]);
   const toggle = () => {
     const next = !expanded;
     if (open === undefined) setInternalOpen(next);
@@ -40,6 +83,7 @@ export function KDisclosure({
 
   return (
     <section
+      ref={root}
       className={["k-disclosure", className].filter(Boolean).join(" ")}
       {...props}
     >

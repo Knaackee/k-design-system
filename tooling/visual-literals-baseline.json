@@ -1,6 +1,10 @@
 {
   "version": 1,
   "entries": {
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_controller.dart|motion|? const Duration(milliseconds: 1)": {
+      "count": 1,
+      "reason": "Native Android MapLibre requires a positive fitBounds duration; 1ms is an API compatibility minimum for reduced motion, not a visual animation duration."
+    },
     "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionHoldDuration = const Duration(milliseconds: 324),": {
       "count": 1,
       "reason": "Consumer-overridable FAB peek hold matching the visually accepted Web animation; documented in docs/chat-bubble.md."
@@ -122,6 +126,18 @@
     "packages/flutter/k_design_ui/lib/src/chat/k_call_bar.dart|motion|duration: const Duration(milliseconds: 900),": {
       "count": 1,
       "reason": "Approved Agent Workspace call-character900ms resize, matching the accepted Web call transition; preserves Rive character state and honors reduced motion. Existing general motion tokens do not match this duration."
+    },
+    "packages/flutter/k_design_ui/lib/src/editors/k_map_zone_editor.dart|motion|this.fitDuration = const Duration(milliseconds: 320),": {
+      "count": 1,
+      "reason": "Public consumer-overridable geographic camera flight duration; preserve accepted Web/Flutter camera choreography independently of UI transitions."
+    },
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_overlays.dart|motion|this.longPressDuration = const Duration(milliseconds: 400),": {
+      "count": 1,
+      "reason": "Public configurable input recognition threshold, not visual animation; preserve matching Web/Flutter long-press activation."
+    },
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_pin.dart|motion|const Duration(milliseconds: 16),": {
+      "count": 1,
+      "reason": "Edge-pan scheduler sampling cadence near 60Hz; elapsed-time integration determines movement, not a visual transition duration."
     }
   }
 }
