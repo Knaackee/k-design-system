@@ -1,5 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import {
+  KAlert,
+  KInline,
   KBadge,
   KBottomSheet,
   KBreadcrumb,
@@ -25,6 +33,8 @@ import {
 } from "@k-design-system/ui";
 import { SettingsPageFixture } from "./settings-page-fixture.js";
 import "./dashboard-shell.css";
+import { ProjectFormFixture } from "./project-form-fixture.js";
+import { ProjectListFixture } from "./project-list-fixture.js";
 
 const projects = [
   { name: "Website refresh", status: "In progress" },
@@ -33,19 +43,40 @@ const projects = [
 ];
 
 export function DashboardShellFixture({
+  initialPage = "Overview",
   initialInspector = false,
   initialMode = "rail",
-}: { initialInspector?: boolean; initialMode?: KSidebarMode } = {}) {
+  renderSettings,
+  formPage = false,
+  initialSettings = false,
+  emptyWorkspace = false,
+  workspaceName = "Orbit",
+}: {
+  initialPage?: "Overview" | "Projects" | "New project";
+  initialInspector?: boolean;
+  initialMode?: KSidebarMode;
+  renderSettings?: (back: () => void) => ReactNode;
+  formPage?: boolean;
+  initialSettings?: boolean;
+  emptyWorkspace?: boolean;
+  workspaceName?: string;
+} = {}) {
   const root = useRef<HTMLDivElement>(null);
   const detailsButton = useRef<HTMLButtonElement>(null);
   const navigationButton = useRef<HTMLButtonElement>(null);
   const [width, setWidth] = useState(() => window.innerWidth);
   const [mode, setMode] = useState<KSidebarMode>(initialMode);
-  const [page, setPage] = useState<"Overview" | "Projects" | "Detail">(
-    "Overview",
+  const [page, setPage] = useState<
+    "Overview" | "Projects" | "Detail" | "New project"
+  >(initialPage);
+  const [projectList, setProjectList] = useState(
+    emptyWorkspace ? [] : projects,
   );
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all");
+  const [created, setCreated] = useState(false);
   const [selected, setSelected] = useState(projects[0]!);
-  const [settings, setSettings] = useState(false);
+  const [settings, setSettings] = useState(initialSettings);
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [inspector, setInspector] = useState(initialInspector);
   const [notes, setNotes] = useState<Record<string, string>>({});
@@ -93,7 +124,7 @@ export function DashboardShellFixture({
   };
   const title = page === "Detail" ? selected.name : page;
   const breadcrumbs = [
-    { id: "orbit", label: "Orbit", onSelect: () => navigate("Overview") },
+    { id: "orbit", label: workspaceName, onSelect: () => navigate("Overview") },
     ...(page === "Detail"
       ? [
           {
@@ -118,7 +149,7 @@ export function DashboardShellFixture({
             <span className="k-sidebar__expanded-only dashboard-shell__identity">
               <KIcon name="orbit" size={24} />
               <KText variant="heading5" as="span">
-                Orbit
+                {workspaceName}
               </KText>
             </span>
             {!drawer && (
@@ -138,9 +169,17 @@ export function DashboardShellFixture({
           <KSidebarItem
             label="Projects"
             leading={<KIcon name="folder" />}
-            active={page !== "Overview"}
+            active={page === "Projects" || page === "Detail"}
             onSelect={() => navigate("Projects")}
           />
+          {formPage && (
+            <KSidebarItem
+              label="New project"
+              leading={<KIcon name="plus" />}
+              active={page === "New project"}
+              onSelect={() => navigate("New project")}
+            />
+          )}
         </KSidebarGroup>
       </KSidebarBody>
       <KSidebarFooter>
@@ -183,18 +222,22 @@ export function DashboardShellFixture({
       data-theme={theme}
     >
       {settings ? (
-        <SettingsPageFixture
-          onBackToApp={() => {
-            setSettings(false);
-            requestAnimationFrame(() =>
-              (
-                root.current?.querySelector<HTMLButtonElement>(
-                  "[data-shell-settings] button",
-                ) ?? navigationButton.current
-              )?.focus(),
-            );
-          }}
-        />
+        renderSettings ? (
+          renderSettings(() => setSettings(false))
+        ) : (
+          <SettingsPageFixture
+            onBackToApp={() => {
+              setSettings(false);
+              requestAnimationFrame(() =>
+                (
+                  root.current?.querySelector<HTMLButtonElement>(
+                    "[data-shell-settings] button",
+                  ) ?? navigationButton.current
+                )?.focus(),
+              );
+            }}
+          />
+        )
       ) : (
         <>
           {!mobile && navigation()}
@@ -213,6 +256,7 @@ export function DashboardShellFixture({
               <KIconButton
                 ref={detailsButton}
                 icon="panel-right"
+                disabled={projectList.length === 0}
                 label="Project details"
                 aria-expanded={inspector}
                 onClick={() => setInspector(!inspector)}
@@ -236,12 +280,12 @@ export function DashboardShellFixture({
                           : "Track progress and keep project notes together."}
                     </KText>
                   </div>
-                  {page === "Overview" && (
+                  {page === "Overview" && projectList.length > 0 && (
                     <div className="dashboard-shell__metrics">
                       {[
-                        ["Active projects", "12"],
-                        ["Tasks completed", "84"],
-                        ["Needs attention", "3"],
+                        ["Active projects", String(projectList.length)],
+                        ["Tasks completed", emptyWorkspace ? "0" : "84"],
+                        ["Needs attention", emptyWorkspace ? "0" : "3"],
                       ].map(([label, value]) => (
                         <KCard key={label}>
                           <KStack gap="control">
@@ -254,36 +298,60 @@ export function DashboardShellFixture({
                       ))}
                     </div>
                   )}
-                  {page !== "Detail" ? (
+                  {page === "New project" ? (
+                    <ProjectFormFixture
+                      onCancel={() => navigate("Projects")}
+                      onCreate={(project) => {
+                        setProjectList((items) => [...items, project]);
+                        setSelected(project);
+                        setCreated(true);
+                        navigate("Detail");
+                      }}
+                    />
+                  ) : projectList.length === 0 ? (
                     <KCard>
-                      <KStack gap="action" align="stretch">
-                        <KText variant="heading4" as="h2">
-                          Projects
+                      <KStack gap="section" align="stretch">
+                        <KIcon name="folder-plus" size={32} />
+                        <KText variant="heading3" as="h2">
+                          Dein erstes Projekt
                         </KText>
-                        {projects.map((project) => (
-                          <div
-                            className="dashboard-shell__project"
-                            key={project.name}
-                          >
-                            <KButton
-                              variant="ghost"
-                              onClick={() => {
-                                setSelected(project);
-                                navigate("Detail");
-                              }}
-                            >
-                              {project.name}
-                            </KButton>
-                            <KBadge variant="secondary">
-                              {project.status}
-                            </KBadge>
-                          </div>
-                        ))}
+                        <KText>
+                          Dein Workspace ist bereit. Lege ein Projekt an, um
+                          Aufgaben und Zusammenarbeit zu organisieren.
+                        </KText>
+                        <KInline>
+                          <KButton onClick={() => navigate("New project")}>
+                            Erstes Projekt erstellen
+                          </KButton>
+                        </KInline>
                       </KStack>
                     </KCard>
+                  ) : page !== "Detail" ? (
+                    <ProjectListFixture
+                      search={search}
+                      setSearch={setSearch}
+                      status={status}
+                      setStatus={setStatus}
+                      projects={projectList}
+                      onCreate={
+                        formPage ? () => navigate("New project") : undefined
+                      }
+                      onSelect={(project) => {
+                        setSelected(project);
+                        setCreated(false);
+                        navigate("Detail");
+                      }}
+                    />
                   ) : (
                     <KCard>
                       <KStack gap="action" align="stretch">
+                        {created && (
+                          <KAlert
+                            tone="success"
+                            title="Project created"
+                            description="Saved locally for this demo. No notification has been sent."
+                          />
+                        )}
                         <KBadge variant="secondary">{selected.status}</KBadge>
                         <KText>
                           Review the project details and add a note to
@@ -333,7 +401,7 @@ export function DashboardShellFixture({
         title={
           <span className="dashboard-shell__identity">
             <KIcon name="orbit" size={24} />
-            Orbit
+            {workspaceName}
           </span>
         }
         closeLabel="Close navigation"

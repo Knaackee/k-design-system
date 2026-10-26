@@ -28,6 +28,18 @@ Use KStack/KInline and existing semantic tokens for spacing; follow the linked
 contract for card insets, hierarchy, density and responsive behavior.
 Never patch private component selectors or duplicate reusable primitives locally.
 
+Before coding, record a short composition map: requested screen -> existing
+shell/pattern -> public K controls -> spacing and typography token roles. Use
+`docs/integration/ui-composition.md` for the decision table and reference stories.
+Inspect the implementation and public props; never infer behavior from names alone.
+If a reference exists, adapt that composition rather than inventing a replacement.
+
+Verify complete journeys, not screenshots of the initial state: navigation and
+return, overlay dismissal and focus return, invalid/valid submission, empty search
+and recovery. Exercise short mobile viewports, touch input, larger type and every
+density. Report actual checked states and omissions. A successful build or scanner
+is not evidence that these journeys work. Keep demos separate from package APIs.
+
 ## Ownership and acceptance
 
 Host owns product data, navigation, events and theme overrides. Library owns

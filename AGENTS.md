@@ -11,6 +11,9 @@ including GPT-5.6 Sol.
 4. Work only on the explicitly approved slice.
 5. Run `pnpm verify` before proposing a commit.
 
+For every UI change, read `.agents/skills/k-design-system-workflow/SKILL.md` and
+its linked composition contract before choosing controls, layouts or styling.
+
 ## Product contract
 
 - The system targets React/Web and Flutter.

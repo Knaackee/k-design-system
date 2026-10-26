@@ -101,7 +101,19 @@ try {
   );
   assert.equal(
     await drawer.getByRole("button", { name: "Close navigation" }).isVisible(),
-    false,
+    true,
+  );
+  assert.ok(
+    drawerBounds.y <= 1,
+    "Navigation starts at the top, not at the bottom",
+  );
+  assert.ok(
+    Math.abs(drawerBounds.height - 900) <= 2,
+    "Navigation is full height",
+  );
+  assert.ok(
+    drawerBounds.width < 375,
+    "Navigation leaves a dismissible backdrop",
   );
   assert.ok(Math.abs(sidebarBounds.width - drawerBounds.width) <= 2);
   assert.ok(

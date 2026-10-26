@@ -16,6 +16,44 @@ If a contract is missing, extend the library and obtain gallery acceptance befor
 consumer integration. Do not recreate a reusable control locally or reach into
 private package paths. Product routing, data and state remain in the application.
 
+### Screen selection and reference compositions
+
+Choose by user intent before choosing presentation. These Storybook examples are
+consumer compositions, not routing/data APIs. Inspect source and public exports at
+the pinned revision. Web-only drafts are not approved Flutter parity references.
+
+| Intent                   | Composition                                             | Storybook story ID                            |
+| ------------------------ | ------------------------------------------------------- | --------------------------------------------- |
+| App navigation and cards | KSidebar, side KResponsiveDrawer, KBreadcrumb, KCard    | app-shells-settings-app--workspace            |
+| Preferences              | KSettingsPage, KSettingsSection, KSettingsRow, K fields | app-shells-settings-app--workspace (Settings) |
+| Guided setup             | KProgressDots, KField, KInput, KButton                  | app-shells-settings-app--onboarding           |
+| Form submission          | KField, KInput, KSelect, KCheckbox, grouped actions     | app-shells-settings-app--form-page            |
+| Search, filter, details  | KSearchField, KSelect, list actions, detail navigation  | app-shells-settings-app--list-detail          |
+| First use                | KCard with explanation and a working creation action    | app-shells-settings-app--empty-workspace      |
+
+Before implementation, record the selected reference and component mapping.
+Reuse the composition, not demo text, fixed dimensions or private CSS selectors.
+Texts, items, validation, routes and backend actions belong to the host. A demo
+callback must not imply persistence, notifications or authentication that it lacks.
+
+### Observable acceptance checklist
+
+- Navigation: every destination, active item and return action agree. Mobile main
+  navigation is a side drawer; contextual details may use a bottom sheet.
+- Forms: invalid submission explains the problem; correction succeeds; cancel
+  returns predictably. Preserve draft values or explicitly define discard behavior.
+- Lists: search and filters compose; empty results can be cleared; opening and
+  returning from details preserves context where the product requires it.
+- Layout: one card inset, shared title/field/action edges, distinct page gutter
+  and section gaps. Use semantic roles; do not copy pixel values from screenshots.
+- Accessibility: visible focus, meaningful labels, keyboard operation and touch
+  targets. Larger type and density must not hide actions or truncate required text.
+- Review matrix: desktop and short phone viewport; pointer and touch; light/dark;
+  dense/standard/spacious and increased text scale. Inspect opened overlays too.
+- Record each actual checked journey and state, failures and untested platforms.
+  Static checks catch likely bypasses; only interaction and visual review establish
+  usability. Human gallery acceptance remains separate from automated checks.
+
 ## Spacing ownership and hierarchy
 
 - A component owns its internal spacing; its parent owns space between siblings.
@@ -77,6 +115,19 @@ content on Web and Flutter. Do not claim visual review from a build alone.
 Report: pinned revision; components reused; layout/token roles; host override
 location; inspected viewports/states; automated results; any unverified platform.
 New reusable components still require human gallery acceptance.
+
+Overlay choice follows purpose, not viewport alone:
+
+- Primary app navigation opened by a hamburger remains a side drawer on phones.
+  Compose KSidebar inside KResponsiveDrawer with side="left" and breakpoint={0}.
+  Do not substitute KBottomSheet for primary navigation.
+- Contextual details may use KResponsiveDrawer with its normal breakpoint: side
+  panel on larger screens, bottom sheet on phones. KDialog is adaptive too.
+- A wrapper that already decides presentation must not delegate its fixed-side
+  branch to another adaptive wrapper. Keep one responsive decision owner.
+- Verify the opened overlay, not only its trigger: correct edge and full-height
+  side presentation, visible close action, backdrop/Escape dismissal, focus return,
+  selection closes mobile navigation, and desktop navigation remains available.
 
 ## Consumer checks
 

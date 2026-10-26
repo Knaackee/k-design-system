@@ -19,6 +19,7 @@ import { KIconButton } from "./actions/icon-button.js";
 import { useHorizontalDragScroll } from "./util/use-horizontal-drag-scroll.js";
 import {
   KBottomSheet,
+  KDesktopDialog,
   KDialog,
   type KOverlayProps,
 } from "./overlays/overlay.js";
@@ -734,6 +735,7 @@ export function KNavigationMenu({
 }
 
 export interface KResponsiveDrawerProps extends KOverlayProps {
+  /** Width below which detail content becomes a sheet. Use 0 for persistent side presentation (e.g. app navigation). */
   breakpoint?: number;
   side?: "left" | "right";
 }
@@ -756,7 +758,7 @@ export function KResponsiveDrawer({
   return compact ? (
     <KBottomSheet {...props} className={className} />
   ) : (
-    <KDialog
+    <KDesktopDialog
       {...props}
       className={[
         "k-responsive-drawer",
