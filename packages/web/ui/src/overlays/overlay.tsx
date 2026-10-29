@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Sheet, type SheetRef } from "react-modal-sheet";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
 import { KIconButton } from "../actions/icon-button.js";
 import { usePageSheetEffect } from "./use-page-sheet-effect.js";
 
@@ -34,6 +34,8 @@ export type KOverlayProps = {
   leading?: ReactNode;
   bodyClassName?: string;
   zIndex?: number;
+  /** Optional initial field for targeted editing flows. */
+  initialFocusRef?: RefObject<HTMLElement | null>;
 };
 
 /** Phone sheets and tablet/desktop dialogs share the same controlled dismissal contract. */
@@ -80,6 +82,7 @@ export function KDesktopDialog({
   showClose = true,
   leading,
   bodyClassName,
+  initialFocusRef,
   zIndex = 3010,
 }: KOverlayProps) {
   return (
@@ -92,6 +95,7 @@ export function KDesktopDialog({
         <Dialog.Content
           className={["k-dialog", className].filter(Boolean).join(" ")}
           data-adaptive-surface="dialog"
+          onOpenAutoFocus={event => { if (initialFocusRef?.current) { event.preventDefault(); initialFocusRef.current.focus(); } }}
           style={{ zIndex }}
           onEscapeKeyDown={(event) => handleEscape(event, dismissible)}
           onPointerDownOutside={
@@ -167,6 +171,7 @@ export function KBottomSheet({
   showClose = true,
   leading,
   bodyClassName,
+  initialFocusRef,
   zIndex = 3010,
   presentationRootId,
 }: KBottomSheetProps) {
@@ -203,7 +208,7 @@ export function KBottomSheet({
           });
         }}
         disableDismiss={!dismissible}
-        onOpenEnd={() => (closeRef.current ?? containerRef.current)?.focus()}
+        onOpenEnd={() => (initialFocusRef?.current ?? closeRef.current ?? containerRef.current)?.focus()}
         prefersReducedMotion={
           typeof window !== "undefined" &&
           typeof window.matchMedia === "function" &&
@@ -221,7 +226,7 @@ export function KBottomSheet({
               document.activeElement instanceof HTMLElement
                 ? document.activeElement
                 : null;
-            (closeRef.current ?? containerRef.current)?.focus();
+            (initialFocusRef?.current ?? closeRef.current ?? containerRef.current)?.focus();
           }}
           onCloseAutoFocus={(event) => {
             if (presentationRootId && openerRef.current?.isConnected) {

@@ -12,6 +12,7 @@
     calc(100dvh - (2 * var(--k-space-layout-gutter)))
   );
   min-height: min(
+    var(--k-map-zone-editor-height, 100dvh),
     calc(480 * var(--k-space-hairline)),
     calc(100dvh - (2 * var(--k-space-layout-gutter)))
   );
@@ -94,7 +95,7 @@
 
 .k-map-zone-editor__entries > button {
   display: grid;
-  grid-template-columns: var(--k-size-control) minmax(0, 1fr);
+  grid-template-columns: calc(var(--k-size-control) * 2) minmax(0, 1fr);
   grid-template-rows: auto auto;
   gap: var(--k-space-tight) var(--k-space-control-gap);
   align-items: center;
@@ -122,13 +123,20 @@
 .k-map-zone-editor__entries > button > span {
   display: grid;
   grid-row: 1 / 3;
-  width: var(--k-size-control);
-  height: var(--k-size-control);
+  width: calc(var(--k-size-control) * 2);
+  aspect-ratio: 4 / 3;
   place-items: center;
-  border-radius: var(--k-radius-full);
-  color: var(--k-color-action-primary-foreground);
-  background: var(--k-color-action-primary-background);
+  overflow: hidden;
+  border-radius: var(--k-radius-control);
+  color: var(--k-color-action-primary-background);
+  background: var(--k-color-surface-raised);
   font-weight: var(--k-font-label-weight);
+}
+
+.k-map-zone-editor__entries svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .k-map-zone-editor__entries strong,
@@ -388,24 +396,6 @@
 }
 
 @container (max-width: 700px) {
-  .k-map-zone-editor__entries {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .k-map-zone-editor__entries > button {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    align-content: start;
-  }
-
-  .k-map-zone-editor__entries > button > span {
-    grid-row: auto;
-  }
-
-  .k-map-zone-editor__entries small {
-    display: none;
-  }
-
   .k-map-zone-editor__vertices {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

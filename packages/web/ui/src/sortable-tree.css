@@ -1,0 +1,194 @@
+.k-sortable-tree {
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  font-size: var(--k-font-body-size);
+  line-height: var(--k-font-body-line-height);
+  min-width: 0;
+  container-type: inline-size;
+  container-name: k-sortable-tree;
+  background: var(--k-color-surface-raised);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-control);
+}
+/* Consumers can override these two CSS variables without limiting model depth. */
+.k-sortable-tree__item {
+  padding-inline-start: calc(
+    min(var(--k-tree-depth), var(--k-sortable-tree-max-visual-depth, 3)) *
+      var(--k-sortable-tree-indent, var(--k-space-layout-section-gap))
+  );
+  border-block-end: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+}
+.k-sortable-tree__item:last-child {
+  border-block-end: 0;
+}
+.k-sortable-tree__row {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: max(
+    var(--k-tree-min-row-height, 0px),
+    calc(
+      var(--k-tree-row-content-height, var(--k-size-hit-target)) + 2 *
+        var(--k-space-control-gap) + 2 * var(--k-border-width-default)
+    )
+  );
+  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
+  background: transparent;
+  border: 0;
+}
+.k-sortable-tree__row-layout {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  width: 100%;
+  min-width: 0;
+}
+.k-sortable-tree__row[data-dragging] {
+  opacity: 1;
+  background: var(--k-color-surface-raised);
+  box-shadow: var(--k-elevation-medium);
+}
+.k-sortable-tree__handle {
+  touch-action: none;
+  cursor: grab;
+  color: var(--k-color-text-muted);
+}
+.k-sortable-tree__handle:active {
+  cursor: grabbing;
+}
+.k-sortable-tree__row[data-fixed] .k-sortable-tree__handle {
+  cursor: pointer;
+  touch-action: auto;
+}
+.k-sortable-tree__content {
+  flex: 1;
+  min-width: 0;
+}
+.k-sortable-tree__label {
+  overflow-wrap: anywhere;
+}
+.k-sortable-tree__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+}
+.k-sortable-tree__drop {
+  position: relative;
+}
+.k-sortable-tree__drop-label {
+  display: none;
+}
+.k-sortable-tree__before {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: var(--k-space-control-gap);
+  z-index: 2;
+}
+.k-sortable-tree__before[data-available] {
+  height: var(--k-space-control-gap);
+}
+.k-sortable-tree__drop[data-over] {
+  border-radius: 0;
+}
+.k-sortable-tree__before[data-over] {
+  background: transparent;
+  outline: 0;
+  border-block-start: var(--k-border-width-strong) solid
+    var(--k-color-border-focus);
+}
+.k-sortable-tree__content[data-over] .k-sortable-tree__drop-label {
+  display: none;
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-body-small-size);
+}
+.k-sortable-tree__end {
+  min-height: 0;
+}
+.k-sortable-tree__end[data-available] {
+  min-height: var(--k-size-hit-target);
+  margin-block-start: var(--k-space-control-gap);
+  border: 0;
+}
+.k-sortable-tree__end[data-available] .k-sortable-tree__drop-label {
+  display: block;
+  padding: var(--k-space-control-inset-inline);
+}
+.k-sortable-tree__empty {
+  padding: var(--k-space-control-inset-inline);
+  color: var(--k-color-text-muted);
+}
+.k-sortable-tree__announcement {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@container k-sortable-tree (max-width: 40rem) {
+  .k-sortable-tree__item {
+    padding-inline-start: calc(
+      min(var(--k-tree-depth), var(--k-sortable-tree-max-visual-depth, 3)) *
+        var(--k-sortable-tree-indent, var(--k-space-control-inset-inline))
+    );
+  }
+  .k-sortable-tree__actions {
+    margin-inline-start: auto;
+  }
+}
+
+.k-sortable-tree__row[data-group] {
+  background: var(--k-color-surface-subtle);
+}
+.k-sortable-tree__toggle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.k-sortable-tree__row[data-group] .k-sortable-tree__row-layout {
+  pointer-events: none;
+}
+.k-sortable-tree__row[data-group]
+  .k-sortable-tree__row-layout
+  :is(button, [role="menu"], a, input, [data-available]) {
+  pointer-events: auto;
+}
+.k-sortable-tree__row[data-expanded="true"] .k-sortable-tree__handle {
+  background: var(--k-color-surface-raised);
+  color: var(--k-color-text-primary);
+}
+
+.k-sortable-tree__inside {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.k-sortable-tree__inside[data-available] {
+  pointer-events: auto;
+}
+.k-sortable-tree__row:has(.k-sortable-tree__inside[data-over]) {
+  background: color-mix(
+    in srgb,
+    var(--k-color-border-focus) 18%,
+    var(--k-color-surface-subtle)
+  );
+}
+.k-sortable-tree__end[data-over] {
+  border-block-start: var(--k-border-width-strong) solid
+    var(--k-color-border-focus);
+}
+/* The transparent toggle must never paint over the category label. */
+.k-button.k-sortable-tree__toggle {
+  --k-button-background: transparent;
+  --k-button-background-hover: transparent;
+  --k-button-background-pressed: transparent;
+  --k-button-foreground: var(--k-color-text-primary);
+}

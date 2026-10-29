@@ -323,7 +323,7 @@ export function ZoneEditorPropertiesFields({
           </label>
         </div>
       ) : null}
-      {options ? (
+      {options && options.showScheduling !== false ? (
         <ZoneWorkingHoursFields
           availability={values.settings.availability}
           hours={values.settings.workingHours}
@@ -334,7 +334,7 @@ export function ZoneEditorPropertiesFields({
           }
         />
       ) : null}
-      {options ? (
+      {options && options.showScheduling !== false ? (
         <ZoneAvailabilityFields
           workingHours={values.settings.workingHours}
           availability={values.settings.availability}

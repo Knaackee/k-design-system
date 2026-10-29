@@ -135,7 +135,11 @@ class KMapZonePropertyOptions {
     this.dateFormat,
     this.defaultWorkingHours,
     this.workingHoursLabels = const {},
+    this.showScheduling = true,
   });
+
+  /// Hide scheduling fields when another workflow owns hours and availability.
+  final bool showScheduling;
   final Map<String, String> workingHoursLabels;
   final List<KMapZoneWorkingDay>? defaultWorkingHours;
   final List<KMapZonePropertyOption> weekdayOptions;

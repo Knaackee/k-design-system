@@ -43,6 +43,7 @@ import {
 } from "./map-zone-editor-state.js";
 export function KMapZoneEditor({
   zones,
+  editRequest,
   selectedZoneId,
   mapProps,
   onChange,
@@ -147,6 +148,15 @@ export function KMapZoneEditor({
     onPendingChangesChanged?.(pendingChanges);
   }, [pendingChanges, onPendingChangesChanged]);
   const transitions = useZoneEditorTransition(draftDirty || properties.dirty);
+  const handledEdit = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    if (!editRequest || disabled || handledEdit.current === editRequest.requestId) return;
+    const zone = zones.find(zone => zone.id === editRequest.zoneId);
+    if (!zone) return;
+    handledEdit.current = editRequest.requestId;
+    transitions.request(() => { propertiesFromMap.current = true; setPanelOpen(true); propertyState.openFor(zone); });
+  }, [editRequest, disabled, zones, transitions, propertyState, setPanelOpen]);
+
   const begin = (zone: KMapZone) => {
     setDraft(copyZone(zone));
     setHistory([]);

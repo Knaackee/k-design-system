@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Ref } from "react";
 import { useField } from "./field.js";
 import { KInput, type KInputProps } from "./input.js";
 import {
@@ -13,6 +13,7 @@ export interface KCurrencyInputProps
       "value" | "defaultValue" | "onChange" | "type" | "onClear"
     >,
     KCurrencyFormat {
+  ref?: Ref<HTMLInputElement>;
   value: number | null;
   onCommit: (value: number | null) => void;
   onInvalidDraft?: (draft: string) => void;

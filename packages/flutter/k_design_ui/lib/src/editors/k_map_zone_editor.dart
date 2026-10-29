@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import '../actions/k_icon_button.dart';
@@ -27,6 +28,18 @@ export 'k_map_zone_boolean.dart' show createKMapCircleCoordinates;
 // roughly 200 controls even for very large imported rings.
 const _maxVisibleZoneHandles = 100;
 const _minimumHandleSpacing = 44.0;
+
+String _zoneCreationIllustration(String kind) {
+  final shape = switch (kind) {
+    'circle' =>
+      '<circle cx="48" cy="36" r="25"/><path d="M48 36H73" stroke-dasharray="3 3"/><circle cx="48" cy="36" r="3" fill-opacity="1"/>',
+    'postal' =>
+      '<path d="M15 12L42 9L53 29L34 45L12 36Z"/><path d="M53 29L80 18L85 49L61 61L34 45Z" fill-opacity=".32"/>',
+    _ =>
+      '<path d="M17 19L49 10L79 28L66 60L29 55L12 38Z"/>${[(17, 19), (49, 10), (79, 28), (66, 60), (29, 55), (12, 38)].map((p) => '<circle cx="${p.$1}" cy="${p.$2}" r="2.5" fill-opacity="1"/>').join()}',
+  };
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 72"><path d="M0 16H96M0 48H96M24 0V72M67 0V72M0 70L96 4" fill="none" stroke="currentColor" opacity=".14" stroke-width="5"/><g fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">$shape</g></svg>';
+}
 
 String _postalAreaName(KMapPostalArea area) =>
     area.label.trim() == area.code ? area.code : '${area.code} ${area.label}';
@@ -157,6 +170,7 @@ class KMapZoneEditor extends StatefulWidget {
     required this.onSelect,
     this.onValidationError,
     this.selectedZoneId,
+    this.editRequest,
     this.zoom = 13,
     this.showZoomControls = true,
     this.labels = const KMapZoneEditorLabels(),
@@ -184,6 +198,9 @@ class KMapZoneEditor extends StatefulWidget {
   final bool showZoomControls;
   final List<KMapZone> zones;
   final String? selectedZoneId;
+
+  /// Opens existing properties through the normal unsaved-change guard.
+  final ({String zoneId, int requestId})? editRequest;
   final KMapZonesChanged onChange;
   final KMapZoneSelected onSelect;
   final KMapZoneValidationErrorCallback? onValidationError;
@@ -253,6 +270,17 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
   @override
   void didUpdateWidget(covariant KMapZoneEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
+    final request = widget.editRequest;
+    if (!widget.disabled &&
+        request != null &&
+        request != oldWidget.editRequest) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final matching = _working.where((zone) => zone.id == request.zoneId);
+        if (matching.isNotEmpty) _guard(() => _propertiesFor(matching.first));
+      });
+    }
+
     if (widget.disabled && _dragBefore != null) {
       _working = _dragBefore!;
       _dragBefore = null;
@@ -1501,15 +1529,56 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
       (l.postalTitle, l.postalDescription, 'postal'),
       (l.polygonTitle, l.polygonDescription, 'polygon'),
     ])
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          KButton(
-            label: entry.$1,
-            onPressed: widget.disabled ? null : () => _new(entry.$3),
+      KButton(
+        label: '${entry.$1}. ${entry.$2}',
+        fullWidth: true,
+        variant: KButtonVariant.secondary,
+        onPressed: widget.disabled ? null : () => _new(entry.$3),
+        content: Padding(
+          padding: EdgeInsets.symmetric(vertical: t.spaceControlInsetInline),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(t.radiusControl),
+                child: ColoredBox(
+                  color: t.colorSurfaceRaised,
+                  child: SvgPicture.string(
+                    _zoneCreationIllustration(entry.$3),
+                    width: t.sizeControl * 2,
+                    height: t.sizeControl * 1.5,
+                    theme: SvgTheme(
+                      currentColor: t.colorActionPrimaryBackground,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: t.spaceControlGap),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: t.spaceTight,
+                  children: [
+                    KText(
+                      entry.$1,
+                      style: TextStyle(
+                        fontSize: t.fontControlSize,
+                        fontWeight: t.fontLabelWeight,
+                      ),
+                    ),
+                    KText(
+                      entry.$2,
+                      style: TextStyle(
+                        fontSize: t.fontCaptionSize,
+                        color: t.colorTextMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          KText(entry.$2, style: TextStyle(color: t.colorTextMuted)),
-        ],
+        ),
       ),
   ];
 

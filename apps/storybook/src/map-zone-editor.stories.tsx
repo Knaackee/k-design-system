@@ -180,6 +180,7 @@ const postalAreas: KMapPostalArea[] = [
 ];
 
 interface Args {
+  showScheduling?: boolean;
   zones: readonly KMapZone[];
   selectedZoneId: string | null;
   compact: boolean;
@@ -277,6 +278,7 @@ function Example({
         defaultRadiusKm={2.5}
         propertyOptions={{
           ...propertyOptions,
+          showScheduling: args.showScheduling,
           workingHoursSources: args.zones.map((zone) => ({
             id: zone.id,
             label: zone.name,
@@ -545,4 +547,11 @@ export const FullscreenEmpty: Story = {
     ...Mobile.parameters,
     fixtureId: "map-zone-editor-fullscreen-empty",
   },
+};
+
+
+export const AreasOnly: Story = {
+  name: "Onboarding: Gebiete ohne Zeiten",
+  args: { showScheduling: false },
+  parameters: { fixtureId: "map-zone-editor-areas-only" },
 };

@@ -1,0 +1,70 @@
+.sortable-tree-fixture {
+  width: 100%;
+  max-width: 48rem;
+  margin-inline: auto;
+  padding: var(--k-space-card-padding);
+  box-sizing: border-box;
+}
+.sortable-tree-fixture--mobile {
+  max-width: 390px;
+}
+.sortable-tree-fixture__select {
+  flex: 1;
+  min-width: 0;
+}
+.sortable-tree-fixture__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.sortable-tree-fixture__icon {
+  grid-column: 1;
+  grid-row: 1;
+  margin-block-start: calc(
+    (var(--k-font-body-small-line-height) * var(--k-text-scale, 1) - 16px) / 2
+  );
+}
+.sortable-tree-fixture__name {
+  display: contents;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+.sortable-tree-fixture__name > :first-child {
+  grid-column: 1;
+  grid-row: 1;
+}
+.sortable-tree-fixture__name > :last-child:not(:first-child) {
+  grid-column: 1;
+  grid-row: 2;
+}
+.sortable-tree-fixture__content[data-group]
+  .sortable-tree-fixture__name
+  > :first-child {
+  grid-column: 1 / -1;
+}
+.sortable-tree-fixture__content[data-group]
+  .sortable-tree-fixture__name
+  > :last-child:not(:first-child) {
+  grid-column: 1 / -1;
+}
+.sortable-tree-fixture__price {
+  grid-column: 2;
+  grid-row: 1;
+  margin-inline-start: auto;
+  text-align: end;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.sortable-tree-fixture__status {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.sortable-tree-fixture__name > :last-child:not(:first-child) {
+  color: var(--k-color-text-muted);
+}

@@ -1,3 +1,5 @@
+import 'sortable_tree_fixture.dart';
+import 'image_cropper_fixture.dart';
 import 'payment_setup_fixture.dart';
 import 'files_home_fixture.dart';
 import 'screen_switcher_prototype.dart';
@@ -76,6 +78,7 @@ import 'editor_fixtures.dart';
 import 'command_palette_fixture.dart';
 import 'animated_icon_fixture.dart';
 import 'theme_switcher_fixture.dart';
+import 'language_switcher_fixture.dart';
 import 'user_menu_fixture.dart';
 import 'notification_fixture.dart';
 import 'orbit_fixture.dart';
@@ -300,6 +303,7 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'Fullscreen · Empty',
                   builder: buildMapZoneEditorFullscreenEmpty,
                 ),
+                WidgetbookUseCase(name: 'Areas only', builder: buildMapZoneEditorAreasOnly),
               ],
             ),
             WidgetbookFolder(
@@ -650,6 +654,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   ),
                 ],
               ),
+            WidgetbookFolder(name: 'Image cropper', children: [
+              WidgetbookUseCase(name: 'image-cropper-avatar', builder: (_) => const ImageCropperFixture()),
+              WidgetbookUseCase(name: 'image-cropper-square', builder: (_) => const ImageCropperFixture(shape: KImageCropShape.square)),
+            ]),
             WidgetbookFolder(
               name: 'ProgressDots',
               children: [
@@ -719,6 +727,11 @@ class KDesignWidgetbook extends StatelessWidget {
                 ),
               ],
             ),
+            WidgetbookFolder(name: 'LanguageSwitcher', children: [
+              WidgetbookUseCase(name: 'language-switcher-default', builder: (_) => const LanguageSwitcherFixture()),
+              WidgetbookUseCase(name: 'language-switcher-flags', builder: (_) => const LanguageSwitcherFixture(flags: true)),
+              WidgetbookUseCase(name: 'language-switcher-disabled', builder: (_) => const LanguageSwitcherFixture(disabled: true)),
+            ]),
             WidgetbookFolder(
               name: 'ThemeSwitcher',
               children: [
@@ -1181,6 +1194,10 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(name: 'SortableTree', children: [
+              for (final kind in ['categories', 'mobile', 'tablet', 'ungrouped', 'flat', 'deep', 'empty'])
+                WidgetbookUseCase(name: 'sortable-tree-$kind', builder: (_) => SortableTreeFixture(kind: kind)),
+            ]),
             WidgetbookFolder(
               name: 'PaymentSetup',
               children: [
@@ -2018,3 +2035,4 @@ class KDesignWidgetbook extends StatelessWidget {
     );
   }
 }
+

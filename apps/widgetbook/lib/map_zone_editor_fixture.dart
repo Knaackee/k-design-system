@@ -259,11 +259,12 @@ class MapZoneEditorFixture extends StatefulWidget {
   const MapZoneEditorFixture({
     this.fullscreen = false,
     this.empty = false,
+    this.showScheduling = true,
     this.mapStyleOverride,
     super.key,
   });
 
-  final bool fullscreen, empty;
+  final bool fullscreen, empty, showScheduling;
   final String? mapStyleOverride;
 
   @override
@@ -295,7 +296,13 @@ class _MapZoneEditorFixtureState extends State<MapZoneEditorFixture> {
     showZoomControls: !widget.fullscreen,
     defaultRadiusKm: 2.5,
     postalAreas: mapZoneEditorPostalAreas,
-    propertyOptions: mapZoneEditorPropertyOptions,
+    propertyOptions: KMapZonePropertyOptions(
+      weekdayOptions: mapZoneEditorPropertyOptions.weekdayOptions,
+      currency: mapZoneEditorPropertyOptions.currency,
+      timeZone: mapZoneEditorPropertyOptions.timeZone,
+      defaultWorkingHours: mapZoneEditorPropertyOptions.defaultWorkingHours,
+      showScheduling: widget.showScheduling,
+    ),
     defaultZoneSettings: const KMapZoneSettings(
       travelCost: KMapZoneTravelCost(kind: 'per-kilometer', amount: .7),
     ),
@@ -426,3 +433,6 @@ class _MapZoneEditorFixtureState extends State<MapZoneEditorFixture> {
     return SizedBox(height: fixtureHeight, child: _editor(tokens));
   }
 }
+
+Widget buildMapZoneEditorAreasOnly(BuildContext context) =>
+    const MapZoneEditorFixture(showScheduling: false);

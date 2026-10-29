@@ -1,5 +1,7 @@
 library;
 
+export 'src/patterns/k_sortable_tree.dart';
+
 export 'src/data_display/k_cover_flow.dart';
 export 'src/feedback/k_text_shimmer.dart';
 
@@ -67,6 +69,7 @@ export 'src/chat/k_agent_chat_workspace.dart';
 export 'src/editors/k_editors.dart';
 
 export 'src/actions/k_theme_switcher.dart';
+export 'src/actions/k_language_switcher.dart';
 export 'src/actions/k_user_menu.dart';
 export 'src/charts/k_chart_types.dart';
 export 'src/charts/k_line_chart.dart';
@@ -114,3 +117,4 @@ export 'src/patterns/k_integration_admin_catalog.dart';
 export 'src/patterns/k_integration_editor.dart';
 
 export 'src/patterns/k_payment_setup.dart';
+export 'src/patterns/k_image_cropper.dart';

@@ -593,63 +593,65 @@ class _KMapZonePropertiesState extends State<KMapZoneProperties> {
             '${l.surchargeAmount} (${options.currency})',
             KInput(controller: surcharge, onChanged: (_) => _emit()),
           ),
-          KMapZoneWorkingHoursFields(
-            hours: workingHours,
-            availability: mode == 'recurring'
-                ? recurring
-                : mode == 'date-range'
-                ? range
-                : null,
-            options: options,
-            otherZones: widget.otherZones
-                .where((zone) => zone.id != widget.zone.id)
-                .toList(),
-            onChanged: (value) {
-              workingHours = value;
-              _emit();
-            },
-          ),
-          _field(
-            l.availability,
-            KSelect(
-              label: l.availability,
-              value: mode,
-              options: [
-                KSelectOption(
-                  value: 'always',
-                  label: l.alwaysAvailability,
-                  leading: KIcon(
-                    KIconName.infinity,
-                    strokeWidth:
-                        (t.borderWidthDefault + t.borderWidthStrong) / 2,
-                  ),
-                ),
-                KSelectOption(
-                  value: 'recurring',
-                  label: l.recurringAvailability,
-                  leading: KIcon(
-                    KIconName.repeat,
-                    strokeWidth:
-                        (t.borderWidthDefault + t.borderWidthStrong) / 2,
-                  ),
-                ),
-                KSelectOption(
-                  value: 'date-range',
-                  label: l.dateRangeAvailability,
-                  leading: KIcon(
-                    KIconName.calendarRange,
-                    strokeWidth:
-                        (t.borderWidthDefault + t.borderWidthStrong) / 2,
-                  ),
-                ),
-              ],
+          if (options.showScheduling)
+            KMapZoneWorkingHoursFields(
+              hours: workingHours,
+              availability: mode == 'recurring'
+                  ? recurring
+                  : mode == 'date-range'
+                  ? range
+                  : null,
+              options: options,
+              otherZones: widget.otherZones
+                  .where((zone) => zone.id != widget.zone.id)
+                  .toList(),
               onChanged: (value) {
-                mode = value ?? 'always';
+                workingHours = value;
                 _emit();
               },
             ),
-          ),
-          if (mode == 'recurring') ...[
+          if (options.showScheduling)
+            _field(
+              l.availability,
+              KSelect(
+                label: l.availability,
+                value: mode,
+                options: [
+                  KSelectOption(
+                    value: 'always',
+                    label: l.alwaysAvailability,
+                    leading: KIcon(
+                      KIconName.infinity,
+                      strokeWidth:
+                          (t.borderWidthDefault + t.borderWidthStrong) / 2,
+                    ),
+                  ),
+                  KSelectOption(
+                    value: 'recurring',
+                    label: l.recurringAvailability,
+                    leading: KIcon(
+                      KIconName.repeat,
+                      strokeWidth:
+                          (t.borderWidthDefault + t.borderWidthStrong) / 2,
+                    ),
+                  ),
+                  KSelectOption(
+                    value: 'date-range',
+                    label: l.dateRangeAvailability,
+                    leading: KIcon(
+                      KIconName.calendarRange,
+                      strokeWidth:
+                          (t.borderWidthDefault + t.borderWidthStrong) / 2,
+                    ),
+                  ),
+                ],
+                onChanged: (value) {
+                  mode = value ?? 'always';
+                  _emit();
+                },
+              ),
+            ),
+          if (options.showScheduling && mode == 'recurring') ...[
             Row(
               spacing: t.spaceControlGap,
               children: [
@@ -805,7 +807,7 @@ class _KMapZonePropertiesState extends State<KMapZoneProperties> {
               ),
             ),
           ],
-          if (mode == 'date-range') ...[
+          if (options.showScheduling && mode == 'date-range') ...[
             _input(l.startDate, range.from, (value) {
               range = KMapZoneAvailability.dateRange(from: value, to: range.to);
               _emit();

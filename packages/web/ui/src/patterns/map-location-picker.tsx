@@ -48,6 +48,8 @@ export interface KMapLocationPickerProps {
     signal: AbortSignal,
   ) => Promise<KMapLocation>;
   onConfirm?: (value: KMapLocation) => void;
+  /** Lets surrounding map controls yield space to search and address choices. */
+  onPanelOpenChange?: (open: boolean) => void;
   labels?: Partial<typeof defaults>;
   leading?: ReactNode;
   hint?: ReactNode;
@@ -68,6 +70,7 @@ export function KMapLocationPicker({
   onLocate,
   onReverseGeocode,
   onConfirm,
+  onPanelOpenChange,
   labels,
   leading,
   hint,
@@ -111,6 +114,7 @@ export function KMapLocationPicker({
   const reduced = useReducedMotion();
   const duration = reduced ? 0 : transitionMs;
   const open = panel !== "closed";
+  useEffect(() => { onPanelOpenChange?.(open); }, [open, onPanelOpenChange]);
   if (
     !Number.isFinite(transitionMs) ||
     transitionMs < 0 ||

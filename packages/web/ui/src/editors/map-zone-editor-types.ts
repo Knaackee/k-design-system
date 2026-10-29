@@ -27,6 +27,8 @@ export interface KMapZoneTravelCostSource {
 }
 
 export interface KMapZonePropertyOptions {
+  /** Hide scheduling fields when the host provides a separate scheduling step. */
+  showScheduling?: boolean;
   weekdayOptions: readonly KMapZonePropertyOption[];
   currency: string;
   timeZone: string;
@@ -58,6 +60,8 @@ export interface KMapZoneUndoAction {
 }
 
 export interface KMapZoneEditorProps {
+  /** Opens existing properties through the normal unsaved-change guard. Change requestId to reopen. */
+  editRequest?: { zoneId: string; requestId: number };
   zones: readonly KMapZone[];
   selectedZoneId: string | null;
   mapProps: ZoneMapProps;

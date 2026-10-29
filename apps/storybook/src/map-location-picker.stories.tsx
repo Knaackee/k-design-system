@@ -68,6 +68,7 @@ function Example({ args, dark }: { args: Args; dark: boolean }) {
       }}
     >
       <KMapLocationPicker
+        onPanelOpenChange={action('onPanelOpenChange')}
         mapProps={{
           mapStyle: style,
           center: [13.39, 52.525],

@@ -28,7 +28,7 @@ function enabledItems(level: HTMLElement) {
   );
 }
 
-function MenuLevel({
+export function MenuLevel({
   actions,
   close,
   nested = false,
@@ -138,13 +138,13 @@ function MenuLevel({
                 }}
               >
                 <span className="k-context-menu__icon">
-                  {action.icon ? (
-                    <KIcon name={action.icon} color="currentColor" />
-                  ) : null}
+                  {action.iconContent ?? (action.icon ? (
+                    <KIcon name={action.icon} color="currentColor" strokeWidth={1.5} />
+                  ) : null)}
                 </span>
                 <span>{action.label}</span>
                 {hasChildren ? (
-                  <KIcon name="chevron-right" color="currentColor" />
+                  <KIcon name="chevron-right" color="currentColor" strokeWidth={1.5} />
                 ) : null}
               </button>
               {hasChildren ? (

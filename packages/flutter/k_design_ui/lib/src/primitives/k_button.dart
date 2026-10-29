@@ -10,6 +10,7 @@ class KButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.loading = false,
+    this.content,
     this.fullWidth = false,
     this.leading,
     this.trailing,
@@ -19,6 +20,9 @@ class KButton extends StatelessWidget {
   });
 
   final String label;
+
+  /// Rich button content; label remains its accessible name.
+  final Widget? content;
   final VoidCallback? onPressed;
   final bool loading;
   final bool fullWidth;
@@ -127,7 +131,7 @@ class KButton extends StatelessWidget {
               ),
             ),
           ),
-          child: Row(
+          child: content != null ? Semantics(label: label, child: ExcludeSemantics(child: content!)) : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (loading) ...[

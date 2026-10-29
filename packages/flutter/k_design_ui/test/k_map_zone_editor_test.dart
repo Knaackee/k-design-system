@@ -72,6 +72,39 @@ Future<ValueNotifier<KMapZoneUndoAction?>> mount(
 }
 
 void main() {
+  testWidgets('host edit request opens existing zone properties', (
+    tester,
+  ) async {
+    final request = ValueNotifier<({String zoneId, int requestId})?>(null);
+    addTearDown(request.dispose);
+    await tester.binding.setSurfaceSize(const Size(1200, 850));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: ValueListenableBuilder(
+            valueListenable: request,
+            builder: (context, value, child) => KMapZoneEditor(
+              mapStyle: 'invalid',
+              center: const KMapCenter(longitude: 13.397, latitude: 52.52),
+              zones: const [zone],
+              editRequest: value,
+              propertyOptions: options,
+              onChange: (_) {},
+              onSelect: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    request.value = (zoneId: zone.id, requestId: 1);
+    await tester.pumpAndSettle();
+    expect(find.text('Einsatzzeiten'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'postal code used as label is not duplicated in a new zone name',
     (tester) async {

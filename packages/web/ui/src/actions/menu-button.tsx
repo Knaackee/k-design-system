@@ -1,3 +1,4 @@
+import { MenuLevel } from "./context-menu.js";
 import {
   Fragment,
   useEffect,
@@ -16,6 +17,8 @@ export interface KMenuAction {
   /** Consumer-provided leading visual, e.g. a file-type icon. */
   iconContent?: ReactNode;
   disabled?: boolean;
+  /** Radio-menu selection; omit for ordinary actions. */
+  checked?: boolean;
   destructive?: boolean;
   separatorBefore?: boolean;
   onSelect?: () => void;
@@ -51,6 +54,7 @@ export function KMenuButton({
   align = "start",
   onOpenChange,
 }: KMenuButtonProps) {
+  const nested = actions.some((action) => action.children?.length);
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
@@ -59,7 +63,7 @@ export function KMenuButton({
   const items = () =>
     Array.from(
       menu.current?.querySelectorAll<HTMLButtonElement>(
-        '[role="menuitem"]:not(:disabled)',
+        '[role="menuitem"]:not(:disabled), [role="menuitemradio"]:not(:disabled)',
       ) ?? [],
     );
   function close(restore = true) {
@@ -95,6 +99,13 @@ export function KMenuButton({
     menu.current?.showPopover();
     position();
     setOpen(true);
+    if (nested) {
+      requestAnimationFrame(() => {
+        const buttons = items();
+        (last ? buttons.at(-1) : buttons[0])?.focus();
+      });
+      return;
+    }
     const buttons = items();
     (last ? buttons.at(-1) : buttons[0])?.focus();
     if (!buttons.length) menu.current?.focus();
@@ -155,9 +166,9 @@ export function KMenuButton({
       <div
         id={id}
         ref={menu}
-        className="k-menu"
+        className={nested ? "k-menu k-context-menu" : "k-menu"}
         popover="auto"
-        role="menu"
+        role={nested ? "presentation" : "menu"}
         aria-label={label}
         tabIndex={-1}
         onToggle={(event) => {
@@ -166,6 +177,7 @@ export function KMenuButton({
           onOpenChange?.(next);
         }}
         onKeyDown={(event) => {
+          if (nested && event.key !== "Tab") return;
           event.stopPropagation();
           const buttons = items();
           const current = buttons.indexOf(
@@ -230,14 +242,15 @@ export function KMenuButton({
             {header}
           </div>
         ) : null}
-        {actions.map((action, index) => (
+        {nested ? <MenuLevel key={String(open)} actions={actions} close={close} label={label} /> : actions.map((action, index) => (
           <Fragment key={action.id}>
             {index > 0 && action.separatorBefore ? (
               <div role="separator" className="k-menu__separator" />
             ) : null}
             <button
               type="button"
-              role="menuitem"
+              role={action.checked === undefined ? "menuitem" : "menuitemradio"}
+              aria-checked={action.checked}
               tabIndex={-1}
               disabled={action.disabled}
               className="k-menu__item"
@@ -252,6 +265,9 @@ export function KMenuButton({
                   <KIcon name={action.icon} color="currentColor" />
                 ) : null)}
               <span>{action.label}</span>
+              {action.checked ? (
+                <KIcon name="check" size={16} strokeWidth={1.5} />
+              ) : null}
             </button>
           </Fragment>
         ))}

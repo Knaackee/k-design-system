@@ -432,6 +432,11 @@ export {
 } from "./feedback/activity-dot.js";
 
 export { KThemeSwitcher } from "./actions/theme-switcher.js";
+export { KLanguageSwitcher } from "./actions/language-switcher.js";
+export type {
+  KLanguageOption,
+  KLanguageSwitcherProps,
+} from "./actions/language-switcher.js";
 export { KUserMenu } from "./actions/user-menu.js";
 export type { KUserMenuProps, KUserMenuAction } from "./actions/user-menu.js";
 export type {
@@ -577,3 +582,4 @@ export type {
 
 export { KProgressDots } from "./data-display/progress-dots.js";
 export type { KProgressDotsProps } from "./data-display/progress-dots.js";
+export * from "./patterns/sortable-tree.js";

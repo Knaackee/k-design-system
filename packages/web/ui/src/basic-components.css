@@ -507,6 +507,10 @@
 .k-toast > div {
   display: grid;
   gap: var(--k-space-micro);
+  min-width: 0;
+}
+.k-toast__content > strong {
+  min-width: 0;
 }
 .k-toast > div > span {
   color: var(--k-color-text-muted);
