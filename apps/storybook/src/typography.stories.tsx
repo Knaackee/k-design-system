@@ -36,6 +36,50 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {};
 
+const balancedExamples = [
+  "Bereit für einen entspannteren Arbeitsalltag und mehr Umsatz?",
+  "Ready for a calmer working day and more revenue?",
+  "Prêt pour des journées plus sereines et un meilleur chiffre d’affaires ?",
+];
+
+export const BalancedMobile: Story = {
+  parameters: { fixtureId: "typography-balanced-mobile" },
+  render: () => (
+    <KStack
+      gap="section"
+      style={{ width: 340, maxWidth: "100%", textAlign: "center" }}
+    >
+      {balancedExamples.map((text) => (
+        <KText key={text} variant="heading1" textWrap="balance">
+          {text}
+        </KText>
+      ))}
+    </KStack>
+  ),
+};
+
+export const BalancedTablet: Story = {
+  parameters: { fixtureId: "typography-balanced-tablet" },
+  render: () => (
+    <KStack
+      gap="section"
+      style={{ width: 680, maxWidth: "100%", textAlign: "center" }}
+    >
+      {balancedExamples.map((text) => (
+        <KText key={text} variant="heading1" textWrap="balance">
+          {text}
+        </KText>
+      ))}
+    </KStack>
+  ),
+};
+
+export const BalancedLargeText: Story = {
+  ...BalancedMobile,
+  globals: { textScale: 1.5 },
+  parameters: { fixtureId: "typography-balanced-large-text" },
+};
+
 export const Scale: Story = {
   parameters: {
     fixtureId: "typography-scale",

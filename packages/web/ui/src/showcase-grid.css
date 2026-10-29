@@ -1,0 +1,98 @@
+.k-showcase-grid {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  overflow: hidden;
+  min-height: 32rem;
+}
+
+.k-showcase-grid__backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.k-showcase-grid__backdrop[data-fade="true"] {
+  mask-image: linear-gradient(transparent, black 16%, black 78%, transparent);
+}
+
+.k-showcase-grid__plane {
+  width: 120%;
+  margin-inline-start: -10%;
+  margin-block-start: -6%;
+  transform: rotate(var(--k-showcase-tilt));
+  transform-origin: 50% 0;
+}
+
+.k-showcase-grid__group {
+  display: grid;
+  grid-template-columns: repeat(var(--k-showcase-columns), minmax(0, 1fr));
+  gap: var(--k-showcase-gap);
+}
+.k-showcase-grid__plane[data-loop="true"] .k-showcase-grid__group {
+  padding-bottom: var(--k-showcase-gap);
+  min-height: 100cqh;
+  box-sizing: border-box;
+}
+.k-showcase-grid__plane[data-loop="true"] .k-showcase-grid__track {
+  animation: k-showcase-loop var(--k-showcase-loop-duration) linear infinite;
+}
+.k-showcase-grid__plane[data-loop="true"][data-animate="false"]
+  .k-showcase-grid__track {
+  animation-play-state: paused;
+}
+.k-showcase-grid__backdrop[data-loop="true"][data-fade="true"] {
+  mask-image: linear-gradient(transparent 38%, black 82%);
+}
+
+.k-showcase-grid__item {
+  min-width: 0;
+}
+
+.k-showcase-grid__plane[data-animate="true"][data-loop="false"]
+  .k-showcase-grid__item {
+  animation: k-showcase-enter var(--k-showcase-duration)
+    cubic-bezier(0.16, 1, 0.3, 1) var(--k-showcase-delay) both;
+}
+
+.k-showcase-grid__foreground {
+  position: relative;
+  min-height: inherit;
+  display: grid;
+  place-items: center;
+  padding: var(--k-space-layout-section-gap);
+}
+
+@container (max-width: 40rem) {
+  .k-showcase-grid__group {
+    grid-template-columns: repeat(
+      var(--k-showcase-compact-columns),
+      minmax(0, 1fr)
+    );
+  }
+}
+
+@keyframes k-showcase-loop {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes k-showcase-enter {
+  from {
+    opacity: 0;
+    transform: translateY(35%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-showcase-grid__plane[data-animate="true"] .k-showcase-grid__item,
+  .k-showcase-grid__plane[data-loop="true"] .k-showcase-grid__track {
+    animation: none;
+  }
+}

@@ -1,4 +1,5 @@
 import 'sortable_tree_fixture.dart';
+import 'showcase_grid_fixture.dart';
 import 'image_cropper_fixture.dart';
 import 'payment_setup_fixture.dart';
 import 'files_home_fixture.dart';
@@ -1198,6 +1199,10 @@ class KDesignWidgetbook extends StatelessWidget {
               for (final kind in ['categories', 'mobile', 'tablet', 'ungrouped', 'flat', 'deep', 'empty'])
                 WidgetbookUseCase(name: 'sortable-tree-$kind', builder: (_) => SortableTreeFixture(kind: kind)),
             ]),
+            WidgetbookFolder(name: 'ShowcaseGrid', children: [
+              for (final kind in ['hero', 'mobile', 'dark', 'grid-only', 'reduced-motion'])
+                WidgetbookUseCase(name: 'showcase-grid-$kind', builder: (_) => ShowcaseGridFixture(kind: kind)),
+            ]),
             WidgetbookFolder(
               name: 'PaymentSetup',
               children: [
@@ -1968,6 +1973,18 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'typography-primary',
                   builder: buildTypographyPrimary,
+                ),
+                WidgetbookUseCase(
+                  name: 'typography-balanced-mobile',
+                  builder: buildTypographyBalancedMobile,
+                ),
+                WidgetbookUseCase(
+                  name: 'typography-balanced-tablet',
+                  builder: buildTypographyBalancedTablet,
+                ),
+                WidgetbookUseCase(
+                  name: 'typography-balanced-large-text',
+                  builder: buildTypographyBalancedLargeText,
                 ),
                 WidgetbookUseCase(
                   name: 'typography-scale',

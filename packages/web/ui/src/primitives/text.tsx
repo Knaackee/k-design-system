@@ -19,6 +19,8 @@ export interface KTextProps extends HTMLAttributes<HTMLElement> {
   as?: KTextElement;
   children: ReactNode;
   variant?: KTextVariant;
+  /** Balance short paragraphs without changing typography or font size. */
+  textWrap?: "wrap" | "balance";
 }
 
 const defaultElements: Record<KTextVariant, KTextElement> = {
@@ -52,6 +54,8 @@ export function KText({
   children,
   className,
   variant = "body",
+  textWrap,
+  style,
   ...props
 }: KTextProps) {
   const element = as ?? defaultElements[variant];
@@ -61,7 +65,12 @@ export function KText({
 
   return createElement(
     element,
-    { ...props, className: classes, "data-variant": variant },
+    {
+      ...props,
+      className: classes,
+      "data-variant": variant,
+      style: textWrap ? { textWrap, ...style } : style,
+    },
     children,
   );
 }

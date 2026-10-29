@@ -14,6 +14,8 @@ enum KTextVariant {
   caption,
 }
 
+enum KTextWrap { wrap, balance }
+
 class KText extends StatelessWidget {
   const KText(
     this.data, {
@@ -23,6 +25,7 @@ class KText extends StatelessWidget {
     this.overflow,
     this.softWrap,
     this.style,
+    this.textWrap = KTextWrap.wrap,
     super.key,
   });
 
@@ -33,6 +36,7 @@ class KText extends StatelessWidget {
   final TextOverflow? overflow;
   final bool? softWrap;
   final TextStyle? style;
+  final KTextWrap textWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +137,101 @@ class KText extends StatelessWidget {
       ).merge(style),
     );
 
+    final Widget content = textWrap == KTextWrap.balance
+        ? _BalancedText(text: text)
+        : text;
     return headingLevel == null
-        ? text
-        : Semantics(headingLevel: headingLevel, child: text);
+        ? content
+        : Semantics(headingLevel: headingLevel, child: content);
+  }
+}
+
+// Keep the natural line count, then find the narrowest fitting paragraph.
+// This is intentionally bounded to headings/short paragraphs, not body layouts.
+class _BalancedText extends StatelessWidget {
+  const _BalancedText({required this.text});
+  final Text text;
+
+  @override
+  Widget build(BuildContext context) {
+    final defaults = DefaultTextStyle.of(context);
+    final direction = Directionality.of(context);
+    final alignment = text.textAlign ?? defaults.textAlign ?? TextAlign.start;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (!constraints.hasBoundedWidth ||
+            constraints.maxWidth <= 0 ||
+            text.data!.contains('\n') ||
+            !(text.softWrap ?? defaults.softWrap)) {
+          return text;
+        }
+        var effectiveStyle = text.style == null || text.style!.inherit
+            ? defaults.style.merge(text.style)
+            : text.style!;
+        if (MediaQuery.boldTextOf(context)) {
+          effectiveStyle = effectiveStyle.merge(
+            const TextStyle(fontWeight: FontWeight.bold),
+          );
+        }
+        final painter = TextPainter(
+          text: TextSpan(text: text.data, style: effectiveStyle),
+          textDirection: direction,
+          textAlign: alignment,
+          textScaler: MediaQuery.textScalerOf(context),
+          locale: Localizations.maybeLocaleOf(context),
+          textHeightBehavior: defaults.textHeightBehavior,
+          maxLines: text.maxLines ?? defaults.maxLines,
+          ellipsis:
+              (text.overflow ?? defaults.overflow) == TextOverflow.ellipsis
+              ? '\u2026'
+              : null,
+        );
+        double width = constraints.maxWidth;
+        try {
+          painter.layout(maxWidth: width);
+          final lines = painter.computeLineMetrics().length;
+          if (painter.didExceedMaxLines || lines < 2 || lines > 6) return text;
+          double lower = 0;
+          double upper = width;
+          for (
+            var iteration = 0;
+            iteration < 16 && upper - lower > .25;
+            iteration++
+          ) {
+            final candidate = (lower + upper) / 2;
+            painter.layout(maxWidth: candidate);
+            final metrics = painter.computeLineMetrics();
+            if (!painter.didExceedMaxLines &&
+                metrics.length == lines &&
+                metrics.every((line) => line.width <= candidate + .01)) {
+              upper = candidate;
+            } else {
+              lower = candidate;
+            }
+          }
+          width = upper;
+        } finally {
+          painter.dispose();
+        }
+        final resolved = switch (alignment) {
+          TextAlign.center => Alignment.center,
+          TextAlign.right => Alignment.centerRight,
+          TextAlign.left => Alignment.centerLeft,
+          TextAlign.end =>
+            direction == TextDirection.ltr
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
+          _ =>
+            direction == TextDirection.ltr
+                ? Alignment.centerLeft
+                : Alignment.centerRight,
+        };
+        return Align(
+          alignment: resolved,
+          heightFactor: 1,
+          child: SizedBox(width: width, child: text),
+        );
+      },
+    );
   }
 }

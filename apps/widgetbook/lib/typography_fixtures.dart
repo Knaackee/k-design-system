@@ -6,6 +6,46 @@ Widget buildTypographyPrimary(BuildContext context) {
   return const Center(child: KText('Designing software with clarity'));
 }
 
+Widget buildTypographyBalancedMobile(BuildContext context) => _balanced(340);
+Widget buildTypographyBalancedTablet(BuildContext context) => _balanced(680);
+Widget buildTypographyBalancedLargeText(BuildContext context) => MediaQuery(
+  data: MediaQuery.of(
+    context,
+  ).copyWith(textScaler: const TextScaler.linear(1.5)),
+  child: _balanced(340),
+);
+
+Widget _balanced(double width) => SingleChildScrollView(
+  child: Center(
+    child: SizedBox(
+      width: width,
+      child: const KStack(
+        gap: KLayoutGap.section,
+        children: [
+          KText(
+            'Bereit für einen entspannteren Arbeitsalltag und mehr Umsatz?',
+            variant: KTextVariant.heading1,
+            textWrap: KTextWrap.balance,
+            align: TextAlign.center,
+          ),
+          KText(
+            'Ready for a calmer working day and more revenue?',
+            variant: KTextVariant.heading1,
+            textWrap: KTextWrap.balance,
+            align: TextAlign.center,
+          ),
+          KText(
+            'Prêt pour des journées plus sereines et un meilleur chiffre d’affaires ?',
+            variant: KTextVariant.heading1,
+            textWrap: KTextWrap.balance,
+            align: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+
 Widget buildTypographyScale(BuildContext context) {
   final tokens = Theme.of(context).extension<KDesignTokens>()!;
   return SingleChildScrollView(
