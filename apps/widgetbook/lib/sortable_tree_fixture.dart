@@ -324,6 +324,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                   expandedIds: expanded,
                   onExpandedChange: (ids) => setState(() => expanded = ids),
                   ungroupedLabel: mode == 'flat' ? null : 'Ohne Kategorie',
+                  defaultUngroupedExpanded: widget.kind != 'ungrouped',
                   onMove: (move) {
                     final node = flattenKSortableTree(
                       nodes,

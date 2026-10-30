@@ -242,35 +242,46 @@ export function KMenuButton({
             {header}
           </div>
         ) : null}
-        {nested ? <MenuLevel key={String(open)} actions={actions} close={close} label={label} /> : actions.map((action, index) => (
-          <Fragment key={action.id}>
-            {index > 0 && action.separatorBefore ? (
-              <div role="separator" className="k-menu__separator" />
-            ) : null}
-            <button
-              type="button"
-              role={action.checked === undefined ? "menuitem" : "menuitemradio"}
-              aria-checked={action.checked}
-              tabIndex={-1}
-              disabled={action.disabled}
-              className="k-menu__item"
-              data-destructive={action.destructive || undefined}
-              onClick={() => {
-                close();
-                action.onSelect?.();
-              }}
-            >
-              {action.iconContent ??
-                (action.icon ? (
-                  <KIcon name={action.icon} color="currentColor" />
-                ) : null)}
-              <span>{action.label}</span>
-              {action.checked ? (
-                <KIcon name="check" size={16} strokeWidth={1.5} />
+        {nested ? (
+          <MenuLevel
+            key={String(open)}
+            actions={actions}
+            close={close}
+            label={label}
+          />
+        ) : (
+          actions.map((action, index) => (
+            <Fragment key={action.id}>
+              {index > 0 && action.separatorBefore ? (
+                <div role="separator" className="k-menu__separator" />
               ) : null}
-            </button>
-          </Fragment>
-        ))}
+              <button
+                type="button"
+                role={
+                  action.checked === undefined ? "menuitem" : "menuitemradio"
+                }
+                aria-checked={action.checked}
+                tabIndex={-1}
+                disabled={action.disabled}
+                className="k-menu__item"
+                data-destructive={action.destructive || undefined}
+                onClick={() => {
+                  close();
+                  action.onSelect?.();
+                }}
+              >
+                {action.iconContent ??
+                  (action.icon ? (
+                    <KIcon name={action.icon} color="currentColor" />
+                  ) : null)}
+                <span>{action.label}</span>
+                {action.checked ? (
+                  <KIcon name="check" size={16} strokeWidth={1.5} />
+                ) : null}
+              </button>
+            </Fragment>
+          ))
+        )}
       </div>
     </>
   );

@@ -114,7 +114,9 @@ export function KMapLocationPicker({
   const reduced = useReducedMotion();
   const duration = reduced ? 0 : transitionMs;
   const open = panel !== "closed";
-  useEffect(() => { onPanelOpenChange?.(open); }, [open, onPanelOpenChange]);
+  useEffect(() => {
+    onPanelOpenChange?.(open);
+  }, [open, onPanelOpenChange]);
   if (
     !Number.isFinite(transitionMs) ||
     transitionMs < 0 ||

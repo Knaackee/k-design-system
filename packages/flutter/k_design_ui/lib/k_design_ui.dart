@@ -119,3 +119,6 @@ export 'src/patterns/k_integration_editor.dart';
 export 'src/patterns/k_payment_setup.dart';
 export 'src/patterns/k_image_cropper.dart';
 export 'src/patterns/k_showcase_grid.dart';
+export 'src/patterns/k_celebration.dart';
+
+export 'src/feedback/k_sound.dart';

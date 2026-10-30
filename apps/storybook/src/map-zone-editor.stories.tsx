@@ -549,7 +549,6 @@ export const FullscreenEmpty: Story = {
   },
 };
 
-
 export const AreasOnly: Story = {
   name: "Onboarding: Gebiete ohne Zeiten",
   args: { showScheduling: false },

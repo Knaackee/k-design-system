@@ -30,6 +30,7 @@ class KSortableTree<T> extends StatefulWidget {
     this.maxDepth,
     this.minRowHeight,
     this.ungroupedLabel,
+    this.defaultUngroupedExpanded = true,
     this.disabled = false,
     this.labels = const KSortableTreeLabels(),
     super.key,
@@ -50,6 +51,7 @@ class KSortableTree<T> extends StatefulWidget {
 
   /// Display-only group for root leaves. Move events retain parentId == null.
   final String? ungroupedLabel;
+  final bool defaultUngroupedExpanded;
   final bool disabled;
   final KSortableTreeLabels labels;
   @override
@@ -63,7 +65,7 @@ class _KSortableTreeState<T> extends State<KSortableTree<T>> {
         for (final e in flattenKSortableTree(widget.nodes))
           if (e.node.children != null) e.node.id,
       };
-  bool _ungroupedOpen = true;
+  late bool _ungroupedOpen = widget.defaultUngroupedExpanded;
   void toggleUngrouped() => setState(() => _ungroupedOpen = !_ungroupedOpen);
   String? _dragging;
   String _announcement = '';

@@ -84,6 +84,7 @@ export interface KSortableTreeProps<T = unknown> {
   className?: string;
   /** Display root leaves in a fixed visual group; move events still use parentId null. */
   ungroupedLabel?: string;
+  defaultUngroupedExpanded?: boolean;
 }
 /** Controlled recursive data with flat, stable row keys so reparenting preserves row state. */
 export function KSortableTree<T>({
@@ -102,6 +103,7 @@ export function KSortableTree<T>({
   ariaLabel = "Sortable hierarchy",
   className,
   ungroupedLabel,
+  defaultUngroupedExpanded = true,
 }: KSortableTreeProps<T>) {
   const id = useId();
   const rowHeights = useRef(new Map<string, number>());
@@ -132,7 +134,9 @@ export function KSortableTree<T>({
   );
   const expanded = expandedIds ?? internalExpanded;
   const ungroupedId = `${id}:ungrouped`;
-  const [ungroupedExpanded, setUngroupedExpanded] = useState(true);
+  const [ungroupedExpanded, setUngroupedExpanded] = useState(
+    defaultUngroupedExpanded,
+  );
   const rootLeaves = nodes.filter((node) => node.children === undefined);
   const grouped = ungroupedLabel !== undefined && rootLeaves.length > 0;
   const baseVisible = flattenKSortableTree(nodes, expanded);

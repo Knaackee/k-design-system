@@ -382,6 +382,16 @@ class _FormFixtureState extends State<FormFixture> {
               label: 'Read only',
               child: _input(controller: _readOnly, readOnly: true),
             ),
+            if (widget.kind == 'input')
+              const KField(
+                label: 'Website',
+                child: KInput(
+                  leading: KIcon(KIconName.globe, size: 20),
+                  keyboardType: TextInputType.url,
+                  autocorrect: false,
+                  placeholder: 'www.example.com',
+                ),
+              ),
             KField(
               label: 'Unavailable',
               child: _input(controller: _disabled, enabled: false),

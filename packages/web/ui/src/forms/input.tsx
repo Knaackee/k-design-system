@@ -17,6 +17,8 @@ export interface KInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size"
 > {
+  /** Decorative leading content inside the input, matching Flutter KInput. */
+  leading?: ReactNode;
   /** An end action, hidden for disabled, read-only or password input. */
   trailingAction?: ReactNode;
   dictationState?: KDictationState;
@@ -30,6 +32,7 @@ export interface KInputProps extends Omit<
 export const KInput = forwardRef<HTMLInputElement, KInputProps>(function KInput(
   {
     className = "",
+    leading,
     clearable = false,
     clearLabel,
     onClear,
@@ -77,7 +80,13 @@ export const KInput = forwardRef<HTMLInputElement, KInputProps>(function KInput(
       className="k-input-target k-input-clearable"
       data-clearable={canClear || undefined}
       data-trailing-action={action ? true : undefined}
+      data-leading={leading ? true : undefined}
     >
+      {leading && (
+        <span className="k-input-leading" aria-hidden="true">
+          {leading}
+        </span>
+      )}
       <input
         id={field.id}
         aria-describedby={field.description}

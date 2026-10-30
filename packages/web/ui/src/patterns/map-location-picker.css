@@ -6,7 +6,10 @@
 .k-location-picker {
   position: relative;
   height: var(--k-location-height, 85dvh);
-  min-height: min(var(--k-location-height, 85dvh), calc(520 * var(--k-space-hairline)));
+  min-height: min(
+    var(--k-location-height, 85dvh),
+    calc(520 * var(--k-space-hairline))
+  );
   overflow: hidden;
   border-radius: var(--k-radius-card);
   background: var(--k-color-surface-subtle);
@@ -26,7 +29,7 @@
 }
 .k-location-picker__overlay {
   position: absolute;
-  inset: 0;
+  inset: var(--k-location-overlay-inset, 0);
   display: flex;
   align-items: flex-start;
   justify-content: center;

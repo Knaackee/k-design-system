@@ -150,11 +150,20 @@ export function KMapZoneEditor({
   const transitions = useZoneEditorTransition(draftDirty || properties.dirty);
   const handledEdit = useRef<number | undefined>(undefined);
   useEffect(() => {
-    if (!editRequest || disabled || handledEdit.current === editRequest.requestId) return;
-    const zone = zones.find(zone => zone.id === editRequest.zoneId);
+    if (
+      !editRequest ||
+      disabled ||
+      handledEdit.current === editRequest.requestId
+    )
+      return;
+    const zone = zones.find((zone) => zone.id === editRequest.zoneId);
     if (!zone) return;
     handledEdit.current = editRequest.requestId;
-    transitions.request(() => { propertiesFromMap.current = true; setPanelOpen(true); propertyState.openFor(zone); });
+    transitions.request(() => {
+      propertiesFromMap.current = true;
+      setPanelOpen(true);
+      propertyState.openFor(zone);
+    });
   }, [editRequest, disabled, zones, transitions, propertyState, setPanelOpen]);
 
   const begin = (zone: KMapZone) => {

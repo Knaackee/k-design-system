@@ -162,10 +162,7 @@ export function TreeRow<T>({
                 toggle();
             }}
           >
-            <KIcon
-              name={fixed ? "folder" : "grip-vertical"}
-              strokeWidth={1.5}
-            />
+            <KIcon name="grip-vertical" strokeWidth={1.5} />
           </KButton>
           {children}
           {!fixed && (

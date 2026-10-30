@@ -1,5 +1,6 @@
 import 'sortable_tree_fixture.dart';
 import 'showcase_grid_fixture.dart';
+import 'celebration_fixture.dart';
 import 'image_cropper_fixture.dart';
 import 'payment_setup_fixture.dart';
 import 'files_home_fixture.dart';
@@ -71,6 +72,7 @@ import 'agent_chat_switcher_fixture.dart';
 import 'agent_chat_workspace_fixture.dart';
 import 'web_search_fixture.dart';
 import 'foley_sounds_fixture.dart';
+import 'sound_onboarding_fixture.dart';
 import 'agent_switcher_variants_fixture.dart';
 import 'ask_tools_fixture.dart';
 import 'workflow_fixture.dart';
@@ -1199,6 +1201,15 @@ class KDesignWidgetbook extends StatelessWidget {
               for (final kind in ['categories', 'mobile', 'tablet', 'ungrouped', 'flat', 'deep', 'empty'])
                 WidgetbookUseCase(name: 'sortable-tree-$kind', builder: (_) => SortableTreeFixture(kind: kind)),
             ]),
+            WidgetbookFolder(
+              name: 'Celebration',
+              children: [
+                WidgetbookUseCase(
+                  name: 'celebration-profile-reveal',
+                  builder: (context) => const CelebrationFixture(),
+                ),
+              ],
+            ),
             WidgetbookFolder(name: 'ShowcaseGrid', children: [
               for (final kind in ['hero', 'mobile', 'dark', 'grid-only', 'reduced-motion'])
                 WidgetbookUseCase(name: 'showcase-grid-$kind', builder: (_) => ShowcaseGridFixture(kind: kind)),
@@ -1321,6 +1332,7 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'review',
                   builder: buildFoleySoundsReview,
                 ),
+                WidgetbookUseCase(name: 'onboarding', builder: (_) => const SoundOnboardingFixture()),
               ],
             ),
             WidgetbookComponent(

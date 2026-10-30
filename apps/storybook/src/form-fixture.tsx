@@ -302,6 +302,15 @@ export function FormFixture({
         <KField label="Required name" errorText="Enter an item name.">
           <Control placeholder="New item" />
         </KField>
+        {kind === "input" && (
+          <KField label="Website">
+            <KInput
+              leading={<KIcon name="globe" size={20} strokeWidth={1.5} />}
+              placeholder="www.example.com"
+              inputMode="url"
+            />
+          </KField>
+        )}
         <KField label="Read only">
           <Control value="Workspace overview" readOnly />
         </KField>

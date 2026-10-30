@@ -1,0 +1,33 @@
+/** Identical recorded Foley cues on Web and Flutter. */
+export const kSoundSources = {
+  tick: new URL("../../src/assets/foley/tick.wav", import.meta.url).href,
+  hover: new URL("../../src/assets/foley/hover.wav", import.meta.url).href,
+  glide: new URL("../../src/assets/foley/glide.wav", import.meta.url).href,
+  pop: new URL("../../src/assets/foley/pop.wav", import.meta.url).href,
+  press: new URL("../../src/assets/foley/press.wav", import.meta.url).href,
+  release: new URL("../../src/assets/foley/release.wav", import.meta.url).href,
+  tap: new URL("../../src/assets/foley/tap.wav", import.meta.url).href,
+  thock: new URL("../../src/assets/foley/thock.wav", import.meta.url).href,
+  on: new URL("../../src/assets/foley/on.wav", import.meta.url).href,
+  off: new URL("../../src/assets/foley/off.wav", import.meta.url).href,
+  switch: new URL("../../src/assets/foley/switch.wav", import.meta.url).href,
+  latch: new URL("../../src/assets/foley/latch.wav", import.meta.url).href,
+  success: new URL("../../src/assets/foley/success.wav", import.meta.url).href,
+  error: new URL("../../src/assets/foley/error.wav", import.meta.url).href,
+  warning: new URL("../../src/assets/foley/warning.wav", import.meta.url).href,
+  denied: new URL("../../src/assets/foley/denied.wav", import.meta.url).href,
+  chime: new URL("../../src/assets/foley/chime.wav", import.meta.url).href,
+  ping: new URL("../../src/assets/foley/ping.wav", import.meta.url).href,
+  bell: new URL("../../src/assets/foley/bell.wav", import.meta.url).href,
+  bubble: new URL("../../src/assets/foley/bubble.wav", import.meta.url).href,
+  swoosh: new URL("../../src/assets/foley/swoosh.wav", import.meta.url).href,
+  whoosh: new URL("../../src/assets/foley/whoosh.wav", import.meta.url).href,
+  drop: new URL("../../src/assets/foley/drop.wav", import.meta.url).href,
+  rise: new URL("../../src/assets/foley/rise.wav", import.meta.url).href,
+  loading: new URL("../../src/assets/foley/loading.wav", import.meta.url).href,
+  ready: new URL("../../src/assets/foley/ready.wav", import.meta.url).href,
+  complete: new URL("../../src/assets/foley/complete.wav", import.meta.url)
+    .href,
+  sparkle: new URL("../../src/assets/foley/sparkle.wav", import.meta.url).href,
+} as const;
+export type KSoundCue = keyof typeof kSoundSources;

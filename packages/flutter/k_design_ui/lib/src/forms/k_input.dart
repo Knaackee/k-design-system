@@ -15,6 +15,9 @@ class KInput extends StatefulWidget {
     this.onChanged,
     this.onSubmitted,
     this.autofocus = false,
+    this.keyboardType,
+    this.minHeight,
+    this.autocorrect = true,
     this.placeholder,
     this.leading,
     this.pill = false,
@@ -35,6 +38,11 @@ class KInput extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final bool autofocus;
+  final TextInputType? keyboardType;
+
+  /// Minimum visible field height; larger text may still grow the field.
+  final double? minHeight;
+  final bool autocorrect;
   final String? placeholder;
   final Widget? leading;
   final bool pill;
@@ -141,6 +149,17 @@ class _KInputState extends State<KInput> {
         disabledBorder: rounded(appearance.disabledBorder),
       );
     }
+    if (widget.minHeight != null) {
+      final padding = appearance.contentPadding! as EdgeInsets;
+      final extra = math.max(0.0, widget.minHeight! - t.sizeControl) / 2;
+      appearance = appearance.copyWith(
+        constraints: BoxConstraints(minHeight: widget.minHeight!),
+        contentPadding: padding.copyWith(
+          top: padding.top + extra,
+          bottom: padding.bottom + extra,
+        ),
+      );
+    }
     return KDictationFieldOverlay(
       controller: _controller,
       state: widget.enabled && !widget.readOnly && !widget.obscureText
@@ -183,11 +202,13 @@ class _KInputState extends State<KInput> {
                       onChanged: widget.onChanged,
                       onSubmitted: widget.onSubmitted,
                       autofocus: widget.autofocus,
+                      keyboardType: widget.keyboardType,
                       enabled: widget.enabled,
                       readOnly: widget.readOnly,
                       obscureText: widget.obscureText,
-                      autocorrect: !widget.obscureText,
-                      enableSuggestions: !widget.obscureText,
+                      autocorrect: widget.autocorrect && !widget.obscureText,
+                      enableSuggestions:
+                          widget.autocorrect && !widget.obscureText,
                       textAlignVertical: formInputAlignment(appearance),
                       style: formTextStyle(context),
                       cursorColor: t.colorBorderFocus,

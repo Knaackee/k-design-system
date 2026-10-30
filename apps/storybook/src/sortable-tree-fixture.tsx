@@ -302,6 +302,7 @@ export function SortableTreeFixture({
           nodes={nodes}
           minRowHeight={96}
           ungroupedLabel={mode === "flat" ? undefined : "Ohne Kategorie"}
+          defaultUngroupedExpanded={!ungrouped}
           onMove={onMove}
           expandedIds={expanded}
           onExpandedChange={setExpanded}

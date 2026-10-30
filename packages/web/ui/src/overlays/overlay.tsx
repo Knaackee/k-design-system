@@ -1,6 +1,13 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Sheet, type SheetRef } from "react-modal-sheet";
-import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { KIconButton } from "../actions/icon-button.js";
 import { usePageSheetEffect } from "./use-page-sheet-effect.js";
 
@@ -95,7 +102,12 @@ export function KDesktopDialog({
         <Dialog.Content
           className={["k-dialog", className].filter(Boolean).join(" ")}
           data-adaptive-surface="dialog"
-          onOpenAutoFocus={event => { if (initialFocusRef?.current) { event.preventDefault(); initialFocusRef.current.focus(); } }}
+          onOpenAutoFocus={(event) => {
+            if (initialFocusRef?.current) {
+              event.preventDefault();
+              initialFocusRef.current.focus();
+            }
+          }}
           style={{ zIndex }}
           onEscapeKeyDown={(event) => handleEscape(event, dismissible)}
           onPointerDownOutside={
@@ -208,7 +220,13 @@ export function KBottomSheet({
           });
         }}
         disableDismiss={!dismissible}
-        onOpenEnd={() => (initialFocusRef?.current ?? closeRef.current ?? containerRef.current)?.focus()}
+        onOpenEnd={() =>
+          (
+            initialFocusRef?.current ??
+            closeRef.current ??
+            containerRef.current
+          )?.focus()
+        }
         prefersReducedMotion={
           typeof window !== "undefined" &&
           typeof window.matchMedia === "function" &&
@@ -226,7 +244,11 @@ export function KBottomSheet({
               document.activeElement instanceof HTMLElement
                 ? document.activeElement
                 : null;
-            (initialFocusRef?.current ?? closeRef.current ?? containerRef.current)?.focus();
+            (
+              initialFocusRef?.current ??
+              closeRef.current ??
+              containerRef.current
+            )?.focus();
           }}
           onCloseAutoFocus={(event) => {
             if (presentationRootId && openerRef.current?.isConnected) {

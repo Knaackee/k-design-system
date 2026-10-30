@@ -30,9 +30,9 @@ extension _SortableTreeRows<T> on _KSortableTreeState<T> {
     Widget handle = KIconButton(
       label:
           '${fixed ? (open ? widget.labels.collapse : widget.labels.expand) : widget.labels.drag}: ${e.node.label}',
-      icon: fixed ? KIconName.folder : KIconName.gripVertical,
+      icon: KIconName.gripVertical,
       iconContent: KIcon(
-        fixed ? KIconName.folder : KIconName.gripVertical,
+        KIconName.gripVertical,
         strokeWidth: 1.5,
       ),
       selected: false,

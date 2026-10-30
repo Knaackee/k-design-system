@@ -91,6 +91,7 @@ export function KSnackbar({ message, ...props }: KSnackbarProps) {
   return <Notification {...props} title={message} compact />;
 }
 export interface KToastViewportProps {
+  bottomOffset?: number;
   children: ReactNode;
   label?: string;
   /** Occupied height in CSS pixels, including exit motion; zero once cleared. */
@@ -103,6 +104,7 @@ export function KToastViewport({
   label = "Notifications",
   onHeightChange,
   position = "bottom-end",
+  bottomOffset,
 }: KToastViewportProps) {
   const visible = Children.toArray(children).length > 0;
   const [retained, setRetained] = useState(children);
@@ -143,6 +145,11 @@ export function KToastViewport({
   return (
     <section
       ref={viewport}
+      style={
+        bottomOffset === undefined
+          ? undefined
+          : { bottom: `max(${bottomOffset}px, env(safe-area-inset-bottom))` }
+      }
       className="k-toast-viewport"
       data-visible={visible || undefined}
       inert={!visible}

@@ -40,11 +40,30 @@
   pointer-events: none;
 }
 .k-input-target {
+  position: relative;
   display: flex;
   align-items: center;
   min-height: max(var(--k-size-control), var(--k-size-hit-target));
   width: 100%;
   min-width: 0;
+}
+.k-input-leading {
+  position: absolute;
+  inset-inline-start: var(--k-space-control-inset-inline);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--k-size-content);
+  color: var(--k-color-text-muted);
+  pointer-events: none;
+}
+.k-input-target[data-leading] > .k-input {
+  padding-inline-start: calc(
+    var(--k-space-control-inset-inline) + var(--k-size-content) +
+      var(--k-space-control-gap)
+  );
 }
 .k-input {
   box-sizing: border-box;

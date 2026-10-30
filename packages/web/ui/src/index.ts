@@ -584,3 +584,5 @@ export { KProgressDots } from "./data-display/progress-dots.js";
 export type { KProgressDotsProps } from "./data-display/progress-dots.js";
 export * from "./patterns/sortable-tree.js";
 export * from "./patterns/showcase-grid.js";
+export * from "./patterns/celebration.js";
+export * from "./feedback/sound.js";

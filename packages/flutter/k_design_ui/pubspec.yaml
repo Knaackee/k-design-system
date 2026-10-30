@@ -10,6 +10,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  audioplayers: 6.8.1
   fl_chart: 1.2.0
   flutter:
     sdk: flutter
@@ -37,6 +38,7 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/foley/
     - assets/great-icons/
     - assets/dicebear/
     - assets/dicebear/styles/

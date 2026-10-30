@@ -220,6 +220,7 @@ class KToast extends StatelessWidget {
   final KToastTone tone;
   static KToastController show({
     required BuildContext context,
+    double? bottomOffset,
     required Widget title,
     Widget? description,
     Widget? icon,
@@ -243,6 +244,7 @@ class KToast extends StatelessWidget {
       onDismiss: dismiss,
     ),
     position,
+    bottomOffset: bottomOffset,
   );
 
   @override

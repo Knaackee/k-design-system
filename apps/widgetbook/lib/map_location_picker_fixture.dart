@@ -78,6 +78,20 @@ Widget _buildFixture(
       width: width ?? double.infinity,
       height: 720,
       child: _LocationPickerFixture(
+        overlayInsets: EdgeInsets.only(
+          top: context.knobs.double.slider(
+            label: 'Overlay top inset',
+            initialValue: 0,
+            min: 0,
+            max: 200,
+          ),
+          bottom: context.knobs.double.slider(
+            label: 'Overlay bottom inset',
+            initialValue: 0,
+            min: 0,
+            max: 160,
+          ),
+        ),
         transitionDuration: Duration(milliseconds: transitionMs),
         blur: blur,
         bounce: bounce,
@@ -93,6 +107,7 @@ Widget _buildFixture(
 
 class _LocationPickerFixture extends StatefulWidget {
   const _LocationPickerFixture({
+    required this.overlayInsets,
     required this.transitionDuration,
     required this.blur,
     required this.bounce,
@@ -103,6 +118,7 @@ class _LocationPickerFixture extends StatefulWidget {
     required this.customMarker,
   });
 
+  final EdgeInsets overlayInsets;
   final Duration transitionDuration;
   final double blur;
   final bool bounce;
@@ -125,6 +141,7 @@ class _LocationPickerFixtureState extends State<_LocationPickerFixture> {
     final style = jsonEncode(createKMapStyle(tokens: tokens));
     return KMapLocationPicker(
       mapStyle: style,
+      overlayInsets: widget.overlayInsets,
       center: const KMapCenter(longitude: 13.39, latitude: 52.525),
       value: _selection,
       onChanged: (value) => setState(() => _selection = value),

@@ -44,6 +44,8 @@ class KMapLocationPicker extends StatefulWidget {
     this.onConfirm,
     this.labels = const KMapLocationPickerLabels(),
     this.leading,
+    this.overlayInsets = EdgeInsets.zero,
+    this.onPanelOpenChanged,
     this.hint,
     this.marker,
     this.markerAppearance = KMapLocationPickerMarkerAppearance.defaultStyle,
@@ -73,6 +75,10 @@ class KMapLocationPicker extends StatefulWidget {
   final ValueChanged<KMapLocation>? onConfirm;
   final KMapLocationPickerLabels labels;
   final Widget? leading;
+
+  /// Space reserved for host header and wizard overlays; map remains full size.
+  final EdgeInsets overlayInsets;
+  final ValueChanged<bool>? onPanelOpenChanged;
   final Widget? hint;
 
   /// Optional visual content rendered inside the draggable map marker.
@@ -112,6 +118,7 @@ class _KMapLocationPickerState extends State<KMapLocationPicker> {
   Timer? _arrivalTimer;
   Timer? _hintTimer;
   List<KMapLocation> _results = const [];
+  bool? _reportedOpen;
   bool _searchBusy = false;
   bool _operationBusy = false;
   bool _error = false;
@@ -361,6 +368,13 @@ class _KMapLocationPickerState extends State<KMapLocationPicker> {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
     final duration = _duration(context);
     final location = _location;
+    if (_reportedOpen != _open) {
+      _reportedOpen = _open;
+      final open = _open;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onPanelOpenChanged?.call(open);
+      });
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(tokens.radiusCard),
       child: ColoredBox(
@@ -387,7 +401,10 @@ class _KMapLocationPickerState extends State<KMapLocationPicker> {
                     : Colors.transparent,
               ),
             ),
-            _buildPanel(context, tokens, location),
+            Padding(
+              padding: widget.overlayInsets,
+              child: _buildPanel(context, tokens, location),
+            ),
             if (!_open && _showHint && location != null)
               _buildHint(tokens, duration, location),
           ],

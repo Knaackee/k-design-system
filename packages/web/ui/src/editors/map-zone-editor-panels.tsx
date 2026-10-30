@@ -176,9 +176,55 @@ export function ZoneCreationOptions({
           >
             <span aria-hidden="true">
               <svg viewBox="0 0 96 72" focusable="false">
-                <path d="M0 16H96M0 48H96M24 0V72M67 0V72M0 70L96 4" fill="none" stroke="currentColor" opacity=".14" strokeWidth="5" />
-                <g fill="currentColor" fillOpacity=".16" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
-                  {index === 0 ? <><circle cx="48" cy="36" r="25"/><path d="M48 36H73" strokeDasharray="3 3"/><circle cx="48" cy="36" r="3" fillOpacity="1"/></> : index === 1 ? <><path d="M15 12L42 9L53 29L34 45L12 36Z"/><path d="M53 29L80 18L85 49L61 61L34 45Z" fillOpacity=".32"/></> : <><path d="M17 19L49 10L79 28L66 60L29 55L12 38Z"/>{[[17,19],[49,10],[79,28],[66,60],[29,55],[12,38]].map(([cx,cy]) => <circle key={cx} cx={cx} cy={cy} r="2.5" fillOpacity="1"/>)}</>}
+                <path
+                  d="M0 16H96M0 48H96M24 0V72M67 0V72M0 70L96 4"
+                  fill="none"
+                  stroke="currentColor"
+                  opacity=".14"
+                  strokeWidth="5"
+                />
+                <g
+                  fill="currentColor"
+                  fillOpacity=".16"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinejoin="round"
+                >
+                  {index === 0 ? (
+                    <>
+                      <circle cx="48" cy="36" r="25" />
+                      <path d="M48 36H73" strokeDasharray="3 3" />
+                      <circle cx="48" cy="36" r="3" fillOpacity="1" />
+                    </>
+                  ) : index === 1 ? (
+                    <>
+                      <path d="M15 12L42 9L53 29L34 45L12 36Z" />
+                      <path
+                        d="M53 29L80 18L85 49L61 61L34 45Z"
+                        fillOpacity=".32"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <path d="M17 19L49 10L79 28L66 60L29 55L12 38Z" />
+                      {[
+                        [17, 19],
+                        [49, 10],
+                        [79, 28],
+                        [66, 60],
+                        [29, 55],
+                        [12, 38],
+                      ].map(([cx, cy]) => (
+                        <circle
+                          key={cx}
+                          cx={cx}
+                          cy={cy}
+                          r="2.5"
+                          fillOpacity="1"
+                        />
+                      ))}
+                    </>
+                  )}
                 </g>
               </svg>
             </span>
