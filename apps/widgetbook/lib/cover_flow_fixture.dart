@@ -3,8 +3,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
-class CoverFlowFixture extends StatelessWidget {
-  const CoverFlowFixture({super.key});
+class CoverFlowFixture extends StatefulWidget {
+  const CoverFlowFixture({super.key, this.reveal = false});
+  final bool reveal;
+  @override
+  State<CoverFlowFixture> createState() => _CoverFlowFixtureState();
+}
+
+class _CoverFlowFixtureState extends State<CoverFlowFixture> {
+  int replay = 0;
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
     child: Center(
@@ -19,7 +26,45 @@ class CoverFlowFixture extends StatelessWidget {
                 variant: KTextVariant.heading2,
               ),
             ),
+            if (widget.reveal)
+              KButton(
+                onPressed: () => setState(() => replay++),
+                label: 'Replay',
+              ),
             KCoverFlow(
+              reveal: context.knobs.boolean(
+                label: 'Reveal',
+                initialValue: widget.reveal,
+              ),
+              revealKey: replay,
+              revealDurationMs: context.knobs.double
+                  .slider(
+                    label: 'Reveal duration (ms)',
+                    initialValue: 1100,
+                    min: 0,
+                    max: 2000,
+                  )
+                  .round(),
+              revealStaggerMs: context.knobs.double
+                  .slider(
+                    label: 'Reveal stagger (ms)',
+                    initialValue: 200,
+                    min: 0,
+                    max: 400,
+                  )
+                  .round(),
+              revealDistance: context.knobs.double.slider(
+                label: 'Reveal distance',
+                initialValue: 36,
+                min: 0,
+                max: 100,
+              ),
+              revealScale: context.knobs.double.slider(
+                label: 'Reveal scale',
+                initialValue: .94,
+                min: .5,
+                max: 1,
+              ),
               label: 'Charakter auswählen',
               initialIndex: 1,
               previousLabel: 'Vorheriger Charakter',
@@ -37,29 +82,32 @@ class CoverFlowFixture extends StatelessWidget {
                 max: 700,
               ),
               itemWidthFraction: context.knobs.double.slider(
-                label: 'Item width fraction', initialValue: .66, min: .1, max: 1,
+                label: 'Item width fraction',
+                initialValue: .66,
+                min: .1,
+                max: 1,
               ),
               sideAngle: context.knobs.double.slider(
                 label: 'Side angle',
-                initialValue: 0,
+                initialValue: widget.reveal ? 55 : 0,
                 min: 0,
                 max: 80,
               ),
               sideOffset: context.knobs.double.slider(
                 label: 'Side offset',
-                initialValue: 100,
+                initialValue: widget.reveal ? 68 : 100,
                 min: 40,
                 max: 150,
               ),
               sideScale: context.knobs.double.slider(
                 label: 'Side scale',
-                initialValue: .72,
+                initialValue: widget.reveal ? 1 : .72,
                 min: .3,
                 max: 1,
               ),
               depth: context.knobs.double.slider(
                 label: 'Depth',
-                initialValue: 180,
+                initialValue: widget.reveal ? 120 : 180,
                 min: 0,
                 max: 300,
               ),

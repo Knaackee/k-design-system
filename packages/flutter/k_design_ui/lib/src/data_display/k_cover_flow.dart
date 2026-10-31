@@ -43,6 +43,13 @@ class KCoverFlow extends StatefulWidget {
     this.showControls = true,
     this.showCaption = true,
     this.reducedMotion = false,
+    this.reveal = false,
+    this.revealKey = 0,
+    this.revealDurationMs = 1100,
+    this.revealStaggerMs = 200,
+    this.revealDistance = 36,
+    this.revealScale = .94,
+    this.onRevealComplete,
   });
 
   final List<KCoverFlowItem> items;
@@ -63,6 +70,10 @@ class KCoverFlow extends StatefulWidget {
       depth,
       spacing,
       perspective;
+  final bool reveal;
+  final int revealKey, revealDurationMs, revealStaggerMs;
+  final double revealDistance, revealScale;
+  final VoidCallback? onRevealComplete;
   final bool keepMounted;
   final bool clipSides, showControls, showCaption, reducedMotion;
 
@@ -70,7 +81,104 @@ class KCoverFlow extends StatefulWidget {
   State<KCoverFlow> createState() => _KCoverFlowState();
 }
 
-class _KCoverFlowState extends State<KCoverFlow> {
+class _KCoverFlowState extends State<KCoverFlow>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _revealController = AnimationController(
+    vsync: this,
+    value: 1,
+  );
+  int _revealOrigin = 0;
+  int _revealTotal = 1;
+  bool _reduced = false;
+  bool _revealInitialized = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final reduced =
+        widget.reducedMotion || MediaQuery.disableAnimationsOf(context);
+    if (!_revealInitialized || reduced != _reduced) {
+      _revealInitialized = true;
+      _startReveal();
+    }
+  }
+
+  @override
+  void didUpdateWidget(KCoverFlow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.reveal != widget.reveal ||
+        oldWidget.revealKey != widget.revealKey ||
+        oldWidget.reducedMotion != widget.reducedMotion ||
+        oldWidget.revealDurationMs != widget.revealDurationMs ||
+        oldWidget.revealStaggerMs != widget.revealStaggerMs ||
+        oldWidget.revealDistance != widget.revealDistance ||
+        oldWidget.revealScale != widget.revealScale ||
+        oldWidget.items.length != widget.items.length) {
+      _startReveal();
+    }
+  }
+
+  void _startReveal() {
+    _revealController.stop();
+    _revealOrigin = _selected;
+    _reduced = widget.reducedMotion || MediaQuery.disableAnimationsOf(context);
+    if (!widget.reveal || _reduced || widget.items.isEmpty) {
+      _revealController.value = 1;
+      if (widget.reveal && widget.items.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) widget.onRevealComplete?.call();
+        });
+      }
+      return;
+    }
+    final neighbors = math.min(
+      math.max(_selected, widget.items.length - 1 - _selected),
+      math.max(1, widget.visibleNeighbors),
+    );
+    _revealTotal = math.max(
+      1,
+      math.max(0, widget.revealDurationMs) +
+          neighbors * math.max(0, widget.revealStaggerMs),
+    );
+    _revealController.duration = Duration(milliseconds: _revealTotal);
+    _revealController.forward(from: 0).whenCompleteOrCancel(() {
+      if (mounted && _revealController.isCompleted) {
+        widget.onRevealComplete?.call();
+      }
+    });
+  }
+
+  Widget _revealed(int index, Widget child) => AnimatedBuilder(
+    animation: _revealController,
+    child: child,
+    builder: (context, child) {
+      final elapsed =
+          _revealController.value * _revealTotal -
+          (index - _revealOrigin).abs() * math.max(0, widget.revealStaggerMs);
+      final progress =
+          !widget.reveal || _reduced || _revealController.isCompleted
+          ? 1.0
+          : (elapsed / math.max(1, widget.revealDurationMs)).clamp(0.0, 1.0);
+      final eased = const Cubic(.22, 1, .36, 1).transform(progress);
+      return Opacity(
+        opacity: eased,
+        child: Transform.translate(
+          offset: Offset(0, math.max(0, widget.revealDistance) * (1 - eased)),
+          child: Transform.scale(
+            scale:
+                widget.revealScale.clamp(.1, 1) +
+                (1 - widget.revealScale.clamp(.1, 1)) * eased,
+            child: child,
+          ),
+        ),
+      );
+    },
+  );
+  @override
+  void dispose() {
+    _revealController.dispose();
+    super.dispose();
+  }
+
   late int _index = widget.initialIndex;
   double _drag = 0;
   bool _dragging = false;
@@ -228,8 +336,10 @@ class _KCoverFlowState extends State<KCoverFlow> {
                                                   excluding: i != selected,
                                                   child: IgnorePointer(
                                                     ignoring: i != selected,
-                                                    child:
-                                                        widget.items[i].child,
+                                                    child: _revealed(
+                                                      i,
+                                                      widget.items[i].child,
+                                                    ),
                                                   ),
                                                 ),
                                               ),

@@ -1,5 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KCoverFlow, KText, type KCoverFlowProps } from "@k-design-system/ui";
+import {
+  KCoverFlow,
+  KText,
+  KButton,
+  type KCoverFlowProps,
+} from "@k-design-system/ui";
 import { useState } from "react";
 
 const characters = [
@@ -19,6 +24,7 @@ const characters = [
 }));
 
 function Fixture(props: KCoverFlowProps) {
+  const [replay, setReplay] = useState(0);
   const [selected, setSelected] = useState(props.initialIndex ?? 1);
   return (
     <div
@@ -31,8 +37,14 @@ function Fixture(props: KCoverFlowProps) {
       <div style={{ textAlign: "center" }}>
         <KText variant="heading2">Wähle deinen ersten Agenten</KText>
       </div>
+      {props.reveal && (
+        <KButton onClick={() => setReplay((value) => value + 1)}>
+          Replay
+        </KButton>
+      )}
       <KCoverFlow
         {...props}
+        revealKey={replay}
         selectedIndex={selected}
         onIndexChange={setSelected}
       />
@@ -65,6 +77,13 @@ const meta = {
     reducedMotion: false,
   },
   argTypes: {
+    reveal: { control: "boolean" },
+    revealDurationMs: {
+      control: { type: "range", min: 0, max: 2000, step: 50 },
+    },
+    revealStaggerMs: { control: { type: "range", min: 0, max: 400, step: 10 } },
+    revealDistance: { control: { type: "range", min: 0, max: 100, step: 1 } },
+    revealScale: { control: { type: "range", min: 0.5, max: 1, step: 0.01 } },
     items: { control: false },
     contentPadding: { control: { type: "range", min: 0, max: 80, step: 1 } },
     clipSides: { control: "boolean" },
@@ -125,4 +144,16 @@ export const Covers: Story = {
 export const ReducedMotion: Story = {
   args: { reducedMotion: true },
   parameters: { fixtureId: "cover-flow-reduced-motion" },
+};
+
+export const Reveal: Story = {
+  name: "cover-flow-reveal",
+  args: {
+    reveal: true,
+    revealDurationMs: 1100,
+    revealStaggerMs: 200,
+    revealDistance: 36,
+    revealScale: 0.94,
+  },
+  parameters: { fixtureId: "cover-flow-reveal" },
 };

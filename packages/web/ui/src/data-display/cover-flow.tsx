@@ -1,4 +1,10 @@
-import { type CSSProperties, type ReactNode, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import { KIconButton } from "../actions/icon-button.js";
 import {
   clampCoverFlowIndex,
@@ -45,6 +51,14 @@ export interface KCoverFlowProps {
   showControls?: boolean;
   showCaption?: boolean;
   reducedMotion?: boolean;
+  /** Reveal visible covers, selected first. Change revealKey to replay. */
+  reveal?: boolean;
+  revealKey?: number;
+  revealDurationMs?: number;
+  revealStaggerMs?: number;
+  revealDistance?: number;
+  revealScale?: number;
+  onRevealComplete?: () => void;
   className?: string;
   style?: CSSProperties;
 }
@@ -74,14 +88,80 @@ export function KCoverFlow({
   showControls = true,
   showCaption = true,
   reducedMotion = false,
+  reveal = false,
+  revealKey = 0,
+  revealDurationMs = 1100,
+  revealStaggerMs = 200,
+  revealDistance = 36,
+  revealScale = 0.94,
+  onRevealComplete,
   className,
   style,
 }: KCoverFlowProps) {
+  const root = useRef<HTMLElement>(null);
+  const complete = useRef(onRevealComplete);
+  complete.current = onRevealComplete;
   const [internalIndex, setInternalIndex] = useState(initialIndex);
   const index = clampCoverFlowIndex(
     selectedIndex ?? internalIndex,
     items.length,
   );
+  useEffect(() => {
+    if (!reveal || !items.length) return;
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const animations: Animation[] = [];
+    let cancelled = false;
+    if (!reducedMotion && !media.matches) {
+      root.current
+        ?.querySelectorAll<HTMLElement>("[data-cover-reveal-index]")
+        .forEach((element) => {
+          const delay =
+            Math.abs(Number(element.dataset.coverRevealIndex) - index) *
+            Math.max(0, revealStaggerMs);
+          animations.push(
+            element.animate(
+              [
+                {
+                  opacity: 0,
+                  transform: `translateY(${Math.max(0, revealDistance)}px) scale(${Math.max(0.1, Math.min(1, revealScale))})`,
+                },
+                { opacity: 1, transform: "translateY(0) scale(1)" },
+              ],
+              {
+                duration: Math.max(0, revealDurationMs),
+                delay,
+                easing: "cubic-bezier(.22,1,.36,1)",
+                fill: "backwards",
+              },
+            ),
+          );
+        });
+    }
+    const reduce = () => {
+      if (media.matches) animations.forEach((animation) => animation.finish());
+    };
+    media.addEventListener("change", reduce);
+    void Promise.all(animations.map((animation) => animation.finished))
+      .then(() => {
+        if (!cancelled) complete.current?.();
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      media.removeEventListener("change", reduce);
+      animations.forEach((animation) => animation.cancel());
+    };
+    // Selection and content edits must not replay the entrance.
+  }, [
+    reveal,
+    revealKey,
+    reducedMotion,
+    revealDurationMs,
+    revealStaggerMs,
+    revealDistance,
+    revealScale,
+    items.length,
+  ]);
   const [dragOffset, setDragOffset] = useState(0);
   const drag = useRef<{
     id: number;
@@ -102,6 +182,7 @@ export function KCoverFlow({
   const position = Math.max(0, Math.min(items.length - 1, index + dragOffset));
   return (
     <section
+      ref={root}
       className={["k-cover-flow", className].filter(Boolean).join(" ")}
       aria-label={label}
       aria-roledescription="carousel"
@@ -197,7 +278,10 @@ export function KCoverFlow({
           drag.current = null;
           setDragOffset(0);
         }}
-        onLostPointerCapture={() => {
+        onLostPointerCapture={(event) => {
+          // Touch begins with implicit capture on the card's child. Transferring
+          // capture to the viewport must not cancel the drag via its bubbled loss.
+          if (event.target !== event.currentTarget) return;
           drag.current = null;
           setDragOffset(0);
         }}
@@ -254,6 +338,7 @@ export function KCoverFlow({
             >
               <div
                 className="k-cover-flow__content"
+                data-cover-reveal-index={hidden ? undefined : itemIndex}
                 inert={itemIndex !== index}
               >
                 {item.content}

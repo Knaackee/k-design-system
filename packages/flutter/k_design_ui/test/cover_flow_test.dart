@@ -13,16 +13,73 @@ void main() {
   );
   Widget host(KCoverFlow child) => MaterialApp(home: Scaffold(body: child));
 
-  testWidgets('consumer can enlarge covers within the viewport', (tester) async {
-    await tester.pumpWidget(host(KCoverFlow(
-      items: items, label: 'Figures', itemWidth: 900, itemWidthFraction: .9,
-      contentPadding: 0, showControls: false, showCaption: false,
-    )));
+  testWidgets(
+    'reveal completes, replays without replacing content and respects reduced motion',
+    (tester) async {
+      int completed = 0;
+      Widget scene(int replay, {bool reduced = false}) => host(
+        KCoverFlow(
+          items: items,
+          label: 'Figures',
+          reveal: true,
+          revealKey: replay,
+          revealDurationMs: 200,
+          revealStaggerMs: 30,
+          reducedMotion: reduced,
+          onRevealComplete: () => completed++,
+        ),
+      );
+      await tester.pumpWidget(scene(0));
+      final element = tester.element(find.byKey(const ValueKey('art-0')));
+      await tester.pumpAndSettle();
+      expect(completed, 1);
+      await tester.pumpWidget(scene(0));
+      await tester.pumpAndSettle();
+      expect(completed, 1);
+      await tester.pumpWidget(scene(1));
+      await tester.pumpAndSettle();
+      expect(completed, 2);
+      expect(
+        tester.element(find.byKey(const ValueKey('art-0'))),
+        same(element),
+      );
+      await tester.pumpWidget(scene(2, reduced: true));
+      await tester.pump();
+      expect(completed, 3);
+      expect(tester.hasRunningAnimations, false);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('consumer can enlarge covers within the viewport', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      host(
+        KCoverFlow(
+          items: items,
+          label: 'Figures',
+          itemWidth: 900,
+          itemWidthFraction: .9,
+          contentPadding: 0,
+          showControls: false,
+          showCaption: false,
+        ),
+      ),
+    );
     final large = tester.getSize(find.byKey(const ValueKey('art-0'))).width;
-    await tester.pumpWidget(host(KCoverFlow(
-      items: items, label: 'Figures', itemWidth: 900,
-      contentPadding: 0, showControls: false, showCaption: false,
-    )));
+    await tester.pumpWidget(
+      host(
+        KCoverFlow(
+          items: items,
+          label: 'Figures',
+          itemWidth: 900,
+          contentPadding: 0,
+          showControls: false,
+          showCaption: false,
+        ),
+      ),
+    );
     final standard = tester.getSize(find.byKey(const ValueKey('art-0'))).width;
     expect(large, greaterThan(standard));
     expect(tester.takeException(), isNull);
@@ -54,8 +111,19 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('retained covers keep their elements when selection changes', (tester) async {
-    await tester.pumpWidget(host(KCoverFlow(items: items, label: 'Figures', keepMounted: true, visibleNeighbors: 1)));
+  testWidgets('retained covers keep their elements when selection changes', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      host(
+        KCoverFlow(
+          items: items,
+          label: 'Figures',
+          keepMounted: true,
+          visibleNeighbors: 1,
+        ),
+      ),
+    );
     final element = tester.element(find.byKey(const ValueKey('art-7')));
     await tester.tap(find.byTooltip('Next cover'));
     await tester.pumpAndSettle();
