@@ -125,63 +125,68 @@ class _KDisclosureState extends State<KDisclosure> {
                           horizontal: compact ? 0 : t.spaceControlInsetInline,
                           vertical: t.spaceControlGap,
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            firstLineIcon(
-                              KIcon(
-                                expanded
-                                    ? KIconName.chevronDown
-                                    : KIconName.chevronRight,
-                                size: 18,
+                        child: Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          heightFactor: 1,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              firstLineIcon(
+                                KIcon(
+                                  expanded
+                                      ? KIconName.chevronDown
+                                      : KIconName.chevronRight,
+                                  size: 18,
+                                ),
                               ),
-                            ),
-                            if (widget.leadingIcon != null) ...[
+                              if (widget.leadingIcon != null) ...[
+                                SizedBox(width: t.spaceControlGap),
+                                firstLineIcon(widget.leadingIcon!),
+                              ],
                               SizedBox(width: t.spaceControlGap),
-                              firstLineIcon(widget.leadingIcon!),
-                            ],
-                            SizedBox(width: t.spaceControlGap),
-                            Flexible(
-                              child:
-                                  widget.titleWidget ??
-                                  Text(
-                                    widget.title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: compact
-                                          ? t.colorTextMuted
-                                          : t.colorTextPrimary,
-                                      fontFamily: t.fontFamily,
-                                      fontSize: t.fontBodySize,
-                                      fontWeight: compact
-                                          ? t.fontBodyWeight
-                                          : t.fontLabelWeight,
-                                      fontVariations: [
-                                        FontVariation.weight(
-                                          (compact
-                                                  ? t.fontBodyWeight
-                                                  : t.fontLabelWeight)
-                                              .value
-                                              .toDouble(),
-                                        ),
-                                        FontVariation.opticalSize(
-                                          MediaQuery.textScalerOf(
-                                            context,
-                                          ).scale(t.fontBodySize).clamp(14, 32),
-                                        ),
-                                      ],
-                                      height:
-                                          t.fontBodyLineHeight / t.fontBodySize,
-                                      letterSpacing: t.fontBodyLetterSpacing,
+                              Flexible(
+                                child:
+                                    widget.titleWidget ??
+                                    Text(
+                                      widget.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: compact
+                                            ? t.colorTextMuted
+                                            : t.colorTextPrimary,
+                                        fontFamily: t.fontFamily,
+                                        fontSize: t.fontBodySize,
+                                        fontWeight: compact
+                                            ? t.fontBodyWeight
+                                            : t.fontLabelWeight,
+                                        fontVariations: [
+                                          FontVariation.weight(
+                                            (compact
+                                                    ? t.fontBodyWeight
+                                                    : t.fontLabelWeight)
+                                                .value
+                                                .toDouble(),
+                                          ),
+                                          FontVariation.opticalSize(
+                                            MediaQuery.textScalerOf(context)
+                                                .scale(t.fontBodySize)
+                                                .clamp(14, 32),
+                                          ),
+                                        ],
+                                        height:
+                                            t.fontBodyLineHeight /
+                                            t.fontBodySize,
+                                        letterSpacing: t.fontBodyLetterSpacing,
+                                      ),
                                     ),
-                                  ),
-                            ),
-                            if (widget.titleIcon != null) ...[
-                              SizedBox(width: t.spaceControlGap),
-                              firstLineIcon(widget.titleIcon!),
+                              ),
+                              if (widget.titleIcon != null) ...[
+                                SizedBox(width: t.spaceControlGap),
+                                firstLineIcon(widget.titleIcon!),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
                       ),
                     ),

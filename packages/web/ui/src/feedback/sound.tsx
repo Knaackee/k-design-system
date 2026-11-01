@@ -56,6 +56,9 @@ export function KSoundProvider({
     <SoundContext.Provider value={controller}>{children}</SoundContext.Provider>
   );
 }
+export function useOptionalKSound(): KSoundController | null {
+  return useContext(SoundContext);
+}
 export function useKSound(): KSoundController {
   const controller = useContext(SoundContext);
   if (!controller) throw new Error("useKSound requires KSoundProvider");

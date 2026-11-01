@@ -499,7 +499,11 @@ class KMapInteractivePinState extends State<KMapInteractivePin>
       button: true,
       selected: widget.selected,
       label: widget.pin.label,
-      hint: widget.pin.draggable ? 'Zum Verschieben gedrückt halten' : null,
+      hint: !widget.pin.draggable
+          ? null
+          : widget.options.activation == KMapPinDragActivation.drag
+          ? 'Zum Verschieben ziehen'
+          : 'Zum Verschieben gedrückt halten',
       child: Focus(
         onKeyEvent: _onKey,
         child: Listener(

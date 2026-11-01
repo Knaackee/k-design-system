@@ -586,3 +586,11 @@ export * from "./patterns/sortable-tree.js";
 export * from "./patterns/showcase-grid.js";
 export * from "./patterns/celebration.js";
 export * from "./feedback/sound.js";
+export {
+  KQrCode,
+  type KQrCodeProps,
+  type KQrCodeVariant,
+  type KQrCodeModuleShape,
+  type KQrCodeEyeShape,
+} from "./data-display/qr-code.js";
+export * from "./patterns/plan-picker.js";

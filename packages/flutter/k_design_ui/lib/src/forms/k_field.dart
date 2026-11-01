@@ -41,6 +41,7 @@ class KField extends StatelessWidget {
             liveRegion: errorText != null,
             child: _FieldText(
               description,
+              multiline: true,
               color: errorText != null
                   ? t.colorStatusErrorForeground
                   : t.colorTextMuted,
@@ -76,13 +77,21 @@ class KFieldScope extends InheritedWidget {
 
 /// Match the shared CSS pixel-grid line height, including wrapped helper text.
 class _FieldText extends StatelessWidget {
-  const _FieldText(this.text, {required this.color});
+  const _FieldText(this.text, {required this.color, this.multiline = false});
   final String text;
   final Color color;
+  final bool multiline;
   @override
   Widget build(BuildContext context) {
     final style = formTextStyle(context, color: color);
     final scaled = MediaQuery.textScalerOf(context).scale(style.fontSize!);
-    return Text(text, style: style.copyWith(height: scaled.round() / scaled));
+    return Text(
+      text,
+      style: style.copyWith(
+        height: multiline
+            ? formTokens(context).fontRelaxedHeight
+            : scaled.round() / scaled,
+      ),
+    );
   }
 }

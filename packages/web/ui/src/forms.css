@@ -26,6 +26,7 @@
   min-width: 0;
 }
 .k-field__description {
+  line-height: var(--k-font-relaxed-height);
   color: var(--k-color-text-muted);
 }
 .k-field__error {

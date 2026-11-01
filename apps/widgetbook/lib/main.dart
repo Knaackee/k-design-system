@@ -1,4 +1,6 @@
+import 'plan_picker_fixture.dart';
 import 'sortable_tree_fixture.dart';
+import 'qr_code_fixture.dart';
 import 'showcase_grid_fixture.dart';
 import 'celebration_fixture.dart';
 import 'image_cropper_fixture.dart';
@@ -135,77 +137,77 @@ class KDesignWidgetbook extends StatelessWidget {
         ViewportAddon(const [
           Viewports.none,
           ViewportData(
-            name: 'Small phone · 320',
+            name: 'Small phone Â· 320',
             width: 320,
             height: 568,
             pixelRatio: 1,
             platform: TargetPlatform.android,
           ),
           ViewportData(
-            name: 'Compact · 375',
+            name: 'Compact Â· 375',
             width: 375,
             height: 812,
             pixelRatio: 1,
             platform: TargetPlatform.android,
           ),
           ViewportData(
-            name: 'Medium · 700',
+            name: 'Medium Â· 700',
             width: 700,
             height: 900,
             pixelRatio: 1,
             platform: TargetPlatform.android,
           ),
           ViewportData(
-            name: 'Phone · 390',
+            name: 'Phone Â· 390',
             width: 390,
             height: 844,
             pixelRatio: 1,
             platform: TargetPlatform.android,
           ),
           ViewportData(
-            name: 'Large phone · 430',
+            name: 'Large phone Â· 430',
             width: 430,
             height: 932,
             pixelRatio: 1,
             platform: TargetPlatform.android,
           ),
           ViewportData(
-            name: 'Tablet · 768',
+            name: 'Tablet Â· 768',
             width: 768,
             height: 1024,
             pixelRatio: 1,
             platform: TargetPlatform.android,
           ),
           ViewportData(
-            name: 'Desktop · 1280',
+            name: 'Desktop Â· 1280',
             width: 1280,
             height: 900,
             pixelRatio: 1,
             platform: TargetPlatform.windows,
           ),
           ViewportData(
-            name: 'Expanded · 1024',
+            name: 'Expanded Â· 1024',
             width: 1024,
             height: 900,
             pixelRatio: 1,
             platform: TargetPlatform.windows,
           ),
           ViewportData(
-            name: 'Large · 1440',
+            name: 'Large Â· 1440',
             width: 1440,
             height: 1000,
             pixelRatio: 1,
             platform: TargetPlatform.windows,
           ),
           ViewportData(
-            name: 'Extra large · 1680',
+            name: 'Extra large Â· 1680',
             width: 1680,
             height: 1050,
             pixelRatio: 1,
             platform: TargetPlatform.windows,
           ),
           ViewportData(
-            name: 'Full HD · 1920',
+            name: 'Full HD Â· 1920',
             width: 1920,
             height: 1080,
             pixelRatio: 1,
@@ -295,15 +297,15 @@ class KDesignWidgetbook extends StatelessWidget {
                   builder: buildMapZoneEditorMobile,
                 ),
                 WidgetbookUseCase(
-                  name: 'Fullscreen · Desktop',
+                  name: 'Fullscreen Â· Desktop',
                   builder: buildMapZoneEditorFullscreenDesktop,
                 ),
                 WidgetbookUseCase(
-                  name: 'Fullscreen · Mobile',
+                  name: 'Fullscreen Â· Mobile',
                   builder: buildMapZoneEditorFullscreenMobile,
                 ),
                 WidgetbookUseCase(
-                  name: 'Fullscreen · Empty',
+                  name: 'Fullscreen Â· Empty',
                   builder: buildMapZoneEditorFullscreenEmpty,
                 ),
                 WidgetbookUseCase(name: 'Areas only', builder: buildMapZoneEditorAreasOnly),
@@ -678,6 +680,15 @@ class KDesignWidgetbook extends StatelessWidget {
                       label: 'Einrichtung',
                     ),
                   ),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'QrCode',
+              children: [
+                WidgetbookUseCase(
+                  name: 'qr-code-playground',
+                  builder: (_) => const QrCodeFixture(),
                 ),
               ],
             ),
@@ -1201,6 +1212,10 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
+            WidgetbookFolder(name: 'PlanPicker', children: [
+              WidgetbookUseCase(name: 'single-monthly', builder: (_) => const PlanPickerFixture()),
+              WidgetbookUseCase(name: 'single-annual', builder: (_) => const PlanPickerFixture(annual: true)),
+            ]),
             WidgetbookFolder(name: 'SortableTree', children: [
               for (final kind in ['categories', 'mobile', 'tablet', 'ungrouped', 'flat', 'deep', 'empty'])
                 WidgetbookUseCase(name: 'sortable-tree-$kind', builder: (_) => SortableTreeFixture(kind: kind)),

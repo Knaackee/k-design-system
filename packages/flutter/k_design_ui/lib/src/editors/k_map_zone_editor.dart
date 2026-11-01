@@ -1246,6 +1246,7 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
                           onPinDragCancel: (event) =>
                               _dragFinish(event, cancelled: true),
                           pinDrag: const KMapPinDragOptions(
+                            activation: KMapPinDragActivation.drag,
                             edgePan: KMapPinEdgePanOptions(),
                           ),
                           fitContentOnLoad: true,

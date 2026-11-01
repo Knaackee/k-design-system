@@ -1,3 +1,5 @@
+import 'dart:async';
+import '../feedback/k_sound.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_animated_icon.dart';
@@ -38,6 +40,7 @@ class KThemeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sound = KSoundProvider.maybeOf(context);
     final t =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
@@ -49,7 +52,10 @@ class KThemeSwitcher extends StatelessWidget {
       icon: symbols[value]!,
       onPressed: disabled
           ? null
-          : () => onChanged(modes[(modes.indexOf(value) + 1) % modes.length]),
+          : () {
+              if (sound != null) unawaited(sound.play(KSoundCue.switchCue));
+              onChanged(modes[(modes.indexOf(value) + 1) % modes.length]);
+            },
       iconContent: KAnimatedIcon(
         symbols[value]!,
         spring: spring,

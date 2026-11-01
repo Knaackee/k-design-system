@@ -1,3 +1,4 @@
+import { useOptionalKSound } from "../feedback/sound.js";
 import { KButton } from "../primitives/button.js";
 import {
   KAnimatedIcon,
@@ -39,6 +40,7 @@ export function KThemeSwitcher({
 }: KThemeSwitcherProps) {
   const names = { ...defaultLabels, ...labels };
   const symbols = { ...defaultIcons, ...icons };
+  const sound = useOptionalKSound();
   return (
     <KButton
       aria-label={`${label}: ${names[value]}`}
@@ -46,9 +48,10 @@ export function KThemeSwitcher({
       variant="ghost"
       className="k-icon-button"
       disabled={disabled}
-      onClick={() =>
-        onValueChange(modes[(modes.indexOf(value) + 1) % modes.length]!)
-      }
+      onClick={() => {
+        void sound?.play("switch");
+        onValueChange(modes[(modes.indexOf(value) + 1) % modes.length]!);
+      }}
     >
       <KAnimatedIcon
         name={symbols[value]}

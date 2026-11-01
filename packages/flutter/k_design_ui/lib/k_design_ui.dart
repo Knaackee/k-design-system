@@ -1,4 +1,5 @@
 library;
+export 'src/data_display/k_qr_code.dart';
 
 export 'src/patterns/k_sortable_tree.dart';
 
@@ -122,3 +123,5 @@ export 'src/patterns/k_showcase_grid.dart';
 export 'src/patterns/k_celebration.dart';
 
 export 'src/feedback/k_sound.dart';
+
+export 'src/patterns/k_plan_picker.dart';

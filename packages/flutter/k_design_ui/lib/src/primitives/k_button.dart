@@ -1,3 +1,4 @@
+import '../feedback/k_sound.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'k_icon.dart';
@@ -72,6 +73,7 @@ class KButton extends StatelessWidget {
         child: FilledButton(
           onPressed: loading ? null : onPressed,
           style: ButtonStyle(
+            enableFeedback: KSoundProvider.maybeOf(context) == null,
             // Density is already resolved by the tokens; do not compact twice.
             visualDensity: VisualDensity.standard,
             alignment: fullWidth ? AlignmentDirectional.centerStart : null,
@@ -131,55 +133,60 @@ class KButton extends StatelessWidget {
               ),
             ),
           ),
-          child: content != null ? Semantics(label: label, child: ExcludeSemantics(child: content!)) : Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (loading) ...[
-                SizedBox.square(
-                  dimension: tokens.componentButtonLoadingIndicatorSize,
-                  child: CircularProgressIndicator(
-                    strokeWidth:
-                        tokens.componentButtonLoadingIndicatorStrokeWidth,
-                    color: foreground,
-                  ),
+          child: content != null
+              ? Semantics(
+                  label: label,
+                  child: ExcludeSemantics(child: content!),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (loading) ...[
+                      SizedBox.square(
+                        dimension: tokens.componentButtonLoadingIndicatorSize,
+                        child: CircularProgressIndicator(
+                          strokeWidth:
+                              tokens.componentButtonLoadingIndicatorStrokeWidth,
+                          color: foreground,
+                        ),
+                      ),
+                      SizedBox(width: tokens.spaceControlGap),
+                    ],
+                    if (leading != null) ...[
+                      if (leading is KIcon)
+                        KIcon(
+                          (leading! as KIcon).name,
+                          size: (leading! as KIcon).size,
+                          color: (leading! as KIcon).color ?? foreground,
+                          label: (leading! as KIcon).label,
+                        )
+                      else
+                        IconTheme.merge(
+                          data: IconThemeData(color: foreground),
+                          child: leading!,
+                        ),
+                      SizedBox(width: tokens.spaceControlGap),
+                    ],
+                    Flexible(
+                      child: KOverflowText(text: Text(label), focusable: false),
+                    ),
+                    if (trailing != null) ...[
+                      SizedBox(width: tokens.spaceControlGap),
+                      if (trailing is KIcon)
+                        KIcon(
+                          (trailing! as KIcon).name,
+                          size: (trailing! as KIcon).size,
+                          color: (trailing! as KIcon).color ?? foreground,
+                          label: (trailing! as KIcon).label,
+                        )
+                      else
+                        IconTheme.merge(
+                          data: IconThemeData(color: foreground),
+                          child: trailing!,
+                        ),
+                    ],
+                  ],
                 ),
-                SizedBox(width: tokens.spaceControlGap),
-              ],
-              if (leading != null) ...[
-                if (leading is KIcon)
-                  KIcon(
-                    (leading! as KIcon).name,
-                    size: (leading! as KIcon).size,
-                    color: (leading! as KIcon).color ?? foreground,
-                    label: (leading! as KIcon).label,
-                  )
-                else
-                  IconTheme.merge(
-                    data: IconThemeData(color: foreground),
-                    child: leading!,
-                  ),
-                SizedBox(width: tokens.spaceControlGap),
-              ],
-              Flexible(
-                child: KOverflowText(text: Text(label), focusable: false),
-              ),
-              if (trailing != null) ...[
-                SizedBox(width: tokens.spaceControlGap),
-                if (trailing is KIcon)
-                  KIcon(
-                    (trailing! as KIcon).name,
-                    size: (trailing! as KIcon).size,
-                    color: (trailing! as KIcon).color ?? foreground,
-                    label: (trailing! as KIcon).label,
-                  )
-                else
-                  IconTheme.merge(
-                    data: IconThemeData(color: foreground),
-                    child: trailing!,
-                  ),
-              ],
-            ],
-          ),
         ),
       ),
     );

@@ -178,6 +178,130 @@
     "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|const KIcon(KIconName.check, strokeWidth: 1.5),": {
       "count": 1,
       "reason": "User-approved thin Lucide icons; shared menu surface preserves KMenuButton checkmark and submenu arrow appearance."
+    },
+    "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|KIcon(KIconName.chevronRight, strokeWidth: 1.5),": {
+      "count": 1,
+      "reason": "Explicit thin chevron stroke matches the accepted navigation icon artwork; not layout spacing."
+    },
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|canvas.drawRect(Offset.zero & size, Paint()..color = Colors.white);": {
+      "count": 1,
+      "reason": "QR rendering uses a stable white paper/quiet-zone substrate (including finder-eye cutouts), independent of app dark mode, to preserve scanner contrast; ink is consumer configurable."
+    },
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|color: Colors.white,": {
+      "count": 1,
+      "reason": "QR rendering uses a stable white paper/quiet-zone substrate (including finder-eye cutouts), independent of app dark mode, to preserve scanner contrast; ink is consumer configurable."
+    },
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|final p = Paint()..color = offset == 1 ? Colors.white : ink;": {
+      "count": 1,
+      "reason": "QR rendering uses a stable white paper/quiet-zone substrate (including finder-eye cutouts), independent of app dark mode, to preserve scanner contrast; ink is consumer configurable."
+    },
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|this.color = const Color(0xff18181b),": {
+      "count": 1,
+      "reason": "Consumer-overridable QR ink default on a white export substrate; deliberately independent of app theme to preserve scanner contrast."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|const KIcon(KIconName.check, size: 18, strokeWidth: 1.5),": {
+      "count": 1,
+      "reason": "Decorative feature/CTA glyph geometry matches the Web plan-picker artwork and does not determine touch-target size."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|constraints: const BoxConstraints(maxWidth: 240),": {
+      "count": 1,
+      "reason": "Plan-picker illustration/reading column cap matches the accepted Web layout and shrinks to available width."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|constraints: const BoxConstraints(maxWidth: 420),": {
+      "count": 1,
+      "reason": "Plan-picker illustration/reading column cap matches the accepted Web layout and shrinks to available width."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|trailing: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),": {
+      "count": 1,
+      "reason": "Decorative feature/CTA glyph geometry matches the Web plan-picker artwork and does not determine touch-target size."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|opacity|tokens.colorActionPrimaryBackground.withValues(alpha: .05),": {
+      "count": 1,
+      "reason": "Selected-plan tint uses 5% of the active primary token over the surface, matching Web color-mix."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|color|? const [Colors.transparent, Colors.white]": {
+      "count": 1,
+      "reason": "White is unit alpha in the dstIn ShaderMask, not a visible theme color."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|color|Colors.white,": {
+      "count": 2,
+      "reason": "White is unit alpha in the dstIn ShaderMask, not a visible theme color."
+    },
+    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|dimension|? constraints.maxHeight": {
+      "count": 1,
+      "reason": "Unbounded showcase fallback canvas is 512 logical pixels, matching Web 32rem; bounded parents retain their supplied height."
+    },
+    "packages/web/ui/src/celebration.css|appearance|border-radius: 2px;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
+    },
+    "packages/web/ui/src/celebration.css|appearance|border-radius: 50%;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
+    },
+    "packages/web/ui/src/celebration.css|appearance|opacity: 0.7;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle alpha keyframes and content reveal timing define the accepted burst; prefers-reduced-motion suppresses both."
+    },
+    "packages/web/ui/src/celebration.css|appearance|opacity: 0.9;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle alpha keyframes and content reveal timing define the accepted burst; prefers-reduced-motion suppresses both."
+    },
+    "packages/web/ui/src/celebration.css|dimension|height: 10px;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
+    },
+    "packages/web/ui/src/celebration.css|dimension|height: 6px;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
+    },
+    "packages/web/ui/src/celebration.css|dimension|inset: -80px;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle overscan keeps the burst from clipping at the content boundary."
+    },
+    "packages/web/ui/src/celebration.css|dimension|width: 6px;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
+    },
+    "packages/web/ui/src/celebration.css|motion|animation: k-celebration-reveal 480ms cubic-bezier(0.16, 1, 0.3, 1) backwards;": {
+      "count": 1,
+      "reason": "Existing accepted confetti choreography: particle alpha keyframes and content reveal timing define the accepted burst; prefers-reduced-motion suppresses both."
+    },
+    "packages/web/ui/src/plan-picker.css|appearance|font-size: calc(1rem * var(--k-text-scale, 1));": {
+      "count": 1,
+      "reason": "Native radio remains in a normal rem-based font context with user text scaling; child typography uses KText token variants."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|height: 1px;": {
+      "count": 2,
+      "reason": "Visually hidden native radio/accessibility text technique preserves focus and screen-reader semantics; the 1px box and negative margin are not visual spacing."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|margin: -1px;": {
+      "count": 1,
+      "reason": "Visually hidden native radio/accessibility text technique preserves focus and screen-reader semantics; the 1px box and negative margin are not visual spacing."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|max-width: 420px;": {
+      "count": 3,
+      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|max-width: 620px;": {
+      "count": 2,
+      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|min-width: 8em;": {
+      "count": 1,
+      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|min-width: min(100%, 240px);": {
+      "count": 1,
+      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
+    },
+    "packages/web/ui/src/plan-picker.css|dimension|width: 1px;": {
+      "count": 2,
+      "reason": "Visually hidden native radio/accessibility text technique preserves focus and screen-reader semantics; the 1px box and negative margin are not visual spacing."
+    },
+    "packages/web/ui/src/showcase-grid.css|dimension|min-height: 32rem;": {
+      "count": 1,
+      "reason": "Showcase fallback canvas height matches Flutter 512 logical pixels; this decorative pattern can be sized by the consumer."
     }
   }
 }

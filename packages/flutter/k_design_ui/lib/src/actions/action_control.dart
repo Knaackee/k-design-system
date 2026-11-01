@@ -1,3 +1,4 @@
+import '../feedback/k_sound.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
@@ -99,6 +100,7 @@ class KActionControl extends StatelessWidget {
               focusNode: focusNode,
               onPressed: onPressed,
               style: ButtonStyle(
+                enableFeedback: KSoundProvider.maybeOf(context) == null,
                 visualDensity: VisualDensity.standard,
                 tapTargetSize: Theme.of(context).materialTapTargetSize,
                 minimumSize: WidgetStatePropertyAll(Size(0, t.sizeControl)),

@@ -8,6 +8,17 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  async viteFinal(config) {
+    // The host may install the linked UI package with another React version.
+    // All gallery components must share the renderer's hook dispatcher.
+    config.resolve = {
+      ...config.resolve,
+      dedupe: [
+        ...new Set([...(config.resolve?.dedupe ?? []), "react", "react-dom"]),
+      ],
+    };
+    return config;
+  },
   features: {
     sidebarOnboardingChecklist: false,
     menuOnboardingChecklist: false,

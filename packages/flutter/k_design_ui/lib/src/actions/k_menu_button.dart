@@ -1,3 +1,4 @@
+import '../feedback/k_sound.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -363,6 +364,8 @@ class _KMenuButtonState extends State<KMenuButton> {
                                       action.onSelect?.call();
                                     },
                               style: ButtonStyle(
+                                enableFeedback:
+                                    KSoundProvider.maybeOf(context) == null,
                                 visualDensity: VisualDensity.standard,
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 minimumSize: WidgetStatePropertyAll(
@@ -493,6 +496,7 @@ class _KMenuButtonState extends State<KMenuButton> {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
+                enableFeedback: KSoundProvider.maybeOf(context) == null,
                 focusNode: _trigger,
                 onTap: onPressed,
                 borderRadius:

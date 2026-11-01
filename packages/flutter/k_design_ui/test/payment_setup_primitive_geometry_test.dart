@@ -73,6 +73,16 @@ void main() {
             tester.getSize(find.byKey(const ValueKey('compact'))).height,
             closeTo(headerHeight, .01),
           );
+          for (final (key, title) in [
+            ('normal', 'Test help'),
+            ('compact', 'Compact help'),
+          ]) {
+            expect(
+              tester.getCenter(find.text(title)).dy,
+              closeTo(tester.getCenter(find.byKey(ValueKey(key))).dy, .01),
+              reason: '$key $density $inputMode $scale: vertically centered',
+            );
+          }
           expect(tester.takeException(), isNull);
         }
       }

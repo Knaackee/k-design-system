@@ -1,3 +1,4 @@
+import { useOptionalKSound } from "../feedback/sound.js";
 import type { ReactNode } from "react";
 import { KMenuButton } from "./menu-button.js";
 import { KIcon } from "../primitives/icon.js";
@@ -27,6 +28,7 @@ export function KLanguageSwitcher({
   label = "Language",
   disabled,
 }: KLanguageSwitcherProps) {
+  const sound = useOptionalKSound();
   return (
     <KMenuButton
       label={`${label}: ${languages.find((language) => language.value === value)?.label ?? value}`}
@@ -39,7 +41,10 @@ export function KLanguageSwitcher({
         label: language.label,
         iconContent: language.flag,
         checked: language.value === value,
-        onSelect: () => onValueChange(language.value),
+        onSelect: () => {
+          if (language.value !== value) void sound?.play("tap");
+          onValueChange(language.value);
+        },
       }))}
     />
   );

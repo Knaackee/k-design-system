@@ -379,32 +379,44 @@ void main() {
     expect(value, 'progress');
   });
   for (final scale in [1.25, 1.5, 1.75]) {
-    testWidgets('field labels share pixel-grid line height at $scale', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: kDesignTheme(),
-          home: MediaQuery(
-            data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-            child: const Scaffold(
-              body: SizedBox(
-                width: 300,
-                child: KField(
-                  label: 'Title',
-                  helperText: 'Helpful text',
-                  child: KInput(),
+    testWidgets(
+      'field labels keep pixel-grid height and descriptions use readable leading at $scale',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(),
+            home: MediaQuery(
+              data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+              child: const Scaffold(
+                body: SizedBox(
+                  width: 300,
+                  child: KField(
+                    label: 'Title',
+                    helperText: 'Helpful text',
+                    child: KInput(),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        tester.getSize(find.byType(KField)).height,
-        closeTo(36 + 16 + 2 * (13 * scale).round(), .01),
-      );
-    });
+        );
+        await tester.pumpAndSettle();
+        expect(
+          tester.getSize(find.byType(KField)).height,
+          closeTo(
+            36 +
+                16 +
+                (13 * scale).round() +
+                (13 *
+                        scale *
+                        kDesignTheme()
+                            .extension<KDesignTokens>()!
+                            .fontRelaxedHeight)
+                    .round(),
+            .01,
+          ),
+        );
+      },
+    );
   }
 }

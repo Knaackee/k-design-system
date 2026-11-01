@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
-import '../lib/sortable_tree_fixture.dart';
+import 'package:k_design_widgetbook/sortable_tree_fixture.dart';
 
 void main() {
   testWidgets('add category validates, saves and can undo', (tester) async {
@@ -53,12 +53,14 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(find.text('Ohne Kategorie'), findsOneWidget);
       expect(find.byType(KSelect), findsOneWidget);
-      await tester.tap(find.text('Ohne Kategorie'));
-      await tester.pumpAndSettle();
+      // Ungrouped offers start collapsed, matching the onboarding fixture.
       expect(find.text('Pflegeshampoo'), findsNothing);
       await tester.tap(find.text('Ohne Kategorie'));
       await tester.pumpAndSettle();
       expect(find.text('Pflegeshampoo'), findsOneWidget);
+      await tester.tap(find.text('Ohne Kategorie'));
+      await tester.pumpAndSettle();
+      expect(find.text('Pflegeshampoo'), findsNothing);
       expect(tester.takeException(), isNull);
     });
   }

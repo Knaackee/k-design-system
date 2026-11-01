@@ -1,0 +1,383 @@
+.k-plan-picker {
+  container-type: inline-size;
+  font-size: calc(1rem * var(--k-text-scale, 1));
+  width: 100%;
+  --k-plan-accent: var(--k-color-action-primary-background);
+  --k-plan-tint: color-mix(
+    in srgb,
+    var(--k-plan-accent) 5%,
+    var(--k-color-surface-raised)
+  );
+}
+.k-plan-picker__intervals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-self: center;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-small-inset);
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-surface-raised);
+}
+.k-plan-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--k-plan-columns), minmax(0, 1fr));
+  gap: var(--k-space-layout-section-gap);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.k-plan-picker[data-single="true"] .k-plan-picker__grid {
+  max-width: 420px;
+  width: 100%;
+  align-self: center;
+}
+.k-plan-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-card);
+  background: var(--k-color-surface-raised);
+  transition:
+    background var(--k-motion-standard),
+    border-color var(--k-motion-standard),
+    box-shadow var(--k-motion-standard);
+}
+.k-plan-card[data-selected="true"] {
+  border-color: var(--k-plan-accent);
+  background: var(--k-plan-tint);
+  box-shadow:
+    inset 0 0 0 var(--k-border-width-default) var(--k-plan-accent),
+    var(--k-elevation-low);
+}
+.k-plan-card[data-disabled="true"] {
+  opacity: var(--k-opacity-disabled);
+}
+.k-plan-card:has(input:focus-visible) {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-space-micro);
+}
+.k-plan-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-layout-section-gap);
+  width: 100%;
+  min-width: 0;
+  padding: var(--k-space-card-padding);
+}
+.k-plan-card__heading {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.k-plan-card__badge {
+  border-radius: var(--k-radius-full);
+  padding: var(--k-space-small-inset) var(--k-space-control-inset-inline);
+  background: var(--k-color-action-primary-background);
+  color: var(--k-color-action-primary-foreground);
+}
+.k-plan-card__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--k-space-control-gap);
+}
+.k-plan-card__price > span {
+  overflow-wrap: anywhere;
+}
+.k-plan-card__artwork {
+  display: grid;
+  place-items: center;
+}
+.k-plan-card__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.k-plan-card__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--k-space-control-gap);
+}
+.k-plan-card__features svg {
+  flex-shrink: 0;
+  color: var(--k-plan-accent);
+}
+.k-plan-card__hit {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  border-radius: inherit;
+}
+.k-plan-card:has(input:disabled) .k-plan-card__hit {
+  cursor: default;
+}
+.k-plan-picker__footer {
+  width: 100%;
+  max-width: 420px;
+  align-self: center;
+  text-align: center;
+}
+.k-plan-picker__muted {
+  color: var(--k-color-text-secondary);
+}
+.k-plan-picker__mobile-options {
+  display: none;
+}
+.k-plan-picker__sr,
+.k-plan-card__radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@container (max-width:640px) {
+  .k-plan-picker__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--k-space-control-gap);
+  }
+  .k-plan-picker__mobile-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--k-space-control-gap);
+  }
+  .k-plan-picker[data-layout="cards"][data-mobile-layout="focused"]:not(
+      [data-single="true"]
+    ):has(.k-plan-card[data-selected="true"])
+    .k-plan-card[data-selected="false"] {
+    display: none;
+  }
+}
+
+.k-plan-card[data-emphasis="accent"] {
+  border-color: var(--k-plan-accent);
+}
+.k-plan-picker[data-layout="stacked"] .k-plan-picker__grid,
+.k-plan-picker[data-layout="compact"] .k-plan-picker__grid,
+.k-plan-picker[data-layout="focused"] .k-plan-picker__grid {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 620px;
+  width: 100%;
+  align-self: center;
+}
+.k-plan-picker[data-layout="compact"] .k-plan-picker__grid {
+  gap: var(--k-space-control-gap);
+}
+.k-plan-picker[data-layout="compact"] .k-plan-card .k-plan-card__features,
+.k-plan-picker[data-layout="compact"] .k-plan-card__artwork,
+.k-plan-picker[data-layout="comparison"] .k-plan-card__features {
+  display: none;
+}
+.k-plan-picker[data-layout="compact"] .k-plan-card__content > .k-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+}
+.k-plan-picker[data-layout="compact"]
+  .k-plan-card__content
+  > .k-stack
+  > .k-stack {
+  text-align: end;
+  align-items: flex-end;
+}
+.k-plan-picker[data-layout="compact"] .k-plan-card__price {
+  justify-content: flex-end;
+}
+.k-plan-picker[data-layout="compact"] .k-plan-card__price > .k-text--heading1 {
+  --k-text-font-size: var(--k-font-heading3-size);
+  --k-text-line-height: var(--k-font-heading3-line-height);
+}
+.k-plan-picker[data-layout="focused"] .k-plan-picker__mobile-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--k-space-control-gap);
+}
+.k-plan-picker[data-layout="focused"]:has(.k-plan-card[data-selected="true"])
+  .k-plan-card[data-selected="false"] {
+  display: none;
+}
+.k-plan-picker__detail {
+  width: 100%;
+  max-width: 620px;
+  align-self: center;
+  padding: var(--k-space-card-padding);
+  box-sizing: border-box;
+}
+.k-plan-picker__comparison {
+  overflow: auto;
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-card);
+}
+.k-plan-picker__comparison:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
+}
+.k-plan-picker__comparison table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--k-font-family);
+  color: var(--k-color-text-primary);
+  font-size: calc(var(--k-font-body-small-size) * var(--k-text-scale, 1));
+}
+.k-plan-picker__comparison caption {
+  text-align: start;
+  padding: var(--k-space-card-padding);
+  font-weight: 600;
+}
+.k-plan-picker__comparison th,
+.k-plan-picker__comparison td {
+  text-align: start;
+  padding: var(--k-space-control-inset-inline);
+  border-top: var(--k-border-width-default) solid var(--k-color-border-default);
+  min-width: 8em;
+}
+.k-plan-picker__comparison th {
+  font-weight: 500;
+}
+.k-plan-picker__comparison [data-selected="true"] {
+  background: var(--k-plan-tint);
+}
+.k-plan-picker[data-sticky-action="true"] .k-plan-picker__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  max-width: none;
+  box-sizing: border-box;
+  padding: var(--k-space-card-padding);
+  padding-bottom: max(var(--k-space-card-padding), env(safe-area-inset-bottom));
+  background: var(--k-color-surface-raised);
+  border-top: var(--k-border-width-default) solid var(--k-color-border-default);
+}
+@container (max-width:22em) {
+  .k-plan-picker[data-layout="compact"] .k-plan-card__content > .k-stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .k-plan-picker[data-layout="compact"]
+    .k-plan-card__content
+    > .k-stack
+    > .k-stack {
+    text-align: start;
+    align-items: flex-start;
+  }
+  .k-plan-picker[data-layout="compact"] .k-plan-card__price {
+    justify-content: flex-start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-plan-card {
+    transition: none;
+  }
+}
+
+.k-plan-card__badge {
+  --k-color-text-primary: var(--k-color-action-primary-foreground);
+  --k-color-text-secondary: var(--k-color-action-primary-foreground);
+}
+
+.k-plan-card__badge {
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.k-plan-card__content > .k-stack > * {
+  min-width: 0;
+}
+
+/* Billing uses a quiet segmented surface; plan names use a distinct underline. */
+.k-plan-switch {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  align-self: center;
+}
+.k-plan-switch__option {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  cursor: pointer;
+}
+.k-plan-switch__option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.k-plan-switch__option > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: var(--k-size-control);
+  box-sizing: border-box;
+  padding: var(--k-space-small-inset) var(--k-space-control-inset-inline);
+  font-family: var(--k-font-family);
+  font-size: calc(var(--k-font-body-small-size) * var(--k-text-scale, 1));
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--k-color-text-secondary);
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition:
+    background var(--k-motion-standard),
+    color var(--k-motion-standard),
+    box-shadow var(--k-motion-standard);
+}
+.k-plan-picker__intervals.k-plan-switch {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: var(--k-space-micro);
+  background: var(--k-color-surface-raised);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-full);
+  min-width: min(100%, 240px);
+}
+.k-plan-picker__intervals .k-plan-switch__option > span {
+  border-radius: var(--k-radius-full);
+}
+.k-plan-picker__intervals input:checked + span {
+  background: var(--k-color-surface-canvas);
+  box-shadow: var(--k-elevation-low);
+  color: var(--k-color-text-primary);
+}
+.k-plan-picker__mobile-options.k-plan-switch {
+  padding: 0;
+  gap: 0;
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  width: 100%;
+  max-width: 420px;
+}
+.k-plan-picker__mobile-options .k-plan-switch__option > span {
+  border-bottom: var(--k-border-width-strong) solid transparent;
+}
+.k-plan-picker__mobile-options input:checked + span {
+  color: var(--k-color-text-primary);
+  border-bottom-color: var(--k-plan-accent);
+}
+.k-plan-switch__option input:focus-visible + span {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
+}
+.k-plan-switch:disabled .k-plan-switch__option,
+.k-plan-switch__option:has(input:disabled) {
+  opacity: var(--k-opacity-disabled);
+  cursor: default;
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-plan-switch__option > span {
+    transition: none;
+  }
+}

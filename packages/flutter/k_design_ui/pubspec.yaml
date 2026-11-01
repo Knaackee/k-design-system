@@ -10,6 +10,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  qr: 3.0.2
   audioplayers: 6.8.1
   fl_chart: 1.2.0
   flutter:

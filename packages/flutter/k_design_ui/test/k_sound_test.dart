@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
@@ -37,6 +37,46 @@ class FakeBackend implements KSoundBackend {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('switchers share scoped sounds and respect mute', (tester) async {
+    final backend = FakeBackend();
+    final controller = KSoundController(enabled: true, backend: backend);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: KSoundProvider(
+          controller: controller,
+          child: Column(
+            children: [
+              KThemeSwitcher(value: ThemeMode.light, onChanged: (_) {}),
+              KLanguageSwitcher(
+                value: 'de',
+                onChanged: (_) {},
+                languages: const [
+                  KLanguageOption(value: 'de', label: 'Deutsch'),
+                  KLanguageOption(value: 'en', label: 'English'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    tester.widget<KIconButton>(find.byType(KIconButton).first).onPressed!();
+    await tester.pumpAndSettle();
+    expect(backend.played, [KSoundCue.switchCue]);
+    final menu = tester.widget<KMenuButton>(find.byType(KMenuButton));
+    menu.actions.last.onSelect!();
+    await tester.pumpAndSettle();
+    expect(backend.played, [KSoundCue.switchCue, KSoundCue.tap]);
+    menu.actions.first.onSelect!();
+    await tester.pumpAndSettle();
+    expect(backend.played.length, 2);
+    controller.setEnabled(false);
+    menu.actions.last.onSelect!();
+    await tester.pumpAndSettle();
+    expect(backend.played.length, 2);
+    await tester.pumpWidget(const SizedBox());
+    controller.dispose();
+  });
   for (final cancel in ['mute', 'background', 'dispose']) {
     test('cancels during asynchronous audio preparation: $cancel', () async {
       final backend = FakeBackend()..preparation = Completer<void>();
@@ -44,8 +84,9 @@ void main() {
       final playing = controller.play(KSoundCue.complete);
       await backend.preparing.future;
       if (cancel == 'mute') controller.setEnabled(false);
-      if (cancel == 'background')
+      if (cancel == 'background') {
         controller.didChangeAppLifecycleState(AppLifecycleState.paused);
+      }
       if (cancel == 'dispose') controller.dispose();
       backend.preparation!.complete();
       await playing;
