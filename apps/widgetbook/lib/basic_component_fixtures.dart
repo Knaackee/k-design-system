@@ -260,7 +260,7 @@ class _CarouselCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(t.spaceCardPadding),
       decoration: BoxDecoration(
         color: t.colorSurfaceRaised,
         border: Border.all(color: t.colorBorderDefault),
@@ -271,8 +271,13 @@ class _CarouselCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          KText(title, variant: KTextVariant.heading4),
-          KText(body),
+          KText(
+            title,
+            variant: KTextVariant.heading4,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          KText(body, maxLines: 2, overflow: TextOverflow.ellipsis),
         ],
       ),
     );

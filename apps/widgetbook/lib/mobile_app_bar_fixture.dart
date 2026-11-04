@@ -152,7 +152,14 @@ class _MobileAppBarFixtureState extends State<MobileAppBarFixture> {
                         : null,
                     contextualContent: Row(
                       children: [
-                        const KText('3 selected', variant: KTextVariant.label),
+                        const Expanded(
+                          child: KText(
+                            '3 selected',
+                            variant: KTextVariant.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
                         KButton(
                           label: 'Move',
                           variant: KButtonVariant.ghost,

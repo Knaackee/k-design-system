@@ -26,8 +26,10 @@ class KOrbitControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
-    final buttons = Row(
-      mainAxisSize: MainAxisSize.min,
+    // Wraps under large text instead of overflowing (Decision 0010).
+    final buttons = Wrap(
+      spacing: tokens.spaceControlGap,
+      runSpacing: tokens.spaceControlGap,
       children: [
         KButton(
           label: labels.reset,
@@ -35,7 +37,6 @@ class KOrbitControls extends StatelessWidget {
           onPressed: onReset,
         ),
         if (onPauseChanged != null) ...[
-          SizedBox(width: tokens.spaceControlGap),
           KButton(
             label: paused ? labels.resume : labels.pause,
             variant: KButtonVariant.secondary,
@@ -82,7 +83,7 @@ class KOrbitControls extends StatelessWidget {
                 )
               : Row(
                   children: [
-                    buttons,
+                    Flexible(child: buttons),
                     if (onSpeedChanged != null) ...[
                       SizedBox(width: tokens.spaceControlGap),
                       Expanded(child: slider),

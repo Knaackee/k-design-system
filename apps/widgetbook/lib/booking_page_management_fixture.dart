@@ -122,8 +122,15 @@ class _BookingPageManagementFixtureState
         mainAxisSize: MainAxisSize.min,
         children: [
           KIcon(icon, size: 20),
-          const SizedBox(height: 5),
-          Text(label, style: const TextStyle(fontSize: 12.5)),
+          const SizedBox(height: 4),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
         ],
       ),
     ),

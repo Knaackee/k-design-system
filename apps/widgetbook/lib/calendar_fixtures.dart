@@ -264,200 +264,205 @@ class _CalendarFixtureState extends State<CalendarFixture> {
             : (availableHeight - 120).clamp(420.0, 680.0);
         return Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              KToolbar(
-                label: label('Calendar', 'Kalender'),
-                children: [
-                  KButton(
-                    label: label('Today', 'Heute'),
-                    variant: KButtonVariant.secondary,
-                    onPressed: () => setState(() => _date = DateTime.now()),
-                  ),
-                  KIconButton(
-                    icon: KIconName.chevronLeft,
-                    label: label('Previous period', 'Vorheriger Zeitraum'),
-                    onPressed: () => navigate(-1),
-                  ),
-                  KIconButton(
-                    icon: KIconName.chevronRight,
-                    label: label('Next period', 'Nächster Zeitraum'),
-                    onPressed: () => navigate(1),
-                  ),
-                  Text(
-                    '${months[_date.month - 1]} ${_date.year}',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    width: 140,
-                    child: KSelect(
-                      value: _view.name,
-                      options: [
-                        KSelectOption(value: 'day', label: label('Day', 'Tag')),
-                        KSelectOption(
-                          value: 'threeDay',
-                          label: label('3 days', '3 Tage'),
-                        ),
-                        KSelectOption(
-                          value: 'week',
-                          label: label('Week', 'Woche'),
-                        ),
-                        KSelectOption(
-                          value: 'month',
-                          label: label('Month', 'Monat'),
-                        ),
-                      ],
-                      onChanged: (v) {
-                        if (v != null) {
-                          setState(
-                            () => _view = KCalendarView.values.byName(v),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  KButton(
-                    label:
-                        '${label('Unplanned', 'Ungeplant')} ${visible.where((e) => e.start == null).length}',
-                    variant: KButtonVariant.secondary,
-                    onPressed: () {
-                      if (compact) {
-                        KBottomSheet.show<void>(
-                          context: context,
-                          title: Text(label('Unplanned', 'Ungeplant')),
-                          child: unplannedContent(sheet: true),
-                        );
-                      } else {
-                        setState(() => _unplanned = !_unplanned);
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              KFilterBar(
-                label: label('Calendar filters', 'Kalenderfilter'),
-                onReset: _project == null
-                    ? null
-                    : () => setState(() => _project = null),
-                children: [
-                  SizedBox(
-                    width: 180,
-                    child: KSelect(
-                      value: _project,
-                      placeholder: label('All projects', 'Alle Projekte'),
-                      clearable: true,
-                      options: const [
-                        KSelectOption(value: 'Orbit', label: 'Orbit'),
-                        KSelectOption(value: 'Workspace', label: 'Workspace'),
-                        KSelectOption(value: 'Research', label: 'Research'),
-                      ],
-                      onChanged: (v) => setState(() => _project = v),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (_scheduling != null)
-                Row(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                KToolbar(
+                  label: label('Calendar', 'Kalender'),
                   children: [
-                    Expanded(
-                      child: Text(
-                        label(
-                          'Choose a time in the calendar',
-                          'Wähle einen Zeitraum im Kalender',
-                        ),
+                    KButton(
+                      label: label('Today', 'Heute'),
+                      variant: KButtonVariant.secondary,
+                      onPressed: () => setState(() => _date = DateTime.now()),
+                    ),
+                    KIconButton(
+                      icon: KIconName.chevronLeft,
+                      label: label('Previous period', 'Vorheriger Zeitraum'),
+                      onPressed: () => navigate(-1),
+                    ),
+                    KIconButton(
+                      icon: KIconName.chevronRight,
+                      label: label('Next period', 'Nächster Zeitraum'),
+                      onPressed: () => navigate(1),
+                    ),
+                    Text(
+                      '${months[_date.month - 1]} ${_date.year}',
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(
+                      width: 140,
+                      child: KSelect(
+                        value: _view.name,
+                        options: [
+                          KSelectOption(
+                            value: 'day',
+                            label: label('Day', 'Tag'),
+                          ),
+                          KSelectOption(
+                            value: 'threeDay',
+                            label: label('3 days', '3 Tage'),
+                          ),
+                          KSelectOption(
+                            value: 'week',
+                            label: label('Week', 'Woche'),
+                          ),
+                          KSelectOption(
+                            value: 'month',
+                            label: label('Month', 'Monat'),
+                          ),
+                        ],
+                        onChanged: (v) {
+                          if (v != null) {
+                            setState(
+                              () => _view = KCalendarView.values.byName(v),
+                            );
+                          }
+                        },
                       ),
                     ),
                     KButton(
-                      label: label('Cancel', 'Abbrechen'),
-                      variant: KButtonVariant.ghost,
-                      onPressed: () => setState(() => _scheduling = null),
+                      label:
+                          '${label('Unplanned', 'Ungeplant')} ${visible.where((e) => e.start == null).length}',
+                      variant: KButtonVariant.secondary,
+                      onPressed: () {
+                        if (compact) {
+                          KBottomSheet.show<void>(
+                            context: context,
+                            title: Text(label('Unplanned', 'Ungeplant')),
+                            child: unplannedContent(sheet: true),
+                          );
+                        } else {
+                          setState(() => _unplanned = !_unplanned);
+                        }
+                      },
                     ),
                   ],
                 ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: KCalendar<CalendarDemoEvent>(
-                      date: _date,
-                      view: _view,
-                      onNavigate: navigate,
-                      events: visible,
-                      eventId: (e) => e.id,
-                      eventStart: (e) => e.start,
-                      eventEnd: (e) => e.end,
-                      eventAllDay: (e) => e.allDay,
-                      timeZone: 'Europe/Berlin',
-                      startHour: 7,
-                      endHour: 24,
-                      hourHeight: 56,
-                      height: calendarHeight,
-                      labels: KCalendarLabels(
-                        allDay: label('All day', 'Ganztägig'),
-                        resizeStart: label('Change start', 'Beginn ändern'),
-                        resizeEnd: label('Change end', 'Ende ändern'),
-                      ),
-                      onEventOpen: (e) => edit(compact, event: e),
-                      onEventMove: move,
-                      onEventResize: resize,
-                      onCreate: (range) => edit(compact, selection: range),
-                      requireLongPress: compact,
-                      eventBuilder: (context, value) => CalendarDemoCard(
-                        event: value.event,
-                        compact: compact || value.compact,
+                const SizedBox(height: 12),
+                KFilterBar(
+                  label: label('Calendar filters', 'Kalenderfilter'),
+                  onReset: _project == null
+                      ? null
+                      : () => setState(() => _project = null),
+                  children: [
+                    SizedBox(
+                      width: 180,
+                      child: KSelect(
+                        value: _project,
+                        placeholder: label('All projects', 'Alle Projekte'),
+                        clearable: true,
+                        options: const [
+                          KSelectOption(value: 'Orbit', label: 'Orbit'),
+                          KSelectOption(value: 'Workspace', label: 'Workspace'),
+                          KSelectOption(value: 'Research', label: 'Research'),
+                        ],
+                        onChanged: (v) => setState(() => _project = v),
                       ),
                     ),
-                  ),
-                  if (_unplanned && !compact)
-                    Container(
-                      width: 280,
-                      height: calendarHeight,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          left: BorderSide(color: t.colorBorderDefault),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                if (_scheduling != null)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          label(
+                            'Choose a time in the calendar',
+                            'Wähle einen Zeitraum im Kalender',
+                          ),
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(label('Unplanned', 'Ungeplant')),
-                              ),
-                              KIconButton(
-                                icon: KIconName.x,
-                                label: label('Close', 'Schließen'),
-                                onPressed: () =>
-                                    setState(() => _unplanned = false),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          unplannedContent(),
-                        ],
+                      KButton(
+                        label: label('Cancel', 'Abbrechen'),
+                        variant: KButtonVariant.ghost,
+                        onPressed: () => setState(() => _scheduling = null),
+                      ),
+                    ],
+                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: KCalendar<CalendarDemoEvent>(
+                        date: _date,
+                        view: _view,
+                        onNavigate: navigate,
+                        events: visible,
+                        eventId: (e) => e.id,
+                        eventStart: (e) => e.start,
+                        eventEnd: (e) => e.end,
+                        eventAllDay: (e) => e.allDay,
+                        timeZone: 'Europe/Berlin',
+                        startHour: 7,
+                        endHour: 24,
+                        hourHeight: 56,
+                        height: calendarHeight,
+                        labels: KCalendarLabels(
+                          allDay: label('All day', 'Ganztägig'),
+                          resizeStart: label('Change start', 'Beginn ändern'),
+                          resizeEnd: label('Change end', 'Ende ändern'),
+                        ),
+                        onEventOpen: (e) => edit(compact, event: e),
+                        onEventMove: move,
+                        onEventResize: resize,
+                        onCreate: (range) => edit(compact, selection: range),
+                        requireLongPress: compact,
+                        eventBuilder: (context, value) => CalendarDemoCard(
+                          event: value.event,
+                          compact: compact || value.compact,
+                        ),
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _message.isEmpty
-                    ? label(
-                        'Click a free slot or drag to select a range.',
-                        'Freien Zeitpunkt anklicken oder einen Zeitraum aufziehen.',
-                      )
-                    : _message,
-                style: TextStyle(
-                  color: t.colorTextMuted,
-                  fontSize: t.fontCaptionSize,
+                    if (_unplanned && !compact)
+                      Container(
+                        width: 280,
+                        height: calendarHeight,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            left: BorderSide(color: t.colorBorderDefault),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(label('Unplanned', 'Ungeplant')),
+                                ),
+                                KIconButton(
+                                  icon: KIconName.x,
+                                  label: label('Close', 'Schließen'),
+                                  onPressed: () =>
+                                      setState(() => _unplanned = false),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            unplannedContent(),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  _message.isEmpty
+                      ? label(
+                          'Click a free slot or drag to select a range.',
+                          'Freien Zeitpunkt anklicken oder einen Zeitraum aufziehen.',
+                        )
+                      : _message,
+                  style: TextStyle(
+                    color: t.colorTextMuted,
+                    fontSize: t.fontCaptionSize,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

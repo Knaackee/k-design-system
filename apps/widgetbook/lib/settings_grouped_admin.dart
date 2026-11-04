@@ -246,6 +246,7 @@ class _SgAssistantState extends State<SgAssistant> {
     children: [
       const KInline(
         gap: KLayoutGap.control,
+        wrap: true,
         children: [
           KText('KI-Assistent', variant: KTextVariant.heading2),
           SgStatus('Admin'),
@@ -309,8 +310,9 @@ class _SgAssistantState extends State<SgAssistant> {
         gap: KLayoutGap.control,
         align: KLayoutAlign.stretch,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          KInline(
+            gap: KLayoutGap.control,
+            wrap: true,
             children: [
               const SgMuted('Systemanweisung'),
               SgMuted('${prompt.text.length} Zeichen'),

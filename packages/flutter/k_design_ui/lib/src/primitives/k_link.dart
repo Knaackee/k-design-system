@@ -108,7 +108,7 @@ class _KLinkState extends State<KLink> {
                       widget.leading!,
                       SizedBox(width: t.spaceTight),
                     ],
-                    Text(widget.label),
+                    Flexible(child: Text(widget.label)),
                     if (widget.trailing != null || widget.external) ...[
                       SizedBox(width: t.spaceTight),
                       widget.trailing ?? const KIcon(KIconName.externalLink),

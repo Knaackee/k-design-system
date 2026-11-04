@@ -20,6 +20,7 @@ class DraftFixtureControls<T> extends StatelessWidget {
     align: KLayoutAlign.stretch,
     children: [
       KInline(
+        wrap: true,
         children: [
           KCheckbox(
             label: 'Delay save',

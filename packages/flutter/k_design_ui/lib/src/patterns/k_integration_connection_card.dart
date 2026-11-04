@@ -3,6 +3,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../basic_components.dart';
 import '../primitives/k_button.dart';
+import '../primitives/k_leading.dart';
 import '../primitives/k_text.dart';
 import 'k_integrations.dart';
 
@@ -158,20 +159,27 @@ class KIntegrationConnectionCard extends StatelessWidget {
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: t.sizeIndicatorTiny,
-                      height: t.sizeIndicatorTiny,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
+                    KLeading(
+                      size: t.sizeIndicatorTiny,
+                      textVariant: KTextVariant.bodySmall,
+                      child: Container(
+                        width: t.sizeIndicatorTiny,
+                        height: t.sizeIndicatorTiny,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                     SizedBox(width: t.spaceControlGap),
-                    KText(
-                      stateLabel,
-                      variant: KTextVariant.bodySmall,
-                      style: TextStyle(color: t.colorTextMuted),
+                    Flexible(
+                      child: KText(
+                        stateLabel,
+                        variant: KTextVariant.bodySmall,
+                        style: TextStyle(color: t.colorTextMuted),
+                      ),
                     ),
                   ],
                 ),

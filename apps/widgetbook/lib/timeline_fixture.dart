@@ -249,8 +249,7 @@ class _TimelineFixtureState extends State<TimelineFixture> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
+                    Wrap(
                       children: [
                         for (final entry in {
                           'Days': 7,

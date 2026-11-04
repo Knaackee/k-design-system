@@ -72,8 +72,8 @@ class _ContextMenuFixtureState extends State<ContextMenuFixture> {
               child: MouseRegion(
                 cursor: SystemMouseCursors.contextMenu,
                 child: KCard(
-                  child: SizedBox(
-                    height: 80,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 80),
                     child: KStack(
                       gap: KLayoutGap.control,
                       children: const [

@@ -53,8 +53,8 @@ class _ExtendedComponentFixtureState extends State<ExtendedComponentFixture> {
       onChanged: (value) => setState(() => otp = value),
       label: 'Verification code',
     ),
-    'kbd' => const Row(
-      mainAxisSize: MainAxisSize.min,
+    'kbd' => const Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text('Open commands with '),
         KKbdGroup(
@@ -225,8 +225,8 @@ class _ExtendedComponentFixtureState extends State<ExtendedComponentFixture> {
       mainAxisSize: MainAxisSize.min,
       children: [
         KSpinner(label: 'Processing'),
-        SizedBox(width: 10),
-        Text('Processing payment…'),
+        SizedBox(width: 12),
+        Flexible(child: Text('Processing payment…')),
       ],
     ),
     'switch' => KSwitch(

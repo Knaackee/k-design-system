@@ -192,16 +192,20 @@ class _HomeOverviewFixtureState extends State<HomeOverviewFixture> {
                   media: ColoredBox(
                     color: t.colorBrandPrimaryBackground,
                     child: Center(
-                      child: KStack(
-                        align: KLayoutAlign.center,
-                        children: [
-                          const KIcon(KIconName.scissors, size: 48),
-                          const KText(
-                            'Alex’ Haarpflege',
-                            variant: KTextVariant.heading3,
-                          ),
-                          const KText('Schöne Haare. Bei dir zu Hause.'),
-                        ],
+                      // Illustration: scales down under large text.
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: KStack(
+                          align: KLayoutAlign.center,
+                          children: [
+                            const KIcon(KIconName.scissors, size: 48),
+                            const KText(
+                              'Alex’ Haarpflege',
+                              variant: KTextVariant.heading3,
+                            ),
+                            const KText('Schöne Haare. Bei dir zu Hause.'),
+                          ],
+                        ),
                       ),
                     ),
                   ),

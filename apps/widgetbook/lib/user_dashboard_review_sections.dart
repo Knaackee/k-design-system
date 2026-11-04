@@ -503,32 +503,40 @@ extension _DashboardSections on _UserDashboardReviewState {
                     for (final label in labels)
                       SizedBox(
                         width: width,
-                        child: KCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              muted(label),
-                              const KText(
-                                '–',
-                                variant: KTextVariant.heading2,
-                                style: TextStyle(fontSize: 24, height: 1.5),
-                              ),
-                              const SizedBox(height: 6),
-                              SizedBox(
-                                height: 30,
-                                child: CustomPaint(
-                                  painter: _Spark(const [
-                                    2,
-                                    4,
-                                    3,
-                                    6,
-                                    5,
-                                    8,
-                                    7,
-                                  ], t.colorTextMuted),
+                        child: KSurface(
+                          tone: KSurfaceTone.subtle,
+                          border: KSurfaceBorder.none,
+                          radius: KSurfaceRadius.large,
+                          // Decision 0010: tiles inside a card are surfaces, never nested cards.
+                          child: Padding(
+                            padding: EdgeInsets.all(t.spaceControlInsetInline),
+
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                muted(label),
+                                const KText(
+                                  '–',
+                                  variant: KTextVariant.heading2,
+                                  style: TextStyle(fontSize: 24, height: 1.5),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 6),
+                                SizedBox(
+                                  height: 30,
+                                  child: CustomPaint(
+                                    painter: _Spark(const [
+                                      2,
+                                      4,
+                                      3,
+                                      6,
+                                      5,
+                                      8,
+                                      7,
+                                    ], t.colorTextMuted),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

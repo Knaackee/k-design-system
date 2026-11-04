@@ -55,8 +55,10 @@ class _SgExtraState extends State<SgExtra> {
             SgInset(
               child: KInline(
                 gap: KLayoutGap.control,
+                wrap: true,
                 children: [
-                  const Expanded(
+                  const SizedBox(
+                    width: 240,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -80,8 +82,9 @@ class _SgExtraState extends State<SgExtra> {
               ),
             ),
             const SgInset(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: KInline(
+                gap: KLayoutGap.control,
+                wrap: true,
                 children: [
                   KText('Status'),
                   SgStatus('Erreichbar · Demo', success: true),

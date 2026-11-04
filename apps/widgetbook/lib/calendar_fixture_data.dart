@@ -94,41 +94,47 @@ class CalendarDemoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          event.title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: t.colorTextPrimary,
-            fontFamily: t.fontFamily,
-            fontSize: t.fontLabelSize,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        if (!compact)
-          Row(
-            children: [
-              KIcon(KIconName.folder, size: 12, color: t.colorTextMuted),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(
-                  event.project,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: t.colorTextMuted,
-                    fontFamily: t.fontFamily,
-                    fontSize: t.fontCaptionSize,
-                  ),
-                ),
+    // Short events clip their secondary line instead of overflowing.
+    return ClipRect(
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              event.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: t.colorTextPrimary,
+                fontFamily: t.fontFamily,
+                fontSize: t.fontLabelSize,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          ),
-      ],
+            ),
+            if (!compact)
+              Row(
+                children: [
+                  KIcon(KIconName.folder, size: 12, color: t.colorTextMuted),
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: Text(
+                      event.project,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: t.colorTextMuted,
+                        fontFamily: t.fontFamily,
+                        fontSize: t.fontCaptionSize,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

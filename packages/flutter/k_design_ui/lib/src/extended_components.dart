@@ -84,9 +84,11 @@ class KProgress extends StatelessWidget {
         children: [
           if (label != null || valueLabel != null) ...[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ?label,
-                const Spacer(),
+                // Long labels wrap instead of pushing the value off-screen.
+                Expanded(child: label ?? const SizedBox.shrink()),
+                SizedBox(width: t.spaceControlGap),
                 valueLabel ??
                     Text(
                       normalized == null
@@ -553,22 +555,68 @@ class KPagination extends StatelessWidget {
   final String nextLabel;
   final int siblingCount;
   @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    final visible =
-        pageCount <= 7
-              ? List.generate(pageCount, (i) => i + 1)
-              : <int>{
-                  1,
-                  for (
-                    var i = page - siblingCount;
-                    i <= page + siblingCount;
-                    i++
-                  )
-                    if (i > 1 && i < pageCount) i,
-                  pageCount,
-                }.toList()
-          ..sort();
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      // Decision 0010: on narrow windows drop sibling pages, then fall back
+      // to "page / count" between the arrows instead of overflowing.
+      final t = Theme.of(context).extension<KDesignTokens>()!;
+      final slot = t.sizeHitTarget;
+      for (final siblings in {siblingCount, 0}) {
+        final count = _visible(siblings).length;
+        final width =
+            (count + 2) * slot + 2 * t.componentPaginationEllipsisWidth;
+        if (!constraints.hasBoundedWidth || width <= constraints.maxWidth) {
+          return _pages(context, t, _visible(siblings));
+        }
+      }
+      return _summary(context, t);
+    },
+  );
+
+  List<int> _visible(int siblings) =>
+      (pageCount <= 7 && siblings == siblingCount
+            ? List.generate(pageCount, (i) => i + 1)
+            : <int>{
+                1,
+                for (var i = page - siblings; i <= page + siblings; i++)
+                  if (i > 1 && i < pageCount) i,
+                pageCount,
+              }.toList())
+        ..sort();
+
+  Widget _summary(BuildContext context, KDesignTokens t) => Semantics(
+    label: label,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        KIconButton(
+          icon: KIconName.chevronLeft,
+          label: previousLabel,
+          onPressed: page > 1 ? () => onPageChanged(page - 1) : null,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: t.spaceControlGap),
+          child: Text(
+            '$page / $pageCount',
+            style: TextStyle(
+              fontFamily: t.fontFamily,
+              fontSize: t.fontControlSize,
+              fontWeight: t.fontControlWeight,
+              color: t.colorTextPrimary,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ),
+        KIconButton(
+          icon: KIconName.chevronRight,
+          label: nextLabel,
+          onPressed: page < pageCount ? () => onPageChanged(page + 1) : null,
+        ),
+      ],
+    ),
+  );
+
+  Widget _pages(BuildContext context, KDesignTokens t, List<int> visible) {
     return Semantics(
       label: label,
       child: Row(
