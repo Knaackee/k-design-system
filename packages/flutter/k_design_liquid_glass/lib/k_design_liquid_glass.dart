@@ -10,6 +10,11 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 /// Pass this builder to [KMobileAppBar.liquidSurfaceBuilder]. The core UI
 /// package deliberately does not depend on the renderer so Flutter Web keeps
 /// using the portable frosted fallback.
+///
+/// Full refraction requires Impeller shader filters. On engines without that
+/// capability, the pinned renderer uses its existing [FakeGlass] surface. This
+/// adapter does not make the upstream Impeller shaders compatible with Skia;
+/// Flutter can still report SkSL compilation warnings for those unused assets.
 Widget kLiquidGlassSurfaceBuilder(
   BuildContext context,
   Widget child,
