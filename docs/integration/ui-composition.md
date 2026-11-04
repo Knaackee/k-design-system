@@ -54,6 +54,21 @@ callback must not imply persistence, notifications or authentication that it lac
   Static checks catch likely bypasses; only interaction and visual review establish
   usability. Human gallery acceptance remains separate from automated checks.
 
+## Hardened rules and adaptive setup (Decision 0010)
+
+- Apps resolve adaptive axes at runtime: Flutter `KAdaptiveTheme`, Web
+  `applyKAdaptive`. Do not choose `mobileApp`/`desktopApp` per platform.
+- No nested cards; leading visuals on the first text line (`KLeading`,
+  `.k-leading`); icon sizes 16/20/24 (12 control glyph, 32/48 display);
+  tokens only, 4 px grid; minimum type 11 px.
+- Every screen works at 360 px and system text 1.3 without clipping, and at
+  2.0 with scrolling.
+- Run `node vendor/k-design-system/tooling/check-ui-rules.mjs <paths>` in
+  addition to the consumer scanner below.
+
+The full rule set, wrong/right pairs and patterns live in the workflow skill:
+`.agents/skills/k-design-system-workflow/references/`.
+
 ## Spacing ownership and hierarchy
 
 - A component owns its internal spacing; its parent owns space between siblings.
