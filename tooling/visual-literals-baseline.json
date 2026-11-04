@@ -1,34 +1,15 @@
 {
   "version": 1,
   "entries": {
-    "packages/flutter/k_design_ui/lib/src/maps/k_map_controller.dart|motion|? const Duration(milliseconds: 1)": {
-      "count": 1,
-      "reason": "Native Android MapLibre requires a positive fitBounds duration; 1ms is an API compatibility minimum for reduced motion, not a visual animation duration."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionHoldDuration = const Duration(milliseconds: 324),": {
-      "count": 1,
-      "reason": "Consumer-overridable FAB peek hold matching the visually accepted Web animation; documented in docs/chat-bubble.md."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionShowDuration = const Duration(milliseconds: 1800),": {
-      "count": 1,
-      "reason": "Consumer-overridable total FAB attention pulse matching the accepted Web rise/fall/bounce choreography."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionPauseDuration = const Duration(milliseconds: 7000),": {
-      "count": 1,
-      "reason": "Consumer-overridable attention repetition interval matching Web; not a generic transition duration."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_fab_attention.dart|motion|const Duration(milliseconds: 600).inMicroseconds;": {
-      "count": 1,
-      "reason": "Minimum movement budget for the configurable FAB rise/fall/bounce sequence, identical to Web."
-    },
-    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 6px;": {
-      "count": 1,
-      "reason": "Existing touch resize grip geometry predates this change; now detected because query parsing no longer consumes following declarations. Preserve the reviewed touch appearance."
-    },
-    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 96px;": {
-      "count": 1,
-      "reason": "Existing mobile timeline label width predates this change; now detected inside the media query. Preserve the existing responsive layout; no matching semantic token exists."
-    },
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab_attention.dart|motion|const Duration(milliseconds: 600).inMicroseconds;": 1,
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionHoldDuration = const Duration(milliseconds: 324),": 1,
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionPauseDuration = const Duration(milliseconds: 7000),": 1,
+    "packages/flutter/k_design_ui/lib/src/actions/k_fab.dart|motion|this.attentionShowDuration = const Duration(milliseconds: 1800),": 1,
+    "packages/flutter/k_design_ui/lib/src/actions/k_menu_button.dart|dimension|strokeWidth: 1.5,": 1,
+    "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|const KIcon(KIconName.check, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|KIcon(KIconName.chevronRight, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/chat/k_agent_chat_identity.dart|opacity|alpha:": 1,
+    "packages/flutter/k_design_ui/lib/src/chat/k_call_bar.dart|motion|duration: const Duration(milliseconds: 900),": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|dimension|height: 44,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|dimension|width: 44,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_canvas.dart|motion|_hold = Timer(const Duration(milliseconds: 500), () {": 1,
@@ -37,18 +18,59 @@
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|dimension|width: 6,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|opacity|..color = t.colorActionPrimaryBackground.withValues(alpha: .08),": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/gantt/gantt_painter.dart|opacity|Paint()..color = const Color(0xFFFFFFFF).withValues(alpha: .65),": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|canvas.drawRect(Offset.zero & size, Paint()..color = Colors.white);": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|color: Colors.white,": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|final p = Paint()..color = offset == 1 ? Colors.white : ink;": 1,
+    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|this.color = const Color(0xff18181b),": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|dimension|height: 420,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|dimension|height: 44,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|dimension|width: 44,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_canvas.dart|motion|_hold = Timer(const Duration(milliseconds: 500), () {": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_painter.dart|dimension|height: 20,": 1,
     "packages/flutter/k_design_ui/lib/src/data_display/timeline/timeline_painter.dart|dimension|width: 6,": 1,
+    "packages/flutter/k_design_ui/lib/src/editors/k_map_zone_editor.dart|motion|this.fitDuration = const Duration(milliseconds: 320),": 1,
     "packages/flutter/k_design_ui/lib/src/extended_components.dart|opacity|opacity: .001,": 1,
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_controller.dart|motion|? const Duration(milliseconds: 1)": 1,
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_overlays.dart|motion|this.longPressDuration = const Duration(milliseconds: 400),": 1,
+    "packages/flutter/k_design_ui/lib/src/maps/k_map_pin.dart|motion|const Duration(milliseconds: 16),": 1,
     "packages/flutter/k_design_ui/lib/src/patterns/k_calendar_pointer_drag.dart|motion|: const Duration(milliseconds: 500),": 1,
     "packages/flutter/k_design_ui/lib/src/patterns/k_calendar.dart|motion|_autoScroll ??= Timer.periodic(const Duration(milliseconds: 30), (_) {": 1,
     "packages/flutter/k_design_ui/lib/src/patterns/k_kanban.dart|motion|static const _tick = Duration(milliseconds: 16);": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|const KIcon(KIconName.check, size: 20, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|constraints: const BoxConstraints(maxWidth: 240),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|constraints: const BoxConstraints(maxWidth: 420),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|trailing: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|opacity|tokens.colorActionPrimaryBackground.withValues(alpha: .05),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|color|? const [Colors.transparent, Colors.white]": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|color|Colors.white,": 2,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|dimension|? constraints.maxHeight": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree_row.dart|dimension|strokeWidth: 1.5,": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree_row.dart|dimension|triggerContent: const KIcon(KIconName.ellipsis, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree_row.dart|motion|delay: const Duration(milliseconds: 300),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|dimension|iconContent: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|dimension|iconContent: KIcon(icon, strokeWidth: 1.5),": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|motion|_scrollTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {": 1,
+    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|opacity|? t.colorBorderFocus.withValues(alpha: .18)": 1,
     "packages/web/ui/src/activity.css|dimension|max-width: calc(6 * 44px + 5 * var(--k-space-control-inset-inline));": 1,
     "packages/web/ui/src/activity.css|dimension|min-width: calc(6 * 44px + 5 * var(--k-space-control-gap));": 1,
+    "packages/web/ui/src/celebration.css|appearance|border-radius: 2px;": 1,
+    "packages/web/ui/src/celebration.css|appearance|border-radius: 50%;": 1,
+    "packages/web/ui/src/celebration.css|appearance|opacity: 0.7;": 1,
+    "packages/web/ui/src/celebration.css|appearance|opacity: 0.9;": 1,
+    "packages/web/ui/src/celebration.css|dimension|height: 10px;": 1,
+    "packages/web/ui/src/celebration.css|dimension|height: 6px;": 1,
+    "packages/web/ui/src/celebration.css|dimension|inset: -80px;": 1,
+    "packages/web/ui/src/celebration.css|dimension|width: 6px;": 1,
+    "packages/web/ui/src/celebration.css|motion|animation: k-celebration-reveal 480ms cubic-bezier(0.16, 1, 0.3, 1) backwards;": 1,
+    "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|height: 1px;": 1,
+    "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|width: 1px;": 1,
+    "packages/web/ui/src/chat/call-bar.css|dimension|height: min(340px, 64vw, 40cqh);": 1,
+    "packages/web/ui/src/chat/call-bar.css|dimension|width: min(340px, 64vw, 40cqh);": 1,
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 220ms;": 1,
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 280ms;": 1,
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 340ms;": 1,
+    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 400ms;": 1,
+    "packages/web/ui/src/chat/call-bar.css|motion|animation: k-call-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) both;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|appearance|border-radius: 2px;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|appearance|opacity: 0.65;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|dimension|height: 14px;": 1,
@@ -68,7 +90,6 @@
     "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 3px;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 44px;": 1,
     "packages/web/ui/src/data-display/gantt/gantt.css|dimension|width: 6px;": 1,
-    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|.k-timeline--touch .vis-item.vis-selected .vis-drag-left::after,": 1,
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|bottom: 12px;": 1,
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|height: 420px;": 1,
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|height: 44px;": 1,
@@ -78,230 +99,21 @@
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|top: 12px;": 1,
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 120px;": 1,
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 44px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 6px;": 1,
+    "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: 96px;": 1,
     "packages/web/ui/src/data-display/timeline/timeline.css|dimension|width: max(var(--k-space-control-inset-inline), 16px);": 1,
+    "packages/web/ui/src/leading.css|dimension|margin-block-start: max(": 1,
+    "packages/web/ui/src/plan-picker.css|appearance|font-size: calc(1rem * var(--k-text-scale, 1));": 1,
+    "packages/web/ui/src/plan-picker.css|dimension|height: 1px;": 2,
+    "packages/web/ui/src/plan-picker.css|dimension|margin: -1px;": 1,
+    "packages/web/ui/src/plan-picker.css|dimension|max-width: 420px;": 3,
+    "packages/web/ui/src/plan-picker.css|dimension|max-width: 620px;": 2,
+    "packages/web/ui/src/plan-picker.css|dimension|min-width: 8em;": 1,
+    "packages/web/ui/src/plan-picker.css|dimension|min-width: min(100%, 240px);": 1,
+    "packages/web/ui/src/plan-picker.css|dimension|width: 1px;": 2,
+    "packages/web/ui/src/showcase-grid.css|dimension|min-height: 32rem;": 1,
     "packages/web/ui/src/table.css|dimension|height: 1em;": 1,
     "packages/web/ui/src/table.css|dimension|height: 1px;": 1,
-    "packages/web/ui/src/table.css|dimension|width: 1px;": 2,
-    "packages/web/ui/src/workflow.css|dimension|@container (max-width: 599px) {": 1,
-    "packages/flutter/k_design_ui/lib/src/chat/k_agent_chat_identity.dart|opacity|alpha:": {
-      "count": 1,
-      "reason": "Human-reviewed Agent Workspace gradient: .68 surface tint multiplied by live transition visibility and vertical band falloff, matching the Web 68% backdrop. This is compositing geometry, not a new global opacity style."
-    },
-    "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|width: 1px;": {
-      "count": 1,
-      "reason": "Screen-reader-only drawer heading: standard clipped 1px accessibility geometry; preserves the accessible dialog name without a duplicate visible heading."
-    },
-    "packages/web/ui/src/chat/agent-chat-workspace.css|dimension|height: 1px;": {
-      "count": 1,
-      "reason": "Screen-reader-only drawer heading: standard clipped 1px accessibility geometry; preserves the accessible dialog name without a duplicate visible heading."
-    },
-    "packages/web/ui/src/chat/call-bar.css|dimension|width: min(340px, 64vw, 40cqh);": {
-      "count": 1,
-      "reason": "Approved Agent Workspace call character maximum340px, capped by viewport width and available call height; matches accepted Storybook design. No existing semantic character-size token provides this geometry."
-    },
-    "packages/web/ui/src/chat/call-bar.css|dimension|height: min(340px, 64vw, 40cqh);": {
-      "count": 1,
-      "reason": "Approved Agent Workspace call character maximum340px, capped by viewport width and available call height; matches accepted Storybook design. No existing semantic character-size token provides this geometry."
-    },
-    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 220ms;": {
-      "count": 1,
-      "reason": "Approved Agent Workspace expanded-call bounce stagger:220ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
-    },
-    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 280ms;": {
-      "count": 1,
-      "reason": "Approved Agent Workspace expanded-call bounce stagger:280ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
-    },
-    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 340ms;": {
-      "count": 1,
-      "reason": "Approved Agent Workspace expanded-call bounce stagger:340ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
-    },
-    "packages/web/ui/src/chat/call-bar.css|motion|animation-delay: 400ms;": {
-      "count": 1,
-      "reason": "Approved Agent Workspace expanded-call bounce stagger:400ms, preserving the accepted identity/waveform/duration/controls sequence without fading. Existing general transition tokens do not represent this choreography."
-    },
-    "packages/web/ui/src/chat/call-bar.css|motion|animation: k-call-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) both;": {
-      "count": 1,
-      "reason": "Approved Agent Workspace expanded-call520ms bounce timing, preserving accepted Storybook choreography without fade and disabled for reduced motion. No existing motion token matches this duration."
-    },
-    "packages/flutter/k_design_ui/lib/src/chat/k_call_bar.dart|motion|duration: const Duration(milliseconds: 900),": {
-      "count": 1,
-      "reason": "Approved Agent Workspace call-character900ms resize, matching the accepted Web call transition; preserves Rive character state and honors reduced motion. Existing general motion tokens do not match this duration."
-    },
-    "packages/flutter/k_design_ui/lib/src/editors/k_map_zone_editor.dart|motion|this.fitDuration = const Duration(milliseconds: 320),": {
-      "count": 1,
-      "reason": "Public consumer-overridable geographic camera flight duration; preserve accepted Web/Flutter camera choreography independently of UI transitions."
-    },
-    "packages/flutter/k_design_ui/lib/src/maps/k_map_overlays.dart|motion|this.longPressDuration = const Duration(milliseconds: 400),": {
-      "count": 1,
-      "reason": "Public configurable input recognition threshold, not visual animation; preserve matching Web/Flutter long-press activation."
-    },
-    "packages/flutter/k_design_ui/lib/src/maps/k_map_pin.dart|motion|const Duration(milliseconds: 16),": {
-      "count": 1,
-      "reason": "Edge-pan scheduler sampling cadence near 60Hz; elapsed-time integration determines movement, not a visual transition duration."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_menu_button.dart|dimension|strokeWidth: 1.5,": {
-      "count": 1,
-      "reason": "User-approved thin Lucide submenu arrow matching Web KMenuButton and KSortableTree; KIcon exposes strokeWidth publicly."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree_row.dart|dimension|strokeWidth: 1.5,": {
-      "count": 1,
-      "reason": "User-approved thin Lucide drag/folder icons matching the accepted Web KSortableTree."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree_row.dart|dimension|triggerContent: const KIcon(KIconName.ellipsis, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "User-approved thin Lucide overflow icon matching Web KSortableTree."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree_row.dart|motion|delay: const Duration(milliseconds: 300),": {
-      "count": 1,
-      "reason": "Interaction threshold for long-press drag parity with Web; not an animation duration. Short press toggles the category."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|dimension|iconContent: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "User-approved thin Lucide move arrow matching accepted Web menu."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|dimension|iconContent: KIcon(icon, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "User-approved thin Lucide up/down arrows matching accepted Web menu."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|motion|_scrollTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {": {
-      "count": 1,
-      "reason": "Edge-autoscroll scheduling cadence during a held drag, not a visual transition duration."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_sortable_tree.dart|opacity|? t.colorBorderFocus.withValues(alpha: .18)": {
-      "count": 1,
-      "reason": "Matches the accepted Web full-category drop highlight: 18% semantic focus color. Foreground remains translucent to preserve text visibility."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|strokeWidth: 1.5,": {
-      "count": 1,
-      "reason": "User-approved thin Lucide icons; shared menu surface preserves KMenuButton checkmark and submenu arrow appearance."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|const KIcon(KIconName.check, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "User-approved thin Lucide icons; shared menu surface preserves KMenuButton checkmark and submenu arrow appearance."
-    },
-    "packages/flutter/k_design_ui/lib/src/actions/k_menu_surface.dart|dimension|KIcon(KIconName.chevronRight, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "Explicit thin chevron stroke matches the accepted navigation icon artwork; not layout spacing."
-    },
-    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|canvas.drawRect(Offset.zero & size, Paint()..color = Colors.white);": {
-      "count": 1,
-      "reason": "QR rendering uses a stable white paper/quiet-zone substrate (including finder-eye cutouts), independent of app dark mode, to preserve scanner contrast; ink is consumer configurable."
-    },
-    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|color: Colors.white,": {
-      "count": 1,
-      "reason": "QR rendering uses a stable white paper/quiet-zone substrate (including finder-eye cutouts), independent of app dark mode, to preserve scanner contrast; ink is consumer configurable."
-    },
-    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|final p = Paint()..color = offset == 1 ? Colors.white : ink;": {
-      "count": 1,
-      "reason": "QR rendering uses a stable white paper/quiet-zone substrate (including finder-eye cutouts), independent of app dark mode, to preserve scanner contrast; ink is consumer configurable."
-    },
-    "packages/flutter/k_design_ui/lib/src/data_display/k_qr_code.dart|color|this.color = const Color(0xff18181b),": {
-      "count": 1,
-      "reason": "Consumer-overridable QR ink default on a white export substrate; deliberately independent of app theme to preserve scanner contrast."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|const KIcon(KIconName.check, size: 18, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "Decorative feature/CTA glyph geometry matches the Web plan-picker artwork and does not determine touch-target size."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|constraints: const BoxConstraints(maxWidth: 240),": {
-      "count": 1,
-      "reason": "Plan-picker illustration/reading column cap matches the accepted Web layout and shrinks to available width."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|constraints: const BoxConstraints(maxWidth: 420),": {
-      "count": 1,
-      "reason": "Plan-picker illustration/reading column cap matches the accepted Web layout and shrinks to available width."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|dimension|trailing: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),": {
-      "count": 1,
-      "reason": "Decorative feature/CTA glyph geometry matches the Web plan-picker artwork and does not determine touch-target size."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_plan_picker.dart|opacity|tokens.colorActionPrimaryBackground.withValues(alpha: .05),": {
-      "count": 1,
-      "reason": "Selected-plan tint uses 5% of the active primary token over the surface, matching Web color-mix."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|color|? const [Colors.transparent, Colors.white]": {
-      "count": 1,
-      "reason": "White is unit alpha in the dstIn ShaderMask, not a visible theme color."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|color|Colors.white,": {
-      "count": 2,
-      "reason": "White is unit alpha in the dstIn ShaderMask, not a visible theme color."
-    },
-    "packages/flutter/k_design_ui/lib/src/patterns/k_showcase_grid.dart|dimension|? constraints.maxHeight": {
-      "count": 1,
-      "reason": "Unbounded showcase fallback canvas is 512 logical pixels, matching Web 32rem; bounded parents retain their supplied height."
-    },
-    "packages/web/ui/src/celebration.css|appearance|border-radius: 2px;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
-    },
-    "packages/web/ui/src/celebration.css|appearance|border-radius: 50%;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
-    },
-    "packages/web/ui/src/celebration.css|appearance|opacity: 0.7;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle alpha keyframes and content reveal timing define the accepted burst; prefers-reduced-motion suppresses both."
-    },
-    "packages/web/ui/src/celebration.css|appearance|opacity: 0.9;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle alpha keyframes and content reveal timing define the accepted burst; prefers-reduced-motion suppresses both."
-    },
-    "packages/web/ui/src/celebration.css|dimension|height: 10px;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
-    },
-    "packages/web/ui/src/celebration.css|dimension|height: 6px;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
-    },
-    "packages/web/ui/src/celebration.css|dimension|inset: -80px;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle overscan keeps the burst from clipping at the content boundary."
-    },
-    "packages/web/ui/src/celebration.css|dimension|width: 6px;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle shape dimensions/radius define decorative geometry, not control or layout spacing."
-    },
-    "packages/web/ui/src/celebration.css|motion|animation: k-celebration-reveal 480ms cubic-bezier(0.16, 1, 0.3, 1) backwards;": {
-      "count": 1,
-      "reason": "Existing accepted confetti choreography: particle alpha keyframes and content reveal timing define the accepted burst; prefers-reduced-motion suppresses both."
-    },
-    "packages/web/ui/src/plan-picker.css|appearance|font-size: calc(1rem * var(--k-text-scale, 1));": {
-      "count": 1,
-      "reason": "Native radio remains in a normal rem-based font context with user text scaling; child typography uses KText token variants."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|height: 1px;": {
-      "count": 2,
-      "reason": "Visually hidden native radio/accessibility text technique preserves focus and screen-reader semantics; the 1px box and negative margin are not visual spacing."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|margin: -1px;": {
-      "count": 1,
-      "reason": "Visually hidden native radio/accessibility text technique preserves focus and screen-reader semantics; the 1px box and negative margin are not visual spacing."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|max-width: 420px;": {
-      "count": 3,
-      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|max-width: 620px;": {
-      "count": 2,
-      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|min-width: 8em;": {
-      "count": 1,
-      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|min-width: min(100%, 240px);": {
-      "count": 1,
-      "reason": "Plan-picker reading/comparison/illustration column constraint is component-specific responsive geometry; columns shrink to available width and do not define generic spacing."
-    },
-    "packages/web/ui/src/plan-picker.css|dimension|width: 1px;": {
-      "count": 2,
-      "reason": "Visually hidden native radio/accessibility text technique preserves focus and screen-reader semantics; the 1px box and negative margin are not visual spacing."
-    },
-    "packages/web/ui/src/showcase-grid.css|dimension|min-height: 32rem;": {
-      "count": 1,
-      "reason": "Showcase fallback canvas height matches Flutter 512 logical pixels; this decorative pattern can be sized by the consumer."
-    }
+    "packages/web/ui/src/table.css|dimension|width: 1px;": 2
   }
 }

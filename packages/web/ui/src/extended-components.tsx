@@ -346,6 +346,9 @@ export function KPagination({
           </button>
         ),
       )}
+      <span className="k-pagination__summary" aria-live="polite">
+        {page} / {pageCount}
+      </span>
       <KIconButton
         icon="chevron-right"
         label={nextLabel}

@@ -14,6 +14,7 @@ class ConsumerExampleApp extends StatelessWidget {
     theme: consumerTheme(Brightness.light),
     darkTheme: consumerTheme(Brightness.dark),
     themeMode: ThemeMode.system,
+    builder: consumerAdaptive,
     home: const ConsumerExamplePage(),
   );
 }

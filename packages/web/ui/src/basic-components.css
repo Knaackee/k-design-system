@@ -239,6 +239,7 @@
   color: var(--k-color-text-muted);
 }
 .k-pagination {
+  container-type: inline-size;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -262,11 +263,28 @@
   background: var(--k-color-action-primary-background);
   color: var(--k-color-action-primary-foreground);
 }
+.k-pagination__summary {
+  display: none;
+  padding-inline: var(--k-space-control-gap);
+  color: var(--k-color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
 .k-pagination__ellipsis {
   display: grid;
   place-items: center;
   width: var(--k-component-pagination-ellipsis-width);
   color: var(--k-color-text-muted);
+}
+/* Decision 0010: narrow windows show "page / count" between the arrows
+   instead of overflowing. */
+@container (max-width: 440px) {
+  .k-pagination__page,
+  .k-pagination__ellipsis {
+    display: none;
+  }
+  .k-pagination__summary {
+    display: inline;
+  }
 }
 .k-tabs {
   display: grid;

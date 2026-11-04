@@ -92,6 +92,10 @@
       "types": "./dist/localization/provider.d.ts",
       "import": "./dist/localization/provider.js"
     },
+    "./adaptive": {
+      "types": "./dist/adaptive.d.ts",
+      "import": "./dist/adaptive.js"
+    },
     "./editors/map-zone-editor": {
       "types": "./dist/editors/map-zone-editor.d.ts",
       "import": "./dist/editors/map-zone-editor.js"

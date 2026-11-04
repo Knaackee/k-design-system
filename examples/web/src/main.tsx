@@ -6,6 +6,7 @@ import "@k-design-system/ui/styles.css";
 import "./theme.css";
 import "./app.css";
 
+import { applyKAdaptive } from "@k-design-system/ui/adaptive";
 import { KButton } from "@k-design-system/ui/primitives/button";
 import { KCard } from "@k-design-system/ui/primitives/card";
 import { KStack } from "@k-design-system/ui/primitives/layout";
@@ -72,6 +73,9 @@ const root = document.getElementById("root");
 if (!root) {
   throw new Error("Missing application root");
 }
+
+// Decision 0010: resolve adaptive axes from the window and pointer.
+applyKAdaptive(document.documentElement);
 
 createRoot(root).render(
   <StrictMode>
