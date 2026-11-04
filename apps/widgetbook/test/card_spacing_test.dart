@@ -57,6 +57,11 @@ void main() {
                     ),
                   );
                   await tester.pumpAndSettle();
+                  // Decision 0010: headings are capped below body scaling.
+                  final headingScale = math.min(
+                    scale,
+                    tokens.textScaleMaxHeading,
+                  );
                   final cards = find.byType(KCard);
                   final first = tester.getRect(cards.at(0));
                   final second = tester.getRect(cards.at(1));
@@ -153,9 +158,10 @@ void main() {
                       heading.height,
                       closeTo(
                         tokens.fontHeading4LineHeight *
-                            scale *
+                            headingScale *
                             (heading.height /
-                                    (tokens.fontHeading4LineHeight * scale))
+                                    (tokens.fontHeading4LineHeight *
+                                        headingScale))
                                 .round(),
                         .5,
                       ),

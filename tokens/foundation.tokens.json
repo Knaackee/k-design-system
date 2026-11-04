@@ -88,36 +88,7 @@
         "$type": "dimension",
         "$value": { "value": 0.5, "unit": "px" }
       },
-      "micro": { "$type": "dimension", "$value": { "value": 2, "unit": "px" } },
-      "badgeOffset": {
-        "$type": "dimension",
-        "$value": { "value": 3, "unit": "px" }
-      },
-      "compact": {
-        "$type": "dimension",
-        "$value": { "value": 5, "unit": "px" }
-      },
-      "tight": { "$type": "dimension", "$value": { "value": 6, "unit": "px" } },
-      "barVertical": {
-        "$type": "dimension",
-        "$value": { "value": 7, "unit": "px" }
-      },
-      "resizeOffset": {
-        "$type": "dimension",
-        "$value": { "value": 9, "unit": "px" }
-      },
-      "barInline": {
-        "$type": "dimension",
-        "$value": { "value": 10, "unit": "px" }
-      },
-      "mediumInset": {
-        "$type": "dimension",
-        "$value": { "value": 14, "unit": "px" }
-      },
-      "touchInset": {
-        "$type": "dimension",
-        "$value": { "value": 15, "unit": "px" }
-      }
+      "micro": { "$type": "dimension", "$value": { "value": 2, "unit": "px" } }
     },
     "1": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } },
     "2": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } },
@@ -471,14 +442,6 @@
       }
     },
     "size": {
-      "micro": {
-        "$type": "dimension",
-        "$value": { "value": 8, "unit": "px" }
-      },
-      "microLabel": {
-        "$type": "dimension",
-        "$value": { "value": 9, "unit": "px" }
-      },
       "avatarSmall": {
         "$type": "dimension",
         "$value": { "value": 11, "unit": "px" }
@@ -566,6 +529,50 @@
       "caption": {
         "$type": "dimension",
         "$value": { "value": 12, "unit": "px" }
+      },
+      "bodyMobile": {
+        "$type": "dimension",
+        "$value": { "value": 16, "unit": "px" }
+      },
+      "controlMobile": {
+        "$type": "dimension",
+        "$value": { "value": 16, "unit": "px" }
+      },
+      "heading1Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 28, "unit": "px" }
+      },
+      "heading2Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 24, "unit": "px" }
+      },
+      "heading3Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
+      },
+      "heading4Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 18, "unit": "px" }
+      },
+      "heading5Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 16, "unit": "px" }
+      },
+      "heading6Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 15, "unit": "px" }
+      },
+      "bodySmallMobile": {
+        "$type": "dimension",
+        "$value": { "value": 14, "unit": "px" }
+      },
+      "labelMobile": {
+        "$type": "dimension",
+        "$value": { "value": 14, "unit": "px" }
+      },
+      "caption2": {
+        "$type": "dimension",
+        "$value": { "value": 11, "unit": "px" }
       }
     },
     "lineHeight": {
@@ -644,6 +651,42 @@
       "caption": {
         "$type": "dimension",
         "$value": { "value": 16, "unit": "px" }
+      },
+      "bodyMobile": {
+        "$type": "dimension",
+        "$value": { "value": 24, "unit": "px" }
+      },
+      "heading1Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 34, "unit": "px" }
+      },
+      "heading2Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 30, "unit": "px" }
+      },
+      "heading3Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 26, "unit": "px" }
+      },
+      "heading4Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 24, "unit": "px" }
+      },
+      "heading5Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 22, "unit": "px" }
+      },
+      "heading6Mobile": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
+      },
+      "bodySmallMobile": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
+      },
+      "labelMobile": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
       }
     },
     "letterSpacing": {

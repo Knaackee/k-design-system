@@ -11,13 +11,19 @@
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);
   font-optical-sizing: auto;
-  font-size: calc(var(--k-text-font-size) * var(--k-text-scale, 1));
+  /* Accessibility text scale, capped per role (Decision 0010). */
+  --k-text-scale-effective: min(
+    var(--k-text-scale, 1),
+    var(--k-text-scale-cap, var(--k-text-scale-max-body))
+  );
+  font-size: calc(var(--k-text-font-size) * var(--k-text-scale-effective));
   font-weight: var(--k-text-font-weight);
   letter-spacing: var(--k-text-letter-spacing);
-  line-height: calc(var(--k-text-line-height) * var(--k-text-scale, 1));
+  line-height: calc(var(--k-text-line-height) * var(--k-text-scale-effective));
 }
 
 .k-text--heading1 {
+  --k-text-scale-cap: var(--k-text-scale-max-heading);
   --k-text-font-size: var(--k-font-heading1-size);
   --k-text-line-height: var(--k-font-heading1-line-height);
   --k-text-letter-spacing: var(--k-font-heading1-letter-spacing);
@@ -25,6 +31,7 @@
 }
 
 .k-text--heading2 {
+  --k-text-scale-cap: var(--k-text-scale-max-heading);
   --k-text-font-size: var(--k-font-heading2-size);
   --k-text-line-height: var(--k-font-heading2-line-height);
   --k-text-letter-spacing: var(--k-font-heading2-letter-spacing);
@@ -32,6 +39,7 @@
 }
 
 .k-text--heading3 {
+  --k-text-scale-cap: var(--k-text-scale-max-heading);
   --k-text-font-size: var(--k-font-heading3-size);
   --k-text-line-height: var(--k-font-heading3-line-height);
   --k-text-letter-spacing: var(--k-font-heading3-letter-spacing);
@@ -39,6 +47,7 @@
 }
 
 .k-text--heading4 {
+  --k-text-scale-cap: var(--k-text-scale-max-heading);
   --k-text-font-size: var(--k-font-heading4-size);
   --k-text-line-height: var(--k-font-heading4-line-height);
   --k-text-letter-spacing: var(--k-font-heading4-letter-spacing);
@@ -46,6 +55,7 @@
 }
 
 .k-text--heading5 {
+  --k-text-scale-cap: var(--k-text-scale-max-heading);
   --k-text-font-size: var(--k-font-heading5-size);
   --k-text-line-height: var(--k-font-heading5-line-height);
   --k-text-letter-spacing: var(--k-font-heading5-letter-spacing);
@@ -53,6 +63,7 @@
 }
 
 .k-text--heading6 {
+  --k-text-scale-cap: var(--k-text-scale-max-heading);
   --k-text-font-size: var(--k-font-heading6-size);
   --k-text-line-height: var(--k-font-heading6-line-height);
   --k-text-letter-spacing: var(--k-font-heading6-letter-spacing);
@@ -250,7 +261,10 @@
   color: var(--k-button-foreground);
   font-family: var(--k-font-family);
   font-optical-sizing: auto;
-  font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
+  font-size: calc(
+    var(--k-font-control-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-control))
+  );
   font-weight: var(--k-font-control-weight);
   letter-spacing: -0.01em;
   line-height: var(--k-font-relaxed-height);

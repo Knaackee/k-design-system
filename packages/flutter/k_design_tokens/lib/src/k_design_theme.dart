@@ -6,7 +6,9 @@ enum KBrand { orbit, reference }
 
 enum KDensity { dense, standard, spacious }
 
-enum KTypeScale { compact, standard }
+/// Type ramp. [mobile] is the phone ramp (compact window class): smaller
+/// headings, 16 px body and 16 px controls.
+enum KTypeScale { compact, standard, mobile }
 
 enum KInputMode { pointer, touch }
 
@@ -28,13 +30,25 @@ class KDesignConfiguration {
   final KInputMode inputMode;
   final KWindowClass windowClass;
 
+  @override
+  bool operator ==(Object other) =>
+      other is KDesignConfiguration &&
+      other.density == density &&
+      other.typeScale == typeScale &&
+      other.inputMode == inputMode &&
+      other.windowClass == windowClass;
+
+  @override
+  int get hashCode => Object.hash(density, typeScale, inputMode, windowClass);
+
   static const dashboard = KDesignConfiguration(density: KDensity.dense);
 
   static const desktopApp = KDesignConfiguration();
 
+  /// Phone context: standard density, phone type ramp, touch targets.
+  /// Prefer [KAdaptiveTheme], which resolves this from the window.
   static const mobileApp = KDesignConfiguration(
-    density: KDensity.spacious,
-    typeScale: KTypeScale.standard,
+    typeScale: KTypeScale.mobile,
     inputMode: KInputMode.touch,
   );
 
@@ -96,7 +110,9 @@ KDesignTokens resolveKDesignTokens(
     sizeControl: controlSize,
     spaceContentActionGap: actionGap,
     spaceCardPadding: cardPadding,
-    spaceLayoutSectionGap: sectionGap,
+    spaceLayoutSectionGap: configuration.windowClass == KWindowClass.compact
+        ? KDesignTokenVariants.windowCompactSpaceLayoutSectionGap
+        : sectionGap,
     sizeHitTarget: switch (configuration.inputMode) {
       KInputMode.pointer => KDesignTokenVariants.inputModePointerSizeHitTarget,
       KInputMode.touch => KDesignTokenVariants.inputModeTouchSizeHitTarget,
@@ -176,6 +192,37 @@ KDesignTokens resolveKDesignTokens(
       fontLabelSize: KDesignTokenVariants.typeScaleStandardFontLabelSize,
       fontLabelLineHeight:
           KDesignTokenVariants.typeScaleStandardFontLabelLineHeight,
+    ),
+    KTypeScale.mobile => resolved.copyWith(
+      fontSize: KDesignTokenVariants.typeScaleMobileFontSize,
+      fontControlSize: KDesignTokenVariants.typeScaleMobileFontControlSize,
+      fontHeading1Size: KDesignTokenVariants.typeScaleMobileFontHeading1Size,
+      fontHeading1LineHeight:
+          KDesignTokenVariants.typeScaleMobileFontHeading1LineHeight,
+      fontHeading2Size: KDesignTokenVariants.typeScaleMobileFontHeading2Size,
+      fontHeading2LineHeight:
+          KDesignTokenVariants.typeScaleMobileFontHeading2LineHeight,
+      fontHeading3Size: KDesignTokenVariants.typeScaleMobileFontHeading3Size,
+      fontHeading3LineHeight:
+          KDesignTokenVariants.typeScaleMobileFontHeading3LineHeight,
+      fontHeading4Size: KDesignTokenVariants.typeScaleMobileFontHeading4Size,
+      fontHeading4LineHeight:
+          KDesignTokenVariants.typeScaleMobileFontHeading4LineHeight,
+      fontHeading5Size: KDesignTokenVariants.typeScaleMobileFontHeading5Size,
+      fontHeading5LineHeight:
+          KDesignTokenVariants.typeScaleMobileFontHeading5LineHeight,
+      fontHeading6Size: KDesignTokenVariants.typeScaleMobileFontHeading6Size,
+      fontHeading6LineHeight:
+          KDesignTokenVariants.typeScaleMobileFontHeading6LineHeight,
+      fontBodySize: KDesignTokenVariants.typeScaleMobileFontBodySize,
+      fontBodyLineHeight:
+          KDesignTokenVariants.typeScaleMobileFontBodyLineHeight,
+      fontBodySmallSize: KDesignTokenVariants.typeScaleMobileFontBodySmallSize,
+      fontBodySmallLineHeight:
+          KDesignTokenVariants.typeScaleMobileFontBodySmallLineHeight,
+      fontLabelSize: KDesignTokenVariants.typeScaleMobileFontLabelSize,
+      fontLabelLineHeight:
+          KDesignTokenVariants.typeScaleMobileFontLabelLineHeight,
     ),
   };
 }

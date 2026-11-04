@@ -1,19 +1,53 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
-import { KLocalizationProvider } from "@k-design-system/ui";
+import { useSyncExternalStore } from "react";
+import { KLocalizationProvider, resolveKAdaptive } from "@k-design-system/ui";
+import type { KAdaptiveOverrides } from "@k-design-system/ui";
 import type { StoryIndexEntry } from "storybook/internal/types";
 import "@k-design-system/tokens/tokens.css";
 import "@k-design-system/ui/styles.css";
 import "../src/gallery.css";
 
+// Re-resolve "auto" axes when the preview viewport or pointer changes.
+const subscribeViewport = (notify: () => void) => {
+  const coarse = window.matchMedia("(pointer: coarse)");
+  window.addEventListener("resize", notify);
+  coarse.addEventListener("change", notify);
+  return () => {
+    window.removeEventListener("resize", notify);
+    coarse.removeEventListener("change", notify);
+  };
+};
+const viewportKey = () =>
+  `${window.innerWidth}:${window.matchMedia("(pointer: coarse)").matches}`;
+
 const withDesignTokens: Decorator = (Story, context) => {
+  useSyncExternalStore(subscribeViewport, viewportKey);
   const language = String(context.globals.language ?? "en");
   document.documentElement.lang = language;
   const brand = String(context.globals.brand ?? "orbit");
   const theme = String(context.globals.theme ?? "light");
   const density = String(context.globals.density ?? "standard");
-  const typeScale = String(context.globals.typeScale ?? "compact");
-  const inputMode = String(context.globals.inputMode ?? "pointer");
-  const windowClass = String(context.globals.windowClass ?? "compact");
+  // Decision 0010: "auto" resolves like a real device from the preview
+  // viewport and primary pointer; explicit toolbar values are overrides.
+  const pick = (key: string) => {
+    const value = String(context.globals[key] ?? "auto");
+    return value === "auto" ? undefined : value;
+  };
+  const resolved = resolveKAdaptive(
+    {
+      width: window.innerWidth,
+      coarsePointer: window.matchMedia("(pointer: coarse)").matches,
+    },
+    {
+      density: pick("density"),
+      typeScale: pick("typeScale"),
+      inputMode: pick("inputMode"),
+      windowClass: pick("windowClass"),
+    } as KAdaptiveOverrides,
+  );
+  const typeScale = resolved.typeScale;
+  const inputMode = resolved.inputMode;
+  const windowClass = resolved.windowClass;
   const textScale = Number(context.globals.textScale ?? 1);
   document.documentElement.dataset.brand = brand;
   document.documentElement.dataset.theme = theme;
@@ -57,9 +91,9 @@ const preview: Preview & {
     brand: "orbit",
     theme: "light",
     density: "standard",
-    typeScale: "compact",
-    inputMode: "pointer",
-    windowClass: "compact",
+    typeScale: "auto",
+    inputMode: "auto",
+    windowClass: "auto",
     textScale: 1,
   },
   globalTypes: {
@@ -123,6 +157,8 @@ const preview: Preview & {
       toolbar: {
         icon: "paragraph",
         items: [
+          { value: "auto", title: "Type · auto (window)" },
+          { value: "mobile", title: "Mobile · 16, phone headings" },
           { value: "compact", title: "Compact · 14" },
           { value: "standard", title: "Standard · 16" },
         ],
@@ -133,6 +169,7 @@ const preview: Preview & {
       toolbar: {
         icon: "mobile",
         items: [
+          { value: "auto", title: "Input · auto (pointer media)" },
           { value: "pointer", title: "Pointer" },
           { value: "touch", title: "Touch" },
         ],
@@ -143,6 +180,7 @@ const preview: Preview & {
       toolbar: {
         icon: "browser",
         items: [
+          { value: "auto", title: "Window · auto (viewport)" },
           { value: "compact", title: "Compact · <600" },
           { value: "medium", title: "Medium · 600–839" },
           { value: "expanded", title: "Expanded · 840–1199" },
@@ -157,7 +195,8 @@ const preview: Preview & {
         icon: "zoom",
         items: [
           { value: "1", title: "Text 100%" },
-          { value: "1.25", title: "Text 125%" },
+          { value: "1.15", title: "Text 115% (common Android default)" },
+          { value: "1.3", title: "Text 130%" },
           { value: "1.5", title: "Text 150%" },
           { value: "2", title: "Text 200%" },
         ],

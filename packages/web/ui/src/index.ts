@@ -616,3 +616,19 @@ export * from "./patterns/plan-picker.js";
 
 export * from "./util/use-long-press-drag.js";
 export * from "./patterns/booking-page-management.js";
+export {
+  applyKAdaptive,
+  kAdaptiveAttributes,
+  kAdaptivePresets,
+  kWindowClassForWidth,
+  resolveKAdaptive,
+} from "./adaptive.js";
+export type {
+  KAdaptiveConfiguration,
+  KAdaptiveEnvironment,
+  KAdaptiveOverrides,
+  KDensity,
+  KInputMode,
+  KTypeScale,
+  KWindowClass,
+} from "./adaptive.js";

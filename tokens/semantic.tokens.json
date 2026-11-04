@@ -347,7 +347,7 @@
     },
     "badgeOffset": {
       "$type": "dimension",
-      "$value": "{space.scale.badgeOffset}"
+      "$value": "{space.scale.micro}"
     },
     "tight": {
       "$type": "dimension",
@@ -355,11 +355,11 @@
     },
     "compact": {
       "$type": "dimension",
-      "$value": "{space.scale.compact}"
+      "$value": "{space.1}"
     },
     "smallInset": {
       "$type": "dimension",
-      "$value": "{space.scale.tight}"
+      "$value": "{space.2}"
     },
     "controlGap": {
       "$type": "dimension",
@@ -387,23 +387,23 @@
     },
     "barVertical": {
       "$type": "dimension",
-      "$value": "{space.scale.barVertical}"
+      "$value": "{space.2}"
     },
     "resizeOffset": {
       "$type": "dimension",
-      "$value": "{space.scale.resizeOffset}"
+      "$value": "{space.2}"
     },
     "barInline": {
       "$type": "dimension",
-      "$value": "{space.scale.barInline}"
+      "$value": "{space.3}"
     },
     "mediumInset": {
       "$type": "dimension",
-      "$value": "{space.scale.mediumInset}"
+      "$value": "{space.4}"
     },
     "touchInset": {
       "$type": "dimension",
-      "$value": "{space.scale.touchInset}"
+      "$value": "{space.4}"
     }
   },
   "size": {
@@ -709,13 +709,9 @@
       "$type": "dimension",
       "$value": "{font.size.bodyCompact}"
     },
-    "microSize": {
+    "caption2Size": {
       "$type": "dimension",
-      "$value": "{font.size.micro}"
-    },
-    "microLabelSize": {
-      "$type": "dimension",
-      "$value": "{font.size.microLabel}"
+      "$value": "{font.size.caption2}"
     },
     "avatarSmallSize": {
       "$type": "dimension",
@@ -1451,7 +1447,7 @@
       },
       "badgeFontSize": {
         "$type": "dimension",
-        "$value": "{font.microSize}"
+        "$value": "{font.caption2Size}"
       },
       "groupStep": {
         "$type": "dimension",
@@ -2436,6 +2432,13 @@
           }
         }
       }
+    }
+  },
+  "text": {
+    "scaleMax": {
+      "body": { "$type": "number", "$value": 2 },
+      "heading": { "$type": "number", "$value": 1.4 },
+      "control": { "$type": "number", "$value": 1.6 }
     }
   }
 }

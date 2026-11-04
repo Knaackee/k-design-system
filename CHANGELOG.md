@@ -7,6 +7,19 @@ version is tagged.
 ## Unreleased
 
 - Final visual acceptance and the release tag remain pending.
+- **Breaking (Decision 0010):** adaptive axes now resolve at runtime from the
+  available window and platform (`applyKAdaptive`, `resolveKAdaptive`,
+  `KAdaptiveTheme`, `resolveKAdaptiveConfiguration`). Galleries default to the
+  same resolution. Migration: Flutter apps wrap their app in `KAdaptiveTheme`
+  instead of passing `KDesignConfiguration.mobileApp`; Web apps call
+  `applyKAdaptive(document.documentElement)`.
+- **Breaking:** `KDesignConfiguration.mobileApp` is Standard density with the
+  new `mobile` type ramp (H1 28/34, body and controls 16) instead of Spacious.
+- **Breaking:** removed `font.microSize` and `font.microLabelSize` (8/9 px);
+  use `font.caption2Size` (11 px). Off-grid spacing roles snap to the 4 px grid.
+- Added per-role system text-scale caps (`text.scaleMax.*`): headings 1.4,
+  controls 1.6, body 2.0. Fixed balanced headings measuring with an unclamped
+  text scaler.
 - Added opt-in follow-up submission during active chat responses on Web and
   Flutter, preserving the stop action and submission controls.
 - Made standard presentation cards compact with accessible icon actions while

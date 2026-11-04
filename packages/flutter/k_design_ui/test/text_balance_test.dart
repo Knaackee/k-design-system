@@ -49,8 +49,12 @@ void main() {
     const heading = 'Schön, dich kennenzulernen.';
     await measure(
       tester,
-      const KText(heading, variant: KTextVariant.heading1,
-        textWrap: KTextWrap.balance, align: TextAlign.center),
+      const KText(
+        heading,
+        variant: KTextVariant.heading1,
+        textWrap: KTextWrap.balance,
+        align: TextAlign.center,
+      ),
       width: 296,
     );
     final paragraph = tester.renderObject<RenderParagraph>(find.text(heading));
@@ -134,7 +138,12 @@ void main() {
               reason: reason,
             );
           }
-          expect(paragraph.textScaler.scale(10), 10 * scale, reason: reason);
+          // Headings are capped at 1.4x (Decision 0010).
+          expect(
+            paragraph.textScaler.scale(10),
+            closeTo(10 * (scale > 1.4 ? 1.4 : scale), 1e-9),
+            reason: reason,
+          );
         }
       }
     }
@@ -188,7 +197,10 @@ void main() {
       final paragraph = tester.renderObject<RenderParagraph>(
         find.byType(RichText),
       );
-      expect(paragraph.textScaler.scale(10), 10 * scale);
+      expect(
+        paragraph.textScaler.scale(10),
+        closeTo(10 * (scale > 1.4 ? 1.4 : scale), 1e-9),
+      );
       final textCenter = tester.getCenter(find.text(message)).dx;
       expect(textCenter, closeTo(400, .1));
     }

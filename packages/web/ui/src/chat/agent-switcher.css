@@ -108,7 +108,7 @@
   border: var(--k-border-width-default) solid var(--k-color-surface-raised);
   border-radius: var(--k-radius-full);
   color: var(--k-color-action-primary-foreground);
-  font-size: var(--k-font-micro-label-size);
+  font-size: var(--k-font-caption2-size);
   font-weight: var(--k-font-control-weight);
   line-height: 1;
 }
@@ -177,7 +177,7 @@
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: var(--k-font-micro-label-size);
+  font-size: var(--k-font-caption2-size);
   font-weight: var(--k-font-label-weight);
   line-height: var(--k-font-relaxed-height);
 }

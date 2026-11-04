@@ -381,7 +381,7 @@
   background: var(--k-color-surface-raised);
   box-shadow: 0 0 0 var(--k-border-width-strong) var(--k-color-surface-canvas);
   color: var(--k-color-text-primary);
-  font-size: var(--k-font-micro-label-size);
+  font-size: var(--k-font-caption2-size);
   transform: none;
   pointer-events: none;
 }
@@ -397,7 +397,7 @@
   min-height: var(--k-component-sidebar-rail-badge-size);
   padding-inline: var(--k-space-badge-offset);
   box-shadow: 0 0 0 var(--k-border-width-strong) var(--k-color-surface-canvas);
-  font-size: var(--k-font-micro-label-size);
+  font-size: var(--k-font-caption2-size);
 }
 
 .k-sidebar[data-mode="rail"] .k-sidebar-group + .k-sidebar-group {

@@ -63,7 +63,10 @@ void main() {
       (KDensity.spacious, 12, 24, 24, 48, 44),
     ]) {
       final tokens = kDesignTokens(
-        configuration: KDesignConfiguration(density: density),
+        configuration: KDesignConfiguration(
+          density: density,
+          windowClass: KWindowClass.expanded,
+        ),
       );
       expect(tokens.spaceControlGap, gap);
       expect(tokens.spaceContentActionGap, action);
@@ -72,6 +75,53 @@ void main() {
       expect(tokens.sizeControl, control);
     }
     expect(KDesignConfiguration.marketing.density, KDensity.spacious);
+  });
+
+  test('compact windows tighten section gaps and use the phone ramp', () {
+    final tokens = kDesignTokens(configuration: KDesignConfiguration.mobileApp);
+    expect(tokens.spaceLayoutSectionGap, 24);
+    expect(tokens.spaceLayoutGutter, 16);
+    expect(tokens.spaceCardPadding, 16);
+    expect(tokens.fontBodySize, 16);
+    expect(tokens.fontControlSize, 16);
+    expect(tokens.fontHeading1Size, 28);
+    expect(tokens.fontHeading1LineHeight, 34);
+    expect(tokens.sizeHitTarget, 48);
+    expect(tokens.fontCaption2Size, 11);
+  });
+
+  test('adaptive resolution follows window and platform', () {
+    final phone = resolveKAdaptiveConfiguration(
+      width: 393,
+      platform: TargetPlatform.iOS,
+    );
+    expect(phone.windowClass, KWindowClass.compact);
+    expect(phone.inputMode, KInputMode.touch);
+    expect(phone.typeScale, KTypeScale.mobile);
+    expect(phone.density, KDensity.standard);
+
+    final tablet = resolveKAdaptiveConfiguration(
+      width: 1024,
+      platform: TargetPlatform.android,
+    );
+    expect(tablet.typeScale, KTypeScale.standard);
+    expect(tablet.inputMode, KInputMode.touch);
+
+    final desktop = resolveKAdaptiveConfiguration(
+      width: 1440,
+      platform: TargetPlatform.macOS,
+      overrides: const KAdaptiveOverrides(density: KDensity.dense),
+    );
+    expect(desktop.typeScale, KTypeScale.compact);
+    expect(desktop.inputMode, KInputMode.pointer);
+    expect(desktop.density, KDensity.dense);
+  });
+
+  test('text scale caps are tokenized per role', () {
+    final tokens = kDesignTokens();
+    expect(tokens.textScaleMaxBody, 2);
+    expect(tokens.textScaleMaxHeading, 1.4);
+    expect(tokens.textScaleMaxControl, 1.6);
   });
 
   test('window classes are derived from available width boundaries', () {

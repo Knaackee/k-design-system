@@ -40,14 +40,18 @@ void main() {
                 return const SizedBox();
               },
             ),
-            KDesignConfiguration.mobileApp,
+            const KGalleryConfiguration(
+              device: false,
+              manual: KDesignConfiguration.mobileApp,
+            ),
           ),
         ),
       ),
     );
 
-    expect(resolved.sizeControl, 44);
+    expect(resolved.sizeControl, 36);
     expect(resolved.fontSize, 16);
+    expect(resolved.fontHeading1Size, 28);
     expect(resolved.sizeHitTarget, 48);
   });
 }

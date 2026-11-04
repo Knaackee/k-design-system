@@ -194,8 +194,7 @@ export const tokenNames = [
   "elevation.nativeKanbanCard",
   "font.family",
   "font.size",
-  "font.microSize",
-  "font.microLabelSize",
+  "font.caption2Size",
   "font.avatarSmallSize",
   "font.tightHeight",
   "font.relaxedHeight",
@@ -563,7 +562,10 @@ export const tokenNames = [
   "component.editor.caretLineHeight",
   "component.editor.caretMinHeight",
   "component.tabStrip.itemMaxWidth",
-  "component.tabStrip.dragElevation"
+  "component.tabStrip.dragElevation",
+  "text.scaleMax.body",
+  "text.scaleMax.heading",
+  "text.scaleMax.control"
 ] as const;
 export type KTokenName = (typeof tokenNames)[number];
 export const mapTokenValues = {

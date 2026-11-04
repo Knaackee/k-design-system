@@ -110,21 +110,21 @@
   --k-space-chart-axis-gutter: 40px;
   --k-space-hairline: 1px;
   --k-space-micro: 2px;
-  --k-space-badge-offset: 3px;
+  --k-space-badge-offset: 2px;
   --k-space-tight: 4px;
-  --k-space-compact: 5px;
-  --k-space-small-inset: 6px;
+  --k-space-compact: 4px;
+  --k-space-small-inset: 8px;
   --k-space-control-gap: 8px;
   --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
   --k-space-card-padding: 16px;
-  --k-space-bar-vertical: 7px;
-  --k-space-resize-offset: 9px;
-  --k-space-bar-inline: 10px;
-  --k-space-medium-inset: 14px;
-  --k-space-touch-inset: 15px;
+  --k-space-bar-vertical: 8px;
+  --k-space-resize-offset: 8px;
+  --k-space-bar-inline: 12px;
+  --k-space-medium-inset: 16px;
+  --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
   --k-size-hit-target: 24px;
@@ -197,8 +197,7 @@
   --k-elevation-native-kanban-card: 0px 1px 4px 0px #00000014;
   --k-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   --k-font-size: 14px;
-  --k-font-micro-size: 8px;
-  --k-font-micro-label-size: 9px;
+  --k-font-caption2-size: 11px;
   --k-font-avatar-small-size: 11px;
   --k-font-tight-height: 1;
   --k-font-relaxed-height: 1.2;
@@ -362,7 +361,7 @@
   --k-component-avatar-badge-stroke-width: var(--k-border-width-strong);
   --k-component-avatar-fallback-font-size-small: var(--k-font-avatar-small-size);
   --k-component-avatar-fallback-font-size-large: var(--k-font-heading5-size);
-  --k-component-avatar-badge-font-size: var(--k-font-micro-size);
+  --k-component-avatar-badge-font-size: var(--k-font-caption2-size);
   --k-component-avatar-group-step: var(--k-size-avatar-step);
   --k-component-badge-primary-background: var(--k-color-action-primary-background);
   --k-component-badge-primary-foreground: var(--k-color-action-primary-foreground);
@@ -567,6 +566,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
+  --k-text-scale-max-body: 2;
+  --k-text-scale-max-heading: 1.4;
+  --k-text-scale-max-control: 1.6;
 }
 
 [data-theme="dark"], [data-brand="orbit"][data-theme="dark"] {
@@ -677,21 +679,21 @@
   --k-space-chart-axis-gutter: 40px;
   --k-space-hairline: 1px;
   --k-space-micro: 2px;
-  --k-space-badge-offset: 3px;
+  --k-space-badge-offset: 2px;
   --k-space-tight: 4px;
-  --k-space-compact: 5px;
-  --k-space-small-inset: 6px;
+  --k-space-compact: 4px;
+  --k-space-small-inset: 8px;
   --k-space-control-gap: 8px;
   --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
   --k-space-card-padding: 16px;
-  --k-space-bar-vertical: 7px;
-  --k-space-resize-offset: 9px;
-  --k-space-bar-inline: 10px;
-  --k-space-medium-inset: 14px;
-  --k-space-touch-inset: 15px;
+  --k-space-bar-vertical: 8px;
+  --k-space-resize-offset: 8px;
+  --k-space-bar-inline: 12px;
+  --k-space-medium-inset: 16px;
+  --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
   --k-size-hit-target: 24px;
@@ -764,8 +766,7 @@
   --k-elevation-native-kanban-card: 0px 1px 4px 0px #00000014;
   --k-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   --k-font-size: 14px;
-  --k-font-micro-size: 8px;
-  --k-font-micro-label-size: 9px;
+  --k-font-caption2-size: 11px;
   --k-font-avatar-small-size: 11px;
   --k-font-tight-height: 1;
   --k-font-relaxed-height: 1.2;
@@ -929,7 +930,7 @@
   --k-component-avatar-badge-stroke-width: var(--k-border-width-strong);
   --k-component-avatar-fallback-font-size-small: var(--k-font-avatar-small-size);
   --k-component-avatar-fallback-font-size-large: var(--k-font-heading5-size);
-  --k-component-avatar-badge-font-size: var(--k-font-micro-size);
+  --k-component-avatar-badge-font-size: var(--k-font-caption2-size);
   --k-component-avatar-group-step: var(--k-size-avatar-step);
   --k-component-badge-primary-background: var(--k-color-action-primary-background);
   --k-component-badge-primary-foreground: var(--k-color-action-primary-foreground);
@@ -1134,6 +1135,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
+  --k-text-scale-max-body: 2;
+  --k-text-scale-max-heading: 1.4;
+  --k-text-scale-max-control: 1.6;
 }
 
 [data-brand="reference"][data-theme="light"] {
@@ -1244,21 +1248,21 @@
   --k-space-chart-axis-gutter: 40px;
   --k-space-hairline: 1px;
   --k-space-micro: 2px;
-  --k-space-badge-offset: 3px;
+  --k-space-badge-offset: 2px;
   --k-space-tight: 4px;
-  --k-space-compact: 5px;
-  --k-space-small-inset: 6px;
+  --k-space-compact: 4px;
+  --k-space-small-inset: 8px;
   --k-space-control-gap: 8px;
   --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
   --k-space-card-padding: 16px;
-  --k-space-bar-vertical: 7px;
-  --k-space-resize-offset: 9px;
-  --k-space-bar-inline: 10px;
-  --k-space-medium-inset: 14px;
-  --k-space-touch-inset: 15px;
+  --k-space-bar-vertical: 8px;
+  --k-space-resize-offset: 8px;
+  --k-space-bar-inline: 12px;
+  --k-space-medium-inset: 16px;
+  --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
   --k-size-hit-target: 24px;
@@ -1331,8 +1335,7 @@
   --k-elevation-native-kanban-card: 0px 1px 4px 0px #00000014;
   --k-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   --k-font-size: 14px;
-  --k-font-micro-size: 8px;
-  --k-font-micro-label-size: 9px;
+  --k-font-caption2-size: 11px;
   --k-font-avatar-small-size: 11px;
   --k-font-tight-height: 1;
   --k-font-relaxed-height: 1.2;
@@ -1496,7 +1499,7 @@
   --k-component-avatar-badge-stroke-width: var(--k-border-width-strong);
   --k-component-avatar-fallback-font-size-small: var(--k-font-avatar-small-size);
   --k-component-avatar-fallback-font-size-large: var(--k-font-heading5-size);
-  --k-component-avatar-badge-font-size: var(--k-font-micro-size);
+  --k-component-avatar-badge-font-size: var(--k-font-caption2-size);
   --k-component-avatar-group-step: var(--k-size-avatar-step);
   --k-component-badge-primary-background: var(--k-color-action-primary-background);
   --k-component-badge-primary-foreground: var(--k-color-action-primary-foreground);
@@ -1701,6 +1704,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
+  --k-text-scale-max-body: 2;
+  --k-text-scale-max-heading: 1.4;
+  --k-text-scale-max-control: 1.6;
 }
 
 [data-brand="reference"][data-theme="dark"] {
@@ -1811,21 +1817,21 @@
   --k-space-chart-axis-gutter: 40px;
   --k-space-hairline: 1px;
   --k-space-micro: 2px;
-  --k-space-badge-offset: 3px;
+  --k-space-badge-offset: 2px;
   --k-space-tight: 4px;
-  --k-space-compact: 5px;
-  --k-space-small-inset: 6px;
+  --k-space-compact: 4px;
+  --k-space-small-inset: 8px;
   --k-space-control-gap: 8px;
   --k-space-content-action-gap: 16px;
   --k-space-control-inset-inline: 12px;
   --k-space-layout-gutter: 16px;
   --k-space-layout-section-gap: 32px;
   --k-space-card-padding: 16px;
-  --k-space-bar-vertical: 7px;
-  --k-space-resize-offset: 9px;
-  --k-space-bar-inline: 10px;
-  --k-space-medium-inset: 14px;
-  --k-space-touch-inset: 15px;
+  --k-space-bar-vertical: 8px;
+  --k-space-resize-offset: 8px;
+  --k-space-bar-inline: 12px;
+  --k-space-medium-inset: 16px;
+  --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
   --k-size-hit-target: 24px;
@@ -1898,8 +1904,7 @@
   --k-elevation-native-kanban-card: 0px 1px 4px 0px #00000014;
   --k-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   --k-font-size: 14px;
-  --k-font-micro-size: 8px;
-  --k-font-micro-label-size: 9px;
+  --k-font-caption2-size: 11px;
   --k-font-avatar-small-size: 11px;
   --k-font-tight-height: 1;
   --k-font-relaxed-height: 1.2;
@@ -2063,7 +2068,7 @@
   --k-component-avatar-badge-stroke-width: var(--k-border-width-strong);
   --k-component-avatar-fallback-font-size-small: var(--k-font-avatar-small-size);
   --k-component-avatar-fallback-font-size-large: var(--k-font-heading5-size);
-  --k-component-avatar-badge-font-size: var(--k-font-micro-size);
+  --k-component-avatar-badge-font-size: var(--k-font-caption2-size);
   --k-component-avatar-group-step: var(--k-size-avatar-step);
   --k-component-badge-primary-background: var(--k-color-action-primary-background);
   --k-component-badge-primary-foreground: var(--k-color-action-primary-foreground);
@@ -2268,6 +2273,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
+  --k-text-scale-max-body: 2;
+  --k-text-scale-max-heading: 1.4;
+  --k-text-scale-max-control: 1.6;
 }
 }
 
@@ -2318,6 +2326,29 @@
   --k-font-label-line-height: 20px;
 }
 
+[data-type-scale="mobile"] {
+  --k-font-size: 16px;
+  --k-font-control-size: 16px;
+  --k-font-heading1-size: 28px;
+  --k-font-heading1-line-height: 34px;
+  --k-font-heading2-size: 24px;
+  --k-font-heading2-line-height: 30px;
+  --k-font-heading3-size: 20px;
+  --k-font-heading3-line-height: 26px;
+  --k-font-heading4-size: 18px;
+  --k-font-heading4-line-height: 24px;
+  --k-font-heading5-size: 16px;
+  --k-font-heading5-line-height: 22px;
+  --k-font-heading6-size: 15px;
+  --k-font-heading6-line-height: 20px;
+  --k-font-body-size: 16px;
+  --k-font-body-line-height: 24px;
+  --k-font-body-small-size: 14px;
+  --k-font-body-small-line-height: 20px;
+  --k-font-label-size: 14px;
+  --k-font-label-line-height: 20px;
+}
+
 [data-density="dense"] {
   --k-space-control-gap: 4px;
   --k-space-content-action-gap: 8px;
@@ -2355,6 +2386,7 @@
 
 [data-window-class="compact"] {
   --k-space-layout-gutter: 16px;
+  --k-space-layout-section-gap: 24px;
 }
 
 [data-window-class="medium"] {

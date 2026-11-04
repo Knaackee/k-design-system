@@ -24,6 +24,10 @@ const variantFiles = {
     "tokens/modes/type-scale.standard.tokens.json",
     '[data-type-scale="standard"]',
   ],
+  typeScaleMobile: [
+    "tokens/modes/type-scale.mobile.tokens.json",
+    '[data-type-scale="mobile"]',
+  ],
   densityDense: [
     "tokens/modes/density.dense.tokens.json",
     '[data-density="dense"]',

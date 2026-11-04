@@ -5,7 +5,7 @@ double _switcherContentHeight(BuildContext context, KDesignTokens tokens) {
   return tokens.componentAvatarSizeLarge +
       tokens.spaceTight * 4 +
       scaler.scale(tokens.fontCaptionLineHeight) +
-      scaler.scale(tokens.fontMicroLabelSize) * tokens.fontRelaxedHeight +
+      scaler.scale(tokens.fontCaption2Size) * tokens.fontRelaxedHeight +
       tokens.borderWidthDefault;
 }
 
@@ -289,7 +289,7 @@ class _StatusContent extends StatelessWidget {
             style: TextStyle(
               color: color,
               fontFamily: tokens.fontFamily,
-              fontSize: tokens.fontMicroLabelSize,
+              fontSize: tokens.fontCaption2Size,
               height: tokens.fontRelaxedHeight,
               fontWeight: tokens.fontLabelWeight,
             ),
@@ -369,7 +369,7 @@ class _BadgeIndicator extends StatelessWidget {
           style: TextStyle(
             color: foreground,
             fontFamily: tokens.fontFamily,
-            fontSize: tokens.fontMicroLabelSize,
+            fontSize: tokens.fontCaption2Size,
             fontWeight: tokens.fontControlWeight,
           ),
           child: item.badgeContent ?? Text(count > 99 ? '99+' : '$count'),

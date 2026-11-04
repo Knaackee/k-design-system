@@ -4,11 +4,25 @@ import 'package:k_design_ui/k_design_ui.dart';
 
 import 'package:widgetbook/widgetbook.dart';
 
-class KDesignConfigurationAddon extends WidgetbookAddon<KDesignConfiguration> {
+/// `device` resolves the axes like a real app does (Decision 0010): from the
+/// use case's available width and the selected device platform. `manual`
+/// pins every axis from the fields below.
+class KGalleryConfiguration {
+  const KGalleryConfiguration({required this.device, required this.manual});
+  final bool device;
+  final KDesignConfiguration manual;
+}
+
+class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
   KDesignConfigurationAddon() : super(name: 'K Design');
 
   @override
   List<Field> get fields => [
+    ObjectDropdownField<String>(
+      name: 'resolve',
+      values: const ['device', 'manual'],
+      initialValue: 'device',
+    ),
     ObjectDropdownField<KDensity>(
       name: 'density',
       values: KDensity.values,
@@ -36,12 +50,15 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KDesignConfiguration> {
   ];
 
   @override
-  KDesignConfiguration valueFromQueryGroup(Map<String, String> group) {
-    return KDesignConfiguration(
-      density: valueOf<KDensity>('density', group)!,
-      typeScale: valueOf<KTypeScale>('type-scale', group)!,
-      inputMode: valueOf<KInputMode>('input-mode', group)!,
-      windowClass: valueOf<KWindowClass>('window-class', group)!,
+  KGalleryConfiguration valueFromQueryGroup(Map<String, String> group) {
+    return KGalleryConfiguration(
+      device: valueOf<String>('resolve', group) != 'manual',
+      manual: KDesignConfiguration(
+        density: valueOf<KDensity>('density', group)!,
+        typeScale: valueOf<KTypeScale>('type-scale', group)!,
+        inputMode: valueOf<KInputMode>('input-mode', group)!,
+        windowClass: valueOf<KWindowClass>('window-class', group)!,
+      ),
     );
   }
 
@@ -49,26 +66,40 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KDesignConfiguration> {
   Widget buildUseCase(
     BuildContext context,
     Widget child,
-    KDesignConfiguration setting,
+    KGalleryConfiguration setting,
   ) {
+    final gallery = setting;
     final theme = Theme.of(context);
+    final resolved = gallery.device
+        ? resolveKAdaptiveConfiguration(
+            width: MediaQuery.sizeOf(context).width,
+            platform: theme.platform,
+            overrides: KAdaptiveOverrides(density: gallery.manual.density),
+          )
+        : gallery.manual;
     final baseTokens =
         theme.extension<KDesignTokens>() ?? KDesignTokens.orbitLight;
-    final tokens = resolveKDesignTokens(baseTokens, setting);
+    final tokens = resolveKDesignTokens(baseTokens, resolved);
 
     return Theme(
       data: theme.copyWith(
-        visualDensity: switch (setting.density) {
+        visualDensity: switch (resolved.density) {
           KDensity.dense => VisualDensity.compact,
           KDensity.standard || KDensity.spacious => VisualDensity.standard,
         },
-        materialTapTargetSize: switch (setting.inputMode) {
+        materialTapTargetSize: switch (resolved.inputMode) {
           KInputMode.pointer => MaterialTapTargetSize.shrinkWrap,
           KInputMode.touch => MaterialTapTargetSize.padded,
         },
         extensions: <ThemeExtension<dynamic>>[tokens],
       ),
-      child: child,
+      child: KAdaptive(
+        configuration: resolved,
+        child: MediaQuery.withClampedTextScaling(
+          maxScaleFactor: tokens.textScaleMaxBody,
+          child: child,
+        ),
+      ),
     );
   }
 }

@@ -1,0 +1,102 @@
+{
+  "font": {
+    "size": {
+      "$type": "dimension",
+      "$value": "{font.size.bodyMobile}"
+    },
+    "controlSize": {
+      "$type": "dimension",
+      "$value": "{font.size.controlMobile}"
+    },
+    "heading1": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading1Mobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading1Mobile}"
+      }
+    },
+    "heading2": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading2Mobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading2Mobile}"
+      }
+    },
+    "heading3": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading3Mobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading3Mobile}"
+      }
+    },
+    "heading4": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading4Mobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading4Mobile}"
+      }
+    },
+    "heading5": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading5Mobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading5Mobile}"
+      }
+    },
+    "heading6": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading6Mobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading6Mobile}"
+      }
+    },
+    "body": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.bodyMobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.bodyMobile}"
+      }
+    },
+    "bodySmall": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.bodySmallMobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.bodySmallMobile}"
+      }
+    },
+    "label": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.labelMobile}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.labelMobile}"
+      }
+    }
+  }
+}

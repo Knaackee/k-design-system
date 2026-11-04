@@ -115,8 +115,15 @@ class KText extends StatelessWidget {
       _ => null,
     };
 
+    // Decision 0010: headings grow less than body text under system scaling.
+    final scaler = MediaQuery.textScalerOf(context).clamp(
+      maxScaleFactor: headingLevel == null
+          ? tokens.textScaleMaxBody
+          : tokens.textScaleMaxHeading,
+    );
     final text = Text(
       data,
+      textScaler: scaler,
       textAlign: align,
       maxLines: maxLines,
       overflow: overflow,
@@ -129,9 +136,7 @@ class KText extends StatelessWidget {
         fontVariations: [
           FontVariation.weight((style?.fontWeight ?? weight).value.toDouble()),
           FontVariation.opticalSize(
-            MediaQuery.textScalerOf(
-              context,
-            ).scale(style?.fontSize ?? size).clamp(14, 32),
+            scaler.scale(style?.fontSize ?? size).clamp(14, 32),
           ),
         ],
         height: lineHeight / size,
@@ -179,7 +184,7 @@ class _BalancedText extends StatelessWidget {
           text: TextSpan(text: text.data, style: effectiveStyle),
           textDirection: direction,
           textAlign: alignment,
-          textScaler: MediaQuery.textScalerOf(context),
+          textScaler: text.textScaler ?? MediaQuery.textScalerOf(context),
           locale: Localizations.maybeLocaleOf(context),
           textHeightBehavior: defaults.textHeightBehavior,
           maxLines: text.maxLines ?? defaults.maxLines,

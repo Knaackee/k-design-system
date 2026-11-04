@@ -1,5 +1,6 @@
 {
   "space": {
-    "layoutGutter": { "$type": "dimension", "$value": "{space.4}" }
+    "layoutGutter": { "$type": "dimension", "$value": "{space.4}" },
+    "layoutSectionGap": { "$type": "dimension", "$value": "{space.6}" }
   }
 }
