@@ -74,6 +74,7 @@ class KOfferOverview extends StatefulWidget {
 class _KOfferOverviewState extends State<KOfferOverview> {
   final _search = TextEditingController();
   String _filter = 'all';
+  void _selectFilter(String value) => setState(() => _filter = value);
   String _t(String source) => widget.translate?.call(source) ?? source;
   final _collapsed = <String>{};
   @override
@@ -111,17 +112,20 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                   KText(
                     _t('Angebot'),
                     variant: KTextVariant.heading2,
-                    style: const TextStyle(
-                      fontSize: 30,
+                    style: TextStyle(
+                      fontSize: t.fontHeading1Size,
                       fontWeight: FontWeight.w700,
-                      height: 1.1,
+                      height: t.fontHeading1LineHeight / t.fontHeading1Size,
                     ),
                   ),
                   SizedBox(height: t.spaceMicro),
                   KText(
                     '${active.where((e) => e.kind == 'service').length} ${_t('Leistungen')} · ${active.where((e) => e.kind == 'product').length} ${_t('Produkte')} · ${widget.categories.length} ${_t('Kategorien')}',
                     variant: KTextVariant.caption,
-                    style: TextStyle(color: t.colorTextMuted, fontSize: 14.5),
+                    style: TextStyle(
+                      color: t.colorTextMuted,
+                      fontSize: t.fontBodySize,
+                    ),
                   ),
                 ],
               ),
@@ -200,11 +204,11 @@ class _KOfferOverviewState extends State<KOfferOverview> {
           child: Row(
             children: [
               Container(
-                width: 10,
-                height: 10,
+                width: t.sizeDot,
+                height: t.sizeDot,
                 decoration: BoxDecoration(
                   color: c.color ?? t.colorActionPrimaryBackground,
-                  borderRadius: BorderRadius.circular(3),
+                  borderRadius: BorderRadius.circular(t.radiusFull),
                 ),
               ),
               SizedBox(width: t.spaceControlGap),
@@ -223,7 +227,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: t.colorTextPrimary,
-                          fontSize: 15.5,
+                          fontSize: t.fontHeading5Size,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -233,7 +237,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: t.fontBodySmallSize,
                             color: t.colorTextMuted,
                           ),
                         ),
@@ -354,8 +358,8 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(t.radiusControl),
                     child: SizedBox(
-                      width: 42,
-                      height: 42,
+                      width: t.componentAttachmentMediaSize,
+                      height: t.componentAttachmentMediaSize,
                       child:
                           e.image ??
                           ColoredBox(
@@ -363,8 +367,8 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                             child: Center(
                               child: Text(
                                 e.name.isEmpty ? '?' : e.name[0],
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: t.colorActionPrimaryForeground,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -384,7 +388,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                           style: TextStyle(
                             color: t.colorTextPrimary,
                             fontWeight: FontWeight.w600,
-                            fontSize: 15.5,
+                            fontSize: t.fontHeading5Size,
                           ),
                         ),
                         SizedBox(height: t.spaceMicro / 2),
@@ -405,7 +409,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: t.colorTextMuted,
-                                  fontSize: 13,
+                                  fontSize: t.fontBodySmallSize,
                                 ),
                               ),
                             ),
@@ -420,7 +424,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       color: t.colorTextPrimary,
-                      fontSize: 15,
+                      fontSize: t.fontHeading5Size,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

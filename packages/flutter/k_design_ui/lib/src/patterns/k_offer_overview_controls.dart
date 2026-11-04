@@ -40,7 +40,7 @@ extension _OfferOverviewControls on _KOfferOverviewState {
         ).extensions.values.where((e) => e is! KDesignTokens),
         t.copyWith(
           radiusControl: t.radiusFull,
-          fontControlSize: 14,
+          fontControlSize: t.fontControlSize,
           fontControlWeight: FontWeight.w600,
           colorActionPrimaryBackground: t.colorTextPrimary,
           colorActionPrimaryForeground: t.colorSurfaceCanvas,
@@ -66,7 +66,7 @@ extension _OfferOverviewControls on _KOfferOverviewState {
                 variant: _filter == item.$1
                     ? KButtonVariant.primary
                     : KButtonVariant.secondary,
-                onPressed: () => setState(() => _filter = item.$1),
+                onPressed: () => _selectFilter(item.$1),
               ),
             ),
         ],
@@ -90,15 +90,18 @@ extension _OfferOverviewControls on _KOfferOverviewState {
             children: [
               KText(
                 _t('Halten und ziehen zum Sortieren'),
-                style: const TextStyle(
-                  fontSize: 14.5,
+                style: TextStyle(
+                  fontSize: t.fontBodySize,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               KText(
                 _t('Leistungen, Produkte und Kategorien frei anordnen.'),
                 variant: KTextVariant.caption,
-                style: TextStyle(color: t.colorTextMuted, fontSize: 14),
+                style: TextStyle(
+                  color: t.colorTextMuted,
+                  fontSize: t.fontBodySize,
+                ),
               ),
             ],
           ),

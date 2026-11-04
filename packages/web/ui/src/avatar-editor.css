@@ -11,7 +11,9 @@
 .k-avatar-editor-source {
   width: 100%;
   height: auto;
-  min-height: 104px;
+  min-height: calc(
+    var(--k-size-avatar-large) + 2 * var(--k-space-layout-gutter)
+  );
   padding: var(--k-space-control-inset-inline);
   border-radius: var(--k-radius-overlay);
   background: var(--k-color-surface-subtle);
@@ -56,7 +58,7 @@
   object-fit: cover;
 }
 .k-avatar-editor-image[aria-pressed="true"] {
-  outline: 2px solid var(--k-color-border-focus);
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
 }
 .k-avatar-editor-camera {
   display: grid;

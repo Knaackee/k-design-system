@@ -175,7 +175,9 @@ class _KAvatarEditorState extends State<KAvatarEditor> {
           ],
         ),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 104),
+          constraints: BoxConstraints(
+            minHeight: tokens.sizeAvatarLarge + tokens.spaceLayoutGutter * 2,
+          ),
           child: KButton(
             label: label,
             variant: KButtonVariant.secondary,
@@ -295,7 +297,7 @@ class _KAvatarEditorState extends State<KAvatarEditor> {
                                         border: widget.selectedId == item.id
                                             ? Border.all(
                                                 color: tokens.colorBorderFocus,
-                                                width: 2,
+                                                width: tokens.borderWidthStrong,
                                               )
                                             : null,
                                       ),

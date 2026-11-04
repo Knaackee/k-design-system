@@ -64,7 +64,7 @@ class KCatalogEditorDialog extends StatelessWidget {
                                 children: [
                                   DefaultTextStyle(
                                     style: TextStyle(
-                                      fontSize: 22,
+                                      fontSize: t.fontHeading2Size,
                                       fontWeight: FontWeight.w700,
                                       color: t.colorTextPrimary,
                                     ),
@@ -77,7 +77,7 @@ class KCatalogEditorDialog extends StatelessWidget {
                                       ),
                                       child: DefaultTextStyle(
                                         style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: t.fontBodySmallSize,
                                           color: t.colorTextMuted,
                                         ),
                                         child: description!,
@@ -154,7 +154,7 @@ class KCatalogEditorBody extends StatelessWidget {
           Expanded(child: form),
           SizedBox(width: t.spaceControlInsetInline * 2),
           SizedBox(
-            width: 340,
+            width: t.layoutCompactWidth,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -165,7 +165,10 @@ class KCatalogEditorBody extends StatelessWidget {
                     child: KText(
                       ' ',
                       variant: KTextVariant.caption,
-                      style: const TextStyle(fontSize: 13, height: 1.5),
+                      style: TextStyle(
+                        fontSize: t.fontBodySmallSize,
+                        height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
+                      ),
                     ),
                   ),
                 ),
@@ -210,8 +213,8 @@ class KCatalogEditorSection extends StatelessWidget {
                     variant: KTextVariant.caption,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                      height: 1.5,
+                      fontSize: t.fontBodySmallSize,
+                      height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
                       color: t.colorTextMuted,
                     ),
                   ),
@@ -248,13 +251,7 @@ class KCatalogEditorCard extends StatelessWidget {
           color: t.colorBorderDefault,
           width: t.borderWidthDefault,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .04),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-        ],
+        boxShadow: t.elevationLow,
         borderRadius: BorderRadius.circular(t.radiusCard),
       ),
       child: child,
@@ -293,10 +290,7 @@ class KCatalogEditorRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                KText(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
+                KText(title, style: TextStyle(fontWeight: FontWeight.w600)),
                 if (help != null) ...[
                   SizedBox(height: t.borderWidthDefault),
                   KText(
@@ -340,8 +334,8 @@ class KCatalogEditorPreview extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(
-                  width: 76,
-                  height: 76,
+                  width: t.componentAttachmentMediaSize * 2,
+                  height: t.componentAttachmentMediaSize * 2,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(t.radiusControl),
                     child: image,
@@ -358,8 +352,8 @@ class KCatalogEditorPreview extends StatelessWidget {
                       children: [
                         KText(
                           name,
-                          style: const TextStyle(
-                            fontSize: 17,
+                          style: TextStyle(
+                            fontSize: t.fontHeading4Size,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -390,7 +384,10 @@ class KCatalogEditorPreview extends StatelessWidget {
             child: KText(
               label,
               variant: KTextVariant.caption,
-              style: TextStyle(fontSize: 11.5, color: t.colorTextMuted),
+              style: TextStyle(
+                fontSize: t.fontCaptionSize,
+                color: t.colorTextMuted,
+              ),
             ),
           ),
         ],

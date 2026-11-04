@@ -24,7 +24,7 @@ class KBookingPageLayout extends StatelessWidget {
         if (c.maxWidth < 900) {
           return Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 640),
+              constraints: BoxConstraints(maxWidth: t.layoutContentWidth),
               child: child,
             ),
           );
@@ -35,7 +35,7 @@ class KBookingPageLayout extends StatelessWidget {
             Expanded(child: child),
             SizedBox(width: t.spaceLayoutSectionGap),
             SizedBox(
-              width: 320,
+              width: t.layoutCompactWidth,
               child: Column(
                 children: [
                   Row(
@@ -55,7 +55,10 @@ class KBookingPageLayout extends StatelessWidget {
                   Text(
                     previewHelp,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13, color: t.colorTextMuted),
+                    style: TextStyle(
+                      fontSize: t.fontBodySmallSize,
+                      color: t.colorTextMuted,
+                    ),
                   ),
                 ],
               ),
@@ -71,17 +74,32 @@ class KBookingPagePhone extends StatelessWidget {
   const KBookingPagePhone({required this.child, super.key});
   final Widget child;
   @override
-  Widget build(BuildContext context) => Container(
-    width: 300,
-    height: 600,
-    clipBehavior: Clip.antiAlias,
-    decoration: BoxDecoration(
-      color: Colors.black,
-      border: Border.all(color: const Color(0xff0b0b0d), width: 9),
-      borderRadius: BorderRadius.circular(40),
-    ),
-    child: ClipRRect(borderRadius: BorderRadius.circular(31), child: child),
-  );
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return SizedBox(
+      width: t.layoutPanelWidth,
+      child: AspectRatio(
+        aspectRatio: 1 / 2,
+        child: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: t.colorBorderStrong,
+            border: Border.all(
+              color: t.colorBorderStrong,
+              width: t.borderWidthStrong,
+            ),
+            borderRadius: BorderRadius.circular(t.radiusProminent),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(
+              t.radiusProminent - t.borderWidthStrong,
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class KBookingPageSection extends StatefulWidget {
@@ -125,7 +143,7 @@ class _KBookingPageSectionState extends State<KBookingPageSection> {
                 widget.onOpenChange?.call(!expanded);
               },
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 48),
+                constraints: BoxConstraints(minHeight: t.sizeHitTarget),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: t.spaceControlGap / 2,
@@ -139,18 +157,22 @@ class _KBookingPageSectionState extends State<KBookingPageSection> {
                           children: [
                             Text(
                               widget.title,
-                              style: const TextStyle(
-                                fontSize: 17,
+                              style: TextStyle(
+                                fontSize: t.fontHeading4Size,
                                 fontWeight: FontWeight.w700,
-                                height: 1.4,
+                                height:
+                                    t.fontBodySmallLineHeight /
+                                    t.fontBodySmallSize,
                               ),
                             ),
                             if (widget.subtitle != null)
                               Text(
                                 widget.subtitle!,
                                 style: TextStyle(
-                                  fontSize: 13,
-                                  height: 1.45,
+                                  fontSize: t.fontBodySmallSize,
+                                  height:
+                                      t.fontBodySmallLineHeight /
+                                      t.fontBodySmallSize,
                                   color: t.colorTextMuted,
                                 ),
                               ),
@@ -219,8 +241,11 @@ class KBookingPageStatus extends StatelessWidget {
             children: [
               if (thumbnail != null) ...[
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: SizedBox(width: 64, height: 118, child: thumbnail),
+                  borderRadius: BorderRadius.circular(t.radiusExtraLarge),
+                  child: SizedBox(
+                    width: t.componentAttachmentMediaSize * 2,
+                    child: AspectRatio(aspectRatio: 64 / 118, child: thumbnail),
+                  ),
                 ),
                 SizedBox(width: t.spaceControlInsetInline),
               ],
@@ -231,8 +256,8 @@ class KBookingPageStatus extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          width: 9,
-                          height: 9,
+                          width: t.sizeDot,
+                          height: t.sizeDot,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: online
@@ -243,8 +268,8 @@ class KBookingPageStatus extends StatelessWidget {
                         SizedBox(width: t.spaceControlGap),
                         Text(
                           online ? 'Online' : 'Offline',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: TextStyle(
+                            fontSize: t.fontHeading5Size,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -254,14 +279,14 @@ class KBookingPageStatus extends StatelessWidget {
                     Row(
                       children: [
                         const KIcon(KIconName.link, size: 15),
-                        const SizedBox(width: 6),
+                        SizedBox(width: t.spaceControlGap),
                         Expanded(
                           child: Text(
                             url,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: t.fontBodySize,
                               color: t.colorTextMuted,
                             ),
                           ),
@@ -350,18 +375,22 @@ class _KBookingThemePickerState extends State<KBookingThemePicker> {
                         onTap: onChanged == null
                             ? null
                             : () => onChanged!(o.id),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(t.radiusExtraLarge),
                         child: Column(
                           children: [
                             Container(
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(
+                                  t.radiusExtraLarge,
+                                ),
                                 border: Border.all(
                                   color: o.id == value
                                       ? t.colorActionPrimaryBackground
                                       : t.colorBorderDefault,
-                                  width: o.id == value ? 2 : 1,
+                                  width: o.id == value
+                                      ? t.borderWidthStrong
+                                      : t.borderWidthDefault,
                                 ),
                               ),
                               child: AspectRatio(
@@ -369,13 +398,13 @@ class _KBookingThemePickerState extends State<KBookingThemePicker> {
                                 child: ExcludeSemantics(child: o.image),
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: t.spaceControlGap),
                             Text(
                               o.label,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: t.fontBodySmallSize,
                                 fontWeight: FontWeight.w600,
                                 color: o.id == value
                                     ? t.colorTextPrimary

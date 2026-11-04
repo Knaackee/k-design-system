@@ -38,7 +38,9 @@ class _KOfferDragRow extends StatelessWidget {
                     color: Theme.of(
                       context,
                     ).extension<KDesignTokens>()!.colorActionPrimaryBackground,
-                    width: 2,
+                    width: Theme.of(
+                      context,
+                    ).extension<KDesignTokens>()!.borderWidthStrong,
                   ),
                 ),
         ),
@@ -52,13 +54,18 @@ class _KOfferDragRow extends StatelessWidget {
           maxSimultaneousDrags: enabled ? 1 : 0,
           feedback: Material(
             elevation: 5,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(
+              Theme.of(context).extension<KDesignTokens>()!.radiusExtraLarge,
+            ),
             color: Theme.of(
               context,
             ).extension<KDesignTokens>()!.colorSurfaceRaised,
             child: SizedBox(width: constraints.maxWidth, child: child),
           ),
-          childWhenDragging: Opacity(opacity: .3, child: child),
+          childWhenDragging: Opacity(
+            opacity: Theme.of(context).extension<KDesignTokens>()!.opacityDrag,
+            child: child,
+          ),
           child: child,
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_icon.dart';
+
 class KBookingFlowChoice extends StatelessWidget {
   const KBookingFlowChoice({
     required this.value,
@@ -33,14 +34,16 @@ class KBookingFlowChoice extends StatelessWidget {
                       color: mode == value
                           ? t.colorActionPrimaryBackground
                           : t.colorBorderDefault,
-                      width: mode == value ? 2 : 1,
+                      width: mode == value
+                          ? t.borderWidthStrong
+                          : t.borderWidthDefault,
                     ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       SizedBox(
-                        height: 46,
+                        height: t.sizeAvatarLarge,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: mode == 'guided'
@@ -61,8 +64,8 @@ class KBookingFlowChoice extends StatelessWidget {
                       SizedBox(height: t.spaceControlGap),
                       Text(
                         mode == 'guided' ? 'Geführt' : 'Freie Auswahl',
-                        style: const TextStyle(
-                          fontSize: 15,
+                        style: TextStyle(
+                          fontSize: t.fontHeading5Size,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -72,8 +75,9 @@ class KBookingFlowChoice extends StatelessWidget {
                             ? 'Kategorien nacheinander, Schritt für Schritt.'
                             : 'Beliebig wechseln, alles gemeinsam buchen.',
                         style: TextStyle(
-                          fontSize: 13,
-                          height: 1.4,
+                          fontSize: t.fontBodySmallSize,
+                          height:
+                              t.fontBodySmallLineHeight / t.fontBodySmallSize,
                           color: t.colorTextMuted,
                         ),
                       ),

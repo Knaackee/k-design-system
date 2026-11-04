@@ -314,7 +314,7 @@
 .k-tabs[data-expanded="true"] .k-tabs__list button {
   flex: 1 0 0;
   min-width: max-content;
-  min-height: max(40px, var(--k-size-hit-target));
+  min-height: max(var(--k-size-control), var(--k-size-hit-target));
 }
 .k-tabs__panel {
   color: var(--k-color-text-primary);
