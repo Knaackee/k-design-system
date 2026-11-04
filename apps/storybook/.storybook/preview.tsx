@@ -1,6 +1,10 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import { useSyncExternalStore } from "react";
-import { KLocalizationProvider, resolveKAdaptive } from "@k-design-system/ui";
+import {
+  KLocalizationProvider,
+  resolveKAdaptive,
+  setKTextScale,
+} from "@k-design-system/ui";
 import type { KAdaptiveOverrides } from "@k-design-system/ui";
 import type { StoryIndexEntry } from "storybook/internal/types";
 import "@k-design-system/tokens/tokens.css";
@@ -55,10 +59,7 @@ const withDesignTokens: Decorator = (Story, context) => {
   document.documentElement.dataset.typeScale = typeScale;
   document.documentElement.dataset.inputMode = inputMode;
   document.documentElement.dataset.windowClass = windowClass;
-  document.documentElement.style.setProperty(
-    "--k-text-scale",
-    String(textScale),
-  );
+  setKTextScale(document.documentElement, textScale);
 
   return (
     <main
@@ -199,6 +200,7 @@ const preview: Preview & {
           { value: "1.3", title: "Text 130%" },
           { value: "1.5", title: "Text 150%" },
           { value: "2", title: "Text 200%" },
+          { value: "3", title: "Text 300%" },
         ],
       },
     },

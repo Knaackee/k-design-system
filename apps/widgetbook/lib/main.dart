@@ -30,6 +30,7 @@ import 'chat_presentations_fixture.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
+import 'geometry_parity_fixture.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'button_fixtures.dart';
@@ -228,7 +229,7 @@ class KDesignWidgetbook extends StatelessWidget {
         ]),
         KDesignConfigurationAddon(),
         KLanguageAddon(),
-        TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
+        TextScaleAddon(initialScale: 1, min: 1, max: 3, divisions: 8),
       ],
       directories: galleryDirectories(),
     );
@@ -237,7 +238,21 @@ class KDesignWidgetbook extends StatelessWidget {
 
 /// Every gallery node, sorted. Shared by the app and the phone gate test.
 List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
-  onzeitOverhaulGallery(),
+  WidgetbookCategory(
+    name: 'Review',
+    children: [
+      ...onzeitOverhaulGallery().children!,
+      WidgetbookComponent(
+        name: 'GeometryParity',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'reference',
+            builder: (_) => const GeometryParityFixture(),
+          ),
+        ],
+      ),
+    ],
+  ),
   WidgetbookCategory(
     name: 'Maps',
     children: [

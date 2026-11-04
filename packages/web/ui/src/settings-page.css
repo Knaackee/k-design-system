@@ -227,6 +227,16 @@
   }
 }
 
+/* Decision 0010: rows stack from 1.3x accessibility text (see setKTextScale). */
+[data-text-large] .k-settings-row[data-layout="auto"] .k-settings-row__layout {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--k-space-control-inset-inline);
+}
+[data-text-large] .k-settings-row[data-layout="auto"] .k-settings-row__control {
+  justify-self: end;
+  max-width: 100%;
+}
+
 /* Galleries can force the compact window class independently of iframe width. */
 [data-window-class="compact"] .k-settings-page {
   width: 100%;

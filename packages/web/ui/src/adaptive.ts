@@ -44,13 +44,11 @@ export function resolveKAdaptive(
     overrides.windowClass ?? kWindowClassForWidth(environment.width);
   const inputMode =
     overrides.inputMode ?? (environment.coarsePointer ? "touch" : "pointer");
+  // Parity rule: the type ramp follows the window class only. Tablet and
+  // desktop share one ramp; mobile Web and the mobile app share another.
+  // Input mode changes hit targets, never typography.
   const typeScale =
-    overrides.typeScale ??
-    (windowClass === "compact"
-      ? "mobile"
-      : windowClass === "medium" || inputMode === "touch"
-        ? "standard"
-        : "compact");
+    overrides.typeScale ?? (windowClass === "compact" ? "mobile" : "standard");
   return {
     density: overrides.density ?? "standard",
     typeScale,
@@ -62,7 +60,7 @@ export function resolveKAdaptive(
 /** Named overrides. Prefer the resolver; use these to pin a product context. */
 export const kAdaptivePresets = {
   dashboard: { density: "dense", typeScale: "compact", inputMode: "pointer" },
-  desktopApp: { density: "standard", typeScale: "compact" },
+  desktopApp: { density: "standard", typeScale: "standard" },
   mobileApp: { density: "standard", typeScale: "mobile", inputMode: "touch" },
   marketing: { density: "spacious", typeScale: "standard" },
 } as const satisfies Record<string, KAdaptiveOverrides>;
@@ -113,4 +111,20 @@ export function applyKAdaptive(
     observer.disconnect();
     coarse.removeEventListener("change", update);
   };
+}
+
+/** Text scale from which rows stack instead of placing controls side by side. */
+export const kLargeTextScale = 1.3;
+
+/**
+ * Applies an accessibility text scale (e.g. from a user setting) the way
+ * Flutter receives the system text scale: sets `--k-text-scale` (capped per
+ * role by the components) and `data-text-large` from 1.3x so layouts stack.
+ */
+export function setKTextScale(
+  element: HTMLElement = document.documentElement,
+  scale = 1,
+): void {
+  element.style.setProperty("--k-text-scale", String(scale));
+  element.toggleAttribute("data-text-large", scale >= kLargeTextScale);
 }

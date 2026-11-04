@@ -2436,9 +2436,9 @@
   },
   "text": {
     "scaleMax": {
-      "body": { "$type": "number", "$value": 2 },
-      "heading": { "$type": "number", "$value": 1.4 },
-      "control": { "$type": "number", "$value": 1.6 }
+      "body": { "$type": "number", "$value": 3 },
+      "heading": { "$type": "number", "$value": 2 },
+      "control": { "$type": "number", "$value": 3 }
     }
   }
 }

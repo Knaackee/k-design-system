@@ -63,7 +63,13 @@ class KAlert extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         DefaultTextStyle(
-          style: _textStyle(t, t.fontLabelSize, t.fontLabelWeight, foreground),
+          style: _textStyle(
+            t,
+            t.fontLabelSize,
+            t.fontLabelWeight,
+            foreground,
+            scaler: MediaQuery.textScalerOf(context),
+          ),
           child: title,
         ),
         if (description != null) ...[
@@ -74,6 +80,7 @@ class KAlert extends StatelessWidget {
               t.fontBodySmallSize,
               t.fontBodyWeight,
               foreground.withValues(alpha: t.componentToastMessageOpacity),
+              scaler: MediaQuery.textScalerOf(context),
             ),
             child: description!,
           ),
@@ -261,6 +268,7 @@ class _DestructiveButton extends StatelessWidget {
           t.fontControlSize,
           t.fontControlWeight,
           t.colorStatusErrorForeground,
+          scaler: MediaQuery.textScalerOf(context),
         ),
       ),
       child: Text(label),
@@ -272,8 +280,9 @@ TextStyle _textStyle(
   KDesignTokens t,
   double size,
   FontWeight weight,
-  Color color,
-) => TextStyle(
+  Color color, {
+  TextScaler scaler = TextScaler.noScaling,
+}) => TextStyle(
   color: color,
   fontFamily: t.fontFamily,
   fontSize: size,
@@ -282,6 +291,6 @@ TextStyle _textStyle(
   leadingDistribution: TextLeadingDistribution.even,
   fontVariations: [
     FontVariation.weight(weight.value.toDouble()),
-    FontVariation.opticalSize(size.clamp(14, 32)),
+    FontVariation.opticalSize(scaler.scale(size).clamp(14, 32)),
   ],
 );

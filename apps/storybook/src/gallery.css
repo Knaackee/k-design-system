@@ -15,7 +15,15 @@ body {
   box-sizing: border-box;
   padding: var(--k-space-layout-gutter);
   display: grid;
+  /* One column bounded by the viewport, like Widgetbook's constraints. An
+     implicit auto column grows to the content's min-content width and
+     pushes wide fixtures (boards, tables) off a phone screen. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
+}
+.k-gallery > * {
+  min-width: 0;
+  max-width: 100%;
 }
 .k-foundation-preview {
   width: min(640px, 100%);

@@ -3661,15 +3661,15 @@
     },
     "text.scaleMax.body": {
       "type": "number",
-      "value": 2
+      "value": 3
     },
     "text.scaleMax.heading": {
       "type": "number",
-      "value": 1.4
+      "value": 2
     },
     "text.scaleMax.control": {
       "type": "number",
-      "value": 1.6
+      "value": 3
     }
   },
   "orbitDark": {
@@ -7334,15 +7334,15 @@
     },
     "text.scaleMax.body": {
       "type": "number",
-      "value": 2
+      "value": 3
     },
     "text.scaleMax.heading": {
       "type": "number",
-      "value": 1.4
+      "value": 2
     },
     "text.scaleMax.control": {
       "type": "number",
-      "value": 1.6
+      "value": 3
     }
   },
   "referenceLight": {
@@ -11007,15 +11007,15 @@
     },
     "text.scaleMax.body": {
       "type": "number",
-      "value": 2
+      "value": 3
     },
     "text.scaleMax.heading": {
       "type": "number",
-      "value": 1.4
+      "value": 2
     },
     "text.scaleMax.control": {
       "type": "number",
-      "value": 1.6
+      "value": 3
     }
   },
   "referenceDark": {
@@ -14680,15 +14680,15 @@
     },
     "text.scaleMax.body": {
       "type": "number",
-      "value": 2
+      "value": 3
     },
     "text.scaleMax.heading": {
       "type": "number",
-      "value": 1.4
+      "value": 2
     },
     "text.scaleMax.control": {
       "type": "number",
-      "value": 1.6
+      "value": 3
     }
   },
   "variants": {

@@ -138,10 +138,10 @@ void main() {
               reason: reason,
             );
           }
-          // Headings are capped at 1.4x (Decision 0010).
+          // Headings are capped at 2.0x (Decision 0010).
           expect(
             paragraph.textScaler.scale(10),
-            closeTo(10 * (scale > 1.4 ? 1.4 : scale), 1e-9),
+            closeTo(10 * (scale > 2 ? 2 : scale), 1e-9),
             reason: reason,
           );
         }
@@ -199,7 +199,7 @@ void main() {
       );
       expect(
         paragraph.textScaler.scale(10),
-        closeTo(10 * (scale > 1.4 ? 1.4 : scale), 1e-9),
+        closeTo(10 * (scale > 2 ? 2 : scale), 1e-9),
       );
       final textCenter = tester.getCenter(find.text(message)).dx;
       expect(textCenter, closeTo(400, .1));

@@ -108,6 +108,7 @@ class KAttachment extends StatelessWidget {
                         error
                             ? t.colorStatusErrorForeground
                             : t.colorTextPrimary,
+                        scaler: MediaQuery.textScalerOf(context),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -122,6 +123,7 @@ class KAttachment extends StatelessWidget {
                           error
                               ? t.colorStatusErrorForeground
                               : t.colorTextMuted,
+                          scaler: MediaQuery.textScalerOf(context),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -186,6 +188,7 @@ class KAvatar extends StatelessWidget {
               : t.fontControlSize,
           t.fontControlWeight,
           t.colorTextPrimary,
+          scaler: MediaQuery.textScalerOf(context),
         ),
         child: fallback ?? Text(_avatarInitials(alt)),
       ),
@@ -239,6 +242,7 @@ class KAvatar extends StatelessWidget {
                       t.componentAvatarBadgeFontSize,
                       FontWeight.w600,
                       t.colorActionPrimaryForeground,
+                      scaler: MediaQuery.textScalerOf(context),
                     ),
                     child: badge!,
                   ),
@@ -395,6 +399,7 @@ class KBadge extends StatelessWidget {
                 t.fontCaptionSize,
                 t.fontControlWeight,
                 foreground,
+                scaler: MediaQuery.textScalerOf(context),
               ).copyWith(height: t.fontTightHeight),
               child: child,
             ),
@@ -419,8 +424,9 @@ TextStyle _textStyle(
   KDesignTokens t,
   double size,
   FontWeight weight,
-  Color color,
-) => TextStyle(
+  Color color, {
+  TextScaler scaler = TextScaler.noScaling,
+}) => TextStyle(
   color: color,
   fontFamily: t.fontFamily,
   fontSize: size,
@@ -429,6 +435,6 @@ TextStyle _textStyle(
   leadingDistribution: TextLeadingDistribution.even,
   fontVariations: [
     FontVariation.weight(weight.value.toDouble()),
-    FontVariation.opticalSize(size.clamp(14, 32)),
+    FontVariation.opticalSize(scaler.scale(size).clamp(14, 32)),
   ],
 );

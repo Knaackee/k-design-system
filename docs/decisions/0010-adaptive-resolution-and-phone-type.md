@@ -28,12 +28,23 @@ repository:
 
 `resolveKAdaptive` (Web) and `resolveKAdaptiveConfiguration` (Flutter) derive:
 
-| Axis        | Source                                                                                     |
-| ----------- | ------------------------------------------------------------------------------------------ |
-| windowClass | available width of the rendering region (unchanged breakpoints)                            |
-| inputMode   | Web: `(pointer: coarse)`; Flutter: iOS/Android/Fuchsia → touch                             |
-| typeScale   | compact window → `mobile`; medium → `standard`; expanded+ → touch ? `standard` : `compact` |
-| density     | `standard` unless overridden                                                               |
+| Axis        | Source                                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| windowClass | available width of the rendering region (unchanged breakpoints)                          |
+| inputMode   | primary pointer is coarse → touch (Web `(pointer: coarse)`; Flutter iOS/Android/Fuchsia) |
+| typeScale   | compact window → `mobile`; every larger window → `standard` (input never changes type)   |
+| density     | `standard` unless overridden                                                             |
+
+**Parity rule.** Tablet and desktop render the same design; mobile Web and the
+mobile app render the same design. Therefore only the window class selects the
+type ramp. Input mode changes hit targets (48 touch / 24 pointer) and nothing
+else. Data-dense desktop screens opt into `dense` density and the `compact`
+ramp explicitly (`KDesignConfiguration.dashboard`), with a stated reason.
+
+Input detection is the same rule on both platforms — the primary pointer.
+Phones and tablets resolve touch, desktops pointer, on Web and Flutter alike.
+Hybrid devices (touch laptops, tablets with a mouse) resolve to their primary
+pointer; apps may override `inputMode`.
 
 Explicit values win. Presets become overrides: `mobileApp` is now Standard
 density + `mobile` ramp + touch (it no longer implies Spacious).
@@ -61,8 +72,11 @@ Minimum type size is 11 px (`font.caption2Size`); `font.microSize` and
 
 ### 3. Capped system text scaling per role
 
-`text.scaleMax.body = 2.0`, `text.scaleMax.control = 1.6`,
-`text.scaleMax.heading = 1.4`. Headings grow less than body text, as on iOS.
+`text.scaleMax.body = 3.0`, `text.scaleMax.control = 3.0`,
+`text.scaleMax.heading = 2.0`. All text reaches at least 200 % (WCAG 1.4.4);
+headings grow less than body text at the largest accessibility sizes, as on
+iOS. From 1.3× rows stack (`KSettingsRow` auto layout; Web `data-text-large`
+set by `setKTextScale`).
 Flutter: `KAdaptiveTheme` clamps globally to the body cap; `KText` applies the
 heading cap. Web: `.k-text` and controls use `min(var(--k-text-scale), cap)`.
 
@@ -83,10 +97,33 @@ Enforced by `tooling/check-ui-rules.mjs` and debug assertions:
 - Icon sizes 16/20/24 only, chosen by the adjacent text role.
 - No raw spacing/font literals in components; semantic tokens only.
 
+### 6. Gates that keep Web and Flutter honest on phones
+
+| Gate                                                                               | Runs                                                                                                              | Fails on                                                                                                                   |
+| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `apps/widgetbook/test/phone_gate_test.dart`                                        | every Widgetbook use case (knob use cases included) at 360×740 and 393×852, iOS and Android, text 1.0/1.3/2.0/3.0 | a RenderFlex overflow up to 2.0; 3.0 is reported as LARGE                                                                  |
+| `tooling/web-phone-gate.mjs` (`pnpm gate:phone-web`)                               | every Storybook story at 360 and 393 CSS px, coarse pointer, same text scales                                     | horizontal page overflow or an element past the right edge outside a scrolling/clipping container, up to 2.0; 3.0 reported |
+| `geometry_parity_test.dart` + `tooling/geometry-parity.mjs` (`pnpm gate:geometry`) | the shared reference `Review/GeometryParity` on phone (393, touch) and desktop (1280, pointer) at 1.0/1.3/2.0     | any size difference above 1 px between Flutter and Web                                                                     |
+
+Stories that already overflowed on Web when the gate was introduced are
+listed with their finding in `tooling/web-phone-gate.known.json` (42 at
+introduction, mostly gallery fixtures with fixed widths or non-wrapping rows).
+The list only shrinks: a new story failing fails the gate, and so does a
+listed story that passes (remove its entry).
+
+200 % is the requirement (WCAG 1.4.4); 300 % is the target and becomes
+gating once the LARGE list is empty. Headless limitations (maps, media,
+embedded browser, remote images) are listed as skipped, never as passed.
+Optical size (`opsz`) follows the _scaled_ font size on both platforms; Web
+does this through `font-optical-sizing: auto`, Flutter components pass the
+`TextScaler` to their text styles.
+
 ## Consequences
 
 - Breaking (pre-release): removed tokens, changed `mobileApp`, snapped spacing,
   changed Storybook/Widgetbook defaults. See CHANGELOG.
-- Typography geometry tests now assert the capped heading scale. Web Chromium
-  measurements for 2.0 headings must be re-taken in gallery review.
+- Typography geometry tests assert the capped heading scale; the geometry
+  parity gate replaces manual Chromium re-measurement for the reference set.
+- Playwright is a machine tool, not a repository dependency. CI installs it
+  globally before `pnpm verify:gates`.
 - Visual acceptance in both galleries is still required (Decision 0001).

@@ -20,11 +20,10 @@ void main() {
     tester,
   ) async {
     // Chromium measurements from the same bundled Inter family and token settings.
-    // Decision 0010 caps headings at 1.4x: the 2.0 heading row is measured at
-    // the capped scale (re-measure in Storybook when the Web cap lands).
+    // Decision 0010 caps headings at 2.0x, so the measured 2.0 row is uncapped.
     for (final (scale, headingScale, headingWidth, labelWidth, buttonWidth) in [
       (1.0, 1.0, 130.875, 46.90625, 87.46875),
-      (2.0, 1.4, 179.34, 88.984375, 143.609375),
+      (2.0, 2.0, 250.953125, 88.984375, 143.609375),
     ]) {
       await tester.pumpWidget(
         MaterialApp(

@@ -43,7 +43,13 @@ class KBreadcrumb extends StatelessWidget {
         item.label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: _textStyle(t, t.fontControlSize, t.fontControlWeight, color),
+        style: _textStyle(
+          t,
+          t.fontControlSize,
+          t.fontControlWeight,
+          color,
+          scaler: MediaQuery.textScalerOf(context),
+        ),
       );
       return Tooltip(
         message: item.label,
@@ -323,8 +329,9 @@ TextStyle _textStyle(
   KDesignTokens t,
   double size,
   FontWeight weight,
-  Color color,
-) => TextStyle(
+  Color color, {
+  TextScaler scaler = TextScaler.noScaling,
+}) => TextStyle(
   color: color,
   fontFamily: t.fontFamily,
   fontSize: size,
@@ -333,6 +340,6 @@ TextStyle _textStyle(
   leadingDistribution: TextLeadingDistribution.even,
   fontVariations: [
     FontVariation.weight(weight.value.toDouble()),
-    FontVariation.opticalSize(size.clamp(14, 32)),
+    FontVariation.opticalSize(scaler.scale(size).clamp(14, 32)),
   ],
 );

@@ -297,8 +297,9 @@ class _KActivityHeatmapState extends State<KActivityHeatmap> {
               small(
                 '${widget.mode == KActivityMode.completed ? 'Abschlüsse' : 'Issues'} pro Tag · Heute: ${dateLabel(today)} · Amber: offen · Grün: erledigt',
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
+              // Wraps at large system text instead of overflowing.
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   small('Weniger'),
                   for (var i = 0; i <= 4; i++)

@@ -26,7 +26,10 @@
     "test:flutter": "dart run melos exec --concurrency 1 -- \"flutter test\"",
     "format:check": "prettier --check .",
     "verify": "pnpm format:check && pnpm generate:check && pnpm test:tooling && pnpm audit:styles && pnpm check:ui-rules && pnpm build:web && pnpm test:web-ui && pnpm typecheck:web && pnpm verify:web-consumer && pnpm verify:flutter-consumer && pnpm analyze:flutter && pnpm test:flutter && pnpm build:storybook && pnpm build:widgetbook",
-    "check:ui-rules": "node tooling/check-ui-rules.mjs"
+    "check:ui-rules": "node tooling/check-ui-rules.mjs",
+    "gate:phone-web": "node tooling/web-phone-gate.mjs",
+    "gate:geometry": "node tooling/geometry-parity.mjs",
+    "verify:gates": "pnpm gate:phone-web && pnpm gate:geometry"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",

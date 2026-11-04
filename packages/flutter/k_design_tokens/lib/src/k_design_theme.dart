@@ -41,9 +41,13 @@ class KDesignConfiguration {
   @override
   int get hashCode => Object.hash(density, typeScale, inputMode, windowClass);
 
+  /// Explicit opt-in for data-dense desktop screens (tables, admin).
   static const dashboard = KDesignConfiguration(density: KDensity.dense);
 
-  static const desktopApp = KDesignConfiguration();
+  /// Tablet and desktop share the standard ramp (parity rule).
+  static const desktopApp = KDesignConfiguration(
+    typeScale: KTypeScale.standard,
+  );
 
   /// Phone context: standard density, phone type ramp, touch targets.
   /// Prefer [KAdaptiveTheme], which resolves this from the window.

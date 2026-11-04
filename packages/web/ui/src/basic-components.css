@@ -41,6 +41,7 @@
 }
 .k-progress__meta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--k-space-control-inset-inline);
   color: var(--k-color-text-muted);

@@ -21,16 +21,14 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
         TargetPlatform.fuchsia => KInputMode.touch,
         _ => KInputMode.pointer,
       };
+  // Parity rule: the type ramp follows the window class only. Tablet and
+  // desktop share one ramp; mobile Web and the mobile app share another.
+  // Input mode changes hit targets, never typography.
   final typeScale =
       overrides.typeScale ??
-      switch (windowClass) {
-        KWindowClass.compact => KTypeScale.mobile,
-        KWindowClass.medium => KTypeScale.standard,
-        _ =>
-          inputMode == KInputMode.touch
-              ? KTypeScale.standard
-              : KTypeScale.compact,
-      };
+      (windowClass == KWindowClass.compact
+          ? KTypeScale.mobile
+          : KTypeScale.standard);
   return KDesignConfiguration(
     density: overrides.density ?? KDensity.standard,
     typeScale: typeScale,

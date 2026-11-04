@@ -20,6 +20,8 @@
   font-weight: var(--k-text-font-weight);
   letter-spacing: var(--k-text-letter-spacing);
   line-height: calc(var(--k-text-line-height) * var(--k-text-scale-effective));
+  /* Parity with Flutter, which breaks a word that cannot fit the line. */
+  overflow-wrap: break-word;
 }
 
 .k-text--heading1 {

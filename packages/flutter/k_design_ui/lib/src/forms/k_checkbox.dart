@@ -80,33 +80,47 @@ class _KCheckboxState extends State<KCheckbox> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: t.sizeContent,
-                      height: t.sizeContent,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(t.radiusSmall),
-                        color: widget.value == false
-                            ? t.componentSelectionBackground
-                            : t.componentSelectionSelectedBackground,
-                        border: Border.all(
-                          color: _showFocus
-                              ? t.componentSelectionFocusRing
-                              : widget.value == false
-                              ? t.componentSelectionBorder
-                              : t.componentSelectionSelectedBorder,
+                    Padding(
+                      // Decision 0010: the box sits on the first label line (Web: 1lh).
+                      padding: EdgeInsets.only(
+                        top: math.max(
+                          0,
+                          (MediaQuery.textScalerOf(
+                                        context,
+                                      ).scale(t.fontControlSize) *
+                                      t.fontTightHeight -
+                                  t.sizeContent) /
+                              2,
                         ),
                       ),
-                      child: widget.value == false
-                          ? null
-                          : Center(
-                              child: KIcon(
-                                widget.value == null
-                                    ? KIconName.minus
-                                    : KIconName.check,
-                                size: 12,
-                                color: t.componentSelectionSelectedForeground,
+                      child: Container(
+                        width: t.sizeContent,
+                        height: t.sizeContent,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(t.radiusSmall),
+                          color: widget.value == false
+                              ? t.componentSelectionBackground
+                              : t.componentSelectionSelectedBackground,
+                          border: Border.all(
+                            color: _showFocus
+                                ? t.componentSelectionFocusRing
+                                : widget.value == false
+                                ? t.componentSelectionBorder
+                                : t.componentSelectionSelectedBorder,
+                          ),
+                        ),
+                        child: widget.value == false
+                            ? null
+                            : Center(
+                                child: KIcon(
+                                  widget.value == null
+                                      ? KIconName.minus
+                                      : KIconName.check,
+                                  size: 12,
+                                  color: t.componentSelectionSelectedForeground,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                     SizedBox(width: t.spaceControlGap),
                     Flexible(

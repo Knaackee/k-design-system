@@ -39,11 +39,25 @@
   align-items: flex-start;
   padding-block: max(
     0px,
-    calc((max(var(--k-size-control), var(--k-size-hit-target)) - 1lh) / 2)
+    calc(
+      (
+          max(var(--k-size-control), var(--k-size-hit-target)) -
+            max(1lh, var(--k-leading-control-size))
+        ) /
+        2
+    )
   );
   box-sizing: border-box;
 }
-.k-checkbox__box,
-.k-radio__indicator {
+.k-checkbox {
+  --k-leading-control-size: var(--k-size-content);
+}
+.k-radio {
+  --k-leading-control-size: var(--k-component-radio-size);
+}
+.k-checkbox__box {
   margin-block-start: max(0px, calc((1lh - var(--k-size-content)) / 2));
+}
+.k-radio__indicator {
+  margin-block-start: max(0px, calc((1lh - var(--k-component-radio-size)) / 2));
 }

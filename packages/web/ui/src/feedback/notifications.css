@@ -24,8 +24,14 @@
   display: flex;
   min-width: 0;
   box-sizing: border-box;
-  font-size: calc(var(--k-font-body-small-size) * var(--k-text-scale, 1));
-  line-height: var(--k-font-body-small-line-height);
+  font-size: calc(
+    var(--k-font-body-small-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  line-height: calc(
+    var(--k-font-body-small-line-height) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
 }
 .k-toast__content {
   flex: 1;

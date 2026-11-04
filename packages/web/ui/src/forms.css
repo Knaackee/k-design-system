@@ -4,7 +4,10 @@
 .k-select-list,
 .k-filter-chip {
   font-family: var(--k-font-family);
-  font-size: calc(var(--k-font-control-size) * var(--k-text-scale, 1));
+  font-size: calc(
+    var(--k-font-control-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-control))
+  );
   font-weight: var(--k-font-control-weight);
   font-optical-sizing: auto;
   line-height: 1;

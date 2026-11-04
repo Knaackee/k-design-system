@@ -195,9 +195,21 @@ class _KShowcaseGridState extends State<KShowcaseGrid>
               children: [
                 ExcludeSemantics(child: IgnorePointer(child: backdrop)),
                 if (widget.child != null)
-                  Padding(
-                    padding: EdgeInsets.all(tokens.spaceLayoutSectionGap),
-                    child: Center(child: widget.child),
+                  // The foreground scrolls when large system text makes it
+                  // taller than the stage; it stays centred otherwise.
+                  LayoutBuilder(
+                    builder: (context, stage) => SingleChildScrollView(
+                      padding: EdgeInsets.all(tokens.spaceLayoutSectionGap),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: math.max(
+                            0,
+                            stage.maxHeight - 2 * tokens.spaceLayoutSectionGap,
+                          ),
+                        ),
+                        child: Center(child: widget.child),
+                      ),
+                    ),
                   ),
               ],
             ),

@@ -26,3 +26,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: dart pub get
       - run: pnpm verify
+      # Decision 0010 Web gates. They need the Storybook build and the Flutter
+      # measurements that `pnpm verify` produced above, plus Playwright, which
+      # is a machine tool rather than a repository dependency.
+      - run: npm install -g playwright@1.56.0 && npx playwright install --with-deps chromium
+      - run: NODE_PATH="$(npm root -g)" pnpm verify:gates

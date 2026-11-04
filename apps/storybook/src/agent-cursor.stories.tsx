@@ -31,7 +31,7 @@ function AgentCursorFixture({
           position: "relative",
           width: 480,
           maxWidth: "100%",
-          height: 260,
+          minHeight: 260,
           border: "1px solid var(--k-color-border-default)",
           borderRadius: "var(--k-radius-overlay)",
           background: "var(--k-color-surface-raised)",

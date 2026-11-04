@@ -112,16 +112,18 @@ void main() {
       platform: TargetPlatform.macOS,
       overrides: const KAdaptiveOverrides(density: KDensity.dense),
     );
-    expect(desktop.typeScale, KTypeScale.compact);
+    expect(desktop.typeScale, KTypeScale.standard);
+    // Parity: tablet and desktop resolve the same ramp.
+    expect(desktop.typeScale, tablet.typeScale);
     expect(desktop.inputMode, KInputMode.pointer);
     expect(desktop.density, KDensity.dense);
   });
 
   test('text scale caps are tokenized per role', () {
     final tokens = kDesignTokens();
-    expect(tokens.textScaleMaxBody, 2);
-    expect(tokens.textScaleMaxHeading, 1.4);
-    expect(tokens.textScaleMaxControl, 1.6);
+    expect(tokens.textScaleMaxBody, 3);
+    expect(tokens.textScaleMaxHeading, 2);
+    expect(tokens.textScaleMaxControl, 3);
   });
 
   test('window classes are derived from available width boundaries', () {

@@ -50,7 +50,8 @@ class _AgentCursorFixtureState extends State<AgentCursorFixture> {
       data: theme,
       child: Container(
         width: 480,
-        height: 260,
+        // Grows with the system text size; fixed heights clip at 1.3x.
+        constraints: const BoxConstraints(minHeight: 260),
         decoration: BoxDecoration(
           color: t.colorSurfaceRaised,
           border: Border.all(color: t.colorBorderDefault),
@@ -60,6 +61,7 @@ class _AgentCursorFixtureState extends State<AgentCursorFixture> {
           clipBehavior: Clip.none,
           children: [
             Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
@@ -130,7 +132,7 @@ class _AgentCursorFixtureState extends State<AgentCursorFixture> {
         ),
       ),
     );
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

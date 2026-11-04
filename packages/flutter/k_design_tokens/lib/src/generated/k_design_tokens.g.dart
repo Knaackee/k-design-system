@@ -1793,9 +1793,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentEditorCaretMinHeight: 1.2,
     componentTabStripItemMaxWidth: 220.0,
     componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
-    textScaleMaxBody: 2.0,
-    textScaleMaxHeading: 1.4,
-    textScaleMaxControl: 1.6,
+    textScaleMaxBody: 3.0,
+    textScaleMaxHeading: 2.0,
+    textScaleMaxControl: 3.0,
   );
 
   static const orbitDark = KDesignTokens(
@@ -2362,9 +2362,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentEditorCaretMinHeight: 1.2,
     componentTabStripItemMaxWidth: 220.0,
     componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
-    textScaleMaxBody: 2.0,
-    textScaleMaxHeading: 1.4,
-    textScaleMaxControl: 1.6,
+    textScaleMaxBody: 3.0,
+    textScaleMaxHeading: 2.0,
+    textScaleMaxControl: 3.0,
   );
 
   static const referenceLight = KDesignTokens(
@@ -2931,9 +2931,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentEditorCaretMinHeight: 1.2,
     componentTabStripItemMaxWidth: 220.0,
     componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
-    textScaleMaxBody: 2.0,
-    textScaleMaxHeading: 1.4,
-    textScaleMaxControl: 1.6,
+    textScaleMaxBody: 3.0,
+    textScaleMaxHeading: 2.0,
+    textScaleMaxControl: 3.0,
   );
 
   static const referenceDark = KDesignTokens(
@@ -3500,9 +3500,9 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentEditorCaretMinHeight: 1.2,
     componentTabStripItemMaxWidth: 220.0,
     componentTabStripDragElevation: <BoxShadow>[BoxShadow(color: Color(0x33000000), offset: Offset(0.0, 4.0), blurRadius: 12.0, spreadRadius: 0.0)],
-    textScaleMaxBody: 2.0,
-    textScaleMaxHeading: 1.4,
-    textScaleMaxControl: 1.6,
+    textScaleMaxBody: 3.0,
+    textScaleMaxHeading: 2.0,
+    textScaleMaxControl: 3.0,
   );
 
   @override

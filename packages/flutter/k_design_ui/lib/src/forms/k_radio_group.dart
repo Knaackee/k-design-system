@@ -127,41 +127,55 @@ class _RadioOptionState<T> extends State<_RadioOption<T>> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: t.componentRadioSize,
-                    height: t.componentRadioSize,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: selected
-                          ? t.componentSelectionSelectedBackground
-                          : t.componentSelectionBackground,
-                      border: Border.all(
-                        width: t.borderWidthDefault,
-                        color: selected
-                            ? t.componentSelectionSelectedBorder
-                            : t.componentSelectionBorder,
+                  Padding(
+                    // Decision 0010: the box sits on the first label line (Web: 1lh).
+                    padding: EdgeInsets.only(
+                      top: math.max(
+                        0,
+                        (MediaQuery.textScalerOf(
+                                      context,
+                                    ).scale(t.fontControlSize) *
+                                    t.fontTightHeight -
+                                t.componentRadioSize) /
+                            2,
                       ),
-                      boxShadow: focused
-                          ? [
-                              BoxShadow(
-                                color: t.componentSelectionFocusRing,
-                                spreadRadius: t.borderWidthStrong,
+                    ),
+                    child: Container(
+                      width: t.componentRadioSize,
+                      height: t.componentRadioSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: selected
+                            ? t.componentSelectionSelectedBackground
+                            : t.componentSelectionBackground,
+                        border: Border.all(
+                          width: t.borderWidthDefault,
+                          color: selected
+                              ? t.componentSelectionSelectedBorder
+                              : t.componentSelectionBorder,
+                        ),
+                        boxShadow: focused
+                            ? [
+                                BoxShadow(
+                                  color: t.componentSelectionFocusRing,
+                                  spreadRadius: t.borderWidthStrong,
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: selected
+                          ? Center(
+                              child: Container(
+                                width: t.componentRadioDotSize,
+                                height: t.componentRadioDotSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: t.componentSelectionSelectedForeground,
+                                ),
                               ),
-                            ]
+                            )
                           : null,
                     ),
-                    child: selected
-                        ? Center(
-                            child: Container(
-                              width: t.componentRadioDotSize,
-                              height: t.componentRadioDotSize,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: t.componentSelectionSelectedForeground,
-                              ),
-                            ),
-                          )
-                        : null,
                   ),
                   SizedBox(width: t.spaceControlGap),
                   Flexible(

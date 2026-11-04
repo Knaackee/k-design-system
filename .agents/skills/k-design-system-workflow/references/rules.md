@@ -45,10 +45,14 @@ assertions. The others are review rules.
 
 ## Text scaling — review + phone gate
 
-- System text scale is capped per role: headings 1.4, controls 1.6, body 2.0.
+- System text scale is capped per role: headings 2.0, controls and body 3.0.
+  From 1.3× rows stack (Flutter automatically; Web via `setKTextScale`).
 - Every screen must work at 1.3 (common Android default) without clipping and
-  at 2.0 with scrolling. Pages scroll; fixed-height containers hold only
-  single-line, truncatable text.
+  at 2.0 with scrolling (gating). 3.0 is measured and reported; aim for it.
+  Pages scroll; fixed-height containers hold only single-line, truncatable
+  text. Stages and previews use `minHeight`, never a fixed `height`.
+- Long words break instead of overflowing (Flutter does this natively; Web
+  `.k-text` uses `overflow-wrap: break-word`).
 
 ## Wrapping — review + phone gate
 
@@ -57,9 +61,12 @@ assertions. The others are review rules.
 - Titles truncate with an ellipsis; numbers, prices and dates never truncate.
 - Badges never shrink titles; on compact windows they move to the next line.
 
-## Narrow windows — phone gate
+## Narrow windows — phone gate (Web and Flutter)
 
-- Every component must fit 360 px. Components with many items degrade
+- Every component must fit 360 px on both platforms. A wide widget (board,
+  table, timeline) scrolls inside its own container; the page never scrolls
+  sideways. A grid or flex parent of such a widget needs `min-width: 0` /
+  `minmax(0, 1fr)` on Web. Components with many items degrade
   (pagination → "page / count", toolbars → overflow menu, chips → wrap).
 
 ## Lists — review

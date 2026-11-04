@@ -36,16 +36,23 @@ applyKAdaptive(rootElement, { density: "dense" });
 
 - Uses the element's width and `(pointer: coarse)`; keeps `data-*` attributes
   in sync on resize.
-- Set `--k-text-scale` only from an accessibility setting; it is capped per
-  role automatically.
+- Apply an accessibility text size with `setKTextScale(root, scale)`: it sets
+  `--k-text-scale` (capped per role) and `data-text-large` from 1.3× so rows
+  stack like on Flutter.
+
+## Parity rule
+
+Tablet = desktop, mobile Web = mobile app. Only the window class picks the
+type ramp; touch vs pointer only changes hit targets. A data-dense desktop
+screen may opt into `KDesignConfiguration.dashboard` (dense + compact ramp) —
+state the reason in the handover.
 
 ## What resolves to what
 
-| Window (px) | Input   | Type ramp | Gutter | Section gap |
-| ----------- | ------- | --------- | ------ | ----------- |
-| < 600       | any     | mobile    | 16     | 24          |
-| 600–839     | any     | standard  | 24     | 32*         |
-| 840+        | touch   | standard  | 32–64  | 32*         |
-| 840+        | pointer | compact   | 32–64  | 32*         |
+| Window (px) | Input | Type ramp | Gutter | Section gap |
+| ----------- | ----- | --------- | ------ | ----------- |
+| < 600       | any   | mobile    | 16     | 24          |
+| 600–839     | any   | standard  | 24     | 32*         |
+| 840+        | any   | standard  | 32–64  | 32*         |
 
 \* standard density; dense 16, spacious 48.

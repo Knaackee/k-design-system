@@ -241,7 +241,10 @@ class KSettingsRow extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final stacked = switch (layout) {
-          KSettingsRowLayout.auto => constraints.maxWidth < 480,
+          // Decision 0010: stack on narrow rows and from 1.3x system text.
+          KSettingsRowLayout.auto =>
+            constraints.maxWidth < 480 ||
+                MediaQuery.textScalerOf(context).scale(1) >= 1.3,
           KSettingsRowLayout.compact => false,
           KSettingsRowLayout.fullWidth => true,
         };

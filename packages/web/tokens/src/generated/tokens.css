@@ -566,9 +566,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
-  --k-text-scale-max-body: 2;
-  --k-text-scale-max-heading: 1.4;
-  --k-text-scale-max-control: 1.6;
+  --k-text-scale-max-body: 3;
+  --k-text-scale-max-heading: 2;
+  --k-text-scale-max-control: 3;
 }
 
 [data-theme="dark"], [data-brand="orbit"][data-theme="dark"] {
@@ -1135,9 +1135,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
-  --k-text-scale-max-body: 2;
-  --k-text-scale-max-heading: 1.4;
-  --k-text-scale-max-control: 1.6;
+  --k-text-scale-max-body: 3;
+  --k-text-scale-max-heading: 2;
+  --k-text-scale-max-control: 3;
 }
 
 [data-brand="reference"][data-theme="light"] {
@@ -1704,9 +1704,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
-  --k-text-scale-max-body: 2;
-  --k-text-scale-max-heading: 1.4;
-  --k-text-scale-max-control: 1.6;
+  --k-text-scale-max-body: 3;
+  --k-text-scale-max-heading: 2;
+  --k-text-scale-max-control: 3;
 }
 
 [data-brand="reference"][data-theme="dark"] {
@@ -2273,9 +2273,9 @@
   --k-component-editor-caret-min-height: 1.2em;
   --k-component-tab-strip-item-max-width: 220px;
   --k-component-tab-strip-drag-elevation: 0px 4px 12px 0px #00000033;
-  --k-text-scale-max-body: 2;
-  --k-text-scale-max-heading: 1.4;
-  --k-text-scale-max-control: 1.6;
+  --k-text-scale-max-body: 3;
+  --k-text-scale-max-heading: 2;
+  --k-text-scale-max-control: 3;
 }
 }
 
