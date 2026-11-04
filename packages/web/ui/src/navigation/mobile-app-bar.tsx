@@ -13,6 +13,7 @@ export type KResolvedGlassQuality = Exclude<KGlassQuality, "auto">;
 export type KMobileAppBarVariant =
   | "floating-glass"
   | "fixed"
+  | "fixed-line"
   | "action"
   | "floating-dock"
   | "labeled"

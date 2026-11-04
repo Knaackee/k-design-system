@@ -1,21 +1,39 @@
-import { useRef, useState, type UIEvent } from "react";
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  KButton,
   KIcon,
   KMobileAppBar,
+  KStack,
+  KText,
   type KGlassQuality,
   type KMobileAppBarItem,
   type KMobileAppBarVariant,
 } from "@k-design-system/ui";
 import "./mobile-app-bar.stories.css";
 
+function AppMark() {
+  return (
+    <svg aria-hidden="true" width="32" height="32" viewBox="12 32 104 72">
+      <path d="M14 102V90l24-14v26H14Z" fill="#EFA24C" />
+      <path d="M44 102V74l26-18v46H44Z" fill="#A9A29A" />
+      <path d="M76 102V50l19-14 19 14v52H76Z" fill="currentColor" />
+    </svg>
+  );
+}
 const items: readonly KMobileAppBarItem[] = [
-  { id: "home", label: "Home", icon: <KIcon name="house" /> },
-  { id: "inbox", label: "Inbox", icon: <KIcon name="mail" />, badge: 13 },
-  { id: "search", label: "Search", icon: <KIcon name="search" /> },
-  { id: "settings", label: "Settings", icon: <KIcon name="settings" /> },
+  {
+    id: "portfolios",
+    label: "Portfolios",
+    icon: <KIcon name="building" size={24} strokeWidth={1.5} />,
+  },
+  { id: "chat", label: "Chat", icon: <AppMark /> },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: <KIcon name="settings" size={24} strokeWidth={1.5} />,
+  },
 ];
-
 function MobileAppBarFixture({
   quality,
   variant,
@@ -23,90 +41,84 @@ function MobileAppBarFixture({
   quality: KGlassQuality;
   variant: KMobileAppBarVariant;
 }) {
-  const [selectedId, setSelectedId] = useState("home");
-  const [message, setMessage] = useState("Home selected");
+  const [selectedId, setSelectedId] = useState("chat");
   const [collapsed, setCollapsed] = useState(false);
-  const lastScrollTop = useRef(0);
-  const usesPrimaryAction =
-    variant === "floating-glass" || variant === "action";
-  const handleScroll = (event: UIEvent<HTMLElement>) => {
-    if (variant !== "collapsible") return;
-    const scrollTop = event.currentTarget.scrollTop;
-    const delta = scrollTop - lastScrollTop.current;
-    if (scrollTop <= 24) {
-      setCollapsed(false);
-      lastScrollTop.current = scrollTop;
-    } else if (Math.abs(delta) >= 6) {
-      setCollapsed(delta > 0);
-      lastScrollTop.current = scrollTop;
-    }
-  };
+  const [message, setMessage] = useState("");
+  const action = variant === "action";
   return (
-    <main className="mobile-app-bar-demo" onScroll={handleScroll}>
-      <div className="mobile-app-bar-demo__orb mobile-app-bar-demo__orb--one" />
-      <div className="mobile-app-bar-demo__orb mobile-app-bar-demo__orb--two" />
-      <section className="mobile-app-bar-demo__content">
-        <span className="mobile-app-bar-demo__eyebrow">Mobile workspace</span>
-        <h1>{variant.replaceAll("-", " ")}</h1>
-        <p>{message}</p>
-        {variant === "collapsible" && (
-          <p className="mobile-app-bar-demo__hint">
-            Scroll down to hide the navigation and up to reveal it.
-          </p>
-        )}
-        {Array.from({ length: 8 }, (_, index) => (
-          <article key={index}>
-            <strong>Project update {index + 1}</strong>
-            <span>Content remains visible beneath the glass surface.</span>
-          </article>
-        ))}
-      </section>
-      <KMobileAppBar
-        items={items}
-        collapsed={collapsed}
-        contextualContent={
-          <div className="mobile-app-bar-demo__contextual">
-            <strong>3 selected</strong>
-            <button onClick={() => setMessage("Moved 3 items")} type="button">
-              <KIcon name="folder" />
-              Move
-            </button>
-            <button onClick={() => setMessage("Deleted 3 items")} type="button">
-              <KIcon name="trash" />
-              Delete
-            </button>
-          </div>
-        }
-        onSelectionChange={(id) => {
-          setSelectedId(id);
-          setMessage(`${items.find((item) => item.id === id)?.label} selected`);
-        }}
-        primaryAction={
-          usesPrimaryAction ? (
-            <button
-              aria-label="Create issue"
-              className="mobile-app-bar-demo__create"
-              onClick={() => setMessage("Create issue action")}
-              type="button"
-            >
-              <KIcon name="plus" />
-            </button>
-          ) : undefined
-        }
-        quality={quality}
-        selectedId={selectedId}
-        variant={variant}
-        visibility="always"
-      />
-    </main>
+    <div className="mobile-app-bar-preview">
+      <main className="mobile-app-bar-preview__viewport">
+        <header className="mobile-app-bar-preview__header">
+          <KStack gap="control">
+            <KText variant="caption">KMobileAppBar</KText>
+            <KText variant="heading3">{variant.replaceAll("-", " ")}</KText>
+          </KStack>
+        </header>
+        <section className="mobile-app-bar-preview__state" aria-live="polite">
+          <KStack gap="control" align="center">
+            <KText variant="heading2">
+              {items.find((item) => item.id === selectedId)?.label}
+            </KText>
+            <KText variant="bodySmall">
+              {message || "Choose a destination below."}
+            </KText>
+            {variant === "collapsible" && (
+              <KButton
+                variant="secondary"
+                onClick={() => setCollapsed(!collapsed)}
+              >
+                {collapsed ? "Show navigation" : "Hide navigation"}
+              </KButton>
+            )}
+          </KStack>
+        </section>
+        <KMobileAppBar
+          items={action ? items.filter((item) => item.id !== "chat") : items}
+          variant={variant}
+          quality={quality}
+          visibility="always"
+          selectedId={selectedId}
+          collapsed={collapsed}
+          onSelectionChange={setSelectedId}
+          primaryAction={
+            action ? (
+              <KButton
+                aria-label="Chat"
+                aria-pressed={selectedId === "chat"}
+                variant={selectedId === "chat" ? "primary" : "secondary"}
+                onClick={() => setSelectedId("chat")}
+              >
+                <AppMark />
+              </KButton>
+            ) : undefined
+          }
+          contextualContent={
+            <>
+              <KText variant="label">3 selected</KText>
+              <KButton
+                variant="ghost"
+                onClick={() => setMessage("Move selected")}
+              >
+                Move
+              </KButton>
+              <KButton
+                variant="ghost"
+                onClick={() => setMessage("Delete selected")}
+              >
+                Delete
+              </KButton>
+            </>
+          }
+        />
+      </main>
+    </div>
   );
 }
-
 const meta = {
   title: "Navigation/MobileAppBar",
   component: MobileAppBarFixture,
   parameters: { layout: "fullscreen" },
-  args: { quality: "auto", variant: "floating-glass" },
+  args: { quality: "solid", variant: "fixed" },
   argTypes: {
     quality: {
       control: "select",
@@ -115,10 +127,11 @@ const meta = {
     variant: {
       control: "select",
       options: [
-        "floating-glass",
         "fixed",
-        "action",
         "floating-dock",
+        "action",
+        "fixed-line",
+        "floating-glass",
         "labeled",
         "collapsible",
         "contextual",
@@ -126,22 +139,15 @@ const meta = {
     },
   },
 } satisfies Meta<typeof MobileAppBarFixture>;
-
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const FloatingGlass: Story = {};
-export const Fixed: Story = { args: { variant: "fixed", quality: "solid" } };
-export const Action: Story = { args: { variant: "action", quality: "solid" } };
-export const FloatingDock: Story = {
-  args: { variant: "floating-dock", quality: "frosted" },
+export const Fixed: Story = {};
+export const FloatingDock: Story = { args: { variant: "floating-dock" } };
+export const Action: Story = { args: { variant: "action" } };
+export const FixedLine: Story = { args: { variant: "fixed-line" } };
+export const FloatingGlass: Story = {
+  args: { variant: "floating-glass", quality: "frosted" },
 };
-export const Labeled: Story = {
-  args: { variant: "labeled", quality: "solid" },
-};
-export const Collapsible: Story = {
-  args: { variant: "collapsible", quality: "frosted" },
-};
-export const Contextual: Story = {
-  args: { variant: "contextual", quality: "solid" },
-};
+export const Labeled: Story = { args: { variant: "labeled" } };
+export const Collapsible: Story = { args: { variant: "collapsible" } };
+export const Contextual: Story = { args: { variant: "contextual" } };

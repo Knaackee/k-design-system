@@ -43,6 +43,7 @@
 }
 
 .k-mobile-app-bar[data-variant="fixed"],
+.k-mobile-app-bar[data-variant="fixed-line"],
 .k-mobile-app-bar[data-variant="action"],
 .k-mobile-app-bar[data-variant="labeled"],
 .k-mobile-app-bar[data-variant="contextual"] {
@@ -51,6 +52,7 @@
 }
 
 .k-mobile-app-bar[data-variant="fixed"] .k-mobile-app-bar__surface,
+.k-mobile-app-bar[data-variant="fixed-line"] .k-mobile-app-bar__surface,
 .k-mobile-app-bar[data-variant="action"] .k-mobile-app-bar__surface,
 .k-mobile-app-bar[data-variant="labeled"] .k-mobile-app-bar__surface,
 .k-mobile-app-bar[data-variant="contextual"] .k-mobile-app-bar__surface {
@@ -74,12 +76,36 @@
 
 .k-mobile-app-bar[data-variant="floating-dock"] .k-mobile-app-bar__surface {
   width: auto;
+  max-width: min(
+    var(--k-component-mobile-app-bar-container-dock-max-width),
+    calc(100vw - 2 * var(--k-component-mobile-app-bar-container-floating-inset))
+  );
   min-height: var(--k-size-app-bar-fixed);
   padding: var(--k-space-compact) var(--k-space-control-gap);
 }
 
 .k-mobile-app-bar[data-variant="floating-dock"] .k-mobile-app-bar__group {
-  grid-auto-columns: var(--k-component-mobile-app-bar-destination-column-width);
+  grid-auto-columns: minmax(
+    var(--k-component-mobile-app-bar-destination-min-width),
+    var(--k-component-mobile-app-bar-destination-column-width)
+  );
+}
+
+.k-mobile-app-bar[data-variant="fixed-line"]
+  .k-mobile-app-bar__destination[data-selected] {
+  background: transparent;
+  box-shadow: none;
+}
+
+.k-mobile-app-bar[data-variant="fixed-line"]
+  .k-mobile-app-bar__destination[data-selected]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: var(--k-component-mobile-app-bar-destination-icon-size);
+  height: var(--k-border-width-strong);
+  border-radius: var(--k-radius-full);
+  background: currentColor;
 }
 
 .k-mobile-app-bar[data-collapsed] .k-mobile-app-bar__surface {
@@ -242,6 +268,10 @@
   min-height: var(--k-component-mobile-app-bar-destination-min-height);
   border-radius: var(--k-component-mobile-app-bar-primary-action-radius);
   box-shadow: var(--k-elevation-medium);
+}
+
+.k-mobile-app-bar__primary .k-button {
+  min-height: var(--k-component-mobile-app-bar-destination-min-height);
 }
 
 .k-mobile-app-bar__contextual {

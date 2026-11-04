@@ -974,6 +974,12 @@ class KDesignWidgetbook extends StatelessWidget {
                   ),
                 ),
                 WidgetbookUseCase(
+                  name: 'mobile-app-bar-fixed-line',
+                  builder: (_) => const MobileAppBarFixture(
+                    variant: KMobileAppBarVariant.fixedLine,
+                  ),
+                ),
+                WidgetbookUseCase(
                   name: 'mobile-app-bar-action',
                   builder: (_) => const MobileAppBarFixture(
                     variant: KMobileAppBarVariant.action,

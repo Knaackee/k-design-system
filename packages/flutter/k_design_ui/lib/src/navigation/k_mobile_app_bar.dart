@@ -10,6 +10,7 @@ enum KMobileAppBarVisibility { portraitMobile, always }
 enum KMobileAppBarVariant {
   floatingGlass,
   fixed,
+  fixedLine,
   action,
   floatingDock,
   labeled,
@@ -145,6 +146,7 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
     _reportResolvedQuality(quality);
     final isFixed = switch (widget.variant) {
       KMobileAppBarVariant.fixed ||
+      KMobileAppBarVariant.fixedLine ||
       KMobileAppBarVariant.action ||
       KMobileAppBarVariant.labeled ||
       KMobileAppBarVariant.contextual => true,
@@ -160,6 +162,13 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
             tokens.componentMobileAppBarContainerRadiusFloating,
           );
     final splitIndex = (widget.items.length / 2).ceil();
+    final isDock = widget.variant == KMobileAppBarVariant.floatingDock;
+    final inlinePadding = isDock
+        ? tokens.spaceControlGap
+        : tokens.componentMobileAppBarContainerPaddingInline;
+    final blockPadding = isDock
+        ? tokens.spaceCompact
+        : tokens.componentMobileAppBarContainerPaddingBlock;
     final before = widget.primaryAction == null
         ? widget.items
         : widget.items.take(splitIndex).toList(growable: false);
@@ -167,30 +176,40 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
         ? const <KMobileAppBarItem>[]
         : widget.items.skip(splitIndex).toList(growable: false);
 
+    final borderSide = BorderSide(
+      width: tokens.borderWidthDefault,
+      color: Color.alphaBlend(
+        tokens.colorGlassHighlight,
+        tokens.colorBorderStrong.withValues(
+          alpha: tokens.componentMobileAppBarOpacityBorder,
+        ),
+      ),
+    );
     final content = Container(
       constraints: BoxConstraints(
         minHeight: widget.variant == KMobileAppBarVariant.labeled
             ? tokens.componentMobileAppBarContainerLabeledMinHeight
+            : isDock
+            ? tokens.sizeAppBarFixed
             : tokens.componentMobileAppBarContainerMinHeight,
       ),
       padding: EdgeInsets.fromLTRB(
-        tokens.componentMobileAppBarContainerPaddingInline,
-        tokens.componentMobileAppBarContainerPaddingBlock,
-        tokens.componentMobileAppBarContainerPaddingInline,
-        tokens.componentMobileAppBarContainerPaddingBlock +
-            (isFixed ? media.padding.bottom : 0),
+        inlinePadding,
+        blockPadding,
+        inlinePadding,
+        blockPadding + (isFixed ? media.padding.bottom : 0),
       ),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Color.alphaBlend(
-            tokens.colorGlassHighlight,
-            tokens.colorBorderStrong.withValues(
-              alpha: tokens.componentMobileAppBarOpacityBorder,
-            ),
-          ),
-        ),
+        color: quality == KGlassQuality.solid
+            ? tokens.colorSurfaceRaised
+            : null,
+        border: isFixed
+            ? Border(top: borderSide)
+            : Border.fromBorderSide(borderSide),
         borderRadius: radius,
-        boxShadow: tokens.componentMobileAppBarContainerNativeElevation,
+        boxShadow: isFixed
+            ? tokens.componentMobileAppBarContainerElevation
+            : tokens.elevationOverlay,
       ),
       child: widget.variant == KMobileAppBarVariant.contextual
           ? SizedBox(width: double.infinity, child: widget.contextualContent)
@@ -263,7 +282,21 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
               maxWidth: isFixed
                   ? double.infinity
                   : widget.variant == KMobileAppBarVariant.floatingDock
-                  ? tokens.componentMobileAppBarContainerDockMaxWidth
+                  ? clampDouble(
+                      widget.items.length *
+                              tokens
+                                  .componentMobileAppBarDestinationColumnWidth +
+                          2 * inlinePadding +
+                          2 * tokens.borderWidthDefault +
+                          (widget.primaryAction == null
+                              ? 0
+                              : tokens.componentMobileAppBarDestinationMinHeight +
+                                    2 *
+                                        tokens
+                                            .componentMobileAppBarContainerPaddingBlock),
+                      0,
+                      tokens.componentMobileAppBarContainerDockMaxWidth,
+                    )
                   : widget.maxWidth ??
                         tokens.componentMobileAppBarContainerMaxWidth,
             ),
@@ -348,6 +381,7 @@ class _DestinationGroup extends StatelessWidget {
                         KMobileAppBarLabelVisibility.selected) &&
                     item.id == parent.selectedId),
             itemBuilder: parent.itemBuilder,
+            lineIndicator: parent.variant == KMobileAppBarVariant.fixedLine,
             onTap: () => parent.onSelectionChanged(item.id),
           ),
         ),
@@ -361,6 +395,7 @@ class _Destination extends StatelessWidget {
     required this.selected,
     required this.showLabel,
     required this.itemBuilder,
+    required this.lineIndicator,
     required this.onTap,
   });
 
@@ -368,6 +403,7 @@ class _Destination extends StatelessWidget {
   final bool selected;
   final bool showLabel;
   final KMobileAppBarItemBuilder? itemBuilder;
+  final bool lineIndicator;
   final VoidCallback onTap;
 
   @override
@@ -386,7 +422,7 @@ class _Destination extends StatelessWidget {
               ? 1
               : tokens.componentMobileAppBarOpacityInactive,
           child: Material(
-            color: selected
+            color: selected && !lineIndicator
                 ? tokens.colorSurfaceSubtle.withValues(
                     alpha: tokens.componentMobileAppBarOpacityRaised,
                   )
@@ -421,6 +457,21 @@ class _Destination extends StatelessWidget {
                           alignment: Alignment.center,
                           clipBehavior: Clip.none,
                           children: [
+                            if (selected && lineIndicator)
+                              Positioned(
+                                top: 0,
+                                child: Container(
+                                  width: tokens
+                                      .componentMobileAppBarDestinationIconSize,
+                                  height: tokens.borderWidthStrong,
+                                  decoration: BoxDecoration(
+                                    color: tokens.colorTextPrimary,
+                                    borderRadius: BorderRadius.circular(
+                                      tokens.radiusFull,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
