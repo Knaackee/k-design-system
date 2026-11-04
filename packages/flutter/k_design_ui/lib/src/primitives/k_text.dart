@@ -127,9 +127,11 @@ class KText extends StatelessWidget {
         fontSize: size,
         fontWeight: weight,
         fontVariations: [
-          FontVariation.weight(weight.value.toDouble()),
+          FontVariation.weight((style?.fontWeight ?? weight).value.toDouble()),
           FontVariation.opticalSize(
-            MediaQuery.textScalerOf(context).scale(size).clamp(14, 32),
+            MediaQuery.textScalerOf(
+              context,
+            ).scale(style?.fontSize ?? size).clamp(14, 32),
           ),
         ],
         height: lineHeight / size,

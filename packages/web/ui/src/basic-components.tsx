@@ -9,6 +9,7 @@ import {
 
 import { KIcon, type KIconName } from "./primitives/icon.js";
 import { KButton } from "./primitives/button.js";
+import { KMenuButton } from "./actions/menu-button.js";
 import { KIconButton } from "./actions/icon-button.js";
 import { KDialog } from "./overlays/overlay.js";
 import { useKLocalization } from "./localization/provider.js";
@@ -312,6 +313,7 @@ export interface KBreadcrumbProps {
   items: readonly KBreadcrumbItem[];
   label?: string;
   separator?: ReactNode;
+  overflowLabel?: string;
   iconStrokeWidth?: number;
 }
 
@@ -319,13 +321,56 @@ export function KBreadcrumb({
   items,
   label = "Breadcrumb",
   separator,
+  overflowLabel,
   iconStrokeWidth = 1.5,
 }: KBreadcrumbProps) {
+  const container = useRef<HTMLElement>(null);
+  const [width, setWidth] = useState<number>();
+  useEffect(() => {
+    const element = container.current;
+    if (!element) return;
+    setWidth(element.clientWidth);
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver((entries) =>
+      setWidth(entries[0].contentRect.width),
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const keep =
+    width === undefined || width >= 600 ? items.length : width < 400 ? 1 : 2;
+  const hidden = items.slice(0, Math.max(0, items.length - keep));
+  const visible = items.slice(hidden.length);
+  const divider = (
+    <span className="k-breadcrumb__separator" aria-hidden="true">
+      {separator ?? (
+        <KIcon name="chevron-right" strokeWidth={iconStrokeWidth} />
+      )}
+    </span>
+  );
   return (
-    <nav className="k-breadcrumb" aria-label={label}>
+    <nav ref={container} className="k-breadcrumb" aria-label={label}>
       <ol>
-        {items.map((item, index) => {
-          const current = index === items.length - 1;
+        {hidden.length > 0 && (
+          <li className="k-breadcrumb__overflow">
+            <KMenuButton
+              key={hidden.map((item) => item.id).join(":")}
+              label={overflowLabel ?? label}
+              overflow
+              actions={hidden.map((item) => ({
+                id: item.id,
+                label: item.label,
+                icon: item.icon,
+                href: item.href,
+                onSelect: item.onSelect,
+                disabled: !item.href && !item.onSelect,
+              }))}
+            />
+            {divider}
+          </li>
+        )}
+        {visible.map((item, index) => {
+          const current = index === visible.length - 1;
           const content = (
             <span className="k-breadcrumb__content">
               {item.icon ? (
@@ -335,11 +380,16 @@ export function KBreadcrumb({
                   strokeWidth={iconStrokeWidth}
                 />
               ) : null}
-              {item.label}
+              <span
+                className="k-breadcrumb__label"
+                title={typeof item.label === "string" ? item.label : undefined}
+              >
+                {item.label}
+              </span>
             </span>
           );
           return (
-            <li key={item.id}>
+            <li key={item.id} data-current={current || undefined}>
               {current ? (
                 <span aria-current="page">{content}</span>
               ) : (
@@ -347,19 +397,21 @@ export function KBreadcrumb({
                   href={item.href ?? "#"}
                   onClick={(event) => {
                     if (!item.href) event.preventDefault();
-                    item.onSelect?.();
+                    if (
+                      !item.href ||
+                      (!event.metaKey &&
+                        !event.ctrlKey &&
+                        !event.shiftKey &&
+                        !event.altKey &&
+                        event.button === 0)
+                    )
+                      item.onSelect?.();
                   }}
                 >
                   {content}
                 </a>
               )}
-              {!current ? (
-                <span className="k-breadcrumb__separator" aria-hidden="true">
-                  {separator ?? (
-                    <KIcon name="chevron-right" strokeWidth={iconStrokeWidth} />
-                  )}
-                </span>
-              ) : null}
+              {!current ? divider : null}
             </li>
           );
         })}

@@ -123,7 +123,11 @@ class KSettingsPage extends StatelessWidget {
                       onPressed: onBack,
                     ),
                   ),
-                  SizedBox(height: tokens.spaceControlInsetInline),
+                  SizedBox(
+                    height: breadcrumb != null
+                        ? tokens.spaceControlGap
+                        : tokens.spaceControlInsetInline,
+                  ),
                 ],
                 if (breadcrumb != null) ...[
                   breadcrumb!,

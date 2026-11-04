@@ -4,6 +4,80 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets(
+    'compact bottom sheet constrains tall content and keeps actions reachable',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 640);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: Scaffold(
+            body: KBottomSheet(
+              title: const Text('Details'),
+              actions: TextButton(
+                onPressed: () {},
+                child: const Text('Confirm'),
+              ),
+              child: const SizedBox(height: 1000, child: Text('Tall detail')),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      await tester.drag(
+        find.byType(SingleChildScrollView).first,
+        const Offset(0, -1100),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Confirm').hitTestable(), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+  testWidgets('compact phone dialog preserves labeled close action', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 760);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    var closes = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => KAdaptiveDialog.show<void>(
+                context: context,
+                builder: (route) => KAdaptiveDialog(
+                  title: const Text('Details'),
+                  expandBody: false,
+                  closeLabel: 'Close details',
+                  onClose: () {
+                    closes++;
+                    Navigator.of(route).pop();
+                  },
+                  child: const Text('Compact content'),
+                ),
+              ),
+              child: const Text('Open'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    final close = find.byTooltip('Close details');
+    expect(close.hitTestable(), findsOneWidget);
+    await tester.tap(close);
+    await tester.pumpAndSettle();
+    expect(closes, 1);
+    expect(find.text('Compact content'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
   for (final alreadyResized in [false, true]) {
     testWidgets(
       'tablet dialog reserves keyboard once with resized parent=$alreadyResized',

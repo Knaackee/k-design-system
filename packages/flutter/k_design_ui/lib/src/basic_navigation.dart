@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import 'actions/k_icon_button.dart';
+import 'actions/k_menu_button.dart';
 import 'primitives/k_icon.dart';
 
 class KBreadcrumbItem {
@@ -23,71 +24,131 @@ class KBreadcrumb extends StatelessWidget {
   const KBreadcrumb({
     required this.items,
     this.label = 'Breadcrumb',
+    this.overflowLabel,
     this.separator,
     this.iconStrokeWidth = 1.5,
     super.key,
   });
   final List<KBreadcrumbItem> items;
   final String label;
+  final String? overflowLabel;
   final Widget? separator;
   final double iconStrokeWidth;
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    Widget content(KBreadcrumbItem item, bool current) {
+    Widget content(KBreadcrumbItem item, bool current, bool bounded) {
       final color = current ? t.colorTextPrimary : t.colorTextMuted;
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (item.icon != null) ...[
-            KIcon(
-              item.icon!,
-              size: 16,
-              strokeWidth: iconStrokeWidth,
-              color: color,
-            ),
-            SizedBox(width: t.spaceTight),
+      final text = Text(
+        item.label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: _textStyle(t, t.fontControlSize, t.fontControlWeight, color),
+      );
+      return Tooltip(
+        message: item.label,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (item.icon != null) ...[
+              KIcon(
+                item.icon!,
+                size: 16,
+                strokeWidth: iconStrokeWidth,
+                color: color,
+              ),
+              SizedBox(width: t.spaceTight),
+            ],
+            if (bounded) Flexible(child: text) else text,
           ],
-          Text(
-            item.label,
-            style: _textStyle(t, t.fontControlSize, t.fontControlWeight, color),
-          ),
-        ],
+        ),
       );
     }
 
     return Semantics(
       label: label,
       container: true,
-      child: Wrap(
-        spacing: t.spaceControlGap,
-        runSpacing: t.spaceControlGap,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          for (final (index, item) in items.indexed) ...[
-            if (index == items.length - 1)
-              Semantics(selected: true, child: content(item, true))
-            else
-              TextButton(
-                onPressed: item.onSelect,
-                style: TextButton.styleFrom(
-                  minimumSize: Size(0, t.sizeHitTarget),
-                  padding: EdgeInsets.zero,
-                  foregroundColor: t.colorTextMuted,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final bounded = constraints.hasBoundedWidth;
+          final keep = constraints.maxWidth < 400
+              ? 1
+              : constraints.maxWidth < 600
+              ? 2
+              : items.length;
+          final hiddenCount = items.length > keep ? items.length - keep : 0;
+          Widget divider() => Padding(
+            padding: EdgeInsets.symmetric(horizontal: t.spaceControlGap),
+            child:
+                separator ??
+                KIcon(
+                  KIconName.chevronRight,
+                  size: 14,
+                  strokeWidth: iconStrokeWidth,
+                  color: t.colorTextMuted,
                 ),
-                child: content(item, false),
-              ),
-            if (index != items.length - 1)
-              separator ??
-                  KIcon(
-                    KIconName.chevronRight,
-                    size: 14,
-                    strokeWidth: iconStrokeWidth,
-                    color: t.colorTextMuted,
+          );
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (hiddenCount > 0) ...[
+                KMenuButton(
+                  label: overflowLabel ?? label,
+                  overflow: true,
+                  actions: [
+                    for (final item in items.take(hiddenCount))
+                      KMenuAction(
+                        id: item.id,
+                        label: item.label,
+                        icon: item.icon,
+                        onSelect: item.onSelect,
+                        disabled: item.onSelect == null,
+                      ),
+                  ],
+                ),
+                divider(),
+              ],
+              for (final (index, item) in items.indexed.skip(hiddenCount)) ...[
+                if (bounded)
+                  Flexible(
+                    child: _breadcrumbLink(
+                      item,
+                      index == items.length - 1,
+                      content(item, index == items.length - 1, true),
+                      t,
+                    ),
+                  )
+                else
+                  _breadcrumbLink(
+                    item,
+                    index == items.length - 1,
+                    content(item, index == items.length - 1, false),
+                    t,
                   ),
-          ],
-        ],
+                if (index != items.length - 1) divider(),
+              ],
+            ],
+          );
+        },
       ),
+    );
+  }
+
+  Widget _breadcrumbLink(
+    KBreadcrumbItem item,
+    bool current,
+    Widget child,
+    KDesignTokens t,
+  ) {
+    if (current) return Semantics(selected: true, child: child);
+    return TextButton(
+      onPressed: item.onSelect,
+      style: TextButton.styleFrom(
+        minimumSize: Size(0, t.sizeHitTarget),
+        padding: EdgeInsets.zero,
+        foregroundColor: t.colorTextMuted,
+      ),
+      child: child,
     );
   }
 }

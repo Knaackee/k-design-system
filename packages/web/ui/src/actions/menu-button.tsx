@@ -12,7 +12,9 @@ import { KIcon, type KIconName } from "../primitives/icon.js";
 
 export interface KMenuAction {
   id: string;
-  label: string;
+  label: ReactNode;
+  /** Navigation links retain native href and modifier-key behavior. */
+  href?: string;
   icon?: KIconName;
   /** Consumer-provided leading visual, e.g. a file-type icon. */
   iconContent?: ReactNode;
@@ -62,7 +64,7 @@ export function KMenuButton({
   const search = useRef({ text: "", time: 0 });
   const items = () =>
     Array.from(
-      menu.current?.querySelectorAll<HTMLButtonElement>(
+      menu.current?.querySelectorAll<HTMLElement>(
         '[role="menuitem"]:not(:disabled), [role="menuitemradio"]:not(:disabled)',
       ) ?? [],
     );
@@ -181,7 +183,7 @@ export function KMenuButton({
           event.stopPropagation();
           const buttons = items();
           const current = buttons.indexOf(
-            document.activeElement as HTMLButtonElement,
+            document.activeElement as HTMLElement,
           );
           let next: number | undefined;
           switch (event.key) {
@@ -250,37 +252,50 @@ export function KMenuButton({
             label={label}
           />
         ) : (
-          actions.map((action, index) => (
-            <Fragment key={action.id}>
-              {index > 0 && action.separatorBefore ? (
-                <div role="separator" className="k-menu__separator" />
-              ) : null}
-              <button
-                type="button"
-                role={
-                  action.checked === undefined ? "menuitem" : "menuitemradio"
-                }
-                aria-checked={action.checked}
-                tabIndex={-1}
-                disabled={action.disabled}
-                className="k-menu__item"
-                data-destructive={action.destructive || undefined}
-                onClick={() => {
-                  close();
-                  action.onSelect?.();
-                }}
-              >
-                {action.iconContent ??
-                  (action.icon ? (
-                    <KIcon name={action.icon} color="currentColor" />
-                  ) : null)}
-                <span>{action.label}</span>
-                {action.checked ? (
-                  <KIcon name="check" size={16} strokeWidth={1.5} />
+          actions.map((action, index) => {
+            const Item = action.href && !action.disabled ? "a" : "button";
+            return (
+              <Fragment key={action.id}>
+                {index > 0 && action.separatorBefore ? (
+                  <div role="separator" className="k-menu__separator" />
                 ) : null}
-              </button>
-            </Fragment>
-          ))
+                <Item
+                  {...(action.href && !action.disabled
+                    ? { href: action.href }
+                    : { type: "button" as const, disabled: action.disabled })}
+                  role={
+                    action.checked === undefined ? "menuitem" : "menuitemradio"
+                  }
+                  aria-checked={action.checked}
+                  tabIndex={-1}
+                  className="k-menu__item"
+                  data-destructive={action.destructive || undefined}
+                  onClick={(event) => {
+                    if (
+                      action.href &&
+                      (event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey ||
+                        event.button !== 0)
+                    )
+                      return;
+                    close();
+                    action.onSelect?.();
+                  }}
+                >
+                  {action.iconContent ??
+                    (action.icon ? (
+                      <KIcon name={action.icon} color="currentColor" />
+                    ) : null)}
+                  <span>{action.label}</span>
+                  {action.checked ? (
+                    <KIcon name="check" size={16} strokeWidth={1.5} />
+                  ) : null}
+                </Item>
+              </Fragment>
+            );
+          })
         )}
       </div>
     </>

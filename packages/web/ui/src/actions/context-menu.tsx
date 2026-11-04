@@ -22,7 +22,7 @@ export interface KContextMenuProps {
 
 function enabledItems(level: HTMLElement) {
   return Array.from(
-    level.querySelectorAll<HTMLButtonElement>(
+    level.querySelectorAll<HTMLElement>(
       ":scope > .k-context-menu__entry > [role=menuitem]:not(:disabled)",
     ),
   );
@@ -62,7 +62,7 @@ export function MenuLevel({
   }
   function navigate(event: KeyboardEvent<HTMLDivElement>) {
     const items = enabledItems(event.currentTarget);
-    const current = items.indexOf(document.activeElement as HTMLButtonElement);
+    const current = items.indexOf(document.activeElement as HTMLElement);
     let next: number | undefined;
     if (event.key === "ArrowDown") next = (current + 1) % items.length;
     if (event.key === "ArrowUp")
@@ -98,6 +98,8 @@ export function MenuLevel({
       {actions.map((action, index) => {
         const hasChildren =
           !action.disabled && Boolean(action.children?.length);
+        const Item =
+          action.href && !action.disabled && !hasChildren ? "a" : "button";
         return (
           <Fragment key={action.id}>
             {index > 0 && action.separatorBefore ? (
@@ -109,11 +111,12 @@ export function MenuLevel({
               onPointerEnter={() => hasChildren && openSubmenu(action.id)}
               onPointerLeave={() => hasChildren && setOpenId(undefined)}
             >
-              <button
-                type="button"
+              <Item
+                {...(action.href && !action.disabled && !hasChildren
+                  ? { href: action.href }
+                  : { type: "button" as const, disabled: action.disabled })}
                 role="menuitem"
                 tabIndex={-1}
-                disabled={action.disabled}
                 className="k-menu__item"
                 data-destructive={action.destructive || undefined}
                 aria-haspopup={hasChildren ? "menu" : undefined}
@@ -121,7 +124,17 @@ export function MenuLevel({
                 onFocus={() => {
                   if (!hasChildren) setOpenId(undefined);
                 }}
-                onClick={() => {
+                onClick={(event) => {
+                  if (
+                    action.href &&
+                    !hasChildren &&
+                    (event.metaKey ||
+                      event.ctrlKey ||
+                      event.shiftKey ||
+                      event.altKey ||
+                      event.button !== 0)
+                  )
+                    return;
                   if (hasChildren) {
                     openSubmenu(action.id, true);
                     return;
@@ -155,7 +168,7 @@ export function MenuLevel({
                     strokeWidth={1.5}
                   />
                 ) : null}
-              </button>
+              </Item>
               {hasChildren ? (
                 <div data-context-submenu={action.id}>
                   <MenuLevel actions={action.children!} close={close} nested />

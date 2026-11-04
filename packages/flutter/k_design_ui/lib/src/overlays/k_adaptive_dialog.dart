@@ -120,6 +120,8 @@ class KAdaptiveDialog extends StatelessWidget {
           title: title,
           description: description,
           actions: actions,
+          onClose: onClose,
+          closeLabel: closeLabel,
           maxWidth: double.infinity,
           onDragEnd: (details) {
             if ((details.primaryVelocity ?? 0) > 300) {

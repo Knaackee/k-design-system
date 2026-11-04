@@ -57,4 +57,27 @@ void main() {
       expect(tester.takeException(), isNull);
     }
   });
+  testWidgets('Inter style overrides update variable font axes', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: const KText(
+          'Strong label',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+        ),
+      ),
+    );
+    final style = tester.widget<Text>(find.text('Strong label')).style!;
+    expect(
+      style.fontVariations!.singleWhere((axis) => axis.axis == 'wght').value,
+      700,
+    );
+    expect(
+      style.fontVariations!.singleWhere((axis) => axis.axis == 'opsz').value,
+      22,
+    );
+    expect(style.fontFamily, 'packages/k_design_tokens/Inter');
+  });
 }

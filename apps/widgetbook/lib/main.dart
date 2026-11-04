@@ -1,3 +1,4 @@
+import 'user_dashboard_review.dart';
 import 'onzeit_overhaul_gallery.dart';
 import 'booking_page_management_fixture.dart';
 import 'offer_overview_fixture.dart';
@@ -73,6 +74,7 @@ import 'extended_component_fixtures.dart';
 import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
+import 'admin_workspace_fixture.dart';
 import 'settings_grouped_fixture.dart';
 import 'management_overview_fixture.dart';
 import 'avatar_editor_fixture.dart';
@@ -1814,11 +1816,38 @@ class KDesignWidgetbook extends StatelessWidget {
                 ),
               ],
             ),
-            WidgetbookFolder(name: 'BookingPageManagement',children:[for(final v in ['overview','dark','mobile','mobile-dark'])WidgetbookUseCase(name:v,builder:(_)=>BookingPageManagementFixture(dark:v.contains('dark'),mobile:v.contains('mobile')))]),
-            WidgetbookFolder(name: 'OfferOverview', children: [
-              for (final v in ['overview', 'dark', 'mobile', 'mobile-dark', 'empty'])
-                WidgetbookUseCase(name: v, builder: (_) => OfferOverviewFixture(dark: v.contains('dark'), empty: v == 'empty')),
-            ]),
+            WidgetbookFolder(
+              name: 'BookingPageManagement',
+              children: [
+                for (final v in ['overview', 'dark', 'mobile', 'mobile-dark'])
+                  WidgetbookUseCase(
+                    name: v,
+                    builder: (_) => BookingPageManagementFixture(
+                      dark: v.contains('dark'),
+                      mobile: v.contains('mobile'),
+                    ),
+                  ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'OfferOverview',
+              children: [
+                for (final v in [
+                  'overview',
+                  'dark',
+                  'mobile',
+                  'mobile-dark',
+                  'empty',
+                ])
+                  WidgetbookUseCase(
+                    name: v,
+                    builder: (_) => OfferOverviewFixture(
+                      dark: v.contains('dark'),
+                      empty: v == 'empty',
+                    ),
+                  ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'CatalogEditor',
               children: [
@@ -1863,6 +1892,49 @@ class KDesignWidgetbook extends StatelessWidget {
                   ),
               ],
             ),
+            WidgetbookFolder(
+              name: 'UserDashboard',
+              children: [
+                for (final entry in const [
+                  ('full-day', 'full'),
+                  ('free-day', 'free'),
+                  ('setup', 'fresh'),
+                  ('ready', 'ready'),
+                ])
+                  WidgetbookUseCase(
+                    name: entry.$1,
+                    builder: (_) => UserDashboardReview(
+                      key: ValueKey(entry.$2),
+                      scenario: entry.$2,
+                    ),
+                  ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'AdminWorkspace',
+              children: [
+                for (final page in const [
+                  'overview',
+                  'navigation',
+                  'customers',
+                  'access',
+                  'growth',
+                  'subscriptions',
+                  'waitlist',
+                  'invitations',
+                  'applications',
+                  'partners',
+                  'operations',
+                  'assistant',
+                  'audit',
+                ])
+                  WidgetbookUseCase(
+                    name: page,
+                    builder: (_) => AdminWorkspaceFixture(initialPage: page),
+                  ),
+              ],
+            ),
+
             WidgetbookFolder(
               name: 'SettingsGrouped',
               children: [

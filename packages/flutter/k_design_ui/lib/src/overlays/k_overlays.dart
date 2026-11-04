@@ -236,14 +236,17 @@ class KBottomSheet extends StatelessWidget {
                     ),
                   )
                 else
-                  _OverlayBody(
-                    title: title,
-                    description: description,
-                    actions: actions,
-                    onClose: onClose,
-                    closeLabel: closeLabel,
-                    padding: t.spaceLayoutGutter,
-                    child: child,
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: _OverlayBody(
+                      title: title,
+                      description: description,
+                      actions: actions,
+                      onClose: onClose,
+                      closeLabel: closeLabel,
+                      padding: t.spaceLayoutGutter,
+                      child: child,
+                    ),
                   ),
               ],
             ),

@@ -177,28 +177,60 @@ class _BasicComponentFixtureState extends State<BasicComponentFixture> {
     ],
   );
 
-  Widget _breadcrumb() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      KBreadcrumb(
-        items: [
-          KBreadcrumbItem(
-            id: 'home',
-            label: 'Home',
-            icon: KIconName.house,
-            onSelect: () {},
+  Widget _breadcrumb() {
+    final tokens = Theme.of(context).extension<KDesignTokens>()!;
+    final labels = [
+      'Einstellungen und persönliche Angaben',
+      'Administration der Plattform',
+      'Kunden und Betriebe',
+      'Kontoeinstellungen und Berechtigungen',
+      'Passwort und Sicherheit',
+    ];
+    List<KBreadcrumbItem> path(int length) => [
+      for (var i = 0; i < length; i++)
+        KBreadcrumbItem(
+          id: '$i',
+          label: labels[i],
+          icon: i == 0 ? KIconName.house : null,
+          onSelect: i == length - 1
+              ? null
+              : () => setState(() => status = labels[i]),
+        ),
+    ];
+    return KStack(
+      gap: KLayoutGap.section,
+      align: KLayoutAlign.stretch,
+      children: [
+        const KText('Responsive navigation', variant: KTextVariant.heading3),
+        for (final width in [320.0, 500.0, 720.0])
+          Align(
+            alignment: Alignment.centerLeft,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: width),
+              child: KStack(
+                gap: KLayoutGap.control,
+                align: KLayoutAlign.stretch,
+                children: [
+                  KText(
+                    '${width.toInt()} px · five levels',
+                    variant: KTextVariant.caption,
+                    style: TextStyle(color: tokens.colorTextMuted),
+                  ),
+                  KBreadcrumb(label: 'Navigation trail', items: path(5)),
+                ],
+              ),
+            ),
           ),
-          KBreadcrumbItem(id: 'projects', label: 'Projects', onSelect: () {}),
-          const KBreadcrumbItem(id: 'orbit', label: 'Orbit redesign'),
-        ],
-      ),
-      const KBreadcrumb(
-        items: [
-          KBreadcrumbItem(id: 'home', label: 'Home', icon: KIconName.house),
-        ],
-      ),
-    ],
-  );
+        KBreadcrumb(label: 'Three-level navigation trail', items: path(3)),
+        const KBreadcrumb(
+          items: [
+            KBreadcrumbItem(id: 'home', label: 'Home', icon: KIconName.house),
+          ],
+        ),
+        KText('Selected: $status', variant: KTextVariant.caption),
+      ],
+    );
+  }
 
   Widget _carousel() => KCarousel(
     label: 'Featured projects',
