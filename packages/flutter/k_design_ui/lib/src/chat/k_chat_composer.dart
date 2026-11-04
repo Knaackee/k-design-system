@@ -390,8 +390,7 @@ class _KChatComposerState extends State<KChatComposer> {
                                                       EdgeInsets.symmetric(
                                                         horizontal:
                                                             composerTokens
-                                                                .spaceControlGap /
-                                                            2,
+                                                                .spaceControlInsetInline,
                                                         vertical: textInset,
                                                       ),
                                                   labelText: null,

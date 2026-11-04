@@ -301,10 +301,20 @@ class _KChatConversationState extends State<KChatConversation> {
                 },
               ),
               child: widget.messages.isEmpty && !widget.hasOlder
-                  ? SingleChildScrollView(
-                      child:
-                          widget.emptyState ??
-                          _EmptyState(labels: widget.labels),
+                  ? LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                          child: Padding(
+                            padding: EdgeInsets.all(t.spaceLayoutGutter),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [widget.emptyState ?? _EmptyState(labels: widget.labels)],
+                            ),
+                          ),
+                        ),
+                      ),
                     )
                   : NotificationListener<ScrollMetricsNotification>(
                       onNotification: _onMetrics,
@@ -697,6 +707,7 @@ class _EmptyState extends StatelessWidget {
           SizedBox(height: t.spaceControlGap),
           Text(
             labels.emptyTitle,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: t.fontHeading5Size,
               fontWeight: t.fontHeadingWeight,
@@ -704,6 +715,7 @@ class _EmptyState extends StatelessWidget {
           ),
           Text(
             labels.emptyDescription,
+            textAlign: TextAlign.center,
             style: TextStyle(color: t.colorTextMuted),
           ),
         ],
