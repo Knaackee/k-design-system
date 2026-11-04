@@ -55,15 +55,15 @@ class _DisclosureFixtureState extends State<DisclosureFixture> {
                     KAccordionItem(
                       id: 'overview',
                       title: 'Overview',
-                      leadingIcon: const KIcon(KIconName.folder, size: 18),
-                      titleIcon: const KIcon(KIconName.star, size: 18),
+                      leadingIcon: const KIcon(KIconName.folder, size: 20),
+                      titleIcon: const KIcon(KIconName.star, size: 20),
                       actions: _actions('Overview'),
                       child: const KText('Project details and ownership.'),
                     ),
                     KAccordionItem(
                       id: 'activity',
                       title: 'Activity',
-                      leadingIcon: const KIcon(KIconName.clock, size: 18),
+                      leadingIcon: const KIcon(KIconName.clock, size: 20),
                       actions: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -79,8 +79,8 @@ class _DisclosureFixtureState extends State<DisclosureFixture> {
               else
                 KDisclosure(
                   title: 'Project settings',
-                  leadingIcon: const KIcon(KIconName.settings, size: 18),
-                  titleIcon: const KIcon(KIconName.star, size: 18),
+                  leadingIcon: const KIcon(KIconName.settings, size: 20),
+                  titleIcon: const KIcon(KIconName.star, size: 20),
                   actions: _actions('Project settings'),
                   defaultOpen: true,
                   child: const KText(

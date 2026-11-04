@@ -195,7 +195,7 @@ export function KAvatarEditor({
                 onClick={() => input.current?.click()}
               >
                 <span>
-                  <KIcon name="image" size={30} />
+                  <KIcon name="image" size={32} />
                   {t.choose}
                 </span>
               </KButton>
@@ -206,7 +206,7 @@ export function KAvatarEditor({
                 onClick={() => void startCamera()}
               >
                 <span>
-                  <KIcon name="camera" size={30} />
+                  <KIcon name="camera" size={32} />
                   {t.camera}
                 </span>
               </KButton>

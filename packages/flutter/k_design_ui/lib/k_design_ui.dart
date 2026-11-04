@@ -1,4 +1,5 @@
 library;
+
 export 'src/patterns/k_catalog_editor.dart';
 export 'src/data_display/k_qr_code.dart';
 
@@ -20,6 +21,7 @@ export 'src/primitives/k_layout.dart';
 export 'src/primitives/k_container.dart';
 export 'src/primitives/k_grid.dart';
 export 'src/primitives/k_icon.dart';
+export 'src/primitives/k_leading.dart';
 export 'src/primitives/k_animated_icon.dart';
 export 'src/primitives/k_separator.dart';
 export 'src/actions/k_icon_button.dart';

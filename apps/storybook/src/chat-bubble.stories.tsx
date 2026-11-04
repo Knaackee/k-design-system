@@ -21,7 +21,7 @@ const meta = {
     visible: true,
     attentionPeekFraction: 0.5,
     attentionHoldMs: 324,
-    children: <KIcon name="message-circle" size={28} />,
+    children: <KIcon name="message-circle" size={32} />,
   },
   argTypes: {
     itemGap: { control: { type: "range", min: 0, max: 32, step: 2 } },
@@ -87,19 +87,19 @@ export const Basic: Story = {
               {
                 id: "one",
                 label: "Bubble 1",
-                content: <KIcon name="star" size={28} />,
+                content: <KIcon name="star" size={32} />,
                 onSelect: () => setCount(1),
               },
               {
                 id: "two",
                 label: "Bubble 2",
-                content: <KIcon name="heart" size={28} />,
+                content: <KIcon name="heart" size={32} />,
                 onSelect: () => setCount(2),
               },
               {
                 id: "three",
                 label: "Bubble 3",
-                content: <KIcon name="sparkles" size={28} />,
+                content: <KIcon name="sparkles" size={32} />,
                 onSelect: () => setCount(3),
               },
             ]}

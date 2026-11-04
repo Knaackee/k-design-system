@@ -34,7 +34,7 @@ class BookingPageManagementFixture extends StatefulWidget {
 
 class _BookingPageManagementFixtureState
     extends State<BookingPageManagementFixture> {
-  void refresh(VoidCallback fn)=>setState(fn);
+  void refresh(VoidCallback fn) => setState(fn);
   String design = 'handwritten', flow = 'guided';
   bool phone = false, online = true, dirty = false, round = false;
   Uint8List? portrait;
@@ -121,7 +121,7 @@ class _BookingPageManagementFixtureState
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          KIcon(icon, size: 19),
+          KIcon(icon, size: 20),
           const SizedBox(height: 5),
           Text(label, style: const TextStyle(fontSize: 12.5)),
         ],

@@ -208,7 +208,7 @@ export function KPresentationMetrics({
       <span className="k-presentation__meta">{label}</span>
       <div className="k-presentation-metrics__primary">
         <strong>{value}</strong>
-        {icon && <KIcon name={icon} size={36} />}
+        {icon && <KIcon name={icon} size={32} />}
       </div>
       {description && <p>{description}</p>}
       <dl>

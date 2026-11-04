@@ -59,7 +59,7 @@ extension _CatalogEditorView on _CatalogEditorFixtureState {
                 label: 'Bild ändern',
                 variant: KButtonVariant.secondary,
                 content: imageBytes == null
-                    ? const KIcon(KIconName.image, size: 26)
+                    ? const KIcon(KIconName.image, size: 24)
                     : Image.memory(
                         imageBytes!,
                         width: 76,
@@ -290,7 +290,7 @@ extension _CatalogEditorView on _CatalogEditorFixtureState {
                       for (final r in recommended)
                         KButton(
                           label: r,
-                          trailing: const KIcon(KIconName.x, size: 13),
+                          trailing: const KIcon(KIconName.x, size: 12),
                           variant: KButtonVariant.secondary,
                           onPressed: () => update(() => recommended.remove(r)),
                         ),

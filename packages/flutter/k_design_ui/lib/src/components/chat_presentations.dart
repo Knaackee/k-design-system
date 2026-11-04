@@ -101,6 +101,7 @@ class KPresentationCard extends StatelessWidget {
       ],
     );
     final body = Padding(
+      // k-ui-rules-ignore raw-spacing: reserves the cover artwork band, not layout rhythm.
       padding: EdgeInsets.fromLTRB(
         cover ? gap * 2 : gap,
         cover ? 120 : gap,
@@ -376,7 +377,7 @@ class KPresentationMetrics extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(child: _value(value, t)),
-                if (icon != null) KIcon(icon!, size: 36),
+                if (icon != null) KIcon(icon!, size: 32),
               ],
             ),
           ),

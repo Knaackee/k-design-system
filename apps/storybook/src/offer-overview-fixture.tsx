@@ -154,7 +154,7 @@ export function OfferOverview({
             </div>
             {hint && filter !== "archive" && (
               <div className="of-hint">
-                <KIcon name="hand" size={22} />
+                <KIcon name="hand" size={24} />
                 <div>
                   <b>Halten und ziehen zum Sortieren</b>
                   <span>Sortieren und Archivieren über die Aktionen.</span>
@@ -257,7 +257,7 @@ export function OfferOverview({
                         >
                           <KIcon
                             name={collapsed ? "chevron-right" : "chevron-down"}
-                            size={18}
+                            size={20}
                           />
                         </KButton>
                       </div>
@@ -295,7 +295,7 @@ export function OfferOverview({
                             >
                               <span className="of-add-layout">
                                 <span>
-                                  <KIcon name="plus" size={17} />
+                                  <KIcon name="plus" size={16} />
                                 </span>
                                 {filter === "product"
                                   ? "Produkt hinzufügen"
@@ -320,7 +320,7 @@ export function OfferOverview({
                   className="of-add-category"
                   onClick={() => setPanel({ type: "category" })}
                 >
-                  <KIcon name="folder" size={18} />
+                  <KIcon name="folder" size={20} />
                   Kategorie hinzufügen
                 </KButton>
                 <section className="of-settings">
@@ -362,7 +362,7 @@ export function OfferOverview({
               aria-label="Verlauf"
               onClick={() => setPanel({ type: "history" })}
             >
-              <KIcon name="rotate-ccw" size={15} />
+              <KIcon name="rotate-ccw" size={16} />
               <span className="of-wide-label">Verlauf</span>
             </KButton>
             <KButton
@@ -379,7 +379,7 @@ export function OfferOverview({
         )}
         {message && (
           <div className="of-message" role="status">
-            <KIcon name="check" size={18} />
+            <KIcon name="check" size={20} />
             <span>{message}</span>
             <KButton
               variant="ghost"

@@ -51,7 +51,7 @@ class _LandingMarkerState extends State<_LandingMarker>
       ),
       child: SizedBox.square(
         dimension: tokens.spaceHairline * 44,
-        child: const Center(child: KIcon(KIconName.mapPin, size: 28)),
+        child: const Center(child: KIcon(KIconName.mapPin, size: 32)),
       ),
     );
     if (!widget.animate) return marker;

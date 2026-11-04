@@ -131,13 +131,13 @@ export function Access({ empty = false }: { empty?: boolean }) {
                     aria-label={`${r.name} ablehnen`}
                     onClick={() => update(r.mail, "Abgelehnt")}
                   >
-                    <KIcon name="x" size={18} />
+                    <KIcon name="x" size={20} />
                   </KButton>
                   <KButton
                     aria-label={`${r.name} einladen`}
                     onClick={() => update(r.mail, "Eingeladen")}
                   >
-                    <KIcon name="send" size={18} />
+                    <KIcon name="send" size={20} />
                   </KButton>
                 </div>
               ) : filter === "Eingeladen" ? (

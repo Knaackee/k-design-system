@@ -49,15 +49,15 @@ export function DisclosureFixture({
               {
                 id: "overview",
                 title: "Overview",
-                leadingIcon: <KIcon name="folder" size={18} />,
-                titleIcon: <KIcon name="star" size={18} />,
+                leadingIcon: <KIcon name="folder" size={20} />,
+                titleIcon: <KIcon name="star" size={20} />,
                 actions: actions("Overview"),
                 content: <KText>Project details and ownership.</KText>,
               },
               {
                 id: "activity",
                 title: "Activity",
-                leadingIcon: <KIcon name="clock" size={18} />,
+                leadingIcon: <KIcon name="clock" size={20} />,
                 actions: (
                   <>
                     <KText variant="caption">3 items</KText>
@@ -71,8 +71,8 @@ export function DisclosureFixture({
         ) : (
           <KDisclosure
             title="Project settings"
-            leadingIcon={<KIcon name="settings" size={18} />}
-            titleIcon={<KIcon name="star" size={18} />}
+            leadingIcon={<KIcon name="settings" size={20} />}
+            titleIcon={<KIcon name="star" size={20} />}
             actions={actions("Project settings")}
             defaultOpen
           >

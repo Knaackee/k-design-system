@@ -89,7 +89,7 @@ function PagePreview() {
     <div className="home-demo-preview" aria-hidden="true">
       <div className="home-demo-phone">
         <div className="home-demo-photo">
-          <KIcon name="scissors" size={36} />
+          <KIcon name="scissors" size={32} />
         </div>
         <small>Alex’ Haarpflege</small>
         <strong>

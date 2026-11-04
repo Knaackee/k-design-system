@@ -5,6 +5,8 @@ import 'localization/k_localization.dart';
 import 'overlays/k_overlays.dart';
 import 'primitives/k_button.dart';
 import 'primitives/k_icon.dart';
+import 'primitives/k_leading.dart';
+import 'primitives/k_text.dart';
 
 enum KStatusTone { neutral, info, success, warning, error }
 
@@ -94,7 +96,11 @@ class KAlert extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (icon != null) ...[
-                  KIcon(icon!, color: foreground),
+                  KLeading.icon(
+                    icon!,
+                    color: foreground,
+                    textVariant: KTextVariant.label,
+                  ),
                   SizedBox(width: t.spaceControlGap),
                 ],
                 Expanded(child: content),

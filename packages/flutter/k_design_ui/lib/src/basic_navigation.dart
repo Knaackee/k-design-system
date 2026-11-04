@@ -83,7 +83,7 @@ class KBreadcrumb extends StatelessWidget {
                 separator ??
                 KIcon(
                   KIconName.chevronRight,
-                  size: 14,
+                  size: 16,
                   strokeWidth: iconStrokeWidth,
                   color: t.colorTextMuted,
                 ),

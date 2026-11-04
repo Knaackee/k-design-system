@@ -99,7 +99,7 @@ export function SettingsOverhaul({
   const navigation = (
     <div className="sg-navigation so-navigation">
       <KButton variant="ghost" onClick={() => open("overview")}>
-        <KIcon name="arrow-left" size={18} />
+        <KIcon name="arrow-left" size={20} />
         Zurück zu Onzeit
       </KButton>
       <div className="so-person">
@@ -205,7 +205,7 @@ export function SettingsOverhaul({
                       size="large"
                     />
                     <span className="so-avatar-edit">
-                      <KIcon name="pencil" size={15} />
+                      <KIcon name="pencil" size={16} />
                     </span>
                   </span>
                 </KButton>
@@ -407,12 +407,12 @@ export function SettingsOverhaul({
             <KStack gap="section" align="stretch">
               <Group title="">
                 <div className="so-version">
-                  <KIcon name="clock" size={28} />
+                  <KIcon name="clock" size={32} />
                   <span>
                     <b>Onzeit</b>
                     <small>Version 0.1.0+1 · Designvorschau</small>
                     <span className="sg-status sg-success">
-                      <KIcon name="check" size={14} />
+                      <KIcon name="check" size={16} />
                       {updateAvailable
                         ? "Version 0.1.1 verfügbar"
                         : "Auf dem neuesten Stand"}

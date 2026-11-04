@@ -120,7 +120,7 @@ export function KPlanCard({
         <ul className="k-plan-card__features">
           {plan.features.map((feature, index) => (
             <li key={index}>
-              <KIcon name="check" size={18} strokeWidth={1.5} />
+              <KIcon name="check" size={20} strokeWidth={1.5} />
               <KText as="span" variant="bodySmall">
                 {feature}
               </KText>
@@ -277,7 +277,7 @@ export function KPlanPicker({
           <ul className="k-plan-card__features">
             {selected.features.map((feature, index) => (
               <li key={index}>
-                <KIcon name="check" size={18} strokeWidth={1.5} />
+                <KIcon name="check" size={20} strokeWidth={1.5} />
                 <KText as="span" variant="bodySmall">
                   {feature}
                 </KText>

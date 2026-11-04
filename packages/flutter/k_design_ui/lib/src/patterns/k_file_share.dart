@@ -107,8 +107,17 @@ class _KFileShareState extends State<KFileShare> {
                 vertical: t.spaceControlInsetInline,
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  KIcon(KIconName.user, size: 18, color: t.colorTextMuted),
+                  KLeading(
+                    size: 20,
+                    textVariant: KTextVariant.body,
+                    child: KIcon(
+                      KIconName.user,
+                      size: 20,
+                      color: t.colorTextMuted,
+                    ),
+                  ),
                   SizedBox(width: t.spaceControlGap),
                   Expanded(
                     child: Column(

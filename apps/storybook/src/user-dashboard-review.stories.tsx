@@ -711,10 +711,10 @@ function SetupContent({ action }: { action: Action }) {
                   className={`ud-setup-content ${steps[i] ? "ud-setup-done" : ""}`}
                 >
                   <span className="ud-check">
-                    {steps[i] && <KIcon name="check" size={15} />}
+                    {steps[i] && <KIcon name="check" size={16} />}
                   </span>
                   <Copy title={label} subtitle={sub} />
-                  {!steps[i] && <KIcon name="chevron-right" size={18} />}
+                  {!steps[i] && <KIcon name="chevron-right" size={20} />}
                 </span>
               </KButton>
             ))}
@@ -766,7 +766,7 @@ function ReadyContent({ action }: { action: Action }) {
               key={label}
             >
               <span className="ud-check">
-                {done[i] && <KIcon name="check" size={15} />}
+                {done[i] && <KIcon name="check" size={16} />}
               </span>
               <Copy title={label} subtitle={sub} />
               {!done[i] && (
@@ -952,7 +952,7 @@ function UserDashboard({
                       variant={i ? "secondary" : "primary"}
                       onClick={() => action(`${label} öffnen`)}
                     >
-                      <KIcon name={icon} size={17} />
+                      <KIcon name={icon} size={16} />
                       {label}
                     </KButton>
                   ))}

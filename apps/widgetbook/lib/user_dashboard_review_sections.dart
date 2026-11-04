@@ -571,7 +571,7 @@ extension _DashboardSections on _UserDashboardReviewState {
       ),
     ),
     child: done
-        ? Center(child: KIcon(KIconName.check, size: 15, color: Colors.white))
+        ? Center(child: KIcon(KIconName.check, size: 16, color: Colors.white))
         : null,
   );
   Widget setup() {
@@ -644,7 +644,7 @@ extension _DashboardSections on _UserDashboardReviewState {
                   paddingInline: 0,
                   variant: KButtonVariant.ghost,
                   content: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Row(
                       children: [
                         check(steps[i]),
@@ -670,7 +670,7 @@ extension _DashboardSections on _UserDashboardReviewState {
                           ),
                         ),
                         if (!steps[i])
-                          const KIcon(KIconName.chevronRight, size: 18),
+                          const KIcon(KIconName.chevronRight, size: 20),
                       ],
                     ),
                   ),

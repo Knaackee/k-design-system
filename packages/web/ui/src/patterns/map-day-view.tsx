@@ -319,7 +319,7 @@ export function KMapDayView({
                 >
                   <div className="k-day-entry__rail">
                     <span>
-                      <KIcon name={item.icon} size={18} />
+                      <KIcon name={item.icon} size={20} />
                     </span>
                   </div>
                   <div

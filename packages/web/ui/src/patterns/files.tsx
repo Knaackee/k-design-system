@@ -102,7 +102,7 @@ export function KFileTree({
             >
               <KIcon
                 name={expanded ? "chevron-down" : "chevron-right"}
-                size={14}
+                size={16}
                 strokeWidth={1.5}
               />
             </button>
@@ -443,7 +443,7 @@ export function KFileShare({
         <ul>
           {recipients.map((recipient) => (
             <li key={recipient.id}>
-              <KIcon name="user-round" size={18} />
+              <KIcon name="user-round" size={20} />
               <div className="k-file-share__person">
                 <strong>{recipient.name}</strong>
                 <p className="k-files-muted">{recipient.permission}</p>

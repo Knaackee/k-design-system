@@ -132,7 +132,7 @@ extension _CatalogEditorOptions on _CatalogEditorFixtureState {
                 KButton(
                   label: 'Option hinzufügen',
                   variant: KButtonVariant.ghost,
-                  leading: const KIcon(KIconName.plus, size: 17),
+                  leading: const KIcon(KIconName.plus, size: 16),
                   fullWidth: true,
                   onPressed: () => update(() {
                     group.options.add(_DemoOption('', '0'));
@@ -145,7 +145,7 @@ extension _CatalogEditorOptions on _CatalogEditorFixtureState {
         KButton(
           label: 'Gruppe hinzufügen',
           variant: KButtonVariant.secondary,
-          leading: const KIcon(KIconName.plus, size: 17),
+          leading: const KIcon(KIconName.plus, size: 16),
           fullWidth: true,
           onPressed: () => update(() {
             groups.add(_DemoGroup('Neue Gruppe', []));

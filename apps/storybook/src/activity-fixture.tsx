@@ -210,7 +210,7 @@ export function ActivityFixture({
           leading: (
             <KIcon
               name={issue.project.value === "orbit" ? "rocket" : "code"}
-              size={18}
+              size={20}
             />
           ),
         }))}

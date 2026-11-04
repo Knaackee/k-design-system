@@ -398,7 +398,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                               e.kind == 'product'
                                   ? KIconName.package
                                   : KIconName.clock,
-                              size: 14,
+                              size: 16,
                               color: t.colorTextMuted,
                             ),
                             SizedBox(width: t.spaceMicro),

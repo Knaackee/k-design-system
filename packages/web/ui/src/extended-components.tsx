@@ -733,7 +733,7 @@ export function KNavigationMenu({
                   className="k-navigation-menu__trigger"
                 >
                   {item.label}
-                  <KIcon name="chevron-down" size={14} />
+                  <KIcon name="chevron-down" size={16} />
                 </button>
               }
             >

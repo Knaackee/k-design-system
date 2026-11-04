@@ -302,7 +302,7 @@ class _OfferOverviewFixtureState extends State<OfferOverviewFixture> {
                           KSidebarItem(
                             label: nav.$1,
                             active: nav.$1 == 'Angebot',
-                            leading: KIcon(nav.$2, size: 19),
+                            leading: KIcon(nav.$2, size: 20),
                             onPressed: () {},
                           ),
                       ],
@@ -313,7 +313,7 @@ class _OfferOverviewFixtureState extends State<OfferOverviewFixture> {
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
                     horizontal: c.maxWidth >= 900 ? 48 : 16,
-                    vertical: 28,
+                    vertical: 32,
                   ),
                   child: Align(
                     alignment: Alignment.topCenter,

@@ -194,7 +194,7 @@ class _SettingsNavigation extends StatelessWidget {
                             leading: KIcon(section.icon),
                             trailing: const KIcon(
                               KIconName.chevronRight,
-                              size: 14,
+                              size: 16,
                             ),
                             active: section.id == selected,
                             onPressed: () => onSelect(section.id),

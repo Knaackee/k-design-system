@@ -254,7 +254,7 @@ class KPlanCard extends StatelessWidget {
               for (final feature in plan.features)
                 KInline(
                   children: [
-                    const KIcon(KIconName.check, size: 18, strokeWidth: 1.5),
+                    const KIcon(KIconName.check, size: 20, strokeWidth: 1.5),
                     Expanded(
                       child: KText(feature, variant: KTextVariant.bodySmall),
                     ),

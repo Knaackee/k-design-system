@@ -69,7 +69,7 @@ export function AppOverhaulMap({
         label="Galerie-Beispielroute in Leipzig"
       />
       <span className="ao-map-pill">
-        <KIcon name="car" size={17} />
+        <KIcon name="car" size={16} />
         14 Min
       </span>
     </div>

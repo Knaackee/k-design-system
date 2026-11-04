@@ -261,7 +261,7 @@ export function KMapLocationPicker({
               {mapProps.renderPin ? (
                 mapProps.renderPin(pin, state)
               ) : (
-                <KIcon name="map-pin" size={28} />
+                <KIcon name="map-pin" size={32} />
               )}
             </motion.span>
           )}
@@ -329,7 +329,7 @@ export function KMapLocationPicker({
                 <>
                   {leading ?? (
                     <span className="k-location-picker__symbol">
-                      <KIcon name="map-pin" size={28} />
+                      <KIcon name="map-pin" size={32} />
                     </span>
                   )}
                   <h2>{text.title}</h2>

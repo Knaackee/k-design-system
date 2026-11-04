@@ -71,7 +71,7 @@ export function OfferRow({
               <span className="of-meta">
                 <KIcon
                   name={item.kind === "product" ? "package" : "clock"}
-                  size={14}
+                  size={16}
                 />
                 <span
                   className={
@@ -136,7 +136,7 @@ export function OfferRow({
           onClick={onRestore}
           aria-label={`${item.name} wiederherstellen`}
         >
-          <KIcon name="undo-2" size={15} />
+          <KIcon name="undo-2" size={16} />
           <span>Wiederherstellen</span>
         </KButton>
       ) : (

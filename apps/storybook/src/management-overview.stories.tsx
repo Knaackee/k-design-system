@@ -176,7 +176,7 @@ function ManagementOverview({
                   <KIcon
                     className="mg-chevron"
                     name="chevron-right"
-                    size={18}
+                    size={20}
                   />
                 </span>
               </KButton>
@@ -199,7 +199,7 @@ function ManagementOverview({
             aria-current={!page ? "page" : undefined}
             onClick={() => setPage(null)}
           >
-            <KIcon name="briefcase" size={19} />
+            <KIcon name="briefcase" size={20} />
             Übersicht
           </KButton>
           {groupList(true)}
@@ -272,7 +272,7 @@ function ManagementOverview({
                   >
                     <KIcon
                       name={published ? "share" : "arrow-right"}
-                      size={17}
+                      size={16}
                     />
                     {published ? "Teilen" : "Einrichten"}
                   </KButton>

@@ -50,10 +50,10 @@ class PickerAction extends StatelessWidget {
             ),
             padding: WidgetStatePropertyAll(
               EdgeInsets.symmetric(
-                vertical: height == null ? 1 : 0,
+                vertical: height == null ? t.spaceHairline : 0,
                 horizontal: icon != null || width != null
                     ? 0
-                    : t.spaceControlInsetInline + 1,
+                    : t.spaceControlInsetInline + t.spaceHairline,
               ),
             ),
             foregroundColor: WidgetStatePropertyAll(

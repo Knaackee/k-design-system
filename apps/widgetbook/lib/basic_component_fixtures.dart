@@ -75,7 +75,7 @@ class _BasicComponentFixtureState extends State<BasicComponentFixture> {
             description: const Text(
               'This action cannot be undone. All project data will be removed.',
             ),
-            media: const KIcon(KIconName.trash, size: 22),
+            media: const KIcon(KIconName.trash, size: 24),
             cancelLabel: 'Cancel',
             actionLabel: 'Delete project',
             destructive: true,

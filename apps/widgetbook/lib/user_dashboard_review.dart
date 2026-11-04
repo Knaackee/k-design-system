@@ -282,7 +282,7 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
     VoidCallback? onPressed,
   }) => KButton(
     label: label,
-    leading: icon == null ? null : KIcon(icon, size: 17),
+    leading: icon == null ? null : KIcon(icon, size: 16),
     variant: secondary ? KButtonVariant.secondary : KButtonVariant.primary,
     onPressed: disabled
         ? null
@@ -343,7 +343,7 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
     bool divider = false,
     CrossAxisAlignment alignment = CrossAxisAlignment.center,
   }) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 9),
+    padding: const EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
       border: divider
           ? Border(top: BorderSide(color: t.colorBorderDefault))
@@ -493,7 +493,7 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
           Opacity(
             opacity: i < 3 ? .5 : 1,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 7),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -511,7 +511,7 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: SizedBox(
                       width: 14,
                       child: Align(
@@ -519,7 +519,7 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
                         child: Container(
                           width: 10,
                           height: 10,
-                          margin: const EdgeInsets.only(top: 5),
+                          margin: const EdgeInsets.only(top: 4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: i < 3 ? t.colorBorderDefault : brand,

@@ -140,7 +140,7 @@ export function OverhaulAccess({ empty }: { empty: boolean }) {
                           ? "x"
                           : "send"
                     }
-                    size={18}
+                    size={20}
                   />
                 )}
               </div>
@@ -169,14 +169,14 @@ export function OverhaulAccess({ empty }: { empty: boolean }) {
                     aria-label={`${r.mail} ablehnen`}
                     onClick={() => update([r.id], "Abgelehnt")}
                   >
-                    <KIcon name="x" size={18} />
+                    <KIcon name="x" size={20} />
                   </KButton>
                   <KButton
                     variant="ghost"
                     aria-label={`${r.mail} einladen`}
                     onClick={() => update([r.id], "Eingeladen")}
                   >
-                    <KIcon name="send" size={18} />
+                    <KIcon name="send" size={20} />
                   </KButton>
                 </div>
               ) : filter === "Eingeladen" ? (
@@ -273,7 +273,7 @@ export function OverhaulAssistant({ empty }: { empty: boolean }) {
             {key === null ? (
               <div className="sg-field-status">
                 <span className="sg-status sg-success">
-                  <KIcon name="check" size={14} />
+                  <KIcon name="check" size={16} />
                   Hinterlegt · Demo
                 </span>
                 <span className="so-muted">••••••••</span>
@@ -313,7 +313,7 @@ export function OverhaulAssistant({ empty }: { empty: boolean }) {
         />
         <div className="so-test-row">
           <KButton variant="secondary" onClick={() => setAnswer(true)}>
-            <KIcon name="play" size={15} />
+            <KIcon name="play" size={16} />
             Testen
           </KButton>
           <span className="so-muted">

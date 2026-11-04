@@ -332,7 +332,7 @@ extension _BookingPageGalleryView on _BookingPageManagementFixtureState {
                               label: online
                                   ? 'Seite offline nehmen'
                                   : 'Seite wieder online stellen',
-                              leading: const KIcon(KIconName.power, size: 18),
+                              leading: const KIcon(KIconName.power, size: 20),
                               variant: KButtonVariant.ghost,
                               onPressed: () async {
                                 final accepted = await KAlertDialog.show(

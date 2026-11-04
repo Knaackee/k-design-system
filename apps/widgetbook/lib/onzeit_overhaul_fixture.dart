@@ -338,7 +338,7 @@ class _OnzeitOverhaulFixtureState extends State<OnzeitOverhaulFixture> {
       gap: KLayoutGap.control,
       align: KLayoutAlign.center,
       children: [
-        KIcon(icon, size: 30),
+        KIcon(icon, size: 32),
         KText(title, variant: KTextVariant.heading3),
         SgMuted(body),
       ],
@@ -862,7 +862,7 @@ class _OnzeitOverhaulFixtureState extends State<OnzeitOverhaulFixture> {
                           ),
                         ),
                         if (c.id == 'c2') const SgMuted('Heute · 10:40'),
-                        const KIcon(KIconName.chevronRight, size: 17),
+                        const KIcon(KIconName.chevronRight, size: 16),
                       ],
                     ),
                   ),

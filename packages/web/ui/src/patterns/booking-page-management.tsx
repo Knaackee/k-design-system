@@ -71,7 +71,7 @@ export function KBookingPageSection({
           <strong>{title}</strong>
           {subtitle && <small>{subtitle}</small>}
         </span>
-        <KIcon name={expanded ? "chevron-down" : "chevron-right"} size={18} />
+        <KIcon name={expanded ? "chevron-down" : "chevron-right"} size={20} />
       </button>
       <div
         id={id}
@@ -118,7 +118,7 @@ export function KBookingPageStatus({
           {online ? "Online" : "Offline"}
         </strong>
         <div className="k-booking-page-url">
-          <KIcon name="link" size={15} />
+          <KIcon name="link" size={16} />
           <span title={url}>{url}</span>
         </div>
         {addressAction}
@@ -205,15 +205,15 @@ export function KBookingFlowChoice({
             {mode === "guided" ? (
               <>
                 <KIcon name="square" />
-                <KIcon name="arrow-right" size={15} />
+                <KIcon name="arrow-right" size={16} />
                 <KIcon name="square" />
-                <KIcon name="arrow-right" size={15} />
+                <KIcon name="arrow-right" size={16} />
                 <KIcon name="square" />
               </>
             ) : (
               <>
-                <KIcon name="layout-grid" size={36} />
-                <KIcon name="arrow-right" size={18} />
+                <KIcon name="layout-grid" size={32} />
+                <KIcon name="arrow-right" size={20} />
                 <KIcon name="shopping-cart" size={32} />
               </>
             )}

@@ -801,7 +801,7 @@ function FilesReview({
                       <div className="k-files-review__viewer k-files-review__media-empty">
                         <KIcon
                           name="file-video-camera"
-                          size={40}
+                          size={48}
                           strokeWidth={1.5}
                         />
                         <p>Video-Vorschau</p>

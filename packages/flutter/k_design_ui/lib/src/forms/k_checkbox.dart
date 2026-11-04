@@ -73,42 +73,47 @@ class _KCheckboxState extends State<KCheckbox> {
               constraints: BoxConstraints(
                 minHeight: math.max(t.sizeControl, t.sizeHitTarget),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: t.sizeContent,
-                    height: t.sizeContent,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(t.radiusSmall),
-                      color: widget.value == false
-                          ? t.componentSelectionBackground
-                          : t.componentSelectionSelectedBackground,
-                      border: Border.all(
-                        color: _showFocus
-                            ? t.componentSelectionFocusRing
-                            : widget.value == false
-                            ? t.componentSelectionBorder
-                            : t.componentSelectionSelectedBorder,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                widthFactor: 1,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: t.sizeContent,
+                      height: t.sizeContent,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(t.radiusSmall),
+                        color: widget.value == false
+                            ? t.componentSelectionBackground
+                            : t.componentSelectionSelectedBackground,
+                        border: Border.all(
+                          color: _showFocus
+                              ? t.componentSelectionFocusRing
+                              : widget.value == false
+                              ? t.componentSelectionBorder
+                              : t.componentSelectionSelectedBorder,
+                        ),
                       ),
-                    ),
-                    child: widget.value == false
-                        ? null
-                        : Center(
-                            child: KIcon(
-                              widget.value == null
-                                  ? KIconName.minus
-                                  : KIconName.check,
-                              size: 12,
-                              color: t.componentSelectionSelectedForeground,
+                      child: widget.value == false
+                          ? null
+                          : Center(
+                              child: KIcon(
+                                widget.value == null
+                                    ? KIconName.minus
+                                    : KIconName.check,
+                                size: 12,
+                                color: t.componentSelectionSelectedForeground,
+                              ),
                             ),
-                          ),
-                  ),
-                  SizedBox(width: t.spaceControlGap),
-                  Flexible(
-                    child: Text(widget.label, style: formTextStyle(context)),
-                  ),
-                ],
+                    ),
+                    SizedBox(width: t.spaceControlGap),
+                    Flexible(
+                      child: Text(widget.label, style: formTextStyle(context)),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

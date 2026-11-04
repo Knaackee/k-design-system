@@ -160,7 +160,7 @@ export function CatalogEditorDialogs({ state }: { state: EditorState }) {
           <KInput
             aria-label="Angebote suchen"
             placeholder="Angebote suchen"
-            leading={<KIcon name="search" size={18} />}
+            leading={<KIcon name="search" size={20} />}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

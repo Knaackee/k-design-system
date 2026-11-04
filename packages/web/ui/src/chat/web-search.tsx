@@ -133,7 +133,7 @@ export function KWebSearch({
         size="small"
         src={source.faviconUrl}
         alt=""
-        fallback={<KIcon name="globe" size={14} />}
+        fallback={<KIcon name="globe" size={16} />}
       />
     );
   return (

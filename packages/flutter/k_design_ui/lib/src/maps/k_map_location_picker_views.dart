@@ -22,7 +22,7 @@ extension _KMapLocationPickerViews on _KMapLocationPickerState {
                   padding: EdgeInsets.all(tokens.spaceCardPadding),
                   child: KIcon(
                     KIconName.mapPin,
-                    size: 28,
+                    size: 32,
                     color: tokens.colorBrandPrimaryForeground,
                   ),
                 ),
@@ -157,9 +157,14 @@ extension _KMapLocationPickerViews on _KMapLocationPickerState {
             vertical: tokens.spaceControlGap,
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             spacing: tokens.spaceControlGap,
             children: [
-              const KIcon(KIconName.mapPin),
+              KLeading(
+                size: 16,
+                textVariant: KTextVariant.label,
+                child: const KIcon(KIconName.mapPin),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

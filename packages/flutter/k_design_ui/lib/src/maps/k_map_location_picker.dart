@@ -8,6 +8,7 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import '../forms/k_input.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_leading.dart';
 import '../primitives/k_surface.dart';
 import '../primitives/k_text.dart';
 import 'k_map.dart';
@@ -545,7 +546,7 @@ class _PickerLandingMarkerState extends State<_PickerLandingMarker>
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
     final content = KeyedSubtree(
       key: const ValueKey('k-map-location-marker-content'),
-      child: widget.child ?? const KIcon(KIconName.mapPin, size: 28),
+      child: widget.child ?? const KIcon(KIconName.mapPin, size: 32),
     );
     final marker = switch (widget.appearance) {
       KMapLocationPickerMarkerAppearance.defaultStyle => DecoratedBox(

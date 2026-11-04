@@ -159,7 +159,7 @@ class KPaymentSetup extends StatelessWidget {
                   ExcludeSemantics(
                     child: iconBox(
                       providerIcon ??
-                          const KIcon(KIconName.creditCard, size: 22),
+                          const KIcon(KIconName.creditCard, size: 24),
                       t.sizeControl,
                       t.colorSurfaceSubtle,
                       t.radiusControl,
@@ -178,7 +178,7 @@ class KPaymentSetup extends StatelessWidget {
                           children: [
                             KIcon(
                               KIconName.check,
-                              size: 14,
+                              size: 16,
                               color: t.colorStatusSuccessAccent,
                             ),
                             Flexible(
@@ -221,7 +221,7 @@ class KPaymentSetup extends StatelessWidget {
                           Align(
                             alignment: AlignmentDirectional.centerStart,
                             child: iconBox(
-                              KIcon(statusIcon, size: 28, color: foreground),
+                              KIcon(statusIcon, size: 32, color: foreground),
                               t.sizeControl + t.spaceControlGap,
                               background,
                               t.radiusCard,
@@ -235,7 +235,7 @@ class KPaymentSetup extends StatelessWidget {
                         spacing: t.spaceContentActionGap,
                         children: [
                           iconBox(
-                            KIcon(statusIcon, size: 28, color: foreground),
+                            KIcon(statusIcon, size: 32, color: foreground),
                             t.sizeControl + t.spaceControlGap,
                             background,
                             t.radiusCard,

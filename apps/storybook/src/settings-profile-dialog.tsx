@@ -80,7 +80,7 @@ export function ProfileDialog({
               key={String(label)}
               className={ok ? "sg-success" : "sg-muted"}
             >
-              <KIcon name={ok ? "circle-check" : "circle"} size={18} /> {label}
+              <KIcon name={ok ? "circle-check" : "circle"} size={20} /> {label}
             </span>
           ))}
         </div>

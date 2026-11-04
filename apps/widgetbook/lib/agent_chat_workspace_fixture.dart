@@ -234,6 +234,7 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
           ? _callBar(expanded: true)
           : KChatConversation(
               emptyState: const SizedBox.shrink(),
+              // k-ui-rules-ignore raw-spacing: reserves space for the fixture header overlay.
               contentPadding: const EdgeInsets.fromLTRB(16, 144, 16, 16),
               key: ValueKey('conversation-$_draftKey'),
               messages: _messagesFor(_draftKey),

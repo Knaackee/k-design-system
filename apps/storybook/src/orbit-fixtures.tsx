@@ -104,7 +104,7 @@ export const data: readonly KOrbitNode[] = [
     statusLabel: "Needs your answer",
     pulse: true,
     appearance: "icon",
-    content: <KIcon name="circle-alert" size={22} />,
+    content: <KIcon name="circle-alert" size={24} />,
   },
   {
     id: "issue-b",
@@ -181,7 +181,7 @@ export const addedNodes: readonly KOrbitNode[] = [
     tone: "info",
     status: "active",
     appearance: "icon",
-    content: <KIcon name="bot" size={14} />,
+    content: <KIcon name="bot" size={16} />,
   },
 ];
 

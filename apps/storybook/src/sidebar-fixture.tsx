@@ -148,7 +148,7 @@ function DemoSidebar({
                     <small>Design workspace</small>
                   </span>
                   <span className="k-sidebar__expanded-only">
-                    <KIcon name="chevron-down" size={14} />
+                    <KIcon name="chevron-down" size={16} />
                   </span>
                 </span>
               }

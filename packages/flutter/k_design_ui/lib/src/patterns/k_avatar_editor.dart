@@ -191,7 +191,7 @@ class _KAvatarEditorState extends State<KAvatarEditor> {
               child: KStack(
                 align: KLayoutAlign.center,
                 children: [
-                  KIcon(icon, size: 30),
+                  KIcon(icon, size: 32),
                   Text(label, textAlign: TextAlign.center),
                 ],
               ),

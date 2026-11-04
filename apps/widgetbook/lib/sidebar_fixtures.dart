@@ -295,7 +295,7 @@ class _WorkspaceButton extends StatelessWidget {
               ],
             ),
           ),
-          KIcon(KIconName.chevronDown, size: 14),
+          KIcon(KIconName.chevronDown, size: 16),
         ],
       ),
     ),

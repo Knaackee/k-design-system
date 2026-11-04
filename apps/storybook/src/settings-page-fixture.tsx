@@ -128,7 +128,7 @@ function SettingsNavigation({
                   leading={<KIcon name={section.icon} />}
                   trailing={
                     <span className="k-settings-page__compact-only">
-                      <KIcon name="chevron-right" size={14} />
+                      <KIcon name="chevron-right" size={16} />
                     </span>
                   }
                   active={selected === section.id}

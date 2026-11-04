@@ -120,56 +120,61 @@ class _RadioOptionState<T> extends State<_RadioOption<T>> {
             constraints: BoxConstraints(
               minHeight: math.max(t.sizeControl, t.sizeHitTarget),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: t.componentRadioSize,
-                  height: t.componentRadioSize,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: selected
-                        ? t.componentSelectionSelectedBackground
-                        : t.componentSelectionBackground,
-                    border: Border.all(
-                      width: t.borderWidthDefault,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              widthFactor: 1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: t.componentRadioSize,
+                    height: t.componentRadioSize,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       color: selected
-                          ? t.componentSelectionSelectedBorder
-                          : t.componentSelectionBorder,
+                          ? t.componentSelectionSelectedBackground
+                          : t.componentSelectionBackground,
+                      border: Border.all(
+                        width: t.borderWidthDefault,
+                        color: selected
+                            ? t.componentSelectionSelectedBorder
+                            : t.componentSelectionBorder,
+                      ),
+                      boxShadow: focused
+                          ? [
+                              BoxShadow(
+                                color: t.componentSelectionFocusRing,
+                                spreadRadius: t.borderWidthStrong,
+                              ),
+                            ]
+                          : null,
                     ),
-                    boxShadow: focused
-                        ? [
-                            BoxShadow(
-                              color: t.componentSelectionFocusRing,
-                              spreadRadius: t.borderWidthStrong,
+                    child: selected
+                        ? Center(
+                            child: Container(
+                              width: t.componentRadioDotSize,
+                              height: t.componentRadioDotSize,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: t.componentSelectionSelectedForeground,
+                              ),
                             ),
-                          ]
+                          )
                         : null,
                   ),
-                  child: selected
-                      ? Center(
-                          child: Container(
-                            width: t.componentRadioDotSize,
-                            height: t.componentRadioDotSize,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: t.componentSelectionSelectedForeground,
-                            ),
-                          ),
-                        )
-                      : null,
-                ),
-                SizedBox(width: t.spaceControlGap),
-                Flexible(
-                  child: Text(
-                    widget.item.label,
-                    style: formTextStyle(
-                      context,
-                      color: t.componentSelectionForeground,
+                  SizedBox(width: t.spaceControlGap),
+                  Flexible(
+                    child: Text(
+                      widget.item.label,
+                      style: formTextStyle(
+                        context,
+                        color: t.componentSelectionForeground,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

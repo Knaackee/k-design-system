@@ -127,7 +127,7 @@ export function KFilesHome({
           >
             <span className="k-files-home-action-content">
               <span className="k-files-home-action-icon">
-                <KIcon name={action.icon} size={23} />
+                <KIcon name={action.icon} size={24} />
               </span>
               <span>
                 <strong>{action.title}</strong>
@@ -158,7 +158,7 @@ export function KFilesHome({
       )}
       {error ? (
         <div className="k-files-home-empty" role="alert">
-          <KIcon name="cloud-off" size={28} />
+          <KIcon name="cloud-off" size={32} />
           <h3>Dateien gerade nicht erreichbar</h3>
           <p>Deine Dateien bleiben erhalten. Versuche es noch einmal.</p>
           <KButton variant="secondary" onClick={onRetry}>

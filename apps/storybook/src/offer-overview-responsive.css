@@ -97,7 +97,7 @@
 }
 .of-bottom-link small {
   display: block;
-  font-size: 10px;
+  font-size: var(--k-font-caption2-size);
 }
 .of-bottom-link[aria-current="page"] {
   color: var(--k-color-brand-primary-foreground);

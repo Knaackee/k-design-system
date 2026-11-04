@@ -17,7 +17,7 @@ extension _OfferOverviewControls on _KOfferOverviewState {
         children: [
           KIcon(
             KIconName.plus,
-            size: 18,
+            size: 20,
             color: t.colorActionPrimaryForeground,
           ),
           SizedBox(width: t.spaceControlGap),
@@ -80,9 +80,17 @@ extension _OfferOverviewControls on _KOfferOverviewState {
       borderRadius: BorderRadius.circular(t.radiusCard),
     ),
     child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        KIcon(KIconName.hand, size: 22, color: t.colorBrandPrimaryForeground),
+        KLeading(
+          size: 24,
+          textVariant: KTextVariant.label,
+          child: KIcon(
+            KIconName.hand,
+            size: 24,
+            color: t.colorBrandPrimaryForeground,
+          ),
+        ),
         SizedBox(width: t.spaceContentActionGap),
         Expanded(
           child: Column(

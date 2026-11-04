@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_text.dart';
+import '../primitives/k_leading.dart';
 import '../primitives/k_surface.dart';
 import '../overlays/k_adaptive_dialog.dart';
 import 'chat_presentations.dart' show KPresentationImage;
@@ -407,8 +409,13 @@ class KPresentationFile extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final details = Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                KIcon(icon, size: 24),
+                KLeading(
+                  size: 24,
+                  textVariant: KTextVariant.body,
+                  child: KIcon(icon, size: 24),
+                ),
                 SizedBox(width: tokens.spaceControlGap),
                 Expanded(
                   child: Column(
@@ -532,8 +539,13 @@ class _Heading extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(tokens.spaceCardPadding),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          KIcon(icon),
+          KLeading(
+            size: 16,
+            textVariant: KTextVariant.body,
+            child: KIcon(icon),
+          ),
           SizedBox(width: tokens.spaceControlGap),
           Expanded(
             child: Column(

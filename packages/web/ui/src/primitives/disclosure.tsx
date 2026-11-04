@@ -97,7 +97,7 @@ export function KDisclosure({
           disabled={disabled}
           onClick={toggle}
         >
-          <KIcon name={expanded ? "chevron-down" : "chevron-right"} size={18} />
+          <KIcon name={expanded ? "chevron-down" : "chevron-right"} size={20} />
           {leadingIcon}
           <span className="k-disclosure__title">{title}</span>
           {titleIcon}

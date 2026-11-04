@@ -117,7 +117,7 @@ function BookingPageManagement({
         previewAction={
           <KButton variant="ghost" onClick={() => setDialog("preview")}>
             Öffnen
-            <KIcon name="external-link" size={15} />
+            <KIcon name="external-link" size={16} />
           </KButton>
         }
         previewHelp="Kund:innen sehen Änderungen erst nach dem Veröffentlichen."
@@ -151,7 +151,7 @@ function BookingPageManagement({
                   : setDialog(label === "Vorschau" ? "preview" : "qr")
               }
             >
-              <KIcon name={icon as "share"} size={19} />
+              <KIcon name={icon as "share"} size={20} />
               {label}
             </KButton>
           ))}
@@ -222,7 +222,7 @@ function BookingPageManagement({
               </div>
             </div>
             <div className="booking-management-media">
-              <KIcon name="image" size={40} />
+              <KIcon name="image" size={48} />
               <div>
                 <strong>Logo</strong>
                 <small>Klein neben deinem Namen</small>
@@ -289,7 +289,7 @@ function BookingPageManagement({
                 onClick={() => setDialog("texts")}
               >
                 Texte beim Einsatzort
-                <KIcon name="chevron-right" size={18} />
+                <KIcon name="chevron-right" size={20} />
               </KButton>
             </KStack>
           </KBookingPageCard>
@@ -302,7 +302,7 @@ function BookingPageManagement({
               fullWidth
               onClick={() => setDialog("offline")}
             >
-              <KIcon name="power" size={18} />
+              <KIcon name="power" size={20} />
               {online ? "Seite offline nehmen" : "Seite wieder online stellen"}
             </KButton>
           </KBookingPageCard>

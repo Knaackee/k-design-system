@@ -171,7 +171,7 @@ export function KanbanFixture({ selection = false }: { selection?: boolean }) {
               <span
                 style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
               >
-                <KIcon name="folder" size={14} /> {item.project}
+                <KIcon name="folder" size={16} /> {item.project}
               </span>
             </div>
           </div>

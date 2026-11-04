@@ -149,7 +149,7 @@ export function AppOverhaulDayForm({
         />
       </div>
       <div className="ao-day-summary-state" data-changed={changes > 0}>
-        <KIcon name={changes ? "sliders-horizontal" : "check"} size={18} />
+        <KIcon name={changes ? "sliders-horizontal" : "check"} size={20} />
         {changes
           ? `${changes} ${changes === 1 ? "Abweichung" : "Abweichungen"} für diesen Tag`
           : "Es gelten deine Standards."}

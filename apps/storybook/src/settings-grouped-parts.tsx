@@ -46,7 +46,7 @@ export function Row({
           <KIcon
             className="sg-chevron"
             name={selected ? "check" : "chevron-right"}
-            size={18}
+            size={20}
           />
         )}
       </span>

@@ -173,7 +173,7 @@ function About() {
           <strong>Onzeit</strong>
           <p>Version 0.1.0+1 · Galerie</p>
           <span className="sg-status sg-success">
-            <KIcon name="check" size={15} />
+            <KIcon name="check" size={16} />
             {status}
           </span>
         </div>

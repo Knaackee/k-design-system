@@ -21,7 +21,7 @@ function TestScreen({
         Geöffnete Screens
       </KButton>
       <div className="screen-switcher-demo__image">
-        <KIcon name="mountain" size={72} />
+        <KIcon name="mountain" size={48} />
       </div>
       <div>
         <KText>Projekt {index + 1} · Übersicht</KText>

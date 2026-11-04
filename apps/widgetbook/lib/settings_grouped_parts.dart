@@ -260,7 +260,7 @@ class SgRow extends StatelessWidget {
             if (selected && !navigation)
               KIcon(
                 KIconName.check,
-                size: 17,
+                size: 16,
                 color: t.colorActionPrimaryBackground,
               )
             else if (!compact && !danger)

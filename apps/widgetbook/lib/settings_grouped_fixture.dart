@@ -214,7 +214,7 @@ class _SettingsGroupedFixtureState extends State<SettingsGroupedFixture> {
               alignment: AlignmentDirectional.centerStart,
               child: KButton(
                 label: 'Zurück zu Onzeit',
-                leading: const KIcon(KIconName.arrowLeft, size: 18),
+                leading: const KIcon(KIconName.arrowLeft, size: 20),
                 variant: KButtonVariant.ghost,
                 onPressed: () => setState(() => detail = false),
               ),

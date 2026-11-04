@@ -1250,6 +1250,7 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
                             edgePan: KMapPinEdgePanOptions(),
                           ),
                           fitContentOnLoad: true,
+                          // k-ui-rules-ignore raw-spacing: camera fit padding in map space.
                           fitContentPadding: EdgeInsets.fromLTRB(
                             40,
                             40,

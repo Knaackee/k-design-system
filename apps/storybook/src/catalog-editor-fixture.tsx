@@ -75,7 +75,7 @@ export function CatalogEditor({
           {draft.image ? (
             <img src={draft.image} alt="" />
           ) : (
-            <KIcon name="image" size={26} />
+            <KIcon name="image" size={24} />
           )}
           <span className="ce-image-edit">
             <KIcon name="pencil" size={12} />
@@ -126,7 +126,7 @@ export function CatalogEditor({
             <div>
               <h1>{product ? "Produkt" : "Leistung"} bearbeiten</h1>
               <p>
-                <KIcon name={product ? "package" : "scissors"} size={14} />
+                <KIcon name={product ? "package" : "scissors"} size={16} />
                 {product ? "Produkt" : "Leistung"} · Änderungen als Entwurf
               </p>
             </div>

@@ -122,7 +122,7 @@ export function SettingsOverhaulDialog({
             />
           </KField>
           <KButton variant="ghost" onClick={() => setVisible(!visible)}>
-            <KIcon name={visible ? "eye-off" : "eye"} size={18} />
+            <KIcon name={visible ? "eye-off" : "eye"} size={20} />
             {visible ? "Passwörter verbergen" : "Passwörter anzeigen"}
           </KButton>
           <ul className="so-password-rules">
@@ -240,7 +240,7 @@ export function SettingsOverhaulDialog({
                 style={centered}
                 onClick={() => setDownload("loading")}
               >
-                <KIcon name="download" size={18} />
+                <KIcon name="download" size={20} />
                 Herunterladen & installieren
               </KButton>
               <KButton

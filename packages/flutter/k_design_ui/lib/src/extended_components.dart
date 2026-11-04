@@ -813,7 +813,7 @@ class KNavigationMenu extends StatelessWidget {
                               children: [
                                 item.label,
                                 SizedBox(width: t.spaceSmallInset),
-                                const KIcon(KIconName.chevronDown, size: 14),
+                                const KIcon(KIconName.chevronDown, size: 16),
                               ],
                             ),
                           ),

@@ -30,7 +30,7 @@ extension _FilesView on _FilesFixtureState {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            KIcon(KIconName.fileVideoCamera, size: 40),
+            KIcon(KIconName.fileVideoCamera, size: 48),
             SizedBox(height: 12),
             Text('Video-Vorschau'),
             Text('In diesem Beispiel ist keine Videodatei hinterlegt.'),

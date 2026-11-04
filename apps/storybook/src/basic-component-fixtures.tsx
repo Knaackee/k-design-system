@@ -57,7 +57,7 @@ export function AlertDialogFixture() {
         onOpenChange={setOpen}
         title="Delete project?"
         description="This action cannot be undone. All project data will be removed."
-        media={<KIcon name="trash" size={22} />}
+        media={<KIcon name="trash" size={24} />}
         cancelLabel="Cancel"
         actionLabel="Delete project"
         destructive

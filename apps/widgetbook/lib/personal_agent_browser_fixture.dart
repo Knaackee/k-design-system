@@ -310,7 +310,7 @@ class _SimulatedHotelPage extends StatelessWidget {
                       runSpacing: t.spaceControlGap,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        const KIcon(KIconName.hotel, size: 40),
+                        const KIcon(KIconName.hotel, size: 48),
                         const Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,

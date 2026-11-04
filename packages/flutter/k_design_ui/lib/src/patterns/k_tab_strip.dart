@@ -123,7 +123,7 @@ class _KTabStripState extends State<KTabStrip> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const KIcon(KIconName.chevronDown, size: 14),
+                  const KIcon(KIconName.chevronDown, size: 16),
                 ],
               ),
             ),

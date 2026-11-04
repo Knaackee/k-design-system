@@ -168,7 +168,7 @@ class _LocationPickerFixtureState extends State<_LocationPickerFixture> {
             )
           : null,
       marker: widget.customMarker
-          ? const KIcon(KIconName.mapPin, size: 44)
+          ? const KIcon(KIconName.mapPin, size: 48)
           : null,
       markerAppearance: widget.customMarker
           ? KMapLocationPickerMarkerAppearance.bare

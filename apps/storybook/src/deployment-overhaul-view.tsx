@@ -85,7 +85,7 @@ function IconTile({ icon, color }: { icon: KIconName; color?: string }) {
         color ? ({ "--do-icon-color": color } as CSSProperties) : undefined
       }
     >
-      <KIcon name={icon} size={17} />
+      <KIcon name={icon} size={16} />
     </span>
   );
 }
@@ -116,7 +116,7 @@ function Row({
           {subtitle && <small>{subtitle}</small>}
         </span>
         {value && <span className="do-row-value">{value}</span>}
-        <KIcon name="chevron-right" size={17} />
+        <KIcon name="chevron-right" size={16} />
       </span>
     </KButton>
   );
@@ -522,14 +522,14 @@ export function DeploymentOverhaul({
               </div>
               {page === "zones" && (
                 <KButton onClick={() => open("newZone")}>
-                  <KIcon name="plus" size={17} />
+                  <KIcon name="plus" size={16} />
                   Zone
                 </KButton>
               )}
             </header>
             {notice && (
               <div role="status" className="do-notice">
-                <KIcon name="check" size={18} />
+                <KIcon name="check" size={20} />
                 {notice}
               </div>
             )}
@@ -609,11 +609,11 @@ export function DeploymentOverhaul({
                   action={
                     <KInline gap="control">
                       <KButton variant="ghost" onClick={() => open("holidays")}>
-                        <KIcon name="flag" size={15} />
+                        <KIcon name="flag" size={16} />
                         Feiertage
                       </KButton>
                       <KButton variant="ghost" onClick={() => open("add")}>
-                        <KIcon name="plus" size={15} />
+                        <KIcon name="plus" size={16} />
                         Hinzufügen
                       </KButton>
                     </KInline>
@@ -726,11 +726,11 @@ export function DeploymentOverhaul({
                                         >
                                           <KIcon
                                             name={typeIcons[item.kind]}
-                                            size={13}
+                                            size={12}
                                           />
                                           {typeNames[item.kind]}
                                         </span>
-                                        <KIcon name="chevron-right" size={17} />
+                                        <KIcon name="chevron-right" size={16} />
                                       </span>
                                     </KButton>
                                   ))}
@@ -881,12 +881,12 @@ export function DeploymentOverhaul({
                     className="do-danger"
                     onClick={remove}
                   >
-                    <KIcon name="trash" size={17} />
+                    <KIcon name="trash" size={16} />
                     {confirmDelete ? "Löschen bestätigen" : "Löschen"}
                   </KButton>
                 ) : (
                   <span className="do-timezone">
-                    <KIcon name="globe" size={15} />
+                    <KIcon name="globe" size={16} />
                     Europe/Berlin
                   </span>
                 )}
@@ -945,7 +945,7 @@ export function DeploymentOverhaul({
                       }}
                     >
                       <span className="do-mode">
-                        <KIcon name={item.icon} size={28} />
+                        <KIcon name={item.icon} size={32} />
                         {item.label}
                       </span>
                     </KButton>
@@ -1089,7 +1089,7 @@ export function DeploymentOverhaul({
                           onClick={() => changeEntry({ mode: item.value })}
                         >
                           <span className="do-mode">
-                            <KIcon name={item.icon} size={26} />
+                            <KIcon name={item.icon} size={24} />
                             {item.label}
                           </span>
                         </KButton>
@@ -1129,7 +1129,7 @@ export function DeploymentOverhaul({
                 )}
                 {sheet === "private" && (
                   <div className="do-info">
-                    <KIcon name="eye" size={18} />
+                    <KIcon name="eye" size={20} />
                     <span>
                       Kund:innen sehen nur, dass du belegt bist – nicht die
                       Bezeichnung.
@@ -1137,7 +1137,7 @@ export function DeploymentOverhaul({
                   </div>
                 )}
                 <div className="do-info">
-                  <KIcon name="info" size={18} />
+                  <KIcon name="info" size={20} />
                   <span>
                     Bestehende Buchungen bleiben bestehen. Die Anwendung prüft
                     beim Speichern die tatsächlichen Konflikte.
@@ -1326,7 +1326,7 @@ export function DeploymentOverhaul({
                           }}
                         />
                         <KButton variant="secondary" onClick={addPostalCode}>
-                          <KIcon name="plus" size={17} />
+                          <KIcon name="plus" size={16} />
                           Hinzufügen
                         </KButton>
                       </div>
@@ -1346,7 +1346,7 @@ export function DeploymentOverhaul({
                           }
                         >
                           {value}
-                          <KIcon name="x" size={15} />
+                          <KIcon name="x" size={16} />
                         </KButton>
                       ))}
                     </KInline>
@@ -1487,7 +1487,7 @@ export function DeploymentOverhaul({
                   Nur geänderte Felder. Unveränderte Angaben blenden wir aus.
                 </KText>
                 <div className="do-info">
-                  <KIcon name="info" size={18} />
+                  <KIcon name="info" size={20} />
                   <span>
                     Historische Vorschau und konfliktfestes Rückgängigmachen
                     werden separat angebunden. Hier werden keine produktiven
@@ -1499,11 +1499,11 @@ export function DeploymentOverhaul({
                     variant="secondary"
                     onClick={() => open("historyPreview")}
                   >
-                    <KIcon name="eye" size={17} />
+                    <KIcon name="eye" size={16} />
                     Vorschau damals
                   </KButton>
                   <KButton variant="secondary" onClick={() => open("undo")}>
-                    <KIcon name="rotate-ccw" size={17} />
+                    <KIcon name="rotate-ccw" size={16} />
                     Rückgängig
                   </KButton>
                 </KInline>

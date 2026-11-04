@@ -366,7 +366,7 @@ class _ResetDetailsState extends State<_ResetDetails> {
                 ),
                 KIcon(
                   _open ? KIconName.chevronDown : KIconName.chevronRight,
-                  size: 18,
+                  size: 20,
                 ),
               ],
             ),

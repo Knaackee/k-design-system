@@ -51,7 +51,7 @@ export function CatalogEditorOptions({ state }: { state: EditorState }) {
                     )
                   }
                 >
-                  <KIcon name="trash" size={17} />
+                  <KIcon name="trash" size={16} />
                 </KButton>
               </div>
               <div className="ce-group-rule">
@@ -179,7 +179,7 @@ export function CatalogEditorOptions({ state }: { state: EditorState }) {
                   }))
                 }
               >
-                <KIcon name="plus" size={17} />
+                <KIcon name="plus" size={16} />
                 Option hinzufügen
               </KButton>
             </KCatalogEditorCard>
@@ -201,7 +201,7 @@ export function CatalogEditorOptions({ state }: { state: EditorState }) {
               ])
             }
           >
-            <KIcon name="plus" size={17} />
+            <KIcon name="plus" size={16} />
             Gruppe hinzufügen
           </KButton>
         </KStack>
@@ -228,7 +228,7 @@ export function CatalogEditorOptions({ state }: { state: EditorState }) {
                   aria-label={`${c.name} entfernen`}
                 >
                   {c.name} <span className="ce-muted">{c.price}</span>
-                  <KIcon name="x" size={13} />
+                  <KIcon name="x" size={12} />
                 </KButton>
               );
             })}
@@ -254,7 +254,7 @@ export function CatalogEditorOptions({ state }: { state: EditorState }) {
             variant="ghost"
             onClick={() => setPanel("archive")}
           >
-            <KIcon name="archive" size={18} />
+            <KIcon name="archive" size={20} />
             {product ? "Produkt" : "Leistung"} archivieren
           </KButton>
         </KCatalogEditorCard>

@@ -1,0 +1,49 @@
+/*
+ * Decision 0010: leading visuals (icons, checkboxes, radios, status dots) sit
+ * on the optical centre of the FIRST text line, never on the centre of a
+ * multi-line block. `1lh` resolves to the line height of the element, so the
+ * offset follows the text role and the capped accessibility scale.
+ */
+.k-leading {
+  --k-leading-size: 1em;
+  flex-shrink: 0;
+  margin-block-start: max(0px, calc((1lh - var(--k-leading-size)) / 2));
+}
+
+/* Alert: icon aligns to the title line. */
+.k-alert > .k-icon:first-child {
+  margin-block-start: max(
+    0px,
+    calc(
+      (
+          var(--k-font-label-line-height) *
+            min(var(--k-text-scale, 1), var(--k-text-scale-max-body)) - 1em
+        ) /
+        2
+    )
+  );
+}
+
+/* Toast: icon aligns to the title line, not to title + description. */
+.k-toast {
+  align-items: flex-start;
+}
+.k-toast__icon {
+  margin-block-start: max(0px, calc((1lh - var(--k-leading-size, 1em)) / 2));
+}
+
+/* Checkbox and radio: the control sits on the first label line; the row
+   stays vertically centred inside its hit target when the label is short. */
+.k-checkbox,
+.k-radio {
+  align-items: flex-start;
+  padding-block: max(
+    0px,
+    calc((max(var(--k-size-control), var(--k-size-hit-target)) - 1lh) / 2)
+  );
+  box-sizing: border-box;
+}
+.k-checkbox__box,
+.k-radio__indicator {
+  margin-block-start: max(0px, calc((1lh - var(--k-size-content)) / 2));
+}

@@ -158,7 +158,7 @@ class _SettingsReviewDialogState extends State<_SettingsReviewDialog> {
           child: KInline(
             gap: KLayoutGap.action,
             children: [
-              KIcon(KIconName.download, size: 28),
+              KIcon(KIconName.download, size: 32),
               Expanded(
                 child: KStack(
                   align: KLayoutAlign.stretch,

@@ -94,7 +94,7 @@ export function OverhaulPayments({ empty }: { empty: boolean }) {
           </div>
           <KButton variant="ghost" onClick={() => setChecks(!checks)}>
             Einrichtung abgeschlossen · 3 von 3
-            <KIcon name={checks ? "chevron-down" : "chevron-right"} size={15} />
+            <KIcon name={checks ? "chevron-down" : "chevron-right"} size={16} />
           </KButton>
           {checks && (
             <ul className="so-checklist">
@@ -271,7 +271,7 @@ export function OverhaulPayments({ empty }: { empty: boolean }) {
                     )
                   }
                 >
-                  <KIcon name="copy" size={18} />
+                  <KIcon name="copy" size={20} />
                 </KButton>
               </div>
             </Group>

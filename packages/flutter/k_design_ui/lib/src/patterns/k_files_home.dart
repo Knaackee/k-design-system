@@ -75,8 +75,10 @@ class KFilesHome extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: t.spaceHairline * 960),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: compact ? 20 : 40,
-                  vertical: compact ? 28 : 48,
+                  horizontal: compact
+                      ? t.spaceLayoutGutter
+                      : t.spaceLayoutSectionGap,
+                  vertical: t.spaceLayoutSectionGap,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -239,7 +241,7 @@ class KFilesHome extends StatelessWidget {
         ],
       ),
     );
-    final icon = KIcon(action.$3, size: 23, color: t.colorTextMuted);
+    final icon = KIcon(action.$3, size: 24, color: t.colorTextMuted);
     final arrow = KIcon(KIconName.arrowUpRight, color: t.colorTextMuted);
     final content = phone
         ? Row(
@@ -279,7 +281,9 @@ class KFilesHome extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: phone ? 70 : 114),
               child: Padding(
-                padding: EdgeInsets.all(compact ? 11 : 17),
+                padding: EdgeInsets.all(
+                  compact ? t.spaceControlInsetInline : t.spaceCardPadding,
+                ),
                 child: content,
               ),
             ),

@@ -136,7 +136,7 @@ class _KDisclosureState extends State<KDisclosure> {
                                   expanded
                                       ? KIconName.chevronDown
                                       : KIconName.chevronRight,
-                                  size: 18,
+                                  size: 20,
                                 ),
                               ),
                               if (widget.leadingIcon != null) ...[

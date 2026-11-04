@@ -183,7 +183,7 @@ class _KBookingPageSectionState extends State<KBookingPageSection> {
                         expanded
                             ? KIconName.chevronDown
                             : KIconName.chevronRight,
-                        size: 18,
+                        size: 20,
                       ),
                     ],
                   ),
@@ -278,7 +278,7 @@ class KBookingPageStatus extends StatelessWidget {
                     SizedBox(height: t.spaceControlGap),
                     Row(
                       children: [
-                        const KIcon(KIconName.link, size: 15),
+                        const KIcon(KIconName.link, size: 16),
                         SizedBox(width: t.spaceControlGap),
                         Expanded(
                           child: Text(

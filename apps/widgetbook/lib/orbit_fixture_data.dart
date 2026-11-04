@@ -55,7 +55,7 @@ List<KOrbitNode> orbitNodes(KDesignTokens tokens) => [
     statusLabel: 'Needs your answer',
     pulse: true,
     appearance: KOrbitNodeAppearance.icon,
-    content: KIcon(KIconName.circleAlert, size: 22),
+    content: KIcon(KIconName.circleAlert, size: 24),
   ),
   const KOrbitNode(
     id: 'issue-b',
@@ -132,7 +132,7 @@ const orbitAddedNodes = [
     tone: KOrbitTone.info,
     status: KOrbitStatus.active,
     appearance: KOrbitNodeAppearance.icon,
-    content: KIcon(KIconName.bot, size: 14),
+    content: KIcon(KIconName.bot, size: 16),
   ),
 ];
 

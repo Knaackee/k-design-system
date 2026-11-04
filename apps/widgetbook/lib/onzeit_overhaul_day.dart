@@ -277,7 +277,7 @@ class _OverhaulDayFormState extends State<_OverhaulDayForm> {
                         label: item.$1,
                         fullWidth: true,
                         variant: KButtonVariant.secondary,
-                        leading: KIcon(item.$2, size: 18),
+                        leading: KIcon(item.$2, size: 20),
                         onPressed: () => setState(item.$3),
                       ),
                     ),

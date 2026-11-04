@@ -307,7 +307,7 @@ export function AppOverhaulFixture({
   ) => (
     <div className="ao-empty">
       <span className="ao-empty-icon">
-        <KIcon name={icon} size={30} />
+        <KIcon name={icon} size={32} />
       </span>
       <KText variant="heading3">{title}</KText>
       <p>{description}</p>
@@ -354,7 +354,7 @@ export function AppOverhaulFixture({
           data-next={i === 1}
         >
           <div className="ao-drive">
-            <KIcon name="car" size={15} />
+            <KIcon name="car" size={16} />
             {b.drive} Min · {b.km} km{i > 0 ? " · 15 Min Puffer" : ""}
           </div>
           <div className="ao-stop-main">
@@ -379,7 +379,7 @@ export function AppOverhaulFixture({
         </div>
       ))}
       <div className="ao-drive">
-        <KIcon name="car" size={15} />
+        <KIcon name="car" size={16} />
         15 Min · 5,6 km
       </div>
       <div className="ao-timeline-start ao-timeline-end">
@@ -411,7 +411,7 @@ export function AppOverhaulFixture({
               }
             >
               <span className="ao-quick-content">
-                <KIcon name={icon} size={21} />
+                <KIcon name={icon} size={20} />
                 {["Anrufen", "Nachricht", "Route", "Termin"][i]}
               </span>
             </KButton>
@@ -518,7 +518,7 @@ export function AppOverhaulFixture({
                       10:40<small>bis 11:10</small>
                     </div>
                     <span className="ao-leave">
-                      <KIcon name="car" size={17} />
+                      <KIcon name="car" size={16} />
                       Losfahren um 10:26 · in 11 Min
                     </span>
                     <div className="ao-person">
@@ -536,7 +536,7 @@ export function AppOverhaulFixture({
                           )
                         }
                       >
-                        <KIcon name="navigation" size={17} />
+                        <KIcon name="navigation" size={16} />
                         Route starten
                       </KButton>
                       <KButton
@@ -643,7 +643,7 @@ export function AppOverhaulFixture({
                   : "Zu Fuß"}
             </small>
           </span>
-          <KIcon name="chevron-right" size={18} />
+          <KIcon name="chevron-right" size={20} />
         </KButton>
         {today.length ? (
           <>
@@ -866,7 +866,7 @@ export function AppOverhaulFixture({
           read || empty ? "Alles gelesen" : "3 ungelesen",
           !read && !empty && (
             <KButton variant="secondary" onClick={() => setRead(true)}>
-              <KIcon name="check" size={17} />
+              <KIcon name="check" size={16} />
               Alle gelesen
             </KButton>
           ),
@@ -890,7 +890,7 @@ export function AppOverhaulFixture({
                     <span className="ao-event-icon">
                       <KIcon
                         name={b.status === "quote" ? "euro" : "bell"}
-                        size={19}
+                        size={20}
                       />
                     </span>
                     <div>
@@ -939,7 +939,7 @@ export function AppOverhaulFixture({
                 <div className="ao-card">
                   <article className="ao-event">
                     <span className="ao-event-icon ao-success">
-                      <KIcon name="check" size={19} />
+                      <KIcon name="check" size={20} />
                     </span>
                     <div>
                       <p>
@@ -967,7 +967,7 @@ export function AppOverhaulFixture({
           "Kund:innen",
           `${contacts.length} Kontakte`,
           <KButton onClick={() => editCustomer()}>
-            <KIcon name="plus" size={17} />
+            <KIcon name="plus" size={16} />
             Neu
           </KButton>,
         )}
@@ -997,7 +997,7 @@ export function AppOverhaulFixture({
                     </span>
                     <span className="ao-list-value">
                       <small>{c.id === "c2" ? "Heute · 10:40" : ""}</small>
-                      <KIcon name="chevron-right" size={17} />
+                      <KIcon name="chevron-right" size={16} />
                     </span>
                   </span>
                 </RowAction>
@@ -1028,7 +1028,7 @@ export function AppOverhaulFixture({
           undefined,
           chat.length > 0 && (
             <KButton variant="secondary" onClick={() => setChat([])}>
-              <KIcon name="plus" size={17} />
+              <KIcon name="plus" size={16} />
               Neues Gespräch
             </KButton>
           ),
@@ -1039,7 +1039,7 @@ export function AppOverhaulFixture({
               <div key={i}>
                 <div className="ao-chat-user">{q}</div>
                 <div className="ao-chat-answer">
-                  <KIcon name="sparkles" size={22} />
+                  <KIcon name="sparkles" size={24} />
                   <div>
                     <p>
                       {empty
@@ -1275,7 +1275,7 @@ export function AppOverhaulFixture({
                 aria-current={screen === p.id ? "page" : undefined}
                 onClick={() => go(p.id)}
               >
-                <KIcon name={p.icon} size={19} />
+                <KIcon name={p.icon} size={20} />
                 {p.label}
               </KButton>
             ))}
@@ -1343,12 +1343,12 @@ export function AppOverhaulFixture({
                 .map((page) => ({
                   id: page.id,
                   label: page.label,
-                  icon: <KIcon name={page.icon} size={21} />,
+                  icon: <KIcon name={page.icon} size={20} />,
                 })),
               {
                 id: "more",
                 label: "Mehr Bereiche",
-                icon: <KIcon name="grid-2x2" size={21} />,
+                icon: <KIcon name="grid-2x2" size={20} />,
               },
             ]}
             selectedId={

@@ -160,7 +160,7 @@ function PageSheetReview({
                   setOpen(true);
                 }}
               >
-                <KIcon name="sliders-horizontal" size={18} />
+                <KIcon name="sliders-horizontal" size={20} />
                 Tag anpassen
               </KButton>
             </KStack>

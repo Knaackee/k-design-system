@@ -78,8 +78,18 @@ class KSidebarHeader extends StatelessWidget {
   const KSidebarHeader({required this.child, super.key});
   final Widget child;
   @override
-  Widget build(BuildContext context) =>
-      Padding(padding: const EdgeInsets.fromLTRB(8, 8, 8, 4), child: child);
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        t.spaceControlGap,
+        t.spaceControlGap,
+        t.spaceControlGap,
+        t.spaceTight,
+      ),
+      child: child,
+    );
+  }
 }
 
 class KSidebarBody extends StatefulWidget {
@@ -347,8 +357,11 @@ class _KSidebarItemState extends State<KSidebarItem> {
               constraints: BoxConstraints(minHeight: minHeight),
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: rail ? 0 : 8 + widget.depth * 20,
-                  right: rail ? 0 : 4,
+                  left: rail
+                      ? 0
+                      : t.spaceControlGap +
+                            widget.depth * (t.sizeContent + t.spaceTight),
+                  right: rail ? 0 : t.spaceTight,
                 ),
                 child: rail
                     ? Center(child: widget.leading)
@@ -474,7 +487,7 @@ class _KSidebarSubgroupState extends State<KSidebarSubgroup> {
         trailing: KSidebarModeContent(
           expanded: KIcon(
             expanded ? KIconName.chevronDown : KIconName.chevronRight,
-            size: 14,
+            size: 16,
           ),
         ),
         onPressed: () {

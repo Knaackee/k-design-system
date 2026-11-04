@@ -735,7 +735,7 @@ export function AdminWorkspace({
                             className="adm-danger"
                             onClick={() => waitAction(index, "Abgelehnt")}
                           >
-                            <KIcon name="x" size={18} />
+                            <KIcon name="x" size={20} />
                           </KButton>
                           <KButton
                             variant="ghost"
@@ -743,7 +743,7 @@ export function AdminWorkspace({
                             className="adm-success"
                             onClick={() => waitAction(index, "Freigegeben")}
                           >
-                            <KIcon name="check" size={18} />
+                            <KIcon name="check" size={20} />
                           </KButton>
                         </>
                       ) : (
@@ -824,7 +824,7 @@ export function AdminWorkspace({
                         )
                       }
                     >
-                      <KIcon name="copy" size={18} />
+                      <KIcon name="copy" size={20} />
                     </KButton>
                   </>
                 }

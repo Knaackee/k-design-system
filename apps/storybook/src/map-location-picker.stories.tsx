@@ -75,7 +75,7 @@ function Example({ args, dark }: { args: Args; dark: boolean }) {
           zoom: 13,
           renderPin:
             args.markerAppearance === "bare"
-              ? () => <KIcon name="map-pin" size={44} />
+              ? () => <KIcon name="map-pin" size={48} />
               : undefined,
         }}
         markerAppearance={args.markerAppearance}

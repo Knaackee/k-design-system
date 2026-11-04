@@ -90,7 +90,7 @@ export function KPaymentSetup({
             className="k-payment-setup__provider"
           >
             <span className="k-payment-setup__provider-icon" aria-hidden="true">
-              {providerIcon ?? <KIcon name="credit-card" size={22} />}
+              {providerIcon ?? <KIcon name="credit-card" size={24} />}
             </span>
             <KStack gap="control" className="k-payment-setup__identity">
               <KText variant="heading5" as="span">
@@ -99,7 +99,7 @@ export function KPaymentSetup({
               <KInline gap="control" align="center">
                 <KIcon
                   name="check"
-                  size={14}
+                  size={16}
                   className="k-payment-setup__connected"
                 />
                 <KText variant="caption" className="k-payment-setup__muted">
@@ -121,7 +121,7 @@ export function KPaymentSetup({
           aria-atomic="true"
         >
           <span className="k-payment-setup__status-icon" aria-hidden="true">
-            <KIcon name={stateIcon[state]} size={28} />
+            <KIcon name={stateIcon[state]} size={32} />
           </span>
           <KStack
             gap="control"

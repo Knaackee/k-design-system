@@ -5,6 +5,8 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import '../actions/k_icon_button.dart';
 import 'k_notification_height.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_leading.dart';
+import '../primitives/k_text.dart';
 
 enum KNotificationPosition { bottomEnd, topEnd, bottomCenter }
 
@@ -283,25 +285,34 @@ class KToast extends StatelessWidget {
         boxShadow: t.componentToastNativeElevation,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
             if (_compact)
-              icon!
+              KLeading(
+                size: t.componentSpinnerDefaultSize,
+                textVariant: KTextVariant.bodySmall,
+                child: icon!,
+              )
             else
-              Container(
-                width: t.componentToastIconSize,
-                height: t.componentToastIconSize,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: iconBackground,
-                  shape: BoxShape.circle,
-                ),
-                child: IconTheme(
-                  data: IconThemeData(
-                    color: iconForeground,
-                    size: t.componentSpinnerDefaultSize,
+              KLeading(
+                size: t.componentToastIconSize,
+                textVariant: KTextVariant.bodySmall,
+                child: Container(
+                  width: t.componentToastIconSize,
+                  height: t.componentToastIconSize,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: iconBackground,
+                    shape: BoxShape.circle,
                   ),
-                  child: icon!,
+                  child: IconTheme(
+                    data: IconThemeData(
+                      color: iconForeground,
+                      size: t.componentSpinnerDefaultSize,
+                    ),
+                    child: icon!,
+                  ),
                 ),
               ),
             SizedBox(width: t.componentToastContentGap),

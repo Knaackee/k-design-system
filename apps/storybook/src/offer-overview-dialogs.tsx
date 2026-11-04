@@ -94,13 +94,13 @@ export function OfferDialogs(props: OfferDialogProps) {
     >
       <span className="of-dialog-row-layout">
         <span className="of-action-icon" style={{ background: color }}>
-          <KIcon name={icon} size={19} />
+          <KIcon name={icon} size={20} />
         </span>
         <span>
           <b>{label}</b>
           <small>{help}</small>
         </span>
-        <KIcon name="chevron-right" size={18} />
+        <KIcon name="chevron-right" size={20} />
       </span>
     </KButton>
   );
@@ -247,7 +247,7 @@ export function OfferDialogs(props: OfferDialogProps) {
                 >
                   <KIcon
                     name="check"
-                    size={18}
+                    size={20}
                     style={{ opacity: c === color ? 1 : 0 }}
                   />
                 </KButton>

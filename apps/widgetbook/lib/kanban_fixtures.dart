@@ -233,7 +233,7 @@ class _KanbanCard extends StatelessWidget {
             SizedBox(width: tokens.spaceControlGap),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 3),
+                padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   item.title,
                   style: TextStyle(
@@ -265,7 +265,7 @@ class _KanbanCard extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                KIcon(KIconName.folder, size: 14, color: tokens.colorTextMuted),
+                KIcon(KIconName.folder, size: 16, color: tokens.colorTextMuted),
                 const SizedBox(width: 4),
                 Text(item.project, style: metaStyle),
               ],

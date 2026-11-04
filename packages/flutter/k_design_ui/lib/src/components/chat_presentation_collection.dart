@@ -105,7 +105,12 @@ class _KPresentationCollectionState extends State<KPresentationCollection> {
                   controller: _scroll,
                   scrollDirection: Axis.horizontal,
                   physics: _CardSnapPhysics(extent: width + gap * 1.5),
-                  padding: EdgeInsets.fromLTRB(2, 2, 2, gap),
+                  padding: EdgeInsets.fromLTRB(
+                    t.spaceMicro,
+                    t.spaceMicro,
+                    t.spaceMicro,
+                    gap,
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

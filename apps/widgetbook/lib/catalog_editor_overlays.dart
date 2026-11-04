@@ -135,7 +135,7 @@ extension _CatalogEditorOverlays on _CatalogEditorFixtureState {
                   label: 'Angebote suchen',
                   placeholder: 'Angebote suchen',
                   controller: search,
-                  leading: const KIcon(KIconName.search, size: 18),
+                  leading: const KIcon(KIconName.search, size: 20),
                   onChanged: (v) => refresh(() => query = v),
                 ),
                 KTabs(

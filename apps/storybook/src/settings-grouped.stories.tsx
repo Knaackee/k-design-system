@@ -77,7 +77,7 @@ function GroupedSettings({
         variant="ghost"
         onClick={() => setDetail(false)}
       >
-        <KIcon name="arrow-left" size={18} />
+        <KIcon name="arrow-left" size={20} />
         Zurück zu Onzeit
       </KButton>
       <div className="sg-profile-link">

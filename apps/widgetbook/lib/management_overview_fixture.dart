@@ -160,7 +160,7 @@ class _ManagementOverviewFixtureState extends State<ManagementOverviewFixture> {
                               variant: KButtonVariant.ghost,
                               leading: const KIcon(
                                 KIconName.briefcase,
-                                size: 19,
+                                size: 20,
                               ),
                               onPressed: () => setState(() => page = null),
                             ),
@@ -468,7 +468,7 @@ class _ManagementOverviewFixtureState extends State<ManagementOverviewFixture> {
       label: widget.published ? 'Teilen' : 'Einrichten',
       leading: KIcon(
         widget.published ? KIconName.share : KIconName.arrowRight,
-        size: 17,
+        size: 16,
       ),
       onPressed: () => widget.published
           ? sgDialog(

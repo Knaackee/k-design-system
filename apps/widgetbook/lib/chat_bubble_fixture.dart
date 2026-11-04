@@ -112,7 +112,7 @@ class _ChatBubbleFixtureState extends State<ChatBubbleFixture> {
                   label: 'Bubble ${i + 1}',
                   child: KIcon(
                     [KIconName.star, KIconName.heart, KIconName.sparkles][i],
-                    size: 28,
+                    size: 32,
                   ),
                   onSelected: () => setState(() => count = i + 1),
                 ),
@@ -121,7 +121,7 @@ class _ChatBubbleFixtureState extends State<ChatBubbleFixture> {
             onPressed: () => setState(() => count++),
             child: widget.customContent
                 ? const Text('✦', style: TextStyle(fontSize: 28))
-                : const KIcon(KIconName.messageCircle, size: 28),
+                : const KIcon(KIconName.messageCircle, size: 32),
           ),
         ),
       ],

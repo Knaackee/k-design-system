@@ -98,7 +98,7 @@ function Tab({
               aria-label={closeLabel}
               onClick={onClose}
             >
-              <KIcon name="x" size={14} />
+              <KIcon name="x" size={16} />
             </button>
           )}
         </div>
@@ -181,7 +181,7 @@ export function KTabStrip({
               <span className="k-tab-strip__picker-content">
                 {activeItem?.icon}
                 <span>{activeItem?.label ?? label}</span>
-                <KIcon name="chevron-down" size={14} />
+                <KIcon name="chevron-down" size={16} />
               </span>
             }
             actions={[
