@@ -14,6 +14,20 @@
   box-shadow: var(--k-elevation-overlay);
   font-family: var(--k-font-family);
 }
+.k-dialog.k-dialog--fullscreen {
+  inset: 0;
+  transform: none;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: 100dvh;
+  border: 0;
+  border-radius: 0;
+  padding-top: env(safe-area-inset-top);
+}
+.k-dialog--fullscreen > .k-overlay-body {
+  flex: 1;
+}
 
 .k-dialog {
   position: fixed;

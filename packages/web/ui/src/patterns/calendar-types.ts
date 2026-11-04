@@ -71,7 +71,12 @@ export interface KCalendarProps<T> {
   onNavigate?: (direction: -1 | 1) => void;
   /** Auto uses indicators in compact month layouts and appointments otherwise. */
   monthEventDisplay?: KCalendarMonthEventDisplay;
-  /** Opens the consumer-owned agenda/details surface for an indicator day. */
+  /** Civil date selected by the consumer for its month agenda. */
+  selectedMonthDay?: string;
+  /**
+   * Opens a month day, including empty days, in either display mode.
+   * Appointment previews become non-interactive so the full day selects the agenda.
+   */
   onMonthDayOpen?: (date: string, events: readonly T[]) => void;
   onEventOpen?: (event: T) => void;
   onEventMove?: (move: KCalendarMove<T>) => void;

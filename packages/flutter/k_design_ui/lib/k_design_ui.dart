@@ -1,4 +1,5 @@
 library;
+export 'src/patterns/k_catalog_editor.dart';
 export 'src/data_display/k_qr_code.dart';
 
 export 'src/patterns/k_sortable_tree.dart';
@@ -11,6 +12,7 @@ export 'src/primitives/k_link.dart';
 export 'src/primitives/k_card.dart';
 export 'src/overlays/k_overlays.dart';
 export 'src/overlays/k_adaptive_dialog.dart';
+export 'src/overlays/k_page_sheet.dart';
 export 'src/primitives/k_disclosure.dart';
 export 'src/primitives/k_surface.dart';
 export 'src/primitives/k_text.dart';
@@ -119,9 +121,16 @@ export 'src/patterns/k_integration_editor.dart';
 
 export 'src/patterns/k_payment_setup.dart';
 export 'src/patterns/k_image_cropper.dart';
+export 'src/patterns/k_avatar_editor.dart';
 export 'src/patterns/k_showcase_grid.dart';
 export 'src/patterns/k_celebration.dart';
 
 export 'src/feedback/k_sound.dart';
 
 export 'src/patterns/k_plan_picker.dart';
+export 'src/patterns/k_media_card.dart';
+export 'src/patterns/k_agenda.dart';
+export 'src/patterns/k_offer_overview.dart';
+export 'src/patterns/k_booking_page_management.dart';
+
+export 'src/patterns/k_booking_flow_choice.dart';

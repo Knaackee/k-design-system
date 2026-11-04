@@ -191,7 +191,9 @@ class _BalancedText extends StatelessWidget {
           painter.layout(maxWidth: width);
           final lines = painter.computeLineMetrics().length;
           if (painter.didExceedMaxLines || lines < 2 || lines > 6) return text;
-          double lower = 0;
+          // Balancing must not introduce a mid-word break for a word that
+          // fits at the natural width. Keep the engine's Unicode break rules.
+          double lower = painter.minIntrinsicWidth.clamp(0.0, width);
           double upper = width;
           for (
             var iteration = 0;

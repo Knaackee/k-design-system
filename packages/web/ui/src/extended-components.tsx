@@ -364,6 +364,8 @@ export interface KTabItem {
   icon?: KIconName;
 }
 export interface KTabsProps {
+  /** Distribute tabs equally across the row; long labels remain scrollable. */
+  expanded?: boolean;
   items: KTabItem[];
   value?: string;
   defaultValue?: string;
@@ -371,6 +373,7 @@ export interface KTabsProps {
   label?: string;
 }
 export function KTabs({
+  expanded = false,
   items,
   value,
   defaultValue,
@@ -401,7 +404,7 @@ export function KTabs({
     select(items[next]!.id);
   };
   return (
-    <div className="k-tabs">
+    <div className="k-tabs" data-expanded={expanded || undefined}>
       <div
         {...dragScroll}
         role="tablist"

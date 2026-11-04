@@ -139,7 +139,11 @@ void main() {
                     const Offset(195, 16)
               : tester.getTopLeft(find.byType(SingleChildScrollView)) +
                     const Offset(195, 40);
-          await tester.dragFrom(start, const Offset(0, 530));
+          await tester.timedDragFrom(
+            start,
+            const Offset(0, 300),
+            const Duration(milliseconds: 800),
+          );
           await tester.pumpAndSettle();
         }
 

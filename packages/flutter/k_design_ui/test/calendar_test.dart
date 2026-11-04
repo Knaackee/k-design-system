@@ -125,6 +125,66 @@ void main() {
     },
   );
 
+  for (final display in [
+    KCalendarMonthEventDisplay.appointments,
+    KCalendarMonthEventDisplay.indicators,
+  ]) {
+    testWidgets(
+      'month day callback selects populated and empty dates in $display',
+      (tester) async {
+        DateTime selected = DateTime(2026, 9, 21);
+        final event = _Event(
+          start: DateTime.utc(2026, 9, 21, 9),
+          end: DateTime.utc(2026, 9, 21, 10),
+        );
+        List<_Event> selectedEvents = [event];
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(),
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) => KCalendar<_Event>(
+                  date: DateTime(2026, 9, 21),
+                  view: KCalendarView.month,
+                  monthEventDisplay: display,
+                  selectedMonthDay: selected,
+                  onMonthDayOpen: (day, events) => setState(() {
+                    selected = day;
+                    selectedEvents = events;
+                  }),
+                  events: [event],
+                  eventId: (_) => 'visit',
+                  eventStart: (event) => event.start,
+                  eventEnd: (event) => event.end,
+                  eventBuilder: (_, _) => const Text('Visit'),
+                  timeZone: 'UTC',
+                  height: 500,
+                ),
+              ),
+            ),
+          ),
+        );
+        Finder day(String label) => find.byWidgetPredicate(
+          (widget) => widget is Semantics && widget.properties.label == label,
+        );
+        final booked = day('21.9.2026, 1');
+        final empty = day('22.9.2026, 0');
+        expect(tester.widget<Semantics>(booked).properties.selected, isTrue);
+        await tester.tapAt(tester.getTopLeft(empty) + const Offset(12, 8));
+        await tester.pump();
+        expect(selected.day, 22);
+        expect(selectedEvents, isEmpty);
+        expect(tester.widget<Semantics>(empty).properties.selected, isTrue);
+        expect(tester.widget<Semantics>(booked).properties.selected, isFalse);
+        await tester.tapAt(tester.getCenter(booked));
+        await tester.pump();
+        expect(selected.day, 21);
+        expect(selectedEvents, [event]);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('thirty-minute week events use the compact event layout', (
     tester,
   ) async {

@@ -45,6 +45,22 @@ void main() {
     return tester.getSize(find.text(text.data));
   }
 
+  testWidgets('balancing keeps a fitting long word intact', (tester) async {
+    const heading = 'Schön, dich kennenzulernen.';
+    await measure(
+      tester,
+      const KText(heading, variant: KTextVariant.heading1,
+        textWrap: KTextWrap.balance, align: TextAlign.center),
+      width: 296,
+    );
+    final paragraph = tester.renderObject<RenderParagraph>(find.text(heading));
+    final wordStart = heading.indexOf('kennenzulernen');
+    final boxes = paragraph.getBoxesForSelection(
+      TextSelection(baseOffset: wordStart, extentOffset: heading.length),
+    );
+    expect(boxes, hasLength(1), reason: 'The final word must occupy one line');
+  });
+
   testWidgets('multilingual headings preserve lines and fit phone and tablet', (
     tester,
   ) async {

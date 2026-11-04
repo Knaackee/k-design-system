@@ -134,7 +134,9 @@
 .k-sidebar-item__control {
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 18px minmax(0, 1fr) auto auto;
+  grid-template-columns:
+    var(--k-component-sidebar-leading-width) minmax(0, 1fr)
+    auto auto;
   align-items: center;
   gap: var(--k-space-control-gap);
   width: 100%;

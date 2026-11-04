@@ -105,6 +105,37 @@
   color: inherit;
   pointer-events: auto;
 }
+.k-calendar-month-day {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-block: 0;
+  border-inline-end: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.k-calendar-month-day-more {
+  margin-inline-start: auto;
+  padding: var(--k-space-tight) var(--k-space-control-gap);
+  color: var(--k-color-text-muted);
+  font-size: var(--k-font-caption-size);
+}
+.k-calendar-month-day--indicators {
+  justify-content: center;
+}
+.k-calendar-month-day[aria-pressed="true"] {
+  background: var(--k-color-brand-primary-background);
+  box-shadow: inset 0 0 0 var(--k-border-width-strong)
+    var(--k-color-border-focus);
+}
+.k-calendar-month-day:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
+}
+.k-calendar-month-indicator-cell--decorative {
+  pointer-events: none;
+}
 .k-calendar-month-indicator-cell:disabled {
   pointer-events: none;
 }

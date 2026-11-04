@@ -7,7 +7,13 @@ import {
   KText,
 } from "@k-design-system/ui";
 
-export function OverlayFixture({ sheet = false }: { sheet?: boolean }) {
+export function OverlayFixture({
+  sheet = false,
+  fullscreen = false,
+}: {
+  sheet?: boolean;
+  fullscreen?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("No selection");
   const content = (
@@ -56,6 +62,7 @@ export function OverlayFixture({ sheet = false }: { sheet?: boolean }) {
         </KBottomSheet>
       ) : (
         <KDialog
+          compactPresentation={fullscreen ? "fullscreen" : "sheet"}
           open={open}
           onOpenChange={setOpen}
           title="Share project"

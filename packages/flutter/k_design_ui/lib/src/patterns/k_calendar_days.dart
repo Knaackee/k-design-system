@@ -145,6 +145,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final selectMonthDay = widget.month ? c.onMonthDayOpen : null;
     final segments = <({T event, int first, int last, int lane})>[];
     final orderedEvents = widget.events.toList()
       ..sort((a, b) {
@@ -231,6 +232,16 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
     final height =
         widget.fixedHeight ??
         math.max(widget.month ? 112.0 : 40.0, top + laneCount * 32 + 9);
+    final visibleMonthLanes = selectMonthDay == null
+        ? null
+        : math.max(
+            0,
+            1 +
+                ((height - top - t.sizeAvatarSmall) /
+                        t.componentCalendarAllDayLaneStep)
+                    .floor(),
+          );
+
     final pendingStart = widget.pendingSelection == null
         ? 0
         : calendarDay(DateTime.parse(widget.pendingSelection!.start.date))
@@ -471,7 +482,7 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                         ),
                       ),
                     ),
-                  if (widget.indicators)
+                  if (widget.indicators || selectMonthDay != null)
                     for (var day = 0; day < widget.days.length; day++)
                       Builder(
                         builder: (context) {
@@ -482,66 +493,127 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                               )
                               .map((segment) => segment.event)
                               .toList();
+                          final overflow =
+                              visibleMonthLanes == null || widget.indicators
+                              ? 0
+                              : segments
+                                    .where(
+                                      (segment) =>
+                                          segment.first <= day &&
+                                          segment.last > day &&
+                                          segment.lane >= visibleMonthLanes,
+                                    )
+                                    .length;
+                          final date = widget.days[day];
+                          final select = selectMonthDay;
+                          final selected =
+                              select != null &&
+                              DateUtils.isSameDay(date, c.selectedMonthDay);
                           return Positioned(
                             left: day * width,
                             width: width,
-                            top: t.componentCalendarMonthIndicatorTop,
-                            height: t.componentCalendarEventMinHeight,
+                            top: select == null
+                                ? t.componentCalendarMonthIndicatorTop
+                                : 0,
+                            height: select == null
+                                ? t.componentCalendarEventMinHeight
+                                : null,
+                            bottom: select == null ? null : 0,
                             child: Semantics(
-                              button: dayEvents.isNotEmpty,
-                              label:
-                                  '${widget.days[day].day}, ${dayEvents.length}',
+                              button: select != null || dayEvents.isNotEmpty,
+                              selected: select == null ? null : selected,
+                              label: select == null
+                                  ? '${date.day}, ${dayEvents.length}'
+                                  : '${date.day}.${date.month}.${date.year}, ${dayEvents.length}',
                               child: InkWell(
-                                onTap: dayEvents.isEmpty
+                                onTap: select != null
+                                    ? () => select(date, dayEvents)
+                                    : dayEvents.isEmpty
                                     ? null
-                                    : () {
-                                        if (c.onMonthDayOpen != null) {
-                                          c.onMonthDayOpen!(
-                                            widget.days[day],
-                                            dayEvents,
-                                          );
-                                        } else {
-                                          c.onEventOpen?.call(dayEvents.first);
-                                        }
-                                      },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    for (final _ in dayEvents.take(3))
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          top: t
-                                              .componentCalendarMonthIndicatorPaddingBlock,
-                                          left: t.spaceBadgeOffset / 2,
-                                          right: t.spaceBadgeOffset / 2,
-                                        ),
-                                        child: DecoratedBox(
-                                          decoration: BoxDecoration(
+                                    : () =>
+                                          c.onEventOpen?.call(dayEvents.first),
+                                child: Container(
+                                  decoration: selected
+                                      ? BoxDecoration(
+                                          color: t.colorBrandPrimaryBackground
+                                              .withValues(
+                                                alpha: t
+                                                    .componentCalendarPreviewOpacityStrong,
+                                              ),
+                                          border: Border.all(
                                             color: t.colorBorderFocus,
-                                            shape: BoxShape.circle,
+                                            width: t.borderWidthStrong,
                                           ),
-                                          child: SizedBox.square(
-                                            dimension: t
-                                                .componentCalendarMonthIndicatorSize,
+                                        )
+                                      : null,
+                                  padding: EdgeInsets.only(
+                                    top: select != null && widget.indicators
+                                        ? t.componentCalendarMonthIndicatorTop
+                                        : 0,
+                                  ),
+                                  child: widget.indicators
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            for (final _ in dayEvents.take(3))
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: t
+                                                      .componentCalendarMonthIndicatorPaddingBlock,
+                                                  left: t.spaceBadgeOffset / 2,
+                                                  right: t.spaceBadgeOffset / 2,
+                                                ),
+                                                child: DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                    color: t.colorBorderFocus,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: SizedBox.square(
+                                                    dimension: t
+                                                        .componentCalendarMonthIndicatorSize,
+                                                  ),
+                                                ),
+                                              ),
+                                            if (dayEvents.length > 3 &&
+                                                select == null)
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: t
+                                                      .componentCalendarMonthIndicatorPaddingInline,
+                                                ),
+                                                child: Text(
+                                                  '+${dayEvents.length - 3}',
+                                                  style: TextStyle(
+                                                    color: t.colorTextMuted,
+                                                    fontSize: t.fontCaptionSize,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        )
+                                      : overflow > 0
+                                      ? ExcludeSemantics(
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional.topEnd,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(
+                                                t.spaceSmallInset,
+                                              ),
+                                              child: Text(
+                                                '+$overflow',
+                                                style: TextStyle(
+                                                  color: t.colorTextMuted,
+                                                  fontSize: t.fontCaptionSize,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    if (dayEvents.length > 3)
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: t
-                                              .componentCalendarMonthIndicatorPaddingInline,
-                                        ),
-                                        child: Text(
-                                          '+${dayEvents.length - 3}',
-                                          style: TextStyle(
-                                            color: t.colorTextMuted,
-                                            fontSize: t.fontCaptionSize,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
+                                        )
+                                      : null,
                                 ),
                               ),
                             ),
@@ -549,7 +621,11 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                         },
                       ),
                   if (!widget.indicators)
-                    for (final segment in segments)
+                    for (final segment in segments.where(
+                      (entry) =>
+                          visibleMonthLanes == null ||
+                          entry.lane < visibleMonthLanes,
+                    ))
                       Positioned(
                         left: segment.first * width + t.spaceTight,
                         width:
@@ -560,12 +636,15 @@ class _KCalendarDaysState<T extends Object> extends State<KCalendarDays<T>> {
                             segment.lane * t.componentCalendarAllDayLaneStep,
                         height: t.sizeAvatarSmall,
                         child: IgnorePointer(
-                          ignoring: previewId != null,
-                          child: Opacity(
-                            opacity: c.eventId(segment.event) == previewId
-                                ? (widget.previewResizeId != null ? .001 : 0)
-                                : 1,
-                            child: widget.eventWidget(segment.event),
+                          ignoring: previewId != null || selectMonthDay != null,
+                          child: ExcludeSemantics(
+                            excluding: selectMonthDay != null,
+                            child: Opacity(
+                              opacity: c.eventId(segment.event) == previewId
+                                  ? (widget.previewResizeId != null ? .001 : 0)
+                                  : 1,
+                              child: widget.eventWidget(segment.event),
+                            ),
                           ),
                         ),
                       ),

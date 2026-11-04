@@ -2,7 +2,7 @@
   width: 100%;
   min-width: 0;
   height: var(--k-map-height, 75vh);
-  min-height: calc(360 * var(--k-space-hairline));
+  min-height: var(--k-map-min-height, calc(360 * var(--k-space-hairline)));
   position: relative;
   overflow: hidden;
   border-radius: var(--k-radius-card);

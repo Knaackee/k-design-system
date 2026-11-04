@@ -1,0 +1,63 @@
+.psr-shell {
+  background: var(--k-color-surface-subtle);
+  min-height: 100dvh;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+.psr-surface {
+  height: 100dvh;
+  overflow: auto;
+  background: var(--k-color-surface-canvas);
+}
+.psr-content {
+  max-width: 42rem;
+  margin: auto;
+  padding: var(--k-space-layout-section-gap) var(--k-space-layout-gutter);
+}
+.psr-content h1 {
+  font-size: var(--k-font-heading2-size);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin: var(--k-space-control-gap) 0 var(--k-space-content-action-gap);
+}
+.psr-content h2 {
+  margin: 0;
+  font-size: var(--k-font-heading3-size);
+}
+.psr-content p,
+.psr-fields p {
+  color: var(--k-color-text-muted);
+  line-height: 1.5;
+  margin: var(--k-space-control-gap) 0 0;
+}
+.psr-card {
+  padding: var(--k-space-control-inset-inline);
+  background: var(--k-color-surface-raised);
+  border-radius: var(--k-radius-card);
+}
+.psr-fields h3 {
+  font-size: var(--k-font-caption-size);
+  font-weight: 600;
+  color: var(--k-color-text-muted);
+  margin: 0 var(--k-space-control-gap) var(--k-space-control-gap);
+}
+.psr-fields section {
+  width: 100%;
+}
+.psr-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--k-space-content-action-gap);
+}
+.psr-actions {
+  width: 100%;
+  justify-content: flex-end;
+}
+.psr-overlay {
+  font-family: var(--k-font-family);
+}
+@media (max-width: 359px) {
+  .psr-two {
+    grid-template-columns: 1fr;
+  }
+}

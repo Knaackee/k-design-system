@@ -1,4 +1,10 @@
 export { KTextShimmer } from "./feedback/text-shimmer.js";
+export { KAvatarEditor } from "./patterns/avatar-editor.js";
+export type {
+  KAvatarEditorProps,
+  KAvatarEditorImage,
+  KAvatarEditorLabels,
+} from "./patterns/avatar-editor.js";
 export { KCoverFlow } from "./data-display/cover-flow.js";
 export type {
   KCoverFlowProps,
@@ -31,6 +37,13 @@ export type {
   KSurfaceTone,
 } from "./primitives/surface.js";
 export { KStack, KInline } from "./primitives/layout.js";
+export {
+  KCatalogEditorBody,
+  KCatalogEditorSection,
+  KCatalogEditorCard,
+  KCatalogEditorRow,
+  KCatalogEditorPreview,
+} from "./patterns/catalog-editor.js";
 export type {
   KStackProps,
   KInlineProps,
@@ -38,6 +51,12 @@ export type {
   KLayoutAlign,
 } from "./primitives/layout.js";
 export { KCard } from "./primitives/card.js";
+export { KMediaCard, type KMediaCardProps } from "./patterns/media-card.js";
+export {
+  KAgenda,
+  type KAgendaProps,
+  type KAgendaItem,
+} from "./patterns/agenda.js";
 export { KBrowserTaskCard } from "./patterns/browser-task-card.js";
 export { KPaymentSetup } from "./patterns/payment-setup.js";
 export type {
@@ -594,3 +613,6 @@ export {
   type KQrCodeEyeShape,
 } from "./data-display/qr-code.js";
 export * from "./patterns/plan-picker.js";
+
+export * from "./util/use-long-press-drag.js";
+export * from "./patterns/booking-page-management.js";

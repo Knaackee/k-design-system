@@ -20,6 +20,7 @@ class KSettingsPage extends StatelessWidget {
     this.backLabel = 'Settings',
     this.title,
     this.description,
+    this.breadcrumb,
     this.eyebrow,
     this.wide = false,
     this.contentPadding,
@@ -35,6 +36,9 @@ class KSettingsPage extends StatelessWidget {
   final String backLabel;
   final String? title;
   final String? description;
+
+  /// Public navigation slot before the page heading, matching Web.
+  final Widget? breadcrumb;
   final String? eyebrow;
   final bool wide;
 
@@ -120,6 +124,10 @@ class KSettingsPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: tokens.spaceControlInsetInline),
+                ],
+                if (breadcrumb != null) ...[
+                  breadcrumb!,
+                  SizedBox(height: tokens.spaceControlGap),
                 ],
                 if (eyebrow case final value?) ...[
                   KText(

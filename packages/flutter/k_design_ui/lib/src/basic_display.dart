@@ -387,14 +387,17 @@ class KBadge extends StatelessWidget {
             ),
             SizedBox(width: t.componentBadgeContentGap),
           ],
-          DefaultTextStyle(
-            style: _textStyle(
-              t,
-              t.fontCaptionSize,
-              t.fontControlWeight,
-              foreground,
-            ).copyWith(height: t.fontTightHeight),
-            child: child,
+          Flexible(
+            fit: FlexFit.loose,
+            child: DefaultTextStyle(
+              style: _textStyle(
+                t,
+                t.fontCaptionSize,
+                t.fontControlWeight,
+                foreground,
+              ).copyWith(height: t.fontTightHeight),
+              child: child,
+            ),
           ),
           if (trailing != null) ...[
             SizedBox(width: t.componentBadgeContentGap),

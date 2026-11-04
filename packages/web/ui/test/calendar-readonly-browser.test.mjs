@@ -41,11 +41,24 @@ const server = await createServer({
         function Fixture() {
           const [opens, setOpens] = useState(0);
           const [moves, setMoves] = useState(0);
-          const editable = new URLSearchParams(location.search).has('editable');
+          const query = new URLSearchParams(location.search);
+          const editable = query.has('editable');
+          const month = query.get('month');
+          const [selectedDay, setSelectedDay] = useState('2026-10-22');
+          const [dayEvents, setDayEvents] = useState([event]);
           return h('div', null,
             h('output', { id: 'opens' }, opens), h('output', { id: 'moves' }, moves),
+            h('output', { id: 'day-agenda' }, dayEvents.map(value => value.id).join(',') || 'Empty'),
             h(KCalendar, {
-              date: new Date('2026-10-22T12:00:00Z'), view: 'day', events: [event],
+              date: new Date('2026-10-22T12:00:00Z'), view: month ? 'month' : 'day', events: [event],
+              ...(month ? {
+                monthEventDisplay: month,
+                selectedMonthDay: selectedDay,
+                onMonthDayOpen: (date, events) => {
+                  setSelectedDay(date);
+                  setDayEvents(events);
+                },
+              } : {}),
               getEventId: value => value.id, getEventStart: value => value.start, getEventEnd: value => value.end,
               renderEvent: () => new URLSearchParams(location.search).has('nested') ? h('button', { type: 'button' }, 'Nested action') : 'Visit',
               onEventOpen: () => setOpens(value => value + 1),
@@ -135,6 +148,28 @@ try {
     () => document.querySelector("#opens")?.textContent === "1",
   );
   assert.equal(await phone.locator("#moves").textContent(), "0");
+  for (const [surface, display, touch] of [
+    [page, "appointments", false],
+    [phone, "indicators", true],
+  ]) {
+    await surface.goto(`${origin}/?month=${display}`);
+    const booked = surface.locator('[data-month-day="2026-10-22"]');
+    const empty = surface.locator('[data-month-day="2026-10-23"]');
+    assert.equal(await booked.getAttribute("aria-pressed"), "true");
+    if (touch) {
+      await empty.tap();
+    } else {
+      await empty.focus();
+      await surface.keyboard.press("Enter");
+    }
+    assert.equal(await empty.getAttribute("aria-pressed"), "true");
+    assert.equal(await booked.getAttribute("aria-pressed"), "false");
+    assert.equal(await surface.locator("#day-agenda").textContent(), "Empty");
+    await booked.click();
+    assert.equal(await surface.locator("#opens").textContent(), "0");
+    assert.equal(await booked.getAttribute("aria-pressed"), "true");
+    assert.equal(await surface.locator("#day-agenda").textContent(), "visit");
+  }
   assert.deepEqual(errors, []);
   console.log(
     "Calendar read-only click, keyboard, touch and editable drag regression passed.",

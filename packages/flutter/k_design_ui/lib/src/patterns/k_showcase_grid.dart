@@ -99,6 +99,13 @@ class _KShowcaseGridState extends State<KShowcaseGrid>
             ? math.max(0.0, widget.gap!)
             : tokens.spaceLayoutSectionGap;
         final planeWidth = width * 1.2;
+        final tiltRadians =
+            (widget.tilt.isFinite ? widget.tilt : -8) * math.pi / 180;
+        // Center the tilted wall in the lower, visible part of tall phones;
+        // the upper portion is faded behind the foreground content.
+        final compactTiltOffset = width <= 640
+            ? math.sin(tiltRadians) * height * .75
+            : 0.0;
         Widget group() => ConstrainedBox(
           constraints: BoxConstraints(minHeight: widget.loop ? height : 0),
           child: Padding(
@@ -127,9 +134,9 @@ class _KShowcaseGridState extends State<KShowcaseGrid>
           minHeight: 0,
           maxHeight: double.infinity,
           child: Transform.translate(
-            offset: Offset(-width * .1, -width * .06),
+            offset: Offset(-width * .1 + compactTiltOffset, -width * .06),
             child: Transform.rotate(
-              angle: (widget.tilt.isFinite ? widget.tilt : -8) * math.pi / 180,
+              angle: tiltRadians,
               alignment: Alignment.topCenter,
               child: AnimatedBuilder(
                 animation: _animation,

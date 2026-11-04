@@ -10,6 +10,52 @@ Widget frame(Widget child) => MaterialApp(
 
 void main() {
   testWidgets(
+    'badge wraps long content at larger text scale without widening',
+    (tester) async {
+      await tester.pumpWidget(
+        frame(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
+            child: const Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 180,
+                child: KBadge(
+                  leading: KIcon(KIconName.check),
+                  trailing: KIcon(KIconName.chevronRight),
+                  child: Text(
+                    'Deine Buchungsseite ist jetzt online und bereit',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(find.byType(KBadge)).width, 180);
+      expect(
+        tester
+            .getSize(
+              find.text('Deine Buchungsseite ist jetzt online und bereit'),
+            )
+            .height,
+        greaterThan(30),
+      );
+
+      await tester.pumpWidget(
+        frame(
+          const Align(
+            alignment: Alignment.topLeft,
+            child: KBadge(child: Text('Live')),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(find.byType(KBadge)).width, lessThan(100));
+    },
+  );
+  testWidgets(
     'breadcrumb icon shares state, spacing and activation with label',
     (tester) async {
       var selected = false;

@@ -157,3 +157,7 @@ export const Reveal: Story = {
   },
   parameters: { fixtureId: "cover-flow-reveal" },
 };
+export const InlineCaption: Story = {
+  args: { captionLayout: "inline", itemBottomExtension: 16 },
+  parameters: { fixtureId: "cover-flow-inline-caption" },
+};

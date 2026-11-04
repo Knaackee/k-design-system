@@ -11,3 +11,10 @@ export const Modal = {
   parameters: { fixtureId: "bottom-sheet-modal" },
   render: () => <OverlayFixture sheet />,
 };
+
+import { SheetScrollHandoffFixture } from "./sheet-scroll-handoff-fixture.js";
+export const ScrollHandoff = {
+  name: "bottom-sheet-scroll-handoff",
+  parameters: { fixtureId: "bottom-sheet-scroll-handoff" },
+  render: () => <SheetScrollHandoffFixture />,
+};

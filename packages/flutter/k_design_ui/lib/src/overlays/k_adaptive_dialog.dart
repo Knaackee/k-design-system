@@ -15,6 +15,7 @@ class KAdaptiveDialog extends StatelessWidget {
     this.closeLabel,
     this.maxWidth = 520,
     this.expandBody = true,
+    this.pageSheet = false,
     super.key,
   });
 
@@ -28,6 +29,9 @@ class KAdaptiveDialog extends StatelessWidget {
   final double maxWidth;
   final bool expandBody;
 
+  /// Use the coordinated tall sheet on every window size for page journeys.
+  final bool pageSheet;
+
   static Future<T?> show<T>({
     required BuildContext context,
     WidgetBuilder? builder,
@@ -38,6 +42,7 @@ class KAdaptiveDialog extends StatelessWidget {
     double maxWidth = 520,
     bool barrierDismissible = true,
     bool useRootNavigator = true,
+    bool pageSheet = false,
   }) {
     assert(builder != null || title != null && child != null);
     final contentBuilder =
@@ -47,10 +52,11 @@ class KAdaptiveDialog extends StatelessWidget {
           description: description,
           actions: actions,
           maxWidth: maxWidth,
+          pageSheet: pageSheet,
           onClose: () => Navigator.of(routeContext).pop(),
           child: child!,
         );
-    if (MediaQuery.sizeOf(context).width < breakpoint) {
+    if (pageSheet || MediaQuery.sizeOf(context).width < breakpoint) {
       return showModalBottomSheet<T>(
         context: context,
         useRootNavigator: useRootNavigator,
@@ -60,6 +66,7 @@ class KAdaptiveDialog extends StatelessWidget {
         // The coordinated sheet below owns dragging and guarded dismissal.
         enableDrag: false,
         backgroundColor: Colors.transparent,
+        constraints: pageSheet ? BoxConstraints(maxWidth: maxWidth) : null,
         builder: (routeContext) => Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.viewInsetsOf(routeContext).bottom,
@@ -107,8 +114,8 @@ class KAdaptiveDialog extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: padding),
       child: child,
     );
-    if (MediaQuery.sizeOf(context).width < breakpoint) {
-      if (!expandBody) {
+    if (pageSheet || MediaQuery.sizeOf(context).width < breakpoint) {
+      if (!expandBody && !pageSheet) {
         return KBottomSheet(
           title: title,
           description: description,
@@ -163,6 +170,9 @@ class _DraggableDialog extends StatefulWidget {
 }
 
 class _DraggableDialogState extends State<_DraggableDialog> {
+  // Dismiss after a quarter of the expanded sheet, matching Web.
+  static const _expandedExtent = .9;
+  static const _dismissExtent = _expandedExtent * .75;
   final _controller = DraggableScrollableController();
   bool _closing = false;
 
@@ -177,7 +187,7 @@ class _DraggableDialogState extends State<_DraggableDialog> {
     // A consumer may keep the route open to confirm unsaved changes.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (_controller.isAttached) _controller.jumpTo(.9);
+      if (_controller.isAttached) _controller.jumpTo(_expandedExtent);
       _closing = false;
     });
   }
@@ -198,26 +208,30 @@ class _DraggableDialogState extends State<_DraggableDialog> {
           },
           child: DraggableScrollableSheet(
             controller: _controller,
-            initialChildSize: .9,
-            minChildSize: .35,
-            maxChildSize: .9,
+            initialChildSize: _expandedExtent,
+            minChildSize: _dismissExtent,
+            maxChildSize: _expandedExtent,
             expand: false,
             shouldCloseOnMinExtent: false,
             builder: (context, scrollController) => KBottomSheet(
               title: widget.dialog.title,
               description: widget.description,
               actions: widget.actions,
-              maxWidth: double.infinity,
+              maxWidth: widget.dialog.pageSheet
+                  ? widget.dialog.maxWidth
+                  : double.infinity,
+              onClose: widget.dialog.pageSheet ? widget.dialog.onClose : null,
+              closeLabel: widget.dialog.closeLabel,
               expandBody: true,
               onDragUpdate: (details) {
                 _controller.jumpTo(
                   (_controller.size - details.delta.dy / constraints.maxHeight)
-                      .clamp(.35, .9),
+                      .clamp(_dismissExtent, _expandedExtent),
                 );
               },
               onDragEnd: (details) {
                 if (details.velocity.pixelsPerSecond.dy > 700 ||
-                    _controller.size <= .36) {
+                    _controller.size <= _dismissExtent + .001) {
                   _close();
                 }
               },

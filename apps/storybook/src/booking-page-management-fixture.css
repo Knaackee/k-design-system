@@ -1,0 +1,92 @@
+.booking-management-fixture {
+  box-sizing: border-box;
+  width: 100%;
+  container-type: inline-size;
+  min-height: 100vh;
+  margin: auto;
+  padding: var(--k-space-layout-gutter);
+  background: var(--k-color-surface-canvas);
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+}
+.booking-management-fixture header {
+  margin-bottom: var(--k-space-layout-gutter);
+}
+.booking-management-fixture h1 {
+  font-size: 34px;
+  letter-spacing: -0.035em;
+  margin: 0;
+  line-height: 1.1;
+}
+.booking-management-fixture header p {
+  margin: 6px 0 0;
+  color: var(--k-color-text-muted);
+  font-size: 15px;
+}
+.booking-management-colors {
+  display: flex;
+  gap: var(--k-space-control-gap);
+  flex-wrap: wrap;
+}
+.booking-management-colors span[style] {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: white;
+}
+.booking-management-media {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-block: 12px;
+}
+.booking-management-media + .booking-management-media {
+  border-top: 1px solid var(--k-color-border-default);
+}
+.booking-management-media > img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+.booking-management-media strong,
+.booking-management-media small {
+  display: block;
+}
+.booking-management-media small {
+  color: var(--k-color-text-muted);
+  margin: 2px 0 8px;
+}
+.booking-management-save {
+  position: sticky;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--k-color-surface-raised);
+  border: 1px solid var(--k-color-border-default);
+  flex-wrap: wrap;
+}
+.booking-management-save > span {
+  flex: 1;
+}
+
+.booking-management-fixture {
+  --k-color-action-primary-background: #0c679f;
+  --k-color-action-primary-foreground: #fff;
+  --k-color-border-focus: #0c679f;
+}
+.booking-management-fixture[data-theme="dark"] {
+  --k-color-action-primary-background: #65bdf2;
+  --k-color-action-primary-foreground: #082f49;
+  --k-color-border-focus: #65bdf2;
+}
+@container (max-width:599px) {
+  .booking-management-fixture h1 {
+    font-size: 30px;
+  }
+}

@@ -10,7 +10,8 @@ export function useField() {
   return useContext(FieldContext);
 }
 export interface KFieldProps {
-  label: string;
+  /** Plain text or a composed label (for example optional/required emphasis). */
+  label: ReactNode;
   helperText?: string;
   errorText?: string;
   required?: boolean;

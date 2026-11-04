@@ -140,12 +140,39 @@ export function KImageCropper({
   const [applying, setApplying] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const loadImage = (image: HTMLImageElement) => {
+    const nextSize = {
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+    };
+    if (
+      nextSize.width <= 0 ||
+      nextSize.height <= 0 ||
+      nextSize.width * nextSize.height > MAX_DECODED_IMAGE_PIXELS
+    ) {
+      setImageSize(null);
+      setCrop(null);
+      setError(copy.imageTooLarge);
+      return;
+    }
+    setImageSize(nextSize);
+    setCrop(
+      initialCrop
+        ? normalizeKImageCrop(initialCrop, nextSize)
+        : createKImageCrop(nextSize),
+    );
+    setError(null);
+  };
+
   useEffect(() => {
     setImageSize(null);
     setCrop(null);
     setApplying(false);
     setError(null);
     dragRef.current = null;
+    const image = imageRef.current;
+    // Data URLs and cached images may load before this effect resets state.
+    if (image?.complete && image.naturalWidth > 0) loadImage(image);
   }, [src]);
 
   useEffect(() => {
@@ -276,29 +303,7 @@ export function KImageCropper({
           alt={alt}
           draggable={false}
           style={imageStyle ? imageStyle : { visibility: "hidden" }}
-          onLoad={(event) => {
-            const nextSize = {
-              width: event.currentTarget.naturalWidth,
-              height: event.currentTarget.naturalHeight,
-            };
-            if (
-              nextSize.width <= 0 ||
-              nextSize.height <= 0 ||
-              nextSize.width * nextSize.height > MAX_DECODED_IMAGE_PIXELS
-            ) {
-              setImageSize(null);
-              setCrop(null);
-              setError(copy.imageTooLarge);
-              return;
-            }
-            setImageSize(nextSize);
-            setCrop(
-              initialCrop
-                ? normalizeKImageCrop(initialCrop, nextSize)
-                : createKImageCrop(nextSize),
-            );
-            setError(null);
-          }}
+          onLoad={(event) => loadImage(event.currentTarget)}
           onError={() => {
             setImageSize(null);
             setCrop(null);

@@ -301,8 +301,9 @@ class _KMapDayPanelState extends State<KMapDayPanel> {
                           ),
                           child: Container(
                             key: ValueKey('k-map-day-item-card-${item.id}'),
-                            padding: EdgeInsets.all(
-                              tokens.spaceControlInsetInline,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: tokens.spaceControlInsetInline,
+                              vertical: tokens.spaceControlGap,
                             ),
                             decoration: BoxDecoration(
                               color: selected
@@ -430,7 +431,7 @@ class _KMapDayPanelState extends State<KMapDayPanel> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: tokens.spaceSmallInset),
+                                SizedBox(height: tokens.spaceTight),
                                 KText(
                                   item.detail,
                                   variant: widget.sheet

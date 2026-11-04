@@ -652,12 +652,16 @@ class KTabs extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.label = 'Tabs',
+    this.expanded = false,
     super.key,
   });
   final List<KTabItem> items;
   final String value;
   final ValueChanged<String> onChanged;
   final String label;
+
+  /// Equal-width tabs that fill available space, scrolling for long labels.
+  final bool expanded;
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
@@ -684,35 +688,31 @@ class KTabs extends StatelessWidget {
                   PointerDeviceKind.trackpad,
                 },
               ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                physics: const ClampingScrollPhysics(),
-                child: Row(
-                  children: [
-                    for (final item in items)
-                      Padding(
-                        padding: EdgeInsets.only(right: t.spaceTight),
-                        child: TextButton.icon(
-                          icon: item.icon == null
-                              ? const SizedBox.shrink()
-                              : KIcon(item.icon!, size: 16),
-                          label: item.label,
-                          style: TextButton.styleFrom(
-                            minimumSize: Size(0, t.sizeHitTarget),
-                            backgroundColor: item.id == value
-                                ? t.colorSurfaceRaised
-                                : Colors.transparent,
-                            foregroundColor: item.id == value
-                                ? t.colorTextPrimary
-                                : t.colorTextMuted,
-                          ),
-                          onPressed: item.enabled
-                              ? () => onChanged(item.id)
-                              : null,
-                        ),
-                      ),
-                  ],
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final row = Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (final item in items)
+                        if (expanded)
+                          Expanded(child: _tab(context, item, t))
+                        else
+                          _tab(context, item, t),
+                    ],
+                  );
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const ClampingScrollPhysics(),
+                    child: expanded
+                        ? ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: constraints.maxWidth,
+                            ),
+                            child: IntrinsicWidth(child: row),
+                          )
+                        : row,
+                  );
+                },
               ),
             ),
           ),
@@ -722,6 +722,29 @@ class KTabs extends StatelessWidget {
       ],
     );
   }
+
+  Widget _tab(BuildContext context, KTabItem item, KDesignTokens t) => Padding(
+    padding: EdgeInsets.only(right: t.spaceTight),
+    child: TextButton.icon(
+      icon: item.icon == null
+          ? const SizedBox.shrink()
+          : KIcon(item.icon!, size: 16),
+      label: item.label,
+      style: TextButton.styleFrom(
+        minimumSize: Size(
+          0,
+          expanded && t.sizeHitTarget < 40 ? 40 : t.sizeHitTarget,
+        ),
+        backgroundColor: item.id == value
+            ? t.colorSurfaceRaised
+            : Colors.transparent,
+        foregroundColor: item.id == value
+            ? t.colorTextPrimary
+            : t.colorTextMuted,
+      ),
+      onPressed: item.enabled ? () => onChanged(item.id) : null,
+    ),
+  );
 }
 
 class KNavigationMenuItem {

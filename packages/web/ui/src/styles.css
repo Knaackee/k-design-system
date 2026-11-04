@@ -1,3 +1,4 @@
+@import "./home-patterns.css";
 @import "./plan-picker.css";
 @import "./navigation/screen-switcher.css";
 @import "./showcase-grid.css";
@@ -52,4 +53,7 @@
 @import "./data-display/orbit/orbit.css";
 
 @import "./core.css";
+@import "./avatar-editor.css";
 @import "./sortable-tree.css";
+@import "./patterns/catalog-editor.css";
+@import "./patterns/booking-page-management.css";

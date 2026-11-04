@@ -319,24 +319,32 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
           </div>
         );
     }
+    const selectMonthDay =
+      !allDayOnly && view === "month" ? props.onMonthDayOpen : undefined;
     const compactMonth = view === "month" && compact;
     const monthIndicators =
       view === "month" &&
       (props.monthEventDisplay === "indicators" ||
         (props.monthEventDisplay !== "appointments" && compact));
-    const rowHeight = compactMonth
+    const sizedMonth = compactMonth || selectMonthDay;
+    const rowHeight = sizedMonth
       ? ((props.height ?? 680) - 44) / 6
       : Math.max(
           allDayOnly ? 40 : 116,
           (allDayOnly ? 4 : 28) + lanes.length * 30,
         );
+    const visibleMonthLanes = selectMonthDay
+      ? Math.max(0, Math.floor((rowHeight - 28) / 30))
+      : Infinity;
+    const entriesOnDay = (day: number) =>
+      positioned.filter(({ start, end }) => start <= day && end > day);
     return (
       <div
         className={`k-calendar-span-row ${allDayOnly ? "" : "k-calendar-month-week"}`}
         style={{
           minHeight: rowHeight,
-          height: compactMonth ? rowHeight : undefined,
-          overflow: compactMonth ? "hidden" : undefined,
+          height: sizedMonth ? rowHeight : undefined,
+          overflow: sizedMonth ? "hidden" : undefined,
         }}
       >
         <div
@@ -345,7 +353,40 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
             gridTemplateColumns: `repeat(${week.length},minmax(0,1fr))`,
           }}
         >
-          {week.map((key) => cell(key, true, "k-calendar-span-cell"))}
+          {week.map((key, day) => {
+            if (!selectMonthDay) return cell(key, true, "k-calendar-span-cell");
+            const dayEntries = entriesOnDay(day);
+            const overflowCount = monthIndicators
+              ? 0
+              : dayEntries.filter(({ lane }) => lane >= visibleMonthLanes)
+                  .length;
+            return (
+              <button
+                key={key}
+                type="button"
+                className={`k-calendar-span-cell k-calendar-month-day${monthIndicators ? " k-calendar-month-day--indicators" : ""}`}
+                data-month-day={key}
+                aria-label={`${formatDay(key)} · ${dayEntries.length}`}
+                aria-pressed={props.selectedMonthDay === key}
+                onClick={() =>
+                  selectMonthDay(
+                    key,
+                    dayEntries.map(({ entry }) => entry.event),
+                  )
+                }
+              >
+                <span className="k-calendar-date">{Number(key.slice(-2))}</span>
+                {overflowCount > 0 && (
+                  <span
+                    className="k-calendar-month-day-more"
+                    aria-hidden="true"
+                  >
+                    +{overflowCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
         {highlight}
         {monthIndicators && (
@@ -356,9 +397,28 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
             }}
           >
             {week.map((key, day) => {
-              const dayEntries = positioned.filter(
-                ({ start, end }) => start <= day && end > day,
+              const dayEntries = entriesOnDay(day);
+              const indicators = dayEntries
+                .slice(0, 3)
+                .map(({ entry }) => (
+                  <span key={entry.id} className="k-calendar-month-indicator" />
+                ));
+              const overflow = dayEntries.length > 3 && (
+                <span className="k-calendar-month-overflow">
+                  +{dayEntries.length - 3}
+                </span>
               );
+              if (selectMonthDay) {
+                return (
+                  <span
+                    className="k-calendar-month-indicator-cell k-calendar-month-indicator-cell--decorative"
+                    aria-hidden="true"
+                    key={key}
+                  >
+                    {indicators}
+                  </span>
+                );
+              }
               return (
                 <button
                   type="button"
@@ -372,17 +432,8 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
                     else if (values[0]) props.onEventOpen?.(values[0]);
                   }}
                 >
-                  {dayEntries.slice(0, 3).map(({ entry }) => (
-                    <span
-                      key={entry.id}
-                      className="k-calendar-month-indicator"
-                    />
-                  ))}
-                  {dayEntries.length > 3 && (
-                    <span className="k-calendar-month-overflow">
-                      +{dayEntries.length - 3}
-                    </span>
-                  )}
+                  {indicators}
+                  {overflow}
                 </button>
               );
             })}
@@ -390,12 +441,18 @@ export function KCalendar<T>(props: KCalendarProps<T>) {
         )}
         {!monthIndicators &&
           positioned.map(({ entry, start, end, lane }) => {
-            if (entry.id === interaction.previewEntryId) return null;
+            if (
+              entry.id === interaction.previewEntryId ||
+              lane >= visibleMonthLanes
+            )
+              return null;
             return (
               <div
                 key={entry.id}
                 className="k-calendar-span-event"
+                inert={selectMonthDay ? true : undefined}
                 style={{
+                  pointerEvents: selectMonthDay ? "none" : undefined,
                   left: `calc(${(start / week.length) * 100}% + 4px)`,
                   width: `calc(${((end - start) / week.length) * 100}% - 8px)`,
                   top: (allDayOnly ? 4 : 28) + lane * 30,

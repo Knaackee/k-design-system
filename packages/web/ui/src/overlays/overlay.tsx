@@ -9,6 +9,11 @@ import {
   type RefObject,
 } from "react";
 import { KIconButton } from "../actions/icon-button.js";
+import {
+  useSheetScrollHandoff,
+  sheetCloseThreshold,
+  sheetCloseVelocity,
+} from "./use-sheet-scroll-handoff.js";
 import { usePageSheetEffect } from "./use-page-sheet-effect.js";
 
 // Radix observes Escape in the capture phase, before a nested popover can
@@ -43,6 +48,8 @@ export type KOverlayProps = {
   zIndex?: number;
   /** Optional initial field for targeted editing flows. */
   initialFocusRef?: RefObject<HTMLElement | null>;
+  /** Long editing journeys can use a full-screen phone dialog instead of a sheet. */
+  compactPresentation?: "sheet" | "fullscreen";
 };
 
 /** Phone sheets and tablet/desktop dialogs share the same controlled dismissal contract. */
@@ -64,6 +71,16 @@ export function KAdaptiveDialog(props: KOverlayProps) {
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
+  if (compact && props.compactPresentation === "fullscreen") {
+    return (
+      <KDesktopDialog
+        {...props}
+        className={[props.className, "k-dialog--fullscreen"]
+          .filter(Boolean)
+          .join(" ")}
+      />
+    );
+  }
   return compact ? (
     <KBottomSheet {...props} showClose={false} />
   ) : (
@@ -190,6 +207,11 @@ export function KBottomSheet({
   const titleId = useId();
   const descriptionId = useId();
   const sheetRef = useRef<SheetRef>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(
+    null,
+  );
+  useSheetScrollHandoff(scrollElement, sheetRef, open, dismissible);
   const [effectActive, setEffectActive] = useState(open);
   useEffect(() => {
     if (open) setEffectActive(true);
@@ -206,6 +228,8 @@ export function KBottomSheet({
       <Sheet
         ref={sheetRef}
         snapPoints={[0, 1]}
+        dragCloseThreshold={sheetCloseThreshold}
+        dragVelocityThreshold={sheetCloseVelocity}
         initialSnap={1}
         unstyled
         style={{ zIndex }}
@@ -220,13 +244,14 @@ export function KBottomSheet({
           });
         }}
         disableDismiss={!dismissible}
-        onOpenEnd={() =>
+        onOpenEnd={() => {
+          setScrollElement(scrollRef.current);
           (
             initialFocusRef?.current ??
             closeRef.current ??
             containerRef.current
-          )?.focus()
-        }
+          )?.focus();
+        }}
         prefersReducedMotion={
           typeof window !== "undefined" &&
           typeof window.matchMedia === "function" &&
@@ -310,6 +335,7 @@ export function KBottomSheet({
             </header>
             <Sheet.Content
               className="k-bottom-sheet-content"
+              scrollRef={scrollRef}
               scrollClassName="k-overlay-body"
               scrollStyle={{ overscrollBehavior: "contain" }}
             >

@@ -26,6 +26,7 @@ class KCalendar<T extends Object> extends StatefulWidget {
     this.onNavigate,
     this.monthEventDisplay = KCalendarMonthEventDisplay.auto,
     this.onMonthDayOpen,
+    this.selectedMonthDay,
     this.onEventMove,
     this.onEventDropOutside,
     this.onEventResize,
@@ -72,7 +73,13 @@ class KCalendar<T extends Object> extends StatefulWidget {
   /// Requests the previous (-1) or next (1) visible period after a swipe.
   final ValueChanged<int>? onNavigate;
   final KCalendarMonthEventDisplay monthEventDisplay;
+
+  /// Opens a month day, including empty days, in either display mode.
+  /// Appointment previews become non-interactive so the full day selects the agenda.
   final void Function(DateTime date, List<T> events)? onMonthDayOpen;
+
+  /// The consumer's selected civil date in the month grid.
+  final DateTime? selectedMonthDay;
   final ValueChanged<KCalendarMove<T>>? onEventMove;
 
   /// Receives an active event move released outside every calendar drop target.

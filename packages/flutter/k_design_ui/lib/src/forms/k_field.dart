@@ -8,12 +8,18 @@ class KField extends StatelessWidget {
     this.helperText,
     this.errorText,
     this.required = false,
+    this.labelStyle,
+    this.helperStyle,
     super.key,
   });
   final String label;
   final String? helperText;
   final String? errorText;
   final bool required;
+
+  /// Optional presentation overrides; semantic labels remain unchanged.
+  final TextStyle? labelStyle;
+  final TextStyle? helperStyle;
   final Widget child;
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,7 @@ class KField extends StatelessWidget {
           child: _FieldText(
             '$label${required ? ' *' : ''}',
             color: t.colorTextPrimary,
+            style: labelStyle,
           ),
         ),
         KFieldScope(
@@ -42,6 +49,9 @@ class KField extends StatelessWidget {
             child: _FieldText(
               description,
               multiline: true,
+              style: errorText != null
+                  ? helperStyle?.copyWith(color: t.colorStatusErrorForeground)
+                  : helperStyle,
               color: errorText != null
                   ? t.colorStatusErrorForeground
                   : t.colorTextMuted,
@@ -77,17 +87,25 @@ class KFieldScope extends InheritedWidget {
 
 /// Match the shared CSS pixel-grid line height, including wrapped helper text.
 class _FieldText extends StatelessWidget {
-  const _FieldText(this.text, {required this.color, this.multiline = false});
+  const _FieldText(
+    this.text, {
+    required this.color,
+    this.multiline = false,
+    this.style,
+  });
   final String text;
   final Color color;
   final bool multiline;
+  final TextStyle? style;
   @override
   Widget build(BuildContext context) {
-    final style = formTextStyle(context, color: color);
-    final scaled = MediaQuery.textScalerOf(context).scale(style.fontSize!);
+    final effectiveStyle = formTextStyle(context, color: color).merge(style);
+    final scaled = MediaQuery.textScalerOf(
+      context,
+    ).scale(effectiveStyle.fontSize!);
     return Text(
       text,
-      style: style.copyWith(
+      style: effectiveStyle.copyWith(
         height: multiline
             ? formTokens(context).fontRelaxedHeight
             : scaled.round() / scaled,

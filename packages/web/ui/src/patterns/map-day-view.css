@@ -164,14 +164,14 @@
 .k-day-entry__content {
   border: calc(1 * var(--k-space-hairline)) solid transparent;
   border-radius: var(--k-radius-card);
-  padding: calc(12 * var(--k-space-hairline));
+  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
   background: transparent;
   text-align: left;
   font: inherit;
   color: inherit;
   display: flex;
   flex-direction: column;
-  gap: calc(6 * var(--k-space-hairline));
+  gap: var(--k-space-tight);
   cursor: pointer;
   min-width: 0;
   width: 100%;
@@ -442,7 +442,7 @@
 .k-day-entry__info {
   position: absolute;
   inset-inline-end: 0;
-  top: calc(12 * var(--k-space-hairline));
+  top: var(--k-space-control-gap);
 }
 .k-day-route-info {
   white-space: pre-line;

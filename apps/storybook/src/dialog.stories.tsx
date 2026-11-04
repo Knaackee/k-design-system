@@ -30,3 +30,9 @@ export const Tablet = {
   },
   render: () => <OverlayFixture />,
 };
+
+export const FullscreenPhone = {
+  name: "fullscreen-editor-phone",
+  globals: { viewport: { value: "mobile1", isRotated: false } },
+  render: () => <OverlayFixture fullscreen />,
+};

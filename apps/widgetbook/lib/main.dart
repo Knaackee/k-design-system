@@ -1,3 +1,9 @@
+import 'onzeit_overhaul_gallery.dart';
+import 'booking_page_management_fixture.dart';
+import 'offer_overview_fixture.dart';
+import 'catalog_editor_fixture.dart';
+import 'home_overview_fixture.dart';
+import 'onboarding_navigation_fixture.dart';
 import 'plan_picker_fixture.dart';
 import 'sortable_tree_fixture.dart';
 import 'qr_code_fixture.dart';
@@ -49,6 +55,7 @@ import 'data_table_cells_fixture.dart';
 import 'disclosure_fixtures.dart';
 import 'overlay_fixtures.dart';
 import 'adaptive_dialog_fixture.dart';
+import 'sheet_scroll_handoff_fixture.dart';
 import 'currency_fixtures.dart';
 import 'data_table_virtual_fixture.dart';
 import 'kanban_fixtures.dart';
@@ -66,6 +73,9 @@ import 'extended_component_fixtures.dart';
 import 'sidebar_fixtures.dart';
 import 'mobile_app_bar_fixture.dart';
 import 'settings_page_fixtures.dart';
+import 'settings_grouped_fixture.dart';
+import 'management_overview_fixture.dart';
+import 'avatar_editor_fixture.dart';
 import 'usage_details_fixture.dart';
 import 'agent_ui_fixtures.dart';
 import 'agent_question_dictation_fixture.dart';
@@ -219,6 +229,7 @@ class KDesignWidgetbook extends StatelessWidget {
         TextScaleAddon(initialScale: 1, min: 1, max: 2, divisions: 4),
       ],
       directories: sortGalleryNodes([
+        onzeitOverhaulGallery(),
         WidgetbookCategory(
           name: 'Maps',
           children: [
@@ -308,7 +319,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'Fullscreen · Empty',
                   builder: buildMapZoneEditorFullscreenEmpty,
                 ),
-                WidgetbookUseCase(name: 'Areas only', builder: buildMapZoneEditorAreasOnly),
+                WidgetbookUseCase(
+                  name: 'Areas only',
+                  builder: buildMapZoneEditorAreasOnly,
+                ),
               ],
             ),
             WidgetbookFolder(
@@ -443,6 +457,10 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'BottomSheet',
               children: [
+                WidgetbookUseCase(
+                  name: 'bottom-sheet-scroll-handoff',
+                  builder: (_) => const SheetScrollHandoffFixture(),
+                ),
                 WidgetbookUseCase(
                   name: 'bottom-sheet-modal',
                   builder: (_) => const OverlayFixture(sheet: true),
@@ -659,13 +677,27 @@ class KDesignWidgetbook extends StatelessWidget {
                   ),
                 ],
               ),
-            WidgetbookFolder(name: 'Image cropper', children: [
-              WidgetbookUseCase(name: 'image-cropper-avatar', builder: (_) => const ImageCropperFixture()),
-              WidgetbookUseCase(name: 'image-cropper-square', builder: (_) => const ImageCropperFixture(shape: KImageCropShape.square)),
-            ]),
+            WidgetbookFolder(
+              name: 'Image cropper',
+              children: [
+                WidgetbookUseCase(
+                  name: 'image-cropper-avatar',
+                  builder: (_) => const ImageCropperFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'image-cropper-square',
+                  builder: (_) =>
+                      const ImageCropperFixture(shape: KImageCropShape.square),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'ProgressDots',
               children: [
+                WidgetbookUseCase(
+                  name: 'onboarding-navigation-touch',
+                  builder: (_) => const OnboardingNavigationFixture(),
+                ),
                 WidgetbookUseCase(
                   name: 'steps',
                   builder: (context) => Center(
@@ -745,11 +777,23 @@ class KDesignWidgetbook extends StatelessWidget {
                 ),
               ],
             ),
-            WidgetbookFolder(name: 'LanguageSwitcher', children: [
-              WidgetbookUseCase(name: 'language-switcher-default', builder: (_) => const LanguageSwitcherFixture()),
-              WidgetbookUseCase(name: 'language-switcher-flags', builder: (_) => const LanguageSwitcherFixture(flags: true)),
-              WidgetbookUseCase(name: 'language-switcher-disabled', builder: (_) => const LanguageSwitcherFixture(disabled: true)),
-            ]),
+            WidgetbookFolder(
+              name: 'LanguageSwitcher',
+              children: [
+                WidgetbookUseCase(
+                  name: 'language-switcher-default',
+                  builder: (_) => const LanguageSwitcherFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'language-switcher-flags',
+                  builder: (_) => const LanguageSwitcherFixture(flags: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'language-switcher-disabled',
+                  builder: (_) => const LanguageSwitcherFixture(disabled: true),
+                ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'ThemeSwitcher',
               children: [
@@ -1212,14 +1256,58 @@ class KDesignWidgetbook extends StatelessWidget {
         WidgetbookCategory(
           name: 'Patterns',
           children: [
-            WidgetbookFolder(name: 'PlanPicker', children: [
-              WidgetbookUseCase(name: 'single-monthly', builder: (_) => const PlanPickerFixture()),
-              WidgetbookUseCase(name: 'single-annual', builder: (_) => const PlanPickerFixture(annual: true)),
-            ]),
-            WidgetbookFolder(name: 'SortableTree', children: [
-              for (final kind in ['categories', 'mobile', 'tablet', 'ungrouped', 'flat', 'deep', 'empty'])
-                WidgetbookUseCase(name: 'sortable-tree-$kind', builder: (_) => SortableTreeFixture(kind: kind)),
-            ]),
+            WidgetbookFolder(
+              name: 'HomeOverview',
+              children: [
+                WidgetbookUseCase(
+                  name: 'active-day',
+                  builder: (_) => const HomeOverviewFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'new-account',
+                  builder: (_) => const HomeOverviewFixture(newAccount: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'mobile',
+                  builder: (_) => const HomeOverviewFixture(maxWidth: 390),
+                ),
+                WidgetbookUseCase(
+                  name: 'tablet',
+                  builder: (_) => const HomeOverviewFixture(maxWidth: 1024),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'PlanPicker',
+              children: [
+                WidgetbookUseCase(
+                  name: 'single-monthly',
+                  builder: (_) => const PlanPickerFixture(),
+                ),
+                WidgetbookUseCase(
+                  name: 'single-annual',
+                  builder: (_) => const PlanPickerFixture(annual: true),
+                ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'SortableTree',
+              children: [
+                for (final kind in [
+                  'categories',
+                  'mobile',
+                  'tablet',
+                  'ungrouped',
+                  'flat',
+                  'deep',
+                  'empty',
+                ])
+                  WidgetbookUseCase(
+                    name: 'sortable-tree-$kind',
+                    builder: (_) => SortableTreeFixture(kind: kind),
+                  ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'Celebration',
               children: [
@@ -1229,10 +1317,22 @@ class KDesignWidgetbook extends StatelessWidget {
                 ),
               ],
             ),
-            WidgetbookFolder(name: 'ShowcaseGrid', children: [
-              for (final kind in ['hero', 'mobile', 'dark', 'grid-only', 'reduced-motion'])
-                WidgetbookUseCase(name: 'showcase-grid-$kind', builder: (_) => ShowcaseGridFixture(kind: kind)),
-            ]),
+            WidgetbookFolder(
+              name: 'ShowcaseGrid',
+              children: [
+                for (final kind in [
+                  'hero',
+                  'mobile',
+                  'dark',
+                  'grid-only',
+                  'reduced-motion',
+                ])
+                  WidgetbookUseCase(
+                    name: 'showcase-grid-$kind',
+                    builder: (_) => ShowcaseGridFixture(kind: kind),
+                  ),
+              ],
+            ),
             WidgetbookFolder(
               name: 'PaymentSetup',
               children: [
@@ -1351,7 +1451,10 @@ class KDesignWidgetbook extends StatelessWidget {
                   name: 'review',
                   builder: buildFoleySoundsReview,
                 ),
-                WidgetbookUseCase(name: 'onboarding', builder: (_) => const SoundOnboardingFixture()),
+                WidgetbookUseCase(
+                  name: 'onboarding',
+                  builder: (_) => const SoundOnboardingFixture(),
+                ),
               ],
             ),
             WidgetbookComponent(
@@ -1702,6 +1805,94 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'settings-page-responsive',
                   builder: (_) => const SettingsPageFixture(),
+                ),
+              ],
+            ),
+            WidgetbookFolder(name: 'BookingPageManagement',children:[for(final v in ['overview','dark','mobile','mobile-dark'])WidgetbookUseCase(name:v,builder:(_)=>BookingPageManagementFixture(dark:v.contains('dark'),mobile:v.contains('mobile')))]),
+            WidgetbookFolder(name: 'OfferOverview', children: [
+              for (final v in ['overview', 'dark', 'mobile', 'mobile-dark', 'empty'])
+                WidgetbookUseCase(name: v, builder: (_) => OfferOverviewFixture(dark: v.contains('dark'), empty: v == 'empty')),
+            ]),
+            WidgetbookFolder(
+              name: 'CatalogEditor',
+              children: [
+                for (final v in [
+                  'service',
+                  'product',
+                  'service-dark',
+                  'product-dark',
+                  'stock',
+                  'recommendations',
+                ])
+                  WidgetbookUseCase(
+                    name: v,
+                    builder: (_) => CatalogEditorFixture(
+                      product: v.startsWith('product') || v == 'stock',
+                      dark: v.endsWith('dark'),
+                      panel: ['stock', 'recommendations'].contains(v)
+                          ? v
+                          : null,
+                    ),
+                  ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'ManagementOverview',
+              children: [
+                for (final variant in [
+                  'overview',
+                  'dark',
+                  'draft',
+                  'empty',
+                  'long-labels',
+                ])
+                  WidgetbookUseCase(
+                    name: variant,
+                    builder: (_) => ManagementOverviewFixture(
+                      published: !['draft', 'empty'].contains(variant),
+                      empty: variant == 'empty',
+                      longLabels: variant == 'long-labels',
+                      forceDark: variant == 'dark',
+                    ),
+                  ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'SettingsGrouped',
+              children: [
+                for (final page in [
+                  'overview',
+                  'profile',
+                  'appearance',
+                  'language',
+                  'payments',
+                  'integrations',
+                  'about',
+                  'access',
+                  'access-empty',
+                  'assistant',
+                  'server',
+                ])
+                  WidgetbookUseCase(
+                    name: page,
+                    builder: (_) => SettingsGroupedFixture(
+                      initialPage: page == 'overview'
+                          ? 'profile'
+                          : page == 'access-empty'
+                          ? 'access'
+                          : page,
+                      emptyAccess: page == 'access-empty',
+                      overview: page == 'overview',
+                    ),
+                  ),
+              ],
+            ),
+            WidgetbookFolder(
+              name: 'AvatarEditor',
+              children: [
+                WidgetbookUseCase(
+                  name: 'gallery',
+                  builder: (_) => const AvatarEditorFixture(),
                 ),
               ],
             ),
@@ -2083,4 +2274,3 @@ class KDesignWidgetbook extends StatelessWidget {
     );
   }
 }
-

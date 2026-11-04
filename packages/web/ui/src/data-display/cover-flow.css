@@ -24,14 +24,18 @@
   cursor: grabbing;
 }
 .k-cover-flow__item {
+  --cover-extension: min(
+    var(--k-cover-flow-item-bottom-extension, 0px),
+    max(0px, calc(5% - var(--k-space-control-gap)))
+  );
   position: absolute;
-  top: 50%;
+  top: calc(50% + var(--cover-extension) / 2);
   left: 50%;
   width: min(
     var(--k-cover-flow-item-fraction, 66%),
     var(--k-cover-flow-item-width)
   );
-  height: 90%;
+  height: calc(90% + var(--cover-extension));
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transition: transform var(--k-component-cover-flow-transition-duration)
@@ -92,6 +96,11 @@
   height: var(--k-space-hairline);
   overflow: hidden;
   clip-path: inset(50%);
+}
+.k-cover-flow__caption[data-layout="inline"] .k-cover-flow__count {
+  display: inline;
+  margin-top: 0;
+  white-space: nowrap;
 }
 .k-cover-flow[data-reduced-motion] .k-cover-flow__item {
   transition: none;

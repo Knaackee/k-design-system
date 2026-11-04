@@ -31,6 +31,8 @@ export interface KCoverFlowProps {
   /** Maximum fraction of the viewport occupied by a cover (0–1). */
   itemWidthFraction?: number;
   height?: CSSProperties["height"];
+  /** Extend covers downward into the viewport gutter without moving their top edge. */
+  itemBottomExtension?: number;
   /** Space around each cover's content, in pixels. */
   contentPadding?: number;
   /** Clip neighboring covers at the horizontal viewport edges only. */
@@ -50,6 +52,8 @@ export interface KCoverFlowProps {
   perspective?: number;
   showControls?: boolean;
   showCaption?: boolean;
+  /** Place the label and position on one line for compact compositions. */
+  captionLayout?: "stacked" | "inline";
   reducedMotion?: boolean;
   /** Reveal visible covers, selected first. Change revealKey to replay. */
   reveal?: boolean;
@@ -75,6 +79,7 @@ export function KCoverFlow({
   itemWidth = 380,
   itemWidthFraction = 0.66,
   height = "clamp(260px, 52dvh, 560px)",
+  itemBottomExtension = 0,
   contentPadding = 16,
   clipSides = true,
   sideAngle = 55,
@@ -87,6 +92,7 @@ export function KCoverFlow({
   perspective = 1100,
   showControls = true,
   showCaption = true,
+  captionLayout = "stacked",
   reducedMotion = false,
   reveal = false,
   revealKey = 0,
@@ -192,6 +198,7 @@ export function KCoverFlow({
           ...style,
           "--k-cover-flow-item-fraction": `${Math.max(0.1, Math.min(1, itemWidthFraction)) * 100}%`,
           "--k-cover-flow-item-width": `${Math.max(1, itemWidth)}px`,
+          "--k-cover-flow-item-bottom-extension": `${Math.max(0, itemBottomExtension)}px`,
           "--k-cover-flow-perspective": `${Math.max(1, perspective)}px`,
           "--k-cover-flow-content-padding": `${Math.max(0, contentPadding)}px`,
         } as CSSProperties
@@ -363,8 +370,12 @@ export function KCoverFlow({
           }
           aria-live="polite"
           aria-atomic="true"
+          data-layout={captionLayout}
         >
           {items[index]?.label}
+          {captionLayout === "inline" && items.length > 0 && (
+            <span aria-hidden="true"> · </span>
+          )}
           {items.length > 0 && (
             <span className="k-cover-flow__count">
               {index + 1} / {items.length}

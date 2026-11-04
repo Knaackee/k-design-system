@@ -1,0 +1,75 @@
+.k-avatar-editor-actions {
+  display: grid;
+  gap: var(--k-space-control-gap);
+  width: 100%;
+}
+.k-avatar-editor-sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--k-space-content-action-gap);
+}
+.k-avatar-editor-source {
+  width: 100%;
+  height: auto;
+  min-height: 104px;
+  padding: var(--k-space-control-inset-inline);
+  border-radius: var(--k-radius-overlay);
+  background: var(--k-color-surface-subtle);
+  justify-content: center;
+}
+.k-avatar-editor-source > .k-button__content {
+  width: 100%;
+  justify-content: center;
+}
+.k-avatar-editor-source .k-truncated__content > span {
+  display: grid;
+  justify-items: center;
+  gap: var(--k-space-control-gap);
+  white-space: normal;
+  text-align: center;
+}
+.k-avatar-editor-omit {
+  width: 100%;
+  justify-content: center;
+}
+.k-avatar-editor-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--k-space-control-gap);
+}
+.k-avatar-editor-gallery > div {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+}
+.k-avatar-editor-image {
+  width: 100%;
+  height: auto;
+  padding: 0;
+  border-radius: var(--k-radius-card);
+  overflow: hidden;
+}
+.k-avatar-editor-image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.k-avatar-editor-image[aria-pressed="true"] {
+  outline: 2px solid var(--k-color-border-focus);
+}
+.k-avatar-editor-camera {
+  display: grid;
+  gap: var(--k-space-control-gap);
+}
+.k-avatar-editor-camera video {
+  width: 100%;
+  max-height: 50vh;
+  border-radius: var(--k-radius-card);
+}
+.k-avatar-editor-gallery > div > .k-button-target:first-child,
+.k-avatar-editor-image > .k-button__content,
+.k-avatar-editor-image .k-truncated,
+.k-avatar-editor-image .k-truncated__content {
+  width: 100%;
+}
