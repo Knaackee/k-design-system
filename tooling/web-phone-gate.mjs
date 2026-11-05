@@ -135,7 +135,13 @@ async function main() {
   // Playwright is a machine tool, not a repo dependency; resolve it the way
   // CommonJS does (NODE_PATH / global install).
   const { chromium } = createRequire(import.meta.url)("playwright");
-  const browser = await chromium.launch();
+  // Linux Chromium follows the machine's font hinting; with full hinting
+  // (GitHub runners) glyph advances round to whole pixels and labels grow
+  // 1-4 px wider than Flutter. Unhinted text matches Flutter and is the
+  // same on every machine.
+  const browser = await chromium.launch({
+    args: ["--font-render-hinting=none"],
+  });
   const server = await serve();
   const base = `http://127.0.0.1:${server.address().port}`;
   const failures = [];

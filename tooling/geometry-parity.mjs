@@ -88,7 +88,13 @@ function serve() {
 async function main() {
   const flutter = JSON.parse(await readFile(flutterFile, "utf8"));
   const { chromium } = createRequire(import.meta.url)("playwright");
-  const browser = await chromium.launch();
+  // Linux Chromium follows the machine's font hinting; with full hinting
+  // (GitHub runners) glyph advances round to whole pixels and labels grow
+  // 1-4 px wider than Flutter. Unhinted text matches Flutter and is the
+  // same on every machine.
+  const browser = await chromium.launch({
+    args: ["--font-render-hinting=none"],
+  });
   const server = await serve();
   const base = `http://127.0.0.1:${server.address().port}`;
   const web = {};
@@ -107,7 +113,19 @@ async function main() {
       { waitUntil: "load" },
     );
     await page.waitForSelector("[data-parity]");
-    await page.evaluate(() => document.fonts.ready);
+    // Text widths are only comparable in Inter, the face Flutter measures
+    // with. A web font is fetched lazily, so `document.fonts.ready` can
+    // resolve before Inter is requested and the fallback face is measured.
+    const font = await page.evaluate(async () => {
+      const faces = ["400 16px Inter", "500 16px Inter", "600 16px Inter"];
+      await Promise.all(faces.map((face) => document.fonts.load(face)));
+      await document.fonts.ready;
+      return faces.filter((face) => !document.fonts.check(face));
+    });
+    if (font.length)
+      throw new Error(
+        `Inter did not load (${font.join(", ")}); widths would be measured in a fallback face.`,
+      );
     web[key] = await page.evaluate(() =>
       Object.fromEntries(
         [...document.querySelectorAll("[data-parity]")].map((entry) => {
