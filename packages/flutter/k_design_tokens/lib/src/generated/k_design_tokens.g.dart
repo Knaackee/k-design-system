@@ -75,6 +75,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   const KDesignTokens({
     required this.colorSurfaceCanvas,
     required this.colorSurfaceRaised,
+    required this.colorSurfaceOverlay,
     required this.colorSurfaceSubtle,
     required this.colorTextPrimary,
     required this.colorTextMuted,
@@ -641,6 +642,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
 
   final Color colorSurfaceCanvas;
   final Color colorSurfaceRaised;
+  final Color colorSurfaceOverlay;
   final Color colorSurfaceSubtle;
   final Color colorTextPrimary;
   final Color colorTextMuted;
@@ -1207,6 +1209,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   static const orbitLight = KDesignTokens(
     colorSurfaceCanvas: Color(0xFFF7F7F8),
     colorSurfaceRaised: Color(0xFFFFFFFF),
+    colorSurfaceOverlay: Color(0xFFFFFFFF),
     colorSurfaceSubtle: Color(0xFFF2F2F3),
     colorTextPrimary: Color(0xFF202024),
     colorTextMuted: Color(0xFF727278),
@@ -1774,6 +1777,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   static const orbitDark = KDesignTokens(
     colorSurfaceCanvas: Color(0xFF181819),
     colorSurfaceRaised: Color(0xFF202022),
+    colorSurfaceOverlay: Color(0xFF202022),
     colorSurfaceSubtle: Color(0xFF29292D),
     colorTextPrimary: Color(0xFFEEEEEF),
     colorTextMuted: Color(0xFF99999F),
@@ -2341,6 +2345,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   static const referenceLight = KDesignTokens(
     colorSurfaceCanvas: Color(0xFFF0FDFA),
     colorSurfaceRaised: Color(0xFFFFFFFF),
+    colorSurfaceOverlay: Color(0xFFFFFFFF),
     colorSurfaceSubtle: Color(0xFFCCFBF1),
     colorTextPrimary: Color(0xFF134E4A),
     colorTextMuted: Color(0xFF52706D),
@@ -2908,6 +2913,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   static const referenceDark = KDesignTokens(
     colorSurfaceCanvas: Color(0xFF071B19),
     colorSurfaceRaised: Color(0xFF0B2925),
+    colorSurfaceOverlay: Color(0xFF0B2925),
     colorSurfaceSubtle: Color(0xFF123B36),
     colorTextPrimary: Color(0xFFECFDF5),
     colorTextMuted: Color(0xFF91B8B2),
@@ -3476,6 +3482,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   KDesignTokens copyWith({
     Color? colorSurfaceCanvas,
     Color? colorSurfaceRaised,
+    Color? colorSurfaceOverlay,
     Color? colorSurfaceSubtle,
     Color? colorTextPrimary,
     Color? colorTextMuted,
@@ -4042,6 +4049,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     return KDesignTokens(
       colorSurfaceCanvas: colorSurfaceCanvas ?? this.colorSurfaceCanvas,
       colorSurfaceRaised: colorSurfaceRaised ?? this.colorSurfaceRaised,
+      colorSurfaceOverlay: colorSurfaceOverlay ?? this.colorSurfaceOverlay,
       colorSurfaceSubtle: colorSurfaceSubtle ?? this.colorSurfaceSubtle,
       colorTextPrimary: colorTextPrimary ?? this.colorTextPrimary,
       colorTextMuted: colorTextMuted ?? this.colorTextMuted,
@@ -4613,6 +4621,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     return KDesignTokens(
       colorSurfaceCanvas: Color.lerp(colorSurfaceCanvas, other.colorSurfaceCanvas, t)!,
       colorSurfaceRaised: Color.lerp(colorSurfaceRaised, other.colorSurfaceRaised, t)!,
+      colorSurfaceOverlay: Color.lerp(colorSurfaceOverlay, other.colorSurfaceOverlay, t)!,
       colorSurfaceSubtle: Color.lerp(colorSurfaceSubtle, other.colorSurfaceSubtle, t)!,
       colorTextPrimary: Color.lerp(colorTextPrimary, other.colorTextPrimary, t)!,
       colorTextMuted: Color.lerp(colorTextMuted, other.colorTextMuted, t)!,

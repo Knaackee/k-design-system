@@ -2,6 +2,7 @@
 export const tokenNames = [
   "color.surface.canvas",
   "color.surface.raised",
+  "color.surface.overlay",
   "color.surface.subtle",
   "color.text.primary",
   "color.text.muted",

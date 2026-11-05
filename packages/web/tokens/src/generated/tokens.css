@@ -5,6 +5,7 @@
 :root, [data-brand="orbit"][data-theme="light"] {
   --k-color-surface-canvas: #f7f7f8;
   --k-color-surface-raised: #ffffff;
+  --k-color-surface-overlay: #ffffff;
   --k-color-surface-subtle: #f2f2f3;
   --k-color-text-primary: #202024;
   --k-color-text-muted: #727278;
@@ -572,6 +573,7 @@
 [data-theme="dark"], [data-brand="orbit"][data-theme="dark"] {
   --k-color-surface-canvas: #181819;
   --k-color-surface-raised: #202022;
+  --k-color-surface-overlay: #202022;
   --k-color-surface-subtle: #29292d;
   --k-color-text-primary: #eeeeef;
   --k-color-text-muted: #99999f;
@@ -1139,6 +1141,7 @@
 [data-brand="reference"][data-theme="light"] {
   --k-color-surface-canvas: #f0fdfa;
   --k-color-surface-raised: #ffffff;
+  --k-color-surface-overlay: #ffffff;
   --k-color-surface-subtle: #ccfbf1;
   --k-color-text-primary: #134e4a;
   --k-color-text-muted: #52706d;
@@ -1706,6 +1709,7 @@
 [data-brand="reference"][data-theme="dark"] {
   --k-color-surface-canvas: #071b19;
   --k-color-surface-raised: #0b2925;
+  --k-color-surface-overlay: #0b2925;
   --k-color-surface-subtle: #123b36;
   --k-color-text-primary: #ecfdf5;
   --k-color-text-muted: #91b8b2;

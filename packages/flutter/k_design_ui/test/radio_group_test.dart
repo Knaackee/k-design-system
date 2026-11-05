@@ -5,6 +5,74 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  for (final density in KDensity.values) {
+    for (final scale in [1.0, 1.8]) {
+      testWidgets('segmented $density $scale wraps and retains radio behavior', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(320, 640);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        String? value = 'draft';
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(
+              configuration: KDesignConfiguration(density: density),
+            ),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(scale)),
+              child: child!,
+            ),
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) => KRadioGroup<String>(
+                  label: 'Status',
+                  appearance: KRadioGroupAppearance.segmented,
+                  value: value,
+                  onChanged: (next) => setState(() => value = next),
+                  items: const [
+                    KRadioOption(value: 'draft', label: 'Draft'),
+                    KRadioOption(value: 'active', label: 'Active'),
+                    KRadioOption(
+                      value: 'archived',
+                      label: 'Unavailable archived status',
+                      disabled: true,
+                    ),
+                    KRadioOption(
+                      value: 'long',
+                      label:
+                          'A very long option label that must wrap within the available width',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        for (final radio in find.byType(RawRadio<String>).evaluate()) {
+          expect(
+            tester.getSize(find.byWidget(radio.widget)).width,
+            lessThanOrEqualTo(320),
+          );
+        }
+        await tester.tap(find.text('Active'));
+        await tester.pump();
+        expect(value, 'active');
+        await tester.tap(find.text('Unavailable archived status'));
+        await tester.pump();
+        expect(value, 'active');
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+        await tester.pump();
+        expect(value, 'long');
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
   testWidgets('empty group labels reserve no header space', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

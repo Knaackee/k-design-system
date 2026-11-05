@@ -9,6 +9,10 @@
         "$type": "color",
         "$value": "{color.neutral.0}"
       },
+      "overlay": {
+        "$type": "color",
+        "$value": "{color.surface.raised}"
+      },
       "subtle": {
         "$type": "color",
         "$value": "{color.neutral.100}"

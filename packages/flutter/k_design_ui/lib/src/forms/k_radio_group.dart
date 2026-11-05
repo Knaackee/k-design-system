@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'form_style.dart';
 
+enum KRadioGroupAppearance { radio, segmented }
+
 @immutable
 class KRadioOption<T> {
   const KRadioOption({
@@ -22,6 +24,7 @@ class KRadioGroup<T> extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.horizontal = false,
+    this.appearance = KRadioGroupAppearance.radio,
     super.key,
   });
   final String label;
@@ -29,6 +32,7 @@ class KRadioGroup<T> extends StatelessWidget {
   final T? value;
   final ValueChanged<T?>? onChanged;
   final bool horizontal;
+  final KRadioGroupAppearance appearance;
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +58,26 @@ class KRadioGroup<T> extends StatelessWidget {
                         key: ValueKey(item.value),
                         item: item,
                         enabled: onChanged != null && !item.disabled,
+                        segmented:
+                            appearance == KRadioGroupAppearance.segmented,
                       ),
                     )
                     .toList();
+                if (appearance == KRadioGroupAppearance.segmented) {
+                  return Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(t.spaceMicro),
+                    decoration: BoxDecoration(
+                      color: t.colorSurfaceSubtle,
+                      borderRadius: BorderRadius.circular(t.radiusControl),
+                    ),
+                    child: Wrap(
+                      spacing: t.spaceMicro,
+                      runSpacing: t.spaceMicro,
+                      children: options,
+                    ),
+                  );
+                }
                 return horizontal
                     ? Wrap(
                         spacing: t.spaceControlGap,
@@ -83,9 +104,15 @@ class KRadioGroup<T> extends StatelessWidget {
 }
 
 class _RadioOption<T> extends StatefulWidget {
-  const _RadioOption({required this.item, required this.enabled, super.key});
+  const _RadioOption({
+    required this.item,
+    required this.enabled,
+    this.segmented = false,
+    super.key,
+  });
   final KRadioOption<T> item;
   final bool enabled;
+  final bool segmented;
   @override
   State<_RadioOption<T>> createState() => _RadioOptionState<T>();
 }
@@ -114,6 +141,36 @@ class _RadioOptionState<T> extends State<_RadioOption<T>> {
       builder: (context, state) {
         final selected = state.states.contains(WidgetState.selected);
         final focused = state.states.contains(WidgetState.focused);
+        if (widget.segmented) {
+          return Opacity(
+            opacity: widget.enabled ? 1 : t.opacityDisabled,
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: math.max(t.sizeControl, t.sizeHitTarget),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: t.spaceControlInsetInline,
+                vertical: t.spaceControlGap,
+              ),
+              decoration: BoxDecoration(
+                color: selected ? t.colorSurfaceRaised : Colors.transparent,
+                borderRadius: BorderRadius.circular(t.radiusControl),
+                border: Border.all(
+                  color: focused ? t.colorBorderFocus : Colors.transparent,
+                  width: t.borderWidthStrong,
+                ),
+              ),
+              child: Text(
+                widget.item.label,
+                textAlign: TextAlign.center,
+                style: formTextStyle(
+                  context,
+                  color: selected ? t.colorTextPrimary : t.colorTextMuted,
+                ),
+              ),
+            ),
+          );
+        }
         return Opacity(
           opacity: widget.enabled ? 1 : t.opacityDisabled,
           child: ConstrainedBox(

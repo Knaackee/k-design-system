@@ -18,6 +18,8 @@ export interface KRadioGroupProps extends Omit<
   disabled?: boolean;
   required?: boolean;
   orientation?: "horizontal" | "vertical";
+  /** Segmented choices retain native radio semantics and wrap when needed. */
+  appearance?: "radio" | "segmented";
 }
 
 /** Native radios provide form submission, arrow navigation and single selection. */
@@ -30,6 +32,7 @@ export function KRadioGroup({
   disabled = false,
   required = false,
   orientation = "vertical",
+  appearance = "radio",
   className = "",
   ...props
 }: KRadioGroupProps) {
@@ -39,6 +42,7 @@ export function KRadioGroup({
       {...props}
       className={`k-radio-group ${className}`}
       disabled={disabled || !onValueChange}
+      data-appearance={appearance}
     >
       <legend>{label}</legend>
       <div className="k-radio-group__items" data-orientation={orientation}>

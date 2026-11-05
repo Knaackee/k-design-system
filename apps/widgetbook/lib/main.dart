@@ -1,4 +1,6 @@
+import 'segmented_radio_fixture.dart';
 import 'user_dashboard_review.dart';
+import 'compact_sheet_fixture.dart';
 import 'onzeit_overhaul_gallery.dart';
 import 'booking_page_management_fixture.dart';
 import 'offer_overview_fixture.dart';
@@ -466,6 +468,10 @@ class KDesignWidgetbook extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'bottom-sheet-modal',
                   builder: (_) => const OverlayFixture(sheet: true),
+                ),
+                WidgetbookUseCase(
+                  name: 'compact-sheet-fixed-actions',
+                  builder: (_) => const CompactSheetFixture(),
                 ),
               ],
             ),
@@ -1222,6 +1228,10 @@ class KDesignWidgetbook extends StatelessWidget {
             WidgetbookFolder(
               name: 'RadioGroup',
               children: [
+                WidgetbookUseCase(
+                  name: 'segmented-single-selection',
+                  builder: (context) => const SegmentedRadioFixture(),
+                ),
                 WidgetbookUseCase(
                   name: 'radio-group-options',
                   builder: (context) => const RadioFixture(),

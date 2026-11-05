@@ -110,6 +110,10 @@
   --k-surface-background: var(--k-color-surface-subtle);
 }
 
+.k-surface--tone-overlay {
+  --k-surface-background: var(--k-color-surface-overlay);
+}
+
 .k-surface--border-none {
   --k-surface-border-width: var(--k-border-width-none);
   --k-surface-border-color: transparent;

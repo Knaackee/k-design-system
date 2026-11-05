@@ -3,6 +3,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 void main() {
+  test('overlay defaults match raised and can be overridden independently', () {
+    for (final tokens in [
+      KDesignTokens.orbitLight,
+      KDesignTokens.orbitDark,
+      KDesignTokens.referenceLight,
+      KDesignTokens.referenceDark,
+    ]) {
+      expect(tokens.colorSurfaceOverlay, tokens.colorSurfaceRaised);
+      final changed = tokens.copyWith(
+        colorSurfaceOverlay: const Color(0xff9c27b0),
+      );
+      expect(changed.colorSurfaceOverlay, const Color(0xff9c27b0));
+      expect(changed.colorSurfaceRaised, tokens.colorSurfaceRaised);
+      expect(
+        tokens.lerp(changed, 1).colorSurfaceOverlay,
+        const Color(0xff9c27b0),
+      );
+    }
+  });
+
   test('neutral actions stay separate from brand accents', () {
     expect(
       KDesignTokens.orbitLight.colorActionPrimaryBackground,

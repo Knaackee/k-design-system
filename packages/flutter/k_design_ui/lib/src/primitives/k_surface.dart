@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
-enum KSurfaceTone { canvas, raised, subtle }
+enum KSurfaceTone { canvas, raised, subtle, overlay }
 
 enum KSurfaceBorder { none, standard, strong }
 
@@ -41,6 +41,7 @@ class KSurface extends StatelessWidget {
       KSurfaceTone.canvas => tokens.colorSurfaceCanvas,
       KSurfaceTone.raised => tokens.colorSurfaceRaised,
       KSurfaceTone.subtle => tokens.colorSurfaceSubtle,
+      KSurfaceTone.overlay => tokens.colorSurfaceOverlay,
     };
     final borderColor = switch (border) {
       KSurfaceBorder.none => null,

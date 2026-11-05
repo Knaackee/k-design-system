@@ -5,7 +5,9 @@ import '../primitives/k_surface.dart';
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
 
-/// Token-styled modal content. Open it with [KDialog.show].
+/// Token-styled modal content with a fixed header and actions.
+/// Compact content sizes to fit; only the body scrolls when constrained.
+/// Open it with [KDialog.show].
 class KDialog extends StatelessWidget {
   const KDialog({
     required this.title,
@@ -86,6 +88,7 @@ class KDialog extends StatelessWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: KSurface(
+                    tone: KSurfaceTone.overlay,
                     radius: KSurfaceRadius.overlay,
                     elevation: KSurfaceElevation.overlay,
                     child: _OverlayBody(
@@ -158,7 +161,7 @@ class KBottomSheet extends StatelessWidget {
     useSafeArea: true,
     builder: (routeContext) => Padding(
       padding: EdgeInsets.only(
-        bottom: expandBody ? MediaQuery.viewInsetsOf(routeContext).bottom : 0,
+        bottom: MediaQuery.viewInsetsOf(routeContext).bottom,
       ),
       child: KBottomSheet(
         title: title,
@@ -185,7 +188,7 @@ class KBottomSheet extends StatelessWidget {
           maxHeight: MediaQuery.sizeOf(context).height * .9,
         ),
         child: Material(
-          color: t.colorSurfaceRaised,
+          color: t.colorSurfaceOverlay,
           elevation: 0,
           shape: RoundedRectangleBorder(
             side: BorderSide(
@@ -331,7 +334,10 @@ class _OverlayBody extends StatelessWidget {
             ),
           ],
           SizedBox(height: t.spaceLayoutGutter),
-          if (expandBody) Expanded(child: child) else child,
+          if (expandBody)
+            Expanded(child: child)
+          else
+            Flexible(child: SingleChildScrollView(child: child)),
           if (actions != null) ...[
             SizedBox(height: t.spaceLayoutGutter),
             Align(alignment: Alignment.centerRight, child: actions!),
@@ -339,6 +345,6 @@ class _OverlayBody extends StatelessWidget {
         ],
       ),
     );
-    return expandBody ? body : SingleChildScrollView(child: body);
+    return body;
   }
 }

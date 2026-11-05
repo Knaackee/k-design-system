@@ -9,7 +9,7 @@
 .k-bottom-sheet {
   box-sizing: border-box;
   color: var(--k-color-text-primary);
-  background: var(--k-color-surface-raised);
+  background: var(--k-color-surface-overlay);
   border: var(--k-border-width-default) solid var(--k-color-border-default);
   box-shadow: var(--k-elevation-overlay);
   font-family: var(--k-font-family);

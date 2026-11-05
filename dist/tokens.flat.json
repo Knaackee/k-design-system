@@ -8,6 +8,10 @@
       "type": "color",
       "value": "#ffffff"
     },
+    "color.surface.overlay": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "color.surface.subtle": {
       "type": "color",
       "value": "#f2f2f3"
@@ -3673,6 +3677,10 @@
       "value": "#181819"
     },
     "color.surface.raised": {
+      "type": "color",
+      "value": "#202022"
+    },
+    "color.surface.overlay": {
       "type": "color",
       "value": "#202022"
     },
@@ -7344,6 +7352,10 @@
       "type": "color",
       "value": "#ffffff"
     },
+    "color.surface.overlay": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "color.surface.subtle": {
       "type": "color",
       "value": "#ccfbf1"
@@ -11009,6 +11021,10 @@
       "value": "#071b19"
     },
     "color.surface.raised": {
+      "type": "color",
+      "value": "#0b2925"
+    },
+    "color.surface.overlay": {
       "type": "color",
       "value": "#0b2925"
     },

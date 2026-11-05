@@ -1,6 +1,6 @@
 import { createElement, type HTMLAttributes, type ReactNode } from "react";
 
-export type KSurfaceTone = "canvas" | "raised" | "subtle";
+export type KSurfaceTone = "canvas" | "raised" | "subtle" | "overlay";
 export type KSurfaceBorder = "none" | "default" | "strong";
 export type KSurfaceRadius =
   | "none"
