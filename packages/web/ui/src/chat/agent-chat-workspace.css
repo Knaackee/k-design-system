@@ -16,7 +16,8 @@
   color: var(--k-color-text-primary);
   background: var(--k-color-surface-canvas);
   font-family: var(--k-font-family);
-  transition: grid-template-columns var(--k-motion-emphasis) ease-in-out;
+  transition: grid-template-columns var(--k-motion-control-settle)
+    var(--k-motion-control-easing);
 }
 
 .k-agent-chat-workspace__sidebar {
@@ -98,6 +99,7 @@
   text-align: center;
   pointer-events: none;
   isolation: isolate;
+  /* k-ui-rules-ignore raw-motion: duration set by the component script (choreography or drag) */
   transition:
     inset-block-start var(--k-agent-chat-workspace-avatar-transition)
       ease-in-out,

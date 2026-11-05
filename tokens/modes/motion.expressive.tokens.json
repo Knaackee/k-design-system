@@ -1,0 +1,82 @@
+{
+  "motion": {
+    "feedback": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.instant}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "control": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.brisk}"
+      },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.playful}"
+      },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "enter": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.medium}"
+      },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.gentle}"
+      },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "exit": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.brisk}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "page": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.relaxed}"
+      },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.gentle}"
+      },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "attention": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.relaxed}"
+      },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.playful}"
+      },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    }
+  }
+}

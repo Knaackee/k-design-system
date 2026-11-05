@@ -8,12 +8,16 @@ class SortableTreeMotion extends StatelessWidget {
     required this.children,
     required this.rowExtent,
     required this.duration,
+    this.curve = Curves.easeInOut,
     super.key,
   });
 
   final List<Widget> children;
   final double rowExtent;
   final Duration duration;
+
+  /// Pass the control role's curve (`tokens.motion(KMotionRole.control)`).
+  final Curve curve;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,7 @@ class SortableTreeMotion extends StatelessWidget {
               AnimatedPositioned(
                 key: children[index].key ?? ValueKey('tree-extra-$index'),
                 duration: effectiveDuration,
-                curve: Curves.easeInOut,
+                curve: curve,
                 top: rowExtent * index,
                 left: 0,
                 right: 0,

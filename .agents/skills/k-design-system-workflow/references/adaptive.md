@@ -40,6 +40,22 @@ applyKAdaptive(rootElement, { density: "dense" });
   `--k-text-scale` (capped per role) and `data-text-large` from 1.3× so rows
   stack like on Flutter.
 
+## Motion style
+
+```dart
+KAdaptiveTheme(
+  overrides: const KAdaptiveOverrides(motion: KMotionStyle.expressive),
+  child: child!,
+)
+```
+
+```ts
+applyKAdaptive(document.documentElement, { motion: "expressive" });
+```
+
+`apple` is the default. The platform reduce-motion setting always resolves to
+`reduced`. Ask the user which style a product wants before changing it.
+
 ## Parity rule
 
 Tablet = desktop, mobile Web = mobile app. Only the window class picks the

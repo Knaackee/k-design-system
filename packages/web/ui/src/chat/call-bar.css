@@ -164,7 +164,8 @@
     .k-call-bar__duration,
     .k-call-bar__controls
   ) {
-  animation: k-call-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: k-call-pop var(--k-motion-enter-settle)
+    var(--k-motion-enter-easing) both;
   animation-delay: 220ms;
 }
 .k-call-bar[data-expanded="true"] .k-call-bar__waveform {

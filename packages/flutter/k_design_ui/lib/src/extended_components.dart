@@ -242,7 +242,8 @@ class KSwitch extends StatelessWidget {
                 ),
                 child: Center(
                   child: AnimatedContainer(
-                    duration: t.componentSwitchTransitionDuration,
+                    duration: t.motion(KMotionRole.control).settle,
+                    curve: t.motion(KMotionRole.control).curve,
                     width: t.componentSwitchTrackWidth,
                     height: t.componentSwitchTrackHeight,
                     padding: EdgeInsets.all(t.componentSwitchTrackInset),
@@ -258,7 +259,8 @@ class KSwitch extends StatelessWidget {
                       borderRadius: BorderRadius.circular(t.radiusFull),
                     ),
                     child: AnimatedAlign(
-                      duration: t.componentSwitchTransitionDuration,
+                      duration: t.motion(KMotionRole.control).settle,
+                      curve: t.motion(KMotionRole.control).curve,
                       alignment: value
                           ? Alignment.centerRight
                           : Alignment.centerLeft,

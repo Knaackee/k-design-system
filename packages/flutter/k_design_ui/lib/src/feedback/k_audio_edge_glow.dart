@@ -41,6 +41,7 @@ final class _KAudioEdgeGlowState extends State<KAudioEdgeGlow>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _motion = AnimationController(
     vsync: this,
+    // k-ui-rules-ignore raw-motion: continuous glow loop
     duration: const Duration(seconds: 13),
   )..addListener(_tick);
 

@@ -30,6 +30,7 @@ import 'chat_presentations_fixture.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
+import 'motion_fixture.dart';
 import 'geometry_parity_fixture.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -2128,6 +2129,15 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
   WidgetbookCategory(
     name: 'Primitives',
     children: [
+      WidgetbookFolder(
+        name: 'Motion',
+        children: [
+          WidgetbookUseCase(
+            name: 'motion-roles',
+            builder: (_) => const MotionRolesFixture(),
+          ),
+        ],
+      ),
       WidgetbookFolder(
         name: 'Accordion',
         children: [

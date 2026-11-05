@@ -76,6 +76,7 @@
   width: 100%;
   height: 100%;
   transform-origin: 50% 100%;
+  /* k-ui-rules-ignore raw-motion: duration set by the component script (choreography or drag) */
   transition: transform var(--k-map-pin-drag-duration, var(--k-motion-standard))
     ease-out;
 }

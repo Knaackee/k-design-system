@@ -56,6 +56,7 @@
   transform-origin: center top;
   transform: perspective(var(--k-screen-switcher-perspective))
     rotateX(var(--k-screen-switcher-tilt)) scale(var(--screen-scale));
+  /* k-ui-rules-ignore raw-motion: synchronised with the screen-switcher choreography (--k-screen-switcher-duration) */
   transition:
     top var(--k-screen-switcher-center-duration) ease,
     left var(--k-screen-switcher-duration) ease,
@@ -160,6 +161,7 @@
   pointer-events: none;
   background: var(--k-color-text-primary);
   opacity: 0;
+  /* k-ui-rules-ignore raw-motion: synchronised with the screen-switcher choreography (--k-screen-switcher-duration) */
   transition: opacity var(--k-screen-switcher-duration) ease;
 }
 .k-screen-switcher[data-mode="overview"] .k-screen-switcher__depth {

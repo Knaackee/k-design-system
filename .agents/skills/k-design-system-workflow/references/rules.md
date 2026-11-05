@@ -96,6 +96,22 @@ assertions. The others are review rules.
 - Sticky footer with primary action in sheets; discard confirmation for dirty
   forms. A dependency that does not exist yet offers "Create …" inline.
 
+## Motion — gate (Decision 0011)
+
+- Animate with a role, never a duration or curve: `feedback` (press/hover),
+  `control` (toggle, expand, reorder), `enter`, `exit`, `page`, `attention`.
+  Web: `transition: opacity var(--k-motion-enter-settle)
+var(--k-motion-enter-easing)`. Flutter: `final m = t.motion(KMotionRole.enter)`
+  then `duration: m.settle, curve: m.curve` (or `m.spring` for physics).
+- Multiply travelled offsets with the role's distance
+  (`--k-motion-<role>-distance`, `m.distance`): reduced motion fades only.
+- Exits are shorter than entries and never bounce. Bounce belongs to
+  spatial motion, never to colour or opacity alone.
+- The style (`apple` default, `expressive`, `reduced`) is chosen once per app
+  via the adaptive overrides; the system reduce-motion setting always wins.
+- Loops and script-driven choreography may use their own timing with a
+  `k-ui-rules-ignore raw-motion: <reason>` comment.
+
 ## Status — review
 
 - Status is text + colour (badge), never colour alone. Dates are relative or

@@ -201,8 +201,8 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                       key: const ValueKey('k-agent-chat-workspace-sidebar'),
                       duration: MediaQuery.disableAnimationsOf(context)
                           ? Duration.zero
-                          : tokens.motionEmphasis,
-                      curve: Curves.easeInOut,
+                          : tokens.motion(KMotionRole.control).settle,
+                      curve: tokens.motion(KMotionRole.control).curve,
                       width: _collapsed || widget.dockMaximized
                           ? 0
                           : KAgentChatWorkspace.desktopSidebarWidth,
@@ -417,10 +417,12 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                                   ? Alignment.center
                                   : Alignment.topCenter,
                               duration: duration,
+                              // k-ui-rules-ignore raw-motion: avatar choreography shared with the Web script
                               curve: Curves.easeInOut,
                               child: TweenAnimationBuilder<double>(
                                 tween: Tween<double>(end: targetSize),
                                 duration: duration,
+                                // k-ui-rules-ignore raw-motion: avatar choreography shared with the Web script
                                 curve: Curves.easeInOut,
                                 child: widget.avatar,
                                 builder: (context, size, avatar) =>

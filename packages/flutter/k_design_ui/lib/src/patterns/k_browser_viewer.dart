@@ -97,8 +97,8 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
       height: compact ? 180 : widget.height,
       duration: MediaQuery.disableAnimationsOf(context) || !_animateHeight
           ? Duration.zero
-          : t.motionModerate,
-      curve: Curves.easeOut,
+          : t.motion(KMotionRole.control).settle,
+      curve: t.motion(KMotionRole.control).curve,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: t.colorSurfaceCanvas,

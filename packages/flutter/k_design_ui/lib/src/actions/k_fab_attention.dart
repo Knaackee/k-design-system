@@ -153,6 +153,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: 0,
           end: 1,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: motion(432),
       ),
@@ -162,6 +163,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: 1,
           end: 0,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeIn)),
         weight: motion(360),
       ),
@@ -169,6 +171,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: 0,
           end: .36,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeOut)),
         weight: motion(180),
       ),
@@ -176,6 +179,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: .36,
           end: 0,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeIn)),
         weight: motion(180),
       ),
@@ -183,6 +187,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: 0,
           end: .14,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeOut)),
         weight: motion(108),
       ),
@@ -190,6 +195,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: .14,
           end: 0,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeIn)),
         weight: motion(108),
       ),
@@ -197,6 +203,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: 0,
           end: .04,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeOut)),
         weight: motion(54),
       ),
@@ -204,6 +211,7 @@ class _KFabAttentionBubbleState extends State<KFabAttentionBubble>
         tween: Tween<double>(
           begin: .04,
           end: 0,
+          // k-ui-rules-ignore raw-motion: keyframed attention sequence (TweenSequence), shared with Web keyframes
         ).chain(CurveTween(curve: Curves.easeIn)),
         weight: motion(54),
       ),

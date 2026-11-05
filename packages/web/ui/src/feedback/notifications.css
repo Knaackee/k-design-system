@@ -66,12 +66,14 @@
   opacity: 1;
   translate: 0 0;
   transition:
-    opacity var(--k-component-toast-entry-duration) ease,
-    translate var(--k-component-toast-entry-duration) ease;
+    opacity var(--k-motion-enter-settle) var(--k-motion-enter-easing),
+    translate var(--k-motion-enter-settle) var(--k-motion-enter-easing);
 }
 .k-toast-viewport:not([data-visible]) {
   opacity: 0;
-  translate: 0 var(--k-space-control-gap);
+  translate: 0 calc(var(--k-space-control-gap) * var(--k-motion-exit-distance));
+  transition-duration: var(--k-motion-exit-settle);
+  transition-timing-function: var(--k-motion-exit-easing);
 }
 .k-toast-viewport:not([data-visible]) .k-toast {
   pointer-events: none;

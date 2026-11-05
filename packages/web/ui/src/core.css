@@ -297,9 +297,9 @@
   line-height: var(--k-font-relaxed-height);
   cursor: pointer;
   transition:
-    background var(--k-motion-fast) ease,
-    opacity var(--k-motion-fast) ease,
-    box-shadow var(--k-motion-fast) ease;
+    background var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    opacity var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    box-shadow var(--k-motion-feedback-settle) var(--k-motion-feedback-easing);
 }
 
 .k-button::after {
@@ -496,8 +496,8 @@
   background: var(--k-progress-dot-color, var(--k-color-text-muted));
   opacity: var(--k-component-progress-dots-inactive-opacity);
   transition:
-    width var(--k-motion-moderate) ease,
-    opacity var(--k-motion-moderate) ease;
+    width var(--k-motion-control-settle) var(--k-motion-control-easing),
+    opacity var(--k-motion-control-settle) var(--k-motion-control-easing);
 }
 .k-progress-dots > span[data-active] {
   background: var(--k-progress-active-color, var(--k-color-text-primary));

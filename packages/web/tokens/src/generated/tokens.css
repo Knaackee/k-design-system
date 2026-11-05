@@ -248,6 +248,24 @@
   --k-motion-spinner: 700ms;
   --k-motion-progress: 1200ms;
   --k-motion-skeleton: 1400ms;
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 1;
+  --k-motion-control-duration: 320ms;
+  --k-motion-control-bounce: 0;
+  --k-motion-control-distance: 1;
+  --k-motion-enter-duration: 500ms;
+  --k-motion-enter-bounce: 0;
+  --k-motion-enter-distance: 1;
+  --k-motion-exit-duration: 320ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 1;
+  --k-motion-page-duration: 500ms;
+  --k-motion-page-bounce: 0;
+  --k-motion-page-distance: 1;
+  --k-motion-attention-duration: 500ms;
+  --k-motion-attention-bounce: 0.3;
+  --k-motion-attention-distance: 1;
   --k-blur-mobile-app-bar-web: 22px;
   --k-blur-mobile-app-bar-native: 18px;
   --k-saturation-mobile-app-bar-web: 1.45;
@@ -569,6 +587,18 @@
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 472ms;
+  --k-motion-control-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-enter-settle: 736ms;
+  --k-motion-enter-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-exit-settle: 472ms;
+  --k-motion-exit-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-page-settle: 736ms;
+  --k-motion-page-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-attention-settle: 820ms;
+  --k-motion-attention-easing: linear(0, 0.0751, 0.2424, 0.4375, 0.6213, 0.7737, 0.8881, 0.9661, 1.0135, 1.0376, 1.0457, 1.0439, 1.0369, 1.0281, 1.0194, 1.012, 1.0063, 1.0023, 0.9998, 0.9985, 0.9979, 0.9979, 0.9982, 0.9986, 1);
 }
 
 [data-theme="dark"], [data-brand="orbit"][data-theme="dark"] {
@@ -817,6 +847,24 @@
   --k-motion-spinner: 700ms;
   --k-motion-progress: 1200ms;
   --k-motion-skeleton: 1400ms;
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 1;
+  --k-motion-control-duration: 320ms;
+  --k-motion-control-bounce: 0;
+  --k-motion-control-distance: 1;
+  --k-motion-enter-duration: 500ms;
+  --k-motion-enter-bounce: 0;
+  --k-motion-enter-distance: 1;
+  --k-motion-exit-duration: 320ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 1;
+  --k-motion-page-duration: 500ms;
+  --k-motion-page-bounce: 0;
+  --k-motion-page-distance: 1;
+  --k-motion-attention-duration: 500ms;
+  --k-motion-attention-bounce: 0.3;
+  --k-motion-attention-distance: 1;
   --k-blur-mobile-app-bar-web: 22px;
   --k-blur-mobile-app-bar-native: 18px;
   --k-saturation-mobile-app-bar-web: 1.45;
@@ -1138,6 +1186,18 @@
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 472ms;
+  --k-motion-control-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-enter-settle: 736ms;
+  --k-motion-enter-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-exit-settle: 472ms;
+  --k-motion-exit-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-page-settle: 736ms;
+  --k-motion-page-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-attention-settle: 820ms;
+  --k-motion-attention-easing: linear(0, 0.0751, 0.2424, 0.4375, 0.6213, 0.7737, 0.8881, 0.9661, 1.0135, 1.0376, 1.0457, 1.0439, 1.0369, 1.0281, 1.0194, 1.012, 1.0063, 1.0023, 0.9998, 0.9985, 0.9979, 0.9979, 0.9982, 0.9986, 1);
 }
 
 [data-brand="reference"][data-theme="light"] {
@@ -1386,6 +1446,24 @@
   --k-motion-spinner: 700ms;
   --k-motion-progress: 1200ms;
   --k-motion-skeleton: 1400ms;
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 1;
+  --k-motion-control-duration: 320ms;
+  --k-motion-control-bounce: 0;
+  --k-motion-control-distance: 1;
+  --k-motion-enter-duration: 500ms;
+  --k-motion-enter-bounce: 0;
+  --k-motion-enter-distance: 1;
+  --k-motion-exit-duration: 320ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 1;
+  --k-motion-page-duration: 500ms;
+  --k-motion-page-bounce: 0;
+  --k-motion-page-distance: 1;
+  --k-motion-attention-duration: 500ms;
+  --k-motion-attention-bounce: 0.3;
+  --k-motion-attention-distance: 1;
   --k-blur-mobile-app-bar-web: 22px;
   --k-blur-mobile-app-bar-native: 18px;
   --k-saturation-mobile-app-bar-web: 1.45;
@@ -1707,6 +1785,18 @@
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 472ms;
+  --k-motion-control-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-enter-settle: 736ms;
+  --k-motion-enter-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-exit-settle: 472ms;
+  --k-motion-exit-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-page-settle: 736ms;
+  --k-motion-page-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-attention-settle: 820ms;
+  --k-motion-attention-easing: linear(0, 0.0751, 0.2424, 0.4375, 0.6213, 0.7737, 0.8881, 0.9661, 1.0135, 1.0376, 1.0457, 1.0439, 1.0369, 1.0281, 1.0194, 1.012, 1.0063, 1.0023, 0.9998, 0.9985, 0.9979, 0.9979, 0.9982, 0.9986, 1);
 }
 
 [data-brand="reference"][data-theme="dark"] {
@@ -1955,6 +2045,24 @@
   --k-motion-spinner: 700ms;
   --k-motion-progress: 1200ms;
   --k-motion-skeleton: 1400ms;
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 1;
+  --k-motion-control-duration: 320ms;
+  --k-motion-control-bounce: 0;
+  --k-motion-control-distance: 1;
+  --k-motion-enter-duration: 500ms;
+  --k-motion-enter-bounce: 0;
+  --k-motion-enter-distance: 1;
+  --k-motion-exit-duration: 320ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 1;
+  --k-motion-page-duration: 500ms;
+  --k-motion-page-bounce: 0;
+  --k-motion-page-distance: 1;
+  --k-motion-attention-duration: 500ms;
+  --k-motion-attention-bounce: 0.3;
+  --k-motion-attention-distance: 1;
   --k-blur-mobile-app-bar-web: 22px;
   --k-blur-mobile-app-bar-native: 18px;
   --k-saturation-mobile-app-bar-web: 1.45;
@@ -2276,10 +2384,121 @@
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 472ms;
+  --k-motion-control-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-enter-settle: 736ms;
+  --k-motion-enter-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-exit-settle: 472ms;
+  --k-motion-exit-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-page-settle: 736ms;
+  --k-motion-page-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-attention-settle: 820ms;
+  --k-motion-attention-easing: linear(0, 0.0751, 0.2424, 0.4375, 0.6213, 0.7737, 0.8881, 0.9661, 1.0135, 1.0376, 1.0457, 1.0439, 1.0369, 1.0281, 1.0194, 1.012, 1.0063, 1.0023, 0.9998, 0.9985, 0.9979, 0.9979, 0.9982, 0.9986, 1);
 }
 }
 
 @layer k-design-mode {
+[data-motion="apple"] {
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 1;
+  --k-motion-control-duration: 320ms;
+  --k-motion-control-bounce: 0;
+  --k-motion-control-distance: 1;
+  --k-motion-enter-duration: 500ms;
+  --k-motion-enter-bounce: 0;
+  --k-motion-enter-distance: 1;
+  --k-motion-exit-duration: 320ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 1;
+  --k-motion-page-duration: 500ms;
+  --k-motion-page-bounce: 0;
+  --k-motion-page-distance: 1;
+  --k-motion-attention-duration: 500ms;
+  --k-motion-attention-bounce: 0.3;
+  --k-motion-attention-distance: 1;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 472ms;
+  --k-motion-control-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-enter-settle: 736ms;
+  --k-motion-enter-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-exit-settle: 472ms;
+  --k-motion-exit-easing: linear(0, 0.0579, 0.1813, 0.3223, 0.457, 0.5749, 0.673, 0.7519, 0.8138, 0.8615, 0.8977, 0.925, 0.9453, 0.9602, 0.9712, 0.9793, 0.9851, 0.9893, 0.9924, 0.9946, 0.9961, 0.9973, 0.9981, 0.9986, 1);
+  --k-motion-page-settle: 736ms;
+  --k-motion-page-easing: linear(0, 0.0577, 0.1807, 0.3215, 0.456, 0.5738, 0.672, 0.7509, 0.8129, 0.8607, 0.8971, 0.9244, 0.9448, 0.9599, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-attention-settle: 820ms;
+  --k-motion-attention-easing: linear(0, 0.0751, 0.2424, 0.4375, 0.6213, 0.7737, 0.8881, 0.9661, 1.0135, 1.0376, 1.0457, 1.0439, 1.0369, 1.0281, 1.0194, 1.012, 1.0063, 1.0023, 0.9998, 0.9985, 0.9979, 0.9979, 0.9982, 0.9986, 1);
+}
+
+[data-motion="expressive"] {
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 1;
+  --k-motion-control-duration: 220ms;
+  --k-motion-control-bounce: 0.4;
+  --k-motion-control-distance: 1;
+  --k-motion-enter-duration: 320ms;
+  --k-motion-enter-bounce: 0.2;
+  --k-motion-enter-distance: 1;
+  --k-motion-exit-duration: 220ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 1;
+  --k-motion-page-duration: 450ms;
+  --k-motion-page-bounce: 0.2;
+  --k-motion-page-distance: 1;
+  --k-motion-attention-duration: 450ms;
+  --k-motion-attention-bounce: 0.4;
+  --k-motion-attention-distance: 1;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 356ms;
+  --k-motion-control-easing: linear(0, 0.0752, 0.2486, 0.457, 0.6577, 0.8258, 0.9511, 1.0332, 1.078, 1.0941, 1.0908, 1.0762, 1.0569, 1.0373, 1.0204, 1.0074, 0.9986, 0.9934, 0.9913, 0.9912, 0.9923, 0.9941, 0.996, 0.9977, 1);
+  --k-motion-enter-settle: 432ms;
+  --k-motion-enter-easing: linear(0, 0.0517, 0.1705, 0.3164, 0.4638, 0.5982, 0.7125, 0.8045, 0.8753, 0.9273, 0.9637, 0.9878, 1.0026, 1.0108, 1.0144, 1.0151, 1.0141, 1.0122, 1.0099, 1.0077, 1.0057, 1.0041, 1.0027, 1.0017, 1);
+  --k-motion-exit-settle: 324ms;
+  --k-motion-exit-easing: linear(0, 0.0577, 0.1809, 0.3217, 0.4562, 0.5741, 0.6722, 0.7511, 0.8131, 0.8609, 0.8973, 0.9246, 0.9449, 0.96, 0.971, 0.9791, 0.985, 0.9892, 0.9923, 0.9945, 0.9961, 0.9972, 0.998, 0.9986, 1);
+  --k-motion-page-settle: 608ms;
+  --k-motion-page-easing: linear(0, 0.0517, 0.1708, 0.3168, 0.4643, 0.5987, 0.713, 0.805, 0.8757, 0.9276, 0.9639, 0.9879, 1.0027, 1.0109, 1.0145, 1.0151, 1.0141, 1.0122, 1.0099, 1.0077, 1.0057, 1.0041, 1.0027, 1.0017, 1);
+  --k-motion-attention-settle: 730ms;
+  --k-motion-attention-easing: linear(0, 0.0755, 0.2496, 0.4586, 0.6596, 0.8277, 0.9526, 1.0343, 1.0786, 1.0942, 1.0905, 1.0757, 1.0563, 1.0367, 1.0199, 1.007, 0.9983, 0.9933, 0.9912, 0.9912, 0.9924, 0.9942, 0.9961, 0.9978, 1);
+}
+
+[data-motion="reduced"] {
+  --k-motion-feedback-duration: 100ms;
+  --k-motion-feedback-bounce: 0;
+  --k-motion-feedback-distance: 0;
+  --k-motion-control-duration: 150ms;
+  --k-motion-control-bounce: 0;
+  --k-motion-control-distance: 0;
+  --k-motion-enter-duration: 150ms;
+  --k-motion-enter-bounce: 0;
+  --k-motion-enter-distance: 0;
+  --k-motion-exit-duration: 100ms;
+  --k-motion-exit-bounce: 0;
+  --k-motion-exit-distance: 0;
+  --k-motion-page-duration: 150ms;
+  --k-motion-page-bounce: 0;
+  --k-motion-page-distance: 0;
+  --k-motion-attention-duration: 150ms;
+  --k-motion-attention-bounce: 0;
+  --k-motion-attention-distance: 0;
+  --k-motion-feedback-settle: 148ms;
+  --k-motion-feedback-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-control-settle: 222ms;
+  --k-motion-control-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-enter-settle: 222ms;
+  --k-motion-enter-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-exit-settle: 148ms;
+  --k-motion-exit-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-page-settle: 222ms;
+  --k-motion-page-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+  --k-motion-attention-settle: 222ms;
+  --k-motion-attention-easing: linear(0, 0.0582, 0.1822, 0.3237, 0.4587, 0.5768, 0.6748, 0.7536, 0.8153, 0.8627, 0.8988, 0.9258, 0.946, 0.9608, 0.9717, 0.9796, 0.9854, 0.9895, 0.9925, 0.9947, 0.9962, 0.9973, 0.9981, 0.9987, 1);
+}
+
 [data-type-scale="compact"] {
   --k-font-size: 14px;
   --k-font-control-size: 13px;

@@ -428,7 +428,8 @@ class _KSortableTreeState<T> extends State<KSortableTree<T>> {
           ),
           child: SortableTreeMotion(
             rowExtent: height,
-            duration: t.motionModerate,
+            duration: t.motion(KMotionRole.control).settle,
+            curve: t.motion(KMotionRole.control).curve,
             children: [
               for (final e in all)
                 if (!grouped || e.parentId != null || e.node.children != null)

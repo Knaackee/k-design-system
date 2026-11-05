@@ -54,8 +54,10 @@ class _KPresentationCollectionState extends State<KPresentationCollection> {
         target,
         duration: Theme.of(
           context,
-        ).extension<KDesignTokens>()!.componentPresentationCollectionScroll,
-        curve: Curves.easeOut,
+        ).extension<KDesignTokens>()!.motion(KMotionRole.control).settle,
+        curve: Theme.of(
+          context,
+        ).extension<KDesignTokens>()!.motion(KMotionRole.control).curve,
       );
     }
   }

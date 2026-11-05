@@ -94,6 +94,7 @@
 }
 
 .k-activity-dot[data-animation="pulse"] .k-activity-dot__ring {
+  /* k-ui-rules-ignore raw-motion: continuous loop, not a change between states */
   animation: k-activity-dot-pulse
     var(--k-activity-dot-animation-duration, var(--k-motion-progress))
     var(--k-activity-dot-animation-timing, ease-in-out)

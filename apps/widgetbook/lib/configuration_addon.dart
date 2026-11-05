@@ -47,6 +47,14 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
       initialValue: KWindowClass.compact,
       labelBuilder: (value) => value.name,
     ),
+    // Applies in both modes (Decision 0011); the platform reduce-motion
+    // setting still wins in `device`.
+    ObjectDropdownField<KMotionStyle>(
+      name: 'motion',
+      values: KMotionStyle.values,
+      initialValue: KMotionStyle.apple,
+      labelBuilder: (value) => value.name,
+    ),
   ];
 
   @override
@@ -58,6 +66,7 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
         typeScale: valueOf<KTypeScale>('type-scale', group)!,
         inputMode: valueOf<KInputMode>('input-mode', group)!,
         windowClass: valueOf<KWindowClass>('window-class', group)!,
+        motion: valueOf<KMotionStyle>('motion', group) ?? KMotionStyle.apple,
       ),
     );
   }
@@ -74,7 +83,11 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
         ? resolveKAdaptiveConfiguration(
             width: MediaQuery.sizeOf(context).width,
             platform: theme.platform,
-            overrides: KAdaptiveOverrides(density: gallery.manual.density),
+            overrides: KAdaptiveOverrides(
+              density: gallery.manual.density,
+              motion: gallery.manual.motion,
+            ),
+            reduceMotion: MediaQuery.disableAnimationsOf(context),
           )
         : gallery.manual;
     final baseTokens =
@@ -97,7 +110,16 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
         configuration: resolved,
         child: MediaQuery.withClampedTextScaling(
           maxScaleFactor: tokens.textScaleMaxBody,
-          child: child,
+          child: resolved.motion == KMotionStyle.reduced
+              ? Builder(
+                  builder: (context) => MediaQuery(
+                    data: MediaQuery.of(
+                      context,
+                    ).copyWith(disableAnimations: true),
+                    child: child,
+                  ),
+                )
+              : child,
         ),
       ),
     );

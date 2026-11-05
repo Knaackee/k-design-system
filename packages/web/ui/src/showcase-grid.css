@@ -53,6 +53,7 @@
 
 .k-showcase-grid__plane[data-animate="true"][data-loop="false"]
   .k-showcase-grid__item {
+  /* k-ui-rules-ignore raw-motion: duration set by the component script (choreography or drag) */
   animation: k-showcase-enter var(--k-showcase-duration)
     cubic-bezier(0.16, 1, 0.3, 1) var(--k-showcase-delay) both;
 }

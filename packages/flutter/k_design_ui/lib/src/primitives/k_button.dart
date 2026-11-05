@@ -73,6 +73,9 @@ class KButton extends StatelessWidget {
         child: FilledButton(
           onPressed: loading ? null : onPressed,
           style: ButtonStyle(
+            // Press and hover colour changes use the feedback role, as on
+            // Web (`--k-motion-feedback-*`).
+            animationDuration: tokens.motion(KMotionRole.feedback).settle,
             enableFeedback: KSoundProvider.maybeOf(context) == null,
             // Density is already resolved by the tokens; do not compact twice.
             visualDensity: VisualDensity.standard,

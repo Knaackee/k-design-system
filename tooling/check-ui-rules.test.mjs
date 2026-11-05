@@ -43,3 +43,42 @@ test("flags nested React cards and odd icon sizes", () => {
     "icon-size",
   ]);
 });
+
+test("flags literal motion in library code, not motion roles", () => {
+  assert.deepEqual(
+    rules(checkWeb(".a { transition: opacity 200ms ease; }", ".css")),
+    ["raw-motion"],
+  );
+  assert.deepEqual(
+    rules(
+      checkWeb(
+        ".a { transition: opacity var(--k-motion-feedback-settle) var(--k-motion-feedback-easing); }",
+        ".css",
+      ),
+    ),
+    [],
+  );
+  assert.deepEqual(
+    rules(
+      checkWeb(".a { transition: opacity 200ms ease; }", ".css", {
+        library: false,
+      }),
+    ),
+    [],
+  );
+  assert.deepEqual(rules(checkDart("AnimatedOpacity(curve: Curves.easeOut)")), [
+    "raw-motion",
+  ]);
+  assert.deepEqual(
+    rules(
+      checkDart("AnimatedOpacity(duration: const Duration(milliseconds: 200))"),
+    ),
+    ["raw-motion"],
+  );
+  assert.deepEqual(
+    rules(
+      checkDart("AnimatedOpacity(duration: spec.settle, curve: spec.curve)"),
+    ),
+    [],
+  );
+});

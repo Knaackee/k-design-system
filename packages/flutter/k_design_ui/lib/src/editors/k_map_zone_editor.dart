@@ -1174,7 +1174,8 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
               );
               final bottomMotion = MediaQuery.disableAnimationsOf(context)
                   ? Duration.zero
-                  : t.motionStandard;
+                  : t.motion(KMotionRole.control).settle;
+              final bottomCurve = t.motion(KMotionRole.control).curve;
               final properties = _properties;
               final panelInset = t.spaceControlInsetInline;
               final panelBottom = 80.0 + overlayInset;
@@ -1301,7 +1302,7 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
                   if (_open)
                     AnimatedPositioned(
                       duration: bottomMotion,
-                      curve: Curves.easeOutCubic,
+                      curve: bottomCurve,
                       left: panelInset,
                       right: panelInset,
                       bottom: panelBottom,
@@ -1310,8 +1311,8 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
                           child: AnimatedContainer(
                             duration: MediaQuery.disableAnimationsOf(context)
                                 ? Duration.zero
-                                : t.motionEmphasis,
-                            curve: Curves.easeOutCubic,
+                                : t.motion(KMotionRole.control).settle,
+                            curve: t.motion(KMotionRole.control).curve,
                             width: math.min(
                               properties ? 600.0 : 440.0,
                               constraints.maxWidth - panelInset * 2,
@@ -1387,7 +1388,7 @@ class _KMapZoneEditorState extends State<KMapZoneEditor> {
                   if (_working.isNotEmpty || _open)
                     AnimatedPositioned(
                       duration: bottomMotion,
-                      curve: Curves.easeOutCubic,
+                      curve: bottomCurve,
                       left: inset,
                       right: inset,
                       bottom: inset + overlayInset,

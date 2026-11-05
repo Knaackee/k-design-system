@@ -16,6 +16,18 @@ const sourceFiles = {
 };
 
 const variantFiles = {
+  motionApple: [
+    "tokens/modes/motion.apple.tokens.json",
+    '[data-motion="apple"]',
+  ],
+  motionExpressive: [
+    "tokens/modes/motion.expressive.tokens.json",
+    '[data-motion="expressive"]',
+  ],
+  motionReduced: [
+    "tokens/modes/motion.reduced.tokens.json",
+    '[data-motion="reduced"]',
+  ],
   typeScaleCompact: [
     "tokens/modes/type-scale.compact.tokens.json",
     '[data-type-scale="compact"]',
@@ -188,7 +200,68 @@ function cssBlock(selector, tokens, sourceTokens = tokens, overrides) {
     ([path, token]) =>
       `  --k-${kebab(path)}: ${cssTokenValue(path, token, sourceTokens, overrides)};`,
   );
-  return `${selector} {\n${lines.join("\n")}\n}`;
+  return `${selector} {\n${[...lines, ...springCss(tokens)].join("\n")}\n}`;
+}
+
+/**
+ * Motion roles are springs given as perceptual duration and bounce (the
+ * SwiftUI / Flutter `SpringDescription.withDurationAndBounce` model). Flutter
+ * simulates them; CSS gets the same curve sampled into `linear()` over the
+ * settle time, so both platforms move identically.
+ */
+export function springPosition(durationMs, bounce, timeMs) {
+  const omega = (2 * Math.PI) / (durationMs / 1000);
+  const zeta = 1 - bounce;
+  const t = timeMs / 1000;
+  if (zeta >= 1) return 1 - Math.exp(-omega * t) * (1 + omega * t);
+  const damped = omega * Math.sqrt(1 - zeta * zeta);
+  return (
+    1 -
+    Math.exp(-zeta * omega * t) *
+      (Math.cos(damped * t) + ((zeta * omega) / damped) * Math.sin(damped * t))
+  );
+}
+
+/** Time until the spring stays within 0.1 % of its target, in ms. */
+export function springSettleMs(durationMs, bounce) {
+  let settled = 0;
+  for (let time = 0; time <= durationMs * 6; time += 2) {
+    if (Math.abs(1 - springPosition(durationMs, bounce, time)) > 0.001)
+      settled = time + 2;
+  }
+  return Math.max(settled, 1);
+}
+
+export function springLinear(durationMs, bounce, samples = 24) {
+  const settle = springSettleMs(durationMs, bounce);
+  const points = Array.from({ length: samples + 1 }, (_, index) => {
+    const value = springPosition(
+      durationMs,
+      bounce,
+      (settle * index) / samples,
+    );
+    return Number((index === samples ? 1 : value).toFixed(4));
+  });
+  return `linear(${points.join(", ")})`;
+}
+
+function springCss(tokens) {
+  const roles = new Set(
+    [...tokens.keys()]
+      .map((path) => path.match(/^motion\.([a-z]+)\.duration$/)?.[1])
+      .filter(Boolean),
+  );
+  return [...roles].flatMap((role) => {
+    const duration = tokens.get(`motion.${role}.duration`);
+    const bounce = tokens.get(`motion.${role}.bounce`);
+    if (!duration || !bounce) return [];
+    const ms = Number(duration.value.value);
+    const amount = Number(bounce.value);
+    return [
+      `  --k-motion-${role}-settle: ${springSettleMs(ms, amount)}ms;`,
+      `  --k-motion-${role}-easing: ${springLinear(ms, amount)};`,
+    ];
+  });
 }
 
 function dartType(token) {

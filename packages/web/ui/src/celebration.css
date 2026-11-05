@@ -17,6 +17,7 @@
   height: 10px;
   border-radius: 2px;
   opacity: 0;
+  /* k-ui-rules-ignore raw-motion: duration set by the component script (choreography or drag) */
   animation: k-celebration-particle var(--k-celebration-duration)
     cubic-bezier(0.16, 0.8, 0.3, 1) backwards;
 }
@@ -25,7 +26,8 @@
   height: 6px;
 }
 .k-celebration[data-active="true"] > .k-celebration__content {
-  animation: k-celebration-reveal 480ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: k-celebration-reveal var(--k-motion-attention-settle)
+    var(--k-motion-attention-easing) backwards;
 }
 @keyframes k-celebration-particle {
   0% {

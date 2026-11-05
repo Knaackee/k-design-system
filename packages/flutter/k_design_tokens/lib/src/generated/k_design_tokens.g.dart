@@ -3,6 +3,60 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
 abstract final class KDesignTokenVariants {
+  static const motionAppleMotionFeedbackDuration = Duration(milliseconds: 100);
+  static const motionAppleMotionFeedbackBounce = 0.0;
+  static const motionAppleMotionFeedbackDistance = 1.0;
+  static const motionAppleMotionControlDuration = Duration(milliseconds: 320);
+  static const motionAppleMotionControlBounce = 0.0;
+  static const motionAppleMotionControlDistance = 1.0;
+  static const motionAppleMotionEnterDuration = Duration(milliseconds: 500);
+  static const motionAppleMotionEnterBounce = 0.0;
+  static const motionAppleMotionEnterDistance = 1.0;
+  static const motionAppleMotionExitDuration = Duration(milliseconds: 320);
+  static const motionAppleMotionExitBounce = 0.0;
+  static const motionAppleMotionExitDistance = 1.0;
+  static const motionAppleMotionPageDuration = Duration(milliseconds: 500);
+  static const motionAppleMotionPageBounce = 0.0;
+  static const motionAppleMotionPageDistance = 1.0;
+  static const motionAppleMotionAttentionDuration = Duration(milliseconds: 500);
+  static const motionAppleMotionAttentionBounce = 0.3;
+  static const motionAppleMotionAttentionDistance = 1.0;
+  static const motionExpressiveMotionFeedbackDuration = Duration(milliseconds: 100);
+  static const motionExpressiveMotionFeedbackBounce = 0.0;
+  static const motionExpressiveMotionFeedbackDistance = 1.0;
+  static const motionExpressiveMotionControlDuration = Duration(milliseconds: 220);
+  static const motionExpressiveMotionControlBounce = 0.4;
+  static const motionExpressiveMotionControlDistance = 1.0;
+  static const motionExpressiveMotionEnterDuration = Duration(milliseconds: 320);
+  static const motionExpressiveMotionEnterBounce = 0.2;
+  static const motionExpressiveMotionEnterDistance = 1.0;
+  static const motionExpressiveMotionExitDuration = Duration(milliseconds: 220);
+  static const motionExpressiveMotionExitBounce = 0.0;
+  static const motionExpressiveMotionExitDistance = 1.0;
+  static const motionExpressiveMotionPageDuration = Duration(milliseconds: 450);
+  static const motionExpressiveMotionPageBounce = 0.2;
+  static const motionExpressiveMotionPageDistance = 1.0;
+  static const motionExpressiveMotionAttentionDuration = Duration(milliseconds: 450);
+  static const motionExpressiveMotionAttentionBounce = 0.4;
+  static const motionExpressiveMotionAttentionDistance = 1.0;
+  static const motionReducedMotionFeedbackDuration = Duration(milliseconds: 100);
+  static const motionReducedMotionFeedbackBounce = 0.0;
+  static const motionReducedMotionFeedbackDistance = 0.0;
+  static const motionReducedMotionControlDuration = Duration(milliseconds: 150);
+  static const motionReducedMotionControlBounce = 0.0;
+  static const motionReducedMotionControlDistance = 0.0;
+  static const motionReducedMotionEnterDuration = Duration(milliseconds: 150);
+  static const motionReducedMotionEnterBounce = 0.0;
+  static const motionReducedMotionEnterDistance = 0.0;
+  static const motionReducedMotionExitDuration = Duration(milliseconds: 100);
+  static const motionReducedMotionExitBounce = 0.0;
+  static const motionReducedMotionExitDistance = 0.0;
+  static const motionReducedMotionPageDuration = Duration(milliseconds: 150);
+  static const motionReducedMotionPageBounce = 0.0;
+  static const motionReducedMotionPageDistance = 0.0;
+  static const motionReducedMotionAttentionDuration = Duration(milliseconds: 150);
+  static const motionReducedMotionAttentionBounce = 0.0;
+  static const motionReducedMotionAttentionDistance = 0.0;
   static const typeScaleCompactFontSize = 14.0;
   static const typeScaleCompactFontControlSize = 13.0;
   static const typeScaleCompactFontHeading1Size = 28.0;
@@ -339,6 +393,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.motionSpinner,
     required this.motionProgress,
     required this.motionSkeleton,
+    required this.motionFeedbackDuration,
+    required this.motionFeedbackBounce,
+    required this.motionFeedbackDistance,
+    required this.motionControlDuration,
+    required this.motionControlBounce,
+    required this.motionControlDistance,
+    required this.motionEnterDuration,
+    required this.motionEnterBounce,
+    required this.motionEnterDistance,
+    required this.motionExitDuration,
+    required this.motionExitBounce,
+    required this.motionExitDistance,
+    required this.motionPageDuration,
+    required this.motionPageBounce,
+    required this.motionPageDistance,
+    required this.motionAttentionDuration,
+    required this.motionAttentionBounce,
+    required this.motionAttentionDistance,
     required this.blurMobileAppBarWeb,
     required this.blurMobileAppBarNative,
     required this.saturationMobileAppBarWeb,
@@ -907,6 +979,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final Duration motionSpinner;
   final Duration motionProgress;
   final Duration motionSkeleton;
+  final Duration motionFeedbackDuration;
+  final double motionFeedbackBounce;
+  final double motionFeedbackDistance;
+  final Duration motionControlDuration;
+  final double motionControlBounce;
+  final double motionControlDistance;
+  final Duration motionEnterDuration;
+  final double motionEnterBounce;
+  final double motionEnterDistance;
+  final Duration motionExitDuration;
+  final double motionExitBounce;
+  final double motionExitDistance;
+  final Duration motionPageDuration;
+  final double motionPageBounce;
+  final double motionPageDistance;
+  final Duration motionAttentionDuration;
+  final double motionAttentionBounce;
+  final double motionAttentionDistance;
   final double blurMobileAppBarWeb;
   final double blurMobileAppBarNative;
   final double saturationMobileAppBarWeb;
@@ -1475,6 +1565,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     motionSpinner: Duration(milliseconds: 700),
     motionProgress: Duration(milliseconds: 1200),
     motionSkeleton: Duration(milliseconds: 1400),
+    motionFeedbackDuration: Duration(milliseconds: 100),
+    motionFeedbackBounce: 0.0,
+    motionFeedbackDistance: 1.0,
+    motionControlDuration: Duration(milliseconds: 320),
+    motionControlBounce: 0.0,
+    motionControlDistance: 1.0,
+    motionEnterDuration: Duration(milliseconds: 500),
+    motionEnterBounce: 0.0,
+    motionEnterDistance: 1.0,
+    motionExitDuration: Duration(milliseconds: 320),
+    motionExitBounce: 0.0,
+    motionExitDistance: 1.0,
+    motionPageDuration: Duration(milliseconds: 500),
+    motionPageBounce: 0.0,
+    motionPageDistance: 1.0,
+    motionAttentionDuration: Duration(milliseconds: 500),
+    motionAttentionBounce: 0.3,
+    motionAttentionDistance: 1.0,
     blurMobileAppBarWeb: 22.0,
     blurMobileAppBarNative: 18.0,
     saturationMobileAppBarWeb: 1.45,
@@ -2044,6 +2152,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     motionSpinner: Duration(milliseconds: 700),
     motionProgress: Duration(milliseconds: 1200),
     motionSkeleton: Duration(milliseconds: 1400),
+    motionFeedbackDuration: Duration(milliseconds: 100),
+    motionFeedbackBounce: 0.0,
+    motionFeedbackDistance: 1.0,
+    motionControlDuration: Duration(milliseconds: 320),
+    motionControlBounce: 0.0,
+    motionControlDistance: 1.0,
+    motionEnterDuration: Duration(milliseconds: 500),
+    motionEnterBounce: 0.0,
+    motionEnterDistance: 1.0,
+    motionExitDuration: Duration(milliseconds: 320),
+    motionExitBounce: 0.0,
+    motionExitDistance: 1.0,
+    motionPageDuration: Duration(milliseconds: 500),
+    motionPageBounce: 0.0,
+    motionPageDistance: 1.0,
+    motionAttentionDuration: Duration(milliseconds: 500),
+    motionAttentionBounce: 0.3,
+    motionAttentionDistance: 1.0,
     blurMobileAppBarWeb: 22.0,
     blurMobileAppBarNative: 18.0,
     saturationMobileAppBarWeb: 1.45,
@@ -2613,6 +2739,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     motionSpinner: Duration(milliseconds: 700),
     motionProgress: Duration(milliseconds: 1200),
     motionSkeleton: Duration(milliseconds: 1400),
+    motionFeedbackDuration: Duration(milliseconds: 100),
+    motionFeedbackBounce: 0.0,
+    motionFeedbackDistance: 1.0,
+    motionControlDuration: Duration(milliseconds: 320),
+    motionControlBounce: 0.0,
+    motionControlDistance: 1.0,
+    motionEnterDuration: Duration(milliseconds: 500),
+    motionEnterBounce: 0.0,
+    motionEnterDistance: 1.0,
+    motionExitDuration: Duration(milliseconds: 320),
+    motionExitBounce: 0.0,
+    motionExitDistance: 1.0,
+    motionPageDuration: Duration(milliseconds: 500),
+    motionPageBounce: 0.0,
+    motionPageDistance: 1.0,
+    motionAttentionDuration: Duration(milliseconds: 500),
+    motionAttentionBounce: 0.3,
+    motionAttentionDistance: 1.0,
     blurMobileAppBarWeb: 22.0,
     blurMobileAppBarNative: 18.0,
     saturationMobileAppBarWeb: 1.45,
@@ -3182,6 +3326,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     motionSpinner: Duration(milliseconds: 700),
     motionProgress: Duration(milliseconds: 1200),
     motionSkeleton: Duration(milliseconds: 1400),
+    motionFeedbackDuration: Duration(milliseconds: 100),
+    motionFeedbackBounce: 0.0,
+    motionFeedbackDistance: 1.0,
+    motionControlDuration: Duration(milliseconds: 320),
+    motionControlBounce: 0.0,
+    motionControlDistance: 1.0,
+    motionEnterDuration: Duration(milliseconds: 500),
+    motionEnterBounce: 0.0,
+    motionEnterDistance: 1.0,
+    motionExitDuration: Duration(milliseconds: 320),
+    motionExitBounce: 0.0,
+    motionExitDistance: 1.0,
+    motionPageDuration: Duration(milliseconds: 500),
+    motionPageBounce: 0.0,
+    motionPageDistance: 1.0,
+    motionAttentionDuration: Duration(milliseconds: 500),
+    motionAttentionBounce: 0.3,
+    motionAttentionDistance: 1.0,
     blurMobileAppBarWeb: 22.0,
     blurMobileAppBarNative: 18.0,
     saturationMobileAppBarWeb: 1.45,
@@ -3752,6 +3914,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     Duration? motionSpinner,
     Duration? motionProgress,
     Duration? motionSkeleton,
+    Duration? motionFeedbackDuration,
+    double? motionFeedbackBounce,
+    double? motionFeedbackDistance,
+    Duration? motionControlDuration,
+    double? motionControlBounce,
+    double? motionControlDistance,
+    Duration? motionEnterDuration,
+    double? motionEnterBounce,
+    double? motionEnterDistance,
+    Duration? motionExitDuration,
+    double? motionExitBounce,
+    double? motionExitDistance,
+    Duration? motionPageDuration,
+    double? motionPageBounce,
+    double? motionPageDistance,
+    Duration? motionAttentionDuration,
+    double? motionAttentionBounce,
+    double? motionAttentionDistance,
     double? blurMobileAppBarWeb,
     double? blurMobileAppBarNative,
     double? saturationMobileAppBarWeb,
@@ -4320,6 +4500,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       motionSpinner: motionSpinner ?? this.motionSpinner,
       motionProgress: motionProgress ?? this.motionProgress,
       motionSkeleton: motionSkeleton ?? this.motionSkeleton,
+      motionFeedbackDuration: motionFeedbackDuration ?? this.motionFeedbackDuration,
+      motionFeedbackBounce: motionFeedbackBounce ?? this.motionFeedbackBounce,
+      motionFeedbackDistance: motionFeedbackDistance ?? this.motionFeedbackDistance,
+      motionControlDuration: motionControlDuration ?? this.motionControlDuration,
+      motionControlBounce: motionControlBounce ?? this.motionControlBounce,
+      motionControlDistance: motionControlDistance ?? this.motionControlDistance,
+      motionEnterDuration: motionEnterDuration ?? this.motionEnterDuration,
+      motionEnterBounce: motionEnterBounce ?? this.motionEnterBounce,
+      motionEnterDistance: motionEnterDistance ?? this.motionEnterDistance,
+      motionExitDuration: motionExitDuration ?? this.motionExitDuration,
+      motionExitBounce: motionExitBounce ?? this.motionExitBounce,
+      motionExitDistance: motionExitDistance ?? this.motionExitDistance,
+      motionPageDuration: motionPageDuration ?? this.motionPageDuration,
+      motionPageBounce: motionPageBounce ?? this.motionPageBounce,
+      motionPageDistance: motionPageDistance ?? this.motionPageDistance,
+      motionAttentionDuration: motionAttentionDuration ?? this.motionAttentionDuration,
+      motionAttentionBounce: motionAttentionBounce ?? this.motionAttentionBounce,
+      motionAttentionDistance: motionAttentionDistance ?? this.motionAttentionDistance,
       blurMobileAppBarWeb: blurMobileAppBarWeb ?? this.blurMobileAppBarWeb,
       blurMobileAppBarNative: blurMobileAppBarNative ?? this.blurMobileAppBarNative,
       saturationMobileAppBarWeb: saturationMobileAppBarWeb ?? this.saturationMobileAppBarWeb,
@@ -4893,6 +5091,24 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       motionSpinner: t < 0.5 ? motionSpinner : other.motionSpinner,
       motionProgress: t < 0.5 ? motionProgress : other.motionProgress,
       motionSkeleton: t < 0.5 ? motionSkeleton : other.motionSkeleton,
+      motionFeedbackDuration: t < 0.5 ? motionFeedbackDuration : other.motionFeedbackDuration,
+      motionFeedbackBounce: lerpDouble(motionFeedbackBounce, other.motionFeedbackBounce, t)!,
+      motionFeedbackDistance: lerpDouble(motionFeedbackDistance, other.motionFeedbackDistance, t)!,
+      motionControlDuration: t < 0.5 ? motionControlDuration : other.motionControlDuration,
+      motionControlBounce: lerpDouble(motionControlBounce, other.motionControlBounce, t)!,
+      motionControlDistance: lerpDouble(motionControlDistance, other.motionControlDistance, t)!,
+      motionEnterDuration: t < 0.5 ? motionEnterDuration : other.motionEnterDuration,
+      motionEnterBounce: lerpDouble(motionEnterBounce, other.motionEnterBounce, t)!,
+      motionEnterDistance: lerpDouble(motionEnterDistance, other.motionEnterDistance, t)!,
+      motionExitDuration: t < 0.5 ? motionExitDuration : other.motionExitDuration,
+      motionExitBounce: lerpDouble(motionExitBounce, other.motionExitBounce, t)!,
+      motionExitDistance: lerpDouble(motionExitDistance, other.motionExitDistance, t)!,
+      motionPageDuration: t < 0.5 ? motionPageDuration : other.motionPageDuration,
+      motionPageBounce: lerpDouble(motionPageBounce, other.motionPageBounce, t)!,
+      motionPageDistance: lerpDouble(motionPageDistance, other.motionPageDistance, t)!,
+      motionAttentionDuration: t < 0.5 ? motionAttentionDuration : other.motionAttentionDuration,
+      motionAttentionBounce: lerpDouble(motionAttentionBounce, other.motionAttentionBounce, t)!,
+      motionAttentionDistance: lerpDouble(motionAttentionDistance, other.motionAttentionDistance, t)!,
       blurMobileAppBarWeb: lerpDouble(blurMobileAppBarWeb, other.blurMobileAppBarWeb, t)!,
       blurMobileAppBarNative: lerpDouble(blurMobileAppBarNative, other.blurMobileAppBarNative, t)!,
       saturationMobileAppBarWeb: lerpDouble(saturationMobileAppBarWeb, other.saturationMobileAppBarWeb, t)!,

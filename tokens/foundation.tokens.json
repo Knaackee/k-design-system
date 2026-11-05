@@ -773,6 +773,49 @@
         "$type": "duration",
         "$value": { "value": 1400, "unit": "ms" }
       }
+    },
+    "spring": {
+      "duration": {
+        "instant": {
+          "$type": "duration",
+          "$value": { "value": 100, "unit": "ms" }
+        },
+        "short": {
+          "$type": "duration",
+          "$value": { "value": 150, "unit": "ms" }
+        },
+        "brisk": {
+          "$type": "duration",
+          "$value": { "value": 220, "unit": "ms" }
+        },
+        "medium": {
+          "$type": "duration",
+          "$value": { "value": 320, "unit": "ms" }
+        },
+        "smooth": {
+          "$type": "duration",
+          "$value": { "value": 400, "unit": "ms" }
+        },
+        "relaxed": {
+          "$type": "duration",
+          "$value": { "value": 450, "unit": "ms" }
+        },
+        "long": {
+          "$type": "duration",
+          "$value": { "value": 500, "unit": "ms" }
+        }
+      },
+      "bounce": {
+        "none": { "$type": "number", "$value": 0 },
+        "subtle": { "$type": "number", "$value": 0.1 },
+        "gentle": { "$type": "number", "$value": 0.2 },
+        "lively": { "$type": "number", "$value": 0.3 },
+        "playful": { "$type": "number", "$value": 0.4 }
+      },
+      "distance": {
+        "none": { "$type": "number", "$value": 0 },
+        "full": { "$type": "number", "$value": 1 }
+      }
     }
   },
   "blur": {

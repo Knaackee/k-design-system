@@ -64,7 +64,8 @@
   pointer-events: none;
 }
 .k-fab__actions[data-open="true"] {
-  animation: k-fab-enter var(--k-motion-emphasis) ease-out;
+  animation: k-fab-enter var(--k-motion-enter-settle)
+    var(--k-motion-enter-easing);
 }
 .k-fab__actions > .k-chat-bubble-host {
   flex-shrink: 0;

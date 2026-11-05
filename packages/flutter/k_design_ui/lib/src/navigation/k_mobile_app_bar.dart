@@ -243,8 +243,8 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
     );
 
     final surface = AnimatedSlide(
-      duration: tokens.componentMobileAppBarMotionModerate,
-      curve: Curves.easeOutCubic,
+      duration: tokens.motion(KMotionRole.control).settle,
+      curve: tokens.motion(KMotionRole.control).curve,
       offset: widget.collapsed ? const Offset(0, 1.25) : Offset.zero,
       child: AnimatedOpacity(
         duration: tokens.componentMobileAppBarMotionStandard,

@@ -54,7 +54,8 @@
 }
 .k-web-search__chevron {
   flex-shrink: 0;
-  transition: transform var(--k-motion-standard) ease;
+  transition: transform var(--k-motion-feedback-settle)
+    var(--k-motion-feedback-easing);
 }
 .k-web-search [aria-expanded="true"] .k-web-search__chevron {
   transform: rotate(90deg);

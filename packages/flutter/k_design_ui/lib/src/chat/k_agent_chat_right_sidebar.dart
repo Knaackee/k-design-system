@@ -9,8 +9,8 @@ extension _KAgentChatRightSidebar on _KAgentChatWorkspaceState {
       key: const ValueKey('k-agent-chat-workspace-right-sidebar'),
       duration: MediaQuery.disableAnimationsOf(context)
           ? Duration.zero
-          : tokens.motionEmphasis,
-      curve: Curves.easeInOut,
+          : tokens.motion(KMotionRole.control).settle,
+      curve: tokens.motion(KMotionRole.control).curve,
       width: widget.rightSidebarOpen ? width : 0,
       child: ClipRect(
         child: OverflowBox(

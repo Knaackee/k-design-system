@@ -13,7 +13,8 @@
   background: var(--k-color-surface-raised);
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);
-  transition: width var(--k-motion-fast) ease;
+  transition: width var(--k-motion-feedback-settle)
+    var(--k-motion-feedback-easing);
 }
 
 .k-sidebar[data-mode="rail"] {
@@ -159,8 +160,8 @@
   line-height: calc(var(--k-font-label-line-height) * var(--k-text-scale, 1));
   cursor: pointer;
   transition:
-    background var(--k-motion-fast) ease,
-    color var(--k-motion-fast) ease;
+    background var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    color var(--k-motion-feedback-settle) var(--k-motion-feedback-easing);
 }
 
 .k-sidebar-item__control:hover,
@@ -240,7 +241,8 @@
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--k-motion-fast) ease;
+  transition: opacity var(--k-motion-feedback-settle)
+    var(--k-motion-feedback-easing);
 }
 
 .k-sidebar-item:hover .k-sidebar-item__action,

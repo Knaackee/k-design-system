@@ -97,8 +97,8 @@ class _KMapDaySheetMotionState extends State<KMapDaySheetMotion>
       await _animation
           .animateTo(
             target,
-            duration: tokens.motionStandard,
-            curve: Curves.easeOut,
+            duration: tokens.motion(KMotionRole.control).settle,
+            curve: tokens.motion(KMotionRole.control).curve,
           )
           .orCancel;
     } on TickerCanceled {

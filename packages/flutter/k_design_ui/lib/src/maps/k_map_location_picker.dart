@@ -461,8 +461,8 @@ class _KMapLocationPickerState extends State<KMapLocationPicker> {
   ) => AnimatedAlign(
     duration: _reducedMotion(context)
         ? Duration.zero
-        : tokens.motionQuick + tokens.motionQuick,
-    curve: Curves.easeInOut,
+        : tokens.motion(KMotionRole.control).settle,
+    curve: tokens.motion(KMotionRole.control).curve,
     alignment: _open ? Alignment.center : Alignment.topCenter,
     child: SafeArea(
       minimum: EdgeInsets.all(tokens.spaceHairline * 20),
@@ -471,8 +471,8 @@ class _KMapLocationPickerState extends State<KMapLocationPicker> {
           child: AnimatedContainer(
             duration: _reducedMotion(context)
                 ? Duration.zero
-                : tokens.motionQuick + tokens.motionQuick,
-            curve: Curves.easeInOut,
+                : tokens.motion(KMotionRole.control).settle,
+            curve: tokens.motion(KMotionRole.control).curve,
             width: _open
                 ? math.min(constraints.maxWidth, 420)
                 : math.min(math.max(0, constraints.maxWidth - 60), 460),

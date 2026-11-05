@@ -84,8 +84,8 @@ class _KDisclosureState extends State<KDisclosure> {
             alignment: 0,
             duration: MediaQuery.disableAnimationsOf(context)
                 ? Duration.zero
-                : t.motionEntry,
-            curve: Curves.easeOutCubic,
+                : t.motion(KMotionRole.control).settle,
+            curve: t.motion(KMotionRole.control).curve,
           );
         });
       }

@@ -11,6 +11,7 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
   required double width,
   required TargetPlatform platform,
   KAdaptiveOverrides overrides = const KAdaptiveOverrides(),
+  bool reduceMotion = false,
 }) {
   final windowClass = overrides.windowClass ?? kWindowClassForWidth(width);
   final inputMode =
@@ -29,11 +30,17 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
       (windowClass == KWindowClass.compact
           ? KTypeScale.mobile
           : KTypeScale.standard);
+  // The platform setting always wins: an app may pick a motion style, but
+  // never more motion than the person asked for.
+  final motion = reduceMotion
+      ? KMotionStyle.reduced
+      : overrides.motion ?? KMotionStyle.apple;
   return KDesignConfiguration(
     density: overrides.density ?? KDensity.standard,
     typeScale: typeScale,
     inputMode: inputMode,
     windowClass: windowClass,
+    motion: motion,
   );
 }
 
@@ -45,6 +52,7 @@ class KAdaptiveOverrides {
     this.typeScale,
     this.inputMode,
     this.windowClass,
+    this.motion,
   });
 
   /// Pins every axis of [configuration] except the window class.
@@ -53,12 +61,17 @@ class KAdaptiveOverrides {
         density: configuration.density,
         typeScale: configuration.typeScale,
         inputMode: configuration.inputMode,
+        motion: configuration.motion,
       );
 
   final KDensity? density;
   final KTypeScale? typeScale;
   final KInputMode? inputMode;
   final KWindowClass? windowClass;
+
+  /// App-level motion style. The platform "reduce motion" setting overrides
+  /// it with [KMotionStyle.reduced].
+  final KMotionStyle? motion;
 }
 
 /// Exposes the resolved configuration below a [KAdaptiveTheme].
@@ -110,6 +123,7 @@ class KAdaptiveTheme extends StatelessWidget {
       width: media.size.width,
       platform: Theme.of(context).platform,
       overrides: overrides,
+      reduceMotion: media.disableAnimations,
     );
     final theme = kDesignTheme(
       brand: brand,
@@ -125,7 +139,20 @@ class KAdaptiveTheme extends StatelessWidget {
         data: theme,
         child: MediaQuery.withClampedTextScaling(
           maxScaleFactor: tokens.textScaleMaxBody,
-          child: child,
+          // A reduced style chosen by the app reaches every widget that
+          // already honours the platform setting.
+          child:
+              configuration.motion == KMotionStyle.reduced &&
+                  !media.disableAnimations
+              ? Builder(
+                  builder: (context) => MediaQuery(
+                    data: MediaQuery.of(
+                      context,
+                    ).copyWith(disableAnimations: true),
+                    child: child,
+                  ),
+                )
+              : child,
         ),
       ),
     );

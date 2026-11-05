@@ -61,7 +61,8 @@
   align-items: start;
   gap: var(--k-space-content-action-gap);
   padding-block: var(--k-space-control-gap);
-  animation: k-payment-setup-status-enter var(--k-motion-emphasis) ease-out both;
+  animation: k-payment-setup-status-enter var(--k-motion-enter-settle)
+    var(--k-motion-enter-easing) both;
 }
 
 .k-payment-setup__status-icon {

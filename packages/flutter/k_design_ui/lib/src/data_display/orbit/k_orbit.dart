@@ -151,6 +151,7 @@ class _KOrbitState extends State<KOrbit> with TickerProviderStateMixin {
     _selectedNodeId = widget.initialSelectedNodeId;
     _ticker = AnimationController(
       vsync: this,
+      // k-ui-rules-ignore raw-motion: continuous orbit loop
       duration: const Duration(hours: 1),
     )..addListener(_tick);
     _layout = _resolveLayout();

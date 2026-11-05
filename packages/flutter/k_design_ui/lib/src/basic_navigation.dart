@@ -220,8 +220,10 @@ class _KCarouselState extends State<KCarousel> {
       next,
       duration: (Theme.of(
         context,
-      ).extension<KDesignTokens>()!).componentCarouselTransitionDuration,
-      curve: Curves.easeOut,
+      ).extension<KDesignTokens>()!).motion(KMotionRole.page).settle,
+      curve: (Theme.of(
+        context,
+      ).extension<KDesignTokens>()!).motion(KMotionRole.page).curve,
     );
   }
 

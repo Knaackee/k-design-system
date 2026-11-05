@@ -14,6 +14,12 @@ enum KInputMode { pointer, touch }
 
 enum KWindowClass { compact, medium, expanded, large, extraLarge }
 
+/// Motion style (Decision 0011). [apple]: calm springs without bounce.
+/// [expressive]: Material Expressive-like springs with bounce on spatial
+/// motion. [reduced]: short cross-fades without movement; chosen
+/// automatically when the platform asks to reduce motion.
+enum KMotionStyle { apple, expressive, reduced }
+
 typedef KDesignTokenTransform = KDesignTokens Function(KDesignTokens tokens);
 
 @immutable
@@ -23,12 +29,14 @@ class KDesignConfiguration {
     this.typeScale = KTypeScale.compact,
     this.inputMode = KInputMode.pointer,
     this.windowClass = KWindowClass.compact,
+    this.motion = KMotionStyle.apple,
   });
 
   final KDensity density;
   final KTypeScale typeScale;
   final KInputMode inputMode;
   final KWindowClass windowClass;
+  final KMotionStyle motion;
 
   @override
   bool operator ==(Object other) =>
@@ -36,10 +44,12 @@ class KDesignConfiguration {
       other.density == density &&
       other.typeScale == typeScale &&
       other.inputMode == inputMode &&
-      other.windowClass == windowClass;
+      other.windowClass == windowClass &&
+      other.motion == motion;
 
   @override
-  int get hashCode => Object.hash(density, typeScale, inputMode, windowClass);
+  int get hashCode =>
+      Object.hash(density, typeScale, inputMode, windowClass, motion);
 
   /// Explicit opt-in for data-dense desktop screens (tables, admin).
   static const dashboard = KDesignConfiguration(density: KDensity.dense);
@@ -108,7 +118,104 @@ KDesignTokens resolveKDesignTokens(
     ),
   };
 
-  final resolved = base.copyWith(
+  final moved = switch (configuration.motion) {
+    KMotionStyle.apple => base.copyWith(
+      motionFeedbackDuration:
+          KDesignTokenVariants.motionAppleMotionFeedbackDuration,
+      motionFeedbackBounce:
+          KDesignTokenVariants.motionAppleMotionFeedbackBounce,
+      motionFeedbackDistance:
+          KDesignTokenVariants.motionAppleMotionFeedbackDistance,
+      motionControlDuration:
+          KDesignTokenVariants.motionAppleMotionControlDuration,
+      motionControlBounce: KDesignTokenVariants.motionAppleMotionControlBounce,
+      motionControlDistance:
+          KDesignTokenVariants.motionAppleMotionControlDistance,
+      motionEnterDuration: KDesignTokenVariants.motionAppleMotionEnterDuration,
+      motionEnterBounce: KDesignTokenVariants.motionAppleMotionEnterBounce,
+      motionEnterDistance: KDesignTokenVariants.motionAppleMotionEnterDistance,
+      motionExitDuration: KDesignTokenVariants.motionAppleMotionExitDuration,
+      motionExitBounce: KDesignTokenVariants.motionAppleMotionExitBounce,
+      motionExitDistance: KDesignTokenVariants.motionAppleMotionExitDistance,
+      motionPageDuration: KDesignTokenVariants.motionAppleMotionPageDuration,
+      motionPageBounce: KDesignTokenVariants.motionAppleMotionPageBounce,
+      motionPageDistance: KDesignTokenVariants.motionAppleMotionPageDistance,
+      motionAttentionDuration:
+          KDesignTokenVariants.motionAppleMotionAttentionDuration,
+      motionAttentionBounce:
+          KDesignTokenVariants.motionAppleMotionAttentionBounce,
+      motionAttentionDistance:
+          KDesignTokenVariants.motionAppleMotionAttentionDistance,
+    ),
+    KMotionStyle.expressive => base.copyWith(
+      motionFeedbackDuration:
+          KDesignTokenVariants.motionExpressiveMotionFeedbackDuration,
+      motionFeedbackBounce:
+          KDesignTokenVariants.motionExpressiveMotionFeedbackBounce,
+      motionFeedbackDistance:
+          KDesignTokenVariants.motionExpressiveMotionFeedbackDistance,
+      motionControlDuration:
+          KDesignTokenVariants.motionExpressiveMotionControlDuration,
+      motionControlBounce:
+          KDesignTokenVariants.motionExpressiveMotionControlBounce,
+      motionControlDistance:
+          KDesignTokenVariants.motionExpressiveMotionControlDistance,
+      motionEnterDuration:
+          KDesignTokenVariants.motionExpressiveMotionEnterDuration,
+      motionEnterBounce: KDesignTokenVariants.motionExpressiveMotionEnterBounce,
+      motionEnterDistance:
+          KDesignTokenVariants.motionExpressiveMotionEnterDistance,
+      motionExitDuration:
+          KDesignTokenVariants.motionExpressiveMotionExitDuration,
+      motionExitBounce: KDesignTokenVariants.motionExpressiveMotionExitBounce,
+      motionExitDistance:
+          KDesignTokenVariants.motionExpressiveMotionExitDistance,
+      motionPageDuration:
+          KDesignTokenVariants.motionExpressiveMotionPageDuration,
+      motionPageBounce: KDesignTokenVariants.motionExpressiveMotionPageBounce,
+      motionPageDistance:
+          KDesignTokenVariants.motionExpressiveMotionPageDistance,
+      motionAttentionDuration:
+          KDesignTokenVariants.motionExpressiveMotionAttentionDuration,
+      motionAttentionBounce:
+          KDesignTokenVariants.motionExpressiveMotionAttentionBounce,
+      motionAttentionDistance:
+          KDesignTokenVariants.motionExpressiveMotionAttentionDistance,
+    ),
+    KMotionStyle.reduced => base.copyWith(
+      motionFeedbackDuration:
+          KDesignTokenVariants.motionReducedMotionFeedbackDuration,
+      motionFeedbackBounce:
+          KDesignTokenVariants.motionReducedMotionFeedbackBounce,
+      motionFeedbackDistance:
+          KDesignTokenVariants.motionReducedMotionFeedbackDistance,
+      motionControlDuration:
+          KDesignTokenVariants.motionReducedMotionControlDuration,
+      motionControlBounce:
+          KDesignTokenVariants.motionReducedMotionControlBounce,
+      motionControlDistance:
+          KDesignTokenVariants.motionReducedMotionControlDistance,
+      motionEnterDuration:
+          KDesignTokenVariants.motionReducedMotionEnterDuration,
+      motionEnterBounce: KDesignTokenVariants.motionReducedMotionEnterBounce,
+      motionEnterDistance:
+          KDesignTokenVariants.motionReducedMotionEnterDistance,
+      motionExitDuration: KDesignTokenVariants.motionReducedMotionExitDuration,
+      motionExitBounce: KDesignTokenVariants.motionReducedMotionExitBounce,
+      motionExitDistance: KDesignTokenVariants.motionReducedMotionExitDistance,
+      motionPageDuration: KDesignTokenVariants.motionReducedMotionPageDuration,
+      motionPageBounce: KDesignTokenVariants.motionReducedMotionPageBounce,
+      motionPageDistance: KDesignTokenVariants.motionReducedMotionPageDistance,
+      motionAttentionDuration:
+          KDesignTokenVariants.motionReducedMotionAttentionDuration,
+      motionAttentionBounce:
+          KDesignTokenVariants.motionReducedMotionAttentionBounce,
+      motionAttentionDistance:
+          KDesignTokenVariants.motionReducedMotionAttentionDistance,
+    ),
+  };
+
+  final resolved = moved.copyWith(
     spaceControlGap: controlGap,
     spaceControlInsetInline: controlInsetInline,
     sizeControl: controlSize,

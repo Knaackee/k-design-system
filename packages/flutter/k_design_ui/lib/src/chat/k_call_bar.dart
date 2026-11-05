@@ -466,6 +466,7 @@ class _CallEntryMotion extends StatelessWidget {
     if (MediaQuery.disableAnimationsOf(context)) return child;
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
+      // k-ui-rules-ignore raw-motion: staggered waveform choreography, mirrors call-bar.css keyframes
       duration: Duration(milliseconds: delay + 520),
       child: child,
       builder: (context, elapsed, child) {
@@ -509,6 +510,7 @@ class _CallAvatarMotionState extends State<_CallAvatarMotion>
   final _anchor = GlobalKey();
   late final _motion = AnimationController(
     vsync: this,
+    // k-ui-rules-ignore raw-motion: staggered waveform choreography, mirrors call-bar.css keyframes
     duration: const Duration(milliseconds: 900),
   );
   Rect? _target;

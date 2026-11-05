@@ -148,14 +148,21 @@ KToastController _show(
                           begin: 0,
                           end: controller._dismissed ? 0 : 1,
                         ),
+                        // Enter and exit roles (Decision 0011); the spring
+                        // may overshoot, opacity is clamped.
                         duration: MediaQuery.disableAnimationsOf(context)
                             ? Duration.zero
-                            : t.componentToastEntryDuration,
-                        curve: Curves.easeOut,
+                            : t.motion(_motionRole(controller)).settle,
+                        curve: t.motion(_motionRole(controller)).curve,
                         builder: (context, value, child) => Opacity(
-                          opacity: value,
+                          opacity: value.clamp(0, 1),
                           child: Transform.translate(
-                            offset: Offset(0, 8 * (1 - value)),
+                            offset: Offset(
+                              0,
+                              8 *
+                                  t.motion(_motionRole(controller)).distance *
+                                  (1 - value),
+                            ),
                             child: child,
                           ),
                         ),
@@ -423,3 +430,7 @@ class KSnackbar extends StatelessWidget {
     tone: tone,
   );
 }
+
+/// A toast enters with the enter role and leaves with the exit role.
+KMotionRole _motionRole(KToastController controller) =>
+    controller._dismissed ? KMotionRole.exit : KMotionRole.enter;

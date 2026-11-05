@@ -6,6 +6,18 @@ version is tagged.
 
 ## Unreleased
 
+- Added configurable motion (Decision 0011): roles `feedback`, `control`,
+  `enter`, `exit`, `page`, `attention` as springs (duration, bounce,
+  distance) in three styles `apple` (default), `expressive` and `reduced`.
+  Web gets `data-motion`, `--k-motion-<role>-settle/-easing` (the spring as
+  `linear()`) and `kMotion()`; Flutter gets `KMotionStyle`, `KMotionRole`,
+  `tokens.motion(role)` with `.settle`, `.curve` and `.spring`. The system
+  reduce-motion setting always wins; an app-chosen `reduced` style also sets
+  `disableAnimations` on Flutter. Both galleries have a motion switch and the
+  shared fixture `Primitives/Motion/motion-roles`.
+- All library transitions use motion roles; new gate rule `raw-motion`.
+- Fixed `--k-motion-slow`, which three chat animations referenced but no
+  token defined.
 - Final visual acceptance and the release tag remain pending.
 - **Breaking (Decision 0010):** adaptive axes now resolve at runtime from the
   available window and platform (`applyKAdaptive`, `resolveKAdaptive`,

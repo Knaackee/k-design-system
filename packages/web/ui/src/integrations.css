@@ -102,8 +102,8 @@
   border-radius: var(--k-radius-card);
   background: var(--k-color-surface-raised);
   transition:
-    border-color var(--k-motion-fast) ease,
-    box-shadow var(--k-motion-fast) ease;
+    border-color var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    box-shadow var(--k-motion-feedback-settle) var(--k-motion-feedback-easing);
 }
 
 .k-integration-card:hover {

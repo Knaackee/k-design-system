@@ -37,8 +37,8 @@ class KSidebar extends StatelessWidget {
         label: semanticLabel,
         container: true,
         child: AnimatedContainer(
-          duration: tokens.componentSidebarTransitionDuration,
-          curve: Curves.easeOutCubic,
+          duration: tokens.motion(KMotionRole.control).settle,
+          curve: tokens.motion(KMotionRole.control).curve,
           width: width,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(

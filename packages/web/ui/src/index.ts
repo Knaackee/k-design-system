@@ -622,6 +622,7 @@ export {
   setKTextScale,
   kAdaptiveAttributes,
   kAdaptivePresets,
+  kMotion,
   kWindowClassForWidth,
   resolveKAdaptive,
 } from "./adaptive.js";
@@ -631,6 +632,9 @@ export type {
   KAdaptiveOverrides,
   KDensity,
   KInputMode,
+  KMotionRole,
+  KMotionSpec,
+  KMotionStyle,
   KTypeScale,
   KWindowClass,
 } from "./adaptive.js";

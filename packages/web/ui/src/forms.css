@@ -539,6 +539,7 @@
   height: var(--k-space-micro);
   border-radius: var(--k-radius-full);
   background: currentColor;
+  /* k-ui-rules-ignore raw-motion: continuous loop, not a change between states */
   animation: k-dictation-pulse var(--k-component-spinner-animation-duration)
     ease-in-out infinite;
   animation-delay: calc(var(--k-dictation-dot-index) * var(--k-motion-fast));
@@ -554,6 +555,7 @@
 .k-dictation-action[data-dictation-state="recording"]:not([data-audio-level])
   .k-dictation-wave,
 .k-dictation-action[data-dictation-state="processing"] .k-icon {
+  /* k-ui-rules-ignore raw-motion: continuous loop, not a change between states */
   animation: k-dictation-pulse var(--k-component-spinner-animation-duration)
     ease-in-out infinite;
 }

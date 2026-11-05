@@ -502,8 +502,8 @@ class _StatusEntry extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       key: ValueKey(state),
       tween: Tween(begin: 0, end: 1),
-      duration: t.motionEmphasis,
-      curve: Curves.easeOut,
+      duration: t.motion(KMotionRole.enter).settle,
+      curve: t.motion(KMotionRole.enter).curve,
       builder: (context, value, child) => Opacity(
         opacity: value,
         child: Transform.translate(

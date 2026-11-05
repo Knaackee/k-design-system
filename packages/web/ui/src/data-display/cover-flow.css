@@ -38,8 +38,8 @@
   height: calc(90% + var(--cover-extension));
   transform-style: preserve-3d;
   backface-visibility: hidden;
-  transition: transform var(--k-component-cover-flow-transition-duration)
-    cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform var(--k-motion-control-settle)
+    var(--k-motion-control-easing);
 }
 .k-cover-flow__content {
   width: 100%;

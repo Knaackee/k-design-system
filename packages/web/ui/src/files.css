@@ -257,8 +257,8 @@
   flex-direction: column;
   overflow: hidden;
   transition:
-    width var(--k-motion-normal, var(--k-component-files-transition)) ease,
-    min-width var(--k-motion-normal, var(--k-component-files-transition)) ease;
+    width var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    min-width var(--k-motion-feedback-settle) var(--k-motion-feedback-easing);
 }
 .k-files-workspace__dock[data-open] {
   width: var(--k-layout-panel-width);
@@ -354,7 +354,7 @@
   color: var(--k-color-text-primary);
   transform: translateX(-100%);
   transition:
-    transform var(--k-motion-normal, var(--k-component-files-transition)) ease,
+    transform var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
     display var(--k-motion-normal, var(--k-component-files-transition))
       allow-discrete,
     overlay var(--k-motion-normal, var(--k-component-files-transition))
@@ -369,7 +369,7 @@
   background: var(--k-component-files-backdrop);
   opacity: 0;
   transition:
-    opacity var(--k-motion-normal, var(--k-component-files-transition)) ease,
+    opacity var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
     display var(--k-motion-normal, var(--k-component-files-transition))
       allow-discrete,
     overlay var(--k-motion-normal, var(--k-component-files-transition))

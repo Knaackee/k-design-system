@@ -1,0 +1,36 @@
+.motion-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--k-space-content-action-gap);
+  max-width: 640px;
+  padding: var(--k-space-layout-gutter);
+}
+.motion-demo__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--k-space-control-gap);
+}
+.motion-demo__track {
+  position: relative;
+  height: var(--k-size-control);
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-surface-subtle);
+}
+.motion-demo__dot {
+  position: absolute;
+  inset-block: 4px;
+  inset-inline-start: 4px;
+  width: calc(var(--k-size-control) - 8px);
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-action-primary-background);
+  opacity: 0.4;
+  transition-property: translate, opacity;
+}
+/* Travel is scaled by the role's distance: 0 in reduced motion (fade only). */
+.motion-demo__track[data-on] .motion-demo__dot {
+  translate: calc((100cqi - var(--k-size-control)) * var(--motion-distance)) 0;
+  opacity: 1;
+}
+.motion-demo__track {
+  container-type: inline-size;
+}

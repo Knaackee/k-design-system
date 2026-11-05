@@ -41,12 +41,15 @@ const withDesignTokens: Decorator = (Story, context) => {
     {
       width: window.innerWidth,
       coarsePointer: window.matchMedia("(pointer: coarse)").matches,
+      reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
+        .matches,
     },
     {
       density: pick("density"),
       typeScale: pick("typeScale"),
       inputMode: pick("inputMode"),
       windowClass: pick("windowClass"),
+      motion: pick("motion"),
     } as KAdaptiveOverrides,
   );
   const typeScale = resolved.typeScale;
@@ -59,6 +62,7 @@ const withDesignTokens: Decorator = (Story, context) => {
   document.documentElement.dataset.typeScale = typeScale;
   document.documentElement.dataset.inputMode = inputMode;
   document.documentElement.dataset.windowClass = windowClass;
+  document.documentElement.dataset.motion = resolved.motion;
   setKTextScale(document.documentElement, textScale);
 
   return (
@@ -70,6 +74,7 @@ const withDesignTokens: Decorator = (Story, context) => {
       data-type-scale={typeScale}
       data-input-mode={inputMode}
       data-window-class={windowClass}
+      data-motion={resolved.motion}
     >
       <KLocalizationProvider locale={language}>
         <Story />
@@ -95,6 +100,7 @@ const preview: Preview & {
     typeScale: "auto",
     inputMode: "auto",
     windowClass: "auto",
+    motion: "auto",
     textScale: 1,
   },
   globalTypes: {
@@ -187,6 +193,18 @@ const preview: Preview & {
           { value: "expanded", title: "Expanded · 840–1199" },
           { value: "large", title: "Large · 1200–1599" },
           { value: "extra-large", title: "Extra large · ≥1600" },
+        ],
+      },
+    },
+    motion: {
+      description: "Motion style (Decision 0011); auto follows reduce motion",
+      toolbar: {
+        icon: "play",
+        items: [
+          { value: "auto", title: "Motion: auto (Apple)" },
+          { value: "apple", title: "Motion: Apple" },
+          { value: "expressive", title: "Motion: Expressive" },
+          { value: "reduced", title: "Motion: reduced" },
         ],
       },
     },

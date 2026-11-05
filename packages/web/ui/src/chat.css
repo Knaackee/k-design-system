@@ -458,7 +458,7 @@
 }
 
 .k-agent-spin {
-  animation: k-agent-spin var(--k-motion-slow) linear infinite;
+  animation: k-agent-spin var(--k-motion-spinner) linear infinite;
 }
 
 .k-agent-tool,
@@ -509,7 +509,7 @@
   background-size: 250% 100%;
   background-clip: text;
   color: transparent;
-  animation: k-agent-shine calc(var(--k-motion-slow) * 5) linear infinite;
+  animation: k-agent-shine calc(var(--k-motion-spinner) * 5) linear infinite;
 }
 
 @keyframes k-agent-shine {
@@ -625,7 +625,7 @@
 }
 
 .k-chat-composer__capture[aria-busy="true"] .k-icon {
-  animation: k-composer-processing var(--k-motion-slow) linear infinite;
+  animation: k-composer-processing var(--k-motion-spinner) linear infinite;
 }
 
 @keyframes k-composer-processing {

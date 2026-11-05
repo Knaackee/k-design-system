@@ -1,0 +1,73 @@
+{
+  "motion": {
+    "feedback": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.instant}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "control": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.medium}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "enter": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.long}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "exit": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.medium}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "page": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.long}"
+      },
+      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    },
+    "attention": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.spring.duration.long}"
+      },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.lively}"
+      },
+      "distance": {
+        "$type": "number",
+        "$value": "{motion.spring.distance.full}"
+      }
+    }
+  }
+}

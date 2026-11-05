@@ -33,9 +33,9 @@
   box-shadow: var(--k-elevation-overlay);
   pointer-events: auto;
   transition:
-    background var(--k-motion-fast) ease,
-    opacity var(--k-motion-fast) ease,
-    transform var(--k-motion-fast) ease;
+    background var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    opacity var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    transform var(--k-motion-feedback-settle) var(--k-motion-feedback-easing);
 }
 
 .k-mobile-app-bar__surface:has(.k-mobile-app-bar__primary) {
@@ -165,9 +165,9 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition:
-    color var(--k-motion-fast) ease,
-    background var(--k-motion-fast) ease,
-    transform var(--k-motion-fast) ease;
+    color var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    background var(--k-motion-feedback-settle) var(--k-motion-feedback-easing),
+    transform var(--k-motion-feedback-settle) var(--k-motion-feedback-easing);
 }
 
 .k-mobile-app-bar[data-variant="labeled"] .k-mobile-app-bar__destination {

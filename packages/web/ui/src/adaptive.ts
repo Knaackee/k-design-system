@@ -11,12 +11,19 @@ export type KTypeScale = "compact" | "standard" | "mobile";
 export type KInputMode = "pointer" | "touch";
 export type KWindowClass =
   "compact" | "medium" | "expanded" | "large" | "extra-large";
+/**
+ * Motion style (Decision 0011): `apple` calm springs, `expressive`
+ * Material Expressive-like springs with bounce, `reduced` short fades
+ * without movement (forced by `prefers-reduced-motion: reduce`).
+ */
+export type KMotionStyle = "apple" | "expressive" | "reduced";
 
 export interface KAdaptiveConfiguration {
   density: KDensity;
   typeScale: KTypeScale;
   inputMode: KInputMode;
   windowClass: KWindowClass;
+  motion: KMotionStyle;
 }
 
 export interface KAdaptiveEnvironment {
@@ -24,6 +31,8 @@ export interface KAdaptiveEnvironment {
   width: number;
   /** True when the primary pointer is coarse (finger). */
   coarsePointer: boolean;
+  /** True when the person asked the system to reduce motion. */
+  reduceMotion?: boolean;
 }
 
 export type KAdaptiveOverrides = Partial<KAdaptiveConfiguration>;
@@ -49,11 +58,17 @@ export function resolveKAdaptive(
   // Input mode changes hit targets, never typography.
   const typeScale =
     overrides.typeScale ?? (windowClass === "compact" ? "mobile" : "standard");
+  // The system setting always wins: an app may pick a motion style, never
+  // more motion than the person asked for.
+  const motion: KMotionStyle = environment.reduceMotion
+    ? "reduced"
+    : (overrides.motion ?? "apple");
   return {
     density: overrides.density ?? "standard",
     typeScale,
     inputMode,
     windowClass,
+    motion,
   };
 }
 
@@ -73,6 +88,7 @@ export function kAdaptiveAttributes(
     "data-type-scale": configuration.typeScale,
     "data-input-mode": configuration.inputMode,
     "data-window-class": configuration.windowClass,
+    "data-motion": configuration.motion,
   };
 }
 
@@ -87,13 +103,18 @@ export function applyKAdaptive(
   onChange?: (configuration: KAdaptiveConfiguration) => void,
 ): () => void {
   const coarse = window.matchMedia("(pointer: coarse)");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const update = () => {
     const width =
       element === document.documentElement
         ? window.innerWidth
         : element.getBoundingClientRect().width;
     const configuration = resolveKAdaptive(
-      { width, coarsePointer: coarse.matches },
+      {
+        width,
+        coarsePointer: coarse.matches,
+        reduceMotion: reduce.matches,
+      },
       overrides,
     );
     for (const [name, value] of Object.entries(
@@ -107,9 +128,11 @@ export function applyKAdaptive(
   const observer = new ResizeObserver(update);
   observer.observe(element);
   coarse.addEventListener("change", update);
+  reduce.addEventListener("change", update);
   return () => {
     observer.disconnect();
     coarse.removeEventListener("change", update);
+    reduce.removeEventListener("change", update);
   };
 }
 
@@ -127,4 +150,39 @@ export function setKTextScale(
 ): void {
   element.style.setProperty("--k-text-scale", String(scale));
   element.toggleAttribute("data-text-large", scale >= kLargeTextScale);
+}
+
+/** What moves (Decision 0011). Components pick a role, never a duration. */
+export type KMotionRole =
+  "feedback" | "control" | "enter" | "exit" | "page" | "attention";
+
+export interface KMotionSpec {
+  /** Time until the spring rests, in ms: the duration to animate over. */
+  settle: number;
+  /** The spring sampled as a CSS `linear()` easing. */
+  easing: string;
+  /** 1 = full movement, 0 = fade only (reduced). Scale offsets with it. */
+  distance: number;
+}
+
+/**
+ * Resolved motion of a role for script animations (Web Animations API).
+ * CSS uses `var(--k-motion-<role>-settle)` and `var(--k-motion-<role>-easing)`.
+ */
+export function kMotion(
+  role: KMotionRole,
+  element: Element = document.documentElement,
+): KMotionSpec {
+  const style = getComputedStyle(element);
+  const read = (name: string) =>
+    style.getPropertyValue(`--k-motion-${role}-${name}`).trim();
+  // Browsers may serialise a duration as `736ms` or `0.736s`.
+  const settle = read("settle");
+  return {
+    settle:
+      (Number.parseFloat(settle) || 0) *
+      (settle.endsWith("ms") || !settle.endsWith("s") ? 1 : 1000),
+    easing: read("easing") || "ease",
+    distance: Number.parseFloat(read("distance") || "1"),
+  };
 }

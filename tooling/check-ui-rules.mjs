@@ -9,6 +9,8 @@
 //                     32/48 (display: empty states, markers)
 //   raw-spacing       numeric EdgeInsets / SizedBox gaps instead of tokens
 //   tiny-type         font sizes below 11 px
+//   raw-motion        library animation with a literal duration or curve
+//                     instead of a motion role (Decision 0011)
 //
 // Usage: node tooling/check-ui-rules.mjs [paths...] [--json]
 // Without paths it checks the library packages. Exit code 1 on findings.
@@ -114,10 +116,18 @@ export function checkDart(source, { library = true } = {}) {
   }
   for (const m of source.matchAll(/fontSize:\s*([0-9]+(?:\.[0-9]+)?)\b/g))
     if (Number(m[1]) < 11) out.push(["tiny-type", lineOf(source, m.index)]);
+  if (library) {
+    for (const m of source.matchAll(
+      /\b(?:duration|reverseDuration|transitionDuration):\s*(?:const\s+)?Duration\((?!\))/g,
+    ))
+      out.push(["raw-motion", lineOf(source, m.index)]);
+    for (const m of source.matchAll(/\bcurve:\s*Curves\.(?!linear\b)/g))
+      out.push(["raw-motion", lineOf(source, m.index)]);
+  }
   return out;
 }
 
-export function checkWeb(source, ext) {
+export function checkWeb(source, ext, { library = true } = {}) {
   const out = [];
   if (ext === ".tsx") {
     for (const m of source.matchAll(/<KIcon\b[^>]*?size=\{([0-9.]+)\}/gs))
@@ -140,6 +150,16 @@ export function checkWeb(source, ext) {
       if (Number(m[1]) < 11) out.push(["tiny-type", lineOf(source, m.index)]);
     for (const m of source.matchAll(/\.k-card[^{,]*\s\.k-card\b[^{]*\{/g))
       out.push(["nested-card", lineOf(source, m.index)]);
+    if (library)
+      for (const m of source.matchAll(
+        /\b(?:transition|animation)(?:-duration|-timing-function)?\s*:([^;]*);/g,
+      ))
+        if (
+          /\bcubic-bezier\(|(?<![\w-])(?:[1-9][0-9]*|0?\.[0-9]+)m?s\b|\bease(?:-in|-out|-in-out)?\b/.test(
+            m[1],
+          )
+        )
+          out.push(["raw-motion", lineOf(source, m.index)]);
   }
   return out;
 }
@@ -156,7 +176,7 @@ async function main() {
       const found =
         ext === ".dart"
           ? checkDart(source, { library })
-          : checkWeb(source, ext);
+          : checkWeb(source, ext, { library });
       for (const [rule, line] of found)
         if (!ignored(lines, line, rule))
           findings.push({ rule, file: relative(root, file), line });

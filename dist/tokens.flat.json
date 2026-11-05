@@ -1538,6 +1538,96 @@
         "unit": "ms"
       }
     },
+    "motion.feedback.duration": {
+      "type": "duration",
+      "value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "motion.feedback.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.feedback.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.control.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.control.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.control.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.enter.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.enter.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.enter.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.exit.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.exit.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.exit.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.page.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.page.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.page.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.attention.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.attention.bounce": {
+      "type": "number",
+      "value": 0.3
+    },
+    "motion.attention.distance": {
+      "type": "number",
+      "value": 1
+    },
     "blur.mobileAppBarWeb": {
       "type": "dimension",
       "value": {
@@ -5210,6 +5300,96 @@
         "value": 1400,
         "unit": "ms"
       }
+    },
+    "motion.feedback.duration": {
+      "type": "duration",
+      "value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "motion.feedback.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.feedback.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.control.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.control.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.control.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.enter.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.enter.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.enter.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.exit.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.exit.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.exit.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.page.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.page.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.page.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.attention.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.attention.bounce": {
+      "type": "number",
+      "value": 0.3
+    },
+    "motion.attention.distance": {
+      "type": "number",
+      "value": 1
     },
     "blur.mobileAppBarWeb": {
       "type": "dimension",
@@ -8884,6 +9064,96 @@
         "unit": "ms"
       }
     },
+    "motion.feedback.duration": {
+      "type": "duration",
+      "value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "motion.feedback.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.feedback.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.control.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.control.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.control.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.enter.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.enter.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.enter.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.exit.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.exit.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.exit.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.page.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.page.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.page.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.attention.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.attention.bounce": {
+      "type": "number",
+      "value": 0.3
+    },
+    "motion.attention.distance": {
+      "type": "number",
+      "value": 1
+    },
     "blur.mobileAppBarWeb": {
       "type": "dimension",
       "value": {
@@ -12557,6 +12827,96 @@
         "unit": "ms"
       }
     },
+    "motion.feedback.duration": {
+      "type": "duration",
+      "value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "motion.feedback.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.feedback.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.control.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.control.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.control.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.enter.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.enter.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.enter.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.exit.duration": {
+      "type": "duration",
+      "value": {
+        "value": 320,
+        "unit": "ms"
+      }
+    },
+    "motion.exit.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.exit.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.page.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.page.bounce": {
+      "type": "number",
+      "value": 0
+    },
+    "motion.page.distance": {
+      "type": "number",
+      "value": 1
+    },
+    "motion.attention.duration": {
+      "type": "duration",
+      "value": {
+        "value": 500,
+        "unit": "ms"
+      }
+    },
+    "motion.attention.bounce": {
+      "type": "number",
+      "value": 0.3
+    },
+    "motion.attention.distance": {
+      "type": "number",
+      "value": 1
+    },
     "blur.mobileAppBarWeb": {
       "type": "dimension",
       "value": {
@@ -14692,6 +15052,282 @@
     }
   },
   "variants": {
+    "motionApple": {
+      "motion.feedback.duration": {
+        "type": "duration",
+        "value": {
+          "value": 100,
+          "unit": "ms"
+        }
+      },
+      "motion.feedback.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.feedback.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.control.duration": {
+        "type": "duration",
+        "value": {
+          "value": 320,
+          "unit": "ms"
+        }
+      },
+      "motion.control.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.control.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.enter.duration": {
+        "type": "duration",
+        "value": {
+          "value": 500,
+          "unit": "ms"
+        }
+      },
+      "motion.enter.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.enter.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.exit.duration": {
+        "type": "duration",
+        "value": {
+          "value": 320,
+          "unit": "ms"
+        }
+      },
+      "motion.exit.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.exit.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.page.duration": {
+        "type": "duration",
+        "value": {
+          "value": 500,
+          "unit": "ms"
+        }
+      },
+      "motion.page.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.page.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.attention.duration": {
+        "type": "duration",
+        "value": {
+          "value": 500,
+          "unit": "ms"
+        }
+      },
+      "motion.attention.bounce": {
+        "type": "number",
+        "value": 0.3
+      },
+      "motion.attention.distance": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    "motionExpressive": {
+      "motion.feedback.duration": {
+        "type": "duration",
+        "value": {
+          "value": 100,
+          "unit": "ms"
+        }
+      },
+      "motion.feedback.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.feedback.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.control.duration": {
+        "type": "duration",
+        "value": {
+          "value": 220,
+          "unit": "ms"
+        }
+      },
+      "motion.control.bounce": {
+        "type": "number",
+        "value": 0.4
+      },
+      "motion.control.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.enter.duration": {
+        "type": "duration",
+        "value": {
+          "value": 320,
+          "unit": "ms"
+        }
+      },
+      "motion.enter.bounce": {
+        "type": "number",
+        "value": 0.2
+      },
+      "motion.enter.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.exit.duration": {
+        "type": "duration",
+        "value": {
+          "value": 220,
+          "unit": "ms"
+        }
+      },
+      "motion.exit.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.exit.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.page.duration": {
+        "type": "duration",
+        "value": {
+          "value": 450,
+          "unit": "ms"
+        }
+      },
+      "motion.page.bounce": {
+        "type": "number",
+        "value": 0.2
+      },
+      "motion.page.distance": {
+        "type": "number",
+        "value": 1
+      },
+      "motion.attention.duration": {
+        "type": "duration",
+        "value": {
+          "value": 450,
+          "unit": "ms"
+        }
+      },
+      "motion.attention.bounce": {
+        "type": "number",
+        "value": 0.4
+      },
+      "motion.attention.distance": {
+        "type": "number",
+        "value": 1
+      }
+    },
+    "motionReduced": {
+      "motion.feedback.duration": {
+        "type": "duration",
+        "value": {
+          "value": 100,
+          "unit": "ms"
+        }
+      },
+      "motion.feedback.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.feedback.distance": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.control.duration": {
+        "type": "duration",
+        "value": {
+          "value": 150,
+          "unit": "ms"
+        }
+      },
+      "motion.control.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.control.distance": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.enter.duration": {
+        "type": "duration",
+        "value": {
+          "value": 150,
+          "unit": "ms"
+        }
+      },
+      "motion.enter.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.enter.distance": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.exit.duration": {
+        "type": "duration",
+        "value": {
+          "value": 100,
+          "unit": "ms"
+        }
+      },
+      "motion.exit.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.exit.distance": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.page.duration": {
+        "type": "duration",
+        "value": {
+          "value": 150,
+          "unit": "ms"
+        }
+      },
+      "motion.page.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.page.distance": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.attention.duration": {
+        "type": "duration",
+        "value": {
+          "value": 150,
+          "unit": "ms"
+        }
+      },
+      "motion.attention.bounce": {
+        "type": "number",
+        "value": 0
+      },
+      "motion.attention.distance": {
+        "type": "number",
+        "value": 0
+      }
+    },
     "typeScaleCompact": {
       "font.size": {
         "type": "dimension",

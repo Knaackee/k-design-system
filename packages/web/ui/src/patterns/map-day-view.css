@@ -279,7 +279,8 @@
     );
     border-radius: calc(24 * var(--k-space-hairline))
       calc(24 * var(--k-space-hairline)) 0 0;
-    transition: height var(--k-motion-standard) ease;
+    transition: height var(--k-motion-feedback-settle)
+      var(--k-motion-feedback-easing);
   }
   .k-day-map:not([data-presentation="sidebar"]) .k-day-panel__handle {
     display: flex;
@@ -341,7 +342,8 @@
   height: max(calc(230 * var(--k-space-hairline)), var(--k-day-sheet-fraction));
   border-radius: calc(24 * var(--k-space-hairline))
     calc(24 * var(--k-space-hairline)) 0 0;
-  transition: height var(--k-motion-standard) ease;
+  transition: height var(--k-motion-feedback-settle)
+    var(--k-motion-feedback-easing);
 }
 .k-day-map[data-presentation="sheet"] .k-day-panel__handle {
   display: flex;

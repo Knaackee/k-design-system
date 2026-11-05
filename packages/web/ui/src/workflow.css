@@ -164,7 +164,8 @@
   grid-template-rows: 0fr;
   visibility: hidden;
   transition:
-    grid-template-rows var(--k-motion-entry) ease,
+    grid-template-rows var(--k-motion-feedback-settle)
+      var(--k-motion-feedback-easing),
     visibility var(--k-motion-entry);
 }
 .k-workflow__phase-body[data-open="true"] {
@@ -179,7 +180,8 @@
   flex-shrink: 0;
   width: var(--k-font-body-small-line-height) !important;
   height: var(--k-font-body-small-line-height) !important;
-  transition: transform var(--k-motion-entry) ease;
+  transition: transform var(--k-motion-feedback-settle)
+    var(--k-motion-feedback-easing);
 }
 .k-workflow__phase-toggle[aria-expanded="true"] .k-workflow__chevron {
   transform: rotate(90deg);

@@ -307,3 +307,15 @@ function luminance(hex) {
     );
   return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
 }
+
+test("motion springs: critically damped without bounce, overshoot with it", async () => {
+  const { springPosition, springSettleMs, springLinear } =
+    await import("./generate-tokens.mjs");
+  assert.equal(springPosition(500, 0, 0), 0);
+  assert.ok(springPosition(500, 0, 500) < 1);
+  assert.ok(springPosition(500, 0.3, 500) > 1);
+  // Must match KMotionSpec.settle in Flutter (k_motion_test.dart).
+  assert.equal(springSettleMs(500, 0), 736);
+  assert.equal(springSettleMs(220, 0.4), 356);
+  assert.match(springLinear(320, 0.2), /^linear\(0, .*, 1\)$/);
+});

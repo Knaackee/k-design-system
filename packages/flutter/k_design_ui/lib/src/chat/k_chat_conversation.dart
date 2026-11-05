@@ -274,8 +274,12 @@ class _KChatConversationState extends State<KChatConversation> {
     } else {
       _scroll.animateTo(
         target,
-        duration: Theme.of(context).extension<KDesignTokens>()!.motionFast,
-        curve: Curves.easeOut,
+        duration: Theme.of(
+          context,
+        ).extension<KDesignTokens>()!.motion(KMotionRole.control).settle,
+        curve: Theme.of(
+          context,
+        ).extension<KDesignTokens>()!.motion(KMotionRole.control).curve,
       );
     }
     if (_showNewest && mounted) setState(() => _showNewest = false);
@@ -304,13 +308,18 @@ class _KChatConversationState extends State<KChatConversation> {
                   ? LayoutBuilder(
                       builder: (context, constraints) => SingleChildScrollView(
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
                           child: Padding(
                             padding: EdgeInsets.all(t.spaceLayoutGutter),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [widget.emptyState ?? _EmptyState(labels: widget.labels)],
+                              children: [
+                                widget.emptyState ??
+                                    _EmptyState(labels: widget.labels),
+                              ],
                             ),
                           ),
                         ),

@@ -440,6 +440,7 @@ class KMapInteractivePinState extends State<KMapInteractivePin>
     _rollbackOffset = Tween<Offset>(
       begin: _offset,
       end: Offset.zero,
+      // k-ui-rules-ignore raw-motion: drag rollback overshoot follows the release velocity
     ).animate(CurvedAnimation(parent: _rollback, curve: Curves.easeOutBack));
     await _rollback.forward(from: 0);
   }

@@ -180,7 +180,8 @@
   border-radius: var(--k-radius-overlay);
   background: var(--k-color-surface-raised);
   box-shadow: var(--k-elevation-overlay);
-  animation: k-editor-toolbar-in var(--k-motion-fast) ease-out;
+  animation: k-editor-toolbar-in var(--k-motion-enter-settle)
+    var(--k-motion-enter-easing);
 }
 
 .k-editor-format-action.k-button {
@@ -395,7 +396,8 @@
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);
   font-size: var(--k-font-control-size);
-  animation: k-editor-toolbar-in var(--k-motion-fast) ease-out;
+  animation: k-editor-toolbar-in var(--k-motion-enter-settle)
+    var(--k-motion-enter-easing);
 }
 
 .k-editor-search-panel__content {
