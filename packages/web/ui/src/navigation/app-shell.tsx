@@ -61,6 +61,7 @@ export function KAppShell({
 }: KAppShellProps) {
   const ref = useRef<HTMLDivElement>(null);
   const haptics = useOptionalKHaptics();
+  const [style, setStyle] = useState("linear");
   const [windowClass, setWindowClass] = useState<KWindowClass>(() =>
     typeof window === "undefined"
       ? "compact"
@@ -69,8 +70,13 @@ export function KAppShell({
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const update = () =>
+    const update = () => {
       setWindowClass(kWindowClassForWidth(element.clientWidth));
+      // The style preset comes from the nearest adaptive root (data-style).
+      setStyle(
+        element.closest("[data-style]")?.getAttribute("data-style") ?? "linear",
+      );
+    };
     update();
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(update);
@@ -87,6 +93,7 @@ export function KAppShell({
     onSelectedChange(id);
   };
   const compact = windowClass === "compact";
+  const appleStyle = style === "apple";
   const rail = windowClass === "medium";
   return (
     <div
@@ -137,7 +144,8 @@ export function KAppShell({
       <div className="k-app-shell__content">{children}</div>
       {compact ? (
         <KMobileAppBar
-          variant="fixed"
+          // Apple style: the iOS 26 floating glass tab bar.
+          variant={appleStyle ? "floating-glass" : "fixed"}
           labelVisibility="always"
           visibility="always"
           label={label}

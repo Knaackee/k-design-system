@@ -16,7 +16,7 @@ abstract final class KDesignTokenVariants {
   static const styleAppleComponentListRowPaddingBlock = 12.0;
   static const styleAppleComponentListRowPaddingInline = 16.0;
   static const styleAppleComponentListLeadingGap = 16.0;
-  static const styleAppleComponentListGroupRadius = 12.0;
+  static const styleAppleComponentListGroupRadius = 24.0;
   static const styleAppleComponentListSectionHeaderGap = 8.0;
   static const styleAppleComponentListSectionHeaderInset = 16.0;
   static const styleAppleComponentPageHeaderPaddingBlockStart = 16.0;
@@ -135,6 +135,26 @@ abstract final class KDesignTokenVariants {
   static const typeScaleMobileFontBodySmallLineHeight = 20.0;
   static const typeScaleMobileFontLabelSize = 14.0;
   static const typeScaleMobileFontLabelLineHeight = 20.0;
+  static const typeScaleAppleFontSize = 17.0;
+  static const typeScaleAppleFontControlSize = 17.0;
+  static const typeScaleAppleFontHeading1Size = 34.0;
+  static const typeScaleAppleFontHeading1LineHeight = 41.0;
+  static const typeScaleAppleFontHeading2Size = 28.0;
+  static const typeScaleAppleFontHeading2LineHeight = 34.0;
+  static const typeScaleAppleFontHeading3Size = 22.0;
+  static const typeScaleAppleFontHeading3LineHeight = 28.0;
+  static const typeScaleAppleFontHeading4Size = 20.0;
+  static const typeScaleAppleFontHeading4LineHeight = 25.0;
+  static const typeScaleAppleFontHeading5Size = 17.0;
+  static const typeScaleAppleFontHeading5LineHeight = 22.0;
+  static const typeScaleAppleFontHeading6Size = 15.0;
+  static const typeScaleAppleFontHeading6LineHeight = 20.0;
+  static const typeScaleAppleFontBodySize = 17.0;
+  static const typeScaleAppleFontBodyLineHeight = 22.0;
+  static const typeScaleAppleFontBodySmallSize = 15.0;
+  static const typeScaleAppleFontBodySmallLineHeight = 20.0;
+  static const typeScaleAppleFontLabelSize = 15.0;
+  static const typeScaleAppleFontLabelLineHeight = 20.0;
   static const densityDenseSpaceControlGap = 4.0;
   static const densityDenseSpaceContentActionGap = 8.0;
   static const densityDenseSpaceCardPadding = 12.0;
@@ -182,6 +202,28 @@ abstract final class KDesignTokenVariants {
     componentListSectionHeaderInset: styleAppleComponentListSectionHeaderInset,
     componentPageHeaderPaddingBlockStart: styleAppleComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleAppleComponentPageHeaderTitleGap,
+  );
+  static KDesignTokens applyTypeScaleApple(KDesignTokens t) => t.copyWith(
+    fontSize: typeScaleAppleFontSize,
+    fontControlSize: typeScaleAppleFontControlSize,
+    fontHeading1Size: typeScaleAppleFontHeading1Size,
+    fontHeading1LineHeight: typeScaleAppleFontHeading1LineHeight,
+    fontHeading2Size: typeScaleAppleFontHeading2Size,
+    fontHeading2LineHeight: typeScaleAppleFontHeading2LineHeight,
+    fontHeading3Size: typeScaleAppleFontHeading3Size,
+    fontHeading3LineHeight: typeScaleAppleFontHeading3LineHeight,
+    fontHeading4Size: typeScaleAppleFontHeading4Size,
+    fontHeading4LineHeight: typeScaleAppleFontHeading4LineHeight,
+    fontHeading5Size: typeScaleAppleFontHeading5Size,
+    fontHeading5LineHeight: typeScaleAppleFontHeading5LineHeight,
+    fontHeading6Size: typeScaleAppleFontHeading6Size,
+    fontHeading6LineHeight: typeScaleAppleFontHeading6LineHeight,
+    fontBodySize: typeScaleAppleFontBodySize,
+    fontBodyLineHeight: typeScaleAppleFontBodyLineHeight,
+    fontBodySmallSize: typeScaleAppleFontBodySmallSize,
+    fontBodySmallLineHeight: typeScaleAppleFontBodySmallLineHeight,
+    fontLabelSize: typeScaleAppleFontLabelSize,
+    fontLabelLineHeight: typeScaleAppleFontLabelLineHeight,
   );
 }
 

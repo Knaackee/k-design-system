@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 
 import 'generated/k_design_tokens.g.dart';
@@ -25,11 +26,17 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
   // Parity rule: the type ramp follows the window class only. Tablet and
   // desktop share one ramp; mobile Web and the mobile app share another.
   // Input mode changes hit targets, never typography.
+  final style = overrides.style ?? KStyle.linear;
+  // The Apple style uses the iOS/iPadOS ramp on phones and tablets
+  // (Decision 0014); desktops keep the standard ramp.
   final typeScale =
       overrides.typeScale ??
-      (windowClass == KWindowClass.compact
-          ? KTypeScale.mobile
-          : KTypeScale.standard);
+      switch ((style, windowClass)) {
+        (KStyle.apple, KWindowClass.compact || KWindowClass.medium) =>
+          KTypeScale.apple,
+        (_, KWindowClass.compact) => KTypeScale.mobile,
+        _ => KTypeScale.standard,
+      };
   // The platform setting always wins: an app may pick a motion style, but
   // never more motion than the person asked for.
   final motion = reduceMotion
@@ -41,7 +48,7 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
     inputMode: inputMode,
     windowClass: windowClass,
     motion: motion,
-    style: overrides.style ?? KStyle.linear,
+    style: style,
   );
 }
 
@@ -98,6 +105,17 @@ class KAdaptive extends InheritedWidget {
       oldWidget.configuration != configuration;
 }
 
+/// The Apple style sets text in the system font (SF Pro) on Apple devices
+/// (Decision 0014); elsewhere, and on the Web build, the brand font stays.
+/// An explicit `fontFamily` (brand typeface) always wins.
+String? kStyleFontFamily(KStyle style) =>
+    style == KStyle.apple &&
+        !kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)
+    ? 'CupertinoSystemText'
+    : null;
+
 /// Applies a K theme resolved from the current window and platform and caps
 /// the system text scale (body/control cap globally; [KText] applies the
 /// tighter heading cap). Place it below `MaterialApp.builder` or around a
@@ -136,7 +154,7 @@ class KAdaptiveTheme extends StatelessWidget {
       brightness: brightness ?? media.platformBrightness,
       configuration: configuration,
       tokenTransform: tokenTransform,
-      fontFamily: fontFamily,
+      fontFamily: fontFamily ?? kStyleFontFamily(configuration.style),
     );
     final tokens = theme.extension<KDesignTokens>()!;
     return KAdaptive(

@@ -7,7 +7,7 @@
  */
 
 export type KDensity = "dense" | "standard" | "spacious";
-export type KTypeScale = "compact" | "standard" | "mobile";
+export type KTypeScale = "compact" | "standard" | "mobile" | "apple";
 export type KInputMode = "pointer" | "touch";
 export type KWindowClass =
   "compact" | "medium" | "expanded" | "large" | "extra-large";
@@ -59,8 +59,17 @@ export function resolveKAdaptive(
   // Parity rule: the type ramp follows the window class only. Tablet and
   // desktop share one ramp; mobile Web and the mobile app share another.
   // Input mode changes hit targets, never typography.
-  const typeScale =
-    overrides.typeScale ?? (windowClass === "compact" ? "mobile" : "standard");
+  const style: KStyle = overrides.style ?? "linear";
+  // The Apple style uses the iOS/iPadOS ramp on phones and tablets
+  // (Decision 0014); desktops keep the standard ramp.
+  const typeScale: KTypeScale =
+    overrides.typeScale ??
+    (style === "apple" &&
+    (windowClass === "compact" || windowClass === "medium")
+      ? "apple"
+      : windowClass === "compact"
+        ? "mobile"
+        : "standard");
   // The system setting always wins: an app may pick a motion style, never
   // more motion than the person asked for.
   const motion: KMotionStyle = environment.reduceMotion
@@ -72,7 +81,7 @@ export function resolveKAdaptive(
     inputMode,
     windowClass,
     motion,
-    style: overrides.style ?? "linear",
+    style,
   };
 }
 

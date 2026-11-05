@@ -2461,7 +2461,7 @@
   --k-component-list-row-padding-block: 12px;
   --k-component-list-row-padding-inline: 16px;
   --k-component-list-leading-gap: 16px;
-  --k-component-list-group-radius: 12px;
+  --k-component-list-group-radius: 24px;
   --k-component-list-section-header-gap: 8px;
   --k-component-list-section-header-inset: 16px;
   --k-component-page-header-padding-block-start: 16px;
@@ -2633,6 +2633,29 @@
   --k-font-body-small-size: 14px;
   --k-font-body-small-line-height: 20px;
   --k-font-label-size: 14px;
+  --k-font-label-line-height: 20px;
+}
+
+[data-type-scale="apple"] {
+  --k-font-size: 17px;
+  --k-font-control-size: 17px;
+  --k-font-heading1-size: 34px;
+  --k-font-heading1-line-height: 41px;
+  --k-font-heading2-size: 28px;
+  --k-font-heading2-line-height: 34px;
+  --k-font-heading3-size: 22px;
+  --k-font-heading3-line-height: 28px;
+  --k-font-heading4-size: 20px;
+  --k-font-heading4-line-height: 25px;
+  --k-font-heading5-size: 17px;
+  --k-font-heading5-line-height: 22px;
+  --k-font-heading6-size: 15px;
+  --k-font-heading6-line-height: 20px;
+  --k-font-body-size: 17px;
+  --k-font-body-line-height: 22px;
+  --k-font-body-small-size: 15px;
+  --k-font-body-small-line-height: 20px;
+  --k-font-label-size: 15px;
   --k-font-label-line-height: 20px;
 }
 

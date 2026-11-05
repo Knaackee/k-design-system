@@ -85,7 +85,10 @@ class KAppShell extends StatelessWidget {
             children: [
               Expanded(child: child),
               KMobileAppBar(
-                variant: KMobileAppBarVariant.fixed,
+                // Apple style: the iOS 26 floating glass tab bar.
+                variant: KAdaptive.maybeOf(context)?.style == KStyle.apple
+                    ? KMobileAppBarVariant.floatingGlass
+                    : KMobileAppBarVariant.fixed,
                 labelVisibility: KMobileAppBarLabelVisibility.always,
                 visibility: KMobileAppBarVisibility.always,
                 semanticLabel: semanticLabel,

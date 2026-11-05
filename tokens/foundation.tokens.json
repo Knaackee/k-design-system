@@ -538,6 +538,46 @@
         "$type": "dimension",
         "$value": { "value": 12, "unit": "px" }
       },
+      "bodyApple": {
+        "$type": "dimension",
+        "$value": { "value": 17, "unit": "px" }
+      },
+      "controlApple": {
+        "$type": "dimension",
+        "$value": { "value": 17, "unit": "px" }
+      },
+      "heading1Apple": {
+        "$type": "dimension",
+        "$value": { "value": 34, "unit": "px" }
+      },
+      "heading2Apple": {
+        "$type": "dimension",
+        "$value": { "value": 28, "unit": "px" }
+      },
+      "heading3Apple": {
+        "$type": "dimension",
+        "$value": { "value": 22, "unit": "px" }
+      },
+      "heading4Apple": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
+      },
+      "heading5Apple": {
+        "$type": "dimension",
+        "$value": { "value": 17, "unit": "px" }
+      },
+      "heading6Apple": {
+        "$type": "dimension",
+        "$value": { "value": 15, "unit": "px" }
+      },
+      "bodySmallApple": {
+        "$type": "dimension",
+        "$value": { "value": 15, "unit": "px" }
+      },
+      "labelApple": {
+        "$type": "dimension",
+        "$value": { "value": 15, "unit": "px" }
+      },
       "bodyMobile": {
         "$type": "dimension",
         "$value": { "value": 16, "unit": "px" }
@@ -659,6 +699,42 @@
       "caption": {
         "$type": "dimension",
         "$value": { "value": 16, "unit": "px" }
+      },
+      "bodyApple": {
+        "$type": "dimension",
+        "$value": { "value": 22, "unit": "px" }
+      },
+      "heading1Apple": {
+        "$type": "dimension",
+        "$value": { "value": 41, "unit": "px" }
+      },
+      "heading2Apple": {
+        "$type": "dimension",
+        "$value": { "value": 34, "unit": "px" }
+      },
+      "heading3Apple": {
+        "$type": "dimension",
+        "$value": { "value": 28, "unit": "px" }
+      },
+      "heading4Apple": {
+        "$type": "dimension",
+        "$value": { "value": 25, "unit": "px" }
+      },
+      "heading5Apple": {
+        "$type": "dimension",
+        "$value": { "value": 22, "unit": "px" }
+      },
+      "heading6Apple": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
+      },
+      "bodySmallApple": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
+      },
+      "labelApple": {
+        "$type": "dimension",
+        "$value": { "value": 20, "unit": "px" }
       },
       "bodyMobile": {
         "$type": "dimension",

@@ -1,0 +1,102 @@
+{
+  "font": {
+    "size": {
+      "$type": "dimension",
+      "$value": "{font.size.bodyApple}"
+    },
+    "controlSize": {
+      "$type": "dimension",
+      "$value": "{font.size.controlApple}"
+    },
+    "heading1": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading1Apple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading1Apple}"
+      }
+    },
+    "heading2": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading2Apple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading2Apple}"
+      }
+    },
+    "heading3": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading3Apple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading3Apple}"
+      }
+    },
+    "heading4": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading4Apple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading4Apple}"
+      }
+    },
+    "heading5": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading5Apple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading5Apple}"
+      }
+    },
+    "heading6": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.heading6Apple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading6Apple}"
+      }
+    },
+    "body": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.bodyApple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.bodyApple}"
+      }
+    },
+    "bodySmall": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.bodySmallApple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.bodySmallApple}"
+      }
+    },
+    "label": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{font.size.labelApple}"
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.labelApple}"
+      }
+    }
+  }
+}

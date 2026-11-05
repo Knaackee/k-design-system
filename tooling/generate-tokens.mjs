@@ -45,6 +45,10 @@ const variantFiles = {
     "tokens/modes/type-scale.mobile.tokens.json",
     '[data-type-scale="mobile"]',
   ],
+  typeScaleApple: [
+    "tokens/modes/type-scale.apple.tokens.json",
+    '[data-type-scale="apple"]',
+  ],
   densityDense: [
     "tokens/modes/density.dense.tokens.json",
     '[data-density="dense"]',
@@ -374,7 +378,10 @@ function generateDart(themes, semantic, variants) {
   // Style presets (Decision 0014) change many tokens at once; emit one apply
   // function per preset so the theme resolver stays a single switch.
   const styleAppliers = Object.entries(variants)
-    .filter(([variant]) => variant.startsWith("style"))
+    .filter(
+      ([variant]) =>
+        variant.startsWith("style") || variant === "typeScaleApple",
+    )
     .map(
       ([variant, tokens]) =>
         `  static KDesignTokens apply${variant[0].toUpperCase()}${variant.slice(1)}(KDesignTokens t) => t.copyWith(\n${[

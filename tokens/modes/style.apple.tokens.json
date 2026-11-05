@@ -19,7 +19,7 @@
       },
       "groupRadius": {
         "$type": "dimension",
-        "$value": "{radius.scale.xl}"
+        "$value": "{radius.scale.3xl}"
       },
       "sectionHeaderGap": {
         "$type": "dimension",

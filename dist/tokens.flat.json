@@ -15445,7 +15445,7 @@
       "component.list.groupRadius": {
         "type": "dimension",
         "value": {
-          "value": 12,
+          "value": 24,
           "unit": "px"
         }
       },
@@ -16169,6 +16169,148 @@
         "type": "dimension",
         "value": {
           "value": 14,
+          "unit": "px"
+        }
+      },
+      "font.label.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 20,
+          "unit": "px"
+        }
+      }
+    },
+    "typeScaleApple": {
+      "font.size": {
+        "type": "dimension",
+        "value": {
+          "value": 17,
+          "unit": "px"
+        }
+      },
+      "font.controlSize": {
+        "type": "dimension",
+        "value": {
+          "value": 17,
+          "unit": "px"
+        }
+      },
+      "font.heading1.size": {
+        "type": "dimension",
+        "value": {
+          "value": 34,
+          "unit": "px"
+        }
+      },
+      "font.heading1.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 41,
+          "unit": "px"
+        }
+      },
+      "font.heading2.size": {
+        "type": "dimension",
+        "value": {
+          "value": 28,
+          "unit": "px"
+        }
+      },
+      "font.heading2.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 34,
+          "unit": "px"
+        }
+      },
+      "font.heading3.size": {
+        "type": "dimension",
+        "value": {
+          "value": 22,
+          "unit": "px"
+        }
+      },
+      "font.heading3.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 28,
+          "unit": "px"
+        }
+      },
+      "font.heading4.size": {
+        "type": "dimension",
+        "value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "font.heading4.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 25,
+          "unit": "px"
+        }
+      },
+      "font.heading5.size": {
+        "type": "dimension",
+        "value": {
+          "value": 17,
+          "unit": "px"
+        }
+      },
+      "font.heading5.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 22,
+          "unit": "px"
+        }
+      },
+      "font.heading6.size": {
+        "type": "dimension",
+        "value": {
+          "value": 15,
+          "unit": "px"
+        }
+      },
+      "font.heading6.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "font.body.size": {
+        "type": "dimension",
+        "value": {
+          "value": 17,
+          "unit": "px"
+        }
+      },
+      "font.body.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 22,
+          "unit": "px"
+        }
+      },
+      "font.bodySmall.size": {
+        "type": "dimension",
+        "value": {
+          "value": 15,
+          "unit": "px"
+        }
+      },
+      "font.bodySmall.lineHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "font.label.size": {
+        "type": "dimension",
+        "value": {
+          "value": 15,
           "unit": "px"
         }
       },

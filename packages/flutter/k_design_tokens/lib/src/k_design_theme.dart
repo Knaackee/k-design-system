@@ -9,7 +9,7 @@ enum KDensity { dense, standard, spacious }
 
 /// Type ramp. [mobile] is the phone ramp (compact window class): smaller
 /// headings, 16 px body and 16 px controls.
-enum KTypeScale { compact, standard, mobile }
+enum KTypeScale { compact, standard, mobile, apple }
 
 enum KInputMode { pointer, touch }
 
@@ -255,6 +255,8 @@ KDesignTokens resolveKDesignTokens(
   );
 
   return switch (configuration.typeScale) {
+    // iOS/iPadOS ramp (Decision 0014): body 17, large title 34.
+    KTypeScale.apple => KDesignTokenVariants.applyTypeScaleApple(resolved),
     KTypeScale.compact => resolved.copyWith(
       fontSize: KDesignTokenVariants.typeScaleCompactFontSize,
       fontControlSize: KDesignTokenVariants.typeScaleCompactFontControlSize,
