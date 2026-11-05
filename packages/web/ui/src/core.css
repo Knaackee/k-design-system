@@ -283,7 +283,7 @@
   justify-content: center;
   gap: var(--k-space-control-gap);
   border: var(--k-border-width-default) solid var(--k-button-border);
-  border-radius: var(--k-radius-control);
+  border-radius: var(--k-component-button-radius);
   background: var(--k-button-background);
   color: var(--k-button-foreground);
   font-family: var(--k-font-family);
@@ -539,4 +539,11 @@
   --k-font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, ui-sans-serif,
     system-ui, sans-serif;
+}
+
+/* Decision 0014: iOS 26 back control, a round button on a raised surface. */
+[data-style="apple"] .k-back-button {
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-surface-raised);
+  box-shadow: var(--k-elevation-low);
 }

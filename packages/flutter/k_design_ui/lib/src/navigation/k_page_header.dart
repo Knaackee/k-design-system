@@ -98,8 +98,14 @@ class KPageHeader extends StatelessWidget {
               Row(
                 children: [
                   ?back,
-                  const Spacer(),
-                  if (inlineActions != null) Flexible(child: inlineActions),
+                  // Actions take all remaining width, like the Web grid, so
+                  // a short action row never wraps early.
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: inlineActions ?? const SizedBox.shrink(),
+                    ),
+                  ),
                 ],
               ),
             );

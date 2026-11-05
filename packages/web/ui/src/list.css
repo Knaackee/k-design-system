@@ -24,12 +24,6 @@
 .k-list__title {
   margin: 0 0 var(--k-component-list-section-header-gap);
 }
-[data-style="apple"] .k-list__title {
-  --k-text-font-size: var(--k-font-caption-size);
-  --k-text-line-height: var(--k-font-caption-line-height);
-  --k-text-font-weight: var(--k-font-body-weight);
-  text-transform: uppercase;
-}
 .k-list__footer {
   margin: var(--k-component-list-section-header-gap) 0 0;
 }

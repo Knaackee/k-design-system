@@ -337,6 +337,7 @@
   --k-component-orbit-motion-travel-duration: var(--k-motion-progress);
   --k-component-orbit-motion-ping-duration: var(--k-motion-emphasis);
   --k-component-orbit-motion-transition-duration: var(--k-motion-moderate);
+  --k-component-button-radius: var(--k-radius-control);
   --k-component-button-disabled-opacity: var(--k-opacity-disabled);
   --k-component-button-loading-indicator-size: var(--k-size-indicator-small);
   --k-component-button-loading-indicator-stroke-width: var(--k-border-width-strong);
@@ -947,6 +948,7 @@
   --k-component-orbit-motion-travel-duration: var(--k-motion-progress);
   --k-component-orbit-motion-ping-duration: var(--k-motion-emphasis);
   --k-component-orbit-motion-transition-duration: var(--k-motion-moderate);
+  --k-component-button-radius: var(--k-radius-control);
   --k-component-button-disabled-opacity: var(--k-opacity-disabled);
   --k-component-button-loading-indicator-size: var(--k-size-indicator-small);
   --k-component-button-loading-indicator-stroke-width: var(--k-border-width-strong);
@@ -1557,6 +1559,7 @@
   --k-component-orbit-motion-travel-duration: var(--k-motion-progress);
   --k-component-orbit-motion-ping-duration: var(--k-motion-emphasis);
   --k-component-orbit-motion-transition-duration: var(--k-motion-moderate);
+  --k-component-button-radius: var(--k-radius-control);
   --k-component-button-disabled-opacity: var(--k-opacity-disabled);
   --k-component-button-loading-indicator-size: var(--k-size-indicator-small);
   --k-component-button-loading-indicator-stroke-width: var(--k-border-width-strong);
@@ -2167,6 +2170,7 @@
   --k-component-orbit-motion-travel-duration: var(--k-motion-progress);
   --k-component-orbit-motion-ping-duration: var(--k-motion-emphasis);
   --k-component-orbit-motion-transition-duration: var(--k-motion-moderate);
+  --k-component-button-radius: var(--k-radius-control);
   --k-component-button-disabled-opacity: var(--k-opacity-disabled);
   --k-component-button-loading-indicator-size: var(--k-size-indicator-small);
   --k-component-button-loading-indicator-stroke-width: var(--k-border-width-strong);
@@ -2454,6 +2458,7 @@
   --k-component-list-section-header-inset: 12px;
   --k-component-page-header-padding-block-start: 8px;
   --k-component-page-header-title-gap: 4px;
+  --k-component-button-radius: 6px;
 }
 
 [data-style="apple"] {
@@ -2466,6 +2471,7 @@
   --k-component-list-section-header-inset: 16px;
   --k-component-page-header-padding-block-start: 16px;
   --k-component-page-header-title-gap: 4px;
+  --k-component-button-radius: 999px;
 }
 
 [data-motion="apple"] {

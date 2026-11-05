@@ -12,6 +12,7 @@ abstract final class KDesignTokenVariants {
   static const styleLinearComponentListSectionHeaderInset = 12.0;
   static const styleLinearComponentPageHeaderPaddingBlockStart = 8.0;
   static const styleLinearComponentPageHeaderTitleGap = 4.0;
+  static const styleLinearComponentButtonRadius = 6.0;
   static const styleAppleComponentListRowMinHeight = 44.0;
   static const styleAppleComponentListRowPaddingBlock = 12.0;
   static const styleAppleComponentListRowPaddingInline = 16.0;
@@ -21,6 +22,7 @@ abstract final class KDesignTokenVariants {
   static const styleAppleComponentListSectionHeaderInset = 16.0;
   static const styleAppleComponentPageHeaderPaddingBlockStart = 16.0;
   static const styleAppleComponentPageHeaderTitleGap = 4.0;
+  static const styleAppleComponentButtonRadius = 999.0;
   static const motionAppleMotionFeedbackDuration = Duration(milliseconds: 100);
   static const motionAppleMotionFeedbackBounce = 0.0;
   static const motionAppleMotionFeedbackDistance = 1.0;
@@ -191,6 +193,7 @@ abstract final class KDesignTokenVariants {
     componentListSectionHeaderInset: styleLinearComponentListSectionHeaderInset,
     componentPageHeaderPaddingBlockStart: styleLinearComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleLinearComponentPageHeaderTitleGap,
+    componentButtonRadius: styleLinearComponentButtonRadius,
   );
   static KDesignTokens applyStyleApple(KDesignTokens t) => t.copyWith(
     componentListRowMinHeight: styleAppleComponentListRowMinHeight,
@@ -202,6 +205,7 @@ abstract final class KDesignTokenVariants {
     componentListSectionHeaderInset: styleAppleComponentListSectionHeaderInset,
     componentPageHeaderPaddingBlockStart: styleAppleComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleAppleComponentPageHeaderTitleGap,
+    componentButtonRadius: styleAppleComponentButtonRadius,
   );
   static KDesignTokens applyTypeScaleApple(KDesignTokens t) => t.copyWith(
     fontSize: typeScaleAppleFontSize,
@@ -564,6 +568,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentOrbitMotionTravelDuration,
     required this.componentOrbitMotionPingDuration,
     required this.componentOrbitMotionTransitionDuration,
+    required this.componentButtonRadius,
     required this.componentButtonDisabledOpacity,
     required this.componentButtonLoadingIndicatorSize,
     required this.componentButtonLoadingIndicatorStrokeWidth,
@@ -1161,6 +1166,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final Duration componentOrbitMotionTravelDuration;
   final Duration componentOrbitMotionPingDuration;
   final Duration componentOrbitMotionTransitionDuration;
+  final double componentButtonRadius;
   final double componentButtonDisabledOpacity;
   final double componentButtonLoadingIndicatorSize;
   final double componentButtonLoadingIndicatorStrokeWidth;
@@ -1758,6 +1764,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentOrbitMotionTravelDuration: Duration(milliseconds: 1200),
     componentOrbitMotionPingDuration: Duration(milliseconds: 240),
     componentOrbitMotionTransitionDuration: Duration(milliseconds: 180),
+    componentButtonRadius: 6.0,
     componentButtonDisabledOpacity: 0.48,
     componentButtonLoadingIndicatorSize: 14.0,
     componentButtonLoadingIndicatorStrokeWidth: 2.0,
@@ -2356,6 +2363,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentOrbitMotionTravelDuration: Duration(milliseconds: 1200),
     componentOrbitMotionPingDuration: Duration(milliseconds: 240),
     componentOrbitMotionTransitionDuration: Duration(milliseconds: 180),
+    componentButtonRadius: 6.0,
     componentButtonDisabledOpacity: 0.48,
     componentButtonLoadingIndicatorSize: 14.0,
     componentButtonLoadingIndicatorStrokeWidth: 2.0,
@@ -2954,6 +2962,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentOrbitMotionTravelDuration: Duration(milliseconds: 1200),
     componentOrbitMotionPingDuration: Duration(milliseconds: 240),
     componentOrbitMotionTransitionDuration: Duration(milliseconds: 180),
+    componentButtonRadius: 6.0,
     componentButtonDisabledOpacity: 0.48,
     componentButtonLoadingIndicatorSize: 14.0,
     componentButtonLoadingIndicatorStrokeWidth: 2.0,
@@ -3552,6 +3561,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentOrbitMotionTravelDuration: Duration(milliseconds: 1200),
     componentOrbitMotionPingDuration: Duration(milliseconds: 240),
     componentOrbitMotionTransitionDuration: Duration(milliseconds: 180),
+    componentButtonRadius: 6.0,
     componentButtonDisabledOpacity: 0.48,
     componentButtonLoadingIndicatorSize: 14.0,
     componentButtonLoadingIndicatorStrokeWidth: 2.0,
@@ -4151,6 +4161,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     Duration? componentOrbitMotionTravelDuration,
     Duration? componentOrbitMotionPingDuration,
     Duration? componentOrbitMotionTransitionDuration,
+    double? componentButtonRadius,
     double? componentButtonDisabledOpacity,
     double? componentButtonLoadingIndicatorSize,
     double? componentButtonLoadingIndicatorStrokeWidth,
@@ -4748,6 +4759,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentOrbitMotionTravelDuration: componentOrbitMotionTravelDuration ?? motionProgress ?? this.componentOrbitMotionTravelDuration,
       componentOrbitMotionPingDuration: componentOrbitMotionPingDuration ?? motionEmphasis ?? this.componentOrbitMotionPingDuration,
       componentOrbitMotionTransitionDuration: componentOrbitMotionTransitionDuration ?? motionModerate ?? this.componentOrbitMotionTransitionDuration,
+      componentButtonRadius: componentButtonRadius ?? radiusControl ?? this.componentButtonRadius,
       componentButtonDisabledOpacity: componentButtonDisabledOpacity ?? opacityDisabled ?? this.componentButtonDisabledOpacity,
       componentButtonLoadingIndicatorSize: componentButtonLoadingIndicatorSize ?? sizeIndicatorSmall ?? this.componentButtonLoadingIndicatorSize,
       componentButtonLoadingIndicatorStrokeWidth: componentButtonLoadingIndicatorStrokeWidth ?? borderWidthStrong ?? this.componentButtonLoadingIndicatorStrokeWidth,
@@ -5350,6 +5362,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentOrbitMotionTravelDuration: t < 0.5 ? componentOrbitMotionTravelDuration : other.componentOrbitMotionTravelDuration,
       componentOrbitMotionPingDuration: t < 0.5 ? componentOrbitMotionPingDuration : other.componentOrbitMotionPingDuration,
       componentOrbitMotionTransitionDuration: t < 0.5 ? componentOrbitMotionTransitionDuration : other.componentOrbitMotionTransitionDuration,
+      componentButtonRadius: lerpDouble(componentButtonRadius, other.componentButtonRadius, t)!,
       componentButtonDisabledOpacity: lerpDouble(componentButtonDisabledOpacity, other.componentButtonDisabledOpacity, t)!,
       componentButtonLoadingIndicatorSize: lerpDouble(componentButtonLoadingIndicatorSize, other.componentButtonLoadingIndicatorSize, t)!,
       componentButtonLoadingIndicatorStrokeWidth: lerpDouble(componentButtonLoadingIndicatorStrokeWidth, other.componentButtonLoadingIndicatorStrokeWidth, t)!,

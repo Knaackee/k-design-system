@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../actions/k_icon_button.dart';
 import '../generated/k_icons.g.dart';
@@ -20,10 +21,23 @@ class KBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rtl = Directionality.of(context) == TextDirection.rtl;
-    return KIconButton(
+    final button = KIconButton(
       label: label,
       icon: rtl ? KIconName.chevronRight : KIconName.chevronLeft,
       onPressed: onPressed ?? () => Navigator.maybePop(context),
+    );
+    if ((KAdaptive.maybeOf(context)?.style ?? KStyle.linear) != KStyle.apple) {
+      return button;
+    }
+    // iOS 26: a round button on a raised surface floating over content.
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: t.colorSurfaceRaised,
+        shape: BoxShape.circle,
+        boxShadow: t.elevationLow,
+      ),
+      child: button,
     );
   }
 }

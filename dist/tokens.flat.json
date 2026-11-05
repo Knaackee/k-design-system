@@ -2050,6 +2050,13 @@
         "unit": "ms"
       }
     },
+    "component.button.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.button.disabled.opacity": {
       "type": "number",
       "value": 0.48
@@ -5885,6 +5892,13 @@
       "value": {
         "value": 180,
         "unit": "ms"
+      }
+    },
+    "component.button.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
       }
     },
     "component.button.disabled.opacity": {
@@ -9724,6 +9738,13 @@
         "unit": "ms"
       }
     },
+    "component.button.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.button.disabled.opacity": {
       "type": "number",
       "value": 0.48
@@ -13561,6 +13582,13 @@
         "unit": "ms"
       }
     },
+    "component.button.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 6,
+        "unit": "px"
+      }
+    },
     "component.button.disabled.opacity": {
       "type": "number",
       "value": 0.48
@@ -15411,6 +15439,13 @@
           "value": 4,
           "unit": "px"
         }
+      },
+      "component.button.radius": {
+        "type": "dimension",
+        "value": {
+          "value": 6,
+          "unit": "px"
+        }
       }
     },
     "styleApple": {
@@ -15474,6 +15509,13 @@
         "type": "dimension",
         "value": {
           "value": 4,
+          "unit": "px"
+        }
+      },
+      "component.button.radius": {
+        "type": "dimension",
+        "value": {
+          "value": 999,
           "unit": "px"
         }
       }

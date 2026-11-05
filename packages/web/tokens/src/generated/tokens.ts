@@ -334,6 +334,7 @@ export const tokenNames = [
   "component.orbit.motion.travelDuration",
   "component.orbit.motion.pingDuration",
   "component.orbit.motion.transitionDuration",
+  "component.button.radius",
   "component.button.disabled.opacity",
   "component.button.loadingIndicator.size",
   "component.button.loadingIndicator.strokeWidth",

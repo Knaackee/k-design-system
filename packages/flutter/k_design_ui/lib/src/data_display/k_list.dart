@@ -18,12 +18,13 @@ class _KListRoles {
 
   static _KListRoles of(BuildContext context) =>
       switch (KAdaptive.maybeOf(context)?.style ?? KStyle.linear) {
-        // iOS: body-size titles and values, small uppercase section headers.
+        // iOS: body-size titles and values.
+        // iOS 26: sentence-case section headers in the subheadline size.
         KStyle.apple => const _KListRoles(
           KTextVariant.body,
           KTextVariant.body,
-          KTextVariant.caption,
-          true,
+          KTextVariant.label,
+          false,
         ),
         // Productivity: medium labels, quieter small values.
         KStyle.linear => const _KListRoles(

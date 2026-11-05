@@ -1321,6 +1321,7 @@
       }
     },
     "button": {
+      "radius": { "$type": "dimension", "$value": "{radius.control}" },
       "disabled": {
         "opacity": {
           "$type": "number",

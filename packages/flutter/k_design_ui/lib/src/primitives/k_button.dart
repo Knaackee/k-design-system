@@ -132,7 +132,7 @@ class KButton extends StatelessWidget {
             ),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(tokens.radiusControl),
+                borderRadius: BorderRadius.circular(tokens.componentButtonRadius),
               ),
             ),
           ),
