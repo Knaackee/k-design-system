@@ -293,13 +293,15 @@ class _TimelineFixtureState extends State<TimelineFixture> {
                 }),
               ),
               section([
-                Row(
+                // Wraps the action under the label at large text.
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: t.spaceControlGap,
                   children: [
-                    Expanded(
-                      child: KText(
-                        selected?.label ?? '12 items · 3 groups',
-                        variant: KTextVariant.bodySmall,
-                      ),
+                    KText(
+                      selected?.label ?? '12 items · 3 groups',
+                      variant: KTextVariant.bodySmall,
                     ),
                     KButton(
                       label: 'View details',

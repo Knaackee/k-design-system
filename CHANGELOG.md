@@ -6,7 +6,8 @@ version is tagged.
 
 ## Unreleased
 
-- Added style presets (Decision 0014): `linear` (default) and `apple`
+- Added style presets (Decision 0014): `linear` and `apple`; without
+  configuration iPhone and iPad get `apple`, other platforms `linear`
   (iOS ramp 17/34, 44 pt rows, inset grouped lists, sentence-case section
   headers, capsule buttons, round back button, floating glass tab bar, system
   font on Apple devices). `KList` draws its grouped surface with `title` and

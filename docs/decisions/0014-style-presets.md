@@ -29,9 +29,14 @@ compensated screen by screen, which is exactly what the system should prevent.
 4. **Behaviour that is not a token** follows the style in the component:
    `apple` sets text in the system font (SF Pro) on Apple devices, uses the
    floating glass tab bar, borderless inset groups and a round back button.
-5. **Material Expressive** follows as `material`, and `auto` (Apple devices →
-   `apple`, Android → `material`, desktop → `linear`) becomes the default once
-   it exists.
+5. **Platform-native default.** Without configuration iPhone and iPad get
+   `apple` (Flutter: `TargetPlatform.iOS`; Web: iPhone/iPad user agent), all
+   other platforms `linear`. Material Expressive follows as `material` and
+   then becomes the Android default. An app sets `style` only to deviate.
+6. **Defaults over props.** Components need no props for appearance: props
+   carry content, events and state; spacing, size, shape, type and motion come
+   from tokens and the style. A consumer override is a token or the style, not
+   a per-screen value.
 
 ## Consequences
 

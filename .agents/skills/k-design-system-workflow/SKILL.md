@@ -11,6 +11,12 @@ description: Build, review or migrate UI in an application that consumes K Desig
 it runs on, aligned to one grid, and proven on a real phone size before
 anyone reviews it.**
 
+**Defaults first.** Out of the box a K app should look like Apple or Google
+built it: the platform-native style (Decision 0014) sets spacing, sizes,
+shapes, type and motion. Pass props for content, events and state only. A
+different look is a token or style change in one place, never per-screen
+values.
+
 Nine ways it fails (each has a rule in `references/rules.md`):
 
 - **Card in a card.** A bordered box inside a bordered box. Inside a card use

@@ -534,7 +534,9 @@ class _ManagementOverviewFixtureState extends State<ManagementOverviewFixture> {
               ),
             ],
           );
-          if (c.maxWidth < 320) {
+          // Narrow rows and large text stack the action under the copy.
+          if (c.maxWidth < 320 ||
+              MediaQuery.textScalerOf(context).scale(1) >= 2) {
             return KStack(
               gap: KLayoutGap.action,
               align: KLayoutAlign.stretch,
