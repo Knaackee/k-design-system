@@ -44,6 +44,24 @@ test("flags nested React cards and odd icon sizes", () => {
   ]);
 });
 
+test("consumer apps get the motion rule, galleries do not", () => {
+  const css = ".a { transition: opacity 200ms ease; }";
+  assert.deepEqual(
+    rules(checkWeb(css, ".css", { library: false, motion: true })),
+    ["raw-motion"],
+  );
+  assert.deepEqual(rules(checkWeb(css, ".css", { library: false })), []);
+  assert.deepEqual(
+    rules(
+      checkDart("AnimatedOpacity(curve: Curves.easeOut)", {
+        library: false,
+        motion: true,
+      }),
+    ),
+    ["raw-motion"],
+  );
+});
+
 test("flags literal motion in library code, not motion roles", () => {
   assert.deepEqual(
     rules(checkWeb(".a { transition: opacity 200ms ease; }", ".css")),

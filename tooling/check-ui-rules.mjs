@@ -9,8 +9,9 @@
 //                     32/48 (display: empty states, markers)
 //   raw-spacing       numeric EdgeInsets / SizedBox gaps instead of tokens
 //   tiny-type         font sizes below 11 px
-//   raw-motion        library animation with a literal duration or curve
-//                     instead of a motion role (Decision 0011)
+//   raw-motion        animation with a literal duration or curve instead of
+//                     a motion role (Decision 0011); library packages and
+//                     consumer apps, not the galleries' demo fixtures
 //
 // Usage: node tooling/check-ui-rules.mjs [paths...] [--json]
 // Without paths it checks the library packages. Exit code 1 on findings.
@@ -59,7 +60,7 @@ function ignored(lines, line, rule) {
   return re.test(lines[line - 1] ?? "") || re.test(lines[line - 2] ?? "");
 }
 
-export function checkDart(source, { library = true } = {}) {
+export function checkDart(source, { library = true, motion = library } = {}) {
   const out = [];
   // nested-card: KCard( ... KCard( within the same call expression.
   for (const m of source.matchAll(/\bKCard\(/g)) {
@@ -116,7 +117,7 @@ export function checkDart(source, { library = true } = {}) {
   }
   for (const m of source.matchAll(/fontSize:\s*([0-9]+(?:\.[0-9]+)?)\b/g))
     if (Number(m[1]) < 11) out.push(["tiny-type", lineOf(source, m.index)]);
-  if (library) {
+  if (motion) {
     for (const m of source.matchAll(
       /\b(?:duration|reverseDuration|transitionDuration):\s*(?:const\s+)?Duration\((?!\))/g,
     ))
@@ -127,7 +128,11 @@ export function checkDart(source, { library = true } = {}) {
   return out;
 }
 
-export function checkWeb(source, ext, { library = true } = {}) {
+export function checkWeb(
+  source,
+  ext,
+  { library = true, motion = library } = {},
+) {
   const out = [];
   if (ext === ".tsx") {
     for (const m of source.matchAll(/<KIcon\b[^>]*?size=\{([0-9.]+)\}/gs))
@@ -150,7 +155,7 @@ export function checkWeb(source, ext, { library = true } = {}) {
       if (Number(m[1]) < 11) out.push(["tiny-type", lineOf(source, m.index)]);
     for (const m of source.matchAll(/\.k-card[^{,]*\s\.k-card\b[^{]*\{/g))
       out.push(["nested-card", lineOf(source, m.index)]);
-    if (library)
+    if (motion)
       for (const m of source.matchAll(
         /\b(?:transition|animation)(?:-duration|-timing-function)?\s*:([^;]*);/g,
       ))
@@ -172,11 +177,15 @@ async function main() {
       if (![".dart", ".tsx", ".css"].includes(ext)) continue;
       const source = await readFile(file, "utf8");
       const lines = source.split("\n");
-      const library = relative(root, file).startsWith("packages/");
+      const path = relative(root, file);
+      const library = path.startsWith("packages/");
+      // A consumer app runs this script from vendor/k-design-system, so its
+      // files lie outside this repository; galleries stay exempt from motion.
+      const motion = library || path.startsWith("..");
       const found =
         ext === ".dart"
-          ? checkDart(source, { library })
-          : checkWeb(source, ext, { library });
+          ? checkDart(source, { library, motion })
+          : checkWeb(source, ext, { library, motion });
       for (const [rule, line] of found)
         if (!ignored(lines, line, rule))
           findings.push({ rule, file: relative(root, file), line });

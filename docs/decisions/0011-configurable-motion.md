@@ -77,7 +77,8 @@ follows it.
 
 ### 3. Gate
 
-`tooling/check-ui-rules.mjs` rule `raw-motion` (library code only): CSS
+`tooling/check-ui-rules.mjs` rule `raw-motion` (library packages and, since
+5 November 2026, consumer apps; not the gallery fixtures): CSS
 `transition`/`animation` with a literal duration, `ease*` or `cubic-bezier`,
 and Flutter `duration: Duration(...)` / `curve: Curves.*` fail. Continuous
 loops (spinners, shimmer, glow) and script-driven choreography (drag

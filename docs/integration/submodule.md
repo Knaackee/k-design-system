@@ -167,6 +167,6 @@ state ownership.
 8. Update the host's submodule pointer and integrate the accepted public API.
 
 The canonical agent instructions for this flow live in
-`.agents/skills/k-design-system-workflow/SKILL.md`. Copy that skill directory to
-the host repository's `.agents/skills` directory when the host should discover it
-automatically.
+`.agents/skills/k-design-system-workflow/SKILL.md`. Do not copy that directory
+into the host: a copy goes stale when the submodule moves. Install the small
+routing entry from [host-skill.md](host-skill.md) instead.

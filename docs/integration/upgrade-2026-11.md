@@ -17,6 +17,11 @@ Read `CHANGELOG.md` (Unreleased) and the skill
 `.agents/skills/k-design-system-workflow/SKILL.md` in the new pin before
 changing code.
 
+If the host repository contains a copied `k-design-system-workflow` skill
+directory, delete it and install the routing entry from
+[host-skill.md](host-skill.md). The copy holds the old rules and agents load
+it automatically.
+
 ## 2. Breaking changes — fix these first
 
 | Change                                                                                                           | What to do                                                                                                                                                                                                                        |

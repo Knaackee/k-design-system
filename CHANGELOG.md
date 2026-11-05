@@ -6,6 +6,12 @@ version is tagged.
 
 ## Unreleased
 
+- The `raw-motion` rule of `tooling/check-ui-rules.mjs` now also checks
+  consumer apps (files outside this repository), not only library packages.
+- Docs: upgrade guide for consumer apps (`docs/integration/upgrade-2026-11.md`),
+  a routing skill entry for hosts instead of copying the skill
+  (`docs/integration/host-skill.md`), an "Ask or decide" section in the
+  workflow skill, and a corrected component catalog.
 - Added `KAppShell` (tab bar, sidebar rail or sidebar by the shell's own
   width), `KPageHeader` (large title on phones, actions under the title from
   1.3× text), `KSegmentedControl` (2–5 options, radio-group semantics,

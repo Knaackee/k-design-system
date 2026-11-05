@@ -129,6 +129,41 @@ Rule gate: <output summary>
 Not checked: <platforms, states>
 ```
 
+## Ask or decide
+
+Ask before acting when the answer changes what the product is or what other
+apps get; decide yourself when the rules already answer it. Ask once, with the
+options and your recommendation, and keep working on everything else.
+
+**Ask the person:**
+
+- Product decisions: motion style other than `apple`; whether sound or
+  haptics exist at all; which 2–5 destinations go into the tab bar; what a
+  destructive action deletes; wording of legal, pricing or consent text.
+- Anything that changes the library for every app: a new or changed public
+  component, prop, token name or default; a host override versus a shared
+  default when it could be either; platform behaviour (gestures, back
+  handling).
+- A reference story or rule that contradicts the request, or a mock that
+  breaks a rule (nested cards, raw values, a text back link). Say which rule
+  and offer the compliant version.
+- Commit, push, merge, pin updates and anything else outside the working
+  tree, unless the person already asked for it.
+
+**Decide yourself (and name the choice in the handover):**
+
+- Which K component and reference to use, the composition map, layout and
+  text roles, gaps and insets from the token roles.
+- Stacking, wrapping and scrolling at large text and narrow widths.
+- Which motion role an animation uses; which haptic cue fits, once haptics
+  are on.
+- Fixing a rule-gate finding, an overflow or an accessibility label.
+- Proposing (not building) a missing library component.
+
+If the person is not available, take the most conservative option (library
+default, feature off, existing component), note it under "Not checked" and
+continue.
+
 ## Ownership
 
 Host owns product data, navigation, events and theme overrides. Library owns

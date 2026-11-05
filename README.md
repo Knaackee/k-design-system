@@ -176,6 +176,10 @@ spacing ownership, density, responsive checks and completion evidence.
 Run `node vendor/k-design-system/tooling/check-consumer-ui.mjs src` (`lib` for
 Flutter) on the migrated consumer boundary; findings require review.
 
+For automatic skill discovery in the host, install the routing entry from
+[docs/integration/host-skill.md](docs/integration/host-skill.md); never copy
+the skill directory, a copy goes stale with every submodule update.
+
 For Skillset users, the global `dk-design-system-workflow` entry and
 `design-system/k-design-system-consumer` Reference route to these repository-owned
 rules. Global catalog changes require candidate approval and synchronization;
