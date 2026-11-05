@@ -36,6 +36,17 @@ export interface KAdaptiveEnvironment {
   coarsePointer: boolean;
   /** True when the person asked the system to reduce motion. */
   reduceMotion?: boolean;
+  /** True on iPhone and iPad: the default style is then `apple`. */
+  appleTouch?: boolean;
+}
+
+/** iPhone or iPad (iPadOS reports a Mac with touch). */
+export function kIsAppleTouch(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return (
+    /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
+  );
 }
 
 export type KAdaptiveOverrides = Partial<KAdaptiveConfiguration>;
@@ -59,7 +70,10 @@ export function resolveKAdaptive(
   // Parity rule: the type ramp follows the window class only. Tablet and
   // desktop share one ramp; mobile Web and the mobile app share another.
   // Input mode changes hit targets, never typography.
-  const style: KStyle = overrides.style ?? "linear";
+  // Platform-native default (Decision 0014): Apple devices get the Apple
+  // style; everything else the productivity style until `material` exists.
+  const style: KStyle =
+    overrides.style ?? (environment.appleTouch ? "apple" : "linear");
   // The Apple style uses the iOS/iPadOS ramp on phones and tablets
   // (Decision 0014); desktops keep the standard ramp.
   const typeScale: KTypeScale =
@@ -128,6 +142,7 @@ export function applyKAdaptive(
         width,
         coarsePointer: coarse.matches,
         reduceMotion: reduce.matches,
+        appleTouch: kIsAppleTouch(),
       },
       overrides,
     );

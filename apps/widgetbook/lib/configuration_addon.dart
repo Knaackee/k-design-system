@@ -8,9 +8,16 @@ import 'package:widgetbook/widgetbook.dart';
 /// use case's available width and the selected device platform. `manual`
 /// pins every axis from the fields below.
 class KGalleryConfiguration {
-  const KGalleryConfiguration({required this.device, required this.manual});
+  const KGalleryConfiguration({
+    required this.device,
+    required this.manual,
+    this.style,
+  });
   final bool device;
   final KDesignConfiguration manual;
+
+  /// Null follows the platform-native default (Decision 0014).
+  final KStyle? style;
 }
 
 class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
@@ -56,13 +63,18 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
       labelBuilder: (value) => value.name,
     ),
     // Style preset (Decision 0014); applies in both modes.
-    ObjectDropdownField<KStyle>(
+    ObjectDropdownField<String>(
       name: 'style',
-      values: KStyle.values,
-      initialValue: KStyle.linear,
-      labelBuilder: (value) => value.name,
+      values: ['auto', ...KStyle.values.map((style) => style.name)],
+      initialValue: 'auto',
+      labelBuilder: (value) => value,
     ),
   ];
+
+  KStyle? _style(Map<String, String> group) {
+    final name = valueOf<String>('style', group);
+    return KStyle.values.where((style) => style.name == name).firstOrNull;
+  }
 
   @override
   KGalleryConfiguration valueFromQueryGroup(Map<String, String> group) {
@@ -74,8 +86,9 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
         inputMode: valueOf<KInputMode>('input-mode', group)!,
         windowClass: valueOf<KWindowClass>('window-class', group)!,
         motion: valueOf<KMotionStyle>('motion', group) ?? KMotionStyle.apple,
-        style: valueOf<KStyle>('style', group) ?? KStyle.linear,
+        style: _style(group) ?? KStyle.linear,
       ),
+      style: _style(group),
     );
   }
 
@@ -94,7 +107,7 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
             overrides: KAdaptiveOverrides(
               density: gallery.manual.density,
               motion: gallery.manual.motion,
-              style: gallery.manual.style,
+              style: gallery.style,
             ),
             reduceMotion: MediaQuery.disableAnimationsOf(context),
           )

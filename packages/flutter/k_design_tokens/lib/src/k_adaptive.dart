@@ -26,7 +26,11 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
   // Parity rule: the type ramp follows the window class only. Tablet and
   // desktop share one ramp; mobile Web and the mobile app share another.
   // Input mode changes hit targets, never typography.
-  final style = overrides.style ?? KStyle.linear;
+  // Platform-native default (Decision 0014): iPhone and iPad get the Apple
+  // style; other platforms the productivity style until `material` exists.
+  final style =
+      overrides.style ??
+      (platform == TargetPlatform.iOS ? KStyle.apple : KStyle.linear);
   // The Apple style uses the iOS/iPadOS ramp on phones and tablets
   // (Decision 0014); desktops keep the standard ramp.
   final typeScale =

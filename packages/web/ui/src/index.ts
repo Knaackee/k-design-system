@@ -625,6 +625,7 @@ export * from "./util/use-long-press-drag.js";
 export * from "./patterns/booking-page-management.js";
 export {
   applyKAdaptive,
+  kIsAppleTouch,
   kLargeTextScale,
   setKTextScale,
   kAdaptiveAttributes,

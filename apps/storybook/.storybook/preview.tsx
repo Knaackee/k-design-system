@@ -4,6 +4,7 @@ import {
   KLocalizationProvider,
   resolveKAdaptive,
   setKTextScale,
+  kIsAppleTouch,
 } from "@k-design-system/ui";
 import type { KAdaptiveOverrides } from "@k-design-system/ui";
 import type { StoryIndexEntry } from "storybook/internal/types";
@@ -43,6 +44,7 @@ const withDesignTokens: Decorator = (Story, context) => {
       coarsePointer: window.matchMedia("(pointer: coarse)").matches,
       reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
         .matches,
+      appleTouch: kIsAppleTouch(),
     },
     {
       density: pick("density"),
@@ -217,7 +219,7 @@ const preview: Preview & {
       toolbar: {
         icon: "paintbrush",
         items: [
-          { value: "auto", title: "Style: auto (Linear)" },
+          { value: "auto", title: "Style: auto (Apple on iPhone/iPad)" },
           { value: "linear", title: "Style: Linear" },
           { value: "apple", title: "Style: Apple" },
         ],

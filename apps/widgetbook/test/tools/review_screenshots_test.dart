@@ -50,51 +50,54 @@ void main() {
     final build = _stories[_story]!;
     Directory(_out).createSync(recursive: true);
     for (final style in KStyle.values) {
-      for (final (size, platform, scale) in _shots) {
-        final key = GlobalKey();
-        tester.view.physicalSize = size * 2;
-        tester.view.devicePixelRatio = 2;
-        await tester.pumpWidget(
-          RepaintBoundary(
-            key: key,
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(platform: platform),
-              home: MediaQuery(
-                data: MediaQueryData(
-                  size: size,
-                  devicePixelRatio: 2,
-                  textScaler: TextScaler.linear(scale),
-                ),
-                child: KAdaptiveTheme(
-                  overrides: KAdaptiveOverrides(style: style),
-                  child: KLocalization(
-                    locale: 'en',
-                    child: Builder(
-                      builder: (context) => Material(
-                        color: Theme.of(
-                          context,
-                        ).extension<KDesignTokens>()!.colorSurfaceCanvas,
-                        child: build(),
+      for (final brightness in Brightness.values) {
+        for (final (size, platform, scale) in _shots) {
+          final key = GlobalKey();
+          tester.view.physicalSize = size * 2;
+          tester.view.devicePixelRatio = 2;
+          await tester.pumpWidget(
+            RepaintBoundary(
+              key: key,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(platform: platform),
+                home: MediaQuery(
+                  data: MediaQueryData(
+                    size: size,
+                    devicePixelRatio: 2,
+                    textScaler: TextScaler.linear(scale),
+                  ),
+                  child: KAdaptiveTheme(
+                    brightness: brightness,
+                    overrides: KAdaptiveOverrides(style: style),
+                    child: KLocalization(
+                      locale: 'en',
+                      child: Builder(
+                        builder: (context) => Material(
+                          color: Theme.of(
+                            context,
+                          ).extension<KDesignTokens>()!.colorSurfaceCanvas,
+                          child: build(),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-        await tester.pump(const Duration(seconds: 1));
-        final boundary =
-            key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
-        final bytes = await tester.runAsync(() async {
-          final image = await boundary.toImage(pixelRatio: 2);
-          final data = await image.toByteData(format: ui.ImageByteFormat.png);
-          return data!.buffer.asUint8List();
-        });
-        File(
-          '$_out/${style.name}-${size.width.toInt()}-$scale.png',
-        ).writeAsBytesSync(bytes!);
+          );
+          await tester.pump(const Duration(seconds: 1));
+          final boundary =
+              key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+          final bytes = await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: 2);
+            final data = await image.toByteData(format: ui.ImageByteFormat.png);
+            return data!.buffer.asUint8List();
+          });
+          File(
+            '$_out/${style.name}-${brightness.name}-${size.width.toInt()}-$scale.png',
+          ).writeAsBytesSync(bytes!);
+        }
       }
     }
     tester.view.resetPhysicalSize();

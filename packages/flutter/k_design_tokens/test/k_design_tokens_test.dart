@@ -97,8 +97,17 @@ void main() {
     );
     expect(phone.windowClass, KWindowClass.compact);
     expect(phone.inputMode, KInputMode.touch);
-    expect(phone.typeScale, KTypeScale.mobile);
+    // Platform-native default (Decision 0014): iPhone gets the Apple style.
+    expect(phone.style, KStyle.apple);
+    expect(phone.typeScale, KTypeScale.apple);
     expect(phone.density, KDensity.standard);
+
+    final android = resolveKAdaptiveConfiguration(
+      width: 393,
+      platform: TargetPlatform.android,
+    );
+    expect(android.style, KStyle.linear);
+    expect(android.typeScale, KTypeScale.mobile);
 
     final tablet = resolveKAdaptiveConfiguration(
       width: 1024,

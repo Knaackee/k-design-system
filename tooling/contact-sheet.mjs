@@ -16,6 +16,7 @@ const arg = (name, fallback) => {
 const story = arg("story");
 const out = resolve(arg("out", "build/contact-sheets"));
 const styles = arg("styles", "apple,linear").split(",");
+const themes = arg("themes", "light,dark").split(",");
 const shots = [
   ["Phone 393 · 100 %", 393, 852, true, 1],
   ["Phone 393 · 130 %", 393, 852, true, 1.3],
@@ -53,32 +54,37 @@ const { chromium } = createRequire(import.meta.url)("playwright");
 const browser = await chromium.launch({ args: ["--font-render-hinting=none"] });
 await mkdir(out, { recursive: true });
 for (const style of styles) {
-  for (const [label, width, height, touch, scale] of shots) {
-    const page = await browser.newPage({
-      viewport: { width, height },
-      hasTouch: touch,
-      isMobile: touch,
-      deviceScaleFactor: 2,
-    });
-    await page.goto(
-      `http://localhost:${server.address().port}/iframe.html?id=${story}&viewMode=story&globals=style:${style};textScale:${scale}`,
-      { waitUntil: "load" },
-    );
-    // Wait for the story itself, not only the page: Storybook shows a
-    // loading spinner first.
-    await page.waitForFunction(
-      () =>
-        document.querySelector("#storybook-root")?.childElementCount > 0 &&
-        !document.querySelector(".sb-show-preparing-story"),
-      null,
-      { timeout: 30000 },
-    );
-    await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(300);
-    const file = join(out, `${style}-${width}-${scale.toFixed(1)}.png`);
-    await page.screenshot({ path: file });
-    console.log(`${style} · ${label} → ${file}`);
-    await page.close();
+  for (const theme of themes) {
+    for (const [label, width, height, touch, scale] of shots) {
+      const page = await browser.newPage({
+        viewport: { width, height },
+        hasTouch: touch,
+        isMobile: touch,
+        deviceScaleFactor: 2,
+      });
+      await page.goto(
+        `http://localhost:${server.address().port}/iframe.html?id=${story}&viewMode=story&globals=style:${style};theme:${theme};textScale:${scale}`,
+        { waitUntil: "load" },
+      );
+      // Wait for the story itself, not only the page: Storybook shows a
+      // loading spinner first.
+      await page.waitForFunction(
+        () =>
+          document.querySelector("#storybook-root")?.childElementCount > 0 &&
+          !document.querySelector(".sb-show-preparing-story"),
+        null,
+        { timeout: 30000 },
+      );
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForTimeout(300);
+      const file = join(
+        out,
+        `${style}-${theme}-${width}-${scale.toFixed(1)}.png`,
+      );
+      await page.screenshot({ path: file });
+      console.log(`${style} · ${label} → ${file}`);
+      await page.close();
+    }
   }
 }
 await browser.close();
