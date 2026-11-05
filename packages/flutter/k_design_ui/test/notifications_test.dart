@@ -43,7 +43,15 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(tester.getSize(find.byType(KToast)).height, lessThan(120));
+    expect(tester.getSize(find.byType(KToast)).height, lessThan(160));
+    expect(
+      tester.getRect(find.text('View')).top,
+      greaterThan(
+        tester
+            .getRect(find.text('Your workspace settings are up to date.'))
+            .bottom,
+      ),
+    );
     expect(tester.takeException(), isNull);
   });
   testWidgets('queued notifications preserve order and dismiss exactly once', (

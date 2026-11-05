@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import 'k_menu_surface.dart';
+import 'k_menu_item_content.dart';
 import 'k_menu_button.dart';
 
 class KContextMenu extends StatefulWidget {
@@ -62,13 +63,15 @@ class _KContextMenuState extends State<KContextMenu> {
     final t =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
-    final width = math.min(
-      t.componentContextMenuWidth,
-      MediaQuery.sizeOf(context).width - t.componentContextMenuViewportInset,
+    final width = menuContentWidth(
+      context,
+      widget.actions,
+      MediaQuery.sizeOf(context).width,
     );
     return MenuAnchor(
       key: _anchor,
       controller: _controller,
+      consumeOutsideTap: true,
       childFocusNode: _focus,
       reservedPadding: EdgeInsets.all(t.spaceControlGap),
       style: _menuStyle(width),
