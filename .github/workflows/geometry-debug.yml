@@ -1,0 +1,22 @@
+# Temporary diagnostic for the geometry parity gate; removed before merge.
+name: Geometry debug
+on:
+  push:
+    branches: [debug/geometry-ci]
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:web && pnpm build:storybook
+      - run: npm install -g playwright@1.56.0 && npx playwright install --with-deps chromium
+      - run: fc-match sans-serif; fc-match Inter; fc-list | wc -l; locale
+      - run: NODE_PATH="$(npm root -g)" node tooling/geometry-debug.mjs
