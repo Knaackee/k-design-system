@@ -30,6 +30,10 @@ the pinned revision. Web-only drafts are not approved Flutter parity references.
 | Form submission          | KField, KInput, KSelect, KCheckbox, grouped actions     | app-shells-settings-app--form-page            |
 | Search, filter, details  | KSearchField, KSelect, list actions, detail navigation  | app-shells-settings-app--list-detail          |
 | First use                | KCard with explanation and a working creation action    | app-shells-settings-app--empty-workspace      |
+| Top-level navigation     | KAppShell (tab bar / rail / sidebar by width)           | navigation-appshell--review                   |
+| Screen header            | KPageHeader with KBackButton and up to three actions    | navigation-pageheader--review                 |
+| Grouped rows             | KList + KListItem on one KSurface                       | data-display-list--review                     |
+| Switch a view in place   | KSegmentedControl (2–5 options)                         | navigation-segmentedcontrol--review           |
 
 Before implementation, record the selected reference and component mapping.
 Reuse the composition, not demo text, fixed dimensions or private CSS selectors.

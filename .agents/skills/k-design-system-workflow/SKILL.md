@@ -11,7 +11,7 @@ description: Build, review or migrate UI in an application that consumes K Desig
 it runs on, aligned to one grid, and proven on a real phone size before
 anyone reviews it.**
 
-Six ways it fails (each has a rule in `references/rules.md`):
+Nine ways it fails (each has a rule in `references/rules.md`):
 
 - **Card in a card.** A bordered box inside a bordered box. Inside a card use
   separators, a grouped list or a section; siblings are siblings.
@@ -25,7 +25,16 @@ Six ways it fails (each has a rule in `references/rules.md`):
 - **Raw values.** `16`, `EdgeInsets.all(18)`, `font-size: 13px`, an icon at
   `size: 18`. Tokens and roles only; the grid is 4 px.
 - **Dropdown as navigation.** A select that switches page sections. Sections
-  are rows that open pages, tabs, or a segmented control for 2–4 views.
+  are `KListItem` rows that open pages, tabs, or a `KSegmentedControl` for
+  2–5 views.
+- **Hand-made navigation.** A text back link, a local tab bar or a disabled
+  back gesture. Use `KAppShell`, `KPageHeader` / `KBackButton`; keep system
+  gestures on (Decision 0012).
+- **Raw motion.** `Duration(milliseconds: 300)`, `Curves.easeOut`,
+  `transition: .2s ease`. Pick a motion role; the app's style decides
+  (Decision 0011).
+- **Noisy feedback.** Sound or haptics on by default, as the only feedback,
+  or on scroll, hover and typing (Decision 0013).
 
 ## Workflow
 
@@ -34,12 +43,15 @@ Most quality is decided before code. Write the composition map first.
 1. **Locate and update.** Resolve the library via `.gitmodules` /
    `vendor/k-design-system`. Read its `AGENTS.md`, public exports and
    `docs/component-catalog.md`. Compare the pin with `origin/main`;
-   fast-forward only a clean checkout.
+   fast-forward only a clean checkout. After a pin update read
+   `CHANGELOG.md` (Unreleased); coming from a pin before November 2026,
+   follow `docs/integration/upgrade-2026-11.md` first.
 2. **Adaptive setup (once per app).** Flutter: wrap the app in
    `KAdaptiveTheme`. Web: `applyKAdaptive(document.documentElement)`. Do not
    pass `KDesignConfiguration.mobileApp` "because it is a phone app" — the
-   resolver derives window class, input and type ramp. See
-   `references/adaptive.md`.
+   resolver derives window class, input and type ramp. Top-level navigation
+   is one `KAppShell`; the motion style and whether sound/haptics exist are
+   one app-level decision each. See `references/adaptive.md`.
 3. **Pick the closest reference.** Choose by user intent from the table in
    `docs/integration/ui-composition.md` and open its Storybook story /
    Widgetbook use case. Copy its structure (sections, list vs card, header,
@@ -60,17 +72,20 @@ control|action|section) -> text roles (KText variants) -> leading visuals`.
 
 ## Recurring faults — check every time
 
-| Fault                                                  | Rule                       |
-| ------------------------------------------------------ | -------------------------- |
-| Nested `KCard` / bordered surface inside a card        | rules.md › Cards           |
-| Icon/checkbox/dot centred on multi-line text           | rules.md › Leading visuals |
-| Icon size 14, 15, 18, 22, 28 …                         | rules.md › Icons           |
-| Literal insets, gaps or font sizes                     | rules.md › Spacing         |
-| Row of label + value/badge that overflows at 1.3× text | rules.md › Wrapping        |
-| Page that only fits at 1.0× text (no scroll)           | rules.md › Text scaling    |
-| Pagination, toolbars or chips exceeding 360 px         | rules.md › Narrow windows  |
-| One card per list item                                 | rules.md › Lists           |
-| Status shown by colour only                            | rules.md › Status          |
+| Fault                                                  | Rule                         |
+| ------------------------------------------------------ | ---------------------------- |
+| Nested `KCard` / bordered surface inside a card        | rules.md › Cards             |
+| Icon/checkbox/dot centred on multi-line text           | rules.md › Leading visuals   |
+| Icon size 14, 15, 18, 22, 28 …                         | rules.md › Icons             |
+| Literal insets, gaps or font sizes                     | rules.md › Spacing           |
+| Row of label + value/badge that overflows at 1.3× text | rules.md › Wrapping          |
+| Page that only fits at 1.0× text (no scroll)           | rules.md › Text scaling      |
+| Pagination, toolbars or chips exceeding 360 px         | rules.md › Narrow windows    |
+| One card per list item                                 | rules.md › Lists             |
+| Status shown by colour only                            | rules.md › Status            |
+| Text back link, local tab bar, disabled back gesture   | rules.md › Navigation        |
+| Literal duration/curve, bounce on an exit              | rules.md › Motion            |
+| Sound/haptics on by default or as the only feedback    | rules.md › Sound and haptics |
 
 `references/teaching.md` has a wrong/right pair for each fault.
 
@@ -90,6 +105,10 @@ Then verify on phone sizes, not only desktop:
   reachable.
 - Web: Storybook/browser at 360 and 393 px with `(pointer: coarse)` emulation
   and the same text scales. Inputs are 16 px (no iOS zoom).
+- Tablet and window widths: resize across 600 and 840 (shell tab bar ↔ rail
+  ↔ sidebar) on iPad/Android tablet or a browser window.
+- Device-only behaviour, on real hardware: iOS back swipe from the middle of
+  the screen, sheet swipe with unsaved changes, haptics, reduce motion.
 - Library changes additionally pass `pnpm gate:phone-flutter`,
   `pnpm gate:phone-web` and `pnpm gate:geometry`, and the story review in
   both galleries.
@@ -104,7 +123,8 @@ Revision: <library pin>
 Reference used: <story/use-case id> — changed: <what>
 Components: <reused> / added: <none|names + gallery ids>
 Layout roles: <gaps, insets, text roles>
-Checked: phone 360/393 · text 1.0/1.3/2.0 · iOS/Android · light/dark · <journeys>
+Checked: phone 360/393 · tablet · text 1.0/1.3/2.0/3.0 · iOS/Android · light/dark · reduce motion · <journeys>
+Motion style / sound / haptics: <apple|expressive|reduced> / <off|setting> / <off|setting>
 Rule gate: <output summary>
 Not checked: <platforms, states>
 ```

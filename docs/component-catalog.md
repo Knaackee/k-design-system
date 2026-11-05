@@ -23,6 +23,8 @@ candidates. Rich-text editing, Kanban, charts, virtualization and advanced
 editable data grids require their own scope. KGrid is a layout primitive, not a
 data grid. Menu items and icon glyphs are not separate component families.
 
+Navigation update (5 November 2026): `KAppShell`, `KPageHeader`, `KBackButton`, `KSegmentedControl` and `KList`/`KListItem` are implemented and exported for Web and Flutter (Decision 0012), as are haptics (`KHapticsProvider`, Decision 0013). Fixtures: Navigation/AppShell, Navigation/PageHeader, Navigation/BackButton, Navigation/SegmentedControl, Data display/List, Patterns/Haptics. Visual Human Acceptance is pending; this supersedes the Patterns, Navigation, Forms (SegmentedControl) and Data Display (List/ListItem) cells above for these families.
+
 Textarea update (28 September 2026): `KTextarea` is now implemented and publicly exported for Web and Flutter. See [forms contract](components/forms.md) and matching `textarea-states` fixtures under Forms/Textarea. Visual Human Acceptance is pending; this supersedes the earlier Forms delivery cell for Textarea only.
 
 ## Catalog maintenance
