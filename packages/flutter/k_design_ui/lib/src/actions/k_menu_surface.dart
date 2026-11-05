@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
-import '../primitives/k_icon.dart';
+import 'k_menu_item_content.dart';
 import '../primitives/k_surface.dart';
 import 'k_menu_button.dart';
 
@@ -100,46 +100,6 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
     ),
   );
 
-  Widget _row(KDesignTokens t, KMenuAction action, double width) => Opacity(
-    opacity: action.disabled ? .48 : 1,
-    child: SizedBox(
-      width: math.max(
-        0,
-        width -
-            2 *
-                (t.spaceControlGap +
-                    t.spaceControlInsetInline +
-                    t.borderWidthDefault),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: t.componentContextMenuIconSize,
-            child:
-                action.iconContent ??
-                (action.icon == null
-                    ? null
-                    : KIcon(
-                        action.icon!,
-                        color: action.destructive
-                            ? t.colorStatusErrorForeground
-                            : t.colorTextPrimary,
-                      )),
-          ),
-          SizedBox(width: t.spaceControlGap),
-          Expanded(
-            child: Semantics(
-              selected: action.checked,
-              child: Text(action.label),
-            ),
-          ),
-          if (action.checked == true)
-            const KIcon(KIconName.check, strokeWidth: 1.5),
-        ],
-      ),
-    ),
-  );
-
   Widget _surface(
     BuildContext context,
     List<KMenuAction> actions,
@@ -178,7 +138,7 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
                   SubmenuButton(
                     key: ValueKey(action.id),
                     submenuIcon: const WidgetStatePropertyAll(
-                      KIcon(KIconName.chevronRight, strokeWidth: 1.5),
+                      SizedBox.shrink(),
                     ),
                     controller: _submenuController(
                       parentPath.isEmpty
@@ -215,7 +175,7 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
                             : '$parentPath/${action.id}',
                       ),
                     ],
-                    child: _row(t, action, width),
+                    child: KMenuItemContent(action: action, width: width),
                   )
                 else
                   MenuItemButton(
@@ -241,7 +201,7 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
                             widget.onClose();
                             action.onSelect?.call();
                           },
-                    child: _row(t, action, width),
+                    child: KMenuItemContent(action: action, width: width),
                   ),
               ],
             ],

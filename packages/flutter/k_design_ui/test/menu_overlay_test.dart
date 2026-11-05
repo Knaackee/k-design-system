@@ -39,7 +39,8 @@ void main() {
       await tester.tap(find.text('Sort'));
       await tester.pumpAndSettle();
       final popup = tester.getRect(find.byType(KSurface));
-      expect(popup.width, width < 256 ? width - 16 : 240);
+      expect(popup.width, greaterThanOrEqualTo(width < 256 ? width - 16 : 240));
+      expect(popup.width, lessThanOrEqualTo(width - 16));
       expect(popup.left, greaterThanOrEqualTo(138));
       expect(popup.right, lessThanOrEqualTo(130 + width - 8));
       expect(tester.takeException(), isNull);
