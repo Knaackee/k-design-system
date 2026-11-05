@@ -6,6 +6,7 @@ import {
   type ReactNode,
   useId,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -23,7 +24,7 @@ export interface KContextMenuProps {
 function enabledItems(level: HTMLElement) {
   return Array.from(
     level.querySelectorAll<HTMLElement>(
-      ":scope > .k-context-menu__entry > [role=menuitem]:not(:disabled)",
+      ":scope > .k-context-menu__entry > :is([role=menuitem], [role=menuitemradio]):not(:disabled)",
     ),
   );
 }
@@ -41,25 +42,49 @@ export function MenuLevel({
 }) {
   const level = useRef<HTMLDivElement>(null);
   const [openId, setOpenId] = useState<string>();
+  const focusSubmenu = useRef(false);
   function openSubmenu(id: string, focus = false) {
+    focusSubmenu.current = focus;
+    if (id === openId) {
+      positionSubmenu(id);
+      return;
+    }
     setOpenId(id);
-    requestAnimationFrame(() => {
-      const container = level.current?.querySelector<HTMLElement>(
-        `[data-context-submenu="${id}"]`,
-      );
-      const submenu = container?.querySelector<HTMLElement>(
-        ".k-context-menu__submenu",
-      );
-      if (!container || !submenu) return;
-      container.dataset.side = "right";
-      if (submenu.getBoundingClientRect().right > innerWidth - 8) {
-        container.dataset.side = "left";
-      }
-      if (focus) {
-        enabledItems(submenu)[0]?.focus();
-      }
-    });
   }
+  function positionSubmenu(id: string) {
+    const container = level.current?.querySelector<HTMLElement>(
+      `[data-context-submenu="${id}"]`,
+    );
+    const submenu = container?.querySelector<HTMLElement>(
+      ".k-context-menu__submenu",
+    );
+    if (!container || !submenu) return;
+    submenu.style.translate = "none";
+    container.dataset.side = "right";
+    if (submenu.getBoundingClientRect().right > innerWidth - 8) {
+      container.dataset.side = "left";
+    }
+    const bounds = submenu.getBoundingClientRect();
+    // On narrow screens neither side may fit; keep every choice reachable.
+    const x = Math.max(8, Math.min(bounds.left, innerWidth - bounds.width - 8));
+    const y = Math.max(
+      8,
+      Math.min(bounds.top, innerHeight - bounds.height - 8),
+    );
+    submenu.style.translate = `${x - bounds.left}px ${y - bounds.top}px`;
+    if (focusSubmenu.current) {
+      enabledItems(submenu)[0]?.focus();
+      focusSubmenu.current = false;
+    }
+  }
+  useLayoutEffect(() => {
+    if (!openId) return;
+    // Measure only after React has made the submenu visible.
+    positionSubmenu(openId);
+    const reposition = () => positionSubmenu(openId);
+    window.addEventListener("resize", reposition);
+    return () => window.removeEventListener("resize", reposition);
+  }, [openId]);
   function navigate(event: KeyboardEvent<HTMLDivElement>) {
     const items = enabledItems(event.currentTarget);
     const current = items.indexOf(document.activeElement as HTMLElement);
@@ -115,7 +140,10 @@ export function MenuLevel({
                 {...(action.href && !action.disabled && !hasChildren
                   ? { href: action.href }
                   : { type: "button" as const, disabled: action.disabled })}
-                role="menuitem"
+                role={
+                  action.checked === undefined ? "menuitem" : "menuitemradio"
+                }
+                aria-checked={action.checked}
                 tabIndex={-1}
                 className="k-menu__item"
                 data-destructive={action.destructive || undefined}
@@ -150,7 +178,7 @@ export function MenuLevel({
                   }
                 }}
               >
-                <span className="k-context-menu__icon">
+                <span className="k-menu__icon">
                   {action.iconContent ??
                     (action.icon ? (
                       <KIcon
@@ -160,14 +188,22 @@ export function MenuLevel({
                       />
                     ) : null)}
                 </span>
-                <span>{action.label}</span>
-                {hasChildren ? (
-                  <KIcon
-                    name="chevron-right"
-                    color="currentColor"
-                    strokeWidth={1.5}
-                  />
-                ) : null}
+                <span className="k-menu__label">{action.label}</span>
+                <span className="k-menu__trailing" aria-hidden="true">
+                  {hasChildren ? (
+                    <KIcon
+                      name="chevron-right"
+                      color="currentColor"
+                      strokeWidth={1.5}
+                    />
+                  ) : action.checked ? (
+                    <KIcon
+                      name="check"
+                      color="currentColor"
+                      strokeWidth={1.5}
+                    />
+                  ) : null}
+                </span>
               </Item>
               {hasChildren ? (
                 <div data-context-submenu={action.id}>
