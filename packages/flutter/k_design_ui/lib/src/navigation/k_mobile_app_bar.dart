@@ -497,6 +497,11 @@ class _Destination extends StatelessWidget {
                                     item.label,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
+                                    // Tab bar labels keep their size at
+                                    // large text, like iOS and the Web bar;
+                                    // the item's tooltip and semantics label
+                                    // carry the full name.
+                                    textScaler: TextScaler.noScaling,
                                     style: TextStyle(
                                       color: selected
                                           ? tokens.colorTextPrimary

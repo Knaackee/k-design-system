@@ -18,7 +18,9 @@ const out = resolve(arg("out", "build/contact-sheets"));
 const styles = arg("styles", "apple,linear").split(",");
 const shots = [
   ["Phone 393 · 100 %", 393, 852, true, 1],
+  ["Phone 393 · 130 %", 393, 852, true, 1.3],
   ["Phone 393 · 200 %", 393, 852, true, 2],
+  ["Phone 393 · 300 %", 393, 852, true, 3],
   ["Tablet 820", 820, 1180, true, 1],
   ["Desktop 1280", 1280, 800, false, 1],
 ];
@@ -62,9 +64,18 @@ for (const style of styles) {
       `http://localhost:${server.address().port}/iframe.html?id=${story}&viewMode=story&globals=style:${style};textScale:${scale}`,
       { waitUntil: "load" },
     );
+    // Wait for the story itself, not only the page: Storybook shows a
+    // loading spinner first.
+    await page.waitForFunction(
+      () =>
+        document.querySelector("#storybook-root")?.childElementCount > 0 &&
+        !document.querySelector(".sb-show-preparing-story"),
+      null,
+      { timeout: 30000 },
+    );
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(300);
-    const file = join(out, `${style}-${width}-${scale}.png`);
+    const file = join(out, `${style}-${width}-${scale.toFixed(1)}.png`);
     await page.screenshot({ path: file });
     console.log(`${style} · ${label} → ${file}`);
     await page.close();

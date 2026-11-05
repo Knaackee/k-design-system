@@ -27,7 +27,9 @@ final _stories = <String, Widget Function()>{
 };
 const _shots = [
   (Size(393, 852), TargetPlatform.iOS, 1.0),
+  (Size(393, 852), TargetPlatform.iOS, 1.3),
   (Size(393, 852), TargetPlatform.iOS, 2.0),
+  (Size(393, 852), TargetPlatform.iOS, 3.0),
   (Size(820, 1180), TargetPlatform.iOS, 1.0),
   (Size(1280, 800), TargetPlatform.macOS, 1.0),
 ];
@@ -91,7 +93,7 @@ void main() {
           return data!.buffer.asUint8List();
         });
         File(
-          '$_out/${style.name}-${size.width.toInt()}-${scale.toInt()}.png',
+          '$_out/${style.name}-${size.width.toInt()}-$scale.png',
         ).writeAsBytesSync(bytes!);
       }
     }
