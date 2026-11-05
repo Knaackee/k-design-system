@@ -23,6 +23,16 @@ abstract final class KDesignTokenVariants {
   static const styleAppleComponentPageHeaderPaddingBlockStart = 16.0;
   static const styleAppleComponentPageHeaderTitleGap = 4.0;
   static const styleAppleComponentButtonRadius = 999.0;
+  static const styleMaterialComponentListRowMinHeight = 56.0;
+  static const styleMaterialComponentListRowPaddingBlock = 16.0;
+  static const styleMaterialComponentListRowPaddingInline = 16.0;
+  static const styleMaterialComponentListLeadingGap = 16.0;
+  static const styleMaterialComponentListGroupRadius = 24.0;
+  static const styleMaterialComponentListSectionHeaderGap = 8.0;
+  static const styleMaterialComponentListSectionHeaderInset = 16.0;
+  static const styleMaterialComponentPageHeaderPaddingBlockStart = 16.0;
+  static const styleMaterialComponentPageHeaderTitleGap = 4.0;
+  static const styleMaterialComponentButtonRadius = 999.0;
   static const motionAppleMotionFeedbackDuration = Duration(milliseconds: 100);
   static const motionAppleMotionFeedbackBounce = 0.0;
   static const motionAppleMotionFeedbackDistance = 1.0;
@@ -206,6 +216,18 @@ abstract final class KDesignTokenVariants {
     componentPageHeaderPaddingBlockStart: styleAppleComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleAppleComponentPageHeaderTitleGap,
     componentButtonRadius: styleAppleComponentButtonRadius,
+  );
+  static KDesignTokens applyStyleMaterial(KDesignTokens t) => t.copyWith(
+    componentListRowMinHeight: styleMaterialComponentListRowMinHeight,
+    componentListRowPaddingBlock: styleMaterialComponentListRowPaddingBlock,
+    componentListRowPaddingInline: styleMaterialComponentListRowPaddingInline,
+    componentListLeadingGap: styleMaterialComponentListLeadingGap,
+    componentListGroupRadius: styleMaterialComponentListGroupRadius,
+    componentListSectionHeaderGap: styleMaterialComponentListSectionHeaderGap,
+    componentListSectionHeaderInset: styleMaterialComponentListSectionHeaderInset,
+    componentPageHeaderPaddingBlockStart: styleMaterialComponentPageHeaderPaddingBlockStart,
+    componentPageHeaderTitleGap: styleMaterialComponentPageHeaderTitleGap,
+    componentButtonRadius: styleMaterialComponentButtonRadius,
   );
   static KDesignTokens applyTypeScaleApple(KDesignTokens t) => t.copyWith(
     fontSize: typeScaleAppleFontSize,
@@ -780,6 +802,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentMobileAppBarDestinationMinHeight,
     required this.componentMobileAppBarDestinationLabeledMinHeight,
     required this.componentMobileAppBarDestinationColumnWidth,
+    required this.componentMobileAppBarDestinationIndicatorWidth,
+    required this.componentMobileAppBarDestinationIndicatorHeight,
     required this.componentMobileAppBarDestinationIconSize,
     required this.componentMobileAppBarDestinationLabelGap,
     required this.componentMobileAppBarPrimaryActionRadius,
@@ -1378,6 +1402,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentMobileAppBarDestinationMinHeight;
   final double componentMobileAppBarDestinationLabeledMinHeight;
   final double componentMobileAppBarDestinationColumnWidth;
+  final double componentMobileAppBarDestinationIndicatorWidth;
+  final double componentMobileAppBarDestinationIndicatorHeight;
   final double componentMobileAppBarDestinationIconSize;
   final double componentMobileAppBarDestinationLabelGap;
   final double componentMobileAppBarPrimaryActionRadius;
@@ -1976,6 +2002,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarDestinationMinHeight: 56.0,
     componentMobileAppBarDestinationLabeledMinHeight: 64.0,
     componentMobileAppBarDestinationColumnWidth: 52.0,
+    componentMobileAppBarDestinationIndicatorWidth: 64.0,
+    componentMobileAppBarDestinationIndicatorHeight: 32.0,
     componentMobileAppBarDestinationIconSize: 24.0,
     componentMobileAppBarDestinationLabelGap: 4.0,
     componentMobileAppBarPrimaryActionRadius: 18.0,
@@ -2575,6 +2603,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarDestinationMinHeight: 56.0,
     componentMobileAppBarDestinationLabeledMinHeight: 64.0,
     componentMobileAppBarDestinationColumnWidth: 52.0,
+    componentMobileAppBarDestinationIndicatorWidth: 64.0,
+    componentMobileAppBarDestinationIndicatorHeight: 32.0,
     componentMobileAppBarDestinationIconSize: 24.0,
     componentMobileAppBarDestinationLabelGap: 4.0,
     componentMobileAppBarPrimaryActionRadius: 18.0,
@@ -3174,6 +3204,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarDestinationMinHeight: 56.0,
     componentMobileAppBarDestinationLabeledMinHeight: 64.0,
     componentMobileAppBarDestinationColumnWidth: 52.0,
+    componentMobileAppBarDestinationIndicatorWidth: 64.0,
+    componentMobileAppBarDestinationIndicatorHeight: 32.0,
     componentMobileAppBarDestinationIconSize: 24.0,
     componentMobileAppBarDestinationLabelGap: 4.0,
     componentMobileAppBarPrimaryActionRadius: 18.0,
@@ -3773,6 +3805,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarDestinationMinHeight: 56.0,
     componentMobileAppBarDestinationLabeledMinHeight: 64.0,
     componentMobileAppBarDestinationColumnWidth: 52.0,
+    componentMobileAppBarDestinationIndicatorWidth: 64.0,
+    componentMobileAppBarDestinationIndicatorHeight: 32.0,
     componentMobileAppBarDestinationIconSize: 24.0,
     componentMobileAppBarDestinationLabelGap: 4.0,
     componentMobileAppBarPrimaryActionRadius: 18.0,
@@ -4373,6 +4407,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentMobileAppBarDestinationMinHeight,
     double? componentMobileAppBarDestinationLabeledMinHeight,
     double? componentMobileAppBarDestinationColumnWidth,
+    double? componentMobileAppBarDestinationIndicatorWidth,
+    double? componentMobileAppBarDestinationIndicatorHeight,
     double? componentMobileAppBarDestinationIconSize,
     double? componentMobileAppBarDestinationLabelGap,
     double? componentMobileAppBarPrimaryActionRadius,
@@ -4971,6 +5007,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentMobileAppBarDestinationMinHeight: componentMobileAppBarDestinationMinHeight ?? sizeAppBarDestination ?? this.componentMobileAppBarDestinationMinHeight,
       componentMobileAppBarDestinationLabeledMinHeight: componentMobileAppBarDestinationLabeledMinHeight ?? sizeAppBarFixed ?? this.componentMobileAppBarDestinationLabeledMinHeight,
       componentMobileAppBarDestinationColumnWidth: componentMobileAppBarDestinationColumnWidth ?? sizeAppBarRail ?? this.componentMobileAppBarDestinationColumnWidth,
+      componentMobileAppBarDestinationIndicatorWidth: componentMobileAppBarDestinationIndicatorWidth ?? this.componentMobileAppBarDestinationIndicatorWidth,
+      componentMobileAppBarDestinationIndicatorHeight: componentMobileAppBarDestinationIndicatorHeight ?? this.componentMobileAppBarDestinationIndicatorHeight,
       componentMobileAppBarDestinationIconSize: componentMobileAppBarDestinationIconSize ?? sizeIconDefault ?? this.componentMobileAppBarDestinationIconSize,
       componentMobileAppBarDestinationLabelGap: componentMobileAppBarDestinationLabelGap ?? spaceTight ?? this.componentMobileAppBarDestinationLabelGap,
       componentMobileAppBarPrimaryActionRadius: componentMobileAppBarPrimaryActionRadius ?? radiusProminent ?? this.componentMobileAppBarPrimaryActionRadius,
@@ -5574,6 +5612,8 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentMobileAppBarDestinationMinHeight: lerpDouble(componentMobileAppBarDestinationMinHeight, other.componentMobileAppBarDestinationMinHeight, t)!,
       componentMobileAppBarDestinationLabeledMinHeight: lerpDouble(componentMobileAppBarDestinationLabeledMinHeight, other.componentMobileAppBarDestinationLabeledMinHeight, t)!,
       componentMobileAppBarDestinationColumnWidth: lerpDouble(componentMobileAppBarDestinationColumnWidth, other.componentMobileAppBarDestinationColumnWidth, t)!,
+      componentMobileAppBarDestinationIndicatorWidth: lerpDouble(componentMobileAppBarDestinationIndicatorWidth, other.componentMobileAppBarDestinationIndicatorWidth, t)!,
+      componentMobileAppBarDestinationIndicatorHeight: lerpDouble(componentMobileAppBarDestinationIndicatorHeight, other.componentMobileAppBarDestinationIndicatorHeight, t)!,
       componentMobileAppBarDestinationIconSize: lerpDouble(componentMobileAppBarDestinationIconSize, other.componentMobileAppBarDestinationIconSize, t)!,
       componentMobileAppBarDestinationLabelGap: lerpDouble(componentMobileAppBarDestinationLabelGap, other.componentMobileAppBarDestinationLabelGap, t)!,
       componentMobileAppBarPrimaryActionRadius: lerpDouble(componentMobileAppBarPrimaryActionRadius, other.componentMobileAppBarPrimaryActionRadius, t)!,

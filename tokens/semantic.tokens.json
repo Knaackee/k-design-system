@@ -2242,6 +2242,15 @@
           "$type": "dimension",
           "$value": "{size.appBarRail}"
         },
+        "indicatorWidth": {
+          "$description": "Material 3 navigation bar: pill behind the selected icon.",
+          "$type": "dimension",
+          "$value": "{size.scale.navIndicatorWidth}"
+        },
+        "indicatorHeight": {
+          "$type": "dimension",
+          "$value": "{size.scale.navIndicatorHeight}"
+        },
         "iconSize": {
           "$type": "dimension",
           "$value": "{size.iconDefault}"

@@ -546,6 +546,8 @@ export const tokenNames = [
   "component.mobileAppBar.destination.minHeight",
   "component.mobileAppBar.destination.labeledMinHeight",
   "component.mobileAppBar.destination.columnWidth",
+  "component.mobileAppBar.destination.indicatorWidth",
+  "component.mobileAppBar.destination.indicatorHeight",
   "component.mobileAppBar.destination.iconSize",
   "component.mobileAppBar.destination.labelGap",
   "component.mobileAppBar.primaryAction.radius",

@@ -31,3 +31,19 @@
   flex-shrink: 0;
   height: auto;
 }
+
+/* Apple style (iOS 26): content scrolls under the floating glass tab bar and
+   keeps its last row above it. */
+.k-app-shell[data-overlay-bar] {
+  position: relative;
+}
+.k-app-shell[data-overlay-bar] > .k-mobile-app-bar {
+  position: absolute;
+}
+.k-app-shell[data-overlay-bar] > .k-app-shell__content {
+  padding-block-end: calc(
+    var(--k-component-mobile-app-bar-container-min-height) + 2 *
+      var(--k-component-mobile-app-bar-container-bottom-inset) +
+      env(safe-area-inset-bottom, 0px)
+  );
+}

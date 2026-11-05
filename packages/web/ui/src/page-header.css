@@ -29,7 +29,8 @@
   --k-text-line-height: var(--k-font-heading3-line-height);
   --k-text-letter-spacing: var(--k-font-heading3-letter-spacing);
 }
-[data-style="apple"] .k-page-header .k-page-header__title {
+[data-style="apple"] .k-page-header .k-page-header__title,
+[data-style="material"] .k-page-header .k-page-header__title {
   --k-text-font-size: var(--k-font-heading1-size);
   --k-text-line-height: var(--k-font-heading1-line-height);
   --k-text-letter-spacing: var(--k-font-heading1-letter-spacing);

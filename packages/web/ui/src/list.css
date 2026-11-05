@@ -9,7 +9,8 @@
   --k-list-value-size: var(--k-font-body-small-size);
   --k-list-value-line: var(--k-font-body-small-line-height);
 }
-[data-style="apple"] .k-list {
+[data-style="apple"] .k-list,
+[data-style="material"] .k-list {
   --k-list-title-size: var(--k-font-body-size);
   --k-list-title-line: var(--k-font-body-line-height);
   --k-list-title-weight: var(--k-font-body-weight);
@@ -38,8 +39,25 @@
   background: var(--k-color-surface-raised);
 }
 /* iOS groups have no outline. */
-[data-style="apple"] .k-list__group {
+[data-style="apple"] .k-list__group,
+[data-style="material"] .k-list__group {
   border-color: transparent;
+}
+/* Apple: continuous (squircle) corners where the browser supports them. */
+@supports (corner-shape: squircle) {
+  [data-style="apple"] .k-list__group {
+    corner-shape: squircle;
+  }
+}
+/* Material: body-medium values; rows navigate without a chevron. */
+[data-style="material"] .k-list {
+  --k-list-value-size: var(--k-font-body-small-size);
+  --k-list-value-line: var(--k-font-body-small-line-height);
+}
+[data-style="material"]
+  .k-list-item:not([data-disclosure])
+  .k-list-item__chevron {
+  display: none;
 }
 .k-list__row {
   min-width: 0;

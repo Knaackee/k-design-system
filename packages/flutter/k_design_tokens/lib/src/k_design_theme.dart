@@ -24,7 +24,9 @@ enum KMotionStyle { apple, expressive, reduced }
 /// Style preset (Decision 0014): structure and rhythm of components, not
 /// colours. [linear]: compact productivity look (default). [apple]: iOS/iPadOS
 /// Human Interface Guidelines: 44 pt rows, inset grouped lists, large titles.
-enum KStyle { linear, apple }
+/// [material]: Material 3 Expressive: 56 dp rows, rounded groups, pill
+/// navigation, expressive motion.
+enum KStyle { linear, apple, material }
 
 typedef KDesignTokenTransform = KDesignTokens Function(KDesignTokens tokens);
 
@@ -227,6 +229,7 @@ KDesignTokens resolveKDesignTokens(
   final styled = switch (configuration.style) {
     KStyle.linear => KDesignTokenVariants.applyStyleLinear(moved),
     KStyle.apple => KDesignTokenVariants.applyStyleApple(moved),
+    KStyle.material => KDesignTokenVariants.applyStyleMaterial(moved),
   };
 
   final resolved = styled.copyWith(

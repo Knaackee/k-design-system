@@ -52,8 +52,8 @@ back swipe is lost.
 
 ## 4. Style, motion, sound and haptics
 
-- Style preset (Decision 0014): iPhone and iPad get `apple` automatically,
-  other platforms `linear`. Override only to deviate, once via `KAdaptiveOverrides(style:)` /
+- Style preset (Decision 0014): iPhone and iPad get `apple`, Android
+  `material`, desktops `linear` automatically. Override only to deviate, once via `KAdaptiveOverrides(style:)` /
   `applyKAdaptive(root, { style })`. Remove local spacing, row heights,
   radii and font sizes that imitated a style; the preset owns them.
 

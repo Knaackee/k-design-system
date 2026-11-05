@@ -18,7 +18,7 @@ export type KWindowClass =
  */
 export type KMotionStyle = "apple" | "expressive" | "reduced";
 /** Style preset (Decision 0014): structure and rhythm, not colours. */
-export type KStyle = "linear" | "apple";
+export type KStyle = "linear" | "apple" | "material";
 
 export interface KAdaptiveConfiguration {
   density: KDensity;
@@ -38,6 +38,15 @@ export interface KAdaptiveEnvironment {
   reduceMotion?: boolean;
   /** True on iPhone and iPad: the default style is then `apple`. */
   appleTouch?: boolean;
+  /** True on Android: the default style is then `material`. */
+  android?: boolean;
+}
+
+/** Android phone or tablet. */
+export function kIsAndroid(): boolean {
+  return (
+    typeof navigator !== "undefined" && /Android/.test(navigator.userAgent)
+  );
 }
 
 /** iPhone or iPad (iPadOS reports a Mac with touch). */
@@ -71,9 +80,14 @@ export function resolveKAdaptive(
   // desktop share one ramp; mobile Web and the mobile app share another.
   // Input mode changes hit targets, never typography.
   // Platform-native default (Decision 0014): Apple devices get the Apple
-  // style; everything else the productivity style until `material` exists.
+  // style, Android Material 3 Expressive, desktops the productivity style.
   const style: KStyle =
-    overrides.style ?? (environment.appleTouch ? "apple" : "linear");
+    overrides.style ??
+    (environment.appleTouch
+      ? "apple"
+      : environment.android
+        ? "material"
+        : "linear");
   // The Apple style uses the iOS/iPadOS ramp on phones and tablets
   // (Decision 0014); desktops keep the standard ramp.
   const typeScale: KTypeScale =
@@ -86,9 +100,10 @@ export function resolveKAdaptive(
         : "standard");
   // The system setting always wins: an app may pick a motion style, never
   // more motion than the person asked for.
+  // Material pairs with expressive springs unless the app chose a style.
   const motion: KMotionStyle = environment.reduceMotion
     ? "reduced"
-    : (overrides.motion ?? "apple");
+    : (overrides.motion ?? (style === "material" ? "expressive" : "apple"));
   return {
     density: overrides.density ?? "standard",
     typeScale,
@@ -143,6 +158,7 @@ export function applyKAdaptive(
         coarsePointer: coarse.matches,
         reduceMotion: reduce.matches,
         appleTouch: kIsAppleTouch(),
+        android: kIsAndroid(),
       },
       overrides,
     );

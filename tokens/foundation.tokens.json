@@ -125,6 +125,18 @@
         "$type": "dimension",
         "$value": { "value": 40, "unit": "px" }
       },
+      "listRowMaterial": {
+        "$type": "dimension",
+        "$value": { "value": 56, "unit": "px" }
+      },
+      "navIndicatorWidth": {
+        "$type": "dimension",
+        "$value": { "value": 64, "unit": "px" }
+      },
+      "navIndicatorHeight": {
+        "$type": "dimension",
+        "$value": { "value": 32, "unit": "px" }
+      },
       "listRowRelaxed": {
         "$type": "dimension",
         "$value": { "value": 44, "unit": "px" }

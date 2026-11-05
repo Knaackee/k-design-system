@@ -294,3 +294,49 @@
     transition: none;
   }
 }
+
+/* Material style: the M3 navigation bar is an opaque tonal surface with a
+   pill behind the icon (Decision 0014). */
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__surface {
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--k-color-surface-raised);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__destination,
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__destination:hover:not(:disabled),
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__destination[data-selected] {
+  background: transparent;
+  box-shadow: none;
+}
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__icon {
+  width: var(--k-component-mobile-app-bar-destination-indicator-width);
+  height: var(--k-component-mobile-app-bar-destination-indicator-height);
+  border-radius: var(--k-radius-full);
+  transition: background var(--k-motion-control-settle)
+    var(--k-motion-control-easing);
+}
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__destination[data-selected]
+  .k-mobile-app-bar__icon {
+  background: var(--k-color-brand-primary-background);
+}
+[data-style="material"]
+  .k-mobile-app-bar[data-variant="labeled"]
+  .k-mobile-app-bar__destination:hover:not(:disabled)
+  .k-mobile-app-bar__icon {
+  background: var(--k-color-action-ghost-hover);
+}

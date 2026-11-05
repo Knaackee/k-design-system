@@ -6,6 +6,12 @@ version is tagged.
 
 ## Unreleased
 
+- Added the `material` style (Material 3 Expressive) and made the default
+  platform-native: Android gets `material` with expressive motion, iPhone and
+  iPad `apple`, desktops `linear`. `apple` gains squircle group corners, a
+  44 pt round back button and content under the floating glass tab bar.
+  `material` uses an opaque M3 navigation bar with a pill indicator
+  (`component.mobileAppBar.destination.indicatorWidth/Height`).
 - Added style presets (Decision 0014): `linear` and `apple`; without
   configuration iPhone and iPad get `apple`, other platforms `linear`
   (iOS ramp 17/34, 44 pt rows, inset grouped lists, sentence-case section

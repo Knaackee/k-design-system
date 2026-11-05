@@ -100,6 +100,7 @@ export function KAppShell({
       ref={ref}
       className={["k-app-shell", className].filter(Boolean).join(" ")}
       data-layout={compact ? "tab-bar" : rail ? "rail" : "sidebar"}
+      data-overlay-bar={compact && appleStyle ? true : undefined}
       {...props}
     >
       {compact ? null : (
@@ -145,7 +146,13 @@ export function KAppShell({
       {compact ? (
         <KMobileAppBar
           // Apple style: the iOS 26 floating glass tab bar.
-          variant={appleStyle ? "floating-glass" : "fixed"}
+          variant={
+            appleStyle
+              ? "floating-glass"
+              : style === "material"
+                ? "labeled"
+                : "fixed"
+          }
           labelVisibility="always"
           visibility="always"
           label={label}

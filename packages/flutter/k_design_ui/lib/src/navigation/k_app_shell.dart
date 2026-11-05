@@ -81,39 +81,67 @@ class KAppShell extends StatelessWidget {
       builder: (context, constraints) {
         final windowClass = kWindowClassForWidth(constraints.maxWidth);
         if (windowClass == KWindowClass.compact) {
-          return Column(
+          final style = KAdaptive.maybeOf(context)?.style;
+          final bar = KMobileAppBar(
+            // Apple style: the iOS 26 floating glass tab bar.
+            variant: switch (KAdaptive.maybeOf(context)?.style) {
+              KStyle.apple => KMobileAppBarVariant.floatingGlass,
+              // Material 3 navigation bar with pill indicator.
+              KStyle.material => KMobileAppBarVariant.labeled,
+              _ => KMobileAppBarVariant.fixed,
+            },
+            labelVisibility: KMobileAppBarLabelVisibility.always,
+            visibility: KMobileAppBarVisibility.always,
+            semanticLabel: semanticLabel,
+            selectedId: selectedId,
+            onSelectionChanged: (id) => _select(context, id),
+            items: [
+              for (final destination in destinations)
+                KMobileAppBarItem(
+                  id: destination.id,
+                  label: destination.label,
+                  icon: KIcon(
+                    destination.id == selectedId
+                        ? destination.selectedIcon ?? destination.icon
+                        : destination.icon,
+                    size: 24,
+                    color: destination.id == selectedId
+                        ? t.colorTextPrimary
+                        : t.colorTextMuted,
+                  ),
+                  badge: destination.badge == null
+                      ? null
+                      : Text(destination.badge!),
+                ),
+            ],
+          );
+          if (style != KStyle.apple) {
+            return Column(
+              children: [
+                Expanded(child: child),
+                bar,
+              ],
+            );
+          }
+          // iOS 26: content scrolls under the floating glass tab bar; the
+          // bar's height is reported as bottom padding so lists end above it.
+          final media = MediaQuery.of(context);
+          final reserve =
+              t.componentMobileAppBarContainerMinHeight +
+              2 * t.componentMobileAppBarContainerBottomInset;
+          return Stack(
             children: [
-              Expanded(child: child),
-              KMobileAppBar(
-                // Apple style: the iOS 26 floating glass tab bar.
-                variant: KAdaptive.maybeOf(context)?.style == KStyle.apple
-                    ? KMobileAppBarVariant.floatingGlass
-                    : KMobileAppBarVariant.fixed,
-                labelVisibility: KMobileAppBarLabelVisibility.always,
-                visibility: KMobileAppBarVisibility.always,
-                semanticLabel: semanticLabel,
-                selectedId: selectedId,
-                onSelectionChanged: (id) => _select(context, id),
-                items: [
-                  for (final destination in destinations)
-                    KMobileAppBarItem(
-                      id: destination.id,
-                      label: destination.label,
-                      icon: KIcon(
-                        destination.id == selectedId
-                            ? destination.selectedIcon ?? destination.icon
-                            : destination.icon,
-                        size: 24,
-                        color: destination.id == selectedId
-                            ? t.colorTextPrimary
-                            : t.colorTextMuted,
-                      ),
-                      badge: destination.badge == null
-                          ? null
-                          : Text(destination.badge!),
+              Positioned.fill(
+                child: MediaQuery(
+                  data: media.copyWith(
+                    padding: media.padding.copyWith(
+                      bottom: media.padding.bottom + reserve,
                     ),
-                ],
+                  ),
+                  child: child,
+                ),
               ),
+              Align(alignment: Alignment.bottomCenter, child: bar),
             ],
           );
         }

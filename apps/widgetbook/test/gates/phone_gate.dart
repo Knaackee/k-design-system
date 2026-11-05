@@ -45,13 +45,22 @@ const _headless = <String, String>{
 void runPhoneGate({int shardIndex = 0, int shardCount = 1}) {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async {
-    final loader = FontLoader('packages/k_design_tokens/Inter')
-      ..addFont(
-        File(
-          '../../packages/flutter/k_design_tokens/assets/fonts/InterVariable.ttf',
-        ).readAsBytes().then(ByteData.sublistView),
-      );
-    await loader.load();
+    // The style presets use the platform fonts (Roboto on Android, SF Pro on
+    // iOS), which the test host lacks; Inter stands in with similar metrics
+    // so the gate measures real glyphs instead of Ahem boxes.
+    for (final family in [
+      'packages/k_design_tokens/Inter',
+      'Roboto',
+      'CupertinoSystemText',
+    ]) {
+      final loader = FontLoader(family)
+        ..addFont(
+          File(
+            '../../packages/flutter/k_design_tokens/assets/fonts/InterVariable.ttf',
+          ).readAsBytes().then(ByteData.sublistView),
+        );
+      await loader.load();
+    }
   });
 
   final useCases = galleryDirectories()

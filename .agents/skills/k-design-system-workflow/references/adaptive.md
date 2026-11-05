@@ -69,8 +69,8 @@ KAdaptiveTheme(
 applyKAdaptive(document.documentElement, { style: "apple" });
 ```
 
-Without configuration iPhone and iPad get `apple`, everything else `linear`
-(Android gets `material` once it exists). Set `style` only to deviate.
+Without configuration iPhone and iPad get `apple`, Android `material`
+(Material 3 Expressive), desktops `linear`. Set `style` only to deviate.
 `linear` is the compact productivity look; `apple` follows the iOS
 HIG: iOS type ramp on phones and tablets, 44 pt rows, inset grouped lists,
 capsule buttons, floating glass tab bar, system font on Apple devices. The

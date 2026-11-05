@@ -21,6 +21,10 @@ const variantFiles = {
     '[data-style="linear"]',
   ],
   styleApple: ["tokens/modes/style.apple.tokens.json", '[data-style="apple"]'],
+  styleMaterial: [
+    "tokens/modes/style.material.tokens.json",
+    '[data-style="material"]',
+  ],
   motionApple: [
     "tokens/modes/motion.apple.tokens.json",
     '[data-motion="apple"]',

@@ -142,7 +142,12 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
     final tokens =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
-    final quality = _resolveQuality(context);
+    // Material style: the M3 navigation bar is an opaque tonal surface with a
+    // pill indicator behind the icon (Decision 0014).
+    final m3 =
+        widget.variant == KMobileAppBarVariant.labeled &&
+        KAdaptive.maybeOf(context)?.style == KStyle.material;
+    final quality = m3 ? KGlassQuality.solid : _resolveQuality(context);
     _reportResolvedQuality(quality);
     final isFixed = switch (widget.variant) {
       KMobileAppBarVariant.fixed ||
@@ -203,11 +208,15 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
         color: quality == KGlassQuality.solid
             ? tokens.colorSurfaceRaised
             : null,
-        border: isFixed
+        border: m3
+            ? null
+            : isFixed
             ? Border(top: borderSide)
             : Border.fromBorderSide(borderSide),
-        borderRadius: radius,
-        boxShadow: isFixed
+        borderRadius: m3 ? null : radius,
+        boxShadow: m3
+            ? null
+            : isFixed
             ? tokens.componentMobileAppBarContainerElevation
             : tokens.elevationOverlay,
       ),
@@ -382,6 +391,9 @@ class _DestinationGroup extends StatelessWidget {
                     item.id == parent.selectedId),
             itemBuilder: parent.itemBuilder,
             lineIndicator: parent.variant == KMobileAppBarVariant.fixedLine,
+            pillIndicator:
+                parent.variant == KMobileAppBarVariant.labeled &&
+                KAdaptive.maybeOf(context)?.style == KStyle.material,
             onTap: () => parent.onSelectionChanged(item.id),
           ),
         ),
@@ -396,6 +408,7 @@ class _Destination extends StatelessWidget {
     required this.showLabel,
     required this.itemBuilder,
     required this.lineIndicator,
+    required this.pillIndicator,
     required this.onTap,
   });
 
@@ -404,7 +417,29 @@ class _Destination extends StatelessWidget {
   final bool showLabel;
   final KMobileAppBarItemBuilder? itemBuilder;
   final bool lineIndicator;
+
+  /// Material 3: a 64×32 pill behind the icon marks the selection.
+  final bool pillIndicator;
   final VoidCallback onTap;
+
+  Widget _pill(KDesignTokens tokens, Widget icon) {
+    if (!pillIndicator) return icon;
+    final motion = tokens.motion(KMotionRole.control);
+    return AnimatedContainer(
+      duration: motion.settle,
+      curve: motion.curve,
+      width: tokens.componentMobileAppBarDestinationIndicatorWidth,
+      height: tokens.componentMobileAppBarDestinationIndicatorHeight,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: selected
+            ? tokens.colorBrandPrimaryBackground
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(tokens.radiusFull),
+      ),
+      child: icon,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +457,7 @@ class _Destination extends StatelessWidget {
               ? 1
               : tokens.componentMobileAppBarOpacityInactive,
           child: Material(
-            color: selected && !lineIndicator
+            color: selected && !lineIndicator && !pillIndicator
                 ? tokens.colorSurfaceSubtle.withValues(
                     alpha: tokens.componentMobileAppBarOpacityRaised,
                   )
@@ -484,9 +519,12 @@ class _Destination extends StatelessWidget {
                                         ? tokens.colorTextPrimary
                                         : tokens.colorTextMuted,
                                   ),
-                                  child: selected
-                                      ? (item.selectedIcon ?? item.icon)
-                                      : item.icon,
+                                  child: _pill(
+                                    tokens,
+                                    selected
+                                        ? (item.selectedIcon ?? item.icon)
+                                        : item.icon,
+                                  ),
                                 ),
                                 if (showLabel) ...[
                                   SizedBox(
@@ -509,7 +547,9 @@ class _Destination extends StatelessWidget {
                                       fontFamily: tokens.fontFamily,
                                       fontSize: tokens
                                           .componentMobileAppBarLabelFontSize,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: pillIndicator && !selected
+                                          ? FontWeight.w500
+                                          : FontWeight.w600,
                                       height: tokens.fontTightHeight,
                                     ),
                                   ),

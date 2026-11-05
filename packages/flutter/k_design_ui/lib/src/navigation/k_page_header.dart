@@ -75,6 +75,8 @@ class KPageHeader extends StatelessWidget {
                 variant: switch ((style, compact)) {
                   // iOS large title on every width.
                   (KStyle.apple, _) => KTextVariant.heading1,
+                  // Material 3 large flexible app bar headline.
+                  (KStyle.material, _) => KTextVariant.heading1,
                   (KStyle.linear, true) => KTextVariant.heading2,
                   (KStyle.linear, false) => KTextVariant.heading3,
                 },

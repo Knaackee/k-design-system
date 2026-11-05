@@ -27,10 +27,14 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
   // desktop share one ramp; mobile Web and the mobile app share another.
   // Input mode changes hit targets, never typography.
   // Platform-native default (Decision 0014): iPhone and iPad get the Apple
-  // style; other platforms the productivity style until `material` exists.
+  // style, Android Material 3 Expressive, desktops the productivity style.
   final style =
       overrides.style ??
-      (platform == TargetPlatform.iOS ? KStyle.apple : KStyle.linear);
+      switch (platform) {
+        TargetPlatform.iOS => KStyle.apple,
+        TargetPlatform.android => KStyle.material,
+        _ => KStyle.linear,
+      };
   // The Apple style uses the iOS/iPadOS ramp on phones and tablets
   // (Decision 0014); desktops keep the standard ramp.
   final typeScale =
@@ -43,9 +47,13 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
       };
   // The platform setting always wins: an app may pick a motion style, but
   // never more motion than the person asked for.
+  // Material pairs with expressive springs unless the app chose a style.
   final motion = reduceMotion
       ? KMotionStyle.reduced
-      : overrides.motion ?? KMotionStyle.apple;
+      : overrides.motion ??
+            (style == KStyle.material
+                ? KMotionStyle.expressive
+                : KMotionStyle.apple);
   return KDesignConfiguration(
     density: overrides.density ?? KDensity.standard,
     typeScale: typeScale,
@@ -109,16 +117,20 @@ class KAdaptive extends InheritedWidget {
       oldWidget.configuration != configuration;
 }
 
-/// The Apple style sets text in the system font (SF Pro) on Apple devices
+/// Apple and Material styles set text in the platform font (SF Pro on Apple
+/// devices, Roboto on Android)
 /// (Decision 0014); elsewhere, and on the Web build, the brand font stays.
 /// An explicit `fontFamily` (brand typeface) always wins.
-String? kStyleFontFamily(KStyle style) =>
-    style == KStyle.apple &&
-        !kIsWeb &&
-        (defaultTargetPlatform == TargetPlatform.iOS ||
-            defaultTargetPlatform == TargetPlatform.macOS)
-    ? 'CupertinoSystemText'
-    : null;
+String? kStyleFontFamily(KStyle style) {
+  if (kIsWeb) return null;
+  return switch ((style, defaultTargetPlatform)) {
+    (KStyle.apple, TargetPlatform.iOS || TargetPlatform.macOS) =>
+      'CupertinoSystemText',
+    // Material: the Android system font (Roboto / Google Sans).
+    (KStyle.material, TargetPlatform.android) => 'Roboto',
+    _ => null,
+  };
+}
 
 /// Applies a K theme resolved from the current window and platform and caps
 /// the system text scale (body/control cap globally; [KText] applies the

@@ -26,6 +26,13 @@ class _KListRoles {
           KTextVariant.label,
           false,
         ),
+        // Material 3: body-large titles, body-medium values.
+        KStyle.material => const _KListRoles(
+          KTextVariant.body,
+          KTextVariant.bodySmall,
+          KTextVariant.label,
+          false,
+        ),
         // Productivity: medium labels, quieter small values.
         KStyle.linear => const _KListRoles(
           KTextVariant.label,
@@ -62,8 +69,10 @@ class KList extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final roles = _KListRoles.of(context);
-    final apple =
-        (KAdaptive.maybeOf(context)?.style ?? KStyle.linear) == KStyle.apple;
+    final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
+    final apple = style == KStyle.apple;
+    // Apple and Material groups are tonal surfaces without an outline.
+    final outlined = style == KStyle.linear;
     final radius = BorderRadius.circular(t.componentListGroupRadius);
     Widget aside(String text, {required bool header}) => Padding(
       padding: EdgeInsetsDirectional.only(
@@ -110,14 +119,15 @@ class KList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (title case final text?) aside(text, header: true),
-          ClipRRect(
-            borderRadius: radius,
+          _GroupClip(
+            radius: radius,
+            continuous: apple,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: t.colorSurfaceRaised,
                 borderRadius: radius,
                 // iOS groups have no outline; the productivity look does.
-                border: apple
+                border: !outlined
                     ? null
                     : Border.all(
                         color: t.colorBorderDefault,
@@ -136,6 +146,23 @@ class KList extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Clips a list group; Apple uses continuous (squircle) corners.
+class _GroupClip extends StatelessWidget {
+  const _GroupClip({
+    required this.radius,
+    required this.continuous,
+    required this.child,
+  });
+  final BorderRadius radius;
+  final bool continuous;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => continuous
+      ? ClipRSuperellipse(borderRadius: radius, child: child)
+      : ClipRRect(borderRadius: radius, child: child);
 }
 
 /// One row of a [KList]: optional leading icon, title, optional description,
@@ -199,7 +226,11 @@ class _KListItemState extends State<KListItem> {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final roles = _KListRoles.of(context);
     final interactive = widget.onPressed != null && widget.enabled;
-    final disclosure = widget.disclosure ?? widget.onPressed != null;
+    // Material list rows navigate without a chevron (Android settings).
+    final disclosure =
+        widget.disclosure ??
+        (widget.onPressed != null &&
+            KAdaptive.maybeOf(context)?.style != KStyle.material);
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
     final iconSize = t.sizeIconDefault;

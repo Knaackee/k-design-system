@@ -157,6 +157,8 @@ export function KListItem({
     "data-interactive": interactive || undefined,
     "data-selected": selected || undefined,
     "data-disabled": disabled || undefined,
+    // An explicit chevron survives styles that hide it by default.
+    "data-disclosure": disclosure ? true : undefined,
   };
   if (href)
     return (

@@ -14,8 +14,9 @@ compensated screen by screen, which is exactly what the system should prevent.
 
 ## Decision
 
-1. **Style is an adaptive axis**, like density and motion: `linear` (default,
-   productivity) and `apple` (iOS/iPadOS HIG). Web: `data-style`,
+1. **Style is an adaptive axis**, like density and motion: `linear`
+   (productivity), `apple` (iOS/iPadOS HIG) and `material` (Material 3
+   Expressive). Web: `data-style`,
    `applyKAdaptive(root, { style })`; Flutter: `KStyle`,
    `KAdaptiveOverrides(style:)`. Both galleries have a style switch.
 2. **Presets are token sets**, generated from `tokens/modes/style.*.tokens.json`:
@@ -30,9 +31,15 @@ compensated screen by screen, which is exactly what the system should prevent.
    `apple` sets text in the system font (SF Pro) on Apple devices, uses the
    floating glass tab bar, borderless inset groups and a round back button.
 5. **Platform-native default.** Without configuration iPhone and iPad get
-   `apple` (Flutter: `TargetPlatform.iOS`; Web: iPhone/iPad user agent), all
-   other platforms `linear`. Material Expressive follows as `material` and
-   then becomes the Android default. An app sets `style` only to deviate.
+   `apple`, Android gets `material` (with expressive motion), desktops
+   `linear`. Flutter decides by `TargetPlatform`, Web by the user agent. An
+   app sets `style` only to deviate.
+   `material`: 56 dp rows, 16 dp insets, rounded tonal groups without
+   outline or chevrons, arrow back control, opaque navigation bar with a
+   64 × 32 dp pill indicator behind the selected icon, capsule buttons,
+   Roboto on Android.
+   `apple` additionally: continuous (squircle) group corners, 44 pt round
+   back button, content scrolling under the floating glass tab bar.
 6. **Defaults over props.** Components need no props for appearance: props
    carry content, events and state; spacing, size, shape, type and motion come
    from tokens and the style. A consumer override is a token or the style, not
@@ -48,5 +55,6 @@ compensated screen by screen, which is exactly what the system should prevent.
   `KListItem.value` is the text value, `trailing` is for badges and dots.
 - Visual acceptance happens on review sheets (`tooling/contact-sheet.mjs`,
   `apps/widgetbook/test/tools/review_screenshots_test.dart`) before a merge.
-- Open for `apple`: collapsing large title, content under the glass tab bar,
-  44 pt toolbar buttons, continuous corners, press feedback.
+- Open: the large title does not yet collapse into the bar on scroll
+  (needs a scroll-aware page scaffold); no press-scale feedback; Material
+  segmented buttons and FAB menus keep the shared look.

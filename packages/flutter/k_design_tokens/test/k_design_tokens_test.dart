@@ -106,8 +106,9 @@ void main() {
       width: 393,
       platform: TargetPlatform.android,
     );
-    expect(android.style, KStyle.linear);
+    expect(android.style, KStyle.material);
     expect(android.typeScale, KTypeScale.mobile);
+    expect(android.motion, KMotionStyle.expressive);
 
     final tablet = resolveKAdaptiveConfiguration(
       width: 1024,

@@ -68,6 +68,8 @@ void main() {
                     textScaler: TextScaler.linear(scale),
                   ),
                   child: KAdaptiveTheme(
+                    // SF Pro and Roboto do not exist in the test host.
+                    fontFamily: 'packages/k_design_tokens/Inter',
                     brightness: brightness,
                     overrides: KAdaptiveOverrides(style: style),
                     child: KLocalization(

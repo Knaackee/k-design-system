@@ -549,6 +549,8 @@
   --k-component-mobile-app-bar-destination-min-height: var(--k-size-app-bar-destination);
   --k-component-mobile-app-bar-destination-labeled-min-height: var(--k-size-app-bar-fixed);
   --k-component-mobile-app-bar-destination-column-width: var(--k-size-app-bar-rail);
+  --k-component-mobile-app-bar-destination-indicator-width: 64px;
+  --k-component-mobile-app-bar-destination-indicator-height: 32px;
   --k-component-mobile-app-bar-destination-icon-size: var(--k-size-icon-default);
   --k-component-mobile-app-bar-destination-label-gap: var(--k-space-tight);
   --k-component-mobile-app-bar-primary-action-radius: var(--k-radius-prominent);
@@ -1160,6 +1162,8 @@
   --k-component-mobile-app-bar-destination-min-height: var(--k-size-app-bar-destination);
   --k-component-mobile-app-bar-destination-labeled-min-height: var(--k-size-app-bar-fixed);
   --k-component-mobile-app-bar-destination-column-width: var(--k-size-app-bar-rail);
+  --k-component-mobile-app-bar-destination-indicator-width: 64px;
+  --k-component-mobile-app-bar-destination-indicator-height: 32px;
   --k-component-mobile-app-bar-destination-icon-size: var(--k-size-icon-default);
   --k-component-mobile-app-bar-destination-label-gap: var(--k-space-tight);
   --k-component-mobile-app-bar-primary-action-radius: var(--k-radius-prominent);
@@ -1771,6 +1775,8 @@
   --k-component-mobile-app-bar-destination-min-height: var(--k-size-app-bar-destination);
   --k-component-mobile-app-bar-destination-labeled-min-height: var(--k-size-app-bar-fixed);
   --k-component-mobile-app-bar-destination-column-width: var(--k-size-app-bar-rail);
+  --k-component-mobile-app-bar-destination-indicator-width: 64px;
+  --k-component-mobile-app-bar-destination-indicator-height: 32px;
   --k-component-mobile-app-bar-destination-icon-size: var(--k-size-icon-default);
   --k-component-mobile-app-bar-destination-label-gap: var(--k-space-tight);
   --k-component-mobile-app-bar-primary-action-radius: var(--k-radius-prominent);
@@ -2382,6 +2388,8 @@
   --k-component-mobile-app-bar-destination-min-height: var(--k-size-app-bar-destination);
   --k-component-mobile-app-bar-destination-labeled-min-height: var(--k-size-app-bar-fixed);
   --k-component-mobile-app-bar-destination-column-width: var(--k-size-app-bar-rail);
+  --k-component-mobile-app-bar-destination-indicator-width: 64px;
+  --k-component-mobile-app-bar-destination-indicator-height: 32px;
   --k-component-mobile-app-bar-destination-icon-size: var(--k-size-icon-default);
   --k-component-mobile-app-bar-destination-label-gap: var(--k-space-tight);
   --k-component-mobile-app-bar-primary-action-radius: var(--k-radius-prominent);
@@ -2464,6 +2472,19 @@
 [data-style="apple"] {
   --k-component-list-row-min-height: 44px;
   --k-component-list-row-padding-block: 12px;
+  --k-component-list-row-padding-inline: 16px;
+  --k-component-list-leading-gap: 16px;
+  --k-component-list-group-radius: 24px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 16px;
+  --k-component-page-header-padding-block-start: 16px;
+  --k-component-page-header-title-gap: 4px;
+  --k-component-button-radius: 999px;
+}
+
+[data-style="material"] {
+  --k-component-list-row-min-height: 56px;
+  --k-component-list-row-padding-block: 16px;
   --k-component-list-row-padding-inline: 16px;
   --k-component-list-leading-gap: 16px;
   --k-component-list-group-radius: 24px;

@@ -543,7 +543,16 @@
 
 /* Decision 0014: iOS 26 back control, a round button on a raised surface. */
 [data-style="apple"] .k-back-button {
+  width: max(var(--k-size-hit-target), var(--k-component-list-row-min-height));
+  height: max(var(--k-size-hit-target), var(--k-component-list-row-min-height));
   border-radius: var(--k-radius-full);
   background: var(--k-color-surface-raised);
   box-shadow: var(--k-elevation-low);
+}
+
+/* Decision 0014: Material sets text in the Android system font. */
+[data-style="material"] {
+  --k-font-family:
+    Roboto, "Google Sans", "Roboto Flex", Inter, ui-sans-serif, system-ui,
+    sans-serif;
 }

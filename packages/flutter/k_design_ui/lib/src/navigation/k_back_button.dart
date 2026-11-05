@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
@@ -21,23 +23,29 @@ class KBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rtl = Directionality.of(context) == TextDirection.rtl;
+    final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
+    // Material navigates up with an arrow; Apple and linear with a chevron.
+    final material = style == KStyle.material;
     final button = KIconButton(
       label: label,
-      icon: rtl ? KIconName.chevronRight : KIconName.chevronLeft,
+      icon: material
+          ? (rtl ? KIconName.arrowRight : KIconName.arrowLeft)
+          : (rtl ? KIconName.chevronRight : KIconName.chevronLeft),
       onPressed: onPressed ?? () => Navigator.maybePop(context),
     );
-    if ((KAdaptive.maybeOf(context)?.style ?? KStyle.linear) != KStyle.apple) {
-      return button;
-    }
-    // iOS 26: a round button on a raised surface floating over content.
+    if (style != KStyle.apple) return button;
+    // iOS 26: a round 44 pt button on a raised surface over content.
     final t = Theme.of(context).extension<KDesignTokens>()!;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: t.colorSurfaceRaised,
-        shape: BoxShape.circle,
-        boxShadow: t.elevationLow,
+    return SizedBox.square(
+      dimension: math.max(t.sizeHitTarget, t.componentListRowMinHeight),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: t.colorSurfaceRaised,
+          shape: BoxShape.circle,
+          boxShadow: t.elevationLow,
+        ),
+        child: Center(child: button),
       ),
-      child: button,
     );
   }
 }

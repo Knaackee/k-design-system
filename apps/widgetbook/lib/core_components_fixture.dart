@@ -213,8 +213,11 @@ class _AppShellFixtureState extends State<AppShellFixture> {
       selectedId: selected,
       onSelected: (id) => setState(() => selected = id),
       sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
+      // Bottom padding from the shell keeps the last row above the tab bar.
       child: SingleChildScrollView(
-        padding: _pad(context),
+        padding: _pad(context).copyWith(
+          bottom: _pad(context).bottom + MediaQuery.paddingOf(context).bottom,
+        ),
         child: KStack(
           gap: KLayoutGap.section,
           align: KLayoutAlign.stretch,
