@@ -31,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 import 'motion_fixture.dart';
+import 'back_button_fixture.dart';
 import 'geometry_parity_fixture.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -956,6 +957,15 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
   WidgetbookCategory(
     name: 'Navigation',
     children: [
+      WidgetbookFolder(
+        name: 'BackButton',
+        children: [
+          WidgetbookUseCase(
+            name: 'back-button',
+            builder: (_) => const BackButtonFixture(),
+          ),
+        ],
+      ),
       WidgetbookFolder(
         name: 'ScreenSwitcher',
         children: [

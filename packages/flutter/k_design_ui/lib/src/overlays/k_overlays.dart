@@ -53,7 +53,10 @@ class KDialog extends StatelessWidget {
         description: description,
         actions: actions,
         closeLabel: closeLabel,
-        onClose: dismissible ? () => Navigator.of(routeContext).pop() : null,
+        // maybePop: a PopScope in the sheet (unsaved changes) can ask first.
+        onClose: dismissible
+            ? () => Navigator.of(routeContext).maybePop()
+            : null,
         maxWidth: maxWidth,
         maxHeight: maxHeight,
         child: child,
@@ -153,22 +156,31 @@ class KBottomSheet extends StatelessWidget {
     useRootNavigator: useRootNavigator,
     isScrollControlled: true,
     isDismissible: dismissible,
-    enableDrag: dismissible && enableDrag,
+    // The sheet handles its own swipe-down so that a PopScope inside it
+    // (unsaved changes) can ask before it closes (Decision 0012, HIG Sheets);
+    // the framework's drag would close it unconditionally.
+    enableDrag: false,
     backgroundColor: Colors.transparent,
     useSafeArea: true,
-    builder: (routeContext) => Padding(
-      padding: EdgeInsets.only(
-        bottom: expandBody ? MediaQuery.viewInsetsOf(routeContext).bottom : 0,
-      ),
-      child: KBottomSheet(
-        title: title,
-        description: description,
-        actions: actions,
-        closeLabel: closeLabel,
-        onClose: dismissible ? () => Navigator.of(routeContext).pop() : null,
-        maxWidth: maxWidth,
-        expandBody: expandBody,
-        child: child,
+    builder: (routeContext) => _KSheetSwipeToDismiss(
+      enabled: dismissible && enableDrag,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: expandBody ? MediaQuery.viewInsetsOf(routeContext).bottom : 0,
+        ),
+        child: KBottomSheet(
+          title: title,
+          description: description,
+          actions: actions,
+          closeLabel: closeLabel,
+          // maybePop: a PopScope in the sheet (unsaved changes) can ask first.
+          onClose: dismissible
+              ? () => Navigator.of(routeContext).maybePop()
+              : null,
+          maxWidth: maxWidth,
+          expandBody: expandBody,
+          child: child,
+        ),
       ),
     ),
   );
@@ -340,5 +352,67 @@ class _OverlayBody extends StatelessWidget {
       ),
     );
     return expandBody ? body : SingleChildScrollView(child: body);
+  }
+}
+
+/// Swipe down to dismiss a sheet through `Navigator.maybePop`, so a
+/// `PopScope(canPop: false)` in the sheet holds it open and can ask first.
+/// Inner scroll views keep their own vertical drag where they start.
+class _KSheetSwipeToDismiss extends StatefulWidget {
+  const _KSheetSwipeToDismiss({required this.enabled, required this.child});
+
+  final bool enabled;
+  final Widget child;
+
+  @override
+  State<_KSheetSwipeToDismiss> createState() => _KSheetSwipeToDismissState();
+}
+
+class _KSheetSwipeToDismissState extends State<_KSheetSwipeToDismiss>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _offset = AnimationController.unbounded(
+    vsync: this,
+  );
+
+  @override
+  void dispose() {
+    _offset.dispose();
+    super.dispose();
+  }
+
+  void _update(DragUpdateDetails details) {
+    _offset.value = (_offset.value + details.delta.dy).clamp(
+      0,
+      double.infinity,
+    );
+  }
+
+  Future<void> _end(DragEndDetails details) async {
+    final height = context.size?.height ?? 1;
+    final fling = (details.primaryVelocity ?? 0) > 700;
+    if (fling || _offset.value > height * .3) {
+      await Navigator.of(context).maybePop();
+      if (!mounted) return;
+    }
+    // Held back (unsaved changes) or not far enough: settle back.
+    final motion = Theme.of(
+      context,
+    ).extension<KDesignTokens>()!.motion(KMotionRole.control);
+    await _offset.animateTo(0, duration: motion.settle, curve: motion.curve);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.enabled) return widget.child;
+    return GestureDetector(
+      onVerticalDragUpdate: _update,
+      onVerticalDragEnd: _end,
+      child: AnimatedBuilder(
+        animation: _offset,
+        builder: (context, child) =>
+            Transform.translate(offset: Offset(0, _offset.value), child: child),
+        child: widget.child,
+      ),
+    );
   }
 }

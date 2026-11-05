@@ -525,3 +525,9 @@
 .k-switch-field[data-disabled] {
   cursor: not-allowed;
 }
+
+/* The back chevron points to the start edge in right-to-left layouts. */
+[dir="rtl"] .k-back-button .k-icon,
+.k-back-button:dir(rtl) .k-icon {
+  scale: -1 1;
+}

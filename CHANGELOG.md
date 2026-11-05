@@ -6,6 +6,15 @@ version is tagged.
 
 ## Unreleased
 
+- Added Apple navigation (Decision 0012): `KBackButton` on Web and Flutter
+  (chevron only, accessible label names the destination; mirrors in RTL);
+  `KPageTransitionsBuilder`, installed by `kDesignTheme` for iOS/macOS, adds
+  the iOS 26 back swipe from anywhere in the content next to the edge swipe
+  (horizontal content keeps its own gestures; `PopScope` is honoured).
+  Navigation rules for tab bars, sidebars, top bars and sheets in the skill.
+- `KBottomSheet` swipe-to-dismiss and Cancel now go through
+  `Navigator.maybePop`, so a `PopScope` for unsaved changes can ask first
+  (previously the swipe closed the sheet unconditionally).
 - Added configurable motion (Decision 0011): roles `feedback`, `control`,
   `enter`, `exit`, `page`, `attention` as springs (duration, bounce,
   distance) in three styles `apple` (default), `expressive` and `reduced`.

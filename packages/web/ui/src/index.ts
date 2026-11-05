@@ -114,6 +114,8 @@ export type {
   KSidebarToggleProps,
 } from "./navigation/sidebar.js";
 export { KMobileAppBar } from "./navigation/mobile-app-bar.js";
+export { KBackButton } from "./navigation/back-button.js";
+export type { KBackButtonProps } from "./navigation/back-button.js";
 export type {
   KGlassQuality,
   KResolvedGlassQuality,

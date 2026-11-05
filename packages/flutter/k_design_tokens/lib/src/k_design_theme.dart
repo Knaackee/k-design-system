@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'generated/k_design_tokens.g.dart';
+import 'k_page_transitions.dart';
 
 enum KBrand { orbit, reference }
 
@@ -371,6 +372,15 @@ ThemeData kDesignTheme({
 
   return ThemeData(
     brightness: brightness,
+    // iOS/macOS: Cupertino transition with the iOS 26 content-area back
+    // swipe (Decision 0012). Android keeps the system's back handling.
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: {
+        ...const PageTransitionsTheme().builders,
+        TargetPlatform.iOS: const KPageTransitionsBuilder(),
+        TargetPlatform.macOS: const KPageTransitionsBuilder(),
+      },
+    ),
     scaffoldBackgroundColor: tokens.colorSurfaceCanvas,
     fontFamily: tokens.fontFamily,
     visualDensity: switch (configuration.density) {

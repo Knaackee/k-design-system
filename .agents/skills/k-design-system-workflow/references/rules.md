@@ -81,12 +81,64 @@ assertions. The others are review rules.
   Minimum height 56 for touch, 40 for pointer.
 - Empty group: a single action row "+ Add …", not a sentence plus a button.
 
-## Navigation — review
+## Navigation — review + gesture tests (Decision 0012, Apple HIG)
 
-- Phone main navigation: bottom tabs (≤ 5) or drawer; contextual details in a
-  bottom sheet; desktop keeps sidebar and secondary navigation visible.
-- Back affordance names the parent ("‹ Portfolios"), never just "Back".
-- Section switching is rows, tabs or a segmented control — never a dropdown.
+Applies to iPhone/iPad and, by the parity rule, to mobile Web and the
+tablet/desktop layouts. Android keeps its system back; do not build a custom
+one.
+
+**Back**
+
+- Use `KBackButton` at the leading edge of the top bar: the chevron alone,
+  never the word "Back"/"Zurück" or a text button. Its `label` names the
+  destination for assistive technology ("Back to Portfolios").
+- Back gestures stay on: leading-edge swipe and, as in iOS 26, a swipe
+  anywhere in the content (Flutter: installed by `kDesignTheme` via
+  `KPageTransitionsBuilder`). Never disable them. The only exception is a
+  screen with unsaved changes: `PopScope(canPop: !dirty,
+onPopInvokedWithResult: …)` and ask before discarding.
+- Horizontal gestures in content (carousel, slider, map, swipe row) are
+  fine: they win where they start. Do not put horizontal swipe actions
+  across a whole screen; they would replace back navigation.
+
+**Top level**
+
+- iPhone: tab bar at the bottom, at most five tabs, each with a one-word
+  label; for navigation only, never actions. Never hide or disable a tab;
+  explain an empty section inside it. No "More" tab. Badges only for
+  critical information. Each tab keeps its own navigation stack.
+- The tab bar stays visible while navigating inside a tab; only modals
+  cover it. It may minimise on scroll when it carries an accessory.
+- iPad / tablet / desktop: tab bar at the top that can turn into a sidebar,
+  or a sidebar (visible by default, hideable). Sidebar: at most two levels;
+  deeper hierarchies get a split view (sidebar → list → detail).
+
+**Top bar**
+
+- Title under 15 characters, never the app name; a large title that
+  collapses on scroll on phones.
+- Leading: back (and sidebar toggle). Trailing: the most important actions,
+  at most three groups, one prominent primary action (Done/Save) at the
+  trailing edge, the rest in a More menu. Symbols instead of text, without
+  borders; text only for actions without a clear symbol ("Edit").
+
+**Sheets**
+
+- For a short, scoped task; long or multi-step work gets a full-screen view.
+- One sheet at a time: close the first before opening a second.
+- Cancel (or Close) leading, Done trailing; never Done alone, never Back,
+  Cancel and Done together. In a multi-step sheet, step 2+ shows Back
+  instead of Cancel.
+- Swipe down dismisses; with unsaved changes ask first (`PopScope`).
+  Resizable sheets show a grabber; consider the medium detent for
+  progressive disclosure. On iPad use the centred page/form sheet.
+
+**Web**
+
+- Same structure. Browser back is the back gesture: every screen that has a
+  back button has its own history entry and URL (the app's router owns it;
+  the design system does not route). `KBackButton` defaults to
+  `history.back()`.
 
 ## Forms — review
 
