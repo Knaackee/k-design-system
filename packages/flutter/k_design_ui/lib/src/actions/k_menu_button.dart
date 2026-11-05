@@ -7,6 +7,7 @@ import '../primitives/k_icon.dart';
 import '../primitives/k_surface.dart';
 import 'action_control.dart';
 import 'k_menu_surface.dart';
+import 'k_menu_item_content.dart';
 import '../patterns/k_toolbar.dart';
 
 class KMenuAction {
@@ -129,10 +130,7 @@ class _KMenuButtonState extends State<KMenuButton> {
     final overlay =
         Overlay.of(context).context.findRenderObject()! as RenderBox;
     final screen = overlay.size;
-    final width = math.min(
-      t.componentContextMenuWidth,
-      math.max(0.0, screen.width - t.componentContextMenuViewportInset),
-    );
+    final width = menuContentWidth(context, widget.actions, screen.width);
     final origin =
         box?.localToGlobal(Offset.zero, ancestor: overlay) ?? Offset.zero;
     setState(() => _menuWidth = width);
@@ -172,13 +170,10 @@ class _KMenuButtonState extends State<KMenuButton> {
     final scaled = MediaQuery.textScalerOf(context).scale(t.fontControlSize);
     final width =
         _menuWidth ??
-        math.min(
-          t.componentContextMenuWidth,
-          math.max(
-            0.0,
-            MediaQuery.sizeOf(context).width -
-                t.componentContextMenuViewportInset,
-          ),
+        menuContentWidth(
+          context,
+          widget.actions,
+          MediaQuery.sizeOf(context).width,
         );
     final textStyle = TextStyle(
       fontFamily: t.fontFamily,
@@ -213,6 +208,7 @@ class _KMenuButtonState extends State<KMenuButton> {
       child: MenuAnchor(
         key: _anchorKey,
         controller: _controller,
+        consumeOutsideTap: true,
         onOpen: () => widget.onOpenChange?.call(true),
         onClose: () => widget.onOpenChange?.call(false),
         childFocusNode: _trigger,
@@ -422,45 +418,9 @@ class _KMenuButtonState extends State<KMenuButton> {
                                   ),
                                 ),
                               ),
-                              child: Opacity(
-                                opacity: action.disabled ? .48 : 1,
-                                child: SizedBox(
-                                  width: math.max(
-                                    0,
-                                    width -
-                                        2 *
-                                            (t.spaceControlGap +
-                                                1 +
-                                                t.spaceControlInsetInline),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      if (action.iconContent != null ||
-                                          action.icon != null) ...[
-                                        action.iconContent ??
-                                            KIcon(
-                                              action.icon!,
-                                              color: action.destructive
-                                                  ? t.colorStatusErrorForeground
-                                                  : t.colorTextPrimary,
-                                            ),
-                                        SizedBox(width: t.spaceControlGap),
-                                      ],
-                                      Expanded(
-                                        child: Semantics(
-                                          selected: action.checked,
-                                          child: Text(action.label),
-                                        ),
-                                      ),
-                                      if (action.checked == true)
-                                        const KIcon(
-                                          KIconName.check,
-                                          size: 16,
-                                          strokeWidth: 1.5,
-                                        ),
-                                    ],
-                                  ),
-                                ),
+                              child: KMenuItemContent(
+                                action: action,
+                                width: width,
                               ),
                             ),
                           ),

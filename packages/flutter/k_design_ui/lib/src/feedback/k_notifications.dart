@@ -186,7 +186,6 @@ KToastController _show(
     ),
   );
   final queue = KToastController._queues[overlay] ??= [];
-  if (queue.length >= 5) queue.last.dismiss();
   queue.add(controller);
   if (queue.length == 1) controller._activate();
   return controller;
@@ -282,73 +281,93 @@ class KToast extends StatelessWidget {
         borderRadius: BorderRadius.circular(t.radiusCard),
         boxShadow: t.componentToastNativeElevation,
       ),
-      child: Row(
-        children: [
-          if (icon != null) ...[
-            if (_compact)
-              icon!
-            else
-              Container(
-                width: t.componentToastIconSize,
-                height: t.componentToastIconSize,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: iconBackground,
-                  shape: BoxShape.circle,
-                ),
-                child: IconTheme(
-                  data: IconThemeData(
-                    color: iconForeground,
-                    size: t.componentSpinnerDefaultSize,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final actionsBelow =
+              constraints.maxWidth < t.componentToastViewportWidth;
+          final content = Row(
+            children: [
+              if (icon != null) ...[
+                if (_compact)
+                  icon!
+                else
+                  Container(
+                    width: t.componentToastIconSize,
+                    height: t.componentToastIconSize,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: iconBackground,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconTheme(
+                      data: IconThemeData(
+                        color: iconForeground,
+                        size: t.componentSpinnerDefaultSize,
+                      ),
+                      child: icon!,
+                    ),
                   ),
-                  child: icon!,
+                SizedBox(width: t.componentToastContentGap),
+              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DefaultTextStyle(
+                      style: TextStyle(
+                        fontFamily: t.fontFamily,
+                        fontWeight: _compact
+                            ? t.fontBodyWeight
+                            : t.fontLabelWeight,
+                        fontSize: t.fontBodySmallSize,
+                        height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
+                        color: t.colorTextPrimary,
+                      ),
+                      child: title,
+                    ),
+                    if (description != null) ...[
+                      SizedBox(height: t.spaceMicro),
+                      DefaultTextStyle(
+                        style: TextStyle(
+                          fontFamily: t.fontFamily,
+                          color: t.colorTextMuted,
+                          fontSize: t.fontBodySmallSize,
+                          height:
+                              t.fontBodySmallLineHeight / t.fontBodySmallSize,
+                        ),
+                        child: description!,
+                      ),
+                    ],
+                  ],
                 ),
               ),
-            SizedBox(width: t.componentToastContentGap),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DefaultTextStyle(
-                  style: TextStyle(
-                    fontFamily: t.fontFamily,
-                    fontWeight: _compact ? t.fontBodyWeight : t.fontLabelWeight,
-                    fontSize: t.fontBodySmallSize,
-                    height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
-                    color: t.colorTextPrimary,
-                  ),
-                  child: title,
-                ),
-                if (description != null) ...[
-                  SizedBox(height: t.spaceMicro),
-                  DefaultTextStyle(
-                    style: TextStyle(
-                      fontFamily: t.fontFamily,
-                      color: t.colorTextMuted,
-                      fontSize: t.fontBodySmallSize,
-                      height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
-                    ),
-                    child: description!,
-                  ),
-                ],
+              if (action != null && !actionsBelow) ...[
+                SizedBox(width: t.componentToastContentGap),
+                action!,
               ],
-            ),
-          ),
-          if (action != null) ...[
-            SizedBox(width: t.componentToastContentGap),
-            action!,
-          ],
-          if (onDismiss != null) ...[
-            SizedBox(width: t.componentToastContentGap),
-            KIconButton(
-              icon: KIconName.x,
-              label: dismissLabel,
-              onPressed: onDismiss,
-            ),
-          ],
-        ],
+              if (onDismiss != null) ...[
+                SizedBox(width: t.componentToastContentGap),
+                KIconButton(
+                  icon: KIconName.x,
+                  label: dismissLabel,
+                  onPressed: onDismiss,
+                ),
+              ],
+            ],
+          );
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              content,
+              if (action != null && actionsBelow) ...[
+                SizedBox(height: t.componentToastContentGap),
+                Align(alignment: AlignmentDirectional.centerEnd, child: action),
+              ],
+            ],
+          );
+        },
       ),
     );
   }

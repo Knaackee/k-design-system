@@ -46,6 +46,18 @@
 .k-toast__action {
   max-width: 40%;
 }
+@media (max-width: 599px) {
+  .k-toast {
+    flex-wrap: wrap;
+  }
+  .k-toast__action {
+    order: 1;
+    flex-basis: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
 .k-toast__action .k-button {
   white-space: normal;
   overflow-wrap: anywhere;
