@@ -109,6 +109,9 @@ Then verify on phone sizes, not only desktop:
   ↔ sidebar) on iPad/Android tablet or a browser window.
 - Device-only behaviour, on real hardware: iOS back swipe from the middle of
   the screen, sheet swipe with unsaved changes, haptics, reduce motion.
+- Platform views (maps, video, web views) do not render in widget tests: use
+  the component's builder/stand-in seam there, as the library fixtures do,
+  and check the real view on a device.
 - Library changes additionally pass `pnpm gate:phone-flutter`,
   `pnpm gate:phone-web` and `pnpm gate:geometry`, and the story review in
   both galleries.
@@ -138,7 +141,8 @@ options and your recommendation, and keep working on everything else.
 **Ask the person:**
 
 - Product decisions: motion style other than `apple`; whether sound or
-  haptics exist at all; which 2–5 destinations go into the tab bar; what a
+  haptics exist at all (an explicit request is that decision: add them behind
+  a setting, still off until the person turns them on); which 2–5 destinations go into the tab bar; what a
   destructive action deletes; wording of legal, pricing or consent text.
 - Anything that changes the library for every app: a new or changed public
   component, prop, token name or default; a host override versus a shared
@@ -163,6 +167,10 @@ options and your recommendation, and keep working on everything else.
 If the person is not available, take the most conservative option (library
 default, feature off, existing component), note it under "Not checked" and
 continue.
+
+The library's own `AGENTS.md` and `pnpm verify` apply to work inside
+`vendor/k-design-system` only; in a host app the checks above are the
+handover.
 
 ## Ownership
 

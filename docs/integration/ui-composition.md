@@ -42,8 +42,10 @@ callback must not imply persistence, notifications or authentication that it lac
 
 ### Observable acceptance checklist
 
-- Navigation: every destination, active item and return action agree. Mobile main
-  navigation is a side drawer; contextual details may use a bottom sheet.
+- Navigation: every destination, active item and return action agree. Top-level
+  navigation is `KAppShell` (tab bar on phones, sidebar from 600); a side drawer
+  only for secondary or deep navigation. Contextual details may use a bottom
+  sheet.
 - Forms: invalid submission explains the problem; correction succeeds; cancel
   returns predictably. Preserve draft values or explicitly define discard behavior.
 - Lists: search and filters compose; empty results can be cleared; opening and
@@ -66,7 +68,7 @@ callback must not imply persistence, notifications or authentication that it lac
   `.k-leading`); icon sizes 16/20/24 (12 control glyph, 32/48 display);
   tokens only, 4 px grid; minimum type 11 px.
 - Every screen works at 360 px and system text 1.3 without clipping, and at
-  2.0 with scrolling.
+  2.0 and 3.0 with scrolling (headings cap at 2.0, body and controls at 3.0).
 - Run `node vendor/k-design-system/tooling/check-ui-rules.mjs <paths>` in
   addition to the consumer scanner below.
 
@@ -137,9 +139,11 @@ New reusable components still require human gallery acceptance.
 
 Overlay choice follows purpose, not viewport alone:
 
-- Primary app navigation opened by a hamburger remains a side drawer on phones.
-  Compose KSidebar inside KResponsiveDrawer with side="left" and breakpoint={0}.
-  Do not substitute KBottomSheet for primary navigation.
+- Top-level app navigation is `KAppShell`: a tab bar on phones, never a
+  hamburger drawer (Decision 0012). A hamburger side drawer (KSidebar inside
+  KResponsiveDrawer, side="left", breakpoint={0}) is only for more than five
+  destinations or secondary navigation. Do not substitute KBottomSheet for
+  primary navigation.
 - Contextual details may use KResponsiveDrawer with its normal breakpoint: side
   panel on larger screens, bottom sheet on phones. KDialog is adaptive too.
 - A wrapper that already decides presentation must not delegate its fixed-side

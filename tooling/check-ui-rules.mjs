@@ -172,7 +172,9 @@ export function checkWeb(
 async function main() {
   const findings = [];
   for (const target of targets.length ? targets : defaults) {
-    for await (const file of files(resolve(root, target))) {
+    for await (const file of files(
+      targets.length ? resolve(process.cwd(), target) : resolve(root, target),
+    )) {
       const ext = extname(file);
       if (![".dart", ".tsx", ".css"].includes(ext)) continue;
       const source = await readFile(file, "utf8");
