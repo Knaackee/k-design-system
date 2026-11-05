@@ -56,6 +56,25 @@ applyKAdaptive(document.documentElement, { motion: "expressive" });
 `apple` is the default. The platform reduce-motion setting always resolves to
 `reduced`. Ask the user which style a product wants before changing it.
 
+## Style preset (Decision 0014)
+
+```dart
+KAdaptiveTheme(
+  overrides: const KAdaptiveOverrides(style: KStyle.apple),
+  child: child!,
+)
+```
+
+```ts
+applyKAdaptive(document.documentElement, { style: "apple" });
+```
+
+`linear` (default) is the compact productivity look; `apple` follows the iOS
+HIG: iOS type ramp on phones and tablets, 44 pt rows, inset grouped lists,
+capsule buttons, floating glass tab bar, system font on Apple devices. The
+style is one app-level product decision: never re-create it per screen with
+local spacing or sizes. Brand colours and fonts stay overridable.
+
 ## Parity rule
 
 Tablet = desktop, mobile Web = mobile app. Only the window class picks the

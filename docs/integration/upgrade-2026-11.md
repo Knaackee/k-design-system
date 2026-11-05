@@ -50,7 +50,12 @@ report, the app navigates. On Flutter iOS/macOS `kDesignTheme` installs
 use `KPageTransitionsBuilder()` for iOS and macOS there too, or the content
 back swipe is lost.
 
-## 4. Motion, sound and haptics
+## 4. Style, motion, sound and haptics
+
+- Style preset (Decision 0014): `linear` (default) or `apple` for a premium
+  iOS/iPadOS look, set once via `KAdaptiveOverrides(style:)` /
+  `applyKAdaptive(root, { style })`. Remove local spacing, row heights,
+  radii and font sizes that imitated a style; the preset owns them.
 
 - Motion style: one decision per app (`apple` default, `expressive`,
   `reduced`) through `KAdaptiveOverrides(motion:)` / `applyKAdaptive(root,

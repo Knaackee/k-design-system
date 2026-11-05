@@ -6,6 +6,14 @@ version is tagged.
 
 ## Unreleased
 
+- Added style presets (Decision 0014): `linear` (default) and `apple`
+  (iOS ramp 17/34, 44 pt rows, inset grouped lists, sentence-case section
+  headers, capsule buttons, round back button, floating glass tab bar, system
+  font on Apple devices). `KList` draws its grouped surface with `title` and
+  `footer`; `KListItem.value` for text values. The App shell caps the page
+  width, the sidebar shows a clear active state. Tab bar labels keep their
+  size at large text. Review sheet tools: `tooling/contact-sheet.mjs` and the
+  Widgetbook screenshot test.
 - The `raw-motion` rule of `tooling/check-ui-rules.mjs` now also checks
   consumer apps (files outside this repository), not only library packages.
 - Docs: upgrade guide for consumer apps (`docs/integration/upgrade-2026-11.md`),

@@ -140,7 +140,7 @@ options and your recommendation, and keep working on everything else.
 
 **Ask the person:**
 
-- Product decisions: motion style other than `apple`; whether sound or
+- Product decisions: the style preset (`linear`, `apple`); motion style other than `apple`; whether sound or
   haptics exist at all (an explicit request is that decision: add them behind
   a setting, still off until the person turns them on); which 2–5 destinations go into the tab bar; what a
   destructive action deletes; wording of legal, pricing or consent text.
