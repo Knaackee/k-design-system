@@ -431,14 +431,16 @@ class _OfferOverviewFixtureState extends State<OfferOverviewFixture> {
                             ),
                         ],
                         footer: KCatalogEditorCard(
-                          child: Row(
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 8,
+                            runSpacing: 8,
                             children: [
-                              Expanded(
-                                child: Text(
-                                  _draft
-                                      ? 'Änderungen als Entwurf'
-                                      : 'Alles veröffentlicht',
-                                ),
+                              Text(
+                                _draft
+                                    ? 'Änderungen als Entwurf'
+                                    : 'Alles veröffentlicht',
                               ),
                               KButton(
                                 label: 'Veröffentlichen',

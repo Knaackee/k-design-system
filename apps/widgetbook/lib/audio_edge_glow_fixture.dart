@@ -29,75 +29,78 @@ class _AudioEdgeGlowFixtureState extends State<AudioEdgeGlowFixture> {
           children: [
             Positioned.fill(child: ColoredBox(color: t.colorSurfaceCanvas)),
             Center(
-              child: SizedBox(
-                width: 320,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: t.spaceControlGap,
-                  children: [
-                    Text(
-                      _state == KAudioEdgeGlowState.capturing
-                          ? 'Ich höre zu'
-                          : _state == KAudioEdgeGlowState.processing
-                          ? 'Wird verarbeitet'
-                          : 'Bereit',
-                    ),
-                    Wrap(
-                      spacing: t.spaceControlGap,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        KButton(
-                          label: 'Aufnahme',
-                          onPressed: () => setState(
-                            () => _state = KAudioEdgeGlowState.capturing,
-                          ),
-                        ),
-                        KButton(
-                          label: 'Verarbeitung',
-                          variant: KButtonVariant.secondary,
-                          onPressed: () => setState(
-                            () => _state = KAudioEdgeGlowState.processing,
-                          ),
-                        ),
-                        KButton(
-                          label: 'Aus',
-                          variant: KButtonVariant.ghost,
-                          onPressed: () => setState(
-                            () => _state = KAudioEdgeGlowState.inactive,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text('Pegel · ${(_level * 100).round()} %'),
-                    KSlider(
-                      label: 'Mikrofonpegel',
-                      value: _level * 100,
-                      onChanged: (value) =>
-                          setState(() => _level = value / 100),
-                    ),
-                    Wrap(
-                      spacing: t.spaceControlGap,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        for (final entry in const [
-                          ('Limette', Color(0xff84cc16)),
-                          ('Violett', Color(0xffa78bfa)),
-                          ('Blau', Color(0xff38bdf8)),
-                        ])
+              child: SingleChildScrollView(
+                child: SizedBox(
+                  width: 320,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: t.spaceControlGap,
+                    children: [
+                      Text(
+                        _state == KAudioEdgeGlowState.capturing
+                            ? 'Ich höre zu'
+                            : _state == KAudioEdgeGlowState.processing
+                            ? 'Wird verarbeitet'
+                            : 'Bereit',
+                      ),
+                      Wrap(
+                        spacing: t.spaceControlGap,
+                        alignment: WrapAlignment.center,
+                        children: [
                           KButton(
-                            label: entry.$1,
-                            variant: KButtonVariant.ghost,
-                            onPressed: () => setState(() => _color = entry.$2),
+                            label: 'Aufnahme',
+                            onPressed: () => setState(
+                              () => _state = KAudioEdgeGlowState.capturing,
+                            ),
                           ),
-                      ],
-                    ),
-                    Text(
-                      widget.reducedMotion
-                          ? 'Bewegung reduziert'
-                          : 'Die Farbe und der Pegel gehören dem Consumer.',
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                          KButton(
+                            label: 'Verarbeitung',
+                            variant: KButtonVariant.secondary,
+                            onPressed: () => setState(
+                              () => _state = KAudioEdgeGlowState.processing,
+                            ),
+                          ),
+                          KButton(
+                            label: 'Aus',
+                            variant: KButtonVariant.ghost,
+                            onPressed: () => setState(
+                              () => _state = KAudioEdgeGlowState.inactive,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text('Pegel · ${(_level * 100).round()} %'),
+                      KSlider(
+                        label: 'Mikrofonpegel',
+                        value: _level * 100,
+                        onChanged: (value) =>
+                            setState(() => _level = value / 100),
+                      ),
+                      Wrap(
+                        spacing: t.spaceControlGap,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (final entry in const [
+                            ('Limette', Color(0xff84cc16)),
+                            ('Violett', Color(0xffa78bfa)),
+                            ('Blau', Color(0xff38bdf8)),
+                          ])
+                            KButton(
+                              label: entry.$1,
+                              variant: KButtonVariant.ghost,
+                              onPressed: () =>
+                                  setState(() => _color = entry.$2),
+                            ),
+                        ],
+                      ),
+                      Text(
+                        widget.reducedMotion
+                            ? 'Bewegung reduziert'
+                            : 'Die Farbe und der Pegel gehören dem Consumer.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

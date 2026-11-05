@@ -156,88 +156,103 @@ class _AgentChatSwitcherFixtureState extends State<AgentChatSwitcherFixture> {
     return SizedBox.expand(
       child: ColoredBox(
         color: tokens.colorSurfaceCanvas,
-        child: Column(
-          children: [
-            KAgentSwitcher(
-              items: _visibleAgents,
-              selectedId: selected.id,
-              onSelect: (id) => setState(() {
-                _selectedId = id;
-                _manageNote = '';
-              }),
-              onManage: () => setState(
-                () => _manageNote = 'Agentenauswahl geöffnet (Demo)',
-              ),
-              labels: _labels,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: tokens.spaceLayoutGutter,
-                vertical: tokens.spaceControlGap,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: tokens.colorBorderDefault,
-                    width: tokens.borderWidthDefault,
+        child: LayoutBuilder(
+          builder: (context, viewport) => Column(
+            children: [
+              // At large system text the switcher and the demo notice share at
+              // most a third of the screen and scroll, so the conversation and
+              // composer keep their room.
+              ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: viewport.maxHeight / 3),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      KAgentSwitcher(
+                        items: _visibleAgents,
+                        selectedId: selected.id,
+                        onSelect: (id) => setState(() {
+                          _selectedId = id;
+                          _manageNote = '';
+                        }),
+                        onManage: () => setState(
+                          () => _manageNote = 'Agentenauswahl geöffnet (Demo)',
+                        ),
+                        labels: _labels,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: tokens.spaceLayoutGutter,
+                          vertical: tokens.spaceControlGap,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: tokens.colorBorderDefault,
+                              width: tokens.borderWidthDefault,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: KText(
+                                'Demodaten · keine echten Agenten oder Arbeitsläufe',
+                                variant: KTextVariant.bodySmall,
+                              ),
+                            ),
+                            SizedBox(width: tokens.spaceControlGap),
+                            Semantics(
+                              liveRegion: true,
+                              child: KText(
+                                _manageNote.isEmpty
+                                    ? 'Chat mit ${selected.name}'
+                                    : _manageNote,
+                                variant: KTextVariant.caption,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: KText(
-                      'Demodaten · keine echten Agenten oder Arbeitsläufe',
-                      variant: KTextVariant.bodySmall,
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 820),
+                    child: KChatConversation(
+                      messages: _messagesByAgent[selected.id]!,
+                      runState: runState,
+                      metadataMode: KChatMessageMetadataMode.grouped,
+                      showTimestamps: false,
+                      labels: KChatLabels(assistant: selected.name, user: 'Du'),
                     ),
                   ),
-                  SizedBox(width: tokens.spaceControlGap),
-                  Semantics(
-                    liveRegion: true,
-                    child: KText(
-                      _manageNote.isEmpty
-                          ? 'Chat mit ${selected.name}'
-                          : _manageNote,
-                      variant: KTextVariant.caption,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 820),
-                  child: KChatConversation(
-                    messages: _messagesByAgent[selected.id]!,
-                    runState: runState,
-                    metadataMode: KChatMessageMetadataMode.grouped,
-                    showTimestamps: false,
-                    labels: KChatLabels(assistant: selected.name, user: 'Du'),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 820),
+                child: KChatComposer(
+                  key: ValueKey('agent-composer-${selected.id}'),
+                  value: _drafts[selected.id]!,
+                  runState: runState,
+                  onValueChanged: (value) =>
+                      setState(() => _drafts[selected.id] = value),
+                  onSubmit: _send,
+                  onStop: () => setState(
+                    () => _activityByAgent[selected.id] =
+                        KAgentActivityState.idle,
+                  ),
+                  labels: KChatComposerLabels(
+                    placeholder: 'Nachricht an ${selected.name}…',
                   ),
                 ),
               ),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 820),
-              child: KChatComposer(
-                key: ValueKey('agent-composer-${selected.id}'),
-                value: _drafts[selected.id]!,
-                runState: runState,
-                onValueChanged: (value) =>
-                    setState(() => _drafts[selected.id] = value),
-                onSubmit: _send,
-                onStop: () => setState(
-                  () =>
-                      _activityByAgent[selected.id] = KAgentActivityState.idle,
-                ),
-                labels: KChatComposerLabels(
-                  placeholder: 'Nachricht an ${selected.name}…',
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

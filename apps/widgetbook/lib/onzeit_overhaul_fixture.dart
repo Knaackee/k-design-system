@@ -861,7 +861,8 @@ class _OnzeitOverhaulFixtureState extends State<OnzeitOverhaulFixture> {
                             ],
                           ),
                         ),
-                        if (c.id == 'c2') const SgMuted('Heute · 10:40'),
+                        if (c.id == 'c2')
+                          const Flexible(child: SgMuted('Heute · 10:40')),
                         const KIcon(KIconName.chevronRight, size: 16),
                       ],
                     ),

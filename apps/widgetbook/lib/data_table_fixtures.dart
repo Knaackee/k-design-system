@@ -277,7 +277,7 @@ class _DataTableFixtureState extends State<DataTableFixture> {
                           : KIconName.minus,
                     ),
                     SizedBox(width: t.spaceControlGap),
-                    Text(projectStatusLabel(row.status)),
+                    Flexible(child: Text(projectStatusLabel(row.status))),
                   ],
                 ),
                 semanticsLabel: (row) => 'Open ${row.title}',

@@ -4,6 +4,7 @@
   font-size: var(--k-font-body-size);
   line-height: var(--k-font-body-line-height);
   min-width: 0;
+  width: 100%;
   container-type: inline-size;
   container-name: k-sortable-tree;
   background: var(--k-color-surface-raised);

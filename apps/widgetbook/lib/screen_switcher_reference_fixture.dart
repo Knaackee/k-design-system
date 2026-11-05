@@ -15,74 +15,80 @@ class _ReferenceState extends State<ScreenSwitcherReferenceFixture> {
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
-    return ColoredBox(
-      color: tokens.colorSurfaceCanvas,
-      child: Padding(
-        padding: EdgeInsets.all(tokens.spaceLayoutGutter),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const KText('ScreenSwitcher · Bibliotheksreferenz'),
-            SizedBox(height: tokens.spaceControlGap),
-            const KText(
-              '15 Karten · Originalgesten und Animationen. Wische nach oben oder unten, um die Karten durchzuwechseln.',
-            ),
-            SizedBox(height: tokens.spaceControlGap),
-            KButton(
-              label: 'Stapel zurücksetzen',
-              onPressed: () => setState(() => generation++),
-            ),
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final width = constraints.maxWidth.clamp(0.0, 480.0);
-                  final height = (constraints.maxHeight * .6).clamp(0.0, 340.0);
-                  return CardStackWidget(
-                    key: ValueKey(generation),
-                    // Upstream scales by count * index: defaults become negative
-                    // for 15 cards. Bound the back card to 72% of the front.
-                    scaleFactor: 28 / (15 * 14),
-                    // Upstream applies its initial offset twice. Keep the
-                    // complete stack within the available gallery height.
-                    positionFactor: 0.25,
-                    cardList: List.generate(
-                      15,
-                      (index) => CardModel(
-                        key: ValueKey('screen-$index'),
-                        backgroundColor: tokens.colorSurfaceRaised,
-                        shadowColor: tokens.colorScrimModal,
-                        radius: Radius.circular(tokens.radiusOverlay),
-                        border: Border.all(color: tokens.colorBorderDefault),
-                        child: SizedBox(
-                          width: width,
-                          height: height,
-                          child: Padding(
-                            padding: EdgeInsets.all(tokens.spaceLayoutGutter),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                KText('Screen ${index + 1}'),
-                                SizedBox(height: tokens.spaceLayoutGutter),
-                                const KIcon(KIconName.fileText),
-                                SizedBox(height: tokens.spaceLayoutGutter),
-                                const Flexible(
-                                  child: KText(
-                                    'Projektideen und nächste Schritte. Ziehe diese Karte, um das unveränderte Verhalten der Bibliothek zu prüfen.',
-                                  ),
+    // Large system text: the intro scrolls and the stack keeps a fixed
+    // stage instead of being squeezed to nothing.
+    final large = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
+    Widget stage(Widget child) =>
+        large ? SizedBox(height: 420, child: child) : Expanded(child: child);
+    final content = Padding(
+      padding: EdgeInsets.all(tokens.spaceLayoutGutter),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const KText('ScreenSwitcher · Bibliotheksreferenz'),
+          SizedBox(height: tokens.spaceControlGap),
+          const KText(
+            '15 Karten · Originalgesten und Animationen. Wische nach oben oder unten, um die Karten durchzuwechseln.',
+          ),
+          SizedBox(height: tokens.spaceControlGap),
+          KButton(
+            label: 'Stapel zurücksetzen',
+            onPressed: () => setState(() => generation++),
+          ),
+          stage(
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final width = constraints.maxWidth.clamp(0.0, 480.0);
+                final height = (constraints.maxHeight * .6).clamp(0.0, 340.0);
+                return CardStackWidget(
+                  key: ValueKey(generation),
+                  // Upstream scales by count * index: defaults become negative
+                  // for 15 cards. Bound the back card to 72% of the front.
+                  scaleFactor: 28 / (15 * 14),
+                  // Upstream applies its initial offset twice. Keep the
+                  // complete stack within the available gallery height.
+                  positionFactor: 0.25,
+                  cardList: List.generate(
+                    15,
+                    (index) => CardModel(
+                      key: ValueKey('screen-$index'),
+                      backgroundColor: tokens.colorSurfaceRaised,
+                      shadowColor: tokens.colorScrimModal,
+                      radius: Radius.circular(tokens.radiusOverlay),
+                      border: Border.all(color: tokens.colorBorderDefault),
+                      child: SizedBox(
+                        width: width,
+                        height: height,
+                        child: Padding(
+                          padding: EdgeInsets.all(tokens.spaceLayoutGutter),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              KText('Screen ${index + 1}'),
+                              SizedBox(height: tokens.spaceLayoutGutter),
+                              const KIcon(KIconName.fileText),
+                              SizedBox(height: tokens.spaceLayoutGutter),
+                              const Flexible(
+                                child: KText(
+                                  'Projektideen und nächste Schritte. Ziehe diese Karte, um das unveränderte Verhalten der Bibliothek zu prüfen.',
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+    return ColoredBox(
+      color: tokens.colorSurfaceCanvas,
+      child: large ? SingleChildScrollView(child: content) : content,
     );
   }
 }

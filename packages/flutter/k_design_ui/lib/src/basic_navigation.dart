@@ -257,8 +257,14 @@ class _KCarouselState extends State<KCarousel> {
                 ),
                 SizedBox(width: t.spaceControlGap),
                 Expanded(
+                  // The slide height grows with the system text size so
+                  // slide text is not clipped at large text (Decision 0010).
+                  // Measuring the slides would need a second copy of every
+                  // child (duplicate state and keys), so it scales instead.
                   child: SizedBox(
-                    height: t.componentCarouselSlideHeight,
+                    height: MediaQuery.textScalerOf(
+                      context,
+                    ).scale(t.componentCarouselSlideHeight),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(t.radiusCard),
                       child: ScrollConfiguration(

@@ -13,7 +13,7 @@ class _DataTableOverflowFixtureState extends State<DataTableOverflowFixture> {
   bool _ascending = true;
 
   @override
-  Widget build(BuildContext context) => Center(
+  Widget build(BuildContext context) => SingleChildScrollView(
     child: SizedBox(
       width: 620,
       child: KStack(

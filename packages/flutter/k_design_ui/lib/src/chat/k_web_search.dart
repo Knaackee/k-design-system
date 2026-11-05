@@ -150,6 +150,7 @@ class _KWebSearchState extends State<KWebSearch>
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final expanded = widget.expanded ?? _expanded;
     final muted = TextStyle(color: t.colorTextMuted);
+    final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
     final status = switch (widget.state) {
       KWebSearchState.running =>
         widget.results.isEmpty
@@ -232,34 +233,75 @@ class _KWebSearchState extends State<KWebSearch>
                           ),
                     SizedBox(width: t.spaceControlGap),
                     Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => Row(
-                          children: [
-                            ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: constraints.maxWidth,
-                              ),
-                              child: title,
-                            ),
-                            if (widget.query?.isNotEmpty == true &&
-                                constraints.maxWidth >
-                                    MediaQuery.textScalerOf(
-                                          context,
-                                        ).scale(t.fontBodySize) *
-                                        9) ...[
-                              SizedBox(width: t.spaceControlGap),
-                              Expanded(
-                                child: KText(
-                                  widget.query!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                      // From 1.3x the status moves under the title so the
+                      // title keeps the row (Decision 0010).
+                      child: largeText
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                LayoutBuilder(
+                                  builder: (context, constraints) => Row(
+                                    children: [
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxWidth: constraints.maxWidth,
+                                        ),
+                                        child: title,
+                                      ),
+                                      if (widget.query?.isNotEmpty == true &&
+                                          constraints.maxWidth >
+                                              MediaQuery.textScalerOf(
+                                                    context,
+                                                  ).scale(t.fontBodySize) *
+                                                  9) ...[
+                                        SizedBox(width: t.spaceControlGap),
+                                        Expanded(
+                                          child: KText(
+                                            widget.query!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: muted,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                                KText(
+                                  status,
+                                  variant: KTextVariant.caption,
                                   style: muted,
                                 ),
+                              ],
+                            )
+                          : LayoutBuilder(
+                              builder: (context, constraints) => Row(
+                                children: [
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: constraints.maxWidth,
+                                    ),
+                                    child: title,
+                                  ),
+                                  if (widget.query?.isNotEmpty == true &&
+                                      constraints.maxWidth >
+                                          MediaQuery.textScalerOf(
+                                                context,
+                                              ).scale(t.fontBodySize) *
+                                              9) ...[
+                                    SizedBox(width: t.spaceControlGap),
+                                    Expanded(
+                                      child: KText(
+                                        widget.query!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: muted,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
-                            ],
-                          ],
-                        ),
-                      ),
+                            ),
                     ),
                     SizedBox(width: t.spaceControlGap),
                     if (icons.isNotEmpty) ...[
@@ -278,8 +320,14 @@ class _KWebSearchState extends State<KWebSearch>
                       ),
                       SizedBox(width: t.spaceControlGap),
                     ],
-                    KText(status, variant: KTextVariant.caption, style: muted),
-                    SizedBox(width: t.spaceControlGap),
+                    if (!largeText) ...[
+                      KText(
+                        status,
+                        variant: KTextVariant.caption,
+                        style: muted,
+                      ),
+                      SizedBox(width: t.spaceControlGap),
+                    ],
                     AnimatedRotation(
                       turns: expanded ? .25 : 0,
                       duration: duration,

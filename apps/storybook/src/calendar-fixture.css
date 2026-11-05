@@ -1,11 +1,13 @@
 .calendar-demo {
   padding: var(--k-space-layout-gutter);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   min-width: 0;
 }
 .calendar-demo-header {
   display: flex;
+  min-width: 0;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 16px;

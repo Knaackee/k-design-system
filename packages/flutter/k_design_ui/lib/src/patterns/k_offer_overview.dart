@@ -335,111 +335,117 @@ class _KOfferOverviewState extends State<KOfferOverview> {
     KOfferCategory c,
     bool divider,
     KDesignTokens t,
-  ) => Container(
-    decoration: BoxDecoration(
-      border: divider
-          ? Border(top: BorderSide(color: t.colorBorderDefault))
-          : null,
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: KButton(
-            label: e.name,
-            variant: KButtonVariant.ghost,
-            fullWidth: true,
-            onPressed: widget.enabled ? e.onEdit : null,
-            content: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: t.spaceControlGap + t.spaceMicro / 2,
-              ),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(t.radiusControl),
-                    child: SizedBox(
-                      width: t.componentAttachmentMediaSize,
-                      height: t.componentAttachmentMediaSize,
-                      child:
-                          e.image ??
-                          ColoredBox(
-                            color: c.color ?? t.colorActionPrimaryBackground,
-                            child: Center(
-                              child: Text(
-                                e.name.isEmpty ? '?' : e.name[0],
-                                style: TextStyle(
-                                  color: t.colorActionPrimaryForeground,
-                                  fontWeight: FontWeight.w700,
+  ) {
+    final large = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
+    final price = Text(
+      e.price,
+      textAlign: TextAlign.right,
+      style: TextStyle(
+        color: t.colorTextPrimary,
+        fontSize: t.fontHeading5Size,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+    return Container(
+      decoration: BoxDecoration(
+        border: divider
+            ? Border(top: BorderSide(color: t.colorBorderDefault))
+            : null,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: KButton(
+              label: e.name,
+              variant: KButtonVariant.ghost,
+              fullWidth: true,
+              onPressed: widget.enabled ? e.onEdit : null,
+              content: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: t.spaceControlGap + t.spaceMicro / 2,
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(t.radiusControl),
+                      child: SizedBox(
+                        width: t.componentAttachmentMediaSize,
+                        height: t.componentAttachmentMediaSize,
+                        child:
+                            e.image ??
+                            ColoredBox(
+                              color: c.color ?? t.colorActionPrimaryBackground,
+                              child: Center(
+                                child: Text(
+                                  e.name.isEmpty ? '?' : e.name[0],
+                                  style: TextStyle(
+                                    color: t.colorActionPrimaryForeground,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: t.spaceContentActionGap),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          e.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: t.colorTextPrimary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: t.fontHeading5Size,
-                          ),
-                        ),
-                        SizedBox(height: t.spaceMicro / 2),
-                        Row(
-                          children: [
-                            KIcon(
-                              e.kind == 'product'
-                                  ? KIconName.package
-                                  : KIconName.clock,
-                              size: 16,
-                              color: t.colorTextMuted,
+                    SizedBox(width: t.spaceContentActionGap),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            e.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: t.colorTextPrimary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: t.fontHeading5Size,
                             ),
-                            SizedBox(width: t.spaceMicro),
-                            Expanded(
-                              child: Text(
-                                e.detail,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: t.colorTextMuted,
-                                  fontSize: t.fontBodySmallSize,
+                          ),
+                          SizedBox(height: t.spaceMicro / 2),
+                          Row(
+                            children: [
+                              KIcon(
+                                e.kind == 'product'
+                                    ? KIconName.package
+                                    : KIconName.clock,
+                                size: 16,
+                                color: t.colorTextMuted,
+                              ),
+                              SizedBox(width: t.spaceMicro),
+                              Expanded(
+                                child: Text(
+                                  e.detail,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: t.colorTextMuted,
+                                    fontSize: t.fontBodySmallSize,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          // From 1.3x the price moves under the name; prices
+                          // never truncate (Decision 0010).
+                          if (large) price,
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: t.spaceControlGap),
-                  Text(
-                    e.price,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      color: t.colorTextPrimary,
-                      fontSize: t.fontHeading5Size,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+                    if (!large) ...[SizedBox(width: t.spaceControlGap), price],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        KMenuButton(
-          label: 'Aktionen für ${e.name}',
-          overflow: true,
-          disabled: !widget.enabled,
-          actions: e.actions,
-        ),
-      ],
-    ),
-  );
+          KMenuButton(
+            label: 'Aktionen für ${e.name}',
+            overflow: true,
+            disabled: !widget.enabled,
+            actions: e.actions,
+          ),
+        ],
+      ),
+    );
+  }
 }

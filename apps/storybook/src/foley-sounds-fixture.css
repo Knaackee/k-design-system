@@ -113,3 +113,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Single-column grids shrink with the screen instead of growing to their
+   widest line. */
+.foley-review__header,
+.foley-review__volume,
+.foley-review__events,
+.foley-review__footer {
+  grid-template-columns: minmax(0, 1fr);
+}

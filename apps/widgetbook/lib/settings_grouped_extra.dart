@@ -42,6 +42,7 @@ class _SgExtraState extends State<SgExtra> {
       children: [
         const KInline(
           gap: KLayoutGap.control,
+          wrap: true,
           children: [
             KText('Server', variant: KTextVariant.heading2),
             SgStatus('Admin'),
@@ -342,25 +343,40 @@ class _SgExtraState extends State<SgExtra> {
         children: [
           for (var i = 0; i < tokens.length; i++)
             SgInset(
-              child: KInline(
-                gap: KLayoutGap.control,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              // From 1.3x the action moves under the text (rules.md).
+              child: MediaQuery.textScalerOf(context).scale(1) >= 1.3
+                  ? KStack(
+                      gap: KLayoutGap.control,
+                      align: KLayoutAlign.start,
                       children: [
                         KText(tokens[i]),
                         SgMuted('Demo-Zugang · $expiry'),
+                        KButton(
+                          label: 'Widerrufen',
+                          variant: KButtonVariant.secondary,
+                          onPressed: () => setState(() => tokens.removeAt(i)),
+                        ),
+                      ],
+                    )
+                  : KInline(
+                      gap: KLayoutGap.control,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              KText(tokens[i]),
+                              SgMuted('Demo-Zugang · $expiry'),
+                            ],
+                          ),
+                        ),
+                        KButton(
+                          label: 'Widerrufen',
+                          variant: KButtonVariant.secondary,
+                          onPressed: () => setState(() => tokens.removeAt(i)),
+                        ),
                       ],
                     ),
-                  ),
-                  KButton(
-                    label: 'Widerrufen',
-                    variant: KButtonVariant.secondary,
-                    onPressed: () => setState(() => tokens.removeAt(i)),
-                  ),
-                ],
-              ),
             ),
           if (tokens.isEmpty)
             const SgInset(child: KText('Noch keine Zugänge.')),

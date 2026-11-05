@@ -22,8 +22,11 @@ body {
   justify-items: center;
 }
 .k-gallery > * {
+  box-sizing: border-box;
   min-width: 0;
-  max-width: 100%;
+  /* The frame wins over fixture max-widths: nothing is wider than the
+     screen the gallery emulates. */
+  max-width: 100% !important;
 }
 .k-foundation-preview {
   width: min(640px, 100%);

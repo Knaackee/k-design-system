@@ -29,6 +29,25 @@ version is tagged.
   the unscaled optical size at large text sizes.
 - Web `.k-text` breaks long words like Flutter; `KProgress` meta wraps;
   `KShowcaseGrid` foreground scrolls at large text; activity legend wraps.
+- Both phone gates now fail at every text scale up to 3.0 and have no
+  exception list; Web stories that do not load fail too.
+- Faster gates: the Flutter phone gate runs as six shard processes in
+  parallel (`pnpm gate:phone-flutter`, part of `pnpm verify`; about 6 min
+  instead of 14 on two cores, and no longer killed for memory); the Web phone
+  gate loads each story once per phone size and steps the text scale in
+  place (about 9 min instead of 20).
+- Web layout (breaking for layouts that relied on overflow): `.k-layout` and
+  its children are capped at the parent width; text, truncated content and
+  nested layouts in a `KInline` shrink like Flutter `Flexible`; size
+  containers (`KUsageDetails`, `KSortableTree`, `KShowcaseGrid`,
+  `KPagination`) take the full width; implicit grid columns of components are
+  `minmax(0, 1fr)`; component text breaks long words; `KBadge` wraps instead
+  of overflowing; `KButton`'s hit area bleeds vertically only (icon buttons
+  in both axes); `KPopover` and integration admin actions stay in bounds.
+- Flutter large-text layouts: `KCarousel` slide height scales with the system text size;
+  `KCatalogEditorDialog` scrolls its header with the form; `KDataTable`
+  single-column trailing, `KOfferOverview` price and `KWebSearch` status move
+  under the title from 1.3x; `KQuestionnaire` actions wrap.
 - Added opt-in follow-up submission during active chat responses on Web and
   Flutter, preserving the stop action and submission controls.
 - Made standard presentation cards compact with accessible icon actions while

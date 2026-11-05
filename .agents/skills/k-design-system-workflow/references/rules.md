@@ -47,10 +47,15 @@ assertions. The others are review rules.
 
 - System text scale is capped per role: headings 2.0, controls and body 3.0.
   From 1.3× rows stack (Flutter automatically; Web via `setKTextScale`).
-- Every screen must work at 1.3 (common Android default) without clipping and
-  at 2.0 with scrolling (gating). 3.0 is measured and reported; aim for it.
+- Every screen must work at 1.3 (common Android default) without clipping
+  and up to 3.0 with scrolling. Both phone gates fail at any scale up to 3.0.
   Pages scroll; fixed-height containers hold only single-line, truncatable
   text. Stages and previews use `minHeight`, never a fixed `height`.
+- Text + trailing value/action rows: from 1.3× the trailing part moves under
+  the text (Flutter `MediaQuery.textScalerOf(context).scale(1) >= 1.3`, Web
+  `[data-text-large]`). Action rows wrap (`Wrap`, `KInline(wrap: true)`).
+- Headers of dialogs and full-screen sheets scroll with the content at large
+  text; chart axes show fewer ticks instead of shrinking them.
 - Long words break instead of overflowing (Flutter does this natively; Web
   `.k-text` uses `overflow-wrap: break-word`).
 

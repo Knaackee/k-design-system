@@ -99,21 +99,35 @@ Enforced by `tooling/check-ui-rules.mjs` and debug assertions:
 
 ### 6. Gates that keep Web and Flutter honest on phones
 
-| Gate                                                                               | Runs                                                                                                              | Fails on                                                                                                                   |
-| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `apps/widgetbook/test/phone_gate_test.dart`                                        | every Widgetbook use case (knob use cases included) at 360×740 and 393×852, iOS and Android, text 1.0/1.3/2.0/3.0 | a RenderFlex overflow up to 2.0; 3.0 is reported as LARGE                                                                  |
-| `tooling/web-phone-gate.mjs` (`pnpm gate:phone-web`)                               | every Storybook story at 360 and 393 CSS px, coarse pointer, same text scales                                     | horizontal page overflow or an element past the right edge outside a scrolling/clipping container, up to 2.0; 3.0 reported |
-| `geometry_parity_test.dart` + `tooling/geometry-parity.mjs` (`pnpm gate:geometry`) | the shared reference `Review/GeometryParity` on phone (393, touch) and desktop (1280, pointer) at 1.0/1.3/2.0     | any size difference above 1 px between Flutter and Web                                                                     |
+| Gate                                                                               | Runs                                                                                                                                               | Fails on                                                                                                                                         |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `apps/widgetbook/test/gates/phone_gate.dart` (`pnpm gate:phone-flutter`, 6 shards) | every Widgetbook use case (knob use cases included) at 360×740 and 393×852, iOS and Android, text 1.0/1.3/2.0/3.0, each configuration opened fresh | any RenderFlex overflow                                                                                                                          |
+| `tooling/web-phone-gate.mjs` (`pnpm gate:phone-web`)                               | every Storybook story at 360 and 393 CSS px, coarse pointer, overlay scrollbars, same text scales                                                  | horizontal page overflow, an element past the right edge outside a scrolling/clipping container, or a story that does not load (after one retry) |
+| `geometry_parity_test.dart` + `tooling/geometry-parity.mjs` (`pnpm gate:geometry`) | the shared reference `Review/GeometryParity` on phone (393, touch) and desktop (1280, pointer) at 1.0/1.3/2.0                                      | any size difference above 1 px between Flutter and Web                                                                                           |
 
-Stories that already overflowed on Web when the gate was introduced are
-listed with their finding in `tooling/web-phone-gate.known.json` (42 at
-introduction, mostly gallery fixtures with fixed widths or non-wrapping rows).
-The list only shrinks: a new story failing fails the gate, and so does a
-listed story that passes (remove its entry).
+Both phone gates go up to 300 %, the body/control cap; WCAG 1.4.4 asks for
+200 %. There is no exception list. Use cases that need a device or network
+(maps, media, embedded browser, remote images) are listed as skipped, never
+as passed. Flutter use cases that throw something other than an overflow (a
+map platform view inside a screen, a framework assertion) are listed as NOTE;
+their layout is still checked.
 
-200 % is the requirement (WCAG 1.4.4); 300 % is the target and becomes
-gating once the LARGE list is empty. Headless limitations (maps, media,
-embedded browser, remote images) are listed as skipped, never as passed.
+What the 300 % pass required, as rules for new work:
+
+- Rows of text plus a trailing value or action stack from 1.3× (Flutter
+  `MediaQuery.textScalerOf`, Web `[data-text-large]`), so neither the title
+  nor a number truncates. Library examples: `KDataTable` single column,
+  `KOfferOverview`, `KWebSearch`, `KQuestionnaire` actions (wrap).
+- Headers of dialogs scroll with the content at large text
+  (`KCatalogEditorDialog`); fixed stages use a minimum height.
+- Flutter `KCarousel` scales its slide height with the system text size (Web
+  slides size to their content).
+- Web layout children never exceed their parent (`.k-layout`,
+  `.k-layout > *`, size containers get `width: 100%`, implicit grid columns
+  are `minmax(0, 1fr)`); text and nested layouts in a row shrink like
+  Flutter's `Flexible`; long words break; badges wrap like Flutter's
+  flexible label; a button's hit area bleeds vertically only.
+
 Optical size (`opsz`) follows the _scaled_ font size on both platforms; Web
 does this through `font-optical-sizing: auto`, Flutter components pass the
 `TextScaler` to their text styles.

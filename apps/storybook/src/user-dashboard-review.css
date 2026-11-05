@@ -709,3 +709,10 @@
 .ud-free + .ud-box .ud-copy small {
   white-space: normal;
 }
+/* Large system text: numbers never truncate, so metric tiles take a row each
+   instead of two per row (rules.md: Wrapping). */
+@container user-dashboard (max-width: 599px) {
+  [data-text-large] .ud-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

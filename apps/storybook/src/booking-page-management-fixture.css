@@ -55,6 +55,10 @@
 .booking-management-media small {
   display: block;
 }
+.booking-management-media > div {
+  flex: 1;
+  min-width: 0;
+}
 .booking-management-media small {
   color: var(--k-color-text-muted);
   margin: 2px 0 8px;

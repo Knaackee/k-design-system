@@ -241,6 +241,7 @@
 }
 .k-pagination {
   container-type: inline-size;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -341,6 +342,7 @@
 .k-popover {
   position: relative;
   display: inline-flex;
+  max-width: 100%;
 }
 .k-popover__content {
   position: fixed;
@@ -796,7 +798,12 @@
   display: inline-flex;
   align-items: center;
   gap: var(--k-component-badge-content-gap);
-  min-height: var(--k-component-badge-min-height);
+  /* Border-box (below) so `max-width: 100%` includes padding; the token
+     minimum stays a content height, as in Flutter. */
+  min-height: calc(
+    var(--k-component-badge-min-height) + 2 *
+      var(--k-component-badge-padding-block) + 2 * var(--k-border-width-default)
+  );
   padding: var(--k-component-badge-padding-block)
     var(--k-component-badge-padding-inline);
   border: var(--k-border-width-default) solid transparent;
@@ -804,7 +811,10 @@
   font: var(--k-font-control-weight)
     calc(var(--k-font-caption-size) * var(--k-text-scale, 1))/1
     var(--k-font-family);
-  white-space: nowrap;
+  /* Like Flutter's Flexible label: one line when it fits, wraps when the
+     row cannot hold it (narrow screens, large text). */
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .k-badge[data-variant="primary"] {
   background: var(--k-component-badge-primary-background);

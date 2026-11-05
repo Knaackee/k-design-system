@@ -247,26 +247,19 @@ class _SgPaymentsState extends State<SgPayments> {
             children: [
               for (final p in todo)
                 SgInset(
-                  child: KInline(
-                    gap: KLayoutGap.control,
-                    children: [
-                      KAvatar(alt: p.name),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            KText(p.name),
-                            SgMuted(
-                              '${p.service} · ${p.time} · ${euro(p.amount)}',
-                            ),
-                          ],
-                        ),
-                      ),
-                      KButton(
-                        label: 'Bestätigen',
-                        onPressed: () => setState(() => p.state = 'Bezahlt'),
-                      ),
-                    ],
+                  child: SgAdaptiveRow(
+                    leading: KAvatar(alt: p.name),
+                    body: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        KText(p.name),
+                        SgMuted('${p.service} · ${p.time} · ${euro(p.amount)}'),
+                      ],
+                    ),
+                    trailing: KButton(
+                      label: 'Bestätigen',
+                      onPressed: () => setState(() => p.state = 'Bezahlt'),
+                    ),
                   ),
                 ),
             ],
@@ -304,30 +297,22 @@ class _SgPaymentsState extends State<SgPayments> {
                       variant: KButtonVariant.ghost,
                       onPressed: () => _details(context, p),
                       content: SgInset(
-                        child: KInline(
-                          gap: KLayoutGap.control,
-                          children: [
-                            KAvatar(alt: p.name),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  KText(p.name),
-                                  SgMuted('${p.service} · ${p.time}'),
-                                ],
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                KText(euro(p.amount)),
-                                SgStatus(
-                                  p.state,
-                                  success: p.state == 'Bezahlt',
-                                ),
-                              ],
-                            ),
-                          ],
+                        child: SgAdaptiveRow(
+                          leading: KAvatar(alt: p.name),
+                          body: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              KText(p.name),
+                              SgMuted('${p.service} · ${p.time}'),
+                            ],
+                          ),
+                          trailing: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              KText(euro(p.amount)),
+                              SgStatus(p.state, success: p.state == 'Bezahlt'),
+                            ],
+                          ),
                         ),
                       ),
                     ),

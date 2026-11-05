@@ -400,11 +400,16 @@ export function KEmojiPicker({
             props.renderItem ? (
               props.renderItem(resolve(item))
             ) : (
+              // ~1,900 SVG emoji: decode only the ones near the visible part
+              // of the grid. Eager decoding blocked a phone's main thread
+              // (76 s on a software-rendered phone emulation).
               <img
                 width={24}
                 height={24}
                 alt=""
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 src={`data:image/svg+xml,${encodeURIComponent(resolve(item).svg)}`}
               />
             )

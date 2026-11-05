@@ -434,7 +434,7 @@ export function DataTableFixture({
               </KFilterBar>
             }
           />
-          <KInline>
+          <KInline wrap>
             <KCheckbox
               label="Delay save"
               value={delayed}

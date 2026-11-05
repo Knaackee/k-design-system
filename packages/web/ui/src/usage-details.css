@@ -1,5 +1,8 @@
 .k-usage-details {
   container-type: inline-size;
+  /* A size container has no intrinsic width; without this it collapses to
+     zero in shrink-to-fit parents (centred grid items, flex rows). */
+  width: 100%;
   min-width: 0;
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);

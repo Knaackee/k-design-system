@@ -349,3 +349,35 @@ class SgProfileAvatarFallback extends StatelessWidget {
     ),
   );
 }
+
+/// Row with leading visual, text and a trailing value or action. From 1.3x
+/// system text the trailing part moves under the text (rules.md: Wrapping),
+/// so neither the title nor a number has to truncate.
+class SgAdaptiveRow extends StatelessWidget {
+  const SgAdaptiveRow({super.key, this.leading, required this.body, this.trailing});
+
+  final Widget? leading;
+  final Widget body;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final large = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
+    return KInline(
+      gap: KLayoutGap.control,
+      children: [
+        ?leading,
+        Expanded(
+          child: large && trailing != null
+              ? KStack(
+                  gap: KLayoutGap.control,
+                  align: KLayoutAlign.start,
+                  children: [body, trailing!],
+                )
+              : body,
+        ),
+        if (!large && trailing != null) trailing!,
+      ],
+    );
+  }
+}

@@ -108,6 +108,7 @@ class _HomeOverviewFixtureState extends State<HomeOverviewFixture> {
                     muted('Nächster Termin'),
                     KInline(
                       align: KLayoutAlign.center,
+                      wrap: true,
                       children: [
                         const KText('10:40', variant: KTextVariant.heading1),
                         muted('in 25 Min.'),
@@ -231,8 +232,12 @@ class _HomeOverviewFixtureState extends State<HomeOverviewFixture> {
                   gap: KLayoutGap.section,
                   children: [
                     widget.newAccount ? newCard : next,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // Wraps the action under the heading at large text.
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 8,
                       children: [
                         heading('Heute'),
                         button('Mein Tag', secondary: true),

@@ -42,7 +42,7 @@ function ThemeSwitcherFixture() {
         <KText variant="bodySmall">
           Selected: {value} · Effective: {theme}
         </KText>
-        <KInline gap="control">
+        <KInline gap="control" wrap>
           <KButton>Primary action</KButton>
           <KButton variant="secondary">Secondary action</KButton>
         </KInline>

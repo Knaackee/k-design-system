@@ -194,12 +194,13 @@ extension _DashboardSections on _UserDashboardReviewState {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              for (final label
-                  in period == 7
-                      ? ['Do', 'Fr', 'Sa', 'So', 'Mo', 'Di', 'Mi']
-                      : period == 30
-                      ? ['6. Okt', '20. Okt', '4. Nov']
-                      : ['Aug', 'Sep', 'Okt', 'Nov'])
+              for (final label in axisLabels(
+                period == 7
+                    ? ['Do', 'Fr', 'Sa', 'So', 'Mo', 'Di', 'Mi']
+                    : period == 30
+                    ? ['6. Okt', '20. Okt', '4. Nov']
+                    : ['Aug', 'Sep', 'Okt', 'Nov'],
+              ))
                 muted(label),
             ],
           ),

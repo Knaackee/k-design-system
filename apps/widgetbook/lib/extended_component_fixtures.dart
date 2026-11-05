@@ -148,8 +148,10 @@ class _ExtendedComponentFixtureState extends State<ExtendedComponentFixture> {
         const KProgress(label: Text('Preparing workspace')),
       ],
     ),
-    'questionnaire' =>
-      done
+    'questionnaire' => SingleChildScrollView(
+      // The page scrolls at large system text; the questionnaire card keeps
+      // its natural height.
+      child: done
           ? const Text('Plan saved.')
           : KQuestionnaire(
               step: step,
@@ -191,6 +193,7 @@ class _ExtendedComponentFixtureState extends State<ExtendedComponentFixture> {
                 ),
               ],
             ),
+    ),
     'skeleton' => const Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

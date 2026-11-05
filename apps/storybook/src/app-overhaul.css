@@ -846,3 +846,8 @@
 .ao-customer-details .ao-section {
   margin: 0;
 }
+/* Suggestion buttons stay inside the column; their labels truncate. */
+.ao-empty > .k-layout {
+  justify-self: stretch;
+  min-width: 0;
+}

@@ -1,25 +1,21 @@
 #!/usr/bin/env node
 // Web phone gate (Decision 0010) — the Storybook twin of
-// apps/widgetbook/test/phone_gate_test.dart.
+// apps/widgetbook/test/gates/phone_gate.dart (`pnpm gate:phone-flutter`).
 //
 // Renders every story of the built Storybook (apps/storybook/storybook-static)
 // on phone viewports (360 and 393 CSS px) with a coarse primary pointer at
-// text scales 1.0, 1.3 and 2.0, and fails when a story overflows the screen
-// horizontally:
+// text scales 1.0, 1.3, 2.0 and 3.0 (the body/control cap), and fails when a
+// story overflows the screen horizontally:
 //
 //   page-overflow   the document is wider than the viewport
 //   offscreen       a visible element ends beyond the right edge and is not
 //                   inside a horizontally scrolling or clipping container
 //
-// 3.0 is measured and reported, but does not fail the gate (see ADR 0010).
+// A story that does not load (timeout, crash) is retried once and then fails
+// the gate: an unverified story is not a passed one. Only stories that need a
+// device or network (`headless`) are skipped, and the report lists them.
 //
-// Known findings: tooling/web-phone-gate.known.json lists stories that
-// overflowed when the gate was introduced, each with the finding. They are
-// reported as KNOWN and do not fail; a new story failing does, and so does a
-// listed story that now passes (STALE: delete its entry). The list only
-// shrinks. `--write-known` rewrites it from the current run (review the diff).
-//
-// Usage: node tooling/web-phone-gate.mjs [--filter <substring>] [--json]
+// Usage: node tooling/web-phone-gate.mjs [--filter <a|b|id>] [--json]
 // Requires `pnpm build:storybook` first. Writes build/web-phone-gate.txt.
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
@@ -33,15 +29,12 @@ const filter = args.includes("--filter")
   ? args[args.indexOf("--filter") + 1]
   : "";
 const json = args.includes("--json");
-const writeKnown = args.includes("--write-known");
-const knownFile = join(root, "tooling/web-phone-gate.known.json");
 
 export const phones = [
   { width: 360, height: 740 },
   { width: 393, height: 852 },
 ];
-export const gatingScales = [1, 1.3, 2];
-export const reportScales = [3];
+export const scales = [1, 1.3, 2, 3];
 
 // Stories that need a device, network or WebGL; mirrors `_headless` in the
 // Flutter gate. Each entry needs a reason; the report still lists them.
@@ -130,7 +123,14 @@ async function main() {
   const stories = Object.values(index.entries).filter(
     (entry) =>
       entry.type === "story" &&
-      (!filter || `${entry.title}/${entry.name}`.includes(filter)),
+      (!filter ||
+        filter
+          .split("|")
+          .some(
+            (part) =>
+              `${entry.title}/${entry.name}`.includes(part) ||
+              entry.id === part,
+          )),
   );
   // Playwright is a machine tool, not a repo dependency; resolve it the way
   // CommonJS does (NODE_PATH / global install).
@@ -139,7 +139,7 @@ async function main() {
   const server = await serve();
   const base = `http://127.0.0.1:${server.address().port}`;
   const failures = [];
-  const large = [];
+  const unloaded = [];
   const skipped = [];
 
   const concurrency = Number(process.env.K_PHONE_GATE_WORKERS ?? 8);
@@ -151,6 +151,16 @@ async function main() {
       isMobile: true,
       deviceScaleFactor: 1,
     });
+    // Phones draw overlay scrollbars that take no width. Headless Chromium
+    // reserves a classic one, which scroll locks (sheets, dialogs) then
+    // compensate with padding and report as overflow.
+    await context.addInitScript(() => {
+      addEventListener("DOMContentLoaded", () => {
+        const style = document.createElement("style");
+        style.textContent = "html { scrollbar-width: none; }";
+        document.head.append(style);
+      });
+    });
     const queue = [...stories];
     const check = async (page, story) => {
       const key = `${story.title}/${story.name}`;
@@ -161,93 +171,98 @@ async function main() {
         if (phone === phones[0]) skipped.push(`${key} (${reason[1]})`);
         return;
       }
-      for (const scale of [...gatingScales, ...reportScales]) {
-        const url = `${base}/iframe.html?id=${story.id}&viewMode=story&globals=textScale:${scale}`;
-        let findings;
+      // Load once per phone, then step the text scale in place the way the
+      // Storybook decorator applies it (setKTextScale: `--k-text-scale` and
+      // `data-text-large`). One load instead of one per scale keeps the gate
+      // at a quarter of the time; layout reacts to the CSS change exactly as
+      // to an in-app text size setting.
+      const url = `${base}/iframe.html?id=${story.id}&viewMode=story&globals=textScale:1`;
+      let loaded = false;
+      let lastError;
+      for (let attempt = 0; attempt < 2 && !loaded; attempt++) {
         try {
-          await page.goto(url, { waitUntil: "load", timeout: 30000 });
-          await page.waitForSelector("#storybook-root > *", { timeout: 10000 });
-          await page.waitForTimeout(150);
-          findings = await page.evaluate(measure);
+          // DOM ready, not "load": a story that requests a blocked remote asset
+          // never fires "load", but renders.
+          await page.goto(url, {
+            waitUntil: "domcontentloaded",
+            timeout: 45000,
+          });
+          await page.waitForSelector("#storybook-root > *", {
+            timeout: 15000,
+          });
+          loaded = true;
         } catch (error) {
-          if (phone === phones[0] && scale === 1)
-            skipped.push(`${key} (${String(error).split("\n")[0]})`);
-          return;
+          lastError = error;
         }
-        if (findings.length === 0) continue;
-        const line = `${key} @ ${phone.width} text ${scale}x: ${findings.join("; ")}`;
-        if (gatingScales.includes(scale)) {
-          failures.push(line);
-          return; // one finding per story is enough to act on
+      }
+      if (!loaded) {
+        unloaded.push(
+          `${key} @ ${phone.width}: ${String(lastError).split("\n")[0]}`,
+        );
+        return;
+      }
+      for (const scale of scales) {
+        await page.evaluate(async (scale) => {
+          const root = document.documentElement;
+          root.style.setProperty("--k-text-scale", String(scale));
+          root.toggleAttribute("data-text-large", scale >= 1.3);
+          // Force style and layout, then give ResizeObserver-driven updates
+          // a turn. Timers, not animation frames: pages that are not in
+          // front get no frames in headless Chromium.
+          void document.body.offsetHeight;
+          await new Promise((done) => setTimeout(done, 60));
+          void document.body.offsetHeight;
+        }, scale);
+        let result = await page.evaluate(measure);
+        if (result.length) {
+          // Confirm after transitions and late layout settle; a loaded CI
+          // runner must not turn a mid-animation frame into a failure.
+          await page.waitForTimeout(400);
+          result = await page.evaluate(measure);
         }
-        large.push(line);
+        if (result.length === 0) continue;
+        failures.push(
+          `${key} @ ${phone.width} text ${scale}x: ${result.join("; ")}`,
+        );
+        return; // one finding per story is enough to act on
       }
     };
     await Promise.all(
       Array.from({ length: concurrency }, async () => {
-        const page = await context.newPage();
         for (let story; (story = queue.shift());) {
+          // A fresh page per story: timers, pending navigations and history
+          // changes of one story never reach the next.
+          const page = await context.newPage();
           await check(page, story);
+          await page.close();
           if (++done % 100 === 0)
             process.stderr.write(
               `  ${done}/${stories.length * phones.length}\n`,
             );
         }
-        await page.close();
       }),
     );
     await context.close();
   }
   failures.sort();
-  large.sort();
+  unloaded.sort();
   skipped.sort();
   await browser.close();
   server.close();
 
-  const known = JSON.parse(await readFile(knownFile, "utf8").catch(() => "{}"));
-  const storyOf = (line) => line.slice(0, line.indexOf(" @ "));
-  const failing = new Set(failures.map(storyOf));
-  const fresh = failures.filter((line) => !(storyOf(line) in known));
-  const listed = failures.filter((line) => storyOf(line) in known);
-  const stale = filter
-    ? []
-    : Object.keys(known).filter((key) => !failing.has(key));
-  if (writeKnown) {
-    const next = Object.fromEntries(
-      [...new Set(failures.map(storyOf))].sort().map((key) => [
-        key,
-        known[key] ??
-          failures
-            .find((line) => storyOf(line) === key)
-            .split(": ")
-            .slice(1)
-            .join(": "),
-      ]),
-    );
-    await writeFile(knownFile, JSON.stringify(next, null, 2) + "\n");
-  }
-
   const report = [
-    `Web phone gate: ${stories.length} stories, ${fresh.length} new overflow(s), ` +
-      `${listed.length} known, ${stale.length} stale known entr${stale.length === 1 ? "y" : "ies"}, ` +
-      `${large.length} at 3.0x (reported), ${skipped.length} skipped (not verified).`,
-    ...fresh.map((line) => `  OVERFLOW ${line}`),
-    ...stale.map(
-      (key) =>
-        `  STALE    ${key} passes now; remove it from web-phone-gate.known.json`,
-    ),
-    ...listed.map((line) => `  KNOWN    ${line}`),
-    ...large.map((line) => `  LARGE    ${line}`),
+    `Web phone gate: ${stories.length} stories, ${failures.length} overflow(s), ` +
+      `${unloaded.length} not loaded, ${skipped.length} skipped (need a device or network).`,
+    ...failures.map((line) => `  OVERFLOW ${line}`),
+    ...unloaded.map((line) => `  NOLOAD   ${line}`),
     ...skipped.map((line) => `  skipped  ${line}`),
   ].join("\n");
   await mkdir(join(root, "build"), { recursive: true });
   await writeFile(join(root, "build/web-phone-gate.txt"), report + "\n");
   if (json)
-    console.log(
-      JSON.stringify({ fresh, stale, listed, large, skipped }, null, 2),
-    );
+    console.log(JSON.stringify({ failures, unloaded, skipped }, null, 2));
   else console.log(report);
-  process.exitCode = fresh.length || (stale.length && !writeKnown) ? 1 : 0;
+  process.exitCode = failures.length || unloaded.length ? 1 : 0;
 }
 
 await main();

@@ -450,7 +450,17 @@ class _KMapState extends State<KMap> {
     final radius = BorderRadius.circular(tokens.radiusCard);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final box = _viewportKey.currentContext?.findRenderObject();
+      // The map can leave the tree before the frame ends (navigation, a
+      // rebuilt screen), or its platform view can fail to build (no MapLibre
+      // on this platform); its viewport has no render object then.
+      final viewport = _viewportKey.currentContext as Element?;
+      if (!mounted || viewport == null || viewport.debugIsDefunct) return;
+      RenderObject? box;
+      try {
+        box = viewport.findRenderObject();
+      } on FlutterError {
+        return; // debug-only assertion for an inactive or failed element
+      }
       if (box is RenderBox && box.hasSize) {
         _publicController.viewport = box.localToGlobal(Offset.zero) & box.size;
         if (widget.fitContentOnLoad && !_initialFitComplete) {

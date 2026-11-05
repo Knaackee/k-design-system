@@ -46,9 +46,9 @@ class KCatalogEditorDialog extends StatelessWidget {
                   tone: KSurfaceTone.canvas,
                   radius: phone ? KSurfaceRadius.none : KSurfaceRadius.overlay,
                   border: phone ? KSurfaceBorder.none : KSurfaceBorder.standard,
-                  child: Column(
-                    children: [
-                      Padding(
+                  child: Builder(
+                    builder: (context) {
+                      final header = Padding(
                         padding: EdgeInsets.all(gutter),
                         child: Row(
                           children: [
@@ -88,29 +88,48 @@ class KCatalogEditorDialog extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.fromLTRB(
-                            gutter,
-                            0,
-                            gutter,
-                            gutter,
-                          ),
-                          child: child,
-                        ),
-                      ),
-                      if (actions != null)
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(color: t.colorBorderDefault),
+                      );
+                      final body = Padding(
+                        padding: EdgeInsets.fromLTRB(gutter, 0, gutter, gutter),
+                        child: child,
+                      );
+                      // Large system text: the header scrolls with the form
+                      // and the footer caps its height, so the editable
+                      // content always keeps room (Decision 0010).
+                      final large =
+                          MediaQuery.textScalerOf(context).scale(1) >= 1.3;
+                      return Column(
+                        children: [
+                          if (!large) header,
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: large
+                                  ? Column(children: [header, body])
+                                  : body,
                             ),
                           ),
-                          padding: EdgeInsets.all(gutter),
-                          child: actions,
-                        ),
-                    ],
+                          if (actions != null)
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight: constraints.maxHeight * .4,
+                              ),
+                              child: SingleChildScrollView(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: t.colorBorderDefault,
+                                      ),
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(gutter),
+                                  child: actions,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),

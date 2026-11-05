@@ -67,6 +67,11 @@
   min-width: 0;
   height: var(--k-component-symbol-picker-cell-size);
 }
+/* Off-screen cells skip layout and paint (large catalogues). */
+.k-symbol-grid button {
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--k-component-symbol-picker-cell-size);
+}
 .k-symbol-footer {
   justify-content: flex-end;
   border-top: var(--k-border-width-default) solid var(--k-color-border-default);

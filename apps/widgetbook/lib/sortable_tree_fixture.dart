@@ -228,6 +228,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final large = MediaQuery.textScalerOf(context).scale(1) >= 2;
     return SingleChildScrollView(
       child: Align(
         alignment: Alignment.topCenter,
@@ -298,7 +299,16 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                 ),
                 KSortableTree<Offer>(
                   nodes: nodes,
-                  minRowHeight: t.sizeControl * 2 + t.spaceControlGap * 3,
+                  // Large text: the price takes its own line (numbers never
+                  // truncate), so rows reserve three scaled lines.
+                  minRowHeight: large
+                      ? MediaQuery.textScalerOf(context).scale(
+                              t.fontBodySmallLineHeight * 2 +
+                                  t.fontCaptionLineHeight,
+                            ) +
+                            t.spaceControlGap * 2 +
+                            t.borderWidthDefault * 2
+                      : t.sizeControl * 2 + t.spaceControlGap * 3,
                   ariaLabel: 'Kategorien und Angebote',
                   maxDepth: widget.kind == 'deep' ? null : 1,
                   canMove: (move) =>
@@ -362,33 +372,52 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: KText(
-                              c.node.label,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              variant: KTextVariant.bodySmall,
-                            ),
+                      if (large) ...[
+                        KText(
+                          c.node.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          variant: KTextVariant.bodySmall,
+                        ),
+                        if (c.node.data != null)
+                          KText(
+                            c.node.data!.price,
+                            variant: KTextVariant.bodySmall,
                           ),
-                          if (c.node.data != null)
-                            KText(
-                              c.node.data!.price,
-                              variant: KTextVariant.bodySmall,
+                      ] else
+                        Row(
+                          children: [
+                            Expanded(
+                              child: KText(
+                                c.node.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                variant: KTextVariant.bodySmall,
+                              ),
                             ),
-                        ],
-                      ),
+                            if (c.node.data != null)
+                              KText(
+                                c.node.data!.price,
+                                variant: KTextVariant.bodySmall,
+                              ),
+                          ],
+                        ),
                       if (c.node.children != null && !c.expanded)
                         KText(
                           '${c.node.children!.length} Einträge',
                           variant: KTextVariant.caption,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: t.colorTextMuted),
                         ),
                       if (c.node.data != null)
+                        // Rows have a fixed extent for drag motion: secondary
+                        // lines stay single-line and truncate.
                         KText(
                           c.node.data!.detail,
                           variant: KTextVariant.caption,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: t.colorTextMuted),
                         ),
                     ],

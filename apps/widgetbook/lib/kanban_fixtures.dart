@@ -159,37 +159,42 @@ class _KanbanFixtureState extends State<KanbanFixture> {
             ? constraints.maxHeight - tokens.spaceLayoutGutter * 2
             : 640.0;
         final height = available.clamp(480.0, 680.0).toDouble();
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            KKanban<_DemoCard>(
-              columns: _columns,
-              itemId: (item) => item.id,
-              itemLabel: (item) => item.title,
-              selectedItemIds: _selected,
-              onSelectionChanged: (value) => setState(() => _selected = value),
-              onCardOpen: (item, _) =>
-                  setState(() => _message = 'Opened ${item.id}'),
-              onAddCard: (columnId) =>
-                  setState(() => _message = 'Add requested for $columnId'),
-              onCardMove: _move,
-              height: height,
-              cardBuilder: (context, card) => _KanbanCard(
-                item: card.item,
-                selected: card.selected,
-                onSelected: card.toggleSelected,
-                onAction: () => setState(
-                  () => _message = 'Actions requested for ${card.item.id}',
+        // The board keeps its height; the page scrolls when large text
+        // makes the status line below it taller than the remaining space.
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              KKanban<_DemoCard>(
+                columns: _columns,
+                itemId: (item) => item.id,
+                itemLabel: (item) => item.title,
+                selectedItemIds: _selected,
+                onSelectionChanged: (value) =>
+                    setState(() => _selected = value),
+                onCardOpen: (item, _) =>
+                    setState(() => _message = 'Opened ${item.id}'),
+                onAddCard: (columnId) =>
+                    setState(() => _message = 'Add requested for $columnId'),
+                onCardMove: _move,
+                height: height,
+                cardBuilder: (context, card) => _KanbanCard(
+                  item: card.item,
+                  selected: card.selected,
+                  onSelected: card.toggleSelected,
+                  onAction: () => setState(
+                    () => _message = 'Actions requested for ${card.item.id}',
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: tokens.spaceLayoutGutter,
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: tokens.spaceLayoutGutter,
+                ),
+                child: Semantics(liveRegion: true, child: Text(_message)),
               ),
-              child: Semantics(liveRegion: true, child: Text(_message)),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

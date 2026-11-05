@@ -37,6 +37,7 @@ class KDataTableSingleRow<T> extends StatelessWidget {
     final tokens =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
+    final large = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
     return Semantics(
       label: content.semanticsLabel(row),
       button: true,
@@ -57,10 +58,22 @@ class KDataTableSingleRow<T> extends StatelessWidget {
                   content.leading!(row),
                   SizedBox(width: tokens.spaceControlGap * 2 + 4),
                 ],
-                Expanded(child: content.title(row)),
-                if (content.trailing != null) ...[
-                  SizedBox(width: tokens.spaceControlGap),
-                  content.trailing!(row),
+                // From 1.3x the trailing value moves under the title so the
+                // title keeps the row (Decision 0010).
+                if (large && content.trailing != null)
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: tokens.spaceMicro,
+                      children: [content.title(row), content.trailing!(row)],
+                    ),
+                  )
+                else ...[
+                  Expanded(child: content.title(row)),
+                  if (content.trailing != null) ...[
+                    SizedBox(width: tokens.spaceControlGap),
+                    content.trailing!(row),
+                  ],
                 ],
               ],
             ),

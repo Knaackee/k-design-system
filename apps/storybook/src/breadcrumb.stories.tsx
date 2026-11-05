@@ -18,6 +18,7 @@ export const Responsive: StoryObj<typeof meta> = {
     <div
       style={{
         display: "grid",
+        gridTemplateColumns: "minmax(0, 1fr)",
         gap: "var(--k-space-layout-section-gap)",
         width: "100%",
       }}

@@ -255,6 +255,12 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
           ],
         )
       : stack([left, right]);
+
+  /// Axis ticks: at large system text only the first and last tick fit.
+  List<String> axisLabels(List<String> labels) =>
+      MediaQuery.textScalerOf(context).scale(1) >= 2 && labels.length > 2
+      ? [labels.first, labels.last]
+      : labels;
   Widget muted(String value) => KText(
     value,
     variant: KTextVariant.bodySmall,
@@ -300,9 +306,14 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (title != null) ...[
-          Row(
+          // The end action wraps under the title at large text.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: t.spaceControlGap,
+            runSpacing: t.spaceControlGap,
             children: [
-              Expanded(child: KText(title, variant: KTextVariant.heading4)),
+              KText(title, variant: KTextVariant.heading4),
               ?end,
             ],
           ),
@@ -448,10 +459,12 @@ class _UserDashboardReviewState extends State<UserDashboardReview> {
                   gap: KLayoutGap.control,
                   children: [
                     KIcon(KIconName.car, size: 16, color: brand),
-                    KText(
-                      free ? 'Losfahren um 09:16' : 'Jetzt losfahren',
-                      variant: KTextVariant.label,
-                      style: TextStyle(color: brand),
+                    Flexible(
+                      child: KText(
+                        free ? 'Losfahren um 09:16' : 'Jetzt losfahren',
+                        variant: KTextVariant.label,
+                        style: TextStyle(color: brand),
+                      ),
                     ),
                   ],
                 ),

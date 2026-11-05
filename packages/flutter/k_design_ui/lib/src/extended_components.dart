@@ -1149,29 +1149,37 @@ class KQuestionnaire extends StatelessWidget {
           SizedBox(height: t.spaceLayoutGutter),
           current.content,
           SizedBox(height: t.spaceLayoutGutter),
-          Row(
+          // Back on the start edge, forward actions on the end edge; at
+          // large text or on narrow screens the forward group wraps below.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: t.spaceControlGap,
+            runSpacing: t.spaceControlGap,
             children: [
               KButton(
                 variant: KButtonVariant.secondary,
                 label: previousLabel,
                 onPressed: step > 0 ? () => onStepChanged(step - 1) : null,
               ),
-              const Spacer(),
-              if (current.optional && step < steps.length - 1) ...[
-                KButton(
-                  variant: KButtonVariant.secondary,
-                  label: skipLabel,
-                  onPressed: () => onStepChanged(step + 1),
-                ),
-                SizedBox(width: t.spaceControlGap),
-              ],
-              KButton(
-                label: step == steps.length - 1 ? completeLabel : nextLabel,
-                onPressed: (canContinue?.call(step) ?? true)
-                    ? () => step == steps.length - 1
-                          ? onComplete()
-                          : onStepChanged(step + 1)
-                    : null,
+              Wrap(
+                spacing: t.spaceControlGap,
+                runSpacing: t.spaceControlGap,
+                children: [
+                  if (current.optional && step < steps.length - 1)
+                    KButton(
+                      variant: KButtonVariant.secondary,
+                      label: skipLabel,
+                      onPressed: () => onStepChanged(step + 1),
+                    ),
+                  KButton(
+                    label: step == steps.length - 1 ? completeLabel : nextLabel,
+                    onPressed: (canContinue?.call(step) ?? true)
+                        ? () => step == steps.length - 1
+                              ? onComplete()
+                              : onStepChanged(step + 1)
+                        : null,
+                  ),
+                ],
               ),
             ],
           ),

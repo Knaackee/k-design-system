@@ -85,12 +85,14 @@ node vendor/k-design-system/tooling/check-consumer-ui.mjs src   # Flutter: lib
 Then verify on phone sizes, not only desktop:
 
 - Flutter: run the app (or a widget test through `KAdaptiveTheme`) at
-  360×740 and 393×852 with system text 1.0, 1.3 and 2.0 on iOS and Android.
-  No RenderFlex overflow, no clipped required text, actions reachable.
+  360×740 and 393×852 with system text 1.0, 1.3, 2.0 and 3.0 on iOS and
+  Android. No RenderFlex overflow, no clipped required text, actions
+  reachable.
 - Web: Storybook/browser at 360 and 393 px with `(pointer: coarse)` emulation
-  and text scale 1.3. Inputs are 16 px (no iOS zoom).
-- Library changes additionally pass `apps/widgetbook/test/phone_gate_test.dart`
-  and the Storybook story review in both galleries.
+  and the same text scales. Inputs are 16 px (no iOS zoom).
+- Library changes additionally pass `pnpm gate:phone-flutter`,
+  `pnpm gate:phone-web` and `pnpm gate:geometry`, and the story review in
+  both galleries.
 
 A passing gate is necessary, not sufficient: human gallery acceptance remains
 required for new reusable components.
