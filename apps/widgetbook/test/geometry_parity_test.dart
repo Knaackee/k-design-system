@@ -49,7 +49,10 @@ void main() {
                 size: size,
                 textScaler: TextScaler.linear(scale),
               ),
+              // Same style as the Web side, which runs in desktop Chromium
+              // (the platform-native default would pick apple on iOS).
               child: const KAdaptiveTheme(
+                overrides: KAdaptiveOverrides(style: KStyle.linear),
                 child: KLocalization(
                   locale: 'en',
                   child: Scaffold(
