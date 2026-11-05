@@ -284,14 +284,18 @@ export function KMenuButton({
                     action.onSelect?.();
                   }}
                 >
-                  {action.iconContent ??
-                    (action.icon ? (
-                      <KIcon name={action.icon} color="currentColor" />
-                    ) : null)}
-                  <span>{action.label}</span>
-                  {action.checked ? (
-                    <KIcon name="check" size={16} strokeWidth={1.5} />
-                  ) : null}
+                  <span className="k-menu__icon">
+                    {action.iconContent ??
+                      (action.icon ? (
+                        <KIcon name={action.icon} color="currentColor" />
+                      ) : null)}
+                  </span>
+                  <span className="k-menu__label">{action.label}</span>
+                  <span className="k-menu__trailing" aria-hidden="true">
+                    {action.checked ? (
+                      <KIcon name="check" size={16} strokeWidth={1.5} />
+                    ) : null}
+                  </span>
                 </Item>
               </Fragment>
             );
