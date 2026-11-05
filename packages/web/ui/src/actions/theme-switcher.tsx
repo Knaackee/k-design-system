@@ -1,3 +1,4 @@
+import { useOptionalKHaptics } from "../feedback/haptics.js";
 import { useOptionalKSound } from "../feedback/sound.js";
 import { KButton } from "../primitives/button.js";
 import {
@@ -41,6 +42,7 @@ export function KThemeSwitcher({
   const names = { ...defaultLabels, ...labels };
   const symbols = { ...defaultIcons, ...icons };
   const sound = useOptionalKSound();
+  const haptics = useOptionalKHaptics();
   return (
     <KButton
       aria-label={`${label}: ${names[value]}`}
@@ -50,6 +52,7 @@ export function KThemeSwitcher({
       disabled={disabled}
       onClick={() => {
         void sound?.play("switch");
+        haptics?.perform("selection");
         onValueChange(modes[(modes.indexOf(value) + 1) % modes.length]!);
       }}
     >

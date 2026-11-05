@@ -6,6 +6,13 @@ version is tagged.
 
 ## Unreleased
 
+- Added haptics (Decision 0013): `KHapticCue` (`selection`, `light`,
+  `medium`, `heavy`, `success`, `warning`, `error`), `KHapticController`
+  (off by default, drops cues closer than 60 ms, silent in the background)
+  and `KHapticsProvider` on Web and Flutter. Flutter maps to
+  `HapticFeedback`, Web to `navigator.vibrate` (`isSupported` is false on
+  Safari). `KSwitch`, `KThemeSwitcher` and `KLanguageSwitcher` play a cue when
+  a provider is present. Sound and haptics rules in the skill.
 - Added Apple navigation (Decision 0012): `KBackButton` on Web and Flutter
   (chevron only, accessible label names the destination; mirrors in RTL);
   `KPageTransitionsBuilder`, installed by `kDesignTheme` for iOS/macOS, adds

@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../feedback/k_haptics.dart';
 import '../feedback/k_sound.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
@@ -54,6 +55,7 @@ class KThemeSwitcher extends StatelessWidget {
           ? null
           : () {
               if (sound != null) unawaited(sound.play(KSoundCue.switchCue));
+              kHaptic(context, KHapticCue.selection);
               onChanged(modes[(modes.indexOf(value) + 1) % modes.length]);
             },
       iconContent: KAnimatedIcon(

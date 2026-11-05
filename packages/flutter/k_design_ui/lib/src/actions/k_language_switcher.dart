@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../feedback/k_haptics.dart';
 import '../feedback/k_sound.dart';
 import 'package:flutter/material.dart';
 import '../primitives/k_icon.dart';
@@ -48,8 +49,9 @@ class KLanguageSwitcher extends StatelessWidget {
               iconContent: language.flag,
               checked: language.value == value,
               onSelect: () {
-                if (language.value != value && sound != null) {
-                  unawaited(sound.play(KSoundCue.tap));
+                if (language.value != value) {
+                  if (sound != null) unawaited(sound.play(KSoundCue.tap));
+                  kHaptic(context, KHapticCue.selection);
                 }
                 onChanged(language.value);
               },

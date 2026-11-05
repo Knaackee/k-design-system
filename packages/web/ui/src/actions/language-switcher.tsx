@@ -1,3 +1,4 @@
+import { useOptionalKHaptics } from "../feedback/haptics.js";
 import { useOptionalKSound } from "../feedback/sound.js";
 import type { ReactNode } from "react";
 import { KMenuButton } from "./menu-button.js";
@@ -29,6 +30,7 @@ export function KLanguageSwitcher({
   disabled,
 }: KLanguageSwitcherProps) {
   const sound = useOptionalKSound();
+  const haptics = useOptionalKHaptics();
   return (
     <KMenuButton
       label={`${label}: ${languages.find((language) => language.value === value)?.label ?? value}`}
@@ -42,7 +44,10 @@ export function KLanguageSwitcher({
         iconContent: language.flag,
         checked: language.value === value,
         onSelect: () => {
-          if (language.value !== value) void sound?.play("tap");
+          if (language.value !== value) {
+            void sound?.play("tap");
+            haptics?.perform("selection");
+          }
           onValueChange(language.value);
         },
       }))}

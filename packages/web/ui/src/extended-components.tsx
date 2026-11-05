@@ -16,6 +16,7 @@ import { createPortal } from "react-dom";
 import { KIcon, type KIconName } from "./primitives/icon.js";
 import { KButton } from "./primitives/button.js";
 import { KIconButton } from "./actions/icon-button.js";
+import { useOptionalKHaptics } from "./feedback/haptics.js";
 import { useHorizontalDragScroll } from "./util/use-horizontal-drag-scroll.js";
 import {
   KBottomSheet,
@@ -152,6 +153,7 @@ export function KSwitch({
   className,
   ...props
 }: KSwitchProps) {
+  const haptics = useOptionalKHaptics();
   const control = (
     <button
       type="button"
@@ -160,7 +162,10 @@ export function KSwitch({
       aria-label={label}
       disabled={disabled}
       className={["k-switch", className].filter(Boolean).join(" ")}
-      onClick={() => onCheckedChange(!checked)}
+      onClick={() => {
+        haptics?.perform("light");
+        onCheckedChange(!checked);
+      }}
       {...props}
     >
       <span className="k-switch__thumb" />

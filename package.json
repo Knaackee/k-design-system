@@ -10,7 +10,7 @@
     "generate": "node tooling/generate-tokens.mjs && node tooling/generate-icons.mjs && node tooling/generate-locales.mjs && node tooling/generate-emoji.mjs && node tooling/generate-dicebear-flutter.mjs",
     "generate:check": "node tooling/generate-tokens.mjs --check && node tooling/generate-icons.mjs --check && node tooling/generate-locales.mjs --check && node tooling/generate-emoji.mjs --check && node tooling/generate-dicebear-flutter.mjs --check",
     "test:tooling": "node --test tooling/*.test.mjs",
-    "test:web-ui": "node --test packages/web/ui/image-cropper.test.mjs packages/web/ui/map-style.test.mjs packages/web/ui/map-day-view.test.mjs packages/web/ui/map-overlays.test.mjs packages/web/ui/map-zone-geometry.test.mjs packages/web/ui/map-zone-editor.test.mjs packages/web/ui/map-zone-working-hours.test.mjs packages/web/ui/sortable-tree.test.mjs packages/web/ui/plan-picker.test.mjs packages/web/ui/motion.test.mjs packages/web/ui/back-button.test.mjs",
+    "test:web-ui": "node --test packages/web/ui/image-cropper.test.mjs packages/web/ui/map-style.test.mjs packages/web/ui/map-day-view.test.mjs packages/web/ui/map-overlays.test.mjs packages/web/ui/map-zone-geometry.test.mjs packages/web/ui/map-zone-editor.test.mjs packages/web/ui/map-zone-working-hours.test.mjs packages/web/ui/sortable-tree.test.mjs packages/web/ui/plan-picker.test.mjs packages/web/ui/motion.test.mjs packages/web/ui/back-button.test.mjs packages/web/ui/haptics.test.mjs packages/web/ui/sound.test.mjs",
     "audit:styles": "node tooling/audit-visual-literals.mjs",
     "build:web": "pnpm --filter @k-design-system/tokens build && pnpm --filter @k-design-system/ui build",
     "build:example:web": "pnpm build:web && pnpm --filter @k-design-system/example-web build",

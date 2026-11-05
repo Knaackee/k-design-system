@@ -128,6 +128,7 @@ export 'src/patterns/k_avatar_editor.dart';
 export 'src/patterns/k_showcase_grid.dart';
 export 'src/patterns/k_celebration.dart';
 
+export 'src/feedback/k_haptics.dart';
 export 'src/feedback/k_sound.dart';
 
 export 'src/patterns/k_plan_picker.dart';

@@ -606,6 +606,7 @@ export type { KProgressDotsProps } from "./data-display/progress-dots.js";
 export * from "./patterns/sortable-tree.js";
 export * from "./patterns/showcase-grid.js";
 export * from "./patterns/celebration.js";
+export * from "./feedback/haptics.js";
 export * from "./feedback/sound.js";
 export {
   KQrCode,

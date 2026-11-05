@@ -13,10 +13,13 @@ const source = await readFile(
   new URL("../packages/web/ui/src/extended-components.tsx", import.meta.url),
   "utf8",
 );
-const component = source.slice(
-  source.indexOf("export interface KSwitchProps"),
-  source.indexOf("export interface KSliderProps"),
-);
+// The slice has no imports; the haptics hook is optional (no provider).
+const component =
+  "const useOptionalKHaptics = () => null;\n" +
+  source.slice(
+    source.indexOf("export interface KSwitchProps"),
+    source.indexOf("export interface KSliderProps"),
+  );
 const output = ts
   .transpileModule(component, {
     compilerOptions: {

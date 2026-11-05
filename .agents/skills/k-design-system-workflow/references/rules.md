@@ -164,6 +164,26 @@ var(--k-motion-enter-easing)`. Flutter: `final m = t.motion(KMotionRole.enter)`
 - Loops and script-driven choreography may use their own timing with a
   `k-ui-rules-ignore raw-motion: <reason>` comment.
 
+## Sound and haptics — review (Decision 0013)
+
+- Both are **off by default**. Turning them on is the person's choice (an
+  app setting with `KSoundToggle` or a `KSwitch`); an agent building an app
+  asks whether the product wants them at all before wiring any cue.
+- Never the only feedback: every cue accompanies a visible change, and the
+  interaction works the same when muted or on a device without haptics.
+- Respect the system: Flutter haptics follow iOS System Haptics and Android
+  touch feedback; sound uses the ambient/sonification channel and stops in
+  the background. Web vibration does not exist on Safari (iOS, macOS) —
+  never promise haptics there.
+- Use them sparingly, for a deliberate act and its outcome: selection
+  changes (`selection`), a toggle or drop landing (`light`), the result of an
+  action the person started (`success`, `warning`, `error`). Never for
+  scrolling, hover, typing, focus, timers or anything that repeats quickly
+  (controllers drop cues closer than 60 ms).
+- Built-in controls play cues only through a provider (`KSoundProvider`,
+  `KHapticsProvider`): `KSwitch`, `KThemeSwitcher`, `KLanguageSwitcher`.
+  Without a provider they are silent.
+
 ## Status — review
 
 - Status is text + colour (badge), never colour alone. Dates are relative or

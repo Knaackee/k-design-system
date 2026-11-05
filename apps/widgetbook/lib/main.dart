@@ -89,6 +89,7 @@ import 'agent_chat_switcher_fixture.dart';
 import 'agent_chat_workspace_fixture.dart';
 import 'web_search_fixture.dart';
 import 'foley_sounds_fixture.dart';
+import 'haptics_fixture.dart';
 import 'sound_onboarding_fixture.dart';
 import 'agent_switcher_variants_fixture.dart';
 import 'ask_tools_fixture.dart';
@@ -1467,6 +1468,15 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
           WidgetbookUseCase(
             name: 'onboarding',
             builder: (_) => const SoundOnboardingFixture(),
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'Haptics',
+        children: [
+          WidgetbookUseCase(
+            name: 'haptics-review',
+            builder: (_) => const HapticsFixture(),
           ),
         ],
       ),

@@ -8,6 +8,7 @@ export 'feedback/k_notifications.dart';
 export 'overlays/k_popover.dart';
 
 import 'actions/k_icon_button.dart';
+import 'feedback/k_haptics.dart';
 import 'overlays/k_overlays.dart';
 import 'overlays/k_popover.dart';
 import 'primitives/k_button.dart';
@@ -230,7 +231,12 @@ class KSwitch extends StatelessWidget {
             : SystemMouseCursors.click,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: onChanged == null ? null : () => onChanged!(!value),
+          onTap: onChanged == null
+              ? null
+              : () {
+                  kHaptic(context, KHapticCue.light);
+                  onChanged!(!value);
+                },
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
