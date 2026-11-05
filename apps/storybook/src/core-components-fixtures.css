@@ -1,0 +1,21 @@
+/* Core component fixtures fill the gallery like Widgetbook does. */
+.k-gallery:has(> .cc-fixture) {
+  padding: 0;
+  justify-items: stretch;
+}
+.cc-fixture {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--k-space-layout-gutter);
+}
+.k-gallery:has(> .cc-shell) {
+  height: 100dvh;
+  padding: 0;
+  align-items: stretch;
+  justify-items: stretch;
+  overflow: hidden;
+}
+.cc-shell {
+  width: 100%;
+  height: 100dvh;
+}

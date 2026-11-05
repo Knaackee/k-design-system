@@ -58,3 +58,7 @@
 @import "./patterns/catalog-editor.css";
 @import "./patterns/booking-page-management.css";
 @import "./leading.css";
+@import "./list.css";
+@import "./segmented-control.css";
+@import "./page-header.css";
+@import "./app-shell.css";

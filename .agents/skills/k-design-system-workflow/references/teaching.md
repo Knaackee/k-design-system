@@ -75,16 +75,14 @@ KIcon(KIconName.user, size: 20)
   items.map((i) => <KCard key={i.id}>{i.name}</KCard>);
 }
 
-// Right: one grouped list (KListItem once implemented; KSettingsRow today)
-<KSettingsSection title="Projekte">
-  {items.map((i) => (
-    <KSettingsRow
-      key={i.id}
-      title={i.name}
-      control={<KIcon name="chevron-right" />}
-    />
-  ))}
-</KSettingsSection>;
+// Right: one grouped list
+<KSurface radius="card">
+  <KList>
+    {items.map((i) => (
+      <KListItem key={i.id} title={i.name} onClick={() => open(i.id)} />
+    ))}
+  </KList>
+</KSurface>;
 ```
 
 ## Dropdown as navigation
@@ -92,6 +90,6 @@ KIcon(KIconName.user, size: 20)
 ```dart
 // Wrong: a select that swaps the page body between "Planung" and "Kennungen".
 // Right: section rows on the detail page that open their own pages,
-// or tabs (KTabs; KSegmentedControl once implemented) for two to four
-// peer views.
+// or a KSegmentedControl (two to five options) for peer views of the same
+// content.
 ```

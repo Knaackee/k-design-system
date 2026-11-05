@@ -1,0 +1,136 @@
+/* KList / KListItem (Decision 0012). Mirrors k_list.dart. */
+.k-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.k-list__row {
+  min-width: 0;
+}
+.k-list[data-separated] > .k-list__row + .k-list__row::before {
+  content: "";
+  display: block;
+  height: var(--k-space-hairline);
+  margin-inline-start: var(--k-space-control-inset-inline);
+  background: var(--k-color-border-default);
+}
+
+.k-list-item {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--k-size-hit-target);
+  margin: 0;
+  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
+  border: 0;
+  background: transparent;
+  color: var(--k-color-text-primary);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  transition: background-color var(--k-motion-feedback-settle)
+    var(--k-motion-feedback-easing);
+}
+.k-list-item[data-interactive] {
+  cursor: pointer;
+}
+.k-list-item[data-interactive]:hover,
+.k-list-item[data-interactive]:active {
+  background: var(--k-color-action-ghost-hover);
+}
+.k-list-item:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
+  background: var(--k-color-action-ghost-hover);
+}
+.k-list-item[data-selected] {
+  background: var(--k-color-action-secondary-background);
+}
+.k-list-item[data-disabled] {
+  cursor: not-allowed;
+}
+.k-list-item[data-disabled] .k-list-item__title {
+  color: var(--k-color-text-muted);
+}
+
+/* The leading visual and the chevron sit on the first title line. */
+.k-list-item__row {
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.k-list-item__chevron {
+  --k-leading-size: var(--k-size-content);
+  /* Label line height (18) is never below the icon (16): no clamp needed. */
+  margin-block-start: calc(
+    (
+        var(--k-font-label-line-height) *
+          min(var(--k-text-scale, 1), var(--k-text-scale-max-body)) -
+          var(--k-size-content)
+      ) /
+      2
+  );
+  color: var(--k-color-text-muted);
+}
+.k-list-item__leading {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: calc(
+    var(--k-font-label-line-height) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  margin-block-start: 0;
+  color: var(--k-color-text-muted);
+}
+.k-list-item__body {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.k-list-item__copy {
+  display: grid;
+  flex: 1;
+  gap: var(--k-space-tight);
+  min-width: 0;
+}
+.k-list-item__title,
+.k-list-item__description {
+  display: block;
+  min-width: 0;
+}
+.k-list-item__title[data-clamped] {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--k-list-title-lines);
+  line-clamp: var(--k-list-title-lines);
+}
+.k-list-item__description {
+  color: var(--k-color-text-muted);
+}
+.k-list-item__trailing {
+  max-width: 50%;
+  min-width: 0;
+  color: var(--k-color-text-muted);
+}
+
+/* Trailing moves under the copy from 1.3× text. */
+[data-text-large] .k-list-item__body {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--k-space-tight);
+}
+[data-text-large] .k-list-item__trailing {
+  max-width: 100%;
+}
+[dir="rtl"] .k-list-item__chevron,
+.k-list-item__chevron:dir(rtl) {
+  transform: scaleX(-1);
+}

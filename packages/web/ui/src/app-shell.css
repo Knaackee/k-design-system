@@ -1,0 +1,27 @@
+/* KAppShell (Decision 0012). Mirrors k_app_shell.dart. */
+.k-app-shell {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.k-app-shell[data-layout="tab-bar"] {
+  flex-direction: column;
+}
+.k-app-shell__content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+/* The tab bar sits in the shell's flow instead of over the page. */
+.k-app-shell > .k-mobile-app-bar {
+  position: sticky;
+  inset-inline: 0;
+  bottom: 0;
+}
+.k-app-shell > .k-sidebar {
+  flex-shrink: 0;
+  height: auto;
+}

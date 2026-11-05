@@ -36,6 +36,17 @@ the platform.
    for unsaved changes, browser back on Web.
 4. **No routing:** the design system ships controls, transitions and rules;
    apps keep their router.
+5. **Components** (added on `feat/core-components`): `KAppShell` (tab bar
+   below 600, sidebar rail 600–839, sidebar from 840, decided by the shell's
+   own width; 2–5 destinations), `KPageHeader` (back + actions on top and a
+   large title on phones, one row from 600, actions under the title from
+   1.3× text, at most three actions), `KSegmentedControl` (2–5 options,
+   radio-group semantics, sliding selection with the `control` motion role,
+   stacked from 1.3× text with three or more options) and `KList` /
+   `KListItem` (grouped rows, leading on the first line, trailing at most
+   half the row and under the copy from 1.3× text, chevron for navigation).
+   Web and Flutter share the structure and thresholds; the selection
+   changes play the `selection` haptic when a `KHapticsProvider` is present.
 
 ## Consequences
 
@@ -47,3 +58,7 @@ the platform.
   spring-back, horizontal content and `PopScope`.
 - The page transition lives in `k_design_tokens` next to `kDesignTheme`,
   because the theme installs it.
+- New public API: `KAppShell`, `KAppDestination`, `KPageHeader`,
+  `KSegmentedControl`, `KSegment`, `KList`, `KListItem` on both platforms.
+  `KSettingsRow` stays for settings with a control; `KListItem` is for
+  navigation and read-only rows.

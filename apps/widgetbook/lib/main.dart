@@ -89,6 +89,7 @@ import 'agent_chat_switcher_fixture.dart';
 import 'agent_chat_workspace_fixture.dart';
 import 'web_search_fixture.dart';
 import 'foley_sounds_fixture.dart';
+import 'core_components_fixture.dart';
 import 'haptics_fixture.dart';
 import 'sound_onboarding_fixture.dart';
 import 'agent_switcher_variants_fixture.dart';
@@ -497,6 +498,12 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
   WidgetbookCategory(
     name: 'Data display',
     children: [
+      WidgetbookFolder(
+        name: 'List',
+        children: [
+          WidgetbookUseCase(name: 'list', builder: (_) => const ListFixture()),
+        ],
+      ),
       WidgetbookFolder(
         name: 'DiceBear Avatar',
         children: [
@@ -958,6 +965,33 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
   WidgetbookCategory(
     name: 'Navigation',
     children: [
+      WidgetbookFolder(
+        name: 'AppShell',
+        children: [
+          WidgetbookUseCase(
+            name: 'app-shell',
+            builder: (_) => const AppShellFixture(),
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'PageHeader',
+        children: [
+          WidgetbookUseCase(
+            name: 'page-header',
+            builder: (_) => const PageHeaderFixture(),
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'SegmentedControl',
+        children: [
+          WidgetbookUseCase(
+            name: 'segmented-control',
+            builder: (_) => const SegmentedControlFixture(),
+          ),
+        ],
+      ),
       WidgetbookFolder(
         name: 'BackButton',
         children: [

@@ -6,6 +6,12 @@ version is tagged.
 
 ## Unreleased
 
+- Added `KAppShell` (tab bar, sidebar rail or sidebar by the shell's own
+  width), `KPageHeader` (large title on phones, actions under the title from
+  1.3× text), `KSegmentedControl` (2–5 options, radio-group semantics,
+  stacks from 1.3× text) and `KList` / `KListItem` (grouped rows, leading on
+  the first line, trailing under the copy from 1.3× text) on Web and
+  Flutter, with fixtures in both galleries (Decision 0012).
 - Added haptics (Decision 0013): `KHapticCue` (`selection`, `light`,
   `medium`, `heavy`, `success`, `warning`, `error`), `KHapticController`
   (off by default, drops cues closer than 60 ms, silent in the background)

@@ -77,8 +77,14 @@ assertions. The others are review rules.
 ## Lists — review
 
 - Items of the same kind are rows in one grouped list, not one card each.
-- Row anatomy: leading (optional) · title · subtitle/meta · trailing.
-  Minimum height 56 for touch, 40 for pointer.
+- Use `KList` + `KListItem`: leading (optional, on the first title line) ·
+  title · description · trailing (at most half the row, under the copy from
+  1.3× text) · chevron when the row navigates. A row is at least the hit
+  target tall. A row that opens something is one button: no second control
+  inside it.
+- Segmented control (`KSegmentedControl`): 2–5 options that switch a view
+  or mode in place; not for navigation or actions. From 1.3× text three or
+  more segments stack.
 - Empty group: a single action row "+ Add …", not a sentence plus a button.
 
 ## Navigation — review + gesture tests (Decision 0012, Apple HIG)
@@ -112,6 +118,8 @@ onPopInvokedWithResult: …)` and ask before discarding.
 - iPad / tablet / desktop: tab bar at the top that can turn into a sidebar,
   or a sidebar (visible by default, hideable). Sidebar: at most two levels;
   deeper hierarchies get a split view (sidebar → list → detail).
+- `KAppShell` implements this from its own width: tab bar below 600, sidebar
+  rail 600–839, full sidebar from 840; 2–5 destinations.
 
 **Top bar**
 
@@ -121,6 +129,9 @@ onPopInvokedWithResult: …)` and ask before discarding.
   at most three groups, one prominent primary action (Done/Save) at the
   trailing edge, the rest in a More menu. Symbols instead of text, without
   borders; text only for actions without a clear symbol ("Edit").
+- `KPageHeader` implements this: back and actions on top with a large title
+  below on phones, one row from 600, actions under the title from 1.3×
+  text; at most three actions.
 
 **Sheets**
 

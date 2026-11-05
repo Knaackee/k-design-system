@@ -607,6 +607,10 @@ export * from "./patterns/sortable-tree.js";
 export * from "./patterns/showcase-grid.js";
 export * from "./patterns/celebration.js";
 export * from "./feedback/haptics.js";
+export * from "./data-display/list.js";
+export * from "./navigation/app-shell.js";
+export * from "./navigation/page-header.js";
+export * from "./navigation/segmented-control.js";
 export * from "./feedback/sound.js";
 export {
   KQrCode,

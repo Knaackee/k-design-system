@@ -1,0 +1,231 @@
+import 'package:flutter/material.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
+import 'package:k_design_ui/k_design_ui.dart';
+
+/// Same fixtures as Storybook core-components-fixtures.tsx.
+EdgeInsets _pad(BuildContext context) => EdgeInsets.all(
+  Theme.of(context).extension<KDesignTokens>()!.spaceLayoutGutter,
+);
+
+class SettingsListFixture extends StatefulWidget {
+  const SettingsListFixture({super.key});
+  @override
+  State<SettingsListFixture> createState() => _SettingsListFixtureState();
+}
+
+class _SettingsListFixtureState extends State<SettingsListFixture> {
+  String last = '–';
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return KStack(
+      gap: KLayoutGap.action,
+      align: KLayoutAlign.stretch,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(t.radiusCard),
+          child: KSurface(
+            radius: KSurfaceRadius.card,
+            child: KList(
+              children: [
+                KListItem(
+                  title: 'Account',
+                  description: 'dana@example.com',
+                  leadingIcon: KIconName.user,
+                  onPressed: () => setState(() => last = 'Account'),
+                ),
+                KListItem(
+                  title: 'Notifications',
+                  leadingIcon: KIconName.bell,
+                  trailing: const KBadge(
+                    variant: KBadgeVariant.secondary,
+                    child: Text('3 new'),
+                  ),
+                  onPressed: () => setState(() => last = 'Notifications'),
+                ),
+                const KListItem(
+                  title: 'Storage',
+                  leadingIcon: KIconName.hardDrive,
+                  trailing: KText(
+                    '12.4 GB of 50 GB',
+                    variant: KTextVariant.bodySmall,
+                  ),
+                ),
+                KListItem(
+                  title:
+                      'A very long title for a row that wraps onto a second line at large text',
+                  description:
+                      'Titles wrap; set titleMaxLines to truncate with …',
+                  leadingIcon: KIconName.fileText,
+                  onPressed: () => setState(() => last = 'Long row'),
+                ),
+                const KListItem(
+                  title:
+                      'Truncated title for a row that would otherwise take several lines',
+                  titleMaxLines: 1,
+                  leadingIcon: KIconName.scissors,
+                ),
+                KListItem(
+                  title: 'Export data',
+                  leadingIcon: KIconName.download,
+                  enabled: false,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+        Semantics(
+          liveRegion: true,
+          child: KText('Last opened: $last', variant: KTextVariant.bodySmall),
+        ),
+      ],
+    );
+  }
+}
+
+class ListFixture extends StatelessWidget {
+  const ListFixture({super.key});
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    padding: _pad(context),
+    child: const SettingsListFixture(),
+  );
+}
+
+class SegmentedControlFixture extends StatefulWidget {
+  const SegmentedControlFixture({super.key});
+  @override
+  State<SegmentedControlFixture> createState() =>
+      _SegmentedControlFixtureState();
+}
+
+class _SegmentedControlFixtureState extends State<SegmentedControlFixture> {
+  String period = 'week';
+  String view = 'list';
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    padding: _pad(context),
+    child: KStack(
+      gap: KLayoutGap.section,
+      align: KLayoutAlign.stretch,
+      children: [
+        KSegmentedControl<String>(
+          label: 'Period',
+          value: period,
+          onChanged: (value) => setState(() => period = value),
+          segments: const [
+            KSegment(value: 'day', label: 'Day'),
+            KSegment(value: 'week', label: 'Week'),
+            KSegment(value: 'month', label: 'Month'),
+            KSegment(value: 'year', label: 'Year'),
+          ],
+        ),
+        KSegmentedControl<String>(
+          label: 'View',
+          value: view,
+          onChanged: (value) => setState(() => view = value),
+          segments: const [
+            KSegment(value: 'list', label: 'List', icon: KIconName.list),
+            KSegment(value: 'grid', label: 'Grid', icon: KIconName.layoutGrid),
+          ],
+        ),
+        Semantics(
+          liveRegion: true,
+          child: KText('$period · $view', variant: KTextVariant.bodySmall),
+        ),
+      ],
+    ),
+  );
+}
+
+class PageHeaderFixture extends StatelessWidget {
+  const PageHeaderFixture({super.key});
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    padding: _pad(context),
+    child: KStack(
+      gap: KLayoutGap.section,
+      align: KLayoutAlign.stretch,
+      children: [
+        KPageHeader(
+          title: 'Riverside',
+          subtitle: '3 buildings · updated today',
+          backLabel: 'Back to Portfolios',
+          onBack: () {},
+          actions: [
+            KIconButton(
+              label: 'Share',
+              icon: KIconName.share,
+              onPressed: () {},
+            ),
+            KButton(label: 'Add building', onPressed: () {}),
+          ],
+        ),
+        const KPageHeader(
+          title: 'Portfolios',
+          subtitle: 'Top level: no back control',
+        ),
+      ],
+    ),
+  );
+}
+
+class AppShellFixture extends StatefulWidget {
+  const AppShellFixture({super.key});
+  @override
+  State<AppShellFixture> createState() => _AppShellFixtureState();
+}
+
+class _AppShellFixtureState extends State<AppShellFixture> {
+  String selected = 'settings';
+  static const destinations = [
+    KAppDestination(id: 'home', label: 'Home', icon: KIconName.house),
+    KAppDestination(
+      id: 'portfolios',
+      label: 'Portfolios',
+      icon: KIconName.building,
+    ),
+    KAppDestination(
+      id: 'inbox',
+      label: 'Inbox',
+      icon: KIconName.inbox,
+      badge: '2',
+    ),
+    KAppDestination(
+      id: 'settings',
+      label: 'Settings',
+      icon: KIconName.settings,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final current = destinations.firstWhere((item) => item.id == selected);
+    return KAppShell(
+      destinations: destinations,
+      selectedId: selected,
+      onSelected: (id) => setState(() => selected = id),
+      sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
+      child: SingleChildScrollView(
+        padding: _pad(context),
+        child: KStack(
+          gap: KLayoutGap.section,
+          align: KLayoutAlign.stretch,
+          children: [
+            KPageHeader(title: current.label, subtitle: 'Adaptive shell demo'),
+            if (selected == 'settings')
+              const SettingsListFixture()
+            else
+              const KText(
+                'Below 600 px the destinations are a tab bar, from 600 px a '
+                'sidebar rail and from 840 px the full sidebar.',
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
