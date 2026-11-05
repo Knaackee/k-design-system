@@ -334,7 +334,7 @@ class _KSidebarItemState extends State<KSidebarItem> {
     final showAction = !rail && widget.action != null && (hovered || focused);
     final minHeight = math.max(36.0, t.sizeHitTarget);
     final color = widget.active
-        ? t.colorActionSecondaryBackground
+        ? t.componentSidebarActiveBackground
         : hovered || focused
         ? t.colorActionGhostHover
         : Colors.transparent;

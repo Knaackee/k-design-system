@@ -9,62 +9,71 @@ import {
   KPageHeader,
   KSegmentedControl,
   KStack,
-  KSurface,
   KText,
 } from "@k-design-system/ui";
 import "./core-components-fixtures.css";
 
 /** Same fixtures as Widgetbook core_components_fixture.dart. */
 
+/** Reference settings screen: grouped sections, real content, no demo text. */
 export function SettingsList() {
-  const [last, setLast] = useState("–");
   return (
-    <KStack gap="action" align="stretch">
-      <KSurface radius="card" style={{ overflow: "hidden" }}>
-        <KList>
-          <KListItem
-            title="Account"
-            description="dana@example.com"
-            leadingIcon="user"
-            onClick={() => setLast("Account")}
-          />
-          <KListItem
-            title="Notifications"
-            leadingIcon="bell"
-            trailing={<KBadge variant="secondary">3 new</KBadge>}
-            onClick={() => setLast("Notifications")}
-          />
-          <KListItem
-            title="Storage"
-            leadingIcon="hard-drive"
-            trailing={
-              <KText as="span" variant="bodySmall">
-                12.4 GB of 50 GB
-              </KText>
-            }
-          />
-          <KListItem
-            title="A very long title for a row that wraps onto a second line at large text"
-            description="Titles wrap; set titleMaxLines to truncate with …"
-            leadingIcon="file-text"
-            onClick={() => setLast("Long row")}
-          />
-          <KListItem
-            title="Truncated title for a row that would otherwise take several lines"
-            titleMaxLines={1}
-            leadingIcon="scissors"
-          />
-          <KListItem
-            title="Export data"
-            leadingIcon="download"
-            disabled
-            onClick={() => {}}
-          />
-        </KList>
-      </KSurface>
-      <KText role="status" variant="bodySmall">
-        Last opened: {last}
-      </KText>
+    <KStack gap="section" align="stretch">
+      <KList title="Account">
+        <KListItem
+          title="Profile"
+          description="Dana Weber · dana@example.com"
+          leadingIcon="user"
+          onClick={() => {}}
+        />
+        <KListItem
+          title="Password and security"
+          leadingIcon="lock"
+          onClick={() => {}}
+        />
+      </KList>
+      <KList title="Notifications">
+        <KListItem
+          title="Push notifications"
+          leadingIcon="bell"
+          trailing={<KBadge variant="secondary">3 new</KBadge>}
+          onClick={() => {}}
+        />
+        <KListItem
+          title="Email summary"
+          leadingIcon="mail"
+          value="Weekly"
+          onClick={() => {}}
+        />
+      </KList>
+      <KList
+        title="Storage"
+        footer="Offline files are removed after 30 days without use."
+      >
+        <KListItem
+          title="Used"
+          leadingIcon="hard-drive"
+          value="12.4 of 50 GB"
+        />
+        <KListItem
+          title="Downloads"
+          leadingIcon="download"
+          value="Wi-Fi only"
+          onClick={() => {}}
+        />
+      </KList>
+      <KList title="About" footer="Version 4.2.0 (318)">
+        <KListItem
+          title="Help and support"
+          leadingIcon="circle-question-mark"
+          onClick={() => {}}
+        />
+        <KListItem
+          title="Terms of use"
+          leadingIcon="file-text"
+          onClick={() => {}}
+        />
+      </KList>
     </KStack>
   );
 }
@@ -154,13 +163,12 @@ export function AppShellFixture() {
         }
       >
         <KStack gap="section" align="stretch" className="cc-fixture">
-          <KPageHeader title={current.label} subtitle="Adaptive shell demo" />
+          <KPageHeader title={current.label} />
           {selected === "settings" ? (
             <SettingsList />
           ) : (
             <KText variant="body">
-              Below 600 px the destinations are a tab bar, from 600 px a sidebar
-              rail and from 840 px the full sidebar.
+              {current.label} has no content in this reference.
             </KText>
           )}
         </KStack>

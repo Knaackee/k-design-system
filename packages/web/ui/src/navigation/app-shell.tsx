@@ -120,7 +120,7 @@ export function KAppShell({
                   }
                   badge={
                     destination.badge ? (
-                      <KBadge>{destination.badge}</KBadge>
+                      <KBadge variant="secondary">{destination.badge}</KBadge>
                     ) : undefined
                   }
                   active={active}

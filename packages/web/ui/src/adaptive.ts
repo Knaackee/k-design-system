@@ -17,6 +17,8 @@ export type KWindowClass =
  * without movement (forced by `prefers-reduced-motion: reduce`).
  */
 export type KMotionStyle = "apple" | "expressive" | "reduced";
+/** Style preset (Decision 0014): structure and rhythm, not colours. */
+export type KStyle = "linear" | "apple";
 
 export interface KAdaptiveConfiguration {
   density: KDensity;
@@ -24,6 +26,7 @@ export interface KAdaptiveConfiguration {
   inputMode: KInputMode;
   windowClass: KWindowClass;
   motion: KMotionStyle;
+  style: KStyle;
 }
 
 export interface KAdaptiveEnvironment {
@@ -69,6 +72,7 @@ export function resolveKAdaptive(
     inputMode,
     windowClass,
     motion,
+    style: overrides.style ?? "linear",
   };
 }
 
@@ -89,6 +93,7 @@ export function kAdaptiveAttributes(
     "data-input-mode": configuration.inputMode,
     "data-window-class": configuration.windowClass,
     "data-motion": configuration.motion,
+    "data-style": configuration.style,
   };
 }
 

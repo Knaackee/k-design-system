@@ -1070,6 +1070,7 @@
       "$type": "dimension",
       "$value": "{layout.width.questionnaire}"
     },
+    "pageWidth": { "$type": "dimension", "$value": "{layout.width.page}" },
     "contentWidth": {
       "$type": "dimension",
       "$value": "{layout.width.content}"
@@ -1854,7 +1855,27 @@
         }
       }
     },
+    "list": {
+      "rowMinHeight": {
+        "$type": "dimension",
+        "$value": "{size.scale.listRow}"
+      },
+      "rowPaddingBlock": { "$type": "dimension", "$value": "{space.2}" },
+      "rowPaddingInline": { "$type": "dimension", "$value": "{space.3}" },
+      "leadingGap": { "$type": "dimension", "$value": "{space.3}" },
+      "groupRadius": { "$type": "dimension", "$value": "{radius.scale.lg}" },
+      "sectionHeaderGap": { "$type": "dimension", "$value": "{space.2}" },
+      "sectionHeaderInset": { "$type": "dimension", "$value": "{space.3}" }
+    },
+    "pageHeader": {
+      "paddingBlockStart": { "$type": "dimension", "$value": "{space.2}" },
+      "titleGap": { "$type": "dimension", "$value": "{space.1}" }
+    },
     "sidebar": {
+      "activeBackground": {
+        "$type": "color",
+        "$value": "{color.border.default}"
+      },
       "transitionDuration": {
         "$type": "duration",
         "$value": "{motion.standard}"

@@ -3,6 +3,24 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
 abstract final class KDesignTokenVariants {
+  static const styleLinearComponentListRowMinHeight = 40.0;
+  static const styleLinearComponentListRowPaddingBlock = 8.0;
+  static const styleLinearComponentListRowPaddingInline = 12.0;
+  static const styleLinearComponentListLeadingGap = 12.0;
+  static const styleLinearComponentListGroupRadius = 8.0;
+  static const styleLinearComponentListSectionHeaderGap = 8.0;
+  static const styleLinearComponentListSectionHeaderInset = 12.0;
+  static const styleLinearComponentPageHeaderPaddingBlockStart = 8.0;
+  static const styleLinearComponentPageHeaderTitleGap = 4.0;
+  static const styleAppleComponentListRowMinHeight = 44.0;
+  static const styleAppleComponentListRowPaddingBlock = 12.0;
+  static const styleAppleComponentListRowPaddingInline = 16.0;
+  static const styleAppleComponentListLeadingGap = 16.0;
+  static const styleAppleComponentListGroupRadius = 12.0;
+  static const styleAppleComponentListSectionHeaderGap = 8.0;
+  static const styleAppleComponentListSectionHeaderInset = 16.0;
+  static const styleAppleComponentPageHeaderPaddingBlockStart = 16.0;
+  static const styleAppleComponentPageHeaderTitleGap = 4.0;
   static const motionAppleMotionFeedbackDuration = Duration(milliseconds: 100);
   static const motionAppleMotionFeedbackBounce = 0.0;
   static const motionAppleMotionFeedbackDistance = 1.0;
@@ -143,6 +161,28 @@ abstract final class KDesignTokenVariants {
   static const windowExpandedSpaceLayoutGutter = 32.0;
   static const windowLargeSpaceLayoutGutter = 48.0;
   static const windowExtraLargeSpaceLayoutGutter = 64.0;
+  static KDesignTokens applyStyleLinear(KDesignTokens t) => t.copyWith(
+    componentListRowMinHeight: styleLinearComponentListRowMinHeight,
+    componentListRowPaddingBlock: styleLinearComponentListRowPaddingBlock,
+    componentListRowPaddingInline: styleLinearComponentListRowPaddingInline,
+    componentListLeadingGap: styleLinearComponentListLeadingGap,
+    componentListGroupRadius: styleLinearComponentListGroupRadius,
+    componentListSectionHeaderGap: styleLinearComponentListSectionHeaderGap,
+    componentListSectionHeaderInset: styleLinearComponentListSectionHeaderInset,
+    componentPageHeaderPaddingBlockStart: styleLinearComponentPageHeaderPaddingBlockStart,
+    componentPageHeaderTitleGap: styleLinearComponentPageHeaderTitleGap,
+  );
+  static KDesignTokens applyStyleApple(KDesignTokens t) => t.copyWith(
+    componentListRowMinHeight: styleAppleComponentListRowMinHeight,
+    componentListRowPaddingBlock: styleAppleComponentListRowPaddingBlock,
+    componentListRowPaddingInline: styleAppleComponentListRowPaddingInline,
+    componentListLeadingGap: styleAppleComponentListLeadingGap,
+    componentListGroupRadius: styleAppleComponentListGroupRadius,
+    componentListSectionHeaderGap: styleAppleComponentListSectionHeaderGap,
+    componentListSectionHeaderInset: styleAppleComponentListSectionHeaderInset,
+    componentPageHeaderPaddingBlockStart: styleAppleComponentPageHeaderPaddingBlockStart,
+    componentPageHeaderTitleGap: styleAppleComponentPageHeaderTitleGap,
+  );
 }
 
 @immutable
@@ -426,6 +466,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.layoutAlertWidth,
     required this.layoutDialogWidth,
     required this.layoutQuestionnaireWidth,
+    required this.layoutPageWidth,
     required this.layoutContentWidth,
     required this.layoutPickerWideWidth,
     required this.layoutOverlayMaxHeight,
@@ -597,6 +638,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentSymbolPickerViewportInset,
     required this.componentSymbolPickerPanelPadding,
     required this.componentSymbolPickerToneMenuOffset,
+    required this.componentListRowMinHeight,
+    required this.componentListRowPaddingBlock,
+    required this.componentListRowPaddingInline,
+    required this.componentListLeadingGap,
+    required this.componentListGroupRadius,
+    required this.componentListSectionHeaderGap,
+    required this.componentListSectionHeaderInset,
+    required this.componentPageHeaderPaddingBlockStart,
+    required this.componentPageHeaderTitleGap,
+    required this.componentSidebarActiveBackground,
     required this.componentSidebarTransitionDuration,
     required this.componentSidebarWidth,
     required this.componentSidebarRailWidth,
@@ -1012,6 +1063,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double layoutAlertWidth;
   final double layoutDialogWidth;
   final double layoutQuestionnaireWidth;
+  final double layoutPageWidth;
   final double layoutContentWidth;
   final double layoutPickerWideWidth;
   final double layoutOverlayMaxHeight;
@@ -1183,6 +1235,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentSymbolPickerViewportInset;
   final double componentSymbolPickerPanelPadding;
   final double componentSymbolPickerToneMenuOffset;
+  final double componentListRowMinHeight;
+  final double componentListRowPaddingBlock;
+  final double componentListRowPaddingInline;
+  final double componentListLeadingGap;
+  final double componentListGroupRadius;
+  final double componentListSectionHeaderGap;
+  final double componentListSectionHeaderInset;
+  final double componentPageHeaderPaddingBlockStart;
+  final double componentPageHeaderTitleGap;
+  final Color componentSidebarActiveBackground;
   final Duration componentSidebarTransitionDuration;
   final double componentSidebarWidth;
   final double componentSidebarRailWidth;
@@ -1598,6 +1660,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutAlertWidth: 440.0,
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
+    layoutPageWidth: 960.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -1769,6 +1832,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListRowMinHeight: 40.0,
+    componentListRowPaddingBlock: 8.0,
+    componentListRowPaddingInline: 12.0,
+    componentListLeadingGap: 12.0,
+    componentListGroupRadius: 8.0,
+    componentListSectionHeaderGap: 8.0,
+    componentListSectionHeaderInset: 12.0,
+    componentPageHeaderPaddingBlockStart: 8.0,
+    componentPageHeaderTitleGap: 4.0,
+    componentSidebarActiveBackground: Color(0xFFE2E2E4),
     componentSidebarTransitionDuration: Duration(milliseconds: 160),
     componentSidebarWidth: 248.0,
     componentSidebarRailWidth: 52.0,
@@ -2185,6 +2258,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutAlertWidth: 440.0,
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
+    layoutPageWidth: 960.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -2356,6 +2430,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListRowMinHeight: 40.0,
+    componentListRowPaddingBlock: 8.0,
+    componentListRowPaddingInline: 12.0,
+    componentListLeadingGap: 12.0,
+    componentListGroupRadius: 8.0,
+    componentListSectionHeaderGap: 8.0,
+    componentListSectionHeaderInset: 12.0,
+    componentPageHeaderPaddingBlockStart: 8.0,
+    componentPageHeaderTitleGap: 4.0,
+    componentSidebarActiveBackground: Color(0xFF303033),
     componentSidebarTransitionDuration: Duration(milliseconds: 160),
     componentSidebarWidth: 248.0,
     componentSidebarRailWidth: 52.0,
@@ -2772,6 +2856,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutAlertWidth: 440.0,
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
+    layoutPageWidth: 960.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -2943,6 +3028,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListRowMinHeight: 40.0,
+    componentListRowPaddingBlock: 8.0,
+    componentListRowPaddingInline: 12.0,
+    componentListLeadingGap: 12.0,
+    componentListGroupRadius: 8.0,
+    componentListSectionHeaderGap: 8.0,
+    componentListSectionHeaderInset: 12.0,
+    componentPageHeaderPaddingBlockStart: 8.0,
+    componentPageHeaderTitleGap: 4.0,
+    componentSidebarActiveBackground: Color(0xFF99D5CD),
     componentSidebarTransitionDuration: Duration(milliseconds: 160),
     componentSidebarWidth: 248.0,
     componentSidebarRailWidth: 52.0,
@@ -3359,6 +3454,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutAlertWidth: 440.0,
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
+    layoutPageWidth: 960.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -3530,6 +3626,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListRowMinHeight: 40.0,
+    componentListRowPaddingBlock: 8.0,
+    componentListRowPaddingInline: 12.0,
+    componentListLeadingGap: 12.0,
+    componentListGroupRadius: 8.0,
+    componentListSectionHeaderGap: 8.0,
+    componentListSectionHeaderInset: 12.0,
+    componentPageHeaderPaddingBlockStart: 8.0,
+    componentPageHeaderTitleGap: 4.0,
+    componentSidebarActiveBackground: Color(0xFF23544E),
     componentSidebarTransitionDuration: Duration(milliseconds: 160),
     componentSidebarWidth: 248.0,
     componentSidebarRailWidth: 52.0,
@@ -3947,6 +4053,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? layoutAlertWidth,
     double? layoutDialogWidth,
     double? layoutQuestionnaireWidth,
+    double? layoutPageWidth,
     double? layoutContentWidth,
     double? layoutPickerWideWidth,
     double? layoutOverlayMaxHeight,
@@ -4118,6 +4225,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentSymbolPickerViewportInset,
     double? componentSymbolPickerPanelPadding,
     double? componentSymbolPickerToneMenuOffset,
+    double? componentListRowMinHeight,
+    double? componentListRowPaddingBlock,
+    double? componentListRowPaddingInline,
+    double? componentListLeadingGap,
+    double? componentListGroupRadius,
+    double? componentListSectionHeaderGap,
+    double? componentListSectionHeaderInset,
+    double? componentPageHeaderPaddingBlockStart,
+    double? componentPageHeaderTitleGap,
+    Color? componentSidebarActiveBackground,
     Duration? componentSidebarTransitionDuration,
     double? componentSidebarWidth,
     double? componentSidebarRailWidth,
@@ -4533,6 +4650,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutAlertWidth: layoutAlertWidth ?? this.layoutAlertWidth,
       layoutDialogWidth: layoutDialogWidth ?? this.layoutDialogWidth,
       layoutQuestionnaireWidth: layoutQuestionnaireWidth ?? this.layoutQuestionnaireWidth,
+      layoutPageWidth: layoutPageWidth ?? this.layoutPageWidth,
       layoutContentWidth: layoutContentWidth ?? this.layoutContentWidth,
       layoutPickerWideWidth: layoutPickerWideWidth ?? this.layoutPickerWideWidth,
       layoutOverlayMaxHeight: layoutOverlayMaxHeight ?? this.layoutOverlayMaxHeight,
@@ -4704,6 +4822,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentSymbolPickerViewportInset: componentSymbolPickerViewportInset ?? layoutViewportInset ?? this.componentSymbolPickerViewportInset,
       componentSymbolPickerPanelPadding: componentSymbolPickerPanelPadding ?? this.componentSymbolPickerPanelPadding,
       componentSymbolPickerToneMenuOffset: componentSymbolPickerToneMenuOffset ?? this.componentSymbolPickerToneMenuOffset,
+      componentListRowMinHeight: componentListRowMinHeight ?? this.componentListRowMinHeight,
+      componentListRowPaddingBlock: componentListRowPaddingBlock ?? this.componentListRowPaddingBlock,
+      componentListRowPaddingInline: componentListRowPaddingInline ?? this.componentListRowPaddingInline,
+      componentListLeadingGap: componentListLeadingGap ?? this.componentListLeadingGap,
+      componentListGroupRadius: componentListGroupRadius ?? this.componentListGroupRadius,
+      componentListSectionHeaderGap: componentListSectionHeaderGap ?? this.componentListSectionHeaderGap,
+      componentListSectionHeaderInset: componentListSectionHeaderInset ?? this.componentListSectionHeaderInset,
+      componentPageHeaderPaddingBlockStart: componentPageHeaderPaddingBlockStart ?? this.componentPageHeaderPaddingBlockStart,
+      componentPageHeaderTitleGap: componentPageHeaderTitleGap ?? this.componentPageHeaderTitleGap,
+      componentSidebarActiveBackground: componentSidebarActiveBackground ?? colorBorderDefault ?? this.componentSidebarActiveBackground,
       componentSidebarTransitionDuration: componentSidebarTransitionDuration ?? motionStandard ?? this.componentSidebarTransitionDuration,
       componentSidebarWidth: componentSidebarWidth ?? layoutSidebarWidth ?? this.componentSidebarWidth,
       componentSidebarRailWidth: componentSidebarRailWidth ?? sizeAppBarRail ?? this.componentSidebarRailWidth,
@@ -5124,6 +5252,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutAlertWidth: lerpDouble(layoutAlertWidth, other.layoutAlertWidth, t)!,
       layoutDialogWidth: lerpDouble(layoutDialogWidth, other.layoutDialogWidth, t)!,
       layoutQuestionnaireWidth: lerpDouble(layoutQuestionnaireWidth, other.layoutQuestionnaireWidth, t)!,
+      layoutPageWidth: lerpDouble(layoutPageWidth, other.layoutPageWidth, t)!,
       layoutContentWidth: lerpDouble(layoutContentWidth, other.layoutContentWidth, t)!,
       layoutPickerWideWidth: lerpDouble(layoutPickerWideWidth, other.layoutPickerWideWidth, t)!,
       layoutOverlayMaxHeight: lerpDouble(layoutOverlayMaxHeight, other.layoutOverlayMaxHeight, t)!,
@@ -5295,6 +5424,16 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentSymbolPickerViewportInset: lerpDouble(componentSymbolPickerViewportInset, other.componentSymbolPickerViewportInset, t)!,
       componentSymbolPickerPanelPadding: lerpDouble(componentSymbolPickerPanelPadding, other.componentSymbolPickerPanelPadding, t)!,
       componentSymbolPickerToneMenuOffset: lerpDouble(componentSymbolPickerToneMenuOffset, other.componentSymbolPickerToneMenuOffset, t)!,
+      componentListRowMinHeight: lerpDouble(componentListRowMinHeight, other.componentListRowMinHeight, t)!,
+      componentListRowPaddingBlock: lerpDouble(componentListRowPaddingBlock, other.componentListRowPaddingBlock, t)!,
+      componentListRowPaddingInline: lerpDouble(componentListRowPaddingInline, other.componentListRowPaddingInline, t)!,
+      componentListLeadingGap: lerpDouble(componentListLeadingGap, other.componentListLeadingGap, t)!,
+      componentListGroupRadius: lerpDouble(componentListGroupRadius, other.componentListGroupRadius, t)!,
+      componentListSectionHeaderGap: lerpDouble(componentListSectionHeaderGap, other.componentListSectionHeaderGap, t)!,
+      componentListSectionHeaderInset: lerpDouble(componentListSectionHeaderInset, other.componentListSectionHeaderInset, t)!,
+      componentPageHeaderPaddingBlockStart: lerpDouble(componentPageHeaderPaddingBlockStart, other.componentPageHeaderPaddingBlockStart, t)!,
+      componentPageHeaderTitleGap: lerpDouble(componentPageHeaderTitleGap, other.componentPageHeaderTitleGap, t)!,
+      componentSidebarActiveBackground: Color.lerp(componentSidebarActiveBackground, other.componentSidebarActiveBackground, t)!,
       componentSidebarTransitionDuration: t < 0.5 ? componentSidebarTransitionDuration : other.componentSidebarTransitionDuration,
       componentSidebarWidth: lerpDouble(componentSidebarWidth, other.componentSidebarWidth, t)!,
       componentSidebarRailWidth: lerpDouble(componentSidebarRailWidth, other.componentSidebarRailWidth, t)!,

@@ -7,34 +7,52 @@ import {
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KText } from "../primitives/text.js";
 
-export interface KListProps extends HTMLAttributes<HTMLUListElement> {
+export interface KListProps extends Omit<HTMLAttributes<HTMLElement>, "title"> {
   children: ReactNode;
+  /** Section title above the group. */
+  title?: ReactNode;
+  /** Note below the group. */
+  footer?: ReactNode;
   /** Hairline between rows (default true). */
   separated?: boolean;
 }
 
 /**
- * A grouped list of `KListItem`s. It has no card surface of its own: place
- * it inside one `KCard` or directly on a surface, never a card per row.
+ * One group of `KListItem`s on its own surface, with an optional section
+ * title and footer (inset grouped list). The list draws its surface: place it
+ * on the page, never inside a card. Stack lists with `KStack gap="section"`.
  */
 export function KList({
   children,
+  title,
+  footer,
   separated = true,
   className,
   ...props
 }: KListProps) {
   return (
-    <ul
+    <section
       className={["k-list", className].filter(Boolean).join(" ")}
-      data-separated={separated || undefined}
       {...props}
     >
-      {Children.toArray(children).map((child, index) => (
-        <li key={index} className="k-list__row">
-          {child}
-        </li>
-      ))}
-    </ul>
+      {title ? (
+        <KText as="h3" variant="label" className="k-list__title">
+          {title}
+        </KText>
+      ) : null}
+      <ul className="k-list__group" data-separated={separated || undefined}>
+        {Children.toArray(children).map((child, index) => (
+          <li key={index} className="k-list__row">
+            {child}
+          </li>
+        ))}
+      </ul>
+      {footer ? (
+        <KText as="p" variant="caption" className="k-list__footer">
+          {footer}
+        </KText>
+      ) : null}
+    </section>
   );
 }
 
@@ -46,10 +64,12 @@ export interface KListItemProps extends Omit<
   description?: ReactNode;
   /** A custom leading visual; it sits on the first title line. */
   leading?: ReactNode;
-  /** Shortcut for a 20 px leading icon. */
+  /** Shortcut for a leading icon in the default icon size. */
   leadingIcon?: KIconName;
-  /** Value or badge at the end. Interactive rows take no trailing control. */
+  /** Non-text trailing content (badge, dot), centred on the title line. */
   trailing?: ReactNode;
+  /** Trailing value text ("12.4 GB") in the style's value role. */
+  value?: ReactNode;
   onClick?: (event: MouseEvent<HTMLElement>) => void;
   /** Renders the row as a link. */
   href?: string;
@@ -72,6 +92,7 @@ export function KListItem({
   leading,
   leadingIcon,
   trailing,
+  value,
   onClick,
   href,
   disclosure,
@@ -87,13 +108,11 @@ export function KListItem({
   const visual =
     leading ??
     (leadingIcon ? (
-      <KIcon name={leadingIcon} size={20} className="k-list-item__icon" />
+      <KIcon name={leadingIcon} size={24} className="k-list-item__icon" />
     ) : null);
   const content = (
     <span className="k-list-item__row">
-      {visual ? (
-        <span className="k-list-item__leading k-leading">{visual}</span>
-      ) : null}
+      {visual ? <span className="k-list-item__leading">{visual}</span> : null}
       <span className="k-list-item__body">
         <span className="k-list-item__copy">
           <KText
@@ -119,16 +138,15 @@ export function KListItem({
             </KText>
           ) : null}
         </span>
+        {value ? <span className="k-list-item__value">{value}</span> : null}
         {trailing ? (
           <span className="k-list-item__trailing">{trailing}</span>
         ) : null}
       </span>
       {showChevron ? (
-        <KIcon
-          name="chevron-right"
-          size={16}
-          className="k-list-item__chevron k-leading"
-        />
+        <span className="k-list-item__chevron" aria-hidden>
+          <KIcon name="chevron-right" size={16} />
+        </span>
       ) : null}
     </span>
   );

@@ -642,6 +642,7 @@ export type {
   KMotionRole,
   KMotionSpec,
   KMotionStyle,
+  KStyle,
   KTypeScale,
   KWindowClass,
 } from "./adaptive.js";

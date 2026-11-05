@@ -50,6 +50,7 @@ const withDesignTokens: Decorator = (Story, context) => {
       inputMode: pick("inputMode"),
       windowClass: pick("windowClass"),
       motion: pick("motion"),
+      style: pick("style"),
     } as KAdaptiveOverrides,
   );
   const typeScale = resolved.typeScale;
@@ -63,6 +64,7 @@ const withDesignTokens: Decorator = (Story, context) => {
   document.documentElement.dataset.inputMode = inputMode;
   document.documentElement.dataset.windowClass = windowClass;
   document.documentElement.dataset.motion = resolved.motion;
+  document.documentElement.dataset.style = resolved.style;
   setKTextScale(document.documentElement, textScale);
 
   return (
@@ -75,6 +77,7 @@ const withDesignTokens: Decorator = (Story, context) => {
       data-input-mode={inputMode}
       data-window-class={windowClass}
       data-motion={resolved.motion}
+      data-style={resolved.style}
     >
       <KLocalizationProvider locale={language}>
         <Story />
@@ -101,6 +104,7 @@ const preview: Preview & {
     inputMode: "auto",
     windowClass: "auto",
     motion: "auto",
+    style: "auto",
     textScale: 1,
   },
   globalTypes: {
@@ -205,6 +209,17 @@ const preview: Preview & {
           { value: "apple", title: "Motion: Apple" },
           { value: "expressive", title: "Motion: Expressive" },
           { value: "reduced", title: "Motion: reduced" },
+        ],
+      },
+    },
+    style: {
+      description: "Style preset (Decision 0014): structure and rhythm",
+      toolbar: {
+        icon: "paintbrush",
+        items: [
+          { value: "auto", title: "Style: auto (Linear)" },
+          { value: "linear", title: "Style: Linear" },
+          { value: "apple", title: "Style: Apple" },
         ],
       },
     },

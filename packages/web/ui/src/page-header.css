@@ -1,8 +1,10 @@
 /* KPageHeader (Decision 0012). Mirrors k_page_header.dart. */
 .k-page-header {
+  box-sizing: border-box;
   container-type: inline-size;
   /* A size container has no intrinsic width. */
   width: 100%;
+  padding-block-start: var(--k-component-page-header-padding-block-start);
 }
 .k-page-header__layout {
   display: grid;
@@ -17,13 +19,20 @@
 .k-page-header__copy {
   display: grid;
   grid-area: copy;
-  gap: var(--k-space-tight);
+  gap: var(--k-component-page-header-title-gap);
   min-width: 0;
 }
+/* Title role per style (Decision 0014): linear heading3 wide / heading2
+   compact; apple large title (heading1) on every width. */
 .k-page-header__title {
-  --k-text-font-size: var(--k-font-heading2-size);
-  --k-text-line-height: var(--k-font-heading2-line-height);
-  --k-text-letter-spacing: var(--k-font-heading2-letter-spacing);
+  --k-text-font-size: var(--k-font-heading3-size);
+  --k-text-line-height: var(--k-font-heading3-line-height);
+  --k-text-letter-spacing: var(--k-font-heading3-letter-spacing);
+}
+[data-style="apple"] .k-page-header .k-page-header__title {
+  --k-text-font-size: var(--k-font-heading1-size);
+  --k-text-line-height: var(--k-font-heading1-line-height);
+  --k-text-letter-spacing: var(--k-font-heading1-letter-spacing);
 }
 .k-page-header__subtitle {
   color: var(--k-color-text-muted);
@@ -59,9 +68,9 @@
     margin-block-start: var(--k-space-tight);
   }
   .k-page-header__title {
-    --k-text-font-size: var(--k-font-heading1-size);
-    --k-text-line-height: var(--k-font-heading1-line-height);
-    --k-text-letter-spacing: var(--k-font-heading1-letter-spacing);
+    --k-text-font-size: var(--k-font-heading2-size);
+    --k-text-line-height: var(--k-font-heading2-line-height);
+    --k-text-letter-spacing: var(--k-font-heading2-letter-spacing);
   }
   .k-page-header__breadcrumb {
     display: none;

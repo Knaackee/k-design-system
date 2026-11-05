@@ -44,6 +44,7 @@ class KPageHeader extends StatelessWidget {
     assert(actions.length <= 3, 'KPageHeader takes at most 3 actions.');
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
+    final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
     final back = backLabel == null
         ? null
         : KBackButton(label: backLabel!, onPressed: onBack);
@@ -71,13 +72,16 @@ class KPageHeader extends StatelessWidget {
               header: true,
               child: KText(
                 title,
-                variant: compact
-                    ? KTextVariant.heading1
-                    : KTextVariant.heading2,
+                variant: switch ((style, compact)) {
+                  // iOS large title on every width.
+                  (KStyle.apple, _) => KTextVariant.heading1,
+                  (KStyle.linear, true) => KTextVariant.heading2,
+                  (KStyle.linear, false) => KTextVariant.heading3,
+                },
               ),
             ),
             if (subtitle case final text?) ...[
-              SizedBox(height: t.spaceTight),
+              SizedBox(height: t.componentPageHeaderTitleGap),
               KText(
                 text,
                 variant: KTextVariant.bodySmall,
@@ -137,10 +141,13 @@ class KPageHeader extends StatelessWidget {
               );
           }
         }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: children,
+        return Padding(
+          padding: EdgeInsets.only(top: t.componentPageHeaderPaddingBlockStart),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: children,
+          ),
         );
       },
     );

@@ -171,7 +171,7 @@
 }
 
 .k-sidebar-item[data-active] .k-sidebar-item__control {
-  background: var(--k-color-action-secondary-background);
+  background: var(--k-component-sidebar-active-background);
   color: var(--k-color-text-primary);
   font-weight: var(--k-font-label-weight);
 }

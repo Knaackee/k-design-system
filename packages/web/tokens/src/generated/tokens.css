@@ -281,6 +281,7 @@
   --k-layout-alert-width: 440px;
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
+  --k-layout-page-width: 960px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -452,6 +453,16 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-row-min-height: 40px;
+  --k-component-list-row-padding-block: 8px;
+  --k-component-list-row-padding-inline: 12px;
+  --k-component-list-leading-gap: 12px;
+  --k-component-list-group-radius: 8px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 12px;
+  --k-component-page-header-padding-block-start: 8px;
+  --k-component-page-header-title-gap: 4px;
+  --k-component-sidebar-active-background: var(--k-color-border-default);
   --k-component-sidebar-transition-duration: var(--k-motion-standard);
   --k-component-sidebar-width: var(--k-layout-sidebar-width);
   --k-component-sidebar-rail-width: var(--k-size-app-bar-rail);
@@ -880,6 +891,7 @@
   --k-layout-alert-width: 440px;
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
+  --k-layout-page-width: 960px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -1051,6 +1063,16 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-row-min-height: 40px;
+  --k-component-list-row-padding-block: 8px;
+  --k-component-list-row-padding-inline: 12px;
+  --k-component-list-leading-gap: 12px;
+  --k-component-list-group-radius: 8px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 12px;
+  --k-component-page-header-padding-block-start: 8px;
+  --k-component-page-header-title-gap: 4px;
+  --k-component-sidebar-active-background: var(--k-color-border-default);
   --k-component-sidebar-transition-duration: var(--k-motion-standard);
   --k-component-sidebar-width: var(--k-layout-sidebar-width);
   --k-component-sidebar-rail-width: var(--k-size-app-bar-rail);
@@ -1479,6 +1501,7 @@
   --k-layout-alert-width: 440px;
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
+  --k-layout-page-width: 960px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -1650,6 +1673,16 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-row-min-height: 40px;
+  --k-component-list-row-padding-block: 8px;
+  --k-component-list-row-padding-inline: 12px;
+  --k-component-list-leading-gap: 12px;
+  --k-component-list-group-radius: 8px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 12px;
+  --k-component-page-header-padding-block-start: 8px;
+  --k-component-page-header-title-gap: 4px;
+  --k-component-sidebar-active-background: var(--k-color-border-default);
   --k-component-sidebar-transition-duration: var(--k-motion-standard);
   --k-component-sidebar-width: var(--k-layout-sidebar-width);
   --k-component-sidebar-rail-width: var(--k-size-app-bar-rail);
@@ -2078,6 +2111,7 @@
   --k-layout-alert-width: 440px;
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
+  --k-layout-page-width: 960px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -2249,6 +2283,16 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-row-min-height: 40px;
+  --k-component-list-row-padding-block: 8px;
+  --k-component-list-row-padding-inline: 12px;
+  --k-component-list-leading-gap: 12px;
+  --k-component-list-group-radius: 8px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 12px;
+  --k-component-page-header-padding-block-start: 8px;
+  --k-component-page-header-title-gap: 4px;
+  --k-component-sidebar-active-background: var(--k-color-border-default);
   --k-component-sidebar-transition-duration: var(--k-motion-standard);
   --k-component-sidebar-width: var(--k-layout-sidebar-width);
   --k-component-sidebar-rail-width: var(--k-size-app-bar-rail);
@@ -2400,6 +2444,30 @@
 }
 
 @layer k-design-mode {
+[data-style="linear"] {
+  --k-component-list-row-min-height: 40px;
+  --k-component-list-row-padding-block: 8px;
+  --k-component-list-row-padding-inline: 12px;
+  --k-component-list-leading-gap: 12px;
+  --k-component-list-group-radius: 8px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 12px;
+  --k-component-page-header-padding-block-start: 8px;
+  --k-component-page-header-title-gap: 4px;
+}
+
+[data-style="apple"] {
+  --k-component-list-row-min-height: 44px;
+  --k-component-list-row-padding-block: 12px;
+  --k-component-list-row-padding-inline: 16px;
+  --k-component-list-leading-gap: 16px;
+  --k-component-list-group-radius: 12px;
+  --k-component-list-section-header-gap: 8px;
+  --k-component-list-section-header-inset: 16px;
+  --k-component-page-header-padding-block-start: 16px;
+  --k-component-page-header-title-gap: 4px;
+}
+
 [data-motion="apple"] {
   --k-motion-feedback-duration: 100ms;
   --k-motion-feedback-bounce: 0;

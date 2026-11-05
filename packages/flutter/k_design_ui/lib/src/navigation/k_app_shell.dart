@@ -141,7 +141,10 @@ class KAppShell extends StatelessWidget {
                             ),
                             badge: destination.badge == null
                                 ? null
-                                : KBadge(child: Text(destination.badge!)),
+                                : KBadge(
+                                    variant: KBadgeVariant.secondary,
+                                    child: Text(destination.badge!),
+                                  ),
                             active: destination.id == selectedId,
                             onPressed: () => _select(context, destination.id),
                           ),
@@ -156,7 +159,16 @@ class KAppShell extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(child: child),
+            // Wide windows: the page keeps a readable width (Decision 0014).
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: t.layoutPageWidth),
+                  child: child,
+                ),
+              ),
+            ),
           ],
         );
       },

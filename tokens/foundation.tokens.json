@@ -121,6 +121,14 @@
         "$type": "dimension",
         "$value": { "value": 16, "unit": "px" }
       },
+      "listRow": {
+        "$type": "dimension",
+        "$value": { "value": 40, "unit": "px" }
+      },
+      "listRowRelaxed": {
+        "$type": "dimension",
+        "$value": { "value": 44, "unit": "px" }
+      },
       "iconDefault": {
         "$type": "dimension",
         "$value": { "value": 24, "unit": "px" }
@@ -884,6 +892,10 @@
       "content": {
         "$type": "dimension",
         "$value": { "value": 640, "unit": "px" }
+      },
+      "page": {
+        "$type": "dimension",
+        "$value": { "value": 960, "unit": "px" }
       },
       "pickerWide": {
         "$type": "dimension",

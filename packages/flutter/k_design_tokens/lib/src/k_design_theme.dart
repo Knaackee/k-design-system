@@ -21,6 +21,11 @@ enum KWindowClass { compact, medium, expanded, large, extraLarge }
 /// automatically when the platform asks to reduce motion.
 enum KMotionStyle { apple, expressive, reduced }
 
+/// Style preset (Decision 0014): structure and rhythm of components, not
+/// colours. [linear]: compact productivity look (default). [apple]: iOS/iPadOS
+/// Human Interface Guidelines: 44 pt rows, inset grouped lists, large titles.
+enum KStyle { linear, apple }
+
 typedef KDesignTokenTransform = KDesignTokens Function(KDesignTokens tokens);
 
 @immutable
@@ -31,6 +36,7 @@ class KDesignConfiguration {
     this.inputMode = KInputMode.pointer,
     this.windowClass = KWindowClass.compact,
     this.motion = KMotionStyle.apple,
+    this.style = KStyle.linear,
   });
 
   final KDensity density;
@@ -38,6 +44,7 @@ class KDesignConfiguration {
   final KInputMode inputMode;
   final KWindowClass windowClass;
   final KMotionStyle motion;
+  final KStyle style;
 
   @override
   bool operator ==(Object other) =>
@@ -46,11 +53,12 @@ class KDesignConfiguration {
       other.typeScale == typeScale &&
       other.inputMode == inputMode &&
       other.windowClass == windowClass &&
-      other.motion == motion;
+      other.motion == motion &&
+      other.style == style;
 
   @override
   int get hashCode =>
-      Object.hash(density, typeScale, inputMode, windowClass, motion);
+      Object.hash(density, typeScale, inputMode, windowClass, motion, style);
 
   /// Explicit opt-in for data-dense desktop screens (tables, admin).
   static const dashboard = KDesignConfiguration(density: KDensity.dense);
@@ -216,7 +224,12 @@ KDesignTokens resolveKDesignTokens(
     ),
   };
 
-  final resolved = moved.copyWith(
+  final styled = switch (configuration.style) {
+    KStyle.linear => KDesignTokenVariants.applyStyleLinear(moved),
+    KStyle.apple => KDesignTokenVariants.applyStyleApple(moved),
+  };
+
+  final resolved = styled.copyWith(
     spaceControlGap: controlGap,
     spaceControlInsetInline: controlInsetInline,
     sizeControl: controlSize,

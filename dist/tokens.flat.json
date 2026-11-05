@@ -1730,6 +1730,13 @@
         "unit": "px"
       }
     },
+    "layout.pageWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 960,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -2794,6 +2801,73 @@
         "value": 96,
         "unit": "px"
       }
+    },
+    "component.list.rowMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.leadingGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.groupRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.titleGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.activeBackground": {
+      "type": "color",
+      "value": "#e2e2e4"
     },
     "component.sidebar.transitionDuration": {
       "type": "duration",
@@ -5493,6 +5567,13 @@
         "unit": "px"
       }
     },
+    "layout.pageWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 960,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -6557,6 +6638,73 @@
         "value": 96,
         "unit": "px"
       }
+    },
+    "component.list.rowMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.leadingGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.groupRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.titleGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.activeBackground": {
+      "type": "color",
+      "value": "#303033"
     },
     "component.sidebar.transitionDuration": {
       "type": "duration",
@@ -9256,6 +9404,13 @@
         "unit": "px"
       }
     },
+    "layout.pageWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 960,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -10320,6 +10475,73 @@
         "value": 96,
         "unit": "px"
       }
+    },
+    "component.list.rowMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.leadingGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.groupRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.titleGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.activeBackground": {
+      "type": "color",
+      "value": "#99d5cd"
     },
     "component.sidebar.transitionDuration": {
       "type": "duration",
@@ -13019,6 +13241,13 @@
         "unit": "px"
       }
     },
+    "layout.pageWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 960,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -14084,6 +14313,73 @@
         "unit": "px"
       }
     },
+    "component.list.rowMinHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.rowPaddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.leadingGap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.list.groupRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderGap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.sectionHeaderInset": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.pageHeader.titleGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.sidebar.activeBackground": {
+      "type": "color",
+      "value": "#23544e"
+    },
     "component.sidebar.transitionDuration": {
       "type": "duration",
       "value": {
@@ -15052,6 +15348,136 @@
     }
   },
   "variants": {
+    "styleLinear": {
+      "component.list.rowMinHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "component.list.rowPaddingBlock": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.list.rowPaddingInline": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.list.leadingGap": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.list.groupRadius": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.list.sectionHeaderGap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.list.sectionHeaderInset": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.pageHeader.paddingBlockStart": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.pageHeader.titleGap": {
+        "type": "dimension",
+        "value": {
+          "value": 4,
+          "unit": "px"
+        }
+      }
+    },
+    "styleApple": {
+      "component.list.rowMinHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 44,
+          "unit": "px"
+        }
+      },
+      "component.list.rowPaddingBlock": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.list.rowPaddingInline": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.list.leadingGap": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.list.groupRadius": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.list.sectionHeaderGap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.list.sectionHeaderInset": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.pageHeader.paddingBlockStart": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.pageHeader.titleGap": {
+        "type": "dimension",
+        "value": {
+          "value": 4,
+          "unit": "px"
+        }
+      }
+    },
     "motionApple": {
       "motion.feedback.duration": {
         "type": "duration",

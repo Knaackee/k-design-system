@@ -1,0 +1,44 @@
+{
+  "component": {
+    "list": {
+      "rowMinHeight": {
+        "$type": "dimension",
+        "$value": "{size.scale.listRowRelaxed}"
+      },
+      "rowPaddingBlock": {
+        "$type": "dimension",
+        "$value": "{space.3}"
+      },
+      "rowPaddingInline": {
+        "$type": "dimension",
+        "$value": "{space.4}"
+      },
+      "leadingGap": {
+        "$type": "dimension",
+        "$value": "{space.4}"
+      },
+      "groupRadius": {
+        "$type": "dimension",
+        "$value": "{radius.scale.xl}"
+      },
+      "sectionHeaderGap": {
+        "$type": "dimension",
+        "$value": "{space.2}"
+      },
+      "sectionHeaderInset": {
+        "$type": "dimension",
+        "$value": "{space.4}"
+      }
+    },
+    "pageHeader": {
+      "paddingBlockStart": {
+        "$type": "dimension",
+        "$value": "{space.4}"
+      },
+      "titleGap": {
+        "$type": "dimension",
+        "$value": "{space.1}"
+      }
+    }
+  }
+}

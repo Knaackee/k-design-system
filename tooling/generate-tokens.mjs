@@ -16,6 +16,11 @@ const sourceFiles = {
 };
 
 const variantFiles = {
+  styleLinear: [
+    "tokens/modes/style.linear.tokens.json",
+    '[data-style="linear"]',
+  ],
+  styleApple: ["tokens/modes/style.apple.tokens.json", '[data-style="apple"]'],
   motionApple: [
     "tokens/modes/motion.apple.tokens.json",
     '[data-motion="apple"]',
@@ -366,6 +371,21 @@ function generateDart(themes, semantic, variants) {
         `  static const ${camel(`${variant}.${path}`)} = ${dartValue(token)};`,
     ),
   );
+  // Style presets (Decision 0014) change many tokens at once; emit one apply
+  // function per preset so the theme resolver stays a single switch.
+  const styleAppliers = Object.entries(variants)
+    .filter(([variant]) => variant.startsWith("style"))
+    .map(
+      ([variant, tokens]) =>
+        `  static KDesignTokens apply${variant[0].toUpperCase()}${variant.slice(1)}(KDesignTokens t) => t.copyWith(\n${[
+          ...tokens,
+        ]
+          .map(
+            ([path]) => `    ${camel(path)}: ${camel(`${variant}.${path}`)},`,
+          )
+          .join("\n")}\n  );`,
+    );
+  variantFields.push(...styleAppliers);
 
   return `// GENERATED FILE. DO NOT EDIT.\nimport 'dart:ui' show lerpDouble;\nimport 'package:flutter/material.dart';\n\nabstract final class KDesignTokenVariants {\n${variantFields.join("\n")}\n}\n\n@immutable\nclass KDesignTokens extends ThemeExtension<KDesignTokens> {\n  const KDesignTokens({\n${constructor.join("\n")}\n  });\n\n${fields.join("\n")}\n\n${Object.entries(
     themes,

@@ -41,6 +41,7 @@ KDesignConfiguration resolveKAdaptiveConfiguration({
     inputMode: inputMode,
     windowClass: windowClass,
     motion: motion,
+    style: overrides.style ?? KStyle.linear,
   );
 }
 
@@ -53,6 +54,7 @@ class KAdaptiveOverrides {
     this.inputMode,
     this.windowClass,
     this.motion,
+    this.style,
   });
 
   /// Pins every axis of [configuration] except the window class.
@@ -62,6 +64,7 @@ class KAdaptiveOverrides {
         typeScale: configuration.typeScale,
         inputMode: configuration.inputMode,
         motion: configuration.motion,
+        style: configuration.style,
       );
 
   final KDensity? density;
@@ -72,6 +75,9 @@ class KAdaptiveOverrides {
   /// App-level motion style. The platform "reduce motion" setting overrides
   /// it with [KMotionStyle.reduced].
   final KMotionStyle? motion;
+
+  /// App-level style preset (Decision 0014).
+  final KStyle? style;
 }
 
 /// Exposes the resolved configuration below a [KAdaptiveTheme].

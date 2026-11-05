@@ -15,6 +15,12 @@
   min-height: 0;
   overflow: auto;
 }
+/* Wide windows: the page keeps a readable width (Decision 0014). */
+.k-app-shell__content > * {
+  box-sizing: border-box;
+  max-width: var(--k-layout-page-width);
+  margin-inline: auto;
+}
 /* The tab bar sits in the shell's flow instead of over the page. */
 .k-app-shell > .k-mobile-app-bar {
   position: sticky;

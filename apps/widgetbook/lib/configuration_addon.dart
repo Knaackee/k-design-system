@@ -55,6 +55,13 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
       initialValue: KMotionStyle.apple,
       labelBuilder: (value) => value.name,
     ),
+    // Style preset (Decision 0014); applies in both modes.
+    ObjectDropdownField<KStyle>(
+      name: 'style',
+      values: KStyle.values,
+      initialValue: KStyle.linear,
+      labelBuilder: (value) => value.name,
+    ),
   ];
 
   @override
@@ -67,6 +74,7 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
         inputMode: valueOf<KInputMode>('input-mode', group)!,
         windowClass: valueOf<KWindowClass>('window-class', group)!,
         motion: valueOf<KMotionStyle>('motion', group) ?? KMotionStyle.apple,
+        style: valueOf<KStyle>('style', group) ?? KStyle.linear,
       ),
     );
   }
@@ -86,6 +94,7 @@ class KDesignConfigurationAddon extends WidgetbookAddon<KGalleryConfiguration> {
             overrides: KAdaptiveOverrides(
               density: gallery.manual.density,
               motion: gallery.manual.motion,
+              style: gallery.manual.style,
             ),
             reduceMotion: MediaQuery.disableAnimationsOf(context),
           )

@@ -1,29 +1,89 @@
-/* KList / KListItem (Decision 0012). Mirrors k_list.dart. */
+/* KList / KListItem (Decisions 0012, 0014). Mirrors k_list.dart. */
 .k-list {
+  display: grid;
+  min-width: 0;
+  /* Text roles per style preset; linear is the default. */
+  --k-list-title-size: var(--k-font-label-size);
+  --k-list-title-line: var(--k-font-label-line-height);
+  --k-list-title-weight: var(--k-font-label-weight);
+  --k-list-value-size: var(--k-font-body-small-size);
+  --k-list-value-line: var(--k-font-body-small-line-height);
+}
+[data-style="apple"] .k-list {
+  --k-list-title-size: var(--k-font-body-size);
+  --k-list-title-line: var(--k-font-body-line-height);
+  --k-list-title-weight: var(--k-font-body-weight);
+  --k-list-value-size: var(--k-font-body-size);
+  --k-list-value-line: var(--k-font-body-line-height);
+}
+.k-list__title,
+.k-list__footer {
+  padding-inline: var(--k-component-list-section-header-inset);
+  color: var(--k-color-text-muted);
+}
+.k-list__title {
+  margin: 0 0 var(--k-component-list-section-header-gap);
+}
+[data-style="apple"] .k-list__title {
+  --k-text-font-size: var(--k-font-caption-size);
+  --k-text-line-height: var(--k-font-caption-line-height);
+  --k-text-font-weight: var(--k-font-body-weight);
+  text-transform: uppercase;
+}
+.k-list__footer {
+  margin: var(--k-component-list-section-header-gap) 0 0;
+}
+.k-list__group {
   display: grid;
   margin: 0;
   padding: 0;
+  overflow: hidden;
   list-style: none;
+  border: var(--k-space-hairline) solid var(--k-color-border-default);
+  border-radius: var(--k-component-list-group-radius);
+  background: var(--k-color-surface-raised);
+}
+/* iOS groups have no outline. */
+[data-style="apple"] .k-list__group {
+  border-color: transparent;
 }
 .k-list__row {
   min-width: 0;
 }
-.k-list[data-separated] > .k-list__row + .k-list__row::before {
+/* Separators start at the text of the row above. */
+.k-list__group[data-separated] > .k-list__row + .k-list__row::before {
   content: "";
   display: block;
   height: var(--k-space-hairline);
-  margin-inline-start: var(--k-space-control-inset-inline);
+  margin-inline-start: var(--k-component-list-row-padding-inline);
   background: var(--k-color-border-default);
+}
+.k-list__group[data-separated]
+  > .k-list__row:has(.k-list-item__leading)
+  + .k-list__row::before {
+  margin-inline-start: calc(
+    var(--k-component-list-row-padding-inline) + var(--k-size-icon-default) +
+      var(--k-component-list-leading-gap)
+  );
 }
 
 .k-list-item {
+  /* Height of the first title line: leading, chevron and badges centre on it. */
+  --k-list-band: calc(
+    var(--k-list-title-line) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  min-height: var(--k-size-hit-target);
+  min-height: max(
+    var(--k-component-list-row-min-height),
+    var(--k-size-hit-target)
+  );
   margin: 0;
-  padding: var(--k-space-control-gap) var(--k-space-control-inset-inline);
+  padding: var(--k-component-list-row-padding-block)
+    var(--k-component-list-row-padding-inline);
   border: 0;
   background: transparent;
   color: var(--k-color-text-primary);
@@ -55,53 +115,49 @@
   color: var(--k-color-text-muted);
 }
 
-/* The leading visual and the chevron sit on the first title line. */
 .k-list-item__row {
   display: flex;
   flex: 1;
   align-items: flex-start;
-  gap: var(--k-space-control-gap);
   min-width: 0;
 }
+.k-list-item__leading,
+.k-list-item__trailing,
 .k-list-item__chevron {
-  --k-leading-size: var(--k-size-content);
-  /* Label line height (18) is never below the icon (16): no clamp needed. */
-  margin-block-start: calc(
-    (
-        var(--k-font-label-line-height) *
-          min(var(--k-text-scale, 1), var(--k-text-scale-max-body)) -
-          var(--k-size-content)
-      ) /
-      2
-  );
-  color: var(--k-color-text-muted);
-}
-.k-list-item__leading {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  height: calc(
-    var(--k-font-label-line-height) *
-      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
-  );
-  margin-block-start: 0;
+  justify-content: center;
+  height: var(--k-list-band);
   color: var(--k-color-text-muted);
+}
+.k-list-item__leading {
+  width: var(--k-size-icon-default);
+  margin-inline-end: var(--k-component-list-leading-gap);
+}
+.k-list-item__trailing,
+.k-list-item__chevron {
+  margin-inline-start: var(--k-space-control-gap);
+}
+.k-list-item__chevron {
+  margin-block-start: 0;
 }
 .k-list-item__body {
   display: flex;
   flex: 1;
-  align-items: center;
-  gap: var(--k-space-control-gap);
+  align-items: flex-start;
   min-width: 0;
 }
 .k-list-item__copy {
   display: grid;
   flex: 1;
-  gap: var(--k-space-tight);
+  gap: var(--k-space-micro);
   min-width: 0;
 }
-.k-list-item__title,
-.k-list-item__description {
+.k-list-item__title {
+  --k-text-font-size: var(--k-list-title-size);
+  --k-text-line-height: var(--k-list-title-line);
+  --k-text-font-weight: var(--k-list-title-weight);
   display: block;
   min-width: 0;
 }
@@ -113,23 +169,46 @@
   line-clamp: var(--k-list-title-lines);
 }
 .k-list-item__description {
-  color: var(--k-color-text-muted);
-}
-.k-list-item__trailing {
-  max-width: 50%;
+  display: block;
   min-width: 0;
   color: var(--k-color-text-muted);
 }
+.k-list-item__value {
+  flex: 0 1 auto;
+  max-width: 50%;
+  min-width: 0;
+  margin-inline-start: var(--k-space-control-gap);
+  color: var(--k-color-text-muted);
+  font-family: var(--k-font-family);
+  font-size: calc(
+    var(--k-list-value-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  line-height: calc(
+    var(--k-list-value-line) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  text-align: end;
+  overflow-wrap: anywhere;
+}
 
-/* Trailing moves under the copy from 1.3× text. */
+/* From 1.3× text the value moves under the title. */
 [data-text-large] .k-list-item__body {
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--k-space-tight);
+  gap: var(--k-space-micro);
 }
 [data-text-large] .k-list-item__trailing {
-  max-width: 100%;
+  height: auto;
+  margin-inline-start: 0;
 }
+[data-text-large] .k-list-item__value {
+  max-width: 100%;
+  margin-inline-start: 0;
+  --k-list-value-size: var(--k-font-body-small-size);
+  --k-list-value-line: var(--k-font-body-small-line-height);
+  text-align: start;
+}
+
 [dir="rtl"] .k-list-item__chevron,
 .k-list-item__chevron:dir(rtl) {
   transform: scaleX(-1);
