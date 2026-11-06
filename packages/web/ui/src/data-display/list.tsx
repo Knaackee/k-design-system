@@ -116,7 +116,11 @@ export function KListItem({
   const interactive = Boolean(onClick || href);
   const showChevron = disclosure ?? interactive;
   const textRef = useRef<HTMLSpanElement>(null);
-  const stacked = useStackedValue(textRef, value != null && value !== false);
+  const stacked = useStackedValue(textRef, value != null && value !== false, [
+    title,
+    description,
+    value,
+  ]);
   const visual =
     leading ??
     (mediaIcon ? (
@@ -225,6 +229,7 @@ export function KListItem({
 function useStackedValue(
   ref: { current: HTMLSpanElement | null },
   hasValue: boolean,
+  deps: readonly unknown[],
 ) {
   const [stacked, setStacked] = useState(false);
   useLayoutEffect(() => {
@@ -239,7 +244,12 @@ function useStackedValue(
       const value = element.lastElementChild as HTMLElement | null;
       if (!copy || !value || copy === value) return;
       element.setAttribute("data-measuring", "");
-      const gap = parseFloat(getComputedStyle(value).marginInlineStart) || 0;
+      // The token, not the value's margin: a stacked value has no margin,
+      // and reading it would flip the decision at the threshold.
+      const gap =
+        parseFloat(
+          getComputedStyle(element).getPropertyValue("--k-space-control-gap"),
+        ) || 0;
       const needed =
         copy.getBoundingClientRect().width +
         gap +
@@ -256,6 +266,6 @@ function useStackedValue(
       alive = false;
       observer.disconnect();
     };
-  });
+  }, [ref, hasValue, ...deps]);
   return stacked;
 }
