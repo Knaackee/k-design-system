@@ -52,22 +52,35 @@ class KSegmentedControl<T> extends StatelessWidget {
     final vertical =
         segments.length >= 3 &&
         MediaQuery.textScalerOf(context).scale(1) >= 1.3;
-    final inset = t.spaceMicro;
-    final radius = BorderRadius.circular(t.radiusControl);
-    final innerRadius = BorderRadius.circular(
-      (t.radiusControl - inset).clamp(0, t.radiusControl).toDouble(),
+    // Material 3 segmented button: outlined pill, tonal selection with a
+    // check mark, dividers between segments (Decision 0015).
+    final material = KAdaptive.maybeOf(context)?.style == KStyle.material;
+    final inset = material ? 0.0 : t.spaceMicro;
+    final radius = BorderRadius.circular(
+      material ? t.radiusFull : t.radiusControl,
     );
-    final thumbDecoration = BoxDecoration(
-      color: t.colorSurfaceRaised,
-      borderRadius: innerRadius,
-      border: Border.all(color: t.colorBorderDefault, width: t.spaceHairline),
-    );
+    final innerRadius = material
+        ? BorderRadius.zero
+        : BorderRadius.circular(
+            (t.radiusControl - inset).clamp(0, t.radiusControl).toDouble(),
+          );
+    final thumbDecoration = material
+        ? BoxDecoration(color: t.colorBrandPrimaryBackground)
+        : BoxDecoration(
+            color: t.colorSurfaceRaised,
+            borderRadius: innerRadius,
+            border: Border.all(
+              color: t.colorBorderDefault,
+              width: t.spaceHairline,
+            ),
+          );
 
     Widget segment(int i) => _KSegmentButton(
       segment: segments[i],
       selected: i == index,
       enabled: onChanged != null,
       radius: innerRadius,
+      check: material,
       decoration: vertical && i == index ? thumbDecoration : null,
       onPressed: () {
         if (i == index) return;
@@ -99,6 +112,15 @@ class KSegmentedControl<T> extends StatelessWidget {
                     bottom: 0,
                     child: DecoratedBox(decoration: thumbDecoration),
                   ),
+                if (material)
+                  for (var i = 1; i < segments.length; i++)
+                    PositionedDirectional(
+                      start: width * i,
+                      width: t.spaceHairline,
+                      top: 0,
+                      bottom: 0,
+                      child: ColoredBox(color: t.colorBorderStrong),
+                    ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -117,11 +139,22 @@ class KSegmentedControl<T> extends StatelessWidget {
       container: true,
       explicitChildNodes: true,
       child: DecoratedBox(
+        position: DecorationPosition.foreground,
         decoration: BoxDecoration(
-          color: t.colorSurfaceSubtle,
           borderRadius: radius,
+          border: material
+              ? Border.all(color: t.colorBorderStrong, width: t.spaceHairline)
+              : null,
         ),
-        child: Padding(padding: EdgeInsets.all(inset), child: content),
+        child: ClipRRect(
+          borderRadius: radius,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: material ? Colors.transparent : t.colorSurfaceSubtle,
+            ),
+            child: Padding(padding: EdgeInsets.all(inset), child: content),
+          ),
+        ),
       ),
     );
   }
@@ -134,6 +167,7 @@ class _KSegmentButton<T> extends StatelessWidget {
     required this.enabled,
     required this.radius,
     required this.onPressed,
+    this.check = false,
     this.decoration,
   });
 
@@ -143,6 +177,9 @@ class _KSegmentButton<T> extends StatelessWidget {
   final BorderRadius radius;
   final BoxDecoration? decoration;
   final VoidCallback onPressed;
+
+  /// Material: a selected segment without an icon shows a check mark.
+  final bool check;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +219,8 @@ class _KSegmentButton<T> extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (segment.icon case final icon?) ...[
+                if (segment.icon ?? (check && selected ? KIconName.check : null)
+                    case final icon?) ...[
                   KIcon(icon, size: 16, color: color),
                   SizedBox(width: t.spaceTight),
                 ],

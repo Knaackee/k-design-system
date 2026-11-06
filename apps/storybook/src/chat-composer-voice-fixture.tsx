@@ -87,19 +87,19 @@ export function VoiceComposerFixture({ mobile = false }: { mobile?: boolean }) {
                 {
                   id: "image",
                   label: "Bild auswählen",
-                  iconContent: <KIcon name="image" strokeWidth={1.5} />,
+                  iconContent: <KIcon name="image" />,
                   onSelect: () => setResult("Bildauswahl geöffnet (Vorschau)."),
                 },
                 {
                   id: "camera",
                   label: "Foto aufnehmen",
-                  iconContent: <KIcon name="camera" strokeWidth={1.5} />,
+                  iconContent: <KIcon name="camera" />,
                   onSelect: () => setResult("Kamera geöffnet (Vorschau)."),
                 },
                 {
                   id: "document",
                   label: "Datei auswählen",
-                  iconContent: <KIcon name="file" strokeWidth={1.5} />,
+                  iconContent: <KIcon name="file" />,
                   onSelect: () =>
                     setResult("Dateiauswahl geöffnet (Vorschau)."),
                 },

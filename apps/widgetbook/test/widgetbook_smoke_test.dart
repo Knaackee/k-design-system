@@ -49,7 +49,8 @@ void main() {
       ),
     );
 
-    expect(resolved.sizeControl, 36);
+    // Touch raises controls to the style's touch height (Decision 0015).
+    expect(resolved.sizeControl, 40);
     expect(resolved.fontSize, 16);
     expect(resolved.fontHeading1Size, 28);
     expect(resolved.sizeHitTarget, 48);

@@ -181,27 +181,15 @@ export function MenuLevel({
                 <span className="k-menu__icon">
                   {action.iconContent ??
                     (action.icon ? (
-                      <KIcon
-                        name={action.icon}
-                        color="currentColor"
-                        strokeWidth={1.5}
-                      />
+                      <KIcon name={action.icon} color="currentColor" />
                     ) : null)}
                 </span>
                 <span className="k-menu__label">{action.label}</span>
                 <span className="k-menu__trailing" aria-hidden="true">
                   {hasChildren ? (
-                    <KIcon
-                      name="chevron-right"
-                      color="currentColor"
-                      strokeWidth={1.5}
-                    />
+                    <KIcon name="chevron-right" color="currentColor" />
                   ) : action.checked ? (
-                    <KIcon
-                      name="check"
-                      color="currentColor"
-                      strokeWidth={1.5}
-                    />
+                    <KIcon name="check" color="currentColor" />
                   ) : null}
                 </span>
               </Item>

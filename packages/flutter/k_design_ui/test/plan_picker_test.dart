@@ -7,7 +7,6 @@ void main() {
   testWidgets('interval changes while payment action remains disabled', (
     tester,
   ) async {
-
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

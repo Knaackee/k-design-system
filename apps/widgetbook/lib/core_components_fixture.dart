@@ -53,6 +53,18 @@ class SettingsListFixture extends StatelessWidget {
         ],
       ),
       KList(
+        title: 'Assistant',
+        footer: 'Speech input runs on this device.',
+        children: [
+          KListItem(
+            title: 'On-device speech input',
+            leadingIcon: KIconName.mic,
+            value: 'Not set up',
+            onPressed: () {},
+          ),
+        ],
+      ),
+      KList(
         title: 'Storage',
         footer: 'Offline files are removed after 30 days without use.',
         children: [
@@ -81,6 +93,52 @@ class SettingsListFixture extends StatelessWidget {
           KListItem(
             title: 'Terms of use',
             leadingIcon: KIconName.fileText,
+            onPressed: () {},
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+/// Objects with media tiles, a status badge and a shared-with summary.
+class PortfolioListFixture extends StatelessWidget {
+  const PortfolioListFixture({super.key});
+
+  @override
+  Widget build(BuildContext context) => KStack(
+    gap: KLayoutGap.section,
+    align: KLayoutAlign.stretch,
+    children: [
+      KList(
+        title: 'Own portfolios',
+        children: [
+          KListItem(
+            title: 'Riverside Holdings',
+            description: 'Dana Weber · Updated 22.09.2026',
+            mediaIcon: KIconName.folder,
+            trailing: const KBadge(
+              variant: KBadgeVariant.secondary,
+              child: Text('Draft'),
+            ),
+            onPressed: () {},
+          ),
+          KListItem(
+            title: 'North Estates',
+            description: 'Updated 03.10.2026',
+            mediaIcon: KIconName.building,
+            value: '12 units',
+            onPressed: () {},
+          ),
+        ],
+      ),
+      KList(
+        title: 'Sharing',
+        children: [
+          KListItem(
+            title: 'Sabrina, Patricia, Kristin',
+            leadingIcon: KIconName.users,
+            value: '3 people',
             onPressed: () {},
           ),
         ],
@@ -178,13 +236,14 @@ class PageHeaderFixture extends StatelessWidget {
 }
 
 class AppShellFixture extends StatefulWidget {
-  const AppShellFixture({super.key});
+  const AppShellFixture({this.initial = 'settings', super.key});
+  final String initial;
   @override
   State<AppShellFixture> createState() => _AppShellFixtureState();
 }
 
 class _AppShellFixtureState extends State<AppShellFixture> {
-  String selected = 'settings';
+  late String selected = widget.initial;
   static const destinations = [
     KAppDestination(id: 'home', label: 'Home', icon: KIconName.house),
     KAppDestination(
@@ -225,6 +284,8 @@ class _AppShellFixtureState extends State<AppShellFixture> {
             KPageHeader(title: current.label),
             if (selected == 'settings')
               const SettingsListFixture()
+            else if (selected == 'portfolios')
+              const PortfolioListFixture()
             else
               KText('${current.label} has no content in this reference.'),
           ],

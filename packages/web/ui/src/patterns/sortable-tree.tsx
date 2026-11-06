@@ -240,12 +240,7 @@ export function KSortableTree<T>({
       id: key,
       label,
       separatorBefore: key === "up",
-      iconContent: (
-        <KIcon
-          name={key === "up" ? "arrow-up" : "arrow-down"}
-          strokeWidth={1.5}
-        />
-      ),
+      iconContent: <KIcon name={key === "up" ? "arrow-up" : "arrow-down"} />,
       disabled: !move || !allowed(move),
       onSelect: () => {
         if (move) commit(move);
@@ -313,7 +308,7 @@ export function KSortableTree<T>({
               {
                 id: "move-to",
                 label: labels.moveTo,
-                iconContent: <KIcon name="arrow-right" strokeWidth={1.5} />,
+                iconContent: <KIcon name="arrow-right" />,
                 children: destinations,
               },
             ]

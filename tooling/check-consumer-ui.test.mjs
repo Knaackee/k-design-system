@@ -31,3 +31,38 @@ test("reports raw spacing and upstream imports with line numbers", () => {
     "upstream-import",
   );
 });
+test("reports appearance set in app code (Decision 0015)", () => {
+  const rules = (source, ext) => findings(source, ext).map((f) => f.rule);
+  assert.deepEqual(rules("KIcon(KIconName.house, strokeWidth: 2)", ".dart"), [
+    "icon-stroke",
+  ]);
+  assert.deepEqual(rules('<KIcon name="house" strokeWidth={2} />', ".tsx"), [
+    "icon-stroke",
+  ]);
+  assert.deepEqual(
+    rules("KAdaptiveOverrides(density: KDensity.dense)", ".dart"),
+    ["appearance-override"],
+  );
+  assert.deepEqual(rules('<div data-density="dense" />', ".tsx"), [
+    "appearance-override",
+  ]);
+  assert.deepEqual(
+    rules(
+      "KCard(child: Row(children: [Text('A'), KIcon(KIconName.chevronRight)]))",
+      ".dart",
+    ),
+    ["hand-built-row"],
+  );
+  assert.deepEqual(
+    rules(
+      '<KCard><span>A</span><KIcon name="chevron-right" /></KCard>',
+      ".tsx",
+    ),
+    ["hand-built-row"],
+  );
+  assert.deepEqual(
+    rules("Scaffold(body: SingleChildScrollView(child: x))", ".dart"),
+    ["bare-page"],
+  );
+  assert.deepEqual(rules("Scaffold(body: KPage(children: [x]))", ".dart"), []);
+});

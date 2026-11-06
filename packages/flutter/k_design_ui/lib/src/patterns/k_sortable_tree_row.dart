@@ -32,9 +32,7 @@ extension _SortableTreeRows<T> on _KSortableTreeState<T> {
           '${fixed ? (open ? widget.labels.collapse : widget.labels.expand) : widget.labels.drag}: ${e.node.label}',
       icon: KIconName.gripVertical,
       iconContent: KIcon(
-        KIconName.gripVertical,
-        strokeWidth: 1.5,
-      ),
+        KIconName.gripVertical),
       selected: false,
       onPressed: widget.disabled
           ? null
@@ -103,7 +101,7 @@ extension _SortableTreeRows<T> on _KSortableTreeState<T> {
               label: '${widget.labels.move}: ${e.node.label}',
               overflow: true,
               alignEnd: true,
-              triggerContent: const KIcon(KIconName.ellipsis, strokeWidth: 1.5),
+              triggerContent: const KIcon(KIconName.ellipsis),
               disabled: widget.disabled || feedback,
               actions: actions(e, c),
             ),

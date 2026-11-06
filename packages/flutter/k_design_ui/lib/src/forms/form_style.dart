@@ -53,7 +53,7 @@ InputDecoration formDecoration(
   final lineMetrics = line.computeLineMetrics().single;
   final fontMetrics = natural.computeLineMetrics().single;
   final lineHeight = line.height;
-  final controlHeight = math.max(t.sizeControl, scaled + 2);
+  final controlHeight = math.max(t.sizeField, scaled + 2);
   final nativeBaseline =
       (controlHeight / 2 +
               (fontMetrics.ascent.round() - fontMetrics.descent.round()) / 2)
@@ -97,7 +97,7 @@ InputDecoration formDecoration(
       t.spaceControlInsetInline + 1,
       math.max(0, padding - baselineAdjustment),
     ),
-    constraints: BoxConstraints(minHeight: t.sizeControl),
+    constraints: BoxConstraints(minHeight: t.sizeField),
     border: border(t.colorBorderDefault),
     enabledBorder: border(
       invalid ? t.colorStatusErrorBorder : t.colorBorderDefault,

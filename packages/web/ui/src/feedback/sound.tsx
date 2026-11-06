@@ -85,7 +85,6 @@ export function KSoundToggle({
       label={enabled ? labelDisable : labelEnable}
       aria-pressed={enabled}
       disabled={disabled}
-      strokeWidth={1.5}
       onClick={() => onEnabledChange(!enabled)}
     />
   );

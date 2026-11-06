@@ -232,10 +232,17 @@ KDesignTokens resolveKDesignTokens(
     KStyle.material => KDesignTokenVariants.applyStyleMaterial(moved),
   };
 
+  // Touch input raises controls to the style's touch heights (Decision 0015):
+  // Apple 44 pt, Material 40 dp buttons and 56 dp fields.
+  final touch = configuration.inputMode == KInputMode.touch;
+  double raised(double touchSize) =>
+      touch && touchSize > controlSize ? touchSize : controlSize;
   final resolved = styled.copyWith(
     spaceControlGap: controlGap,
     spaceControlInsetInline: controlInsetInline,
-    sizeControl: controlSize,
+    sizeControl: raised(styled.sizeControlTouch),
+    sizeField: raised(styled.sizeFieldTouch),
+    sizeProminent: raised(styled.sizeProminentTouch),
     spaceContentActionGap: actionGap,
     spaceCardPadding: cardPadding,
     spaceLayoutSectionGap: configuration.windowClass == KWindowClass.compact
@@ -397,6 +404,9 @@ ThemeData kDesignTheme({
         ...const PageTransitionsTheme().builders,
         TargetPlatform.iOS: const KPageTransitionsBuilder(),
         TargetPlatform.macOS: const KPageTransitionsBuilder(),
+        // Android 15/16: the Material 3 fade-forwards transition with
+        // predictive back (Decision 0015).
+        TargetPlatform.android: const FadeForwardsPageTransitionsBuilder(),
       },
     ),
     scaffoldBackgroundColor: tokens.colorSurfaceCanvas,

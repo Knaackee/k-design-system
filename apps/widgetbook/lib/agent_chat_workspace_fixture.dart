@@ -265,19 +265,19 @@ class _AgentChatWorkspaceFixtureState extends State<AgentChatWorkspaceFixture> {
               KMenuAction(
                 id: 'image',
                 label: 'Bild auswählen',
-                iconContent: const KIcon(KIconName.image, strokeWidth: 1.5),
+                iconContent: const KIcon(KIconName.image),
                 onSelect: () => _addAttachment('Bild.jpg', 'image/jpeg'),
               ),
               KMenuAction(
                 id: 'camera',
                 label: 'Neues Bild aufnehmen',
-                iconContent: const KIcon(KIconName.camera, strokeWidth: 1.5),
+                iconContent: const KIcon(KIconName.camera),
                 onSelect: () => _addAttachment('Aufnahme.jpg', 'image/jpeg'),
               ),
               KMenuAction(
                 id: 'document',
                 label: 'Dokument auswählen',
-                iconContent: const KIcon(KIconName.file, strokeWidth: 1.5),
+                iconContent: const KIcon(KIconName.file),
                 onSelect: () =>
                     _addAttachment('Projektbrief.pdf', 'application/pdf'),
               ),

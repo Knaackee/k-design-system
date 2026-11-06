@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import 'k_overlays.dart';
+import 'k_sheet_drag.dart';
 
 /// A modal sheet on phones and a centered dialog on larger screens.
 /// Use [show] so route behavior matches the rendered surface.
@@ -116,23 +117,18 @@ class KAdaptiveDialog extends StatelessWidget {
     );
     if (pageSheet || MediaQuery.sizeOf(context).width < breakpoint) {
       if (!expandBody && !pageSheet) {
-        return KBottomSheet(
-          title: title,
-          description: description,
-          actions: actions,
-          onClose: onClose,
-          closeLabel: closeLabel,
-          maxWidth: double.infinity,
-          onDragEnd: (details) {
-            if ((details.primaryVelocity ?? 0) > 300) {
-              if (onClose != null) {
-                onClose!();
-              } else {
-                Navigator.of(context).maybePop();
-              }
-            }
-          },
-          child: child,
+        // One drag model for every sheet (Decision 0015).
+        return KSheetDrag(
+          onDismiss: onClose,
+          child: KBottomSheet(
+            title: title,
+            description: description,
+            actions: actions,
+            onClose: onClose,
+            closeLabel: closeLabel,
+            maxWidth: double.infinity,
+            child: child,
+          ),
         );
       }
       return _DraggableDialog(
@@ -155,7 +151,9 @@ class KAdaptiveDialog extends StatelessWidget {
   }
 }
 
-class _DraggableDialog extends StatefulWidget {
+/// The tall sheet for long content and page journeys: 90 % of the height,
+/// dragged and dismissed like every other sheet (Decision 0015).
+class _DraggableDialog extends StatelessWidget {
   const _DraggableDialog({
     required this.dialog,
     required this.padding,
@@ -167,84 +165,32 @@ class _DraggableDialog extends StatefulWidget {
   final Widget? description;
   final Widget? actions;
 
-  @override
-  State<_DraggableDialog> createState() => _DraggableDialogState();
-}
-
-class _DraggableDialogState extends State<_DraggableDialog> {
-  // Dismiss after a quarter of the expanded sheet, matching Web.
   static const _expandedExtent = .9;
-  static const _dismissExtent = _expandedExtent * .75;
-  final _controller = DraggableScrollableController();
-  bool _closing = false;
-
-  void _close() {
-    if (_closing) return;
-    _closing = true;
-    if (widget.dialog.onClose != null) {
-      widget.dialog.onClose!();
-    } else {
-      Navigator.of(context).maybePop();
-    }
-    // A consumer may keep the route open to confirm unsaved changes.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (_controller.isAttached) _controller.jumpTo(_expandedExtent);
-      _closing = false;
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) =>
-        NotificationListener<DraggableScrollableNotification>(
-          onNotification: (notification) {
-            if (notification.extent <= notification.minExtent + .001) _close();
-            return true;
-          },
-          child: DraggableScrollableSheet(
-            controller: _controller,
-            initialChildSize: _expandedExtent,
-            minChildSize: _dismissExtent,
-            maxChildSize: _expandedExtent,
-            expand: false,
-            shouldCloseOnMinExtent: false,
-            builder: (context, scrollController) => KBottomSheet(
-              title: widget.dialog.title,
-              description: widget.description,
-              actions: widget.actions,
-              maxWidth: widget.dialog.pageSheet
-                  ? widget.dialog.maxWidth
-                  : double.infinity,
-              onClose: widget.dialog.pageSheet ? widget.dialog.onClose : null,
-              closeLabel: widget.dialog.closeLabel,
-              expandBody: true,
-              onDragUpdate: (details) {
-                _controller.jumpTo(
-                  (_controller.size - details.delta.dy / constraints.maxHeight)
-                      .clamp(_dismissExtent, _expandedExtent),
-                );
-              },
-              onDragEnd: (details) {
-                if (details.velocity.pixelsPerSecond.dy > 700 ||
-                    _controller.size <= _dismissExtent + .001) {
-                  _close();
-                }
-              },
-              child: SingleChildScrollView(
-                controller: scrollController,
-                physics: const ClampingScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: widget.padding),
-                child: widget.dialog.child,
-              ),
+    builder: (context, constraints) => Align(
+      alignment: Alignment.bottomCenter,
+      heightFactor: 1,
+      child: SizedBox(
+        height: constraints.maxHeight * _expandedExtent,
+        child: KSheetDrag(
+          onDismiss: dialog.onClose,
+          child: KBottomSheet(
+            title: dialog.title,
+            description: description,
+            actions: actions,
+            maxWidth: dialog.pageSheet ? dialog.maxWidth : double.infinity,
+            onClose: dialog.pageSheet ? dialog.onClose : null,
+            closeLabel: dialog.closeLabel,
+            expandBody: true,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: padding),
+              child: dialog.child,
             ),
           ),
         ),
+      ),
+    ),
   );
 }

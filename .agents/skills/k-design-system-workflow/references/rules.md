@@ -26,6 +26,29 @@ assertions. The others are review rules.
 - Text-adjacent icons: 16 (small/label), 20 (body), 24 (headings, toolbars).
 - 12 only for glyphs inside a control (checkbox tick). 32/48 for display
   (empty states, markers). Nothing else.
+- Never set `strokeWidth`. The style's `size.iconStroke` draws the same
+  screen stroke at every size (Apple and linear 1.5, Material 1.75), so a
+  16 px and a 24 px icon look equally heavy next to text (Decision 0015;
+  `check-consumer-ui` › icon-stroke).
+
+## Defaults — gate (Decision 0015)
+
+- App code passes content, events and state. Style, density, type scale,
+  motion, control heights, radii and icon strokes come from the resolved
+  style; `KAdaptiveOverrides` for them only for a product decision the
+  person made (`check-consumer-ui` › appearance-override).
+- A look that does not fit without an override is a library gap: report it
+  with a screenshot instead of patching it in the app.
+
+## Touch targets — review + tests (Decision 0015)
+
+- Touch input raises every control to the style's touch height: Apple 44 pt
+  (HIG minimum hit region), Material 40 dp buttons and 56 dp fields inside
+  a 48 dp target. A full-width button is the screen's call to action:
+  centred label, 50 pt on iOS.
+- Do not shrink controls back (no `minHeight`, `height`, dense density on a
+  phone). On a tablet or desktop with a pointer the density's own heights
+  apply.
 
 ## Spacing — gate
 
@@ -63,7 +86,12 @@ assertions. The others are review rules.
 
 - A row with a label and a value, badge or button must wrap or flex:
   `KInline(wrap: true)`, `Flexible`, or stack below 440 px.
-- Titles truncate with an ellipsis; numbers, prices and dates never truncate.
+- Titles wrap by default and never break inside a word. Truncate with "…"
+  only where the person asked for one line (`titleMaxLines: 1`), e.g. a
+  list of names; numbers, prices and dates never truncate.
+- A list row's value sits beside the title when both fit on one line and
+  moves under it otherwise (iOS value cell); Material rows always show it
+  under the title. Do not cap or truncate the value to force one line.
 - Badges never shrink titles; on compact windows they move to the next line.
 
 ## Narrow windows — phone gate (Web and Flutter)
@@ -78,10 +106,25 @@ assertions. The others are review rules.
 
 - Items of the same kind are rows in one grouped list, not one card each.
 - Use `KList` + `KListItem`: leading (optional, on the first title line) ·
-  title · description · trailing (at most half the row, under the copy from
-  1.3× text) · chevron when the row navigates. A row is at least the hit
-  target tall. A row that opens something is one button: no second control
-  inside it.
+  title · description · value (beside the title when it fits, else under
+  it) · trailing badge · chevron when the row navigates. A row is at least
+  the hit target tall. A row that opens something is one button: no second
+  control inside it.
+- Objects (a portfolio, a building, a folder) use `mediaIcon`: an icon on a
+  tonal tile; the row then centres tile, badge and chevron on the copy. Never
+  a `KCard` with a chevron (`check-consumer-ui` › hand-built-row).
+- A choice per row (a role per person) is a row with the value and a menu,
+  not a full select field inside the row.
+
+## Pages — review (Decision 0015)
+
+- Every screen body is a `KPage`: gutter, safe areas, readable width and
+  section spacing. Sign-in, onboarding and single forms use
+  `KPage(width: form)` (520, centred vertically); everything else the page
+  width (960). Never a bare scroll view (`check-consumer-ui` › bare-page).
+- On phones `KAppShell` adds the bar that covers the status bar once content
+  scrolls under it and takes the page title from `KPageHeader`; do not add
+  a second app bar.
 - Segmented control (`KSegmentedControl`): 2–5 options that switch a view
   or mode in place; not for navigation or actions. From 1.3× text three or
   more segments stack.
@@ -121,10 +164,18 @@ onPopInvokedWithResult: …)` and ask before discarding.
 - `KAppShell` implements this from its own width: tab bar below 600, sidebar
   rail 600–839, full sidebar from 840; 2–5 destinations.
 
+**Breadcrumbs (Decision 0015)**
+
+- Breadcrumbs measure the width: as many trailing levels as fit stay
+  visible, the rest go into the menu (with their icons); only the last label
+  is shortened with "…". Pass the trail as `KPageHeader(breadcrumb:)`.
+- Phones show no breadcrumb: the back button carries the path. Always pass
+  `backHistory` (root first, with icons); a long press opens it, as on iOS.
+
 **Top bar**
 
 - Title under 15 characters, never the app name; a large title that
-  collapses on scroll on phones.
+  collapses on scroll on phones (`KAppShell` does this with `KPageHeader`).
 - Leading: back (and sidebar toggle). Trailing: the most important actions,
   at most three groups, one prominent primary action (Done/Save) at the
   trailing edge, the rest in a More menu. Symbols instead of text, without
@@ -143,6 +194,11 @@ onPopInvokedWithResult: …)` and ask before discarding.
 - Swipe down dismisses; with unsaved changes ask first (`PopScope`).
   Resizable sheets show a grabber; consider the medium detent for
   progressive disclosure. On iPad use the centred page/form sheet.
+- Open sheets only through `KAdaptiveDialog.show`, `KBottomSheet.show` or
+  `KPageSheet`: they share one drag model (`KSheetDrag`). The sheet follows
+  the finger from handle, header and from a list at its top, closes past a
+  quarter or on a fling, and leaves from where it was released. A custom
+  sheet wraps its content in `KSheetDrag`.
 
 **Web**
 
@@ -155,6 +211,11 @@ onPopInvokedWithResult: …)` and ask before discarding.
 
 - Group fields under short section headings; pair short numeric/date fields
   side by side; units inside the field as suffix.
+- Two to five exclusive options: `KSegmentedControl` (Material shows the M3
+  segmented button), not a radio group. Dates use the date field with its
+  own picker trigger inside the field, never a separate calendar button.
+- Every dialog and sheet is migrated with the screen that opens it; check the
+  inventory.
 - Required errors appear at the field, scrolled into view on submit.
 - Sticky footer with primary action in sheets; discard confirmation for dirty
   forms. A dependency that does not exist yet offers "Create …" inline.

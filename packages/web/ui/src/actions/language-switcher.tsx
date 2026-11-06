@@ -37,7 +37,7 @@ export function KLanguageSwitcher({
       disabled={disabled}
       overflow
       align="end"
-      triggerContent={<KIcon name="languages" strokeWidth={1.5} />}
+      triggerContent={<KIcon name="languages" />}
       actions={languages.map((language) => ({
         id: language.value,
         label: language.label,

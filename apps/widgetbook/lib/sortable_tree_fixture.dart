@@ -290,9 +290,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                       label: 'Rückgängig',
                       icon: KIconName.undo2,
                       iconContent: const KIcon(
-                        KIconName.undo2,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.undo2),
                       onPressed: previous == null ? null : undo,
                     ),
                   ],
@@ -352,9 +350,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                       id: 'edit',
                       label: 'Bearbeiten',
                       iconContent: const KIcon(
-                        KIconName.pencil,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.pencil),
                       onSelect: () => edit(c.node),
                     ),
                     KMenuAction(
@@ -362,9 +358,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                       label: 'Entfernen',
                       destructive: true,
                       iconContent: const KIcon(
-                        KIconName.trash,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.trash),
                       onSelect: () => remove(c.node),
                     ),
                   ],
@@ -431,9 +425,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                       label: 'Kategorie',
                       variant: KButtonVariant.secondary,
                       leading: const KIcon(
-                        KIconName.folderPlus,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.folderPlus),
                       onPressed: () => edit(
                         Node(
                           id: 'new-${DateTime.now().microsecondsSinceEpoch}',
@@ -446,7 +438,7 @@ class _SortableTreeFixtureState extends State<SortableTreeFixture> {
                     KButton(
                       label: 'Angebot',
                       variant: KButtonVariant.ghost,
-                      leading: const KIcon(KIconName.plus, strokeWidth: 1.5),
+                      leading: const KIcon(KIconName.plus),
                       onPressed: () => edit(
                         Node(
                           id: 'new-${DateTime.now().microsecondsSinceEpoch}',

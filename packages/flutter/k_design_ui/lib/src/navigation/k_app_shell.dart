@@ -5,6 +5,7 @@ import '../basic_display.dart';
 import '../feedback/k_haptics.dart';
 import '../primitives/k_icon.dart';
 import 'k_mobile_app_bar.dart';
+import 'k_scroll_top_bar.dart';
 import 'k_sidebar.dart';
 
 /// A top-level destination of a [KAppShell].
@@ -115,10 +116,13 @@ class KAppShell extends StatelessWidget {
                 ),
             ],
           );
+          // Content scrolls under a bar that covers the status bar and
+          // takes the page title (Decision 0015).
+          final page = KScrollTopBar(child: child);
           if (style != KStyle.apple) {
             return Column(
               children: [
-                Expanded(child: child),
+                Expanded(child: page),
                 bar,
               ],
             );
@@ -138,14 +142,19 @@ class KAppShell extends StatelessWidget {
                       bottom: media.padding.bottom + reserve,
                     ),
                   ),
-                  child: child,
+                  child: page,
                 ),
               ),
               Align(alignment: Alignment.bottomCenter, child: bar),
             ],
           );
         }
-        final rail = windowClass == KWindowClass.medium;
+        // iPadOS and Android tablets show labelled destinations; the
+        // icon-only rail stays for the productivity style (Decision 0015).
+        final rail =
+            windowClass == KWindowClass.medium &&
+            (KAdaptive.maybeOf(context)?.style ?? KStyle.linear) ==
+                KStyle.linear;
         return Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

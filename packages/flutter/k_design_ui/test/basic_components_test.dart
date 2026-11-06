@@ -81,7 +81,8 @@ void main() {
       final icons = tester.widgetList<KIcon>(find.byType(KIcon)).toList();
       expect(icons.first.color, KDesignTokens.orbitLight.colorTextMuted);
       expect(icons.last.color, KDesignTokens.orbitLight.colorTextPrimary);
-      expect(icons.first.strokeWidth, 1.5);
+      // The stroke comes from the style token (Decision 0015).
+      expect(icons.first.strokeWidth, isNull);
       expect(
         tester.getTopLeft(find.text('Home')).dx -
             tester.getTopRight(find.byType(KIcon).first).dx,

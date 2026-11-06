@@ -229,7 +229,9 @@ void main() {
       of: find.byType(FilledButton),
       matching: find.byType(Material),
     );
-    expect(tester.getSize(material.first).height, 32);
+    // Touch raises even dense controls to the style's touch height
+    // (Decision 0015: 40 for linear, 44 Apple).
+    expect(tester.getSize(material.first).height, 40);
     await tester.tap(find.text('Actions'));
     await tester.pumpAndSettle();
     expect(tester.getSize(find.byType(MenuItemButton).first).height, 48);

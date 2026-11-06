@@ -799,11 +799,7 @@ function FilesReview({
                       </div>
                     ) : current.id === "video" ? (
                       <div className="k-files-review__viewer k-files-review__media-empty">
-                        <KIcon
-                          name="file-video-camera"
-                          size={48}
-                          strokeWidth={1.5}
-                        />
+                        <KIcon name="file-video-camera" size={48} />
                         <p>Video-Vorschau</p>
                         <span className="k-files-muted">
                           In diesem Beispiel ist keine Videodatei hinterlegt.

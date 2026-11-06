@@ -31,7 +31,10 @@ void main() {
         ),
       );
       expect(find.byTooltip('Back to agents'), findsOneWidget);
-      expect(tester.getTopLeft(find.byTooltip('Back to agents')).dx, lessThan(60));
+      expect(
+        tester.getTopLeft(find.byTooltip('Back to agents')).dx,
+        lessThan(60),
+      );
       await tester.tap(find.byTooltip('Back to agents'));
       await tester.pumpAndSettle();
       expect(count, 1);

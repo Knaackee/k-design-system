@@ -227,17 +227,17 @@ export function ZoneEditorPropertiesFields({
                 {
                   value: "per-kilometer",
                   label: `${labels.perKilometerTravelCost} · ${money("per-kilometer")}/km`,
-                  leading: <KIcon name="car-front" strokeWidth={1.5} />,
+                  leading: <KIcon name="car-front" />,
                 },
                 {
                   value: "flat-rate",
                   label: `${labels.flatRateTravelCost} · ${money("flat-rate")}`,
-                  leading: <KIcon name="banknote" strokeWidth={1.5} />,
+                  leading: <KIcon name="banknote" />,
                 },
                 {
                   value: "free",
                   label: labels.freeTravelCost,
-                  leading: <KIcon name="gift" strokeWidth={1.5} />,
+                  leading: <KIcon name="gift" />,
                 },
               ]}
               value={travelCost.kind}
@@ -286,7 +286,6 @@ export function ZoneEditorPropertiesFields({
                             ? "banknote"
                             : "gift"
                       }
-                      strokeWidth={1.5}
                     />
                   ),
                 }))}

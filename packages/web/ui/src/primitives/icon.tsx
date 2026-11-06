@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react";
+import { type HTMLAttributes, useSyncExternalStore } from "react";
 import { iconSvg, type KIconName } from "../generated/icons.js";
 export type { KIconName } from "../generated/icons.js";
 export interface KIconProps extends Omit<
@@ -7,11 +7,40 @@ export interface KIconProps extends Omit<
 > {
   name: KIconName;
   size?: number;
+  /**
+   * Stroke in the icon's 24-unit grid. Leave it unset: the style's
+   * `--k-size-icon-stroke` then draws the same screen stroke at every size
+   * (Decision 0015). App code must not set it (UI rule gate).
+   */
   strokeWidth?: number;
   color?: string;
   /** Omit for decorative icons; label meaningful standalone icons. */
   label?: string;
 }
+/** Fallback before styles load and during server rendering (linear). */
+const kDefaultIconStroke = 1.5;
+
+function readIconStroke(): number {
+  if (typeof document === "undefined") return kDefaultIconStroke;
+  const value = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue(
+      "--k-size-icon-stroke",
+    ),
+  );
+  return Number.isFinite(value) && value > 0 ? value : kDefaultIconStroke;
+}
+
+/** Re-reads the stroke when the root's style or theme attributes change. */
+function subscribeIconStroke(onChange: () => void) {
+  if (typeof MutationObserver === "undefined") return () => {};
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-style", "data-brand", "data-theme", "style"],
+  });
+  return () => observer.disconnect();
+}
+
 export function KIcon({
   name,
   size = 16,
@@ -29,13 +58,17 @@ export function KIcon({
     (!Number.isFinite(strokeWidth) || strokeWidth <= 0)
   )
     throw new RangeError("KIcon strokeWidth must be positive and finite");
-  const svg =
-    strokeWidth === undefined
-      ? iconSvg[name]
-      : iconSvg[name].replace(
-          /stroke-width="[^"]*"/g,
-          `stroke-width="${strokeWidth}"`,
-        );
+  const tokenStroke = useSyncExternalStore(
+    subscribeIconStroke,
+    readIconStroke,
+    () => kDefaultIconStroke,
+  );
+  // Absolute stroke: the token is in screen pixels, the SVG grid is 24.
+  const stroke = strokeWidth ?? (tokenStroke * 24) / size;
+  const svg = iconSvg[name].replace(
+    /stroke-width="[^"]*"/g,
+    `stroke-width="${Number(stroke.toFixed(3))}"`,
+  );
   const mask = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
   return (
     <span

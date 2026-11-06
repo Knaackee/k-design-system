@@ -36,7 +36,7 @@ export type {
   KSurfaceRadius,
   KSurfaceTone,
 } from "./primitives/surface.js";
-export { KStack, KInline } from "./primitives/layout.js";
+export { KStack, KInline, KPage } from "./primitives/layout.js";
 export {
   KCatalogEditorBody,
   KCatalogEditorSection,
@@ -46,6 +46,7 @@ export {
 } from "./patterns/catalog-editor.js";
 export type {
   KStackProps,
+  KPageProps,
   KInlineProps,
   KLayoutGap,
   KLayoutAlign,

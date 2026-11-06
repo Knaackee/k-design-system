@@ -1,5 +1,7 @@
 import { forwardRef, useLayoutEffect, useRef, useState } from "react";
 import { KIconButton, type KIconButtonProps } from "../actions/icon-button.js";
+import { KContextMenu } from "../actions/context-menu.js";
+import type { KMenuAction } from "../actions/menu-button.js";
 
 export interface KBackButtonProps extends Omit<
   KIconButtonProps,
@@ -7,6 +9,12 @@ export interface KBackButtonProps extends Omit<
 > {
   /** Accessible name including the destination, e.g. "Back to Portfolios". */
   label: string;
+  /**
+   * Levels above the current screen, root first, with icons. A long press or
+   * secondary click opens them as a menu, as the iOS back button does; this
+   * replaces breadcrumbs on phones (Decision 0015).
+   */
+  history?: readonly KMenuAction[];
 }
 
 /**
@@ -17,7 +25,10 @@ export interface KBackButtonProps extends Omit<
  * the browser history, like the browser's own back button.
  */
 export const KBackButton = forwardRef<HTMLButtonElement, KBackButtonProps>(
-  function KBackButton({ label, onClick, className = "", ...rest }, ref) {
+  function KBackButton(
+    { label, onClick, history = [], className = "", ...rest },
+    ref,
+  ) {
     const own = useRef<HTMLButtonElement | null>(null);
     // Material navigates up with an arrow; Apple and linear with a chevron.
     const [material, setMaterial] = useState(false);
@@ -27,7 +38,7 @@ export const KBackButton = forwardRef<HTMLButtonElement, KBackButtonProps>(
           "material",
       );
     }, []);
-    return (
+    const button = (
       <KIconButton
         ref={(element) => {
           own.current = element;
@@ -40,6 +51,13 @@ export const KBackButton = forwardRef<HTMLButtonElement, KBackButtonProps>(
         onClick={onClick ?? (() => window.history.back())}
         {...rest}
       />
+    );
+    return history.length > 0 ? (
+      <KContextMenu label={label} actions={history}>
+        {button}
+      </KContextMenu>
+    ) : (
+      button
     );
   },
 );

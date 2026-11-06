@@ -219,9 +219,7 @@ class _VoiceComposerFixtureState extends State<VoiceComposerFixture> {
                       id: 'image',
                       label: 'Bild auswählen',
                       iconContent: const KIcon(
-                        KIconName.image,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.image),
                       onSelect: () => setState(
                         () => _result = 'Bildauswahl geöffnet (Vorschau).',
                       ),
@@ -230,9 +228,7 @@ class _VoiceComposerFixtureState extends State<VoiceComposerFixture> {
                       id: 'camera',
                       label: 'Foto aufnehmen',
                       iconContent: const KIcon(
-                        KIconName.camera,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.camera),
                       onSelect: () => setState(
                         () => _result = 'Kamera geöffnet (Vorschau).',
                       ),
@@ -241,9 +237,7 @@ class _VoiceComposerFixtureState extends State<VoiceComposerFixture> {
                       id: 'document',
                       label: 'Datei auswählen',
                       iconContent: const KIcon(
-                        KIconName.file,
-                        strokeWidth: 1.5,
-                      ),
+                        KIconName.file),
                       onSelect: () => setState(
                         () => _result = 'Dateiauswahl geöffnet (Vorschau).',
                       ),

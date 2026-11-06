@@ -74,9 +74,9 @@
   appearance: none;
   width: 100%;
   min-width: 0;
-  min-height: var(--k-size-control);
+  min-height: var(--k-size-field);
   height: max(
-    var(--k-size-control),
+    var(--k-size-field),
     calc(
       var(--k-font-control-size) * var(--k-text-scale, 1) + var(--k-space-micro)
     )
@@ -86,7 +86,7 @@
       0px,
       calc(
         (
-            var(--k-size-control) - var(--k-space-micro) -
+            var(--k-size-field) - var(--k-space-micro) -
               var(--k-font-control-size) * var(--k-text-scale, 1)
           ) /
           2

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import 'k_sheet_drag.dart';
+
 import '../primitives/k_surface.dart';
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
@@ -162,7 +164,7 @@ class KBottomSheet extends StatelessWidget {
     enableDrag: false,
     backgroundColor: Colors.transparent,
     useSafeArea: true,
-    builder: (routeContext) => _KSheetSwipeToDismiss(
+    builder: (routeContext) => KSheetDrag(
       enabled: dismissible && enableDrag,
       child: Padding(
         padding: EdgeInsets.only(
@@ -352,67 +354,5 @@ class _OverlayBody extends StatelessWidget {
       ),
     );
     return expandBody ? body : SingleChildScrollView(child: body);
-  }
-}
-
-/// Swipe down to dismiss a sheet through `Navigator.maybePop`, so a
-/// `PopScope(canPop: false)` in the sheet holds it open and can ask first.
-/// Inner scroll views keep their own vertical drag where they start.
-class _KSheetSwipeToDismiss extends StatefulWidget {
-  const _KSheetSwipeToDismiss({required this.enabled, required this.child});
-
-  final bool enabled;
-  final Widget child;
-
-  @override
-  State<_KSheetSwipeToDismiss> createState() => _KSheetSwipeToDismissState();
-}
-
-class _KSheetSwipeToDismissState extends State<_KSheetSwipeToDismiss>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _offset = AnimationController.unbounded(
-    vsync: this,
-  );
-
-  @override
-  void dispose() {
-    _offset.dispose();
-    super.dispose();
-  }
-
-  void _update(DragUpdateDetails details) {
-    _offset.value = (_offset.value + details.delta.dy).clamp(
-      0,
-      double.infinity,
-    );
-  }
-
-  Future<void> _end(DragEndDetails details) async {
-    final height = context.size?.height ?? 1;
-    final fling = (details.primaryVelocity ?? 0) > 700;
-    if (fling || _offset.value > height * .3) {
-      await Navigator.of(context).maybePop();
-      if (!mounted) return;
-    }
-    // Held back (unsaved changes) or not far enough: settle back.
-    final motion = Theme.of(
-      context,
-    ).extension<KDesignTokens>()!.motion(KMotionRole.control);
-    await _offset.animateTo(0, duration: motion.settle, curve: motion.curve);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!widget.enabled) return widget.child;
-    return GestureDetector(
-      onVerticalDragUpdate: _update,
-      onVerticalDragEnd: _end,
-      child: AnimatedBuilder(
-        animation: _offset,
-        builder: (context, child) =>
-            Transform.translate(offset: Offset(0, _offset.value), child: child),
-        child: widget.child,
-      ),
-    );
   }
 }

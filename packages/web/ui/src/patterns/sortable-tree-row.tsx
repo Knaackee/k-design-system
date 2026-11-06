@@ -162,13 +162,13 @@ export function TreeRow<T>({
                 toggle();
             }}
           >
-            <KIcon name="grip-vertical" strokeWidth={1.5} />
+            <KIcon name="grip-vertical" />
           </KButton>
           {children}
           {!fixed && (
             <KMenuButton
               label={`${labels.move} ${entry.node.label}`}
-              triggerContent={<KIcon name="ellipsis" strokeWidth={1.5} />}
+              triggerContent={<KIcon name="ellipsis" />}
               overflow
               align="end"
               disabled={disabled}

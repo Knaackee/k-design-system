@@ -37,6 +37,7 @@ class KButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
     final tokens =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
@@ -64,7 +65,7 @@ class KButton extends StatelessWidget {
       ),
     };
 
-    return SizedBox(
+    final button = SizedBox(
       width: fullWidth ? double.infinity : null,
       child: Opacity(
         opacity: loading || onPressed == null
@@ -79,8 +80,11 @@ class KButton extends StatelessWidget {
             enableFeedback: KSoundProvider.maybeOf(context) == null,
             // Density is already resolved by the tokens; do not compact twice.
             visualDensity: VisualDensity.standard,
-            alignment: fullWidth ? AlignmentDirectional.centerStart : null,
-            minimumSize: WidgetStatePropertyAll(Size(0, tokens.sizeControl)),
+            // A full-width button is a call to action: centred label and the
+            // prominent touch height (iOS 50 pt) (Decision 0015).
+            minimumSize: WidgetStatePropertyAll(
+              Size(0, fullWidth ? tokens.sizeProminent : tokens.sizeControl),
+            ),
             padding: WidgetStatePropertyAll(
               EdgeInsets.symmetric(
                 // Material paints its 1px border inside; CSS includes it in layout.
@@ -130,10 +134,15 @@ class KButton extends StatelessWidget {
                     ).scale(tokens.fontControlSize),
               ),
             ),
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
+            // Material 3 Expressive: the pressed button morphs to a
+            // squarer shape; Material animates the change (Decision 0015).
+            shape: WidgetStateProperty.resolveWith(
+              (states) => RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
-                  tokens.componentButtonRadius,
+                  style == KStyle.material &&
+                          states.contains(WidgetState.pressed)
+                      ? tokens.radiusControl
+                      : tokens.componentButtonRadius,
                 ),
               ),
             ),
@@ -193,6 +202,48 @@ class KButton extends StatelessWidget {
                   ],
                 ),
         ),
+      ),
+    );
+    // Apple: the pressed button scales down slightly (Decision 0015).
+    return style == KStyle.apple && onPressed != null && !loading
+        ? KPressScale(child: button)
+        : button;
+  }
+}
+
+/// Scales its child to 96 % while pressed, with the feedback motion role
+/// (iOS press response). Used by buttons and tappable surfaces in the Apple
+/// style.
+class KPressScale extends StatefulWidget {
+  const KPressScale({required this.child, super.key});
+  final Widget child;
+
+  @override
+  State<KPressScale> createState() => _KPressScaleState();
+}
+
+class _KPressScaleState extends State<KPressScale> {
+  bool _pressed = false;
+
+  void _set(bool value) {
+    if (_pressed != value) setState(() => _pressed = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final motion = Theme.of(
+      context,
+    ).extension<KDesignTokens>()!.motion(KMotionRole.feedback);
+    return Listener(
+      onPointerDown: (_) => _set(true),
+      onPointerUp: (_) => _set(false),
+      onPointerCancel: (_) => _set(false),
+      child: AnimatedScale(
+        // Reduced motion: distance 0, no scaling.
+        scale: _pressed ? 1 - .04 * motion.distance : 1,
+        duration: motion.settle,
+        curve: motion.curve,
+        child: widget.child,
       ),
     );
   }

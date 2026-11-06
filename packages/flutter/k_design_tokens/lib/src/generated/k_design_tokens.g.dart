@@ -13,6 +13,10 @@ abstract final class KDesignTokenVariants {
   static const styleLinearComponentPageHeaderPaddingBlockStart = 8.0;
   static const styleLinearComponentPageHeaderTitleGap = 4.0;
   static const styleLinearComponentButtonRadius = 6.0;
+  static const styleLinearSizeControlTouch = 40.0;
+  static const styleLinearSizeFieldTouch = 40.0;
+  static const styleLinearSizeProminentTouch = 44.0;
+  static const styleLinearSizeIconStroke = 1.5;
   static const styleAppleComponentListRowMinHeight = 44.0;
   static const styleAppleComponentListRowPaddingBlock = 12.0;
   static const styleAppleComponentListRowPaddingInline = 16.0;
@@ -23,6 +27,11 @@ abstract final class KDesignTokenVariants {
   static const styleAppleComponentPageHeaderPaddingBlockStart = 16.0;
   static const styleAppleComponentPageHeaderTitleGap = 4.0;
   static const styleAppleComponentButtonRadius = 999.0;
+  static const styleAppleSizeControlTouch = 44.0;
+  static const styleAppleSizeFieldTouch = 44.0;
+  static const styleAppleSizeProminentTouch = 50.0;
+  static const styleAppleSizeIconStroke = 1.5;
+  static const styleMaterialComponentTopBarHeight = 64.0;
   static const styleMaterialComponentListRowMinHeight = 56.0;
   static const styleMaterialComponentListRowPaddingBlock = 16.0;
   static const styleMaterialComponentListRowPaddingInline = 16.0;
@@ -33,6 +42,10 @@ abstract final class KDesignTokenVariants {
   static const styleMaterialComponentPageHeaderPaddingBlockStart = 16.0;
   static const styleMaterialComponentPageHeaderTitleGap = 4.0;
   static const styleMaterialComponentButtonRadius = 999.0;
+  static const styleMaterialSizeControlTouch = 40.0;
+  static const styleMaterialSizeFieldTouch = 56.0;
+  static const styleMaterialSizeProminentTouch = 48.0;
+  static const styleMaterialSizeIconStroke = 1.75;
   static const motionAppleMotionFeedbackDuration = Duration(milliseconds: 100);
   static const motionAppleMotionFeedbackBounce = 0.0;
   static const motionAppleMotionFeedbackDistance = 1.0;
@@ -204,6 +217,10 @@ abstract final class KDesignTokenVariants {
     componentPageHeaderPaddingBlockStart: styleLinearComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleLinearComponentPageHeaderTitleGap,
     componentButtonRadius: styleLinearComponentButtonRadius,
+    sizeControlTouch: styleLinearSizeControlTouch,
+    sizeFieldTouch: styleLinearSizeFieldTouch,
+    sizeProminentTouch: styleLinearSizeProminentTouch,
+    sizeIconStroke: styleLinearSizeIconStroke,
   );
   static KDesignTokens applyStyleApple(KDesignTokens t) => t.copyWith(
     componentListRowMinHeight: styleAppleComponentListRowMinHeight,
@@ -216,8 +233,13 @@ abstract final class KDesignTokenVariants {
     componentPageHeaderPaddingBlockStart: styleAppleComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleAppleComponentPageHeaderTitleGap,
     componentButtonRadius: styleAppleComponentButtonRadius,
+    sizeControlTouch: styleAppleSizeControlTouch,
+    sizeFieldTouch: styleAppleSizeFieldTouch,
+    sizeProminentTouch: styleAppleSizeProminentTouch,
+    sizeIconStroke: styleAppleSizeIconStroke,
   );
   static KDesignTokens applyStyleMaterial(KDesignTokens t) => t.copyWith(
+    componentTopBarHeight: styleMaterialComponentTopBarHeight,
     componentListRowMinHeight: styleMaterialComponentListRowMinHeight,
     componentListRowPaddingBlock: styleMaterialComponentListRowPaddingBlock,
     componentListRowPaddingInline: styleMaterialComponentListRowPaddingInline,
@@ -228,6 +250,10 @@ abstract final class KDesignTokenVariants {
     componentPageHeaderPaddingBlockStart: styleMaterialComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleMaterialComponentPageHeaderTitleGap,
     componentButtonRadius: styleMaterialComponentButtonRadius,
+    sizeControlTouch: styleMaterialSizeControlTouch,
+    sizeFieldTouch: styleMaterialSizeFieldTouch,
+    sizeProminentTouch: styleMaterialSizeProminentTouch,
+    sizeIconStroke: styleMaterialSizeIconStroke,
   );
   static KDesignTokens applyTypeScaleApple(KDesignTokens t) => t.copyWith(
     fontSize: typeScaleAppleFontSize,
@@ -380,6 +406,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.spaceTouchInset,
     required this.sizeChartHeight,
     required this.sizeControl,
+    required this.sizeControlTouch,
+    required this.sizeFieldTouch,
+    required this.sizeProminentTouch,
+    required this.sizeField,
+    required this.sizeProminent,
+    required this.sizeIconStroke,
     required this.sizeHitTarget,
     required this.sizeIndicatorTiny,
     required this.sizeIndicatorSmall,
@@ -535,6 +567,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.layoutDialogWidth,
     required this.layoutQuestionnaireWidth,
     required this.layoutPageWidth,
+    required this.layoutFormWidth,
     required this.layoutContentWidth,
     required this.layoutPickerWideWidth,
     required this.layoutOverlayMaxHeight,
@@ -707,6 +740,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentSymbolPickerViewportInset,
     required this.componentSymbolPickerPanelPadding,
     required this.componentSymbolPickerToneMenuOffset,
+    required this.componentListMediaSize,
+    required this.componentListMediaRadius,
+    required this.componentListMediaBackground,
+    required this.componentListMediaForeground,
     required this.componentListRowMinHeight,
     required this.componentListRowPaddingBlock,
     required this.componentListRowPaddingInline,
@@ -714,6 +751,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentListGroupRadius,
     required this.componentListSectionHeaderGap,
     required this.componentListSectionHeaderInset,
+    required this.componentTopBarHeight,
     required this.componentPageHeaderPaddingBlockStart,
     required this.componentPageHeaderTitleGap,
     required this.componentSidebarActiveBackground,
@@ -980,6 +1018,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double spaceTouchInset;
   final double sizeChartHeight;
   final double sizeControl;
+  final double sizeControlTouch;
+  final double sizeFieldTouch;
+  final double sizeProminentTouch;
+  final double sizeField;
+  final double sizeProminent;
+  final double sizeIconStroke;
   final double sizeHitTarget;
   final double sizeIndicatorTiny;
   final double sizeIndicatorSmall;
@@ -1135,6 +1179,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double layoutDialogWidth;
   final double layoutQuestionnaireWidth;
   final double layoutPageWidth;
+  final double layoutFormWidth;
   final double layoutContentWidth;
   final double layoutPickerWideWidth;
   final double layoutOverlayMaxHeight;
@@ -1307,6 +1352,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentSymbolPickerViewportInset;
   final double componentSymbolPickerPanelPadding;
   final double componentSymbolPickerToneMenuOffset;
+  final double componentListMediaSize;
+  final double componentListMediaRadius;
+  final Color componentListMediaBackground;
+  final Color componentListMediaForeground;
   final double componentListRowMinHeight;
   final double componentListRowPaddingBlock;
   final double componentListRowPaddingInline;
@@ -1314,6 +1363,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentListGroupRadius;
   final double componentListSectionHeaderGap;
   final double componentListSectionHeaderInset;
+  final double componentTopBarHeight;
   final double componentPageHeaderPaddingBlockStart;
   final double componentPageHeaderTitleGap;
   final Color componentSidebarActiveBackground;
@@ -1580,6 +1630,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     spaceTouchInset: 16.0,
     sizeChartHeight: 256.0,
     sizeControl: 36.0,
+    sizeControlTouch: 40.0,
+    sizeFieldTouch: 40.0,
+    sizeProminentTouch: 44.0,
+    sizeField: 36.0,
+    sizeProminent: 36.0,
+    sizeIconStroke: 1.5,
     sizeHitTarget: 24.0,
     sizeIndicatorTiny: 12.0,
     sizeIndicatorSmall: 14.0,
@@ -1735,6 +1791,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
     layoutPageWidth: 960.0,
+    layoutFormWidth: 520.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -1907,6 +1964,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListMediaSize: 40.0,
+    componentListMediaRadius: 8.0,
+    componentListMediaBackground: Color(0xFFF7FEE7),
+    componentListMediaForeground: Color(0xFF4D7C0F),
     componentListRowMinHeight: 40.0,
     componentListRowPaddingBlock: 8.0,
     componentListRowPaddingInline: 12.0,
@@ -1914,6 +1975,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
     componentSidebarActiveBackground: Color(0xFFE2E2E4),
@@ -2181,6 +2243,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     spaceTouchInset: 16.0,
     sizeChartHeight: 256.0,
     sizeControl: 36.0,
+    sizeControlTouch: 40.0,
+    sizeFieldTouch: 40.0,
+    sizeProminentTouch: 44.0,
+    sizeField: 36.0,
+    sizeProminent: 36.0,
+    sizeIconStroke: 1.5,
     sizeHitTarget: 24.0,
     sizeIndicatorTiny: 12.0,
     sizeIndicatorSmall: 14.0,
@@ -2336,6 +2404,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
     layoutPageWidth: 960.0,
+    layoutFormWidth: 520.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -2508,6 +2577,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListMediaSize: 40.0,
+    componentListMediaRadius: 8.0,
+    componentListMediaBackground: Color(0xFF1A2E05),
+    componentListMediaForeground: Color(0xFFA3E635),
     componentListRowMinHeight: 40.0,
     componentListRowPaddingBlock: 8.0,
     componentListRowPaddingInline: 12.0,
@@ -2515,6 +2588,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
     componentSidebarActiveBackground: Color(0xFF303033),
@@ -2782,6 +2856,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     spaceTouchInset: 16.0,
     sizeChartHeight: 256.0,
     sizeControl: 36.0,
+    sizeControlTouch: 40.0,
+    sizeFieldTouch: 40.0,
+    sizeProminentTouch: 44.0,
+    sizeField: 36.0,
+    sizeProminent: 36.0,
+    sizeIconStroke: 1.5,
     sizeHitTarget: 24.0,
     sizeIndicatorTiny: 12.0,
     sizeIndicatorSmall: 14.0,
@@ -2937,6 +3017,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
     layoutPageWidth: 960.0,
+    layoutFormWidth: 520.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -3109,6 +3190,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListMediaSize: 40.0,
+    componentListMediaRadius: 8.0,
+    componentListMediaBackground: Color(0xFFCCFBF1),
+    componentListMediaForeground: Color(0xFF0D9488),
     componentListRowMinHeight: 40.0,
     componentListRowPaddingBlock: 8.0,
     componentListRowPaddingInline: 12.0,
@@ -3116,6 +3201,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
     componentSidebarActiveBackground: Color(0xFF99D5CD),
@@ -3383,6 +3469,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     spaceTouchInset: 16.0,
     sizeChartHeight: 256.0,
     sizeControl: 36.0,
+    sizeControlTouch: 40.0,
+    sizeFieldTouch: 40.0,
+    sizeProminentTouch: 44.0,
+    sizeField: 36.0,
+    sizeProminent: 36.0,
+    sizeIconStroke: 1.5,
     sizeHitTarget: 24.0,
     sizeIndicatorTiny: 12.0,
     sizeIndicatorSmall: 14.0,
@@ -3538,6 +3630,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutDialogWidth: 520.0,
     layoutQuestionnaireWidth: 620.0,
     layoutPageWidth: 960.0,
+    layoutFormWidth: 520.0,
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
@@ -3710,6 +3803,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSymbolPickerViewportInset: 16.0,
     componentSymbolPickerPanelPadding: 12.0,
     componentSymbolPickerToneMenuOffset: 96.0,
+    componentListMediaSize: 40.0,
+    componentListMediaRadius: 8.0,
+    componentListMediaBackground: Color(0xFF123B36),
+    componentListMediaForeground: Color(0xFF2DD4BF),
     componentListRowMinHeight: 40.0,
     componentListRowPaddingBlock: 8.0,
     componentListRowPaddingInline: 12.0,
@@ -3717,6 +3814,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
     componentSidebarActiveBackground: Color(0xFF23544E),
@@ -3985,6 +4083,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? spaceTouchInset,
     double? sizeChartHeight,
     double? sizeControl,
+    double? sizeControlTouch,
+    double? sizeFieldTouch,
+    double? sizeProminentTouch,
+    double? sizeField,
+    double? sizeProminent,
+    double? sizeIconStroke,
     double? sizeHitTarget,
     double? sizeIndicatorTiny,
     double? sizeIndicatorSmall,
@@ -4140,6 +4244,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? layoutDialogWidth,
     double? layoutQuestionnaireWidth,
     double? layoutPageWidth,
+    double? layoutFormWidth,
     double? layoutContentWidth,
     double? layoutPickerWideWidth,
     double? layoutOverlayMaxHeight,
@@ -4312,6 +4417,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentSymbolPickerViewportInset,
     double? componentSymbolPickerPanelPadding,
     double? componentSymbolPickerToneMenuOffset,
+    double? componentListMediaSize,
+    double? componentListMediaRadius,
+    Color? componentListMediaBackground,
+    Color? componentListMediaForeground,
     double? componentListRowMinHeight,
     double? componentListRowPaddingBlock,
     double? componentListRowPaddingInline,
@@ -4319,6 +4428,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentListGroupRadius,
     double? componentListSectionHeaderGap,
     double? componentListSectionHeaderInset,
+    double? componentTopBarHeight,
     double? componentPageHeaderPaddingBlockStart,
     double? componentPageHeaderTitleGap,
     Color? componentSidebarActiveBackground,
@@ -4585,6 +4695,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       spaceTouchInset: spaceTouchInset ?? this.spaceTouchInset,
       sizeChartHeight: sizeChartHeight ?? this.sizeChartHeight,
       sizeControl: sizeControl ?? this.sizeControl,
+      sizeControlTouch: sizeControlTouch ?? this.sizeControlTouch,
+      sizeFieldTouch: sizeFieldTouch ?? this.sizeFieldTouch,
+      sizeProminentTouch: sizeProminentTouch ?? this.sizeProminentTouch,
+      sizeField: sizeField ?? this.sizeField,
+      sizeProminent: sizeProminent ?? this.sizeProminent,
+      sizeIconStroke: sizeIconStroke ?? this.sizeIconStroke,
       sizeHitTarget: sizeHitTarget ?? this.sizeHitTarget,
       sizeIndicatorTiny: sizeIndicatorTiny ?? this.sizeIndicatorTiny,
       sizeIndicatorSmall: sizeIndicatorSmall ?? this.sizeIndicatorSmall,
@@ -4740,6 +4856,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutDialogWidth: layoutDialogWidth ?? this.layoutDialogWidth,
       layoutQuestionnaireWidth: layoutQuestionnaireWidth ?? this.layoutQuestionnaireWidth,
       layoutPageWidth: layoutPageWidth ?? this.layoutPageWidth,
+      layoutFormWidth: layoutFormWidth ?? this.layoutFormWidth,
       layoutContentWidth: layoutContentWidth ?? this.layoutContentWidth,
       layoutPickerWideWidth: layoutPickerWideWidth ?? this.layoutPickerWideWidth,
       layoutOverlayMaxHeight: layoutOverlayMaxHeight ?? this.layoutOverlayMaxHeight,
@@ -4912,6 +5029,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentSymbolPickerViewportInset: componentSymbolPickerViewportInset ?? layoutViewportInset ?? this.componentSymbolPickerViewportInset,
       componentSymbolPickerPanelPadding: componentSymbolPickerPanelPadding ?? this.componentSymbolPickerPanelPadding,
       componentSymbolPickerToneMenuOffset: componentSymbolPickerToneMenuOffset ?? this.componentSymbolPickerToneMenuOffset,
+      componentListMediaSize: componentListMediaSize ?? this.componentListMediaSize,
+      componentListMediaRadius: componentListMediaRadius ?? this.componentListMediaRadius,
+      componentListMediaBackground: componentListMediaBackground ?? colorBrandPrimaryBackground ?? this.componentListMediaBackground,
+      componentListMediaForeground: componentListMediaForeground ?? colorBrandPrimaryAccent ?? this.componentListMediaForeground,
       componentListRowMinHeight: componentListRowMinHeight ?? this.componentListRowMinHeight,
       componentListRowPaddingBlock: componentListRowPaddingBlock ?? this.componentListRowPaddingBlock,
       componentListRowPaddingInline: componentListRowPaddingInline ?? this.componentListRowPaddingInline,
@@ -4919,6 +5040,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentListGroupRadius: componentListGroupRadius ?? this.componentListGroupRadius,
       componentListSectionHeaderGap: componentListSectionHeaderGap ?? this.componentListSectionHeaderGap,
       componentListSectionHeaderInset: componentListSectionHeaderInset ?? this.componentListSectionHeaderInset,
+      componentTopBarHeight: componentTopBarHeight ?? this.componentTopBarHeight,
       componentPageHeaderPaddingBlockStart: componentPageHeaderPaddingBlockStart ?? this.componentPageHeaderPaddingBlockStart,
       componentPageHeaderTitleGap: componentPageHeaderTitleGap ?? this.componentPageHeaderTitleGap,
       componentSidebarActiveBackground: componentSidebarActiveBackground ?? colorBorderDefault ?? this.componentSidebarActiveBackground,
@@ -5190,6 +5312,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       spaceTouchInset: lerpDouble(spaceTouchInset, other.spaceTouchInset, t)!,
       sizeChartHeight: lerpDouble(sizeChartHeight, other.sizeChartHeight, t)!,
       sizeControl: lerpDouble(sizeControl, other.sizeControl, t)!,
+      sizeControlTouch: lerpDouble(sizeControlTouch, other.sizeControlTouch, t)!,
+      sizeFieldTouch: lerpDouble(sizeFieldTouch, other.sizeFieldTouch, t)!,
+      sizeProminentTouch: lerpDouble(sizeProminentTouch, other.sizeProminentTouch, t)!,
+      sizeField: lerpDouble(sizeField, other.sizeField, t)!,
+      sizeProminent: lerpDouble(sizeProminent, other.sizeProminent, t)!,
+      sizeIconStroke: lerpDouble(sizeIconStroke, other.sizeIconStroke, t)!,
       sizeHitTarget: lerpDouble(sizeHitTarget, other.sizeHitTarget, t)!,
       sizeIndicatorTiny: lerpDouble(sizeIndicatorTiny, other.sizeIndicatorTiny, t)!,
       sizeIndicatorSmall: lerpDouble(sizeIndicatorSmall, other.sizeIndicatorSmall, t)!,
@@ -5345,6 +5473,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutDialogWidth: lerpDouble(layoutDialogWidth, other.layoutDialogWidth, t)!,
       layoutQuestionnaireWidth: lerpDouble(layoutQuestionnaireWidth, other.layoutQuestionnaireWidth, t)!,
       layoutPageWidth: lerpDouble(layoutPageWidth, other.layoutPageWidth, t)!,
+      layoutFormWidth: lerpDouble(layoutFormWidth, other.layoutFormWidth, t)!,
       layoutContentWidth: lerpDouble(layoutContentWidth, other.layoutContentWidth, t)!,
       layoutPickerWideWidth: lerpDouble(layoutPickerWideWidth, other.layoutPickerWideWidth, t)!,
       layoutOverlayMaxHeight: lerpDouble(layoutOverlayMaxHeight, other.layoutOverlayMaxHeight, t)!,
@@ -5517,6 +5646,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentSymbolPickerViewportInset: lerpDouble(componentSymbolPickerViewportInset, other.componentSymbolPickerViewportInset, t)!,
       componentSymbolPickerPanelPadding: lerpDouble(componentSymbolPickerPanelPadding, other.componentSymbolPickerPanelPadding, t)!,
       componentSymbolPickerToneMenuOffset: lerpDouble(componentSymbolPickerToneMenuOffset, other.componentSymbolPickerToneMenuOffset, t)!,
+      componentListMediaSize: lerpDouble(componentListMediaSize, other.componentListMediaSize, t)!,
+      componentListMediaRadius: lerpDouble(componentListMediaRadius, other.componentListMediaRadius, t)!,
+      componentListMediaBackground: Color.lerp(componentListMediaBackground, other.componentListMediaBackground, t)!,
+      componentListMediaForeground: Color.lerp(componentListMediaForeground, other.componentListMediaForeground, t)!,
       componentListRowMinHeight: lerpDouble(componentListRowMinHeight, other.componentListRowMinHeight, t)!,
       componentListRowPaddingBlock: lerpDouble(componentListRowPaddingBlock, other.componentListRowPaddingBlock, t)!,
       componentListRowPaddingInline: lerpDouble(componentListRowPaddingInline, other.componentListRowPaddingInline, t)!,
@@ -5524,6 +5657,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentListGroupRadius: lerpDouble(componentListGroupRadius, other.componentListGroupRadius, t)!,
       componentListSectionHeaderGap: lerpDouble(componentListSectionHeaderGap, other.componentListSectionHeaderGap, t)!,
       componentListSectionHeaderInset: lerpDouble(componentListSectionHeaderInset, other.componentListSectionHeaderInset, t)!,
+      componentTopBarHeight: lerpDouble(componentTopBarHeight, other.componentTopBarHeight, t)!,
       componentPageHeaderPaddingBlockStart: lerpDouble(componentPageHeaderPaddingBlockStart, other.componentPageHeaderPaddingBlockStart, t)!,
       componentPageHeaderTitleGap: lerpDouble(componentPageHeaderTitleGap, other.componentPageHeaderTitleGap, t)!,
       componentSidebarActiveBackground: Color.lerp(componentSidebarActiveBackground, other.componentSidebarActiveBackground, t)!,

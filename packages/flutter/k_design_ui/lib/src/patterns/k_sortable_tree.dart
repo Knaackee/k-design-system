@@ -252,7 +252,7 @@ class _KSortableTreeState<T> extends State<KSortableTree<T>> {
       return KMenuAction(
         id: id,
         label: label,
-        iconContent: KIcon(icon, strokeWidth: 1.5),
+        iconContent: KIcon(icon),
         disabled: !allowed(move),
         separatorBefore: separator,
         onSelect: () => commit(move),
@@ -300,7 +300,7 @@ class _KSortableTreeState<T> extends State<KSortableTree<T>> {
         KMenuAction(
           id: 'move-to',
           label: widget.labels.moveTo,
-          iconContent: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),
+          iconContent: const KIcon(KIconName.arrowRight),
           children: destinations,
         ),
       for (final a in supplied.where((a) => a.destructive))

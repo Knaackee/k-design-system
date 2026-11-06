@@ -249,74 +249,73 @@ void main() {
     },
   );
 
-  testWidgets(
-    'mouse mapping stays; one finger pans, pinch only zooms',
-    (tester) async {
-      var view = const KOrbitViewState();
-      await tester.pumpWidget(
-        app(
-          KOrbit(
-            levels: levels,
-            nodes: nodes,
-            connections: const [],
-            showControls: false,
-            paused: true,
-            interactionMode: KOrbitInteractionMode.embedded,
-            onViewChange: (value) => view = value,
-          ),
+  testWidgets('mouse mapping stays; one finger pans, pinch only zooms', (
+    tester,
+  ) async {
+    var view = const KOrbitViewState();
+    await tester.pumpWidget(
+      app(
+        KOrbit(
+          levels: levels,
+          nodes: nodes,
+          connections: const [],
+          showControls: false,
+          paused: true,
+          interactionMode: KOrbitInteractionMode.embedded,
+          onViewChange: (value) => view = value,
         ),
-      );
-      final origin =
-          tester.getTopLeft(find.byType(KOrbit)) + const Offset(20, 20);
-      var gesture = await tester.startGesture(
-        origin,
-        kind: PointerDeviceKind.mouse,
-      );
-      await gesture.moveBy(const Offset(40, 20));
-      await gesture.up();
-      await tester.pump();
-      expect(view.offset, const Offset(40, 20));
-      expect(view.yaw, 0);
-      gesture = await tester.startGesture(
-        origin,
-        kind: PointerDeviceKind.mouse,
-        buttons: kSecondaryMouseButton,
-      );
-      await gesture.moveBy(const Offset(40, 20));
-      await gesture.up();
-      await tester.pump();
-      expect(view.yaw, closeTo(.32, .001));
-      expect(view.offset, const Offset(40, 20));
-      final touch = await tester.startGesture(origin, pointer: 3);
-      await touch.moveBy(const Offset(30, 0));
-      await touch.moveBy(const Offset(30, 0));
-      await touch.up();
-      await tester.pump();
-      expect(view.yaw, closeTo(.32, .001));
-      expect(view.offset.dx, greaterThan(40));
-      final a = await tester.startGesture(
-        origin + const Offset(80, 80),
-        pointer: 4,
-      );
-      final b = await tester.startGesture(
-        origin + const Offset(140, 80),
-        pointer: 5,
-      );
-      await tester.pump(const Duration(milliseconds: 16));
-      await b.moveBy(const Offset(30, 0));
-      await tester.pump(const Duration(milliseconds: 16));
-      await b.moveBy(const Offset(30, 0));
-      await tester.pump(const Duration(milliseconds: 16));
-      await b.moveBy(const Offset(30, 0));
-      await tester.pump();
-      await a.up();
-      await b.up();
-      expect(view.zoom, greaterThan(1));
-      expect(view.yaw, closeTo(.32, .001));
-      expect(view.pitch, closeTo(.16, .001));
-      expect(tester.takeException(), isNull);
-    },
-  );
+      ),
+    );
+    final origin =
+        tester.getTopLeft(find.byType(KOrbit)) + const Offset(20, 20);
+    var gesture = await tester.startGesture(
+      origin,
+      kind: PointerDeviceKind.mouse,
+    );
+    await gesture.moveBy(const Offset(40, 20));
+    await gesture.up();
+    await tester.pump();
+    expect(view.offset, const Offset(40, 20));
+    expect(view.yaw, 0);
+    gesture = await tester.startGesture(
+      origin,
+      kind: PointerDeviceKind.mouse,
+      buttons: kSecondaryMouseButton,
+    );
+    await gesture.moveBy(const Offset(40, 20));
+    await gesture.up();
+    await tester.pump();
+    expect(view.yaw, closeTo(.32, .001));
+    expect(view.offset, const Offset(40, 20));
+    final touch = await tester.startGesture(origin, pointer: 3);
+    await touch.moveBy(const Offset(30, 0));
+    await touch.moveBy(const Offset(30, 0));
+    await touch.up();
+    await tester.pump();
+    expect(view.yaw, closeTo(.32, .001));
+    expect(view.offset.dx, greaterThan(40));
+    final a = await tester.startGesture(
+      origin + const Offset(80, 80),
+      pointer: 4,
+    );
+    final b = await tester.startGesture(
+      origin + const Offset(140, 80),
+      pointer: 5,
+    );
+    await tester.pump(const Duration(milliseconds: 16));
+    await b.moveBy(const Offset(30, 0));
+    await tester.pump(const Duration(milliseconds: 16));
+    await b.moveBy(const Offset(30, 0));
+    await tester.pump(const Duration(milliseconds: 16));
+    await b.moveBy(const Offset(30, 0));
+    await tester.pump();
+    await a.up();
+    await b.up();
+    expect(view.zoom, greaterThan(1));
+    expect(view.yaw, closeTo(.32, .001));
+    expect(view.pitch, closeTo(.16, .001));
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('local ping works while motion is paused and ends once', (
     tester,

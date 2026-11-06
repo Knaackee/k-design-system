@@ -108,7 +108,15 @@ export function KSegmentedControl<T extends string = string>({
           data-selected={i === index || undefined}
           onClick={() => select(i)}
         >
-          {segment.icon ? <KIcon name={segment.icon} size={16} /> : null}
+          {segment.icon ? (
+            <KIcon name={segment.icon} size={16} />
+          ) : i === index ? (
+            <KIcon
+              name="check"
+              size={16}
+              className="k-segmented-control__check"
+            />
+          ) : null}
           <KText
             as="span"
             variant="label"

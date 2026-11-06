@@ -3,6 +3,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -314,6 +315,7 @@ export interface KBreadcrumbProps {
   label?: string;
   separator?: ReactNode;
   overflowLabel?: string;
+  /** @deprecated Icon strokes come from the style (`--k-size-icon-stroke`). */
   iconStrokeWidth?: number;
 }
 
@@ -322,23 +324,50 @@ export function KBreadcrumb({
   label = "Breadcrumb",
   separator,
   overflowLabel,
-  iconStrokeWidth = 1.5,
+  iconStrokeWidth,
 }: KBreadcrumbProps) {
   const container = useRef<HTMLElement>(null);
-  const [width, setWidth] = useState<number>();
-  useEffect(() => {
-    const element = container.current;
-    if (!element) return;
-    setWidth(element.clientWidth);
+  const probe = useRef<HTMLOListElement>(null);
+  const [keep, setKeep] = useState(items.length);
+  // Measure instead of breakpoints (Decision 0015): as many trailing levels
+  // as fit stay visible, the rest go into the menu; only the last label is
+  // ever shortened with "…". Mirrors KBreadcrumb in Flutter.
+  useLayoutEffect(() => {
+    const nav = container.current;
+    const list = probe.current;
+    if (!nav || !list) return;
+    const compute = () => {
+      const available = nav.clientWidth;
+      const [menu, ...rows] = Array.from(list.children).map(
+        (child) => child.getBoundingClientRect().width,
+      );
+      const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+      const trailing = (count: number) =>
+        rows.slice(rows.length - count).reduce((sum, w) => sum + w, 0) +
+        gap * (count - 1);
+      if (trailing(rows.length) <= available + 0.5) {
+        setKeep(rows.length);
+        return;
+      }
+      let count = 1;
+      while (
+        count < rows.length - 1 &&
+        menu + gap + trailing(count + 1) <= available + 0.5
+      )
+        count++;
+      setKeep(count);
+    };
+    compute();
     if (typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver((entries) =>
-      setWidth(entries[0].contentRect.width),
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-  const keep =
-    width === undefined || width >= 600 ? items.length : width < 400 ? 1 : 2;
+    const observer = new ResizeObserver(compute);
+    observer.observe(nav);
+    let alive = true;
+    void document.fonts?.ready.then(() => alive && compute());
+    return () => {
+      alive = false;
+      observer.disconnect();
+    };
+  }, [items]);
   const hidden = items.slice(0, Math.max(0, items.length - keep));
   const visible = items.slice(hidden.length);
   const divider = (
@@ -348,8 +377,34 @@ export function KBreadcrumb({
       )}
     </span>
   );
+  const renderContent = (item: KBreadcrumbItem) => (
+    <span className="k-breadcrumb__content">
+      {item.icon ? (
+        <KIcon name={item.icon} size={16} strokeWidth={iconStrokeWidth} />
+      ) : null}
+      <span
+        className="k-breadcrumb__label"
+        title={typeof item.label === "string" ? item.label : undefined}
+      >
+        {item.label}
+      </span>
+    </span>
+  );
   return (
     <nav ref={container} className="k-breadcrumb" aria-label={label}>
+      {/* Invisible natural-width copy used to measure what fits. */}
+      <ol ref={probe} className="k-breadcrumb__probe" aria-hidden inert>
+        <li className="k-breadcrumb__overflow">
+          <KMenuButton label={overflowLabel ?? label} overflow actions={[]} />
+          {divider}
+        </li>
+        {items.map((item, index) => (
+          <li key={item.id}>
+            {renderContent(item)}
+            {index < items.length - 1 ? divider : null}
+          </li>
+        ))}
+      </ol>
       <ol>
         {hidden.length > 0 && (
           <li className="k-breadcrumb__overflow">
@@ -371,23 +426,7 @@ export function KBreadcrumb({
         )}
         {visible.map((item, index) => {
           const current = index === visible.length - 1;
-          const content = (
-            <span className="k-breadcrumb__content">
-              {item.icon ? (
-                <KIcon
-                  name={item.icon}
-                  size={16}
-                  strokeWidth={iconStrokeWidth}
-                />
-              ) : null}
-              <span
-                className="k-breadcrumb__label"
-                title={typeof item.label === "string" ? item.label : undefined}
-              >
-                {item.label}
-              </span>
-            </span>
-          );
+          const content = renderContent(item);
           return (
             <li key={item.id} data-current={current || undefined}>
               {current ? (

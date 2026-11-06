@@ -17,7 +17,11 @@ shapes, type and motion. Pass props for content, events and state only. A
 different look is a token or style change in one place, never per-screen
 values.
 
-Nine ways it fails (each has a rule in `references/rules.md`):
+**Every surface, not only screens.** A migration or review covers every
+screen **and** every sheet, dialog, menu and form the app opens. Start with
+the inventory (Workflow step 1b); a surface without evidence is not done.
+
+Twelve ways it fails (each has a rule in `references/rules.md`):
 
 - **Card in a card.** A bordered box inside a bordered box. Inside a card use
   separators, a grouped list or a section; siblings are siblings.
@@ -41,6 +45,16 @@ Nine ways it fails (each has a rule in `references/rules.md`):
   (Decision 0011).
 - **Noisy feedback.** Sound or haptics on by default, as the only feedback,
   or on scroll, hover and typing (Decision 0013).
+- **Hand-built rows and pages.** A `KCard` with a title, a badge and a
+  chevron instead of `KListItem` (media tile: `mediaIcon`); a
+  `SingleChildScrollView` page instead of `KPage`, so a sign-in form runs
+  across a whole iPad (Decision 0015).
+- **Appearance in app code.** Icon `strokeWidth`, `KAdaptiveOverrides` for
+  style/density/type scale, control heights or radii set per screen. The
+  style preset decides them (Decision 0015).
+- **Desktop forms on a phone.** Radio buttons for two options (use
+  `KSegmentedControl`), a calendar button beside a date field, one full
+  select per row inside a list (use a row with a value and a menu).
 
 ## Workflow
 
@@ -52,6 +66,11 @@ Most quality is decided before code. Write the composition map first.
    fast-forward only a clean checkout. After a pin update read
    `CHANGELOG.md` (Unreleased); coming from a pin before November 2026,
    follow `docs/integration/upgrade-2026-11.md` first.
+   1b. **Inventory.** List every route, sheet, dialog, menu and form the app
+   opens (search for `KAdaptiveDialog.show`, `KBottomSheet.show`,
+   `KPageSheet`, `showDialog`, `Navigator.push`, routes). Keep the list in
+   the handover; each entry gets a screenshot pair (before/after) or a
+   reason.
 2. **Adaptive setup (once per app).** Flutter: wrap the app in
    `KAdaptiveTheme`. Web: `applyKAdaptive(document.documentElement)`. Do not
    pass `KDesignConfiguration.mobileApp` "because it is a phone app" — the
@@ -92,6 +111,11 @@ control|action|section) -> text roles (KText variants) -> leading visuals`.
 | Text back link, local tab bar, disabled back gesture   | rules.md › Navigation        |
 | Literal duration/curve, bounce on an exit              | rules.md › Motion            |
 | Sound/haptics on by default or as the only feedback    | rules.md › Sound and haptics |
+| Card used as a list row, scroll view used as a page    | rules.md › Lists, Pages      |
+| `strokeWidth`, density or style set in app code        | rules.md › Defaults          |
+| Control under 44 pt on iOS, 48 dp target on Android    | rules.md › Touch targets     |
+| Breadcrumb on a phone, back button without its path    | rules.md › Navigation        |
+| Sheet that cannot be dragged from its list             | rules.md › Sheets            |
 
 `references/teaching.md` has a wrong/right pair for each fault.
 
@@ -102,6 +126,11 @@ control|action|section) -> text roles (KText variants) -> leading visuals`.
 node vendor/k-design-system/tooling/check-ui-rules.mjs <changed paths>
 node vendor/k-design-system/tooling/check-consumer-ui.mjs src   # Flutter: lib
 ```
+
+`check-consumer-ui` reports `icon-stroke`, `appearance-override`,
+`hand-built-row` and `bare-page` besides native controls and raw spacing.
+Every finding is fixed or carries a `k-ui-rules-ignore` comment with a
+reason the person accepted.
 
 Then verify on phone sizes, not only desktop:
 
@@ -132,6 +161,7 @@ Revision: <library pin>
 Reference used: <story/use-case id> — changed: <what>
 Components: <reused> / added: <none|names + gallery ids>
 Layout roles: <gaps, insets, text roles>
+Inventory: <n> screens, <n> sheets/dialogs, <n> menus — all with evidence | missing: <list>
 Checked: phone 360/393 · tablet · text 1.0/1.3/2.0/3.0 · iOS/Android · light/dark · reduce motion · <journeys>
 Motion style / sound / haptics: <apple|expressive|reduced> / <off|setting> / <off|setting>
 Rule gate: <output summary>

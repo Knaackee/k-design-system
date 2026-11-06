@@ -11,3 +11,9 @@ export const Review: StoryObj = {
   parameters: { fixtureId: "app-shell" },
   render: () => <AppShellFixture />,
 };
+
+export const ReviewPortfolios: StoryObj = {
+  name: "app-shell-portfolios",
+  parameters: { fixtureId: "app-shell-portfolios" },
+  render: () => <AppShellFixture initial="portfolios" />,
+};

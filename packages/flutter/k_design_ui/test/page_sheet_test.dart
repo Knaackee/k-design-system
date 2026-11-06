@@ -68,7 +68,7 @@ void main() {
       );
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
-      expect(find.byType(DraggableScrollableSheet), findsOneWidget);
+      expect(find.byType(KSheetDrag), findsOneWidget);
       expect(find.text('Save action').hitTestable(), findsOneWidget);
       await tester.scrollUntilVisible(
         find.text('Row 29'),

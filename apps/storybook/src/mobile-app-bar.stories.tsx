@@ -25,13 +25,13 @@ const items: readonly KMobileAppBarItem[] = [
   {
     id: "portfolios",
     label: "Portfolios",
-    icon: <KIcon name="building" size={24} strokeWidth={1.5} />,
+    icon: <KIcon name="building" size={24} />,
   },
   { id: "chat", label: "Chat", icon: <AppMark /> },
   {
     id: "settings",
     label: "Settings",
-    icon: <KIcon name="settings" size={24} strokeWidth={1.5} />,
+    icon: <KIcon name="settings" size={24} />,
   },
 ];
 function MobileAppBarFixture({

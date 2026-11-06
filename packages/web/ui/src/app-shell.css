@@ -47,3 +47,72 @@
       env(safe-area-inset-bottom, 0px)
   );
 }
+
+/* Phones (Decision 0015): a bar fades in over content scrolled under the
+   status bar and takes the page title once the large title has scrolled
+   away (iOS navigation bar, Material 3 top app bar on scroll). */
+.k-app-shell[data-layout="tab-bar"] {
+  position: relative;
+}
+.k-app-shell__top-bar {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 0;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: calc(
+    var(--k-component-top-bar-height) + env(safe-area-inset-top, 0px)
+  );
+  padding: env(safe-area-inset-top, 0px) var(--k-space-layout-gutter) 0;
+  border-block-end: var(--k-space-hairline) solid var(--k-color-border-default);
+  background: var(--k-color-surface-raised);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--k-motion-control-settle)
+    var(--k-motion-control-easing);
+}
+.k-app-shell__top-bar[data-visible] {
+  opacity: 1;
+  pointer-events: auto;
+}
+[data-style="apple"] .k-app-shell__top-bar {
+  justify-content: center;
+  /* Same glass as the tab bar. */
+  background: color-mix(
+    in srgb,
+    var(--k-color-surface-raised)
+      calc(var(--k-component-mobile-app-bar-opacity-glass-frosted) * 100%),
+    transparent
+  );
+  -webkit-backdrop-filter: blur(
+      var(--k-component-mobile-app-bar-glass-web-blur)
+    )
+    saturate(var(--k-component-mobile-app-bar-glass-web-saturation));
+  backdrop-filter: blur(var(--k-component-mobile-app-bar-glass-web-blur))
+    saturate(var(--k-component-mobile-app-bar-glass-web-saturation));
+}
+.k-app-shell__top-title {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--k-color-text-primary);
+  font: var(--k-font-heading-weight)
+    calc(
+      var(--k-font-heading5-size) *
+        min(var(--k-text-scale, 1), var(--k-text-scale-max-heading))
+    ) /
+    calc(
+      var(--k-font-heading5-line-height) *
+        min(var(--k-text-scale, 1), var(--k-text-scale-max-heading))
+    )
+    var(--k-font-family);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transition: opacity var(--k-motion-control-settle)
+    var(--k-motion-control-easing);
+}
+.k-app-shell__top-title[data-visible] {
+  opacity: 1;
+}

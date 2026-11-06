@@ -6,6 +6,19 @@ version is tagged.
 
 ## Unreleased
 
+- Platform-native defaults reach every component (Decision 0015): touch
+  heights (Apple 44 pt controls, 50 pt full-width buttons with a centred
+  label; Material 40 dp buttons and 56 dp fields), one icon stroke per style
+  at every size, list values beside the title when they fit and under it
+  otherwise, `KListItem.mediaIcon`, measured breadcrumbs and
+  `KPageHeader.backHistory` / `KBackButton.history`, one sheet drag model
+  (`KSheetDrag`: drag from a list at its top, no jump back on dismissal),
+  `KPage` with readable page and form widths, a scroll bar under the status
+  bar that takes the page title, Android fade-forwards transitions, press
+  feedback, the Material 3 segmented button and a labelled tablet sidebar.
+  `check-consumer-ui` reports `icon-stroke`, `appearance-override`,
+  `hand-built-row` and `bare-page`.
+
 - Added the `material` style (Material 3 Expressive) and made the default
   platform-native: Android gets `material` with expressive motion, iPhone and
   iPad `apple`, desktops `linear`. `apple` gains squircle group corners, a

@@ -1,5 +1,11 @@
 {
   "component": {
+    "topBar": {
+      "height": {
+        "$type": "dimension",
+        "$value": "{size.scale.topBarMaterial}"
+      }
+    },
     "list": {
       "rowMinHeight": {
         "$type": "dimension",
@@ -46,5 +52,17 @@
         "$value": "{radius.scale.full}"
       }
     }
+  },
+  "size": {
+    "controlTouch": {
+      "$type": "dimension",
+      "$value": "{size.control.comfortable}"
+    },
+    "fieldTouch": { "$type": "dimension", "$value": "{size.control.field}" },
+    "prominentTouch": {
+      "$type": "dimension",
+      "$value": "{size.control.tall}"
+    },
+    "iconStroke": { "$type": "number", "$value": "{size.iconStroke.regular}" }
   }
 }

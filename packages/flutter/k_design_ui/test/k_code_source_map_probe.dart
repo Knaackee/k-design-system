@@ -16,8 +16,11 @@ void main() {
       final raw = 'first$separator$line${separator}last';
       final map = KCodeSourceMap(raw);
       check(map.rendered == 'first\n$line\nlast', 'rendering');
-      for(var offset=0;offset<=map.rendered.length;offset++){
-        check(map.toRendered(map.toRaw(offset))==offset,'all rendered UTF16 positions');
+      for (var offset = 0; offset <= map.rendered.length; offset++) {
+        check(
+          map.toRendered(map.toRaw(offset)) == offset,
+          'all rendered UTF16 positions',
+        );
       }
       final afterEmoji = raw.indexOf('😀') + 2;
       check(

@@ -93,8 +93,45 @@ export function KAppShell({
     onSelectedChange(id);
   };
   const compact = windowClass === "compact";
+  const content = useRef<HTMLDivElement>(null);
+  const bar = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [topTitle, setTopTitle] = useState<string | null>(null);
+  // Phones: a bar covers the status bar once content scrolls under it and
+  // takes the page title when the large title has scrolled away (0015).
+  useLayoutEffect(() => {
+    const scroller = content.current;
+    if (!compact || !scroller) return;
+    const update = () => {
+      const pageScrolled =
+        scroller.scrollTop > 0 ||
+        (scroller.scrollHeight <= scroller.clientHeight && window.scrollY > 0);
+      setScrolled(pageScrolled);
+      const title = scroller.querySelector<HTMLElement>(
+        ".k-page-header__title",
+      );
+      const barBox = bar.current?.getBoundingClientRect();
+      setTopTitle(
+        pageScrolled &&
+          title &&
+          barBox &&
+          title.getBoundingClientRect().bottom <= barBox.bottom
+          ? (title.textContent ?? null)
+          : null,
+      );
+    };
+    update();
+    scroller.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      scroller.removeEventListener("scroll", update);
+      window.removeEventListener("scroll", update);
+    };
+  }, [compact]);
   const appleStyle = style === "apple";
-  const rail = windowClass === "medium";
+  // iPadOS and Android tablets show labelled destinations; the icon-only
+  // rail stays for the productivity style (Decision 0015).
+  const rail = windowClass === "medium" && style === "linear";
   return (
     <div
       ref={ref}
@@ -142,7 +179,24 @@ export function KAppShell({
           ) : null}
         </KSidebar>
       )}
-      <div className="k-app-shell__content">{children}</div>
+      {compact ? (
+        <div
+          ref={bar}
+          className="k-app-shell__top-bar"
+          aria-hidden
+          data-visible={scrolled || undefined}
+        >
+          <span
+            className="k-app-shell__top-title"
+            data-visible={topTitle ? true : undefined}
+          >
+            {topTitle}
+          </span>
+        </div>
+      ) : null}
+      <div ref={content} className="k-app-shell__content">
+        {children}
+      </div>
       {compact ? (
         <KMobileAppBar
           // Apple style: the iOS 26 floating glass tab bar.

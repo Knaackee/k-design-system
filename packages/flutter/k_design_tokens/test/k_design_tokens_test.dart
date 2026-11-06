@@ -44,7 +44,8 @@ void main() {
       ),
     );
 
-    expect(tokens.sizeControl, 32);
+    // Touch raises the dense control to the style's touch height (0015).
+    expect(tokens.sizeControl, 40);
     expect(tokens.fontSize, 16);
     expect(tokens.fontControlSize, 14);
     expect(tokens.fontHeading1Size, 36);

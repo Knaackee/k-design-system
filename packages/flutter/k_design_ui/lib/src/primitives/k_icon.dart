@@ -27,6 +27,10 @@ class KIcon extends StatelessWidget {
   });
   final KIconName name;
   final double size;
+
+  /// Stroke in the icon's 24-unit grid. Leave it unset: the style's
+  /// `size.iconStroke` then draws the same screen stroke at every size
+  /// (Decision 0015). App code must not set it (UI rule gate).
   final double? strokeWidth;
   final Color? color;
 
@@ -52,12 +56,12 @@ class KIcon extends StatelessWidget {
         'Must be positive and finite',
       );
     }
-    final svg = strokeWidth == null
-        ? kIconSvg[name]!
-        : kIconSvg[name]!.replaceAll(
-            RegExp('stroke-width="[^"]*"'),
-            'stroke-width="$strokeWidth"',
-          );
+    // Absolute stroke: the token is in screen pixels, the SVG grid is 24.
+    final stroke = strokeWidth ?? tokens.sizeIconStroke * 24 / resolvedSize;
+    final svg = kIconSvg[name]!.replaceAll(
+      RegExp('stroke-width="[^"]*"'),
+      'stroke-width="${stroke.toStringAsFixed(3)}"',
+    );
     return SvgPicture.string(
       svg,
       width: resolvedSize,

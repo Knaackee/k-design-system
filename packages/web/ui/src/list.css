@@ -71,7 +71,15 @@
   background: var(--k-color-border-default);
 }
 .k-list__group[data-separated]
-  > .k-list__row:has(.k-list-item__leading)
+  > .k-list__row:has(.k-list-item__media)
+  + .k-list__row::before {
+  margin-inline-start: calc(
+    var(--k-component-list-row-padding-inline) +
+      var(--k-component-list-media-size) + var(--k-component-list-leading-gap)
+  );
+}
+.k-list__group[data-separated]
+  > .k-list__row:has(.k-list-item__leading):not(:has(.k-list-item__media))
   + .k-list__row::before {
   margin-inline-start: calc(
     var(--k-component-list-row-padding-inline) + var(--k-size-icon-default) +
@@ -147,6 +155,28 @@
   width: var(--k-size-icon-default);
   margin-inline-end: var(--k-component-list-leading-gap);
 }
+/* Media rows centre leading, value and chevron on the copy block. */
+.k-list-item[data-media] .k-list-item__row,
+.k-list-item[data-media] .k-list-item__body {
+  align-items: center;
+}
+.k-list-item[data-media] .k-list-item__leading {
+  width: var(--k-component-list-media-size);
+  height: var(--k-component-list-media-size);
+}
+.k-list-item[data-media] :is(.k-list-item__trailing, .k-list-item__chevron) {
+  height: auto;
+}
+.k-list-item__media {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--k-component-list-media-size);
+  height: var(--k-component-list-media-size);
+  border-radius: var(--k-component-list-media-radius);
+  background: var(--k-component-list-media-background);
+  color: var(--k-component-list-media-foreground);
+}
 .k-list-item__trailing,
 .k-list-item__chevron {
   margin-inline-start: var(--k-space-control-gap);
@@ -159,6 +189,25 @@
   flex: 1;
   align-items: flex-start;
   min-width: 0;
+}
+/* Copy and value: side by side when both fit on one line, else stacked
+   (iOS value cell; KTitleValueLayout in Flutter). Material always stacks. */
+.k-list-item__text {
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  min-width: 0;
+}
+.k-list-item__text[data-stacked],
+[data-style="material"] .k-list-item__text,
+[data-text-large] .k-list-item__text {
+  flex-direction: column;
+  gap: var(--k-space-micro);
+}
+.k-list-item__text[data-measuring] > * {
+  flex: none;
+  width: max-content;
+  max-width: none;
 }
 .k-list-item__copy {
   display: grid;
@@ -186,10 +235,21 @@
   color: var(--k-color-text-muted);
 }
 .k-list-item__value {
-  flex: 0 1 auto;
-  max-width: 50%;
+  flex: none;
   min-width: 0;
+  max-width: 100%;
   margin-inline-start: var(--k-space-control-gap);
+  /* A side-by-side value centres on the first title line. */
+  margin-block-start: max(
+    0px,
+    calc(
+      (
+          var(--k-list-band) - var(--k-list-value-line) *
+            min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+        ) /
+        2
+    )
+  );
   color: var(--k-color-text-muted);
   font-family: var(--k-font-family);
   font-size: calc(
@@ -200,8 +260,13 @@
     var(--k-list-value-line) *
       min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
   );
-  text-align: end;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+}
+.k-list-item__text[data-stacked] > .k-list-item__value,
+[data-style="material"] .k-list-item__value,
+[data-text-large] .k-list-item__value {
+  margin-inline-start: 0;
+  margin-block-start: 0;
 }
 
 /* From 1.3× text the value moves under the title. */
@@ -209,16 +274,16 @@
   flex-direction: column;
   gap: var(--k-space-micro);
 }
+[data-text-large] .k-list-item__text {
+  width: 100%;
+}
 [data-text-large] .k-list-item__trailing {
   height: auto;
   margin-inline-start: 0;
 }
 [data-text-large] .k-list-item__value {
-  max-width: 100%;
-  margin-inline-start: 0;
   --k-list-value-size: var(--k-font-body-small-size);
   --k-list-value-line: var(--k-font-body-small-line-height);
-  text-align: start;
 }
 
 [dir="rtl"] .k-list-item__chevron,

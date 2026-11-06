@@ -863,9 +863,28 @@
   height: var(--k-component-badge-icon-size);
 }
 .k-breadcrumb {
+  position: relative;
   min-width: 0;
   width: 100%;
   max-width: 100%;
+}
+/* Zero-width, clipped: the items keep their natural widths for measuring
+   without widening the page. */
+.k-breadcrumb > ol.k-breadcrumb__probe {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+.k-breadcrumb__probe li {
+  flex: none;
+}
+.k-breadcrumb__probe .k-breadcrumb__label {
+  overflow: visible;
 }
 .k-breadcrumb ol {
   display: flex;

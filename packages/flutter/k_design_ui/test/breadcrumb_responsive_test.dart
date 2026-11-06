@@ -43,7 +43,7 @@ Widget host(double width, double scale, void Function(int) selected) =>
       ),
     );
 void main() {
-  for (final width in [320.0, 390.0, 500.0, 1024.0]) {
+  for (final width in [320.0, 390.0, 500.0, 1024.0, 1800.0]) {
     for (final scale in [1.0, 2.0]) {
       testWidgets(
         'breadcrumb fits $width at text scale $scale and retains current semantics',
@@ -76,31 +76,92 @@ void main() {
                 .name,
             'isTrue',
           );
-          expect(
-            find.byType(KMenuButton),
-            width < 600 ? findsOneWidget : findsNothing,
-          );
-          if (width < 600) {
-            expect(find.text(labels.first), findsNothing);
-            expect(
-              find.text(labels[3]),
-              width < 400 ? findsNothing : findsOneWidget,
-            );
+          // Measured, not breakpoints (Decision 0015): the menu appears only
+          // when the whole trail does not fit, and then holds the root.
+          final collapsed = find.byType(KMenuButton).evaluate().isNotEmpty;
+          expect(find.text(labels.first), collapsed ? findsNothing : findsOne);
+          if (collapsed) {
             await tester.tap(find.byType(KMenuButton));
             await tester.pumpAndSettle();
             expect(find.text(labels.first), findsOneWidget);
-            await tester.tap(find.text(labels.first));
-            await tester.pumpAndSettle();
-            expect(selected, 0);
-          } else {
-            await tester.tap(find.text(labels.first));
-            await tester.pumpAndSettle();
-            expect(selected, 0);
           }
+          await tester.tap(find.text(labels.first));
+          await tester.pumpAndSettle();
+          expect(selected, 0);
           expect(tester.takeException(), isNull);
           semantics.dispose();
         },
       );
     }
   }
+
+  testWidgets('a short trail uses the whole width on a phone (no menu)', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 358,
+              child: KBreadcrumb(
+                items: [
+                  for (final label in ['Home', 'Customers', 'Acme', 'Q3'])
+                    KBreadcrumbItem(id: label, label: label, onSelect: () {}),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(KMenuButton), findsNothing);
+    for (final label in ['Home', 'Customers', 'Acme', 'Q3']) {
+      expect(find.text(label), findsOneWidget);
+    }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a long trail keeps every level that fits', (tester) async {
+    tester.view.physicalSize = const Size(390, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Scaffold(
+          body: Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 358,
+              child: KBreadcrumb(
+                items: [
+                  for (final label in [
+                    'Portfolios',
+                    'Riverside Holdings',
+                    'North',
+                    'Unit 4',
+                    'Kunde',
+                  ])
+                    KBreadcrumbItem(id: label, label: label, onSelect: () {}),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(KMenuButton), findsOneWidget);
+    // More than the last level stays visible when it fits.
+    expect(find.text('Unit 4'), findsOneWidget);
+    expect(find.text('Kunde'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

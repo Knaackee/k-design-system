@@ -46,5 +46,20 @@
         "$value": "{radius.control}"
       }
     }
+  },
+  "size": {
+    "controlTouch": {
+      "$type": "dimension",
+      "$value": "{size.control.comfortable}"
+    },
+    "fieldTouch": {
+      "$type": "dimension",
+      "$value": "{size.control.comfortable}"
+    },
+    "prominentTouch": {
+      "$type": "dimension",
+      "$value": "{size.control.lg}"
+    },
+    "iconStroke": { "$type": "number", "$value": "{size.iconStroke.fine}" }
   }
 }

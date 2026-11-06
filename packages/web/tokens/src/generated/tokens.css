@@ -127,6 +127,12 @@
   --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
+  --k-size-control-touch: 40px;
+  --k-size-field-touch: 40px;
+  --k-size-prominent-touch: 44px;
+  --k-size-field: 36px;
+  --k-size-prominent: 36px;
+  --k-size-icon-stroke: 1.5;
   --k-size-hit-target: 24px;
   --k-size-indicator-tiny: 12px;
   --k-size-indicator-small: 14px;
@@ -282,6 +288,7 @@
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
   --k-layout-page-width: 960px;
+  --k-layout-form-width: 520px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -454,6 +461,10 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-media-size: 40px;
+  --k-component-list-media-radius: 8px;
+  --k-component-list-media-background: var(--k-color-brand-primary-background);
+  --k-component-list-media-foreground: var(--k-color-brand-primary-accent);
   --k-component-list-row-min-height: 40px;
   --k-component-list-row-padding-block: 8px;
   --k-component-list-row-padding-inline: 12px;
@@ -461,6 +472,7 @@
   --k-component-list-group-radius: 8px;
   --k-component-list-section-header-gap: 8px;
   --k-component-list-section-header-inset: 12px;
+  --k-component-top-bar-height: 44px;
   --k-component-page-header-padding-block-start: 8px;
   --k-component-page-header-title-gap: 4px;
   --k-component-sidebar-active-background: var(--k-color-border-default);
@@ -740,6 +752,12 @@
   --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
+  --k-size-control-touch: 40px;
+  --k-size-field-touch: 40px;
+  --k-size-prominent-touch: 44px;
+  --k-size-field: 36px;
+  --k-size-prominent: 36px;
+  --k-size-icon-stroke: 1.5;
   --k-size-hit-target: 24px;
   --k-size-indicator-tiny: 12px;
   --k-size-indicator-small: 14px;
@@ -895,6 +913,7 @@
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
   --k-layout-page-width: 960px;
+  --k-layout-form-width: 520px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -1067,6 +1086,10 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-media-size: 40px;
+  --k-component-list-media-radius: 8px;
+  --k-component-list-media-background: var(--k-color-brand-primary-background);
+  --k-component-list-media-foreground: var(--k-color-brand-primary-accent);
   --k-component-list-row-min-height: 40px;
   --k-component-list-row-padding-block: 8px;
   --k-component-list-row-padding-inline: 12px;
@@ -1074,6 +1097,7 @@
   --k-component-list-group-radius: 8px;
   --k-component-list-section-header-gap: 8px;
   --k-component-list-section-header-inset: 12px;
+  --k-component-top-bar-height: 44px;
   --k-component-page-header-padding-block-start: 8px;
   --k-component-page-header-title-gap: 4px;
   --k-component-sidebar-active-background: var(--k-color-border-default);
@@ -1353,6 +1377,12 @@
   --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
+  --k-size-control-touch: 40px;
+  --k-size-field-touch: 40px;
+  --k-size-prominent-touch: 44px;
+  --k-size-field: 36px;
+  --k-size-prominent: 36px;
+  --k-size-icon-stroke: 1.5;
   --k-size-hit-target: 24px;
   --k-size-indicator-tiny: 12px;
   --k-size-indicator-small: 14px;
@@ -1508,6 +1538,7 @@
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
   --k-layout-page-width: 960px;
+  --k-layout-form-width: 520px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -1680,6 +1711,10 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-media-size: 40px;
+  --k-component-list-media-radius: 8px;
+  --k-component-list-media-background: var(--k-color-brand-primary-background);
+  --k-component-list-media-foreground: var(--k-color-brand-primary-accent);
   --k-component-list-row-min-height: 40px;
   --k-component-list-row-padding-block: 8px;
   --k-component-list-row-padding-inline: 12px;
@@ -1687,6 +1722,7 @@
   --k-component-list-group-radius: 8px;
   --k-component-list-section-header-gap: 8px;
   --k-component-list-section-header-inset: 12px;
+  --k-component-top-bar-height: 44px;
   --k-component-page-header-padding-block-start: 8px;
   --k-component-page-header-title-gap: 4px;
   --k-component-sidebar-active-background: var(--k-color-border-default);
@@ -1966,6 +2002,12 @@
   --k-space-touch-inset: 16px;
   --k-size-chart-height: 256px;
   --k-size-control: 36px;
+  --k-size-control-touch: 40px;
+  --k-size-field-touch: 40px;
+  --k-size-prominent-touch: 44px;
+  --k-size-field: 36px;
+  --k-size-prominent: 36px;
+  --k-size-icon-stroke: 1.5;
   --k-size-hit-target: 24px;
   --k-size-indicator-tiny: 12px;
   --k-size-indicator-small: 14px;
@@ -2121,6 +2163,7 @@
   --k-layout-dialog-width: 520px;
   --k-layout-questionnaire-width: 620px;
   --k-layout-page-width: 960px;
+  --k-layout-form-width: 520px;
   --k-layout-content-width: 640px;
   --k-layout-picker-wide-width: 720px;
   --k-layout-overlay-max-height: 760px;
@@ -2293,6 +2336,10 @@
   --k-component-symbol-picker-viewport-inset: var(--k-layout-viewport-inset);
   --k-component-symbol-picker-panel-padding: 12px;
   --k-component-symbol-picker-tone-menu-offset: 96px;
+  --k-component-list-media-size: 40px;
+  --k-component-list-media-radius: 8px;
+  --k-component-list-media-background: var(--k-color-brand-primary-background);
+  --k-component-list-media-foreground: var(--k-color-brand-primary-accent);
   --k-component-list-row-min-height: 40px;
   --k-component-list-row-padding-block: 8px;
   --k-component-list-row-padding-inline: 12px;
@@ -2300,6 +2347,7 @@
   --k-component-list-group-radius: 8px;
   --k-component-list-section-header-gap: 8px;
   --k-component-list-section-header-inset: 12px;
+  --k-component-top-bar-height: 44px;
   --k-component-page-header-padding-block-start: 8px;
   --k-component-page-header-title-gap: 4px;
   --k-component-sidebar-active-background: var(--k-color-border-default);
@@ -2467,6 +2515,10 @@
   --k-component-page-header-padding-block-start: 8px;
   --k-component-page-header-title-gap: 4px;
   --k-component-button-radius: 6px;
+  --k-size-control-touch: 40px;
+  --k-size-field-touch: 40px;
+  --k-size-prominent-touch: 44px;
+  --k-size-icon-stroke: 1.5;
 }
 
 [data-style="apple"] {
@@ -2480,9 +2532,14 @@
   --k-component-page-header-padding-block-start: 16px;
   --k-component-page-header-title-gap: 4px;
   --k-component-button-radius: 999px;
+  --k-size-control-touch: 44px;
+  --k-size-field-touch: 44px;
+  --k-size-prominent-touch: 50px;
+  --k-size-icon-stroke: 1.5;
 }
 
 [data-style="material"] {
+  --k-component-top-bar-height: 64px;
   --k-component-list-row-min-height: 56px;
   --k-component-list-row-padding-block: 16px;
   --k-component-list-row-padding-inline: 16px;
@@ -2493,6 +2550,10 @@
   --k-component-page-header-padding-block-start: 16px;
   --k-component-page-header-title-gap: 4px;
   --k-component-button-radius: 999px;
+  --k-size-control-touch: 40px;
+  --k-size-field-touch: 56px;
+  --k-size-prominent-touch: 48px;
+  --k-size-icon-stroke: 1.75;
 }
 
 [data-motion="apple"] {

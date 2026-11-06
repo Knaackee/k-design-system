@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../primitives/k_text.dart';
+import '../actions/k_menu_button.dart';
 import 'k_back_button.dart';
+import 'k_scroll_top_bar.dart';
 
 /// Header of a screen: back control, title, one line of context and up to
 /// three actions (Decision 0012, Apple HIG Toolbars).
@@ -24,6 +26,7 @@ class KPageHeader extends StatelessWidget {
     this.onBack,
     this.actions = const [],
     this.breadcrumb,
+    this.backHistory = const [],
     super.key,
   });
 
@@ -39,6 +42,10 @@ class KPageHeader extends StatelessWidget {
   final List<Widget> actions;
   final Widget? breadcrumb;
 
+  /// Levels above this screen for the back button's long-press menu; give
+  /// it whenever [breadcrumb] is set so phones keep the path (0015).
+  final List<KMenuAction> backHistory;
+
   @override
   Widget build(BuildContext context) {
     assert(actions.length <= 3, 'KPageHeader takes at most 3 actions.');
@@ -47,7 +54,11 @@ class KPageHeader extends StatelessWidget {
     final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
     final back = backLabel == null
         ? null
-        : KBackButton(label: backLabel!, onPressed: onBack);
+        : KBackButton(
+            label: backLabel!,
+            onPressed: onBack,
+            history: backHistory,
+          );
     final actionBar = actions.isEmpty
         ? null
         : Wrap(
@@ -68,18 +79,21 @@ class KPageHeader extends StatelessWidget {
               crumb,
               SizedBox(height: t.spaceTight),
             ],
-            Semantics(
-              header: true,
-              child: KText(
-                title,
-                variant: switch ((style, compact)) {
-                  // iOS large title on every width.
-                  (KStyle.apple, _) => KTextVariant.heading1,
-                  // Material 3 large flexible app bar headline.
-                  (KStyle.material, _) => KTextVariant.heading1,
-                  (KStyle.linear, true) => KTextVariant.heading2,
-                  (KStyle.linear, false) => KTextVariant.heading3,
-                },
+            KTopBarTitleAnchor(
+              title: title,
+              child: Semantics(
+                header: true,
+                child: KText(
+                  title,
+                  variant: switch ((style, compact)) {
+                    // iOS large title on every width.
+                    (KStyle.apple, _) => KTextVariant.heading1,
+                    // Material 3 large flexible app bar headline.
+                    (KStyle.material, _) => KTextVariant.heading1,
+                    (KStyle.linear, true) => KTextVariant.heading2,
+                    (KStyle.linear, false) => KTextVariant.heading3,
+                  },
+                ),
               ),
             ),
             if (subtitle case final text?) ...[

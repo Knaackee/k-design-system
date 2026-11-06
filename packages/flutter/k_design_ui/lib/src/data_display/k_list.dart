@@ -7,6 +7,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_leading.dart';
 import '../primitives/k_text.dart';
+import 'k_title_value_layout.dart';
 
 /// Text roles of list parts per style preset (Decision 0014).
 class _KListRoles {
@@ -94,13 +95,20 @@ class KList extends StatelessWidget {
       if (separated && index < children.length - 1) {
         final leading =
             child is KListItem &&
-            (child.leading != null || child.leadingIcon != null);
+            (child.leading != null ||
+                child.leadingIcon != null ||
+                child.mediaIcon != null);
         rows.add(
           Padding(
             padding: EdgeInsetsDirectional.only(
               start:
                   t.componentListRowPaddingInline +
-                  (leading ? t.sizeIconDefault + t.componentListLeadingGap : 0),
+                  (leading
+                      ? (child.mediaIcon != null
+                                ? t.componentListMediaSize
+                                : t.sizeIconDefault) +
+                            t.componentListLeadingGap
+                      : 0),
             ),
             child: Divider(
               height: t.spaceHairline,
@@ -182,6 +190,7 @@ class KListItem extends StatefulWidget {
     this.description,
     this.leading,
     this.leadingIcon,
+    this.mediaIcon,
     this.trailing,
     this.value,
     this.onPressed,
@@ -200,6 +209,11 @@ class KListItem extends StatefulWidget {
 
   /// Shortcut for a leading icon in the default icon size.
   final KIconName? leadingIcon;
+
+  /// An icon on a tonal media tile (an object such as a building or a
+  /// folder). The row then centres leading, value and chevron on the copy
+  /// block, as iOS and Material do for two-line rows with media.
+  final KIconName? mediaIcon;
 
   /// Non-text trailing content (badge, status dot), centred on the title line.
   final Widget? trailing;
@@ -239,20 +253,41 @@ class _KListItemState extends State<KListItem> {
       0.0,
       KLeading.offsetFor(context, size: 0, textVariant: roles.title) * 2,
     );
-    Widget onBand(Widget child) => SizedBox(
-      height: band,
-      // A badge taller than the line overflows the band evenly instead of
-      // pushing the row taller, so rows keep one height.
-      child: OverflowBox(
-        minHeight: 0,
-        maxHeight: double.infinity,
-        fit: OverflowBoxFit.deferToChild,
-        child: child,
-      ),
-    );
+    // Media rows centre everything on the copy block; others use the band.
+    final media = widget.mediaIcon != null;
+    Widget onBand(Widget child) => media
+        ? child
+        : SizedBox(
+            height: band,
+            // A badge taller than the line overflows the band evenly instead of
+            // pushing the row taller, so rows keep one height.
+            child: OverflowBox(
+              minHeight: 0,
+              maxHeight: double.infinity,
+              fit: OverflowBoxFit.deferToChild,
+              child: child,
+            ),
+          );
     final muted = TextStyle(color: t.colorTextMuted);
     final leading =
         widget.leading ??
+        (media
+            ? DecoratedBox(
+                decoration: BoxDecoration(
+                  color: t.componentListMediaBackground,
+                  borderRadius: BorderRadius.circular(
+                    t.componentListMediaRadius,
+                  ),
+                ),
+                child: Center(
+                  child: KIcon(
+                    widget.mediaIcon!,
+                    size: iconSize,
+                    color: t.componentListMediaForeground,
+                  ),
+                ),
+              )
+            : null) ??
         (widget.leadingIcon == null
             ? null
             : KIcon(
@@ -265,9 +300,11 @@ class _KListItemState extends State<KListItem> {
         : KText(
             widget.value!,
             variant: largeText ? KTextVariant.bodySmall : roles.value,
-            align: largeText ? TextAlign.start : TextAlign.end,
             style: muted,
           );
+    // Material rows show the value as supporting text (Android Settings).
+    final stackValue =
+        largeText || KAdaptive.maybeOf(context)?.style == KStyle.material;
     final title = KText(
       widget.title,
       variant: roles.title,
@@ -291,50 +328,59 @@ class _KListItemState extends State<KListItem> {
             ),
           )
         : null;
-    final row = LayoutBuilder(
-      builder: (context, constraints) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (leading != null) ...[
-            onBand(SizedBox.square(dimension: iconSize, child: leading)),
-            SizedBox(width: t.componentListLeadingGap),
-          ],
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                title,
-                if (description != null) ...[
-                  SizedBox(height: t.spaceMicro),
-                  description,
-                ],
-                // From 1.3× text value and badge move under the title.
-                if (largeText && value != null) ...[
-                  SizedBox(height: t.spaceMicro),
-                  value,
-                ],
-                if (largeText && widget.trailing != null) ...[
-                  SizedBox(height: t.spaceMicro),
-                  widget.trailing!,
-                ],
-              ],
+    final row = Row(
+      crossAxisAlignment: media
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
+      children: [
+        if (leading != null) ...[
+          onBand(
+            SizedBox.square(
+              dimension: media ? t.componentListMediaSize : iconSize,
+              child: leading,
             ),
           ),
-          if (!largeText && value != null) ...[
-            SizedBox(width: t.spaceControlGap),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: constraints.maxWidth / 2),
-              child: value,
-            ),
-          ],
-          if (!largeText && widget.trailing != null) ...[
-            SizedBox(width: t.spaceControlGap),
-            onBand(widget.trailing!),
-          ],
-          if (chevron != null) ...[SizedBox(width: t.spaceControlGap), chevron],
+          SizedBox(width: t.componentListLeadingGap),
         ],
-      ),
+        Expanded(
+          child: Builder(
+            builder: (context) {
+              final copy = Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  title,
+                  if (description != null) ...[
+                    SizedBox(height: t.spaceMicro),
+                    description,
+                  ],
+                  // From 1.3× text the badge moves under the title.
+                  if (largeText && widget.trailing != null) ...[
+                    SizedBox(height: t.spaceMicro),
+                    widget.trailing!,
+                  ],
+                ],
+              );
+              if (value == null) return copy;
+              // Side by side when both fit on one line, else the value
+              // moves under the copy; words are never broken (0015).
+              return KTitleValueLayout(
+                copy: copy,
+                value: value,
+                gap: t.spaceControlGap,
+                stackGap: t.spaceMicro,
+                band: band,
+                stacked: stackValue,
+              );
+            },
+          ),
+        ),
+        if (!largeText && widget.trailing != null) ...[
+          SizedBox(width: t.spaceControlGap),
+          onBand(widget.trailing!),
+        ],
+        if (chevron != null) ...[SizedBox(width: t.spaceControlGap), chevron],
+      ],
     );
     final background = widget.selected
         ? t.colorActionSecondaryBackground

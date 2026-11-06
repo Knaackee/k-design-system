@@ -292,9 +292,7 @@ export function KMenuButton({
                   </span>
                   <span className="k-menu__label">{action.label}</span>
                   <span className="k-menu__trailing" aria-hidden="true">
-                    {action.checked ? (
-                      <KIcon name="check" size={16} strokeWidth={1.5} />
-                    ) : null}
+                    {action.checked ? <KIcon name="check" size={16} /> : null}
                   </span>
                 </Item>
               </Fragment>

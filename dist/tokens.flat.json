@@ -556,6 +556,45 @@
         "unit": "px"
       }
     },
+    "size.controlTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.fieldTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.prominentTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "size.field": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.iconStroke": {
+      "type": "number",
+      "value": 1.5
+    },
     "size.hitTarget": {
       "type": "dimension",
       "value": {
@@ -1737,6 +1776,13 @@
         "unit": "px"
       }
     },
+    "layout.formWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -2809,6 +2855,28 @@
         "unit": "px"
       }
     },
+    "component.list.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaBackground": {
+      "type": "color",
+      "value": "#f7fee7"
+    },
+    "component.list.mediaForeground": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
     "component.list.rowMinHeight": {
       "type": "dimension",
       "value": {
@@ -2855,6 +2923,13 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.topBar.height": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
         "unit": "px"
       }
     },
@@ -4414,6 +4489,45 @@
         "unit": "px"
       }
     },
+    "size.controlTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.fieldTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.prominentTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "size.field": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.iconStroke": {
+      "type": "number",
+      "value": 1.5
+    },
     "size.hitTarget": {
       "type": "dimension",
       "value": {
@@ -5595,6 +5709,13 @@
         "unit": "px"
       }
     },
+    "layout.formWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -6667,6 +6788,28 @@
         "unit": "px"
       }
     },
+    "component.list.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaBackground": {
+      "type": "color",
+      "value": "#1a2e05"
+    },
+    "component.list.mediaForeground": {
+      "type": "color",
+      "value": "#a3e635"
+    },
     "component.list.rowMinHeight": {
       "type": "dimension",
       "value": {
@@ -6713,6 +6856,13 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.topBar.height": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
         "unit": "px"
       }
     },
@@ -8272,6 +8422,45 @@
         "unit": "px"
       }
     },
+    "size.controlTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.fieldTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.prominentTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "size.field": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.iconStroke": {
+      "type": "number",
+      "value": 1.5
+    },
     "size.hitTarget": {
       "type": "dimension",
       "value": {
@@ -9453,6 +9642,13 @@
         "unit": "px"
       }
     },
+    "layout.formWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -10525,6 +10721,28 @@
         "unit": "px"
       }
     },
+    "component.list.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaBackground": {
+      "type": "color",
+      "value": "#ccfbf1"
+    },
+    "component.list.mediaForeground": {
+      "type": "color",
+      "value": "#0d9488"
+    },
     "component.list.rowMinHeight": {
       "type": "dimension",
       "value": {
@@ -10571,6 +10789,13 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.topBar.height": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
         "unit": "px"
       }
     },
@@ -12130,6 +12355,45 @@
         "unit": "px"
       }
     },
+    "size.controlTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.fieldTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "size.prominentTouch": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
+        "unit": "px"
+      }
+    },
+    "size.field": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.prominent": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "size.iconStroke": {
+      "type": "number",
+      "value": 1.5
+    },
     "size.hitTarget": {
       "type": "dimension",
       "value": {
@@ -13311,6 +13575,13 @@
         "unit": "px"
       }
     },
+    "layout.formWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 520,
+        "unit": "px"
+      }
+    },
     "layout.contentWidth": {
       "type": "dimension",
       "value": {
@@ -14383,6 +14654,28 @@
         "unit": "px"
       }
     },
+    "component.list.mediaSize": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaRadius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.list.mediaBackground": {
+      "type": "color",
+      "value": "#123b36"
+    },
+    "component.list.mediaForeground": {
+      "type": "color",
+      "value": "#2dd4bf"
+    },
     "component.list.rowMinHeight": {
       "type": "dimension",
       "value": {
@@ -14429,6 +14722,13 @@
       "type": "dimension",
       "value": {
         "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.topBar.height": {
+      "type": "dimension",
+      "value": {
+        "value": 44,
         "unit": "px"
       }
     },
@@ -15502,6 +15802,31 @@
           "value": 6,
           "unit": "px"
         }
+      },
+      "size.controlTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "size.fieldTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "size.prominentTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 44,
+          "unit": "px"
+        }
+      },
+      "size.iconStroke": {
+        "type": "number",
+        "value": 1.5
       }
     },
     "styleApple": {
@@ -15574,9 +15899,41 @@
           "value": 999,
           "unit": "px"
         }
+      },
+      "size.controlTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 44,
+          "unit": "px"
+        }
+      },
+      "size.fieldTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 44,
+          "unit": "px"
+        }
+      },
+      "size.prominentTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 50,
+          "unit": "px"
+        }
+      },
+      "size.iconStroke": {
+        "type": "number",
+        "value": 1.5
       }
     },
     "styleMaterial": {
+      "component.topBar.height": {
+        "type": "dimension",
+        "value": {
+          "value": 64,
+          "unit": "px"
+        }
+      },
       "component.list.rowMinHeight": {
         "type": "dimension",
         "value": {
@@ -15646,6 +16003,31 @@
           "value": 999,
           "unit": "px"
         }
+      },
+      "size.controlTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "size.fieldTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 56,
+          "unit": "px"
+        }
+      },
+      "size.prominentTouch": {
+        "type": "dimension",
+        "value": {
+          "value": 48,
+          "unit": "px"
+        }
+      },
+      "size.iconStroke": {
+        "type": "number",
+        "value": 1.75
       }
     },
     "motionApple": {

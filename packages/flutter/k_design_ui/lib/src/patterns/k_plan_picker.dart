@@ -129,7 +129,7 @@ class KPlanPicker extends StatelessWidget {
                 KButton(
                   label: actionLabel!,
                   loading: loading,
-                  trailing: const KIcon(KIconName.arrowRight, strokeWidth: 1.5),
+                  trailing: const KIcon(KIconName.arrowRight),
                   onPressed:
                       disabled ||
                           loading ||
@@ -254,7 +254,7 @@ class KPlanCard extends StatelessWidget {
               for (final feature in plan.features)
                 KInline(
                   children: [
-                    const KIcon(KIconName.check, size: 20, strokeWidth: 1.5),
+                    const KIcon(KIconName.check, size: 20),
                     Expanded(
                       child: KText(feature, variant: KTextVariant.bodySmall),
                     ),

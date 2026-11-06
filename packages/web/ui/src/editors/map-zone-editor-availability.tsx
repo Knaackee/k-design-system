@@ -288,7 +288,7 @@ export function ZoneAvailabilityFields({
 
             label: labels.alwaysAvailability,
 
-            leading: <KIcon name="infinity" strokeWidth={1.5} />,
+            leading: <KIcon name="infinity" />,
           },
 
           {
@@ -296,7 +296,7 @@ export function ZoneAvailabilityFields({
 
             label: labels.recurringAvailability,
 
-            leading: <KIcon name="repeat" strokeWidth={1.5} />,
+            leading: <KIcon name="repeat" />,
           },
 
           {
@@ -304,7 +304,7 @@ export function ZoneAvailabilityFields({
 
             label: labels.dateRangeAvailability,
 
-            leading: <KIcon name="calendar-range" strokeWidth={1.5} />,
+            leading: <KIcon name="calendar-range" />,
           },
         ]}
 

@@ -14,6 +14,22 @@ export function findings(source, extension) {
             "raw-spacing",
             /\b(?:EdgeInsets\.(?:all|symmetric|only)|SizedBox)\s*\([^)]*\b[1-9]\d*(?:\.\d+)?\b/g,
           ],
+          // Decision 0015: appearance comes from the style; apps do not set it.
+          ["icon-stroke", /\bKIcon\s*\([^)]*\bstrokeWidth\s*:/gs],
+          [
+            "appearance-override",
+            /\bKAdaptiveOverrides\s*\([^)]*\b(?:style|density|typeScale|motion)\s*:/gs,
+          ],
+          // A card with a chevron is a hand-built list row: use KListItem.
+          [
+            "hand-built-row",
+            /\bKCard\s*\((?:(?!\bKCard\s*\()[\s\S]){0,600}?KIconName\.chevronRight/g,
+          ],
+          // Pages scroll in KPage (gutter, safe areas, readable width).
+          [
+            "bare-page",
+            /\bbody\s*:\s*(?:const\s+)?SingleChildScrollView\s*\(/g,
+          ],
         ]
       : [
           ["native-control", /<(?:input|select|textarea|button)\b/g],
@@ -24,6 +40,17 @@ export function findings(source, extension) {
           [
             "raw-spacing",
             /\b(?:gap|padding|margin)(?:-[\w-]+)?\s*:\s*[^;\n}]*\b[1-9]\d*(?:\.\d+)?(?:px|rem)\b/g,
+          ],
+          // Decision 0015: appearance comes from the style; apps do not set it.
+          ["icon-stroke", /<KIcon\b[^>]*\bstrokeWidth=/gs],
+          [
+            "appearance-override",
+            /\bdata-(?:style|density|type-scale|motion)=|\boverrides\s*[:=]\s*\{?\s*\{[^}]*\b(?:style|density|typeScale|motion)\s*:/g,
+          ],
+          // A card with a chevron is a hand-built list row: use KListItem.
+          [
+            "hand-built-row",
+            /<KCard\b(?:(?!<\/KCard>)[\s\S]){0,800}?chevron-right/g,
           ],
         ];
   return rules.flatMap(([rule, regex]) =>

@@ -533,19 +533,19 @@ export function AgentChatWorkspaceFixture({
                   {
                     id: "image",
                     label: "Bild auswählen",
-                    iconContent: <KIcon name="image" strokeWidth={1.5} />,
+                    iconContent: <KIcon name="image" />,
                     onSelect: () => addAttachment("Bild.jpg", "image/jpeg"),
                   },
                   {
                     id: "camera",
                     label: "Neues Bild aufnehmen",
-                    iconContent: <KIcon name="camera" strokeWidth={1.5} />,
+                    iconContent: <KIcon name="camera" />,
                     onSelect: () => addAttachment("Aufnahme.jpg", "image/jpeg"),
                   },
                   {
                     id: "document",
                     label: "Dokument auswählen",
-                    iconContent: <KIcon name="file" strokeWidth={1.5} />,
+                    iconContent: <KIcon name="file" />,
                     onSelect: () =>
                       addAttachment("Projektbrief.pdf", "application/pdf"),
                   },

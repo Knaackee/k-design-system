@@ -31,7 +31,6 @@ class _MobileAppBarFixtureState extends State<MobileAppBarFixture> {
         icon: KIcon(
           KIconName.building,
           size: 24,
-          strokeWidth: 1.5,
           color: selectedId == 'portfolios'
               ? tokens.colorTextPrimary
               : tokens.colorTextMuted,
@@ -48,7 +47,6 @@ class _MobileAppBarFixtureState extends State<MobileAppBarFixture> {
         icon: KIcon(
           KIconName.settings,
           size: 24,
-          strokeWidth: 1.5,
           color: selectedId == 'settings'
               ? tokens.colorTextPrimary
               : tokens.colorTextMuted,

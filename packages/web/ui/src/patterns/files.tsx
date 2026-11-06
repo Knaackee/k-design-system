@@ -103,7 +103,6 @@ export function KFileTree({
               <KIcon
                 name={expanded ? "chevron-down" : "chevron-right"}
                 size={16}
-                strokeWidth={1.5}
               />
             </button>
           ) : (
@@ -116,7 +115,7 @@ export function KFileTree({
             onClick={() => onSelect(node.id)}
           >
             {node.icon ? (
-              <KIcon name={node.icon} size={16} strokeWidth={1.5} />
+              <KIcon name={node.icon} size={16} />
             ) : (
               <KFileIcon
                 name={node.name}
@@ -362,7 +361,7 @@ export function KFileInfo({
   return (
     <section className="k-file-info">
       <div className="k-file-info__identity">
-        <KIcon name="file-text" size={24} strokeWidth={1.5} />
+        <KIcon name="file-text" size={24} />
         <strong>{name}</strong>
       </div>
       <dl>

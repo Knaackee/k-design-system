@@ -84,3 +84,41 @@
   border-color: var(--k-color-border-default);
   background: var(--k-color-surface-raised);
 }
+
+/* Material 3 segmented button (Decision 0015): outlined pill, tonal
+   selection with a check mark, dividers between segments. */
+.k-segmented-control__check {
+  display: none;
+}
+[data-style="material"] .k-segmented-control {
+  --k-segment-inset: 0px;
+  overflow: hidden;
+  border-radius: var(--k-radius-full);
+  background: transparent;
+}
+/* The outline is drawn over the selection, as in Flutter. */
+[data-style="material"] .k-segmented-control::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: var(--k-space-hairline) solid var(--k-color-border-strong);
+  border-radius: inherit;
+  pointer-events: none;
+}
+[data-style="material"] .k-segmented-control__thumb {
+  border: 0;
+  border-radius: 0;
+  background: var(--k-color-brand-primary-background);
+}
+[data-style="material"] .k-segmented-control__segment {
+  border-radius: 0;
+}
+[data-style="material"]
+  .k-segmented-control__segment
+  + .k-segmented-control__segment {
+  border-inline-start-color: var(--k-color-border-strong);
+}
+[data-style="material"] .k-segmented-control__check {
+  display: inline-flex;
+}

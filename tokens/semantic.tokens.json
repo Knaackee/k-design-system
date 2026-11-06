@@ -415,6 +415,36 @@
       "$type": "dimension",
       "$value": "{size.control.md}"
     },
+    "controlTouch": {
+      "$description": "Minimum control height with touch input; the style preset sets it (Apple 44 pt, Material 40 dp).",
+      "$type": "dimension",
+      "$value": "{size.control.comfortable}"
+    },
+    "fieldTouch": {
+      "$description": "Minimum text field and select height with touch input (Material 56 dp).",
+      "$type": "dimension",
+      "$value": "{size.control.comfortable}"
+    },
+    "prominentTouch": {
+      "$description": "Height of a full-width primary button with touch input (iOS 50 pt).",
+      "$type": "dimension",
+      "$value": "{size.control.lg}"
+    },
+    "field": {
+      "$description": "Resolved text field height: size.control, raised to size.fieldTouch with touch input.",
+      "$type": "dimension",
+      "$value": "{size.control.md}"
+    },
+    "prominent": {
+      "$description": "Resolved full-width primary button height.",
+      "$type": "dimension",
+      "$value": "{size.control.md}"
+    },
+    "iconStroke": {
+      "$description": "Icon stroke in screen pixels at every icon size (Lucide absolute stroke).",
+      "$type": "number",
+      "$value": "{size.iconStroke.fine}"
+    },
     "hitTarget": {
       "$type": "dimension",
       "$value": "{size.hitTarget.pointer}"
@@ -1071,6 +1101,11 @@
       "$value": "{layout.width.questionnaire}"
     },
     "pageWidth": { "$type": "dimension", "$value": "{layout.width.page}" },
+    "formWidth": {
+      "$description": "Readable width of a form page (sign-in, onboarding step); KPage(width: form).",
+      "$type": "dimension",
+      "$value": "{layout.width.dialog}"
+    },
     "contentWidth": {
       "$type": "dimension",
       "$value": "{layout.width.content}"
@@ -1857,6 +1892,23 @@
       }
     },
     "list": {
+      "mediaSize": {
+        "$description": "Leading media tile of a list row (icon on a tonal tile); the row centres on it.",
+        "$type": "dimension",
+        "$value": "{size.control.comfortable}"
+      },
+      "mediaRadius": {
+        "$type": "dimension",
+        "$value": "{radius.scale.lg}"
+      },
+      "mediaBackground": {
+        "$type": "color",
+        "$value": "{color.brand.primary.background}"
+      },
+      "mediaForeground": {
+        "$type": "color",
+        "$value": "{color.brand.primary.accent}"
+      },
       "rowMinHeight": {
         "$type": "dimension",
         "$value": "{size.scale.listRow}"
@@ -1867,6 +1919,13 @@
       "groupRadius": { "$type": "dimension", "$value": "{radius.scale.lg}" },
       "sectionHeaderGap": { "$type": "dimension", "$value": "{space.2}" },
       "sectionHeaderInset": { "$type": "dimension", "$value": "{space.3}" }
+    },
+    "topBar": {
+      "height": {
+        "$description": "Bar that appears over scrolled content on phones (iOS 44 pt navigation bar, Material 64 dp top app bar), below the status bar.",
+        "$type": "dimension",
+        "$value": "{size.control.lg}"
+      }
     },
     "pageHeader": {
       "paddingBlockStart": { "$type": "dimension", "$value": "{space.2}" },

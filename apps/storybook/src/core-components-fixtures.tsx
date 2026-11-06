@@ -46,6 +46,14 @@ export function SettingsList() {
           onClick={() => {}}
         />
       </KList>
+      <KList title="Assistant" footer="Speech input runs on this device.">
+        <KListItem
+          title="On-device speech input"
+          leadingIcon="mic"
+          value="Not set up"
+          onClick={() => {}}
+        />
+      </KList>
       <KList
         title="Storage"
         footer="Offline files are removed after 30 days without use."
@@ -147,8 +155,44 @@ const destinations = [
   { id: "settings", label: "Settings", icon: "settings" },
 ] as const;
 
-export function AppShellFixture() {
-  const [selected, setSelected] = useState("settings");
+/** Objects with media tiles, a status badge and a shared-with summary. */
+export function PortfolioList() {
+  return (
+    <KStack gap="section" align="stretch">
+      <KList title="Own portfolios">
+        <KListItem
+          title="Riverside Holdings"
+          description="Dana Weber · Updated 22.09.2026"
+          mediaIcon="folder"
+          trailing={<KBadge variant="secondary">Draft</KBadge>}
+          onClick={() => {}}
+        />
+        <KListItem
+          title="North Estates"
+          description="Updated 03.10.2026"
+          mediaIcon="building"
+          value="12 units"
+          onClick={() => {}}
+        />
+      </KList>
+      <KList title="Sharing">
+        <KListItem
+          title="Sabrina, Patricia, Kristin"
+          leadingIcon="users"
+          value="3 people"
+          onClick={() => {}}
+        />
+      </KList>
+    </KStack>
+  );
+}
+
+export function AppShellFixture({
+  initial = "settings",
+}: {
+  initial?: string;
+}) {
+  const [selected, setSelected] = useState(initial);
   const current = destinations.find((item) => item.id === selected)!;
   return (
     <div className="cc-shell">
@@ -166,6 +210,8 @@ export function AppShellFixture() {
           <KPageHeader title={current.label} />
           {selected === "settings" ? (
             <SettingsList />
+          ) : selected === "portfolios" ? (
+            <PortfolioList />
           ) : (
             <KText variant="body">
               {current.label} has no content in this reference.

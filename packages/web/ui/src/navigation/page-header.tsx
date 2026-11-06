@@ -1,6 +1,7 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { KText } from "../primitives/text.js";
 import { KBackButton } from "./back-button.js";
+import type { KMenuAction } from "../actions/menu-button.js";
 
 export interface KPageHeaderProps extends Omit<
   HTMLAttributes<HTMLElement>,
@@ -16,6 +17,11 @@ export interface KPageHeaderProps extends Omit<
   actions?: ReactNode;
   /** Shown above the title from 600 px (deep desktop hierarchies). */
   breadcrumb?: ReactNode;
+  /**
+   * Levels above this screen for the back button's long-press menu; give it
+   * whenever `breadcrumb` is set so phones keep the path (Decision 0015).
+   */
+  backHistory?: readonly KMenuAction[];
 }
 
 /**
@@ -31,6 +37,7 @@ export function KPageHeader({
   onBack,
   actions,
   breadcrumb,
+  backHistory,
   className,
   ...props
 }: KPageHeaderProps) {
@@ -44,7 +51,11 @@ export function KPageHeader({
       <div className="k-page-header__layout">
         {backLabel ? (
           <div className="k-page-header__back">
-            <KBackButton label={backLabel} onClick={onBack} />
+            <KBackButton
+              label={backLabel}
+              onClick={onBack}
+              history={backHistory}
+            />
           </div>
         ) : null}
         <div className="k-page-header__copy">

@@ -292,7 +292,6 @@ export function SortableTreeFixture({
           )}
           <KIconButton
             icon="undo-2"
-            strokeWidth={1.5}
             label="Rückgängig"
             disabled={!previous}
             onClick={undo}
@@ -344,25 +343,25 @@ export function SortableTreeFixture({
             {
               id: "edit",
               label: "Bearbeiten",
-              iconContent: <KIcon name="pencil" strokeWidth={1.5} />,
+              iconContent: <KIcon name="pencil" />,
               onSelect: () => edit(node),
             },
             {
               id: "remove",
               label: "Entfernen",
               destructive: true,
-              iconContent: <KIcon name="trash" strokeWidth={1.5} />,
+              iconContent: <KIcon name="trash" />,
               onSelect: () => setRemoving(node),
             },
           ]}
         />
         <KInline gap="action" wrap>
           <KButton variant="secondary" onClick={() => fresh(true)}>
-            <KIcon name="folder-plus" strokeWidth={1.5} />
+            <KIcon name="folder-plus" />
             Kategorie
           </KButton>
           <KButton variant="ghost" onClick={() => fresh(false)}>
-            <KIcon name="plus" strokeWidth={1.5} />
+            <KIcon name="plus" />
             Angebot
           </KButton>
         </KInline>

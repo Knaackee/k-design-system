@@ -72,6 +72,31 @@ var(--k-motion-enter-easing)` or `kMotion('enter', el)` on Web. The rule
   `KSegmentedControl` and `KAppShell`. Never the only feedback; never for scroll,
   hover or typing. Web vibration does not exist on Safari (iPhone, Mac).
 
+## 4b. Native details (Decision 0015)
+
+Remove what the library now does, then check every surface:
+
+- **Inventory first.** List every screen, sheet, dialog and menu (search for
+  `KAdaptiveDialog.show`, `KBottomSheet.show`, `KPageSheet`, `showDialog`,
+  routes). Each one is migrated and gets a before/after screenshot.
+- **Pages.** Wrap each screen body in `KPage`; sign-in and single forms in
+  `KPage(width: form)`. Remove bare `SingleChildScrollView` pages and local
+  max widths.
+- **Rows.** Replace cards that act as list rows (title, badge, chevron) with
+  `KListItem` in a `KList`; objects get `mediaIcon`. Drop value width caps
+  and `titleMaxLines` unless one line is wanted (a list of names).
+- **Heights and icons.** Remove `strokeWidth`, `minHeight`/`height` on
+  buttons and fields, dense density on phones and style or density
+  overrides. A full-width primary button is a plain `KButton(fullWidth:)`.
+- **Breadcrumbs.** Pass the trail as `KPageHeader(breadcrumb:)` and the
+  same levels with icons as `backHistory`; do not show a breadcrumb row on
+  phones.
+- **Forms in sheets.** Two to five options: `KSegmentedControl`; dates:
+  the date field; a role per person: a row with value and menu.
+- **Sheets.** Open them only through `KAdaptiveDialog.show`,
+  `KBottomSheet.show` or `KPageSheet`; a custom sheet wraps its content in
+  `KSheetDrag`.
+
 ## 5. Verify
 
 Run the rule checks from the consumer repository:
@@ -92,6 +117,7 @@ light and dark:
 | Android tablet                   | Same as iPad                                                                                  |
 | Desktop browsers incl. Safari    | Keyboard: segmented control arrows, list rows, focus rings; window resize across 600 / 840    |
 | Any device with reduce motion on | Only fades, no movement                                                                       |
+| Every sheet (phone)              | Drag down from the list at its top closes it; no jump back; unsaved changes ask first         |
 
 No overflow, no clipped required text, every action reachable. Paste the
 evidence block from the skill into the handover.

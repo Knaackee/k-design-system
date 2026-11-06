@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -26,14 +28,17 @@ class KBreadcrumb extends StatelessWidget {
     this.label = 'Breadcrumb',
     this.overflowLabel,
     this.separator,
-    this.iconStrokeWidth = 1.5,
+    @Deprecated('Icon strokes come from the style (size.iconStroke).')
+    this.iconStrokeWidth,
     super.key,
   });
   final List<KBreadcrumbItem> items;
   final String label;
   final String? overflowLabel;
   final Widget? separator;
-  final double iconStrokeWidth;
+
+  /// Leave unset; the style's `size.iconStroke` applies (Decision 0015).
+  final double? iconStrokeWidth;
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
@@ -77,10 +82,11 @@ class KBreadcrumb extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final bounded = constraints.hasBoundedWidth;
-          final keep = constraints.maxWidth < 400
-              ? 1
-              : constraints.maxWidth < 600
-              ? 2
+          // Measure instead of breakpoints (Decision 0015): show as many
+          // trailing levels as fit, the rest go into the menu. Only the
+          // last label is ever shortened with "…".
+          final keep = bounded
+              ? _fittingCount(context, t, constraints.maxWidth)
               : items.length;
           final hiddenCount = items.length > keep ? items.length - keep : 0;
           Widget divider() => Padding(
@@ -138,6 +144,50 @@ class KBreadcrumb extends StatelessWidget {
         },
       ),
     );
+  }
+
+  int _fittingCount(BuildContext context, KDesignTokens t, double available) {
+    final scaler = MediaQuery.textScalerOf(context);
+    final direction = Directionality.of(context);
+    double itemWidth(KBreadcrumbItem item) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: item.label,
+          style: _textStyle(
+            t,
+            t.fontControlSize,
+            t.fontControlWeight,
+            t.colorTextPrimary,
+            scaler: scaler,
+          ),
+        ),
+        maxLines: 1,
+        textDirection: direction,
+        textScaler: scaler,
+      )..layout();
+      final width = painter.width + (item.icon == null ? 0 : 16 + t.spaceTight);
+      painter.dispose();
+      return width;
+    }
+
+    final separatorWidth = 16 + 2 * t.spaceControlGap;
+    final widths = [for (final item in items) itemWidth(item)];
+    double trailing(int count) {
+      var sum = 0.0;
+      for (var i = items.length - count; i < items.length; i++) {
+        sum += widths[i];
+      }
+      return sum + separatorWidth * (count - 1);
+    }
+
+    if (trailing(items.length) <= available) return items.length;
+    final menu = math.max(t.sizeControl, t.sizeHitTarget) + separatorWidth;
+    var count = 1;
+    while (count < items.length - 1 &&
+        menu + trailing(count + 1) <= available) {
+      count++;
+    }
+    return count;
   }
 
   Widget _breadcrumbLink(

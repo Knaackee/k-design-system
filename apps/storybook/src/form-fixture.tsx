@@ -305,7 +305,7 @@ export function FormFixture({
         {kind === "input" && (
           <KField label="Website">
             <KInput
-              leading={<KIcon name="globe" size={20} strokeWidth={1.5} />}
+              leading={<KIcon name="globe" size={20} />}
               placeholder="www.example.com"
               inputMode="url"
             />
