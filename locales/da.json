@@ -19,6 +19,7 @@
     "nextMonth": "Næste måned",
     "apply": "Anvend",
     "cancel": "Annuller",
+    "moreActions": "Flere handlinger",
     "clear": "Ryd",
     "invalid": "Angiv en gyldig dato og tid.",
     "outOfRange": "Vælg en værdi inden for det tilladte interval.",

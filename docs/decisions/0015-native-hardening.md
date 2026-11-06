@@ -49,10 +49,16 @@ app code passes content, events and state.
    segmented button (outlined pill, tonal selection with a check). Tablets
    in `apple` and `material` show a labelled sidebar instead of the
    icon-only rail.
-8. **Gates.** `check-consumer-ui` reports `icon-stroke`,
-   `appearance-override`, `hand-built-row` and `bare-page`. The workflow
-   skill requires an inventory of every screen, sheet, dialog and menu with
-   evidence.
+8. **Scrolled top bar.** The bar keeps the page header's back control and
+   actions while the header is scrolled away (iOS navigation bar): icon
+   actions stay, text buttons and further actions move into a More menu.
+9. **Icons grow with text.** Text-adjacent icons (16–24) scale with the
+   system text size up to `text.scaleMax.icon` (2×), as SF Symbols do;
+   tab bar symbols, glyphs inside fields and display icons keep their size.
+10. **Gates.** `check-consumer-ui` reports `icon-stroke`,
+    `appearance-override`, `hand-built-row` and `bare-page`. The workflow
+    skill requires an inventory of every screen, sheet, dialog and menu with
+    evidence.
 
 ## Consequences
 

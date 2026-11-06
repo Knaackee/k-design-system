@@ -3,6 +3,11 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../actions/k_icon_button.dart';
+import '../actions/k_menu_button.dart';
+import '../primitives/k_button.dart';
+import '../primitives/k_icon.dart';
+import '../localization/k_localization.dart';
 import '../primitives/k_text.dart';
 
 /// Lets a [KPageHeader] hand its title to the bar of the surrounding
@@ -29,14 +34,28 @@ class KTopBarTitleScope extends InheritedWidget {
 class KTopBarTitleController extends ChangeNotifier {
   String? _title;
   GlobalKey? _anchor;
+  Widget? _back;
+  List<Widget> _actions = const [];
 
   String? get title => _title;
   GlobalKey? get anchor => _anchor;
 
-  void register(String title, GlobalKey anchor) {
-    if (title == _title && anchor == _anchor) return;
+  /// The page header's back control; the bar keeps it while scrolled.
+  Widget? get back => _back;
+
+  /// The page header's actions; the bar keeps them while scrolled.
+  List<Widget> get actions => _actions;
+
+  void register(
+    String title,
+    GlobalKey anchor, {
+    Widget? back,
+    List<Widget> actions = const [],
+  }) {
     _title = title;
     _anchor = anchor;
+    _back = back;
+    _actions = actions;
     notifyListeners();
   }
 
@@ -44,6 +63,8 @@ class KTopBarTitleController extends ChangeNotifier {
     if (anchor != _anchor) return;
     _title = null;
     _anchor = null;
+    _back = null;
+    _actions = const [];
     notifyListeners();
   }
 }
@@ -53,10 +74,14 @@ class KTopBarTitleAnchor extends StatefulWidget {
   const KTopBarTitleAnchor({
     required this.title,
     required this.child,
+    this.back,
+    this.actions = const [],
     super.key,
   });
   final String title;
   final Widget child;
+  final Widget? back;
+  final List<Widget> actions;
 
   @override
   State<KTopBarTitleAnchor> createState() => _KTopBarTitleAnchorState();
@@ -80,14 +105,25 @@ class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor> {
   @override
   void didUpdateWidget(KTopBarTitleAnchor oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.title != widget.title) _register();
+    if (oldWidget.title != widget.title ||
+        oldWidget.back != widget.back ||
+        oldWidget.actions != widget.actions) {
+      _register();
+    }
   }
 
   void _register() {
     final controller = _controller;
     if (controller == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) controller.register(widget.title, _anchor);
+      if (mounted) {
+        controller.register(
+          widget.title,
+          _anchor,
+          back: widget.back,
+          actions: widget.actions,
+        );
+      }
     });
   }
 
@@ -213,22 +249,40 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
         ),
         child: SizedBox(
           height: t.componentTopBarHeight,
-          child: AnimatedOpacity(
-            opacity: _titleShown && title != null ? 1 : 0,
-            duration: motion.settle,
-            curve: motion.curve,
-            child: Align(
-              // iOS centres the inline title; Material starts it.
-              alignment: apple
-                  ? Alignment.center
-                  : AlignmentDirectional.centerStart,
-              child: KText(
-                title ?? '',
-                variant: KTextVariant.heading5,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+          child: Row(
+            children: [
+              // Back and actions stay reachable while the header is
+              // scrolled away, as in the iOS navigation bar (0015).
+              if (_controller.back case final back?) ...[
+                back,
+                SizedBox(width: t.spaceTight),
+              ],
+              Expanded(
+                child: ExcludeSemantics(
+                  child: AnimatedOpacity(
+                    opacity: _titleShown && title != null ? 1 : 0,
+                    duration: motion.settle,
+                    curve: motion.curve,
+                    child: Align(
+                      // iOS centres the inline title; Material starts it.
+                      alignment: apple
+                          ? Alignment.center
+                          : AlignmentDirectional.centerStart,
+                      child: KText(
+                        title ?? '',
+                        variant: KTextVariant.heading5,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
+              ..._barActions(
+                _controller.actions,
+                KLocalization.of(context).text('moreActions'),
+              ),
+            ],
           ),
         ),
       ),
@@ -264,8 +318,9 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
                 opacity: _scrolled ? 1 : 0,
                 duration: motion.settle,
                 curve: motion.curve,
-                // The page header keeps the title for assistive technology.
+                // Hidden until scrolled; the page header keeps the title.
                 child: ExcludeSemantics(
+                  excluding: !_scrolled,
                   child: KeyedSubtree(key: _bar, child: surface),
                 ),
               ),
@@ -275,4 +330,46 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
       ),
     );
   }
+}
+
+/// Icon actions (at most two) stay in the bar; text buttons and the rest go
+/// into a More menu, so the bar never overflows (Decision 0015).
+List<Widget> _barActions(List<Widget> actions, String moreLabel) {
+  if (actions.isEmpty) return const [];
+  final visible = <Widget>[];
+  final menu = <KMenuAction>[];
+  for (final (index, action) in actions.indexed) {
+    if (action is KIconButton && visible.length < 2) {
+      visible.add(action);
+    } else if (action is KIconButton) {
+      menu.add(
+        KMenuAction(
+          id: '$index',
+          label: action.label,
+          icon: action.icon,
+          onSelect: action.onPressed,
+          disabled: action.onPressed == null,
+        ),
+      );
+    } else if (action is KButton) {
+      menu.add(
+        KMenuAction(
+          id: '$index',
+          label: action.label,
+          icon: action.leading is KIcon
+              ? (action.leading! as KIcon).name
+              : null,
+          onSelect: action.onPressed,
+          disabled: action.onPressed == null,
+        ),
+      );
+    } else if (visible.length < 2) {
+      visible.add(action);
+    }
+  }
+  return [
+    ...visible,
+    if (menu.isNotEmpty)
+      KMenuButton(label: moreLabel, overflow: true, actions: menu),
+  ];
 }

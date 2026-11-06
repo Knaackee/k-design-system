@@ -81,6 +81,8 @@ class KPageHeader extends StatelessWidget {
             ],
             KTopBarTitleAnchor(
               title: title,
+              back: back,
+              actions: actions,
               child: Semantics(
                 header: true,
                 child: KText(

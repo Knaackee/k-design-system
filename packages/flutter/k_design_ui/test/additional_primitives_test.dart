@@ -147,8 +147,13 @@ void main() {
         KDensity.standard,
       );
       await tester.pumpAndSettle();
+      // Text-adjacent icons grow with the text (2x cap); display icons keep
+      // their size (Decision 0015).
       for (final size in [16.0, 24.0, 32.0]) {
-        expect(tester.getSize(find.byKey(ValueKey(size))), Size.square(size));
+        expect(
+          tester.getSize(find.byKey(ValueKey(size))),
+          Size.square(size <= 24 ? size * 2 : size),
+        );
         expect(find.bySemanticsLabel('Check $size'), findsOneWidget);
       }
       expect(tester.takeException(), isNull);

@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../primitives/k_icon.dart';
+
 enum KGlassQuality { auto, liquid, frosted, solid }
 
 enum KMobileAppBarVisibility { portraitMobile, always }
@@ -131,8 +133,12 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
     });
   }
 
+  // Tab bar symbols keep one size at every text size, as on iOS.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      KIconFixedScope(child: Builder(builder: _build));
+
+  Widget _build(BuildContext context) {
     final media = MediaQuery.of(context);
     if (widget.visibility == KMobileAppBarVisibility.portraitMobile &&
         media.orientation != Orientation.portrait) {

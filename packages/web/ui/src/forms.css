@@ -607,3 +607,9 @@
   font-size: var(--k-font-caption-size);
   line-height: var(--k-font-caption-line-height);
 }
+
+/* Glyphs inside a field keep their size; the text grows (Decision 0015). */
+.k-input-target,
+.k-selection {
+  --k-icon-scale: 1;
+}

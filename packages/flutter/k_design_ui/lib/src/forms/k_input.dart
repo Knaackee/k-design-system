@@ -104,8 +104,12 @@ class _KInputState extends State<KInput> {
     super.dispose();
   }
 
+  // Glyphs inside a field keep their size; the text grows (Decision 0015).
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      KIconFixedScope(child: Builder(builder: _build));
+
+  Widget _build(BuildContext context) {
     final t = formTokens(context);
     final field = KFieldScope.of(context);
     final canClear =

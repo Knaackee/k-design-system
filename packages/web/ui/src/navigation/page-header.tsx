@@ -2,6 +2,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 import { KText } from "../primitives/text.js";
 import { KBackButton } from "./back-button.js";
 import type { KMenuAction } from "../actions/menu-button.js";
+import { useKTopBarEntry } from "./top-bar.js";
 
 export interface KPageHeaderProps extends Omit<
   HTMLAttributes<HTMLElement>,
@@ -41,6 +42,8 @@ export function KPageHeader({
   className,
   ...props
 }: KPageHeaderProps) {
+  // Phones: back and actions stay in the shell's top bar while scrolled.
+  useKTopBarEntry({ backLabel, onBack, backHistory, actions });
   return (
     <header
       className={["k-page-header", className].filter(Boolean).join(" ")}

@@ -892,6 +892,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.textScaleMaxBody,
     required this.textScaleMaxHeading,
     required this.textScaleMaxControl,
+    required this.textScaleMaxIcon,
   });
 
   final Color colorSurfaceCanvas;
@@ -1504,6 +1505,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double textScaleMaxBody;
   final double textScaleMaxHeading;
   final double textScaleMaxControl;
+  final double textScaleMaxIcon;
 
   static const orbitLight = KDesignTokens(
     colorSurfaceCanvas: Color(0xFFF7F7F8),
@@ -2116,6 +2118,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
+    textScaleMaxIcon: 2.0,
   );
 
   static const orbitDark = KDesignTokens(
@@ -2729,6 +2732,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
+    textScaleMaxIcon: 2.0,
   );
 
   static const referenceLight = KDesignTokens(
@@ -3342,6 +3346,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
+    textScaleMaxIcon: 2.0,
   );
 
   static const referenceDark = KDesignTokens(
@@ -3955,6 +3960,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
+    textScaleMaxIcon: 2.0,
   );
 
   @override
@@ -4569,6 +4575,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? textScaleMaxBody,
     double? textScaleMaxHeading,
     double? textScaleMaxControl,
+    double? textScaleMaxIcon,
   }) {
     return KDesignTokens(
       colorSurfaceCanvas: colorSurfaceCanvas ?? this.colorSurfaceCanvas,
@@ -5181,6 +5188,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       textScaleMaxBody: textScaleMaxBody ?? this.textScaleMaxBody,
       textScaleMaxHeading: textScaleMaxHeading ?? this.textScaleMaxHeading,
       textScaleMaxControl: textScaleMaxControl ?? this.textScaleMaxControl,
+      textScaleMaxIcon: textScaleMaxIcon ?? this.textScaleMaxIcon,
     );
   }
 
@@ -5798,6 +5806,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       textScaleMaxBody: lerpDouble(textScaleMaxBody, other.textScaleMaxBody, t)!,
       textScaleMaxHeading: lerpDouble(textScaleMaxHeading, other.textScaleMaxHeading, t)!,
       textScaleMaxControl: lerpDouble(textScaleMaxControl, other.textScaleMaxControl, t)!,
+      textScaleMaxIcon: lerpDouble(textScaleMaxIcon, other.textScaleMaxIcon, t)!,
     );
   }
 }

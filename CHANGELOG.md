@@ -16,6 +16,9 @@ version is tagged.
   `KPage` with readable page and form widths, a scroll bar under the status
   bar that takes the page title, Android fade-forwards transitions, press
   feedback, the Material 3 segmented button and a labelled tablet sidebar.
+  The scrolled top bar keeps back and actions (text actions in a More
+  menu); text-adjacent icons grow with the text up to 2×
+  (`text.scaleMax.icon`, `kIconScale`, `KIconFixedScope`).
   `check-consumer-ui` reports `icon-stroke`, `appearance-override`,
   `hand-built-row` and `bare-page`.
 

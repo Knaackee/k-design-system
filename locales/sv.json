@@ -19,6 +19,7 @@
     "nextMonth": "Nästa månad",
     "apply": "Tillämpa",
     "cancel": "Avbryt",
+    "moreActions": "Fler åtgärder",
     "clear": "Rensa",
     "invalid": "Ange ett giltigt datum och en giltig tid.",
     "outOfRange": "Välj ett värde inom det tillåtna intervallet.",

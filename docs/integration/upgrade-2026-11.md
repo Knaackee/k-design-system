@@ -88,6 +88,10 @@ Remove what the library now does, then check every surface:
 - **Heights and icons.** Remove `strokeWidth`, `minHeight`/`height` on
   buttons and fields, dense density on phones and style or density
   overrides. A full-width primary button is a plain `KButton(fullWidth:)`.
+- **Top bar and icons.** Remove own app bars, sticky headers and fixed icon
+  sizes per text size. Screen actions go into `KPageHeader(actions:)`; the
+  scrolled bar keeps back and actions. Icons grow with the text by
+  themselves.
 - **Breadcrumbs.** Pass the trail as `KPageHeader(breadcrumb:)` and the
   same levels with icons as `backHistory`; do not show a breadcrumb row on
   phones.

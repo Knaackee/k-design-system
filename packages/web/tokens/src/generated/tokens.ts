@@ -609,7 +609,8 @@ export const tokenNames = [
   "component.tabStrip.dragElevation",
   "text.scaleMax.body",
   "text.scaleMax.heading",
-  "text.scaleMax.control"
+  "text.scaleMax.control",
+  "text.scaleMax.icon"
 ] as const;
 export type KTokenName = (typeof tokenNames)[number];
 export const mapTokenValues = {

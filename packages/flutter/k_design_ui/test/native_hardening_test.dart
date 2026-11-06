@@ -150,7 +150,19 @@ void main() {
               child: ListView(
                 controller: controller,
                 children: [
-                  const KPageHeader(title: 'Settings'),
+                  KPageHeader(
+                    title: 'Settings',
+                    backLabel: 'Back to Home',
+                    onBack: () {},
+                    actions: [
+                      KIconButton(
+                        label: 'Share',
+                        icon: KIconName.share,
+                        onPressed: () {},
+                      ),
+                      KButton(label: 'Add', onPressed: () {}),
+                    ],
+                  ),
                   for (var i = 0; i < 40; i++)
                     SizedBox(height: 44, child: Text('Row $i')),
                 ],
@@ -173,5 +185,44 @@ void main() {
     await tester.pumpAndSettle();
     expect(opacities(), everyElement(1));
     expect(find.text('Settings'), findsWidgets);
+    // Back and actions stay reachable in the bar; the text action moves
+    // into the More menu.
+    final inBar = find.descendant(of: bar, matching: find.byType(KBackButton));
+    expect(inBar, findsOneWidget);
+    expect(
+      find.descendant(of: bar, matching: find.byTooltip('Share')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: bar, matching: find.byType(KMenuButton)),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('text-adjacent icons grow with the text up to 2x', (
+    tester,
+  ) async {
+    Future<Size> sizeAt(double scale, {bool fixed = false}) async {
+      await tester.pumpWidget(
+        MediaQuery(
+          data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+          child: host(
+            Center(
+              child: fixed
+                  ? const KIconFixedScope(
+                      child: KIcon(KIconName.house, size: 24),
+                    )
+                  : const KIcon(KIconName.house, size: 24),
+            ),
+          ),
+        ),
+      );
+      return tester.getSize(find.byType(KIcon));
+    }
+
+    expect((await sizeAt(1)).width, 24);
+    expect((await sizeAt(1.5)).width, 36);
+    expect((await sizeAt(3)).width, 48);
+    expect((await sizeAt(3, fixed: true)).width, 24);
   });
 }

@@ -340,3 +340,8 @@
   .k-mobile-app-bar__icon {
   background: var(--k-color-action-ghost-hover);
 }
+
+/* Tab bar symbols keep one size at every text size, as on iOS. */
+.k-mobile-app-bar {
+  --k-icon-scale: 1;
+}

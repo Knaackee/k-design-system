@@ -2597,7 +2597,12 @@
     "scaleMax": {
       "body": { "$type": "number", "$value": 3 },
       "heading": { "$type": "number", "$value": 2 },
-      "control": { "$type": "number", "$value": 3 }
+      "control": { "$type": "number", "$value": 3 },
+      "icon": {
+        "$description": "Text-adjacent icons grow with the text up to this factor (Decision 0015).",
+        "$type": "number",
+        "$value": 2
+      }
     }
   }
 }

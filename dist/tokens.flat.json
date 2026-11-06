@@ -3930,6 +3930,10 @@
     "text.scaleMax.control": {
       "type": "number",
       "value": 3
+    },
+    "text.scaleMax.icon": {
+      "type": "number",
+      "value": 2
     }
   },
   "orbitDark": {
@@ -7863,6 +7867,10 @@
     "text.scaleMax.control": {
       "type": "number",
       "value": 3
+    },
+    "text.scaleMax.icon": {
+      "type": "number",
+      "value": 2
     }
   },
   "referenceLight": {
@@ -11796,6 +11804,10 @@
     "text.scaleMax.control": {
       "type": "number",
       "value": 3
+    },
+    "text.scaleMax.icon": {
+      "type": "number",
+      "value": 2
     }
   },
   "referenceDark": {
@@ -15729,6 +15741,10 @@
     "text.scaleMax.control": {
       "type": "number",
       "value": 3
+    },
+    "text.scaleMax.icon": {
+      "type": "number",
+      "value": 2
     }
   },
   "variants": {

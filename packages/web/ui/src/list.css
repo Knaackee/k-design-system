@@ -75,15 +75,16 @@
   + .k-list__row::before {
   margin-inline-start: calc(
     var(--k-component-list-row-padding-inline) +
-      var(--k-component-list-media-size) + var(--k-component-list-leading-gap)
+      var(--k-component-list-media-size) * var(--k-icon-scale, 1) +
+      var(--k-component-list-leading-gap)
   );
 }
 .k-list__group[data-separated]
   > .k-list__row:has(.k-list-item__leading):not(:has(.k-list-item__media))
   + .k-list__row::before {
   margin-inline-start: calc(
-    var(--k-component-list-row-padding-inline) + var(--k-size-icon-default) +
-      var(--k-component-list-leading-gap)
+    var(--k-component-list-row-padding-inline) + var(--k-size-icon-default) *
+      var(--k-icon-scale, 1) + var(--k-component-list-leading-gap)
   );
 }
 
@@ -152,7 +153,7 @@
   color: var(--k-color-text-muted);
 }
 .k-list-item__leading {
-  width: var(--k-size-icon-default);
+  width: calc(var(--k-size-icon-default) * var(--k-icon-scale, 1));
   margin-inline-end: var(--k-component-list-leading-gap);
 }
 /* Media rows centre leading, value and chevron on the copy block. */
@@ -161,8 +162,8 @@
   align-items: center;
 }
 .k-list-item[data-media] .k-list-item__leading {
-  width: var(--k-component-list-media-size);
-  height: var(--k-component-list-media-size);
+  width: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
+  height: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
 }
 .k-list-item[data-media] :is(.k-list-item__trailing, .k-list-item__chevron) {
   height: auto;
@@ -171,8 +172,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--k-component-list-media-size);
-  height: var(--k-component-list-media-size);
+  width: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
+  height: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
   border-radius: var(--k-component-list-media-radius);
   background: var(--k-component-list-media-background);
   color: var(--k-component-list-media-foreground);

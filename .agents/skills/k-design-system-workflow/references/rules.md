@@ -26,6 +26,10 @@ assertions. The others are review rules.
 - Text-adjacent icons: 16 (small/label), 20 (body), 24 (headings, toolbars).
 - 12 only for glyphs inside a control (checkbox tick). 32/48 for display
   (empty states, markers). Nothing else.
+- Icons next to text grow with the text size up to 2× by themselves; never
+  scale them by hand. A box that holds an icon uses `kIconScale(context)`
+  (Web: `--k-icon-scale`); glyphs that must not grow sit in
+  `KIconFixedScope`.
 - Never set `strokeWidth`. The style's `size.iconStroke` draws the same
   screen stroke at every size (Apple and linear 1.5, Material 1.75), so a
   16 px and a 24 px icon look equally heavy next to text (Decision 0015;
@@ -123,8 +127,10 @@ assertions. The others are review rules.
   `KPage(width: form)` (520, centred vertically); everything else the page
   width (960). Never a bare scroll view (`check-consumer-ui` › bare-page).
 - On phones `KAppShell` adds the bar that covers the status bar once content
-  scrolls under it and takes the page title from `KPageHeader`; do not add
-  a second app bar.
+  scrolls under it and takes the page title, back control and actions from
+  `KPageHeader`; do not add a second app bar. Put screen actions into
+  `KPageHeader(actions:)` (icon buttons stay in the bar, text buttons move
+  into its More menu), never into the scrolling content.
 - Segmented control (`KSegmentedControl`): 2–5 options that switch a view
   or mode in place; not for navigation or actions. From 1.3× text three or
   more segments stack.

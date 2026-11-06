@@ -79,8 +79,16 @@ export function KIcon({
       aria-hidden={label ? undefined : true}
       style={{
         ...style,
-        width: size,
-        height: size,
+        // Text-adjacent icons (16–24) grow with the text up to
+        // --k-text-scale-max-icon; glyphs and display icons keep their size.
+        width:
+          size >= 16 && size <= 24
+            ? `calc(${size}px * var(--k-icon-scale, 1))`
+            : size,
+        height:
+          size >= 16 && size <= 24
+            ? `calc(${size}px * var(--k-icon-scale, 1))`
+            : size,
         color,
         maskImage: mask,
         WebkitMaskImage: mask,

@@ -105,8 +105,9 @@ class KList extends StatelessWidget {
                   t.componentListRowPaddingInline +
                   (leading
                       ? (child.mediaIcon != null
-                                ? t.componentListMediaSize
-                                : t.sizeIconDefault) +
+                                    ? t.componentListMediaSize
+                                    : t.sizeIconDefault) *
+                                kIconScale(context) +
                             t.componentListLeadingGap
                       : 0),
             ),
@@ -247,7 +248,9 @@ class _KListItemState extends State<KListItem> {
             KAdaptive.maybeOf(context)?.style != KStyle.material);
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
-    final iconSize = t.sizeIconDefault;
+    // Leading icons and media tiles grow with the text (Decision 0015).
+    final iconScale = kIconScale(context);
+    final iconSize = t.sizeIconDefault * iconScale;
     // Height of the first title line, the band everything aligns to.
     final band = math.max(
       0.0,
@@ -282,7 +285,7 @@ class _KListItemState extends State<KListItem> {
                 child: Center(
                   child: KIcon(
                     widget.mediaIcon!,
-                    size: iconSize,
+                    size: t.sizeIconDefault,
                     color: t.componentListMediaForeground,
                   ),
                 ),
@@ -292,7 +295,7 @@ class _KListItemState extends State<KListItem> {
             ? null
             : KIcon(
                 widget.leadingIcon!,
-                size: iconSize,
+                size: t.sizeIconDefault,
                 color: t.colorTextMuted,
               ));
     final value = widget.value == null
@@ -336,7 +339,9 @@ class _KListItemState extends State<KListItem> {
         if (leading != null) ...[
           onBand(
             SizedBox.square(
-              dimension: media ? t.componentListMediaSize : iconSize,
+              dimension: media
+                  ? t.componentListMediaSize * iconScale
+                  : iconSize,
               child: leading,
             ),
           ),

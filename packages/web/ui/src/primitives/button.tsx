@@ -11,7 +11,7 @@ export type KButtonVariant = "primary" | "secondary" | "ghost";
 export interface KButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Shows progress and prevents additional activation. */
   loading?: boolean;
-  /** Fill the parent width while keeping content aligned to the start. */
+  /** Fill the parent width: a call to action with a centred label. */
   fullWidth?: boolean;
   /** Semantic visual role. */
   variant?: KButtonVariant;

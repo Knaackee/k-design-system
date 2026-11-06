@@ -10,6 +10,13 @@ import { KBadge } from "../basic-components.js";
 import { useOptionalKHaptics } from "../feedback/haptics.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KMobileAppBar } from "./mobile-app-bar.js";
+import { KBackButton } from "./back-button.js";
+import {
+  KTopBarContext,
+  kTopBarActions,
+  type KTopBarEntry,
+} from "./top-bar.js";
+import { useKLocalization } from "../localization/provider.js";
 import {
   KSidebar,
   KSidebarBody,
@@ -97,6 +104,8 @@ export function KAppShell({
   const bar = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [topTitle, setTopTitle] = useState<string | null>(null);
+  const [entry, setEntry] = useState<KTopBarEntry | null>(null);
+  const { messages } = useKLocalization();
   // Phones: a bar covers the status bar once content scrolls under it and
   // takes the page title when the large title has scrolled away (0015).
   useLayoutEffect(() => {
@@ -183,19 +192,36 @@ export function KAppShell({
         <div
           ref={bar}
           className="k-app-shell__top-bar"
-          aria-hidden
           data-visible={scrolled || undefined}
+          inert={!scrolled}
         >
+          {/* Back and actions stay reachable while the header is scrolled
+              away, as in the iOS navigation bar (Decision 0015). */}
+          {entry?.backLabel ? (
+            <KBackButton
+              label={entry.backLabel}
+              onClick={entry.onBack}
+              history={entry.backHistory}
+            />
+          ) : null}
           <span
             className="k-app-shell__top-title"
+            aria-hidden
             data-visible={topTitle ? true : undefined}
           >
             {topTitle}
           </span>
+          {entry?.actions ? (
+            <span className="k-app-shell__top-actions">
+              {kTopBarActions(entry.actions, messages.moreActions)}
+            </span>
+          ) : null}
         </div>
       ) : null}
       <div ref={content} className="k-app-shell__content">
-        {children}
+        <KTopBarContext.Provider value={compact ? setEntry : null}>
+          {children}
+        </KTopBarContext.Provider>
       </div>
       {compact ? (
         <KMobileAppBar

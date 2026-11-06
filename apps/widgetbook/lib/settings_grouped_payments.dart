@@ -151,6 +151,19 @@ class _SgPaymentsState extends State<SgPayments> {
                   filter == 'Andere' && p.state == 'Abgelaufen'),
         )
         .toList();
+    final large = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
+    final open = KButton(
+      label: 'Öffnen',
+      variant: KButtonVariant.secondary,
+      leading: const KIcon(KIconName.externalLink, size: 16),
+      onPressed: () => sgDialog(
+        context,
+        'Stripe',
+        const KText(
+          'In der Anwendung öffnet diese Aktion dein Stripe-Dashboard. Diese Story verwendet ausschließlich Beispieldaten.',
+        ),
+      ),
+    );
     return KStack(
       gap: KLayoutGap.section,
       align: KLayoutAlign.stretch,
@@ -177,20 +190,15 @@ class _SgPaymentsState extends State<SgPayments> {
                           ],
                         ),
                       ),
-                      KButton(
-                        label: 'Öffnen',
-                        variant: KButtonVariant.secondary,
-                        leading: const KIcon(KIconName.externalLink, size: 16),
-                        onPressed: () => sgDialog(
-                          context,
-                          'Stripe',
-                          const KText(
-                            'In der Anwendung öffnet diese Aktion dein Stripe-Dashboard. Diese Story verwendet ausschließlich Beispieldaten.',
-                          ),
-                        ),
-                      ),
+                      if (!large) open,
                     ],
                   ),
+                  // From 1.3x text the action moves under the account row.
+                  if (large)
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: open,
+                    ),
                   KButton(
                     label: 'Einrichtung abgeschlossen · 3 von 3',
                     variant: KButtonVariant.ghost,

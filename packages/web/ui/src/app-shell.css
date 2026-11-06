@@ -77,8 +77,10 @@
   opacity: 1;
   pointer-events: auto;
 }
+[data-style="apple"] .k-app-shell__top-title {
+  text-align: center;
+}
 [data-style="apple"] .k-app-shell__top-bar {
-  justify-content: center;
   /* Same glass as the tab bar. */
   background: color-mix(
     in srgb,
@@ -93,7 +95,17 @@
   backdrop-filter: blur(var(--k-component-mobile-app-bar-glass-web-blur))
     saturate(var(--k-component-mobile-app-bar-glass-web-saturation));
 }
+.k-app-shell__top-bar {
+  gap: var(--k-space-tight);
+}
+.k-app-shell__top-actions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--k-space-tight);
+}
 .k-app-shell__top-title {
+  flex: 1;
   min-width: 0;
   overflow: hidden;
   color: var(--k-color-text-primary);

@@ -100,16 +100,17 @@ class AwGroup extends StatelessWidget {
       gap: KLayoutGap.control,
       align: KLayoutAlign.stretch,
       children: [
-        Row(
+        // The action wraps under the heading when large text needs room.
+        KInline(
+          gap: KLayoutGap.control,
+          wrap: true,
           children: [
-            Expanded(
-              child: KText(
-                title,
-                variant: KTextVariant.caption,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: t.colorTextMuted,
-                ),
+            KText(
+              title,
+              variant: KTextVariant.caption,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: t.colorTextMuted,
               ),
             ),
             ?action,
