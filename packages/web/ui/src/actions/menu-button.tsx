@@ -307,3 +307,6 @@ export function KMenuButton({
 export function KOverflowMenu(props: Omit<KMenuButtonProps, "overflow">) {
   return <KMenuButton {...props} overflow />;
 }
+
+// A stable name: page headers and rows recognise it across bundles.
+KMenuButton.displayName = "KMenuButton";

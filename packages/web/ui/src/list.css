@@ -75,8 +75,7 @@
   + .k-list__row::before {
   margin-inline-start: calc(
     var(--k-component-list-row-padding-inline) +
-      var(--k-component-list-media-size) * var(--k-icon-scale, 1) +
-      var(--k-component-list-leading-gap)
+      var(--k-component-list-media-size) + var(--k-component-list-leading-gap)
   );
 }
 .k-list__group[data-separated]
@@ -162,18 +161,20 @@
   align-items: center;
 }
 .k-list-item[data-media] .k-list-item__leading {
-  width: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
-  height: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
+  width: var(--k-component-list-media-size);
+  height: var(--k-component-list-media-size);
 }
 .k-list-item[data-media] :is(.k-list-item__trailing, .k-list-item__chevron) {
   height: auto;
 }
+/* Media tiles keep their size at every text size (Decision 0015). */
 .k-list-item__media {
+  --k-icon-scale: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
-  height: calc(var(--k-component-list-media-size) * var(--k-icon-scale, 1));
+  width: var(--k-component-list-media-size);
+  height: var(--k-component-list-media-size);
   border-radius: var(--k-component-list-media-radius);
   background: var(--k-component-list-media-background);
   color: var(--k-component-list-media-foreground);
@@ -290,4 +291,32 @@
 [dir="rtl"] .k-list-item__chevron,
 .k-list-item__chevron:dir(rtl) {
   transform: scaleX(-1);
+}
+
+/* Choice and switch rows (Decision 0015): the whole row responds. */
+.k-list-item__switch {
+  display: inline-flex;
+  pointer-events: none;
+}
+[data-style="material"] .k-list-item__menu-chevron {
+  display: none;
+}
+.k-list-item:has(> .k-list-item__menu-trigger) {
+  position: relative;
+}
+.k-list-item__menu-content {
+  display: contents;
+}
+.k-list-item__menu-trigger {
+  position: absolute;
+  inset: 0;
+}
+.k-list-item__menu-trigger :is(.k-button-target, .k-button) {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.k-list-item:has(> .k-list-item__menu-trigger :focus-visible) {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
 }

@@ -7,6 +7,8 @@ EdgeInsets _pad(BuildContext context) => EdgeInsets.all(
   Theme.of(context).extension<KDesignTokens>()!.spaceLayoutGutter,
 );
 
+bool _sounds = true;
+
 /// Reference settings screen: grouped sections, real content, no demo text.
 class SettingsListFixture extends StatelessWidget {
   const SettingsListFixture({super.key});
@@ -48,7 +50,24 @@ class SettingsListFixture extends StatelessWidget {
             title: 'Email summary',
             leadingIcon: KIconName.mail,
             value: 'Weekly',
-            onPressed: () {},
+            menu: [
+              KMenuAction(id: 'daily', label: 'Daily', onSelect: () {}),
+              KMenuAction(
+                id: 'weekly',
+                label: 'Weekly',
+                checked: true,
+                onSelect: () {},
+              ),
+              KMenuAction(id: 'never', label: 'Never', onSelect: () {}),
+            ],
+          ),
+          StatefulBuilder(
+            builder: (context, setState) => KListItem(
+              title: 'Sounds',
+              leadingIcon: KIconName.volume2,
+              switchValue: _sounds,
+              onSwitchChanged: (value) => setState(() => _sounds = value),
+            ),
           ),
         ],
       ),
@@ -281,7 +300,29 @@ class _AppShellFixtureState extends State<AppShellFixture> {
           gap: KLayoutGap.section,
           align: KLayoutAlign.stretch,
           children: [
-            KPageHeader(title: current.label),
+            KPageHeader(
+              title: current.label,
+              actions: [
+                if (selected == 'portfolios') ...[
+                  KButton(
+                    label: 'Portfolio',
+                    leading: const KIcon(KIconName.plus, size: 16),
+                    onPressed: () {},
+                  ),
+                  KMenuButton(
+                    label: 'Options',
+                    overflow: true,
+                    actions: [
+                      KMenuAction(
+                        id: 'export',
+                        label: 'Export',
+                        onSelect: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
             if (selected == 'settings')
               const SettingsListFixture()
             else if (selected == 'portfolios')
@@ -293,4 +334,33 @@ class _AppShellFixtureState extends State<AppShellFixture> {
       ),
     );
   }
+}
+
+/// Reference onboarding: footer with Back, progress and Next on every step.
+class OnboardingFixture extends StatelessWidget {
+  const OnboardingFixture({super.key});
+
+  @override
+  Widget build(BuildContext context) => KOnboarding(
+    onDone: () {},
+    steps: [
+      for (final (title, body) in [
+        ('Welcome to Assetry', 'Your properties, from portfolio to building.'),
+        ('Add your first portfolio', 'Group buildings by owner or region.'),
+        ('Invite your team', 'Share a portfolio with read or edit access.'),
+      ])
+        KPage(
+          children: [
+            KStack(
+              gap: KLayoutGap.control,
+              align: KLayoutAlign.stretch,
+              children: [
+                KText(title, variant: KTextVariant.heading1),
+                KText(body),
+              ],
+            ),
+          ],
+        ),
+    ],
+  );
 }

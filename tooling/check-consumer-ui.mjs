@@ -25,6 +25,14 @@ export function findings(source, extension) {
             "hand-built-row",
             /\bKCard\s*\((?:(?!\bKCard\s*\()[\s\S]){0,600}?KIconName\.chevronRight/g,
           ],
+          // A control in a row's trailing slot: only it responds. Use menu:,
+          // switchValue: or onPressed: (on/off settings always a switch).
+          [
+            "split-row",
+            /\bKListItem\s*\((?:(?!\bKListItem\s*\()[\s\S]){0,600}?\btrailing\s*:\s*(?:const\s+)?K(?:IconButton|MenuButton|Switch|Checkbox|Button)\s*\(/g,
+          ],
+          // Steps use KOnboarding: footer fixed at the bottom on every step.
+          ["hand-built-steps", /\bKProgressDots\s*\(/g],
           // Pages scroll in KPage (gutter, safe areas, readable width).
           [
             "bare-page",
@@ -47,6 +55,11 @@ export function findings(source, extension) {
             "appearance-override",
             /\bdata-(?:style|density|type-scale|motion)=|\boverrides\s*[:=]\s*\{?\s*\{[^}]*\b(?:style|density|typeScale|motion)\s*:/g,
           ],
+          [
+            "split-row",
+            /<KListItem\b[^>]*\btrailing=\{\s*<K(?:IconButton|MenuButton|Switch|Checkbox|Button)\b/gs,
+          ],
+          ["hand-built-steps", /<KProgressDots\b/g],
           // A card with a chevron is a hand-built list row: use KListItem.
           [
             "hand-built-row",

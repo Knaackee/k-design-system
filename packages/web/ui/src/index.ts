@@ -611,6 +611,11 @@ export * from "./feedback/haptics.js";
 export * from "./data-display/list.js";
 export * from "./navigation/app-shell.js";
 export * from "./navigation/page-header.js";
+export * from "./navigation/onboarding.js";
+export {
+  type KPrimaryActionPlacement,
+  KTopBarContext,
+} from "./navigation/top-bar.js";
 export * from "./navigation/segmented-control.js";
 export * from "./feedback/sound.js";
 export {

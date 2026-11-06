@@ -1920,6 +1920,22 @@
       "sectionHeaderGap": { "$type": "dimension", "$value": "{space.2}" },
       "sectionHeaderInset": { "$type": "dimension", "$value": "{space.3}" }
     },
+    "fab": {
+      "height": {
+        "$description": "Extended floating action button that carries a page's primary action (Material 3).",
+        "$type": "dimension",
+        "$value": "{size.control.field}"
+      },
+      "radius": { "$type": "dimension", "$value": "{radius.scale.lg}" },
+      "background": {
+        "$type": "color",
+        "$value": "{color.brand.primary.background}"
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.brand.primary.accent}"
+      }
+    },
     "topBar": {
       "height": {
         "$description": "Bar that appears over scrolled content on phones (iOS 44 pt navigation bar, Material 64 dp top app bar), below the status bar.",

@@ -1,5 +1,6 @@
 import {
   Children,
+  isValidElement,
   type HTMLAttributes,
   type MouseEvent,
   type ReactNode,
@@ -8,6 +9,10 @@ import {
   useState,
 } from "react";
 import { KIcon, type KIconName } from "../primitives/icon.js";
+import { KButton } from "../primitives/button.js";
+import { KIconButton } from "../actions/icon-button.js";
+import { KMenuButton, type KMenuAction } from "../actions/menu-button.js";
+import { KSwitch } from "../extended-components.js";
 import { KText } from "../primitives/text.js";
 
 export interface KListProps extends Omit<HTMLAttributes<HTMLElement>, "title"> {
@@ -74,6 +79,14 @@ export interface KListItemProps extends Omit<
    * centres leading, value and chevron on the copy block.
    */
   mediaIcon?: KIconName;
+  /**
+   * A choice row: the whole row opens these options as a menu, with `value`
+   * showing the current one (iOS pull-down, Android menu).
+   */
+  menu?: readonly KMenuAction[];
+  /** A boolean row: a switch at the end, and the whole row toggles it. */
+  switchValue?: boolean;
+  onSwitchChange?: (value: boolean) => void;
   /** Non-text trailing content (badge, dot), centred on the title line. */
   trailing?: ReactNode;
   /** Trailing value text ("12.4 GB") in the style's value role. */
@@ -101,9 +114,12 @@ export function KListItem({
   leading,
   leadingIcon,
   mediaIcon,
-  trailing,
+  menu,
+  switchValue,
+  onSwitchChange,
+  trailing: trailingProp,
   value,
-  onClick,
+  onClick: onClickProp,
   href,
   disclosure,
   selected = false,
@@ -113,8 +129,45 @@ export function KListItem({
   style,
   ...props
 }: KListItemProps) {
-  const interactive = Boolean(onClick || href);
-  const showChevron = disclosure ?? interactive;
+  const toggle = switchValue !== undefined;
+  const onClick =
+    onClickProp ??
+    (toggle && onSwitchChange ? () => onSwitchChange(!switchValue) : undefined);
+  const trailing =
+    trailingProp ??
+    (toggle ? (
+      <span aria-hidden className="k-list-item__switch">
+        <KSwitch
+          checked={switchValue}
+          label={typeof title === "string" ? title : ""}
+          showLabel={false}
+          disabled={disabled}
+          tabIndex={-1}
+          onCheckedChange={onSwitchChange ?? (() => {})}
+        />
+      </span>
+    ) : menu ? (
+      <span className="k-list-item__menu-chevron" aria-hidden>
+        <KIcon name="chevrons-up-down" size={16} />
+      </span>
+    ) : null);
+  if (
+    !onClick &&
+    !href &&
+    !menu &&
+    isValidElement(trailingProp) &&
+    [KIconButton, KMenuButton, KButton, KSwitch].some(
+      (component) =>
+        trailingProp.type === component ||
+        (trailingProp.type as { displayName?: string }).displayName ===
+          (component as { displayName?: string }).displayName,
+    )
+  )
+    console.warn(
+      `KListItem "${String(title)}": a control in \`trailing\` makes only that control tappable. Use \`menu\` for a choice, \`switchValue\` for on/off or \`onClick\` so the whole row responds (Decision 0015).`,
+    );
+  const interactive = Boolean(onClick || href || menu);
+  const showChevron = disclosure ?? (Boolean(onClickProp || href) && !toggle);
   const textRef = useRef<HTMLSpanElement>(null);
   const stacked = useStackedValue(textRef, value != null && value !== false, [
     title,
@@ -188,6 +241,29 @@ export function KListItem({
     // An explicit chevron survives styles that hide it by default.
     "data-disclosure": disclosure ? true : undefined,
   };
+  if (menu)
+    // The row draws itself; an invisible menu trigger covers it, so the
+    // whole row opens the menu and the menu anchors to the row.
+    return (
+      <div {...common} data-interactive>
+        <span aria-hidden className="k-list-item__menu-content">
+          {content}
+        </span>
+        <span className="k-list-item__menu-trigger">
+          <KMenuButton
+            label={
+              typeof value === "string"
+                ? `${String(title)}, ${value}`
+                : String(title)
+            }
+            actions={menu}
+            disabled={disabled}
+            fullWidth
+            triggerVariant="ghost"
+          />
+        </span>
+      </div>
+    );
   if (href)
     return (
       <a
@@ -213,6 +289,8 @@ export function KListItem({
         type="button"
         disabled={disabled}
         aria-pressed={selected || undefined}
+        role={toggle ? "switch" : undefined}
+        aria-checked={toggle ? switchValue : undefined}
         onClick={onClick}
       >
         {content}

@@ -886,3 +886,6 @@ export function KQuestionnaire({
 
 export { KToast, KToastViewport } from "./feedback/notifications.js";
 export type { KToastProps } from "./feedback/notifications.js";
+
+// A stable name: page headers and rows recognise it across bundles.
+KSwitch.displayName = "KSwitch";

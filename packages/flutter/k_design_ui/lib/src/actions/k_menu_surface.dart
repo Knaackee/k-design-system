@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+
+import '../primitives/k_focus_ring.dart';
 import 'k_menu_item_content.dart';
 import '../primitives/k_surface.dart';
 import 'k_menu_button.dart';
@@ -79,17 +81,14 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
     backgroundColor: WidgetStateProperty.resolveWith(
       (states) => states.contains(WidgetState.pressed)
           ? t.colorActionGhostPressed
-          : states.contains(WidgetState.hovered) ||
-                states.contains(WidgetState.focused)
+          : states.contains(WidgetState.hovered) || kFocusVisible(states)
           ? t.colorActionGhostHover
           : Colors.transparent,
     ),
     overlayColor: const WidgetStatePropertyAll(Colors.transparent),
     side: WidgetStateProperty.resolveWith(
       (states) => BorderSide(
-        color: states.contains(WidgetState.focused)
-            ? t.colorBorderFocus
-            : Colors.transparent,
+        color: kFocusVisible(states) ? t.colorBorderFocus : Colors.transparent,
         width: t.borderWidthStrong,
       ),
     ),

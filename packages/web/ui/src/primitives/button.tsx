@@ -62,3 +62,6 @@ export const KButton = forwardRef<HTMLButtonElement, KButtonProps>(
     );
   },
 );
+
+// A stable name: page headers and rows recognise it across bundles.
+KButton.displayName = "KButton";

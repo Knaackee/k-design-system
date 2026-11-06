@@ -21,7 +21,7 @@ values.
 screen **and** every sheet, dialog, menu and form the app opens. Start with
 the inventory (Workflow step 1b); a surface without evidence is not done.
 
-Twelve ways it fails (each has a rule in `references/rules.md`):
+Thirteen ways it fails (each has a rule in `references/rules.md`):
 
 - **Card in a card.** A bordered box inside a bordered box. Inside a card use
   separators, a grouped list or a section; siblings are siblings.
@@ -52,6 +52,9 @@ Twelve ways it fails (each has a rule in `references/rules.md`):
 - **Appearance in app code.** Icon `strokeWidth`, `KAdaptiveOverrides` for
   style/density/type scale, control heights or radii set per screen. The
   style preset decides them (Decision 0015).
+- **Split rows and loose steps.** A row where only a trailing icon or switch
+  responds; a checkbox for an on/off setting; onboarding with progress or
+  buttons placed by hand instead of `KOnboarding` (Decision 0015).
 - **Desktop forms on a phone.** Radio buttons for two options (use
   `KSegmentedControl`), a calendar button beside a date field, one full
   select per row inside a list (use a row with a value and a menu).

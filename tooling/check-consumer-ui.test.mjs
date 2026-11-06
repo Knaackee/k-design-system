@@ -66,3 +66,29 @@ test("reports appearance set in app code (Decision 0015)", () => {
   );
   assert.deepEqual(rules("Scaffold(body: KPage(children: [x]))", ".dart"), []);
 });
+
+test("reports split rows and hand-built steps (Decision 0015)", () => {
+  const rules = (source, ext) => findings(source, ext).map((f) => f.rule);
+  assert.deepEqual(
+    rules(
+      "KListItem(title: 'Theme', trailing: KIconButton(label: 'x', icon: i))",
+      ".dart",
+    ),
+    ["split-row"],
+  );
+  assert.deepEqual(
+    rules('<KListItem title="Theme" trailing={<KSwitch checked />} />', ".tsx"),
+    ["split-row"],
+  );
+  assert.deepEqual(
+    rules("KListItem(title: 'Theme', menu: options, value: 'Dark')", ".dart"),
+    [],
+  );
+  assert.deepEqual(rules("KProgressDots(count: 3, activeIndex: 0)", ".dart"), [
+    "hand-built-steps",
+  ]);
+  assert.deepEqual(
+    rules("<KProgressDots count={3} activeIndex={0} />", ".tsx"),
+    ["hand-built-steps"],
+  );
+});

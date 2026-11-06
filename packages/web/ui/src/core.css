@@ -598,9 +598,17 @@
   flex-direction: column;
   align-items: center;
   min-height: 100%;
-  padding: calc(var(--k-space-layout-gutter) + env(safe-area-inset-top, 0px))
+  /* Inside the shell on phones --k-safe-top includes the top bar and
+     --k-safe-bottom-extra the floating action button (Decision 0015). */
+  padding: calc(
+      var(--k-space-layout-gutter) +
+        var(--k-safe-top, env(safe-area-inset-top, 0px))
+    )
     calc(var(--k-space-layout-gutter) + env(safe-area-inset-right, 0px))
-    calc(var(--k-space-layout-gutter) + env(safe-area-inset-bottom, 0px))
+    calc(
+      var(--k-space-layout-gutter) + env(safe-area-inset-bottom, 0px) +
+        var(--k-safe-bottom-extra, 0px)
+    )
     calc(var(--k-space-layout-gutter) + env(safe-area-inset-left, 0px));
 }
 .k-page__body {

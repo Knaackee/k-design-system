@@ -4,18 +4,22 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 // Decision 0015: platform-native defaults without properties.
-Widget host(Widget child, {KStyle style = KStyle.apple, double width = 393}) =>
-    MaterialApp(
-      home: KAdaptiveTheme(
-        fontFamily: 'packages/k_design_tokens/Inter',
-        overrides: KAdaptiveOverrides(style: style),
-        child: Scaffold(
-          body: Center(
-            child: SizedBox(width: width, height: 800, child: child),
-          ),
-        ),
+Widget host(
+  Widget child, {
+  KStyle style = KStyle.apple,
+  double width = 393,
+  double height = 800,
+}) => MaterialApp(
+  home: KAdaptiveTheme(
+    fontFamily: 'packages/k_design_tokens/Inter',
+    overrides: KAdaptiveOverrides(style: style),
+    child: Scaffold(
+      body: Center(
+        child: SizedBox(width: width, height: height, child: child),
       ),
-    );
+    ),
+  ),
+);
 
 void main() {
   testWidgets('list value sits beside a short title and under a long one', (
@@ -224,5 +228,166 @@ void main() {
     expect((await sizeAt(1.5)).width, 36);
     expect((await sizeAt(3)).width, 48);
     expect((await sizeAt(3, fixed: true)).width, 24);
+  });
+
+  Future<void> pumpShell(
+    WidgetTester tester, {
+    required KStyle style,
+    KPrimaryActionPlacement placement = KPrimaryActionPlacement.auto,
+  }) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: KAdaptiveTheme(
+          fontFamily: 'packages/k_design_tokens/Inter',
+          overrides: KAdaptiveOverrides(style: style),
+          child: Scaffold(
+            body: KAppShell(
+              primaryActionPlacement: placement,
+              destinations: const [
+                KAppDestination(id: 'a', label: 'Home', icon: KIconName.house),
+                KAppDestination(id: 'b', label: 'More', icon: KIconName.menu),
+              ],
+              selectedId: 'a',
+              onSelected: (_) {},
+              child: KPage(
+                children: [
+                  KPageHeader(
+                    title: 'Portfolios',
+                    backLabel: 'Back',
+                    onBack: () {},
+                    actions: [
+                      KButton(
+                        label: 'Portfolio',
+                        leading: const KIcon(KIconName.plus),
+                        onPressed: () {},
+                      ),
+                      KMenuButton(
+                        label: 'Options',
+                        overflow: true,
+                        actions: [
+                          KMenuAction(
+                            id: 'x',
+                            label: 'Export',
+                            onSelect: () {},
+                          ),
+                        ],
+                      ),
+                      KIconButton(
+                        label: 'Edit',
+                        icon: KIconName.pencil,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('phone header controls appear once, in the bar', (tester) async {
+    await pumpShell(tester, style: KStyle.apple);
+    expect(find.byType(KBackButton), findsOneWidget);
+    // One More menu: the page's own overflow merges into the bar's.
+    expect(find.byType(KMenuButton), findsOneWidget);
+    // Apple: the primary action is an icon in the bar.
+    expect(find.byTooltip('Portfolio'), findsOneWidget);
+    expect(find.text('Portfolio'), findsNothing);
+  });
+
+  testWidgets('material puts the primary action on an extended FAB', (
+    tester,
+  ) async {
+    await pumpShell(tester, style: KStyle.material);
+    expect(find.text('Portfolio'), findsOneWidget);
+    final fab = tester.getRect(find.text('Portfolio'));
+    expect(fab.bottom, greaterThan(600));
+    await pumpShell(
+      tester,
+      style: KStyle.material,
+      placement: KPrimaryActionPlacement.bar,
+    );
+    expect(find.byTooltip('Portfolio'), findsOneWidget);
+  });
+
+  testWidgets('onboarding footer stays put on every step', (tester) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    var done = false;
+    await tester.pumpWidget(
+      host(
+        KOnboarding(
+          steps: const [Text('One'), Text('Two'), Text('Three')],
+          onDone: () => done = true,
+        ),
+        height: 852,
+      ),
+    );
+    await tester.pumpAndSettle();
+    final next = find.text('Next');
+    final dots = find.byType(KProgressDots);
+    final first = (tester.getRect(next), tester.getRect(dots));
+    expect(first.$2.bottom, greaterThan(760));
+    // Back is invisible but keeps its space on the first step.
+    expect(find.text('Back').hitTestable(), findsNothing);
+    await tester.tap(next);
+    await tester.pumpAndSettle();
+    expect(tester.getRect(find.text('Next')), first.$1);
+    expect(tester.getRect(dots), first.$2);
+    expect(find.text('Back').hitTestable(), findsOneWidget);
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
+    expect(done, isTrue);
+  });
+
+  testWidgets('choice and switch rows respond on the whole row', (
+    tester,
+  ) async {
+    var on = false;
+    String? picked;
+    await tester.pumpWidget(
+      host(
+        StatefulBuilder(
+          builder: (context, setState) => KList(
+            children: [
+              KListItem(
+                title: 'Appearance',
+                value: 'Dark',
+                menu: [
+                  KMenuAction(
+                    id: 'light',
+                    label: 'Light',
+                    onSelect: () => picked = 'light',
+                  ),
+                ],
+              ),
+              KListItem(
+                title: 'Notifications',
+                switchValue: on,
+                onSwitchChanged: (value) => setState(() => on = value),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    // A tap on the title, far from the trailing control, works.
+    await tester.tap(find.text('Notifications'));
+    await tester.pumpAndSettle();
+    expect(on, isTrue);
+    await tester.tap(find.text('Appearance'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Light'));
+    await tester.pumpAndSettle();
+    expect(picked, 'light');
   });
 }

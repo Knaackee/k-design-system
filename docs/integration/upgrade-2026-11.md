@@ -88,6 +88,10 @@ Remove what the library now does, then check every surface:
 - **Heights and icons.** Remove `strokeWidth`, `minHeight`/`height` on
   buttons and fields, dense density on phones and style or density
   overrides. A full-width primary button is a plain `KButton(fullWidth:)`.
+- **Rows, switches, onboarding.** Rows with a trailing button, menu or
+  switch become `KListItem(menu:)` or `KListItem(switchValue:)`; on/off
+  settings use the switch. Onboarding and multi-step setups use
+  `KOnboarding`; remove hand-placed progress dots and step buttons.
 - **Top bar and icons.** Remove own app bars, sticky headers and fixed icon
   sizes per text size. Screen actions go into `KPageHeader(actions:)`; the
   scrolled bar keeps back and actions. Icons grow with the text by

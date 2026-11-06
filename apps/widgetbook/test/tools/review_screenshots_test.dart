@@ -22,6 +22,7 @@ const _out = String.fromEnvironment(
 final _stories = <String, Widget Function()>{
   'app-shell': () => const AppShellFixture(),
   'app-shell-portfolios': () => const AppShellFixture(initial: 'portfolios'),
+  'onboarding': () => const OnboardingFixture(),
   'list': () => const ListFixture(),
   'page-header': () => const PageHeaderFixture(),
   'segmented-control': () => const SegmentedControlFixture(),
@@ -89,6 +90,9 @@ void main() {
               ),
             ),
           );
+          // Top bar entries register after the first frame.
+          await tester.pump();
+          await tester.pump();
           await tester.pump(const Duration(seconds: 1));
           final boundary =
               key.currentContext!.findRenderObject()! as RenderRepaintBoundary;

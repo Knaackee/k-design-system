@@ -109,7 +109,12 @@ class KPageHeader extends StatelessWidget {
           ],
         );
         final children = <Widget>[];
-        if (compact) {
+        // Phones inside the shell: back and actions live in the top bar
+        // (KScrollTopBar); the header shows only the large title (0015).
+        final inBar = compact && KTopBarTitleScope.maybeOf(context) != null;
+        if (inBar) {
+          children.add(copy);
+        } else if (compact) {
           final inlineActions = !largeText ? actionBar : null;
           if (back != null || inlineActions != null) {
             children.add(

@@ -19,6 +19,12 @@ version is tagged.
   The scrolled top bar keeps back and actions (text actions in a More
   menu); text-adjacent icons grow with the text up to 2×
   (`text.scaleMax.icon`, `kIconScale`, `KIconFixedScope`).
+- Phone top bar holds back and actions at all times (no duplicates, one
+  More menu); primary action as extended FAB (Material) or bar icon
+  (Apple), `KAppShell.primaryActionPlacement`. Keyboard-only focus rings
+  (`kFocusVisible`). `KListItem(menu:)` and `KListItem(switchValue:)`,
+  `KOnboarding` with a fixed footer. `check-consumer-ui`: `split-row`,
+  `hand-built-steps`.
   `check-consumer-ui` reports `icon-stroke`, `appearance-override`,
   `hand-built-row` and `bare-page`.
 

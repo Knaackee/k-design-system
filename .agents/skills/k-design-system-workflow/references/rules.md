@@ -117,8 +117,20 @@ assertions. The others are review rules.
 - Objects (a portfolio, a building, a folder) use `mediaIcon`: an icon on a
   tonal tile; the row then centres tile, badge and chevron on the copy. Never
   a `KCard` with a chevron (`check-consumer-ui` › hand-built-row).
-- A choice per row (a role per person) is a row with the value and a menu,
-  not a full select field inside the row.
+- A choice per row (theme, a role per person) is
+  `KListItem(value:, menu:)`: the whole row opens the menu. On/off settings
+  are always `KListItem(switchValue:, onSwitchChanged:)`: the whole row
+  toggles. Never a button, menu or switch in `trailing`
+  (`check-consumer-ui` › split-row; a debug assertion fails too). Checkboxes
+  only select items in a list or confirm consent.
+
+## Onboarding and steps — gate (Decision 0015)
+
+- Every onboarding and multi-step setup is `KOnboarding`: footer fixed at
+  the bottom on every step (Back, progress, Next / Done), above the keyboard
+  and the home indicator; Back keeps its space on the first step. Never
+  place `KProgressDots` or step buttons by hand
+  (`check-consumer-ui` › hand-built-steps).
 
 ## Pages — review (Decision 0015)
 
@@ -126,15 +138,17 @@ assertions. The others are review rules.
   section spacing. Sign-in, onboarding and single forms use
   `KPage(width: form)` (520, centred vertically); everything else the page
   width (960). Never a bare scroll view (`check-consumer-ui` › bare-page).
-- On phones `KAppShell` adds the bar that covers the status bar once content
-  scrolls under it and takes the page title, back control and actions from
-  `KPageHeader`; do not add a second app bar. Put screen actions into
-  `KPageHeader(actions:)` (icon buttons stay in the bar, text buttons move
-  into its More menu), never into the scrolling content.
-- Segmented control (`KSegmentedControl`): 2–5 options that switch a view
-  or mode in place; not for navigation or actions. From 1.3× text three or
-  more segments stack.
-- Empty group: a single action row "+ Add …", not a sentence plus a button.
+- On phones `KAppShell` holds the top bar: back and actions from
+  `KPageHeader` live only there (the header then shows only the large
+  title); the bar is transparent at the top, gets glass or a tonal surface
+  when content scrolls under it, and shows the inline title once the large
+  title has scrolled away. Never add a second app bar or a second More menu:
+  put every screen action into `KPageHeader(actions:)`; a page's own
+  overflow `KMenuButton` merges into the bar's.
+- The first primary `KButton` in the actions is the page's primary action:
+  Material shows it as an extended floating action button, Apple as an icon
+  in the bar (give it a `KIcon`). `KAppShell(primaryActionPlacement:)`
+  switches between `bar` and `fab` app-wide.
 
 ## Navigation — review + gesture tests (Decision 0012, Apple HIG)
 

@@ -2,6 +2,8 @@ import '../feedback/k_sound.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+
+import '../primitives/k_focus_ring.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_button.dart';
 
@@ -81,7 +83,7 @@ class KActionControl extends StatelessWidget {
     }
 
     BorderSide border(Set<WidgetState> states) => BorderSide(
-      color: states.contains(WidgetState.focused)
+      color: kFocusVisible(states)
           ? t.colorBorderFocus
           : switch (effectiveVariant) {
               KButtonVariant.primary => Colors.transparent,
@@ -130,7 +132,7 @@ class KActionControl extends StatelessWidget {
                       : iconOnly
                       ? border(states)
                       : BorderSide(
-                          color: states.contains(WidgetState.focused)
+                          color: kFocusVisible(states)
                               ? t.colorBorderFocus
                               : selected
                               ? Colors.transparent

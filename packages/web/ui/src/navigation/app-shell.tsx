@@ -11,9 +11,11 @@ import { useOptionalKHaptics } from "../feedback/haptics.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KMobileAppBar } from "./mobile-app-bar.js";
 import { KBackButton } from "./back-button.js";
+import { KText } from "../primitives/text.js";
 import {
   KTopBarContext,
-  kTopBarActions,
+  kSplitTopBarActions,
+  type KPrimaryActionPlacement,
   type KTopBarEntry,
 } from "./top-bar.js";
 import { useKLocalization } from "../localization/provider.js";
@@ -47,6 +49,11 @@ export interface KAppShellProps extends Omit<
   /** Below the destinations in the expanded sidebar (settings, help). */
   sidebarFooter?: ReactNode;
   label?: string;
+  /**
+   * Phones: where a page's primary action goes. `auto` uses the extended
+   * floating action button for Material and the top bar for Apple.
+   */
+  primaryActionPlacement?: KPrimaryActionPlacement;
 }
 
 /**
@@ -63,6 +70,7 @@ export function KAppShell({
   sidebarHeader,
   sidebarFooter,
   label = "Primary navigation",
+  primaryActionPlacement = "auto",
   className,
   ...props
 }: KAppShellProps) {
@@ -141,12 +149,44 @@ export function KAppShell({
   // iPadOS and Android tablets show labelled destinations; the icon-only
   // rail stays for the productivity style (Decision 0015).
   const rail = windowClass === "medium" && style === "linear";
+  const placement =
+    primaryActionPlacement === "auto"
+      ? style === "material"
+        ? "fab"
+        : "bar"
+      : primaryActionPlacement;
+  const split = kSplitTopBarActions(
+    entry?.actions,
+    messages.moreActions,
+    placement === "fab",
+  );
+  // The FAB sits above the tab bar, whatever its height.
+  useLayoutEffect(() => {
+    const shell = ref.current;
+    const tabBar = shell?.querySelector<HTMLElement>(
+      ":scope > .k-mobile-app-bar",
+    );
+    if (!shell || !tabBar || typeof ResizeObserver === "undefined") return;
+    const measure = () =>
+      shell.style.setProperty(
+        "--k-app-shell-tab-bar-height",
+        `${tabBar.getBoundingClientRect().height}px`,
+      );
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(tabBar);
+    return () => observer.disconnect();
+  }, [compact]);
+  // The bar row takes space only when it holds controls (Decision 0015).
+  const topControls = Boolean(entry?.backLabel) || split.bar.length > 0;
   return (
     <div
       ref={ref}
       className={["k-app-shell", className].filter(Boolean).join(" ")}
       data-layout={compact ? "tab-bar" : rail ? "rail" : "sidebar"}
       data-overlay-bar={compact && appleStyle ? true : undefined}
+      data-top-controls={compact && topControls ? true : undefined}
+      data-fab={compact && split.primary ? true : undefined}
       {...props}
     >
       {compact ? null : (
@@ -192,8 +232,7 @@ export function KAppShell({
         <div
           ref={bar}
           className="k-app-shell__top-bar"
-          data-visible={scrolled || undefined}
-          inert={!scrolled}
+          data-scrolled={scrolled || undefined}
         >
           {/* Back and actions stay reachable while the header is scrolled
               away, as in the iOS navigation bar (Decision 0015). */}
@@ -211,12 +250,26 @@ export function KAppShell({
           >
             {topTitle}
           </span>
-          {entry?.actions ? (
-            <span className="k-app-shell__top-actions">
-              {kTopBarActions(entry.actions, messages.moreActions)}
-            </span>
+          {split.bar.length ? (
+            <span className="k-app-shell__top-actions">{split.bar}</span>
           ) : null}
         </div>
+      ) : null}
+      {compact && split.primary ? (
+        // Material 3 extended FAB with the page's primary action.
+        <button
+          type="button"
+          className="k-app-shell__fab"
+          onClick={split.primary.onClick}
+          disabled={split.primary.disabled}
+        >
+          {split.primary.icon ? (
+            <KIcon name={split.primary.icon} size={24} />
+          ) : null}
+          <KText as="span" variant="label">
+            {split.primary.label}
+          </KText>
+        </button>
       ) : null}
       <div ref={content} className="k-app-shell__content">
         <KTopBarContext.Provider value={compact ? setEntry : null}>

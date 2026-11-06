@@ -5,6 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'chat_presentation_image.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../primitives/k_focus_ring.dart';
+
 import '../primitives/k_button.dart';
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
@@ -211,12 +213,10 @@ class KPresentationReference extends StatelessWidget {
         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
         side: WidgetStateProperty.resolveWith(
           (states) => BorderSide(
-            color: states.contains(WidgetState.focused)
+            color: kFocusVisible(states)
                 ? t.colorTextPrimary
                 : t.colorBorderDefault,
-            width: states.contains(WidgetState.focused)
-                ? 2
-                : t.borderWidthDefault,
+            width: kFocusVisible(states) ? 2 : t.borderWidthDefault,
           ),
         ),
         shape: WidgetStatePropertyAll(

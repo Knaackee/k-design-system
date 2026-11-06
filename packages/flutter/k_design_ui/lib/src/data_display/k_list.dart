@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show OverflowBoxFit;
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../actions/k_icon_button.dart';
+import '../actions/k_menu_button.dart';
+import '../extended_components.dart' show KSwitch;
+import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_leading.dart';
 import '../primitives/k_text.dart';
@@ -105,9 +109,8 @@ class KList extends StatelessWidget {
                   t.componentListRowPaddingInline +
                   (leading
                       ? (child.mediaIcon != null
-                                    ? t.componentListMediaSize
-                                    : t.sizeIconDefault) *
-                                kIconScale(context) +
+                                ? t.componentListMediaSize
+                                : t.sizeIconDefault * kIconScale(context)) +
                             t.componentListLeadingGap
                       : 0),
             ),
@@ -192,6 +195,9 @@ class KListItem extends StatefulWidget {
     this.leading,
     this.leadingIcon,
     this.mediaIcon,
+    this.menu,
+    this.switchValue,
+    this.onSwitchChanged,
     this.trailing,
     this.value,
     this.onPressed,
@@ -216,6 +222,15 @@ class KListItem extends StatefulWidget {
   /// block, as iOS and Material do for two-line rows with media.
   final KIconName? mediaIcon;
 
+  /// A choice row: the whole row opens these options as a menu, with
+  /// [value] showing the current one (iOS pull-down, Android menu).
+  final List<KMenuAction>? menu;
+
+  /// A boolean row: a switch at the end, and the whole row toggles it.
+  /// Use a switch for every on/off setting (Decision 0015).
+  final bool? switchValue;
+  final ValueChanged<bool>? onSwitchChanged;
+
   /// Non-text trailing content (badge, status dot), centred on the title line.
   final Widget? trailing;
 
@@ -238,14 +253,46 @@ class _KListItemState extends State<KListItem> {
 
   @override
   Widget build(BuildContext context) {
+    assert(
+      widget.onPressed != null ||
+          widget.menu != null ||
+          widget.switchValue != null ||
+          !(widget.trailing is KIconButton ||
+              widget.trailing is KMenuButton ||
+              widget.trailing is KButton ||
+              widget.trailing is KSwitch),
+      'KListItem "${widget.title}": a control in `trailing` makes only that '
+      'control tappable. Use `menu:` for a choice, `switchValue:` for on/off '
+      'or `onPressed:` so the whole row responds (Decision 0015).',
+    );
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final roles = _KListRoles.of(context);
-    final interactive = widget.onPressed != null && widget.enabled;
+    final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
+    final toggle = widget.switchValue;
+    final onToggle = widget.onSwitchChanged;
+    final onPressed =
+        widget.onPressed ??
+        (toggle != null && onToggle != null ? () => onToggle(!toggle) : null);
+    final interactive = onPressed != null && widget.enabled;
     // Material list rows navigate without a chevron (Android settings).
     final disclosure =
         widget.disclosure ??
-        (widget.onPressed != null &&
-            KAdaptive.maybeOf(context)?.style != KStyle.material);
+        (widget.onPressed != null && style != KStyle.material);
+    final trailing =
+        widget.trailing ??
+        (toggle != null
+            ? ExcludeSemantics(
+                child: KSwitch(
+                  value: toggle,
+                  label: widget.title,
+                  showLabel: false,
+                  onChanged: widget.enabled ? onToggle : null,
+                ),
+              )
+            : widget.menu != null && style != KStyle.material
+            // iOS pull-down rows show up/down chevrons after the value.
+            ? KIcon(KIconName.chevronsUpDown, size: 16, color: t.colorTextMuted)
+            : null);
     final rtl = Directionality.of(context) == TextDirection.rtl;
     final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
     // Leading icons and media tiles grow with the text (Decision 0015).
@@ -275,18 +322,22 @@ class _KListItemState extends State<KListItem> {
     final leading =
         widget.leading ??
         (media
-            ? DecoratedBox(
-                decoration: BoxDecoration(
-                  color: t.componentListMediaBackground,
-                  borderRadius: BorderRadius.circular(
-                    t.componentListMediaRadius,
+            // Media tiles keep their size at every text size, so the copy
+            // keeps its width.
+            ? KIconFixedScope(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: t.componentListMediaBackground,
+                    borderRadius: BorderRadius.circular(
+                      t.componentListMediaRadius,
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: KIcon(
-                    widget.mediaIcon!,
-                    size: t.sizeIconDefault,
-                    color: t.componentListMediaForeground,
+                  child: Center(
+                    child: KIcon(
+                      widget.mediaIcon!,
+                      size: t.sizeIconDefault,
+                      color: t.componentListMediaForeground,
+                    ),
                   ),
                 ),
               )
@@ -339,9 +390,7 @@ class _KListItemState extends State<KListItem> {
         if (leading != null) ...[
           onBand(
             SizedBox.square(
-              dimension: media
-                  ? t.componentListMediaSize * iconScale
-                  : iconSize,
+              dimension: media ? t.componentListMediaSize : iconSize,
               child: leading,
             ),
           ),
@@ -360,9 +409,9 @@ class _KListItemState extends State<KListItem> {
                     description,
                   ],
                   // From 1.3× text the badge moves under the title.
-                  if (largeText && widget.trailing != null) ...[
+                  if (largeText && trailing != null && toggle == null) ...[
                     SizedBox(height: t.spaceMicro),
-                    widget.trailing!,
+                    trailing,
                   ],
                 ],
               );
@@ -380,9 +429,9 @@ class _KListItemState extends State<KListItem> {
             },
           ),
         ),
-        if (!largeText && widget.trailing != null) ...[
+        if (trailing != null && (!largeText || toggle != null)) ...[
           SizedBox(width: t.spaceControlGap),
-          onBand(widget.trailing!),
+          onBand(trailing),
         ],
         if (chevron != null) ...[SizedBox(width: t.spaceControlGap), chevron],
       ],
@@ -392,15 +441,42 @@ class _KListItemState extends State<KListItem> {
         : _highlighted
         ? t.colorActionGhostHover
         : Colors.transparent;
+    final content = ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: math.max(t.componentListRowMinHeight, t.sizeHitTarget),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: t.componentListRowPaddingInline,
+          vertical: t.componentListRowPaddingBlock,
+        ),
+        // A one-line row centres in the minimum height as a whole.
+        child: Align(alignment: AlignmentDirectional.centerStart, child: row),
+      ),
+    );
+    if (widget.menu case final actions?) {
+      // The whole row is the menu trigger.
+      return KMenuButton(
+        label: widget.value == null
+            ? widget.title
+            : '${widget.title}, ${widget.value}',
+        actions: actions,
+        disabled: !widget.enabled,
+        fullWidth: true,
+        triggerRadius: BorderRadius.zero,
+        triggerContent: content,
+      );
+    }
     return Semantics(
-      button: widget.onPressed != null,
+      button: onPressed != null && toggle == null,
+      toggled: toggle,
       enabled: widget.enabled,
       selected: widget.selected,
       container: true,
       child: Material(
         color: background,
         child: InkWell(
-          onTap: interactive ? widget.onPressed : null,
+          onTap: interactive ? onPressed : null,
           onHighlightChanged: (value) => setState(() => _highlighted = value),
           onHover: interactive
               ? (value) => setState(() => _highlighted = value)
@@ -409,22 +485,7 @@ class _KListItemState extends State<KListItem> {
           highlightColor: Colors.transparent,
           hoverColor: Colors.transparent,
           focusColor: t.colorActionGhostHover,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: math.max(t.componentListRowMinHeight, t.sizeHitTarget),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: t.componentListRowPaddingInline,
-                vertical: t.componentListRowPaddingBlock,
-              ),
-              // A one-line row centres in the minimum height as a whole.
-              child: Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: row,
-              ),
-            ),
-          ),
+          child: content,
         ),
       ),
     );

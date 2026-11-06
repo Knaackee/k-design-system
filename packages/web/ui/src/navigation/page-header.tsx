@@ -42,20 +42,23 @@ export function KPageHeader({
   className,
   ...props
 }: KPageHeaderProps) {
-  // Phones: back and actions stay in the shell's top bar while scrolled.
-  useKTopBarEntry({ backLabel, onBack, backHistory, actions });
+  // Phones inside the shell: back and actions live in the top bar; the
+  // header shows only the large title (Decision 0015).
+  const inBar = useKTopBarEntry({ backLabel, onBack, backHistory, actions });
+  const shownBack = inBar ? undefined : backLabel;
+  const shownActions = inBar ? undefined : actions;
   return (
     <header
       className={["k-page-header", className].filter(Boolean).join(" ")}
-      data-back={backLabel ? true : undefined}
-      data-actions={actions ? true : undefined}
+      data-back={shownBack ? true : undefined}
+      data-actions={shownActions ? true : undefined}
       {...props}
     >
       <div className="k-page-header__layout">
-        {backLabel ? (
+        {shownBack ? (
           <div className="k-page-header__back">
             <KBackButton
-              label={backLabel}
+              label={shownBack}
               onClick={onBack}
               history={backHistory}
             />
@@ -78,8 +81,8 @@ export function KPageHeader({
             </KText>
           ) : null}
         </div>
-        {actions ? (
-          <div className="k-page-header__actions">{actions}</div>
+        {shownActions ? (
+          <div className="k-page-header__actions">{shownActions}</div>
         ) : null}
       </div>
     </header>

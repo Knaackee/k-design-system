@@ -96,3 +96,6 @@ export function KIcon({
     />
   );
 }
+
+// A stable name: page headers and rows recognise it across bundles.
+KIcon.displayName = "KIcon";

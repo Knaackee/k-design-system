@@ -10,6 +10,7 @@ export 'src/feedback/k_text_shimmer.dart';
 
 export 'src/primitives/k_button.dart';
 export 'src/primitives/k_page.dart';
+export 'src/primitives/k_focus_ring.dart';
 export 'src/primitives/k_link.dart';
 export 'src/primitives/k_card.dart';
 export 'src/overlays/k_overlays.dart';
@@ -33,6 +34,7 @@ export 'src/actions/k_command_palette.dart';
 export 'src/data_display/k_list.dart';
 export 'src/navigation/k_app_shell.dart';
 export 'src/navigation/k_scroll_top_bar.dart';
+export 'src/navigation/k_onboarding.dart';
 export 'src/navigation/k_back_button.dart';
 export 'src/navigation/k_page_header.dart';
 export 'src/navigation/k_segmented_control.dart';

@@ -38,3 +38,6 @@ export const KIconButton = forwardRef<HTMLButtonElement, KIconButtonProps>(
     );
   },
 );
+
+// A stable name: page headers and rows recognise it across bundles.
+KIconButton.displayName = "KIconButton";

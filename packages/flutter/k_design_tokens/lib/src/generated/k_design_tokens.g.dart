@@ -751,6 +751,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentListGroupRadius,
     required this.componentListSectionHeaderGap,
     required this.componentListSectionHeaderInset,
+    required this.componentFabHeight,
+    required this.componentFabRadius,
+    required this.componentFabBackground,
+    required this.componentFabForeground,
     required this.componentTopBarHeight,
     required this.componentPageHeaderPaddingBlockStart,
     required this.componentPageHeaderTitleGap,
@@ -1364,6 +1368,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentListGroupRadius;
   final double componentListSectionHeaderGap;
   final double componentListSectionHeaderInset;
+  final double componentFabHeight;
+  final double componentFabRadius;
+  final Color componentFabBackground;
+  final Color componentFabForeground;
   final double componentTopBarHeight;
   final double componentPageHeaderPaddingBlockStart;
   final double componentPageHeaderTitleGap;
@@ -1977,6 +1985,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentFabHeight: 56.0,
+    componentFabRadius: 8.0,
+    componentFabBackground: Color(0xFFF7FEE7),
+    componentFabForeground: Color(0xFF4D7C0F),
     componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
@@ -2591,6 +2603,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentFabHeight: 56.0,
+    componentFabRadius: 8.0,
+    componentFabBackground: Color(0xFF1A2E05),
+    componentFabForeground: Color(0xFFA3E635),
     componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
@@ -3205,6 +3221,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentFabHeight: 56.0,
+    componentFabRadius: 8.0,
+    componentFabBackground: Color(0xFFCCFBF1),
+    componentFabForeground: Color(0xFF0D9488),
     componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
@@ -3819,6 +3839,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentListGroupRadius: 8.0,
     componentListSectionHeaderGap: 8.0,
     componentListSectionHeaderInset: 12.0,
+    componentFabHeight: 56.0,
+    componentFabRadius: 8.0,
+    componentFabBackground: Color(0xFF123B36),
+    componentFabForeground: Color(0xFF2DD4BF),
     componentTopBarHeight: 44.0,
     componentPageHeaderPaddingBlockStart: 8.0,
     componentPageHeaderTitleGap: 4.0,
@@ -4434,6 +4458,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentListGroupRadius,
     double? componentListSectionHeaderGap,
     double? componentListSectionHeaderInset,
+    double? componentFabHeight,
+    double? componentFabRadius,
+    Color? componentFabBackground,
+    Color? componentFabForeground,
     double? componentTopBarHeight,
     double? componentPageHeaderPaddingBlockStart,
     double? componentPageHeaderTitleGap,
@@ -5047,6 +5075,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentListGroupRadius: componentListGroupRadius ?? this.componentListGroupRadius,
       componentListSectionHeaderGap: componentListSectionHeaderGap ?? this.componentListSectionHeaderGap,
       componentListSectionHeaderInset: componentListSectionHeaderInset ?? this.componentListSectionHeaderInset,
+      componentFabHeight: componentFabHeight ?? this.componentFabHeight,
+      componentFabRadius: componentFabRadius ?? this.componentFabRadius,
+      componentFabBackground: componentFabBackground ?? colorBrandPrimaryBackground ?? this.componentFabBackground,
+      componentFabForeground: componentFabForeground ?? colorBrandPrimaryAccent ?? this.componentFabForeground,
       componentTopBarHeight: componentTopBarHeight ?? this.componentTopBarHeight,
       componentPageHeaderPaddingBlockStart: componentPageHeaderPaddingBlockStart ?? this.componentPageHeaderPaddingBlockStart,
       componentPageHeaderTitleGap: componentPageHeaderTitleGap ?? this.componentPageHeaderTitleGap,
@@ -5665,6 +5697,10 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentListGroupRadius: lerpDouble(componentListGroupRadius, other.componentListGroupRadius, t)!,
       componentListSectionHeaderGap: lerpDouble(componentListSectionHeaderGap, other.componentListSectionHeaderGap, t)!,
       componentListSectionHeaderInset: lerpDouble(componentListSectionHeaderInset, other.componentListSectionHeaderInset, t)!,
+      componentFabHeight: lerpDouble(componentFabHeight, other.componentFabHeight, t)!,
+      componentFabRadius: lerpDouble(componentFabRadius, other.componentFabRadius, t)!,
+      componentFabBackground: Color.lerp(componentFabBackground, other.componentFabBackground, t)!,
+      componentFabForeground: Color.lerp(componentFabForeground, other.componentFabForeground, t)!,
       componentTopBarHeight: lerpDouble(componentTopBarHeight, other.componentTopBarHeight, t)!,
       componentPageHeaderPaddingBlockStart: lerpDouble(componentPageHeaderPaddingBlockStart, other.componentPageHeaderPaddingBlockStart, t)!,
       componentPageHeaderTitleGap: lerpDouble(componentPageHeaderTitleGap, other.componentPageHeaderTitleGap, t)!,

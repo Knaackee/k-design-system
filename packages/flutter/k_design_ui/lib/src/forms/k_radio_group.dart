@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import '../primitives/k_focus_ring.dart';
 import 'form_style.dart';
 
 @immutable
@@ -113,7 +114,7 @@ class _RadioOptionState<T> extends State<_RadioOption<T>> {
       ),
       builder: (context, state) {
         final selected = state.states.contains(WidgetState.selected);
-        final focused = state.states.contains(WidgetState.focused);
+        final focused = kFocusVisible(state.states);
         return Opacity(
           opacity: widget.enabled ? 1 : t.opacityDisabled,
           child: ConstrainedBox(

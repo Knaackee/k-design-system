@@ -3,9 +3,13 @@ import {
   KAppShell,
   KBadge,
   KButton,
+  KIcon,
   KIconButton,
   KList,
   KListItem,
+  KMenuButton,
+  KOnboarding,
+  KPage,
   KPageHeader,
   KSegmentedControl,
   KStack,
@@ -17,6 +21,7 @@ import "./core-components-fixtures.css";
 
 /** Reference settings screen: grouped sections, real content, no demo text. */
 export function SettingsList() {
+  const [sounds, setSounds] = useState(true);
   return (
     <KStack gap="section" align="stretch">
       <KList title="Account">
@@ -43,7 +48,22 @@ export function SettingsList() {
           title="Email summary"
           leadingIcon="mail"
           value="Weekly"
-          onClick={() => {}}
+          menu={[
+            { id: "daily", label: "Daily", onSelect: () => {} },
+            {
+              id: "weekly",
+              label: "Weekly",
+              checked: true,
+              onSelect: () => {},
+            },
+            { id: "never", label: "Never", onSelect: () => {} },
+          ]}
+        />
+        <KListItem
+          title="Sounds"
+          leadingIcon="volume-2"
+          switchValue={sounds}
+          onSwitchChange={setSounds}
         />
       </KList>
       <KList title="Assistant" footer="Speech input runs on this device.">
@@ -207,7 +227,26 @@ export function AppShellFixture({
         }
       >
         <KStack gap="section" align="stretch" className="cc-fixture">
-          <KPageHeader title={current.label} />
+          <KPageHeader
+            title={current.label}
+            actions={
+              selected === "portfolios" ? (
+                <>
+                  <KButton onClick={() => {}}>
+                    <KIcon name="plus" size={16} />
+                    Portfolio
+                  </KButton>
+                  <KMenuButton
+                    label="Options"
+                    overflow
+                    actions={[
+                      { id: "export", label: "Export", onSelect: () => {} },
+                    ]}
+                  />
+                </>
+              ) : undefined
+            }
+          />
           {selected === "settings" ? (
             <SettingsList />
           ) : selected === "portfolios" ? (
@@ -219,6 +258,29 @@ export function AppShellFixture({
           )}
         </KStack>
       </KAppShell>
+    </div>
+  );
+}
+
+/** Reference onboarding: footer with Back, progress and Next on every step. */
+export function OnboardingFixture() {
+  const steps = [
+    ["Welcome to Assetry", "Your properties, from portfolio to building."],
+    ["Add your first portfolio", "Group buildings by owner or region."],
+    ["Invite your team", "Share a portfolio with read or edit access."],
+  ].map(([title, body]) => (
+    <KPage key={title}>
+      <KStack gap="control" align="stretch">
+        <KText as="h1" variant="heading1">
+          {title}
+        </KText>
+        <KText>{body}</KText>
+      </KStack>
+    </KPage>
+  ));
+  return (
+    <div style={{ height: "100dvh" }}>
+      <KOnboarding steps={steps} onDone={() => {}} />
     </div>
   );
 }

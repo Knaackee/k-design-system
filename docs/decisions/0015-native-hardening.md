@@ -49,13 +49,22 @@ app code passes content, events and state.
    segmented button (outlined pill, tonal selection with a check). Tablets
    in `apple` and `material` show a labelled sidebar instead of the
    icon-only rail.
-8. **Scrolled top bar.** The bar keeps the page header's back control and
-   actions while the header is scrolled away (iOS navigation bar): icon
-   actions stay, text buttons and further actions move into a More menu.
+8. **Top bar.** On phones the bar holds the page header's back control and
+   actions at all times (iOS navigation bar, Material 3 top app bar): the
+   header shows only the large title, so nothing appears twice. Transparent
+   at the top, glass or tonal once content scrolls under it; icon actions
+   stay, text buttons, further actions and a page's own overflow menu share
+   one More menu. The first primary button becomes an extended FAB
+   (Material) or a bar icon (Apple); `primaryActionPlacement` overrides.
+   Focus rings show only for keyboard focus.
 9. **Icons grow with text.** Text-adjacent icons (16–24) scale with the
    system text size up to `text.scaleMax.icon` (2×), as SF Symbols do;
    tab bar symbols, glyphs inside fields and display icons keep their size.
-10. **Gates.** `check-consumer-ui` reports `icon-stroke`,
+10. **Rows and steps.** `KListItem(menu:)` and
+    `KListItem(switchValue:)` make the whole row respond; on/off settings
+    use a switch. `KOnboarding` fixes Back, progress and Next at the bottom
+    for every step.
+11. **Gates.** `check-consumer-ui` reports `icon-stroke`,
     `appearance-override`, `hand-built-row` and `bare-page`. The workflow
     skill requires an inventory of every screen, sheet, dialog and menu with
     evidence.

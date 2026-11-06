@@ -66,21 +66,70 @@
     var(--k-component-top-bar-height) + env(safe-area-inset-top, 0px)
   );
   padding: env(safe-area-inset-top, 0px) var(--k-space-layout-gutter) 0;
+  pointer-events: none;
+}
+.k-app-shell__top-bar > * {
+  pointer-events: auto;
+}
+/* Transparent at the top; a surface once content scrolls under it. */
+.k-app-shell__top-bar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
   border-block-end: var(--k-space-hairline) solid var(--k-color-border-default);
   background: var(--k-color-surface-raised);
   opacity: 0;
-  pointer-events: none;
   transition: opacity var(--k-motion-control-settle)
     var(--k-motion-control-easing);
 }
-.k-app-shell__top-bar[data-visible] {
+.k-app-shell__top-bar[data-scrolled]::before {
   opacity: 1;
-  pointer-events: auto;
+}
+/* Content starts below the bar's controls and ends above the FAB. */
+.k-app-shell[data-top-controls] > .k-app-shell__content {
+  --k-safe-top: calc(
+    env(safe-area-inset-top, 0px) + var(--k-component-top-bar-height)
+  );
+}
+.k-app-shell[data-fab] > .k-app-shell__content {
+  --k-safe-bottom-extra: calc(
+    var(--k-component-fab-height) + var(--k-space-layout-gutter)
+  );
+}
+.k-app-shell__fab {
+  position: absolute;
+  z-index: 3;
+  inset-inline-end: var(--k-space-layout-gutter);
+  inset-block-end: calc(
+    var(--k-space-layout-gutter) + var(--k-app-shell-tab-bar-height, 0px)
+  );
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--k-space-tight);
+  box-sizing: border-box;
+  min-width: var(--k-component-fab-height);
+  min-height: var(--k-component-fab-height);
+  padding: 0 var(--k-space-layout-gutter);
+  border: 0;
+  border-radius: var(--k-component-fab-radius);
+  background: var(--k-component-fab-background);
+  color: var(--k-component-fab-foreground);
+  box-shadow: var(--k-elevation-medium);
+  cursor: pointer;
+}
+.k-app-shell__fab .k-text {
+  color: inherit;
+}
+.k-app-shell__fab:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-border-width-strong);
 }
 [data-style="apple"] .k-app-shell__top-title {
   text-align: center;
 }
-[data-style="apple"] .k-app-shell__top-bar {
+[data-style="apple"] .k-app-shell__top-bar::before {
   /* Same glass as the tab bar. */
   background: color-mix(
     in srgb,
@@ -127,4 +176,58 @@
 }
 .k-app-shell__top-title[data-visible] {
   opacity: 1;
+}
+
+/* KOnboarding (Decision 0015). Mirrors k_onboarding.dart. */
+.k-onboarding {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+}
+.k-onboarding__content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  animation: k-onboarding-in var(--k-motion-page-duration)
+    var(--k-motion-page-easing) both;
+}
+.k-onboarding__content[data-direction="back"] {
+  animation-name: k-onboarding-back;
+}
+@keyframes k-onboarding-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--k-space-layout-gutter) * 2));
+  }
+}
+@keyframes k-onboarding-back {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--k-space-layout-gutter) * -2));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-onboarding__content {
+    animation: none;
+  }
+}
+/* Fixed at the bottom on every step; Back keeps its space. */
+.k-onboarding__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-control-gap) var(--k-space-layout-gutter)
+    calc(var(--k-space-layout-gutter) + env(safe-area-inset-bottom, 0px));
+}
+.k-onboarding__back {
+  justify-self: start;
+}
+.k-onboarding__back[data-hidden] {
+  visibility: hidden;
+}
+.k-onboarding__next {
+  justify-self: end;
 }

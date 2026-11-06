@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../forms/form_style.dart';
+import '../primitives/k_focus_ring.dart';
 import '../primitives/k_icon.dart';
 
 TextStyle pickerTextStyle(BuildContext context, {Color? color}) {
@@ -75,10 +76,10 @@ class PickerAction extends StatelessWidget {
             overlayColor: const WidgetStatePropertyAll(Colors.transparent),
             side: WidgetStateProperty.resolveWith(
               (states) => BorderSide(
-                color: states.contains(WidgetState.focused)
+                color: kFocusVisible(states)
                     ? t.colorBorderFocus
                     : Colors.transparent,
-                width: states.contains(WidgetState.focused) ? 2 : 1,
+                width: kFocusVisible(states) ? 2 : 1,
               ),
             ),
             shape: WidgetStatePropertyAll(

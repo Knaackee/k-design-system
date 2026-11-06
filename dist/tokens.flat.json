@@ -2926,6 +2926,28 @@
         "unit": "px"
       }
     },
+    "component.fab.height": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.fab.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.fab.background": {
+      "type": "color",
+      "value": "#f7fee7"
+    },
+    "component.fab.foreground": {
+      "type": "color",
+      "value": "#4d7c0f"
+    },
     "component.topBar.height": {
       "type": "dimension",
       "value": {
@@ -6862,6 +6884,28 @@
         "value": 12,
         "unit": "px"
       }
+    },
+    "component.fab.height": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.fab.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.fab.background": {
+      "type": "color",
+      "value": "#1a2e05"
+    },
+    "component.fab.foreground": {
+      "type": "color",
+      "value": "#a3e635"
     },
     "component.topBar.height": {
       "type": "dimension",
@@ -10800,6 +10844,28 @@
         "unit": "px"
       }
     },
+    "component.fab.height": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.fab.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.fab.background": {
+      "type": "color",
+      "value": "#ccfbf1"
+    },
+    "component.fab.foreground": {
+      "type": "color",
+      "value": "#0d9488"
+    },
     "component.topBar.height": {
       "type": "dimension",
       "value": {
@@ -14736,6 +14802,28 @@
         "value": 12,
         "unit": "px"
       }
+    },
+    "component.fab.height": {
+      "type": "dimension",
+      "value": {
+        "value": 56,
+        "unit": "px"
+      }
+    },
+    "component.fab.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.fab.background": {
+      "type": "color",
+      "value": "#123b36"
+    },
+    "component.fab.foreground": {
+      "type": "color",
+      "value": "#2dd4bf"
     },
     "component.topBar.height": {
       "type": "dimension",

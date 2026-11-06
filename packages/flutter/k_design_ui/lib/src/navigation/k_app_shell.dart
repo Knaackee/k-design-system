@@ -48,6 +48,7 @@ class KAppShell extends StatelessWidget {
     this.sidebarHeader,
     this.sidebarFooter,
     this.semanticLabel = 'Primary navigation',
+    this.primaryActionPlacement = KPrimaryActionPlacement.auto,
     super.key,
   });
 
@@ -63,6 +64,10 @@ class KAppShell extends StatelessWidget {
   /// Shown below the destinations in the expanded sidebar (settings, help).
   final Widget? sidebarFooter;
   final String semanticLabel;
+
+  /// Phones: where a page's primary action goes. `auto` uses the extended
+  /// floating action button for Material and the top bar for Apple.
+  final KPrimaryActionPlacement primaryActionPlacement;
 
   void _select(BuildContext context, String id) {
     if (id == selectedId) return;
@@ -118,7 +123,10 @@ class KAppShell extends StatelessWidget {
           );
           // Content scrolls under a bar that covers the status bar and
           // takes the page title (Decision 0015).
-          final page = KScrollTopBar(child: child);
+          final page = KScrollTopBar(
+            placement: primaryActionPlacement,
+            child: child,
+          );
           if (style != KStyle.apple) {
             return Column(
               children: [
