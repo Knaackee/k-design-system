@@ -88,6 +88,9 @@ Remove what the library now does, then check every surface:
 - **Heights and icons.** Remove `strokeWidth`, `minHeight`/`height` on
   buttons and fields, dense density on phones and style or density
   overrides. A full-width primary button is a plain `KButton(fullWidth:)`.
+- **Navigation buttons and tabs.** Menu and chat-history buttons move into
+  `KPageHeader(leading:)`. After the upgrade, open every tab once after a
+  tab switch: no FAB, action or empty space may come from another tab.
 - **Rows, switches, onboarding.** Rows with a trailing button, menu or
   switch become `KListItem(menu:)` or `KListItem(switchValue:)`; on/off
   settings use the switch. Onboarding and multi-step setups use

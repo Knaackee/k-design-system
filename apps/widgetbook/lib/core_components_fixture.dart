@@ -283,27 +283,49 @@ class _AppShellFixtureState extends State<AppShellFixture> {
     ),
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    final current = destinations.firstWhere((item) => item.id == selected);
-    return KAppShell(
-      destinations: destinations,
-      selectedId: selected,
-      onSelected: (id) => setState(() => selected = id),
-      sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
+  Widget _page(BuildContext context, KAppDestination destination) {
+    final id = destination.id;
+    return SingleChildScrollView(
       // Bottom padding from the shell keeps the last row above the tab bar.
-      child: SingleChildScrollView(
-        padding: _pad(context).copyWith(
-          bottom: _pad(context).bottom + MediaQuery.paddingOf(context).bottom,
-        ),
-        child: KStack(
-          gap: KLayoutGap.section,
-          align: KLayoutAlign.stretch,
-          children: [
+      padding: _pad(context).copyWith(
+        top: _pad(context).top + MediaQuery.paddingOf(context).top,
+        bottom: _pad(context).bottom + MediaQuery.paddingOf(context).bottom,
+      ),
+      child: KStack(
+        gap: KLayoutGap.section,
+        align: KLayoutAlign.stretch,
+        children: [
+          if (id == 'home') ...[
             KPageHeader(
-              title: current.label,
+              title: 'Assistant',
+              leading: KIconButton(
+                label: 'Chat history',
+                icon: KIconName.menu,
+                onPressed: () {},
+              ),
+            ),
+            KList(
+              title: 'What can I help with?',
+              children: [
+                KListItem(
+                  title: 'Create a portfolio',
+                  description: 'With a name and a goal',
+                  leadingIcon: KIconName.folder,
+                  onPressed: () {},
+                ),
+                KListItem(
+                  title: 'Add a building',
+                  description: 'From an exposé or photos',
+                  leadingIcon: KIconName.building,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ] else ...[
+            KPageHeader(
+              title: destination.label,
               actions: [
-                if (selected == 'portfolios') ...[
+                if (id == 'portfolios') ...[
                   KButton(
                     label: 'Portfolio',
                     leading: const KIcon(KIconName.plus, size: 16),
@@ -323,17 +345,36 @@ class _AppShellFixtureState extends State<AppShellFixture> {
                 ],
               ],
             ),
-            if (selected == 'settings')
+            if (id == 'settings')
               const SettingsListFixture()
-            else if (selected == 'portfolios')
+            else if (id == 'portfolios')
               const PortfolioListFixture()
             else
-              KText('${current.label} has no content in this reference.'),
+              KText('${destination.label} has no content in this reference.'),
           ],
-        ),
+        ],
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) => KAppShell(
+    destinations: destinations,
+    selectedId: selected,
+    onSelected: (id) => setState(() => selected = id),
+    sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
+    // Tabs stay alive, as in most apps; only the shown page fills the top
+    // bar (Decision 0015).
+    child: IndexedStack(
+      index: destinations.indexWhere((item) => item.id == selected),
+      children: [
+        // Each page reads the shell's insets (bar row, FAB), not the
+        // fixture's own context above the shell.
+        for (final destination in destinations)
+          Builder(builder: (context) => _page(context, destination)),
+      ],
+    ),
+  );
 }
 
 /// Reference onboarding: footer with Back, progress and Next on every step.

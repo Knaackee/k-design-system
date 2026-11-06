@@ -1,7 +1,8 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show ScrollDirection;
+import 'package:flutter/rendering.dart'
+    show RenderIndexedStack, RenderOffstage, ScrollDirection;
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../actions/k_icon_button.dart';
@@ -17,10 +18,22 @@ class KTopBarTitleScope extends InheritedWidget {
   const KTopBarTitleScope({
     required this.controller,
     required super.child,
+    this.barControls = false,
     super.key,
   });
 
   final KTopBarTitleController controller;
+
+  /// Whether the bar row holds controls (back, leading or actions). The
+  /// row then separates the large title from the status bar, so the
+  /// header drops its own top padding.
+  final bool barControls;
+
+  static bool barControlsOf(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<KTopBarTitleScope>()
+          ?.barControls ??
+      false;
 
   static KTopBarTitleController? maybeOf(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<KTopBarTitleScope>()
@@ -28,45 +41,118 @@ class KTopBarTitleScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(KTopBarTitleScope oldWidget) =>
-      controller != oldWidget.controller;
+      controller != oldWidget.controller ||
+      barControls != oldWidget.barControls;
 }
 
 /// The page title and where it is on screen.
+/// One page header's entry in the top bar.
+class KTopBarEntry {
+  KTopBarEntry({
+    required this.title,
+    required this.anchor,
+    this.back,
+    this.leading,
+    this.actions = const [],
+    required this.order,
+  });
+  final String title;
+  final GlobalKey anchor;
+  final Widget? back;
+  final Widget? leading;
+  final List<Widget> actions;
+
+  /// Registration order; among visible headers the newest wins.
+  final int order;
+}
+
+/// The page headers below a [KScrollTopBar]. Only the header that is on
+/// screen fills the bar: pages kept alive in other tabs (`IndexedStack`,
+/// `Offstage`) or under another route never leak their actions (0015).
 class KTopBarTitleController extends ChangeNotifier {
-  String? _title;
-  GlobalKey? _anchor;
-  Widget? _back;
-  List<Widget> _actions = const [];
+  final _entries = <GlobalKey, KTopBarEntry>{};
+  int _order = 0;
+  KTopBarEntry? _active;
 
-  String? get title => _title;
-  GlobalKey? get anchor => _anchor;
+  KTopBarEntry? get active => _active;
+  String? get title => _active?.title;
+  GlobalKey? get anchor => _active?.anchor;
 
-  /// The page header's back control; the bar keeps it while scrolled.
-  Widget? get back => _back;
-
-  /// The page header's actions; the bar keeps them while scrolled.
-  List<Widget> get actions => _actions;
+  /// The header's back control, or its [leading] navigation button.
+  Widget? get back => _active?.back ?? _active?.leading;
+  List<Widget> get actions => _active?.actions ?? const [];
 
   void register(
     String title,
     GlobalKey anchor, {
     Widget? back,
+    Widget? leading,
     List<Widget> actions = const [],
   }) {
-    _title = title;
-    _anchor = anchor;
-    _back = back;
-    _actions = actions;
-    notifyListeners();
+    _entries[anchor] = KTopBarEntry(
+      title: title,
+      anchor: anchor,
+      back: back,
+      leading: leading,
+      actions: actions,
+      order: _entries[anchor]?.order ?? _order++,
+    );
+    resolve();
   }
 
   void unregister(GlobalKey anchor) {
-    if (anchor != _anchor) return;
-    _title = null;
-    _anchor = null;
-    _back = null;
-    _actions = const [];
+    if (_entries.remove(anchor) == null) return;
+    // Unregistering happens while the tree is finalized; resolve after it.
+    if (_resolveScheduled) return;
+    _resolveScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _resolveScheduled = false;
+      if (!_disposed) resolve();
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  bool _resolveScheduled = false;
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  /// Picks the newest header that is actually shown; call after layout.
+  void resolve() {
+    KTopBarEntry? next;
+    for (final entry in _entries.values) {
+      final box = entry.anchor.currentContext?.findRenderObject();
+      if (box == null || !box.attached || !_shown(box)) continue;
+      if (next == null || entry.order > next.order) next = entry;
+    }
+    if (next == _active) return;
+    _active = next;
     notifyListeners();
+  }
+
+  /// False when an IndexedStack shows another child or an Offstage hides it.
+  static bool _shown(RenderObject node) {
+    RenderObject child = node;
+    var parent = node.parent;
+    while (parent != null) {
+      if (parent is RenderOffstage && parent.offstage) return false;
+      if (parent is RenderIndexedStack) {
+        var index = 0;
+        var current = parent.firstChild;
+        while (current != null && current != child) {
+          index++;
+          current = parent.childAfter(current);
+        }
+        if (index != parent.index) return false;
+      }
+      child = parent;
+      parent = parent.parent;
+    }
+    return true;
   }
 }
 
@@ -76,20 +162,28 @@ class KTopBarTitleAnchor extends StatefulWidget {
     required this.title,
     required this.child,
     this.back,
+    this.leading,
     this.actions = const [],
     super.key,
   });
   final String title;
   final Widget child;
   final Widget? back;
+  final Widget? leading;
   final List<Widget> actions;
 
   @override
   State<KTopBarTitleAnchor> createState() => _KTopBarTitleAnchorState();
 }
 
-class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor> {
+class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor>
+    with AutomaticKeepAliveClientMixin {
   final _anchor = GlobalKey();
+
+  // In a lazy list the header leaves the tree once it scrolls far away;
+  // the bar still needs its title, back control and actions.
+  @override
+  bool get wantKeepAlive => true;
   KTopBarTitleController? _controller;
 
   @override
@@ -108,6 +202,7 @@ class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.title != widget.title ||
         oldWidget.back != widget.back ||
+        oldWidget.leading != widget.leading ||
         oldWidget.actions != widget.actions) {
       _register();
     }
@@ -116,14 +211,22 @@ class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor> {
   void _register() {
     final controller = _controller;
     if (controller == null) return;
+    // Hidden routes and tabs pause their tickers; they leave the bar.
+    final visible =
+        TickerMode.valuesOf(context).enabled &&
+        (ModalRoute.of(context)?.isCurrent ?? true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
+      if (!mounted) return;
+      if (visible) {
         controller.register(
           widget.title,
           _anchor,
           back: widget.back,
+          leading: widget.leading,
           actions: widget.actions,
         );
+      } else {
+        controller.unregister(_anchor);
       }
     });
   }
@@ -135,8 +238,10 @@ class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      KeyedSubtree(key: _anchor, child: widget.child);
+  Widget build(BuildContext context) {
+    super.build(context);
+    return KeyedSubtree(key: _anchor, child: widget.child);
+  }
 }
 
 /// Where a page's primary action goes on phones (Decision 0015).
@@ -248,13 +353,18 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
           .localToGlobal(Offset(0, anchor.size.height))
           .dy;
       final barBottom = bar.localToGlobal(Offset(0, bar.size.height)).dy;
-      shown = titleBottom <= barBottom;
+      // A header kept alive far outside a lazy list has no position.
+      shown = !titleBottom.isFinite || titleBottom <= barBottom;
     }
     if (shown != _titleShown && mounted) setState(() => _titleShown = shown);
   }
 
   @override
   Widget build(BuildContext context) {
+    // A tab switch changes which header is shown only after layout.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _controller.resolve();
+    });
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
     final apple = style == KStyle.apple;
@@ -371,6 +481,7 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
     );
     return KTopBarTitleScope(
       controller: _controller,
+      barControls: hasControls,
       child: Stack(
         children: [
           Positioned.fill(

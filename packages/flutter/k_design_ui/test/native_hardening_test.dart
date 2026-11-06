@@ -201,6 +201,12 @@ void main() {
       find.descendant(of: bar, matching: find.byType(KMenuButton)),
       findsOneWidget,
     );
+    // Far down a lazy list the header leaves the viewport's cache; the bar
+    // keeps its title and back control.
+    controller.jumpTo(1400);
+    await tester.pumpAndSettle();
+    expect(opacities(), everyElement(1));
+    expect(inBar, findsOneWidget);
   });
 
   testWidgets('text-adjacent icons grow with the text up to 2x', (
@@ -389,5 +395,86 @@ void main() {
     await tester.tap(find.text('Light'));
     await tester.pumpAndSettle();
     expect(picked, 'light');
+  });
+
+  testWidgets('only the visible tab fills the bar (IndexedStack)', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    Widget app(int index) => MaterialApp(
+      home: KAdaptiveTheme(
+        fontFamily: 'packages/k_design_tokens/Inter',
+        overrides: const KAdaptiveOverrides(style: KStyle.material),
+        child: Scaffold(
+          body: KAppShell(
+            destinations: const [
+              KAppDestination(
+                id: 'a',
+                label: 'Portfolios',
+                icon: KIconName.folder,
+              ),
+              KAppDestination(
+                id: 'b',
+                label: 'Chat',
+                icon: KIconName.messageSquare,
+              ),
+            ],
+            selectedId: index == 0 ? 'a' : 'b',
+            onSelected: (_) {},
+            child: IndexedStack(
+              index: index,
+              children: [
+                KPage(
+                  children: [
+                    KPageHeader(
+                      title: 'Portfolios',
+                      actions: [
+                        KButton(
+                          label: 'Portfolio',
+                          leading: const KIcon(KIconName.plus),
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                KPage(
+                  children: [
+                    KPageHeader(
+                      title: 'Chat',
+                      leading: KIconButton(
+                        label: 'Chat history',
+                        icon: KIconName.menu,
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpWidget(app(1));
+    await tester.pumpAndSettle();
+    // Chat: no FAB from the hidden Portfolios tab, the history button sits
+    // in the bar.
+    expect(find.text('Portfolio'), findsNothing);
+    expect(find.byTooltip('Chat history'), findsOneWidget);
+    final bar = find.byType(KScrollTopBar);
+    expect(
+      find.descendant(of: bar, matching: find.byTooltip('Chat history')),
+      findsOneWidget,
+    );
+    await tester.pumpWidget(app(0));
+    await tester.pumpAndSettle();
+    expect(find.text('Portfolio'), findsOneWidget);
+    expect(find.byTooltip('Chat history'), findsNothing);
+    await tester.pumpWidget(app(1));
+    await tester.pumpAndSettle();
+    expect(find.text('Portfolio'), findsNothing);
   });
 }

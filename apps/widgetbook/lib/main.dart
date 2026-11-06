@@ -973,6 +973,10 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
             builder: (_) => const AppShellFixture(),
           ),
           WidgetbookUseCase(
+            name: 'app-shell-assistant',
+            builder: (_) => const AppShellFixture(initial: 'home'),
+          ),
+          WidgetbookUseCase(
             name: 'onboarding',
             builder: (_) => const OnboardingFixture(),
           ),

@@ -27,6 +27,7 @@ class KPageHeader extends StatelessWidget {
     this.actions = const [],
     this.breadcrumb,
     this.backHistory = const [],
+    this.leading,
     super.key,
   });
 
@@ -46,6 +47,12 @@ class KPageHeader extends StatelessWidget {
   /// it whenever [breadcrumb] is set so phones keep the path (0015).
   final List<KMenuAction> backHistory;
 
+  /// A navigation button at the start (menu, chat history) for screens
+  /// without a back control: on phones it sits at the start of the top
+  /// bar, as in Gmail or ChatGPT; wider, before the title. Never place
+  /// such a button in the page content (Decision 0015).
+  final Widget? leading;
+
   @override
   Widget build(BuildContext context) {
     assert(actions.length <= 3, 'KPageHeader takes at most 3 actions.');
@@ -53,7 +60,7 @@ class KPageHeader extends StatelessWidget {
     final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
     final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
     final back = backLabel == null
-        ? null
+        ? leading
         : KBackButton(
             label: backLabel!,
             onPressed: onBack,
@@ -81,7 +88,8 @@ class KPageHeader extends StatelessWidget {
             ],
             KTopBarTitleAnchor(
               title: title,
-              back: back,
+              back: backLabel == null ? null : back,
+              leading: backLabel == null ? leading : null,
               actions: actions,
               child: Semantics(
                 header: true,
@@ -170,8 +178,13 @@ class KPageHeader extends StatelessWidget {
               );
           }
         }
+        // Below a bar row with controls the row already separates the
+        // title from the status bar, as in iOS and Material top bars.
+        final barRow = inBar && KTopBarTitleScope.barControlsOf(context);
         return Padding(
-          padding: EdgeInsets.only(top: t.componentPageHeaderPaddingBlockStart),
+          padding: EdgeInsets.only(
+            top: barRow ? 0 : t.componentPageHeaderPaddingBlockStart,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,

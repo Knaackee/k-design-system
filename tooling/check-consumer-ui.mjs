@@ -33,6 +33,12 @@ export function findings(source, extension) {
           ],
           // Steps use KOnboarding: footer fixed at the bottom on every step.
           ["hand-built-steps", /\bKProgressDots\s*\(/g],
+          // Menu and history buttons belong in KPageHeader(leading:), which
+          // puts them at the start of the phone top bar.
+          [
+            "content-nav-button",
+            /(?<!\bleading\s*:\s*(?:const\s+)?)\bKIconButton\s*\((?:(?!\bKIconButton\s*\()[\s\S]){0,300}?KIconName\.(?:menu|panelLeft|panelLeftOpen|history)\b/g,
+          ],
           // Pages scroll in KPage (gutter, safe areas, readable width).
           [
             "bare-page",
@@ -60,6 +66,10 @@ export function findings(source, extension) {
             /<KListItem\b[^>]*\btrailing=\{\s*<K(?:IconButton|MenuButton|Switch|Checkbox|Button)\b/gs,
           ],
           ["hand-built-steps", /<KProgressDots\b/g],
+          [
+            "content-nav-button",
+            /(?<!\bleading=\{\s*)<KIconButton\b[^>]*\bicon="(?:menu|panel-left|panel-left-open|history)"/gs,
+          ],
           // A card with a chevron is a hand-built list row: use KListItem.
           [
             "hand-built-row",

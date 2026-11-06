@@ -23,6 +23,7 @@ final _stories = <String, Widget Function()>{
   'app-shell': () => const AppShellFixture(),
   'app-shell-portfolios': () => const AppShellFixture(initial: 'portfolios'),
   'onboarding': () => const OnboardingFixture(),
+  'app-shell-assistant': () => const AppShellFixture(initial: 'home'),
   'list': () => const ListFixture(),
   'page-header': () => const PageHeaderFixture(),
   'segmented-control': () => const SegmentedControlFixture(),

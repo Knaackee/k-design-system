@@ -8,6 +8,15 @@
   width: 100%;
   padding: var(--k-space-layout-gutter);
 }
+/* Inside the shell the page starts below the top bar's controls and ends
+   above the floating action button, as KPage does. */
+.cc-shell .cc-fixture {
+  padding-block: calc(var(--k-space-layout-gutter) + var(--k-safe-top, 0px))
+    calc(var(--k-space-layout-gutter) + var(--k-safe-bottom-extra, 0px));
+}
+.cc-fixture[hidden] {
+  display: none;
+}
 .k-gallery:has(> .cc-shell) {
   height: 100dvh;
   padding: 0;

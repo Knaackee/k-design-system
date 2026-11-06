@@ -56,7 +56,9 @@ app code passes content, events and state.
    stay, text buttons, further actions and a page's own overflow menu share
    one More menu. The first primary button becomes an extended FAB
    (Material) or a bar icon (Apple); `primaryActionPlacement` overrides.
-   Focus rings show only for keyboard focus.
+   Focus rings show only for keyboard focus. Only the header on screen
+   fills the bar (hidden tabs and covered routes leave it), and
+   `KPageHeader(leading:)` holds a menu or history button at its start.
 9. **Icons grow with text.** Text-adjacent icons (16–24) scale with the
    system text size up to `text.scaleMax.icon` (2×), as SF Symbols do;
    tab bar symbols, glyphs inside fields and display icons keep their size.

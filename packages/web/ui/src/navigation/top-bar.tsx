@@ -4,6 +4,7 @@ import {
   createContext,
   isValidElement,
   useContext,
+  useId,
   useLayoutEffect,
   type ReactNode,
 } from "react";
@@ -17,23 +18,50 @@ export interface KTopBarEntry {
   backLabel?: string;
   onBack?: () => void;
   backHistory?: readonly KMenuAction[];
+  /** Navigation button (menu, chat history) when there is no back. */
+  leading?: ReactNode;
   actions?: ReactNode;
 }
 
-export const KTopBarContext = createContext<
-  ((entry: KTopBarEntry | null) => void) | null
->(null);
+/**
+ * The page headers below a shell. Only a header that is on screen fills the
+ * bar, so pages kept alive in hidden tabs never leak their actions
+ * (Decision 0015). Mirrors `KTopBarTitleController` in Flutter.
+ */
+export interface KTopBarRegistry {
+  register(
+    id: string,
+    entry: KTopBarEntry,
+    element: () => HTMLElement | null,
+  ): void;
+  unregister(id: string): void;
+}
+
+export const KTopBarContext = createContext<KTopBarRegistry | null>(null);
 
 /** Registers the header's back control and actions with the top bar. */
-export function useKTopBarEntry(entry: KTopBarEntry): boolean {
-  const register = useContext(KTopBarContext);
-  const { backLabel, onBack, backHistory, actions } = entry;
+export function useKTopBarEntry(
+  entry: KTopBarEntry,
+  element: { current: HTMLElement | null },
+): boolean {
+  const registry = useContext(KTopBarContext);
+  const id = useId();
+  const { backLabel, onBack, backHistory, leading, actions } = entry;
   useLayoutEffect(() => {
-    if (!register) return;
-    register({ backLabel, onBack, backHistory, actions });
-    return () => register(null);
-  }, [register, backLabel, onBack, backHistory, actions]);
-  return register !== null;
+    if (!registry) return;
+    registry.register(
+      id,
+      { backLabel, onBack, backHistory, leading, actions },
+      () => element.current,
+    );
+    return () => registry.unregister(id);
+  }, [registry, id, element, backLabel, onBack, backHistory, leading, actions]);
+  return registry !== null;
+}
+
+/** Whether an element is rendered (not inside `display: none` or hidden). */
+export function kIsShown(element: HTMLElement | null): boolean {
+  return Boolean(element && element.getClientRects().length > 0);
 }
 
 type ActionProps = {

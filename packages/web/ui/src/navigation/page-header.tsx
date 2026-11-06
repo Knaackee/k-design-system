@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import { useRef, type HTMLAttributes, type ReactNode } from "react";
 import { KText } from "../primitives/text.js";
 import { KBackButton } from "./back-button.js";
 import type { KMenuAction } from "../actions/menu-button.js";
@@ -23,6 +23,13 @@ export interface KPageHeaderProps extends Omit<
    * whenever `breadcrumb` is set so phones keep the path (Decision 0015).
    */
   backHistory?: readonly KMenuAction[];
+  /**
+   * A navigation button at the start (menu, chat history) for screens
+   * without a back control: on phones it sits at the start of the top bar,
+   * as in Gmail or ChatGPT; wider, before the title. Never place such a
+   * button in the page content (Decision 0015).
+   */
+  leading?: ReactNode;
 }
 
 /**
@@ -39,18 +46,25 @@ export function KPageHeader({
   actions,
   breadcrumb,
   backHistory,
+  leading,
   className,
   ...props
 }: KPageHeaderProps) {
   // Phones inside the shell: back and actions live in the top bar; the
   // header shows only the large title (Decision 0015).
-  const inBar = useKTopBarEntry({ backLabel, onBack, backHistory, actions });
+  const root = useRef<HTMLElement>(null);
+  const inBar = useKTopBarEntry(
+    { backLabel, onBack, backHistory, leading, actions },
+    root,
+  );
   const shownBack = inBar ? undefined : backLabel;
+  const shownLeading = inBar || backLabel ? undefined : leading;
   const shownActions = inBar ? undefined : actions;
   return (
     <header
+      ref={root}
       className={["k-page-header", className].filter(Boolean).join(" ")}
-      data-back={shownBack ? true : undefined}
+      data-back={shownBack || shownLeading ? true : undefined}
       data-actions={shownActions ? true : undefined}
       {...props}
     >
@@ -63,6 +77,8 @@ export function KPageHeader({
               history={backHistory}
             />
           </div>
+        ) : shownLeading ? (
+          <div className="k-page-header__back">{shownLeading}</div>
         ) : null}
         <div className="k-page-header__copy">
           {breadcrumb ? (

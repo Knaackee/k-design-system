@@ -1,5 +1,7 @@
 import {
+  useCallback,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type HTMLAttributes,
@@ -17,6 +19,8 @@ import {
   kSplitTopBarActions,
   type KPrimaryActionPlacement,
   type KTopBarEntry,
+  type KTopBarRegistry,
+  kIsShown,
 } from "./top-bar.js";
 import { useKLocalization } from "../localization/provider.js";
 import {
@@ -113,6 +117,56 @@ export function KAppShell({
   const [scrolled, setScrolled] = useState(false);
   const [topTitle, setTopTitle] = useState<string | null>(null);
   const [entry, setEntry] = useState<KTopBarEntry | null>(null);
+  // Every header below; the newest one that is on screen fills the bar.
+  const entries = useRef(
+    new Map<
+      string,
+      { entry: KTopBarEntry; element: () => HTMLElement | null; order: number }
+    >(),
+  );
+  const order = useRef(0);
+  const resolveEntry = useCallback(() => {
+    let next: { entry: KTopBarEntry; order: number } | null = null;
+    for (const candidate of entries.current.values())
+      if (
+        kIsShown(candidate.element()) &&
+        (!next || candidate.order > next.order)
+      )
+        next = candidate;
+    setEntry(next?.entry ?? null);
+  }, []);
+  const registry = useMemo<KTopBarRegistry>(
+    () => ({
+      register(id, value, element) {
+        const previous = entries.current.get(id);
+        entries.current.set(id, {
+          entry: value,
+          element,
+          order: previous?.order ?? order.current++,
+        });
+        resolveEntry();
+      },
+      unregister(id) {
+        if (entries.current.delete(id)) resolveEntry();
+      },
+    }),
+    [resolveEntry],
+  );
+  // Tab switches show or hide kept-alive pages without unmounting them.
+  useLayoutEffect(() => {
+    const scroller = content.current;
+    if (!compact || !scroller || typeof MutationObserver === "undefined")
+      return;
+    resolveEntry();
+    const observer = new MutationObserver(resolveEntry);
+    observer.observe(scroller, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["hidden", "style", "class", "inert"],
+      childList: true,
+    });
+    return () => observer.disconnect();
+  }, [compact, resolveEntry]);
   const { messages } = useKLocalization();
   // Phones: a bar covers the status bar once content scrolls under it and
   // takes the page title when the large title has scrolled away (0015).
@@ -178,7 +232,8 @@ export function KAppShell({
     return () => observer.disconnect();
   }, [compact]);
   // The bar row takes space only when it holds controls (Decision 0015).
-  const topControls = Boolean(entry?.backLabel) || split.bar.length > 0;
+  const topControls =
+    Boolean(entry?.backLabel || entry?.leading) || split.bar.length > 0;
   return (
     <div
       ref={ref}
@@ -242,7 +297,9 @@ export function KAppShell({
               onClick={entry.onBack}
               history={entry.backHistory}
             />
-          ) : null}
+          ) : (
+            (entry?.leading ?? null)
+          )}
           <span
             className="k-app-shell__top-title"
             aria-hidden
@@ -272,7 +329,7 @@ export function KAppShell({
         </button>
       ) : null}
       <div ref={content} className="k-app-shell__content">
-        <KTopBarContext.Provider value={compact ? setEntry : null}>
+        <KTopBarContext.Provider value={compact ? registry : null}>
           {children}
         </KTopBarContext.Provider>
       </div>

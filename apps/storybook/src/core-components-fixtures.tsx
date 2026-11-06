@@ -207,13 +207,71 @@ export function PortfolioList() {
   );
 }
 
+function ShellPage({ id, label }: { id: string; label: string }) {
+  if (id === "home")
+    return (
+      <>
+        <KPageHeader
+          title="Assistant"
+          leading={
+            <KIconButton label="Chat history" icon="menu" onClick={() => {}} />
+          }
+        />
+        <KList title="What can I help with?">
+          <KListItem
+            title="Create a portfolio"
+            description="With a name and a goal"
+            leadingIcon="folder"
+            onClick={() => {}}
+          />
+          <KListItem
+            title="Add a building"
+            description="From an exposé or photos"
+            leadingIcon="building"
+            onClick={() => {}}
+          />
+        </KList>
+      </>
+    );
+  return (
+    <>
+      <KPageHeader
+        title={label}
+        actions={
+          id === "portfolios" ? (
+            <>
+              <KButton onClick={() => {}}>
+                <KIcon name="plus" size={16} />
+                Portfolio
+              </KButton>
+              <KMenuButton
+                label="Options"
+                overflow
+                actions={[
+                  { id: "export", label: "Export", onSelect: () => {} },
+                ]}
+              />
+            </>
+          ) : undefined
+        }
+      />
+      {id === "settings" ? (
+        <SettingsList />
+      ) : id === "portfolios" ? (
+        <PortfolioList />
+      ) : (
+        <KText variant="body">{label} has no content in this reference.</KText>
+      )}
+    </>
+  );
+}
+
 export function AppShellFixture({
   initial = "settings",
 }: {
   initial?: string;
 }) {
   const [selected, setSelected] = useState(initial);
-  const current = destinations.find((item) => item.id === selected)!;
   return (
     <div className="cc-shell">
       <KAppShell
@@ -226,37 +284,19 @@ export function AppShellFixture({
           </KText>
         }
       >
-        <KStack gap="section" align="stretch" className="cc-fixture">
-          <KPageHeader
-            title={current.label}
-            actions={
-              selected === "portfolios" ? (
-                <>
-                  <KButton onClick={() => {}}>
-                    <KIcon name="plus" size={16} />
-                    Portfolio
-                  </KButton>
-                  <KMenuButton
-                    label="Options"
-                    overflow
-                    actions={[
-                      { id: "export", label: "Export", onSelect: () => {} },
-                    ]}
-                  />
-                </>
-              ) : undefined
-            }
-          />
-          {selected === "settings" ? (
-            <SettingsList />
-          ) : selected === "portfolios" ? (
-            <PortfolioList />
-          ) : (
-            <KText variant="body">
-              {current.label} has no content in this reference.
-            </KText>
-          )}
-        </KStack>
+        {/* Tabs stay mounted, as in most apps; only the shown page fills the
+            top bar (Decision 0015). */}
+        {destinations.map((destination) => (
+          <KStack
+            key={destination.id}
+            gap="section"
+            align="stretch"
+            className="cc-fixture"
+            hidden={destination.id !== selected}
+          >
+            <ShellPage id={destination.id} label={destination.label} />
+          </KStack>
+        ))}
       </KAppShell>
     </div>
   );

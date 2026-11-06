@@ -27,6 +27,13 @@ version is tagged.
   `hand-built-steps`.
   `check-consumer-ui` reports `icon-stroke`, `appearance-override`,
   `hand-built-row` and `bare-page`.
+- Only the page on screen fills the phone top bar: tabs kept alive in an
+  `IndexedStack` (Flutter) or hidden (Web) no longer leak a FAB, actions or
+  bar height. `KPageHeader(leading:)` for menu and chat-history buttons.
+  Below a bar row with controls the large title drops its extra top
+  padding. Flutter: the bar keeps title, back and actions when a lazy list
+  has scrolled the header out of its cache. `check-consumer-ui`:
+  `content-nav-button`.
 
 - Added the `material` style (Material 3 Expressive) and made the default
   platform-native: Android gets `material` with expressive motion, iPhone and

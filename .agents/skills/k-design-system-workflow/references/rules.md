@@ -145,6 +145,16 @@ assertions. The others are review rules.
   title has scrolled away. Never add a second app bar or a second More menu:
   put every screen action into `KPageHeader(actions:)`; a page's own
   overflow `KMenuButton` merges into the bar's.
+- Menu, drawer and chat-history buttons go into `KPageHeader(leading:)`:
+  on phones they sit at the start of the top bar (Gmail, ChatGPT), wider
+  before the title. Never as an icon button at the top of the content
+  (`check-consumer-ui` › content-nav-button).
+- Only the page on screen fills the top bar. Tabs kept alive in an
+  `IndexedStack` or hidden on the Web are fine; check every tab after a tab
+  switch: no FAB, action or empty bar height may come from another page.
+- Chat and assistant screens: the composer stays fixed at the bottom
+  (`KChatComposer`), suggestions sit above it with a real heading, and the
+  screen has no FAB; its primary action is sending.
 - The first primary `KButton` in the actions is the page's primary action:
   Material shows it as an extended floating action button, Apple as an icon
   in the bar (give it a `KIcon`). `KAppShell(primaryActionPlacement:)`

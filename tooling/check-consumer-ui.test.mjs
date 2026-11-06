@@ -92,3 +92,32 @@ test("reports split rows and hand-built steps (Decision 0015)", () => {
     ["hand-built-steps"],
   );
 });
+
+test("reports navigation buttons placed in page content (Decision 0015)", () => {
+  const rules = (source, ext) => findings(source, ext).map((f) => f.rule);
+  assert.deepEqual(
+    rules(
+      "KIconButton(label: 'Verlauf', icon: KIconName.menu, onPressed: f)",
+      ".dart",
+    ),
+    ["content-nav-button"],
+  );
+  assert.deepEqual(
+    rules(
+      "KPageHeader(title: 'Chat', leading: KIconButton(label: 'Verlauf', icon: KIconName.menu, onPressed: f))",
+      ".dart",
+    ),
+    [],
+  );
+  assert.deepEqual(
+    rules('<KIconButton label="Verlauf" icon="menu" />', ".tsx"),
+    ["content-nav-button"],
+  );
+  assert.deepEqual(
+    rules(
+      '<KPageHeader title="Chat" leading={<KIconButton label="Verlauf" icon="menu" />} />',
+      ".tsx",
+    ),
+    [],
+  );
+});

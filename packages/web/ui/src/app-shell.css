@@ -233,3 +233,8 @@
 .k-onboarding__next {
   justify-self: end;
 }
+/* Below a bar row with controls the row already separates the large
+   title from the status bar, as in iOS and Material top bars. */
+.k-app-shell[data-top-controls] > .k-app-shell__content .k-page-header {
+  padding-block-start: 0;
+}
