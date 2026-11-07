@@ -133,7 +133,7 @@ void main() {
     },
   );
 
-  testWidgets('newest control stays in flow below the scroll body', (
+  testWidgets('newest control overlays the scroll body without resizing it', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(360, 500);
@@ -170,13 +170,15 @@ void main() {
 
     tester.view.physicalSize = const Size(360, 500);
     await tester.pump();
+    final scrollBodyBeforeDrag = tester.getRect(find.byType(ListView));
 
     await tester.drag(find.byType(ListView), const Offset(0, 120));
     await tester.pump();
 
     final scrollBody = tester.getRect(find.byType(ListView));
     final newest = tester.getRect(find.text('Jump to newest message'));
-    expect(newest.top, greaterThanOrEqualTo(scrollBody.bottom));
+    expect(newest.bottom, lessThanOrEqualTo(scrollBody.bottom));
+    expect(scrollBody, scrollBodyBeforeDrag);
   });
   testWidgets('manual drag cancels a queued automatic follow', (tester) async {
     tester.view.physicalSize = const Size(360, 500);

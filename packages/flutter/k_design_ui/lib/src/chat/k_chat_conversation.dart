@@ -289,9 +289,9 @@ class _KChatConversationState extends State<KChatConversation> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final entries = widget.messages.length + (widget.hasOlder ? 1 : 0);
-    return Column(
+    return Stack(
       children: [
-        Expanded(
+        Positioned.fill(
           child: Semantics(
             liveRegion: true,
             child: ScrollConfiguration(
@@ -406,14 +406,19 @@ class _KChatConversationState extends State<KChatConversation> {
           ),
         ),
         if (_showNewest)
-          Padding(
-            padding: EdgeInsets.all(t.spaceControlGap),
-            child: Center(
-              child: KButton(
-                label: widget.labels.newContent,
-                leading: const KIcon(KIconName.arrowDown),
-                variant: KButtonVariant.secondary,
-                onPressed: _jumpToEnd,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Padding(
+              padding: EdgeInsets.all(t.spaceControlGap),
+              child: Center(
+                child: KButton(
+                  label: widget.labels.newContent,
+                  leading: const KIcon(KIconName.arrowDown),
+                  variant: KButtonVariant.secondary,
+                  onPressed: _jumpToEnd,
+                ),
               ),
             ),
           ),
