@@ -39,6 +39,12 @@ export function findings(source, extension) {
             "content-nav-button",
             /(?<!\bleading\s*:\s*(?:const\s+)?)\bKIconButton\s*\((?:(?!\bKIconButton\s*\()[\s\S]){0,300}?KIconName\.(?:menu|panelLeft|panelLeftOpen|history)\b/g,
           ],
+          // Content refreshes on its own and by pulling (KPage(onRefresh:)),
+          // not from a refresh button.
+          [
+            "refresh-button",
+            /\bK(?:Icon)?Button\s*\((?:(?!\bK(?:Icon)?Button\s*\()[\s\S]){0,300}?KIconName\.refresh(?:Cw|Ccw)?\b/g,
+          ],
           // Pages scroll in KPage (gutter, safe areas, readable width).
           [
             "bare-page",
@@ -69,6 +75,10 @@ export function findings(source, extension) {
           [
             "content-nav-button",
             /(?<!\bleading=\{\s*)<KIconButton\b[^>]*\bicon="(?:menu|panel-left|panel-left-open|history)"/gs,
+          ],
+          [
+            "refresh-button",
+            /<K(?:Icon)?Button\b[^>]*\bicon="refresh(?:-cw|-ccw)?"/gs,
           ],
           // A card with a chevron is a hand-built list row: use KListItem.
           [

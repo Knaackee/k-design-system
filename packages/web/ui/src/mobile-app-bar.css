@@ -153,6 +153,8 @@
   position: relative;
   box-sizing: border-box;
   display: grid;
+  /* A long label shortens with "…" inside its cell, never past it. */
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   min-width: var(--k-component-mobile-app-bar-destination-min-width);
   min-height: var(--k-component-mobile-app-bar-destination-min-height);
@@ -248,6 +250,7 @@
 .k-mobile-app-bar__label {
   overflow: hidden;
   max-width: 100%;
+  text-align: center;
   color: currentColor;
   font-family: var(--k-font-family);
   font-size: var(--k-component-mobile-app-bar-label-font-size);

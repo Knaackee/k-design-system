@@ -49,7 +49,12 @@ class KSidebar extends StatelessWidget {
             alignment: Alignment.centerLeft,
             minWidth: width - 1,
             maxWidth: width - 1,
-            child: SizedBox(width: width - 1, child: child),
+            // Tablets: the header stays below the status bar and the
+            // footer above the home indicator.
+            child: SizedBox(
+              width: width - 1,
+              child: SafeArea(left: false, right: false, child: child),
+            ),
           ),
         ),
       ),

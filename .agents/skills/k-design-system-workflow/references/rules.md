@@ -149,6 +149,17 @@ assertions. The others are review rules.
   on phones they sit at the start of the top bar (Gmail, ChatGPT), wider
   before the title. Never as an icon button at the top of the content
   (`check-consumer-ui` › content-nav-button).
+- Content refreshes on its own (open, return to the tab, after changes) and
+  by pulling: `KPage(onRefresh:)`. Never a refresh button in the page
+  actions (`check-consumer-ui` › refresh-button); desktops may offer
+  "Refresh" in the More menu.
+- One brand colour: `tokens.withAccent(color)` (Flutter) or
+  `applyKAccent(root, color)` (Web), never single colour tokens.
+- Further screens for tablets and desktops go into
+  `KAppShell(sidebarSections:)`; the tab bar keeps 2–5 short labels
+  (about 10 characters).
+- Section headings name the area ("Heute"), never its state; the empty
+  state is the row text.
 - Only the page on screen fills the top bar. Tabs kept alive in an
   `IndexedStack` or hidden on the Web are fine; check every tab after a tab
   switch: no FAB, action or empty bar height may come from another page.

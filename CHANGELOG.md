@@ -34,6 +34,13 @@ version is tagged.
   padding. Flutter: the bar keeps title, back and actions when a lazy list
   has scrolled the header out of its cache. `check-consumer-ui`:
   `content-nav-button`.
+- `KPage(onRefresh:)`: pull to refresh (iOS control in the Apple style,
+  Material indicator otherwise, touch gesture on the Web).
+  `withAccent(color)` / `applyKAccent(root, color)` set one brand colour for
+  every accent-derived token. `KAppShell(sidebarSections:)` for tablet and
+  desktop sidebars. The sidebar respects the status bar and home
+  indicator; tab labels shorten inside their cell and badges keep their
+  size. `check-consumer-ui`: `refresh-button`.
 
 - Added the `material` style (Material 3 Expressive) and made the default
   platform-native: Android gets `material` with expressive motion, iPhone and

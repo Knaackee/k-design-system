@@ -88,6 +88,10 @@ Remove what the library now does, then check every surface:
 - **Heights and icons.** Remove `strokeWidth`, `minHeight`/`height` on
   buttons and fields, dense density on phones and style or density
   overrides. A full-width primary button is a plain `KButton(fullWidth:)`.
+- **Refresh, colour, sidebar.** Remove refresh buttons; pass
+  `KPage(onRefresh:)`. Replace single colour overrides with
+  `withAccent(color)` / `applyKAccent(root, color)`. Move screens beyond the
+  tab bar into `KAppShell(sidebarSections:)`.
 - **Navigation buttons and tabs.** Menu and chat-history buttons move into
   `KPageHeader(leading:)`. After the upgrade, open every tab once after a
   tab switch: no FAB, action or empty space may come from another tab.

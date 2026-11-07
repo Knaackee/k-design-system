@@ -7,6 +7,9 @@
   width: var(--k-sidebar-width);
   min-width: 0;
   height: 100%;
+  /* Tablets: below the status bar, above the home indicator. */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   overflow: hidden;
   border-right: var(--k-border-width-default) solid
     var(--k-color-border-default);

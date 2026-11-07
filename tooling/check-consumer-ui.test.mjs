@@ -121,3 +121,19 @@ test("reports navigation buttons placed in page content (Decision 0015)", () => 
     [],
   );
 });
+
+test("refresh-button", () => {
+  const rules = (source, ext) => findings(source, ext).map((f) => f.rule);
+  assert.deepEqual(
+    rules(
+      "KIconButton(label: 'Aktualisieren', icon: KIconName.refreshCw, onPressed: f)",
+      ".dart",
+    ),
+    ["refresh-button"],
+  );
+  assert.deepEqual(
+    rules('<KIconButton label="Aktualisieren" icon="refresh-cw" />', ".tsx"),
+    ["refresh-button"],
+  );
+  assert.deepEqual(rules("KPage(onRefresh: load, children: [])", ".dart"), []);
+});

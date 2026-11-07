@@ -603,7 +603,11 @@ class _Destination extends StatelessWidget {
                                       fontWeight: FontWeight.w700,
                                       height: tokens.fontTightHeight,
                                     ),
-                                    child: item.badge!,
+                                    // Fixed like the label, so a count
+                                    // never outgrows its badge.
+                                    child: MediaQuery.withNoTextScaling(
+                                      child: item.badge!,
+                                    ),
                                   ),
                                 ),
                               ),

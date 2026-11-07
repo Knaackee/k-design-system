@@ -619,6 +619,38 @@
 .k-page[data-width="form"] {
   justify-content: center;
 }
+/* KPage(onRefresh): pull to refresh on touch screens. */
+.k-page__refresh {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+}
+.k-page__refresh-spinner {
+  width: var(--k-size-icon-default);
+  height: var(--k-size-icon-default);
+  border: var(--k-size-icon-stroke) solid var(--k-color-border-default);
+  border-top-color: var(--k-color-action-primary-background);
+  border-radius: 50%;
+}
+.k-page__refresh[data-refreshing] .k-page__refresh-spinner {
+  animation: k-page-refresh 0.8s linear infinite;
+}
+@keyframes k-page-refresh {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-page__refresh[data-refreshing] .k-page__refresh-spinner {
+    animation-duration: 2.4s;
+  }
+}
 .k-page[data-width="form"] > .k-page__body {
   max-width: var(--k-layout-form-width);
+}
+
+/* applyKAccent: a stronger tint keeps icon tiles visible in dark mode. */
+[data-theme="dark"] {
+  --k-accent-tint: 24%;
 }

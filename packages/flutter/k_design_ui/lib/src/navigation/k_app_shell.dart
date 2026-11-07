@@ -27,6 +27,16 @@ class KAppDestination {
   final String? badge;
 }
 
+/// A labelled group of destinations that only the tablet and desktop
+/// sidebar shows, below the tab bar destinations (iPadOS and Material
+/// sidebars hold more than a tab bar). Phones reach these screens from
+/// inside a tab.
+class KAppSidebarSection {
+  const KAppSidebarSection({required this.label, required this.destinations});
+  final String label;
+  final List<KAppDestination> destinations;
+}
+
 /// Adaptive app frame for the top-level destinations (Decision 0012):
 ///
 /// | Width       | Navigation                                  |
@@ -47,6 +57,7 @@ class KAppShell extends StatelessWidget {
     required this.child,
     this.sidebarHeader,
     this.sidebarFooter,
+    this.sidebarSections = const [],
     this.semanticLabel = 'Primary navigation',
     this.primaryActionPlacement = KPrimaryActionPlacement.auto,
     super.key,
@@ -63,6 +74,9 @@ class KAppShell extends StatelessWidget {
 
   /// Shown below the destinations in the expanded sidebar (settings, help).
   final Widget? sidebarFooter;
+
+  /// Tablets and desktops: further destinations in labelled groups.
+  final List<KAppSidebarSection> sidebarSections;
   final String semanticLabel;
 
   /// Phones: where a page's primary action goes. `auto` uses the extended
@@ -163,6 +177,26 @@ class KAppShell extends StatelessWidget {
             windowClass == KWindowClass.medium &&
             (KAdaptive.maybeOf(context)?.style ?? KStyle.linear) ==
                 KStyle.linear;
+        Widget sidebarItem(KAppDestination destination) => Padding(
+          padding: EdgeInsets.only(bottom: t.spaceMicro),
+          child: KSidebarItem(
+            label: destination.label,
+            leading: KIcon(
+              destination.id == selectedId
+                  ? destination.selectedIcon ?? destination.icon
+                  : destination.icon,
+              size: 20,
+            ),
+            badge: destination.badge == null
+                ? null
+                : KBadge(
+                    variant: KBadgeVariant.secondary,
+                    child: Text(destination.badge!),
+                  ),
+            active: destination.id == selectedId,
+            onPressed: () => _select(context, destination.id),
+          ),
+        );
         return Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -177,25 +211,14 @@ class KAppShell extends StatelessWidget {
                   KSidebarBody(
                     children: [
                       for (final destination in destinations)
-                        Padding(
-                          padding: EdgeInsets.only(bottom: t.spaceMicro),
-                          child: KSidebarItem(
-                            label: destination.label,
-                            leading: KIcon(
-                              destination.id == selectedId
-                                  ? destination.selectedIcon ?? destination.icon
-                                  : destination.icon,
-                              size: 20,
-                            ),
-                            badge: destination.badge == null
-                                ? null
-                                : KBadge(
-                                    variant: KBadgeVariant.secondary,
-                                    child: Text(destination.badge!),
-                                  ),
-                            active: destination.id == selectedId,
-                            onPressed: () => _select(context, destination.id),
-                          ),
+                        sidebarItem(destination),
+                      for (final section in sidebarSections)
+                        KSidebarGroup(
+                          label: rail ? null : section.label,
+                          children: [
+                            for (final destination in section.destinations)
+                              sidebarItem(destination),
+                          ],
                         ),
                     ],
                   ),

@@ -231,3 +231,46 @@ export function kMotion(
     distance: Number.parseFloat(read("distance") || "1"),
   };
 }
+
+/**
+ * One brand colour for the whole app: sets the action colours (buttons,
+ * switches, selection, badges, charts) and derives the tinted brand colours
+ * (icon tiles, FAB) for light and dark, so no default accent stays behind.
+ * Returns a function that removes them again.
+ */
+export function applyKAccent(
+  element: HTMLElement = document.documentElement,
+  accent: string,
+): () => void {
+  const probe = document.createElement("span");
+  probe.style.color = accent;
+  element.appendChild(probe);
+  const [r = 0, g = 0, b = 0] = (
+    getComputedStyle(probe).color.match(/[\d.]+/g) ?? []
+  ).map(Number);
+  probe.remove();
+  const channel = (value: number) => {
+    const c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  const luminance =
+    0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  const surface = "var(--k-color-surface-raised)";
+  const tint = `color-mix(in srgb, ${accent} var(--k-accent-tint, 12%), ${surface})`;
+  const onTint = `color-mix(in srgb, ${accent} 70%, var(--k-color-text-primary))`;
+  const values: Record<string, string> = {
+    "--k-color-action-primary-background": accent,
+    "--k-color-action-primary-foreground": luminance > 0.4 ? "#000" : "#fff",
+    "--k-color-action-primary-hover": `color-mix(in srgb, ${accent} 90%, var(--k-color-text-primary))`,
+    "--k-color-action-primary-pressed": `color-mix(in srgb, ${accent} 80%, var(--k-color-text-primary))`,
+    "--k-color-brand-primary-accent": onTint,
+    "--k-color-brand-primary-background": tint,
+    "--k-color-brand-primary-foreground": onTint,
+    "--k-color-brand-primary-border": `color-mix(in srgb, ${accent} 35%, ${surface})`,
+  };
+  for (const [name, value] of Object.entries(values))
+    element.style.setProperty(name, value);
+  return () => {
+    for (const name of Object.keys(values)) element.style.removeProperty(name);
+  };
+}

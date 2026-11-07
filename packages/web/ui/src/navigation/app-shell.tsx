@@ -27,6 +27,7 @@ import {
   KSidebar,
   KSidebarBody,
   KSidebarFooter,
+  KSidebarGroup,
   KSidebarHeader,
   KSidebarItem,
 } from "./sidebar.js";
@@ -38,6 +39,15 @@ export interface KAppDestination {
   selectedIcon?: KIconName;
   /** Short count or marker ("2", "99+"): tab bar badge, sidebar KBadge. */
   badge?: string;
+}
+
+/**
+ * A labelled group that only the tablet and desktop sidebar shows, below
+ * the tab bar destinations. Phones reach these screens from inside a tab.
+ */
+export interface KAppSidebarSection {
+  label: string;
+  destinations: readonly KAppDestination[];
 }
 
 export interface KAppShellProps extends Omit<
@@ -52,6 +62,8 @@ export interface KAppShellProps extends Omit<
   sidebarHeader?: ReactNode;
   /** Below the destinations in the expanded sidebar (settings, help). */
   sidebarFooter?: ReactNode;
+  /** Tablets and desktops: further destinations in labelled groups. */
+  sidebarSections?: readonly KAppSidebarSection[];
   label?: string;
   /**
    * Phones: where a page's primary action goes. `auto` uses the extended
@@ -73,6 +85,7 @@ export function KAppShell({
   children,
   sidebarHeader,
   sidebarFooter,
+  sidebarSections = [],
   label = "Primary navigation",
   primaryActionPlacement = "auto",
   className,
@@ -234,6 +247,33 @@ export function KAppShell({
   // The bar row takes space only when it holds controls (Decision 0015).
   const topControls =
     Boolean(entry?.backLabel || entry?.leading) || split.bar.length > 0;
+  const sidebarItem = (destination: KAppDestination) => {
+    const active = destination.id === selectedId;
+    return (
+      <KSidebarItem
+        key={destination.id}
+        label={destination.label}
+        textLabel={destination.label}
+        leading={
+          <KIcon
+            name={
+              active
+                ? (destination.selectedIcon ?? destination.icon)
+                : destination.icon
+            }
+            size={20}
+          />
+        }
+        badge={
+          destination.badge ? (
+            <KBadge variant="secondary">{destination.badge}</KBadge>
+          ) : undefined
+        }
+        active={active}
+        onSelect={() => select(destination.id)}
+      />
+    );
+  };
   return (
     <div
       ref={ref}
@@ -250,33 +290,15 @@ export function KAppShell({
             <KSidebarHeader>{sidebarHeader}</KSidebarHeader>
           ) : null}
           <KSidebarBody>
-            {destinations.map((destination) => {
-              const active = destination.id === selectedId;
-              return (
-                <KSidebarItem
-                  key={destination.id}
-                  label={destination.label}
-                  textLabel={destination.label}
-                  leading={
-                    <KIcon
-                      name={
-                        active
-                          ? (destination.selectedIcon ?? destination.icon)
-                          : destination.icon
-                      }
-                      size={20}
-                    />
-                  }
-                  badge={
-                    destination.badge ? (
-                      <KBadge variant="secondary">{destination.badge}</KBadge>
-                    ) : undefined
-                  }
-                  active={active}
-                  onSelect={() => select(destination.id)}
-                />
-              );
-            })}
+            {destinations.map(sidebarItem)}
+            {sidebarSections.map((section) => (
+              <KSidebarGroup
+                key={section.label}
+                label={rail ? undefined : section.label}
+              >
+                {section.destinations.map(sidebarItem)}
+              </KSidebarGroup>
+            ))}
           </KSidebarBody>
           {sidebarFooter && !rail ? (
             <KSidebarFooter>{sidebarFooter}</KSidebarFooter>

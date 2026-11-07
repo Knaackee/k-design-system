@@ -133,11 +133,8 @@ ThemeData buildAppTheme(Brightness brightness) {
   return kDesignTheme(
     brightness: brightness,
     configuration: KDesignConfiguration.mobileApp,
-    tokenTransform: (tokens) => tokens.copyWith(
-      colorActionPrimaryBackground: const Color(0xff2563eb),
-      colorActionPrimaryForeground: const Color(0xffffffff),
-      radiusControl: 0,
-    ),
+    // One brand colour for buttons, switches, tiles and the FAB.
+    tokenTransform: (tokens) => tokens.withAccent(const Color(0xff2563eb)),
   );
 }
 ```

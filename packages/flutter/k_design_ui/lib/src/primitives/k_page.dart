@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
@@ -25,12 +26,17 @@ class KPage extends StatelessWidget {
     required this.children,
     this.width = KPageWidth.content,
     this.controller,
+    this.onRefresh,
     super.key,
   });
 
   final List<Widget> children;
   final KPageWidth width;
   final ScrollController? controller;
+
+  /// Pull to refresh, as on iOS (Apple style) and Android (other styles).
+  /// Never add a refresh button to the page actions.
+  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -44,31 +50,61 @@ class KPage extends StatelessWidget {
       gutter + padding.right,
       gutter + padding.bottom,
     );
-    return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-        controller: controller,
-        padding: insets,
+    Widget body(BoxConstraints constraints) => ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: form && constraints.hasBoundedHeight
+            ? math.max(0, constraints.maxHeight - insets.vertical)
+            : 0,
+      ),
+      child: Align(
+        alignment: form ? Alignment.center : Alignment.topCenter,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: form && constraints.hasBoundedHeight
-                ? math.max(0, constraints.maxHeight - insets.vertical)
-                : 0,
+            maxWidth: form ? t.layoutFormWidth : t.layoutPageWidth,
           ),
-          child: Align(
-            alignment: form ? Alignment.center : Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: form ? t.layoutFormWidth : t.layoutPageWidth,
-              ),
-              child: KStack(
-                gap: KLayoutGap.section,
-                align: KLayoutAlign.stretch,
-                children: children,
-              ),
-            ),
+          child: KStack(
+            gap: KLayoutGap.section,
+            align: KLayoutAlign.stretch,
+            children: children,
           ),
         ),
       ),
+    );
+    final refresh = onRefresh;
+    if (refresh != null && KAdaptive.maybeOf(context)?.style == KStyle.apple) {
+      // iOS: the spinner opens above the content as the page is pulled.
+      return LayoutBuilder(
+        builder: (context, constraints) => CustomScrollView(
+          controller: controller,
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          slivers: [
+            // The control must be the first sliver to receive the overscroll.
+            CupertinoSliverRefreshControl(onRefresh: refresh),
+            SliverPadding(
+              padding: insets,
+              sliver: SliverToBoxAdapter(child: body(constraints)),
+            ),
+          ],
+        ),
+      );
+    }
+    final scroll = LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        controller: controller,
+        physics: refresh == null ? null : const AlwaysScrollableScrollPhysics(),
+        padding: insets,
+        child: body(constraints),
+      ),
+    );
+    if (refresh == null) return scroll;
+    return RefreshIndicator(
+      onRefresh: refresh,
+      edgeOffset: padding.top,
+      color: t.colorActionPrimaryBackground,
+      backgroundColor: t.colorSurfaceRaised,
+      child: scroll,
     );
   }
 }
