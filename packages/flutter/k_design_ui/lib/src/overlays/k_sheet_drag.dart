@@ -36,12 +36,16 @@ class _KSheetDragState extends State<KSheetDrag>
   static const _flingVelocity = 700.0;
   static const _dismissFraction = .25;
 
-  late final AnimationController _offset = AnimationController.unbounded(
-    vsync: this,
-  );
+  late final AnimationController _offset;
   bool _closing = false;
 
   double get offset => _offset.value;
+
+  @override
+  void initState() {
+    super.initState();
+    _offset = AnimationController.unbounded(vsync: this);
+  }
 
   @override
   void dispose() {
