@@ -23,3 +23,9 @@ export const ReviewAssistant: StoryObj = {
   parameters: { fixtureId: "app-shell-assistant" },
   render: () => <AppShellFixture initial="home" />,
 };
+
+export const ReviewCustomSidebar: StoryObj = {
+  name: "app-shell-custom-sidebar",
+  parameters: { fixtureId: "app-shell-custom-sidebar" },
+  render: () => <AppShellFixture initial="home" customSidebar />,
+};

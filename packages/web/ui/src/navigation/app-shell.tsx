@@ -60,6 +60,8 @@ export interface KAppShellProps extends Omit<
   children: ReactNode;
   /** Above the destinations in the expanded sidebar (app name, account). */
   sidebarHeader?: ReactNode;
+  /** Web expanded sidebar: replace body navigation; rail and phone keep destinations. */
+  sidebarContent?: ReactNode;
   /** Below the destinations in the expanded sidebar (settings, help). */
   sidebarFooter?: ReactNode;
   /** Tablets and desktops: further destinations in labelled groups. */
@@ -84,6 +86,7 @@ export function KAppShell({
   onSelectedChange,
   children,
   sidebarHeader,
+  sidebarContent,
   sidebarFooter,
   sidebarSections = [],
   label = "Primary navigation",
@@ -290,15 +293,21 @@ export function KAppShell({
             <KSidebarHeader>{sidebarHeader}</KSidebarHeader>
           ) : null}
           <KSidebarBody>
-            {destinations.map(sidebarItem)}
-            {sidebarSections.map((section) => (
-              <KSidebarGroup
-                key={section.label}
-                label={rail ? undefined : section.label}
-              >
-                {section.destinations.map(sidebarItem)}
-              </KSidebarGroup>
-            ))}
+            {!rail && sidebarContent != null ? (
+              sidebarContent
+            ) : (
+              <>
+                {destinations.map(sidebarItem)}
+                {sidebarSections.map((section) => (
+                  <KSidebarGroup
+                    key={section.label}
+                    label={rail ? undefined : section.label}
+                  >
+                    {section.destinations.map(sidebarItem)}
+                  </KSidebarGroup>
+                ))}
+              </>
+            )}
           </KSidebarBody>
           {sidebarFooter && !rail ? (
             <KSidebarFooter>{sidebarFooter}</KSidebarFooter>

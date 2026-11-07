@@ -12,6 +12,7 @@ import {
   KPage,
   KPageHeader,
   KSegmentedControl,
+  KSidebarItem,
   KStack,
   KText,
 } from "@k-design-system/ui";
@@ -268,8 +269,10 @@ function ShellPage({ id, label }: { id: string; label: string }) {
 
 export function AppShellFixture({
   initial = "settings",
+  customSidebar = false,
 }: {
   initial?: string;
+  customSidebar?: boolean;
 }) {
   const [selected, setSelected] = useState(initial);
   return (
@@ -278,6 +281,37 @@ export function AppShellFixture({
         destinations={destinations}
         selectedId={selected}
         onSelectedChange={setSelected}
+        sidebarContent={
+          customSidebar ? (
+            <>
+              <KSidebarItem
+                label="Home"
+                active={selected === "home"}
+                onSelect={() => setSelected("home")}
+              />
+              <KSidebarItem
+                label="Assistant"
+                onSelect={() => setSelected("home")}
+              />
+            </>
+          ) : undefined
+        }
+        sidebarFooter={
+          customSidebar ? (
+            <>
+              {destinations
+                .filter((item) => item.id !== "home")
+                .map((item) => (
+                  <KSidebarItem
+                    key={item.id}
+                    label={item.label}
+                    active={selected === item.id}
+                    onSelect={() => setSelected(item.id)}
+                  />
+                ))}
+            </>
+          ) : undefined
+        }
         sidebarHeader={
           <KText as="span" variant="label">
             Assetry

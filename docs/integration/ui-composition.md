@@ -40,6 +40,13 @@ Reuse the composition, not demo text, fixed dimensions or private CSS selectors.
 Texts, items, validation, routes and backend actions belong to the host. A demo
 callback must not imply persistence, notifications or authentication that it lacks.
 
+Web `KAppShell.sidebarContent` replaces the expanded sidebar body when a host
+needs contextual rows beside its primary navigation. Compose it with public
+`KSidebarItem` controls and put persistent secondary actions in `sidebarFooter`.
+The rail and phone retain the supplied `destinations`; the host keeps selected
+state and routing consistent. This Web composition slot does not change Flutter
+navigation behavior. Reference: `navigation-appshell--review-custom-sidebar`.
+
 ### Observable acceptance checklist
 
 - Navigation: every destination, active item and return action agree. Top-level

@@ -110,3 +110,42 @@ test("app shell renders a tab bar without a window (server)", () => {
   assert.doesNotMatch(html, /k-sidebar/);
   assert.match(html, /<main>Content<\/main>/);
 });
+
+test("app shell custom expanded body preserves rail and phone destinations", () => {
+  const previous = globalThis.window;
+  const render = (width) => {
+    globalThis.window = { innerWidth: width };
+    return renderToStaticMarkup(
+      h(
+        KAppShell,
+        {
+          selectedId: "home",
+          onSelectedChange: () => {},
+          destinations: [
+            { id: "home", label: "Home", icon: "house" },
+            { id: "jobs", label: "Jobs", icon: "repeat" },
+          ],
+          sidebarContent: h("div", null, "Home and agents"),
+          sidebarFooter: h("div", null, "Footer actions"),
+        },
+        h("main", null, "Content"),
+      ),
+    );
+  };
+  try {
+    const desktop = render(1000);
+    assert.match(desktop, /Home and agents/);
+    assert.match(desktop, /Footer actions/);
+    assert.doesNotMatch(desktop, />Jobs</);
+    const rail = render(700);
+    assert.doesNotMatch(rail, /Home and agents|Footer actions/);
+    assert.match(rail, /Jobs/);
+    const phone = render(393);
+    assert.doesNotMatch(phone, /Home and agents|Footer actions/);
+    assert.match(phone, /k-mobile-app-bar/);
+    assert.match(phone, /Jobs/);
+  } finally {
+    if (previous === undefined) delete globalThis.window;
+    else globalThis.window = previous;
+  }
+});
