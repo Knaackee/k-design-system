@@ -631,20 +631,11 @@
   height: var(--k-size-icon-default);
   border: var(--k-size-icon-stroke) solid var(--k-color-border-default);
   border-top-color: var(--k-color-action-primary-background);
-  border-radius: 50%;
+  border-radius: var(--k-radius-full);
 }
 .k-page__refresh[data-refreshing] .k-page__refresh-spinner {
-  animation: k-page-refresh 0.8s linear infinite;
-}
-@keyframes k-page-refresh {
-  to {
-    transform: rotate(360deg);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .k-page__refresh[data-refreshing] .k-page__refresh-spinner {
-    animation-duration: 2.4s;
-  }
+  animation: k-attachment-spin var(--k-component-spinner-animation-duration)
+    linear infinite;
 }
 .k-page[data-width="form"] > .k-page__body {
   max-width: var(--k-layout-form-width);
