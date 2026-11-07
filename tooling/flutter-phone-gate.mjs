@@ -15,9 +15,11 @@
 import { spawnSync } from "node:child_process";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import { availableParallelism, totalmem } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { flutterTestCommand } from "./flutter-test-command.mjs";
 
-const root = resolve(new URL("..", import.meta.url).pathname);
+const root = fileURLToPath(new URL("../", import.meta.url));
 const app = join(root, "apps/widgetbook");
 const args = process.argv.slice(2);
 const filter = args.includes("--filter")
@@ -40,19 +42,21 @@ const jobs = Number(
 for (let index = 0; index < shards; index++)
   await rm(join(app, `build/phone_gate_report.${index}.txt`), { force: true });
 const started = Date.now();
-const run = spawnSync(
-  "flutter",
-  [
-    "test",
-    `--concurrency=${jobs}`,
-    ...(filter ? [`--dart-define=PHONE_GATE_FILTER=${filter}`] : []),
-    ...Array.from(
-      { length: shards },
-      (_, index) => `test/gates/phone_gate_${index}.dart`,
-    ),
-  ],
-  { cwd: app, stdio: ["ignore", "ignore", "inherit"] },
-);
+const invocation = flutterTestCommand([
+  "test",
+  `--concurrency=${jobs}`,
+  ...(filter ? [`--dart-define=PHONE_GATE_FILTER=${filter}`] : []),
+  ...Array.from(
+    { length: shards },
+    (_, index) => `test/gates/phone_gate_${index}.dart`,
+  ),
+]);
+const run = spawnSync(invocation.command, invocation.args, {
+  cwd: app,
+  stdio: ["ignore", "ignore", "inherit"],
+  windowsHide: true,
+});
+if (run.error) throw run.error;
 
 const lines = { OVERFLOW: [], skipped: [], NOTE: [] };
 let useCases = 0;
