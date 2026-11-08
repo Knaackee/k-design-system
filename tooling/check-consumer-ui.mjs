@@ -39,6 +39,12 @@ export function findings(source, extension) {
             "content-nav-button",
             /(?<!\bleading\s*:\s*(?:const\s+)?)\bKIconButton\s*\((?:(?!\bKIconButton\s*\()[\s\S]){0,300}?KIconName\.(?:menu|panelLeft|panelLeftOpen|history)\b/g,
           ],
+          // The shell's top bar covers the status bar itself; a SafeArea
+          // around it leaves a second band above the bar.
+          [
+            "safe-area-shell",
+            /\bSafeArea\s*\((?:(?!\bSafeArea\s*\()[\s\S]){0,200}?\bKAppShell\s*\(/g,
+          ],
           // Content refreshes on its own and by pulling (KPage(onRefresh:)),
           // not from a refresh button.
           [

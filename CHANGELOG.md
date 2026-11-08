@@ -41,6 +41,9 @@ version is tagged.
   desktop sidebars. The sidebar respects the status bar and home
   indicator; tab labels shorten inside their cell and badges keep their
   size. `check-consumer-ui`: `refresh-button`.
+- The phone top bar follows the tab on screen: switching from a scrolled
+  tab to a short one no longer leaves the bar filled. Web tabs keep their
+  own scroll position. `check-consumer-ui`: `safe-area-shell`.
 
 - Added the `material` style (Material 3 Expressive) and made the default
   platform-native: Android gets `material` with expressive motion, iPhone and

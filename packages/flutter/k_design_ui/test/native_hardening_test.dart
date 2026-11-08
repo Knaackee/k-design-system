@@ -477,4 +477,78 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Portfolio'), findsNothing);
   });
+
+  testWidgets('the bar follows the shown tab, not the scrolled one', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final controller = ScrollController();
+    addTearDown(controller.dispose);
+    Widget app(int index) => MaterialApp(
+      home: KAdaptiveTheme(
+        fontFamily: 'packages/k_design_tokens/Inter',
+        overrides: const KAdaptiveOverrides(style: KStyle.material),
+        child: Scaffold(
+          body: KAppShell(
+            destinations: const [
+              KAppDestination(id: 'a', label: 'Agents', icon: KIconName.house),
+              KAppDestination(id: 'b', label: 'Jobs', icon: KIconName.folder),
+            ],
+            selectedId: index == 0 ? 'a' : 'b',
+            onSelected: (_) {},
+            child: IndexedStack(
+              index: index,
+              children: [
+                KPage(
+                  controller: controller,
+                  children: [
+                    KPageHeader(
+                      title: 'Agents',
+                      leading: KIconButton(
+                        label: 'Account',
+                        icon: KIconName.user,
+                        onPressed: () {},
+                      ),
+                    ),
+                    for (var i = 0; i < 40; i++)
+                      SizedBox(height: 60, child: Text('Agent $i')),
+                  ],
+                ),
+                const KPage(children: [KPageHeader(title: 'Jobs')]),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    final bar = find.byType(KScrollTopBar);
+    double background() => tester
+        .widget<AnimatedOpacity>(
+          find
+              .descendant(of: bar, matching: find.byType(AnimatedOpacity))
+              .first,
+        )
+        .opacity;
+    await tester.pumpWidget(app(0));
+    await tester.pumpAndSettle();
+    expect(background(), 0);
+    controller.jumpTo(1200);
+    await tester.pumpAndSettle();
+    expect(background(), 1);
+    // The account button stays in the bar while scrolled.
+    expect(
+      find.descendant(of: bar, matching: find.byTooltip('Account')),
+      findsOneWidget,
+    );
+    // Jobs is not scrolled: the bar is clear again.
+    await tester.pumpWidget(app(1));
+    await tester.pumpAndSettle();
+    expect(background(), 0);
+    // Back to Agents, still scrolled.
+    await tester.pumpWidget(app(0));
+    await tester.pumpAndSettle();
+    expect(background(), 1);
+  });
 }
