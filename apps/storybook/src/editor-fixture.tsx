@@ -18,6 +18,13 @@ Select text to open the **contextual format bar**. Preview renders the same coll
 - [ ] Review keyboard and touch behavior
 - [ ] Connect the consumer's CRDT transport
 
+| Surface | State |
+| --- | --- |
+| Preview | **Read only** |
+| Source | Editable |
+
+![Preview image](/image-cropper/jordan.png)
+
 > Persistence, rooms and permissions stay with the consuming application.
 
 \`KMarkdownEditor\` emits controlled document and selection events.

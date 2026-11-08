@@ -61,7 +61,8 @@ class KIntegrationMarketplaceLabels {
     this.unavailableLabel = 'Nicht verfügbar',
   });
 
-  final String title;
+  /// Set to null when the containing page already provides this heading.
+  final String? title;
   final String description;
   final String searchPlaceholder;
   final String connectedTitle;
@@ -185,11 +186,10 @@ class _KIntegrationMarketplaceState extends State<KIntegrationMarketplace> {
                   final copy = Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      KText(
-                        widget.labels.title,
-                        variant: KTextVariant.heading2,
-                      ),
-                      SizedBox(height: t.spaceTight),
+                      if (widget.labels.title case final title?) ...[
+                        KText(title, variant: KTextVariant.heading2),
+                        SizedBox(height: t.spaceTight),
+                      ],
                       KText(
                         widget.labels.description,
                         variant: KTextVariant.bodySmall,

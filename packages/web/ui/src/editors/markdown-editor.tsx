@@ -1,9 +1,5 @@
-import Link from "@tiptap/extension-link";
-import TaskItem from "@tiptap/extension-task-item";
-import TaskList from "@tiptap/extension-task-list";
-import { Markdown } from "@tiptap/markdown";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { EditorContent } from "@tiptap/react";
+import { KMarkdownPreview } from "./markdown-preview.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, Ref } from "react";
 import type { Editor } from "@tiptap/react";
@@ -18,7 +14,10 @@ import {
   insertKEditorDictation,
 } from "./dictation.js";
 import { KIconButton } from "../actions/icon-button.js";
-import type { KEditorCollaborationDocument } from "./collaboration.js";
+import {
+  resolveKEditorCollaborationDocument,
+  type KEditorCollaborationDocument,
+} from "./collaboration.js";
 import {
   KEditorFormatBar,
   kDefaultMarkdownFormatActions,
@@ -37,6 +36,12 @@ import {
 
 export interface KMarkdownEditorProps {
   markdown: string;
+  /** Resolve private or relative image sources in the host, without rewriting the document. */
+  renderImage?: (image: {
+    src: string;
+    alt?: string;
+    title?: string;
+  }) => ReactNode;
   onChange?: (markdown: string, transaction: KEditorTransaction) => void;
   mode?: KEditorMode;
   defaultMode?: KEditorMode;
@@ -158,6 +163,7 @@ function markdownChange(
 
 export function KMarkdownEditor({
   markdown,
+  renderImage,
   onChange,
   mode: controlledMode,
   defaultMode = "source",
@@ -186,6 +192,8 @@ export function KMarkdownEditor({
 }: KMarkdownEditorProps) {
   const [internalMode, setInternalMode] = useState(defaultMode);
   const mode = controlledMode ?? internalMode;
+  const sourceVisited = useRef(mode === "source");
+  if (mode === "source") sourceVisited.current = true;
   const [sourceDraft, setSourceDraft] = useState(markdown);
   const [selection, setSelection] = useState<KEditorSelection>({
     anchor: 0,
@@ -217,37 +225,27 @@ export function KMarkdownEditor({
     [labelKey],
   );
 
-  const preview = useEditor({
-    extensions: [
-      StarterKit.configure({ link: false }),
-      Link.configure({ openOnClick: true, autolink: true }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Markdown.configure({ markedOptions: { gfm: true } }),
-    ],
-    content: markdown,
-    contentType: "markdown",
-    editable: false,
-    editorProps: {
-      attributes: {
-        class: "k-markdown-editor-content",
-        "aria-label": `${ariaLabel} preview`,
-      },
-    },
-  });
-
   useEffect(() => {
+    if (collaborationDocument) return;
     if (markdown === lastEmitted.current) return;
     setSourceDraft(markdown);
-  }, [markdown]);
+  }, [markdown, collaborationDocument]);
 
   useEffect(() => {
-    if (!preview) return;
-    preview.commands.setContent(sourceDraft, {
-      contentType: "markdown",
-      emitUpdate: false,
-    });
-  }, [preview, sourceDraft]);
+    if (!collaborationDocument) return;
+    const text = resolveKEditorCollaborationDocument(
+      collaborationDocument,
+      "text",
+    ).getText("content");
+    const update = () => {
+      const value = text.toString();
+      lastEmitted.current = value;
+      setSourceDraft(value);
+    };
+    text.observe(update);
+    update();
+    return () => text.unobserve(update);
+  }, [collaborationDocument]);
 
   function changeMode(next: KEditorMode) {
     if (controlledMode === undefined) setInternalMode(next);
@@ -351,8 +349,13 @@ export function KMarkdownEditor({
             </div>
           )}
 
-          {mode === "source" ? (
-            <div ref={sourceShellRef} className="k-markdown-editor-source">
+          {sourceVisited.current && (
+            <div
+              ref={sourceShellRef}
+              className="k-markdown-editor-source"
+              style={mode === "source" ? undefined : { display: "none" }}
+              inert={mode !== "source"}
+            >
               {showFloatingToolbar &&
                 !readOnly &&
                 selection.anchor !== selection.head &&
@@ -402,11 +405,19 @@ export function KMarkdownEditor({
                   </span>
                 )}
             </div>
-          ) : (
-            <div className="k-markdown-editor-surface" data-readonly="true">
-              <EditorContent editor={preview} />
-            </div>
           )}
+          <div
+            className="k-markdown-editor-surface"
+            data-readonly="true"
+            style={mode === "read" ? undefined : { display: "none" }}
+            inert={mode !== "read"}
+          >
+            <KMarkdownPreview
+              markdown={sourceDraft}
+              ariaLabel={`${ariaLabel} preview`}
+              renderImage={renderImage}
+            />
+          </div>
           {(showFixedToolbar || dictation) &&
             mode === "source" &&
             !readOnly && (

@@ -232,6 +232,8 @@
 
 .k-markdown-editor-content {
   box-sizing: border-box;
+  max-width: var(--k-editor-content-max-width, none);
+  margin-inline: auto;
   min-height: calc(var(--k-size-control) * 9);
   padding: var(--k-space-layout-gutter);
   outline: none;
@@ -246,6 +248,25 @@
 }
 .k-markdown-editor-content > :last-child {
   margin-bottom: 0;
+}
+
+.k-markdown-editor-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.k-markdown-editor-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.k-markdown-editor-content th,
+.k-markdown-editor-content td {
+  padding: var(--k-space-control-gap) var(--k-space-small-inset);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  text-align: start;
 }
 
 .k-markdown-editor-content h1,

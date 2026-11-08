@@ -36,6 +36,8 @@ class KMarkdownEditor extends StatefulWidget {
     this.collaborationAdapter,
     this.semanticLabel = 'Markdown editor',
     this.onLinkRequested,
+    this.imageBuilder,
+    this.onLinkPressed,
     this.minHeight = 280,
     this.formatBarMinimumItemExtent,
     this.dictationState,
@@ -67,6 +69,10 @@ class KMarkdownEditor extends StatefulWidget {
   final KEditorCollaborationAdapter? collaborationAdapter;
   final String semanticLabel;
   final KEditorLinkRequest? onLinkRequested;
+
+  /// Host-owned resolution of relative or protected Markdown images.
+  final Widget Function(Uri uri, String? alt, String? title)? imageBuilder;
+  final ValueChanged<String>? onLinkPressed;
   final double minHeight;
 
   /// Optional minimum size for every formatting action. When omitted, the
@@ -224,8 +230,13 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
               child: Column(
                 children: [
                   Expanded(
-                    child: editing
-                        ? KMarkdownSourceGeometry(
+                    child: IndexedStack(
+                      index: editing ? 0 : 1,
+                      sizing: StackFit.expand,
+                      children: [
+                        ExcludeFocus(
+                          excluding: !editing,
+                          child: KMarkdownSourceGeometry(
                             scrollController: _scrollController,
                             paragraphs: _paragraphs,
                             child: Stack(
@@ -279,14 +290,20 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
                                   ),
                               ],
                             ),
-                          )
-                        : _MarkdownPreview(
-                            markdown: _effectiveDraft,
-                            semanticLabel: '${widget.semanticLabel} preview',
-                            topInset: widget.showModeSwitcher
-                                ? t.sizeHitTarget + t.spaceSmallInset
-                                : t.spaceMediumInset,
                           ),
+                        ),
+                        _MarkdownPreview(
+                          markdown: _effectiveDraft,
+                          semanticLabel: '${widget.semanticLabel} preview',
+                          contentMaxWidth: widget.contentMaxWidth,
+                          imageBuilder: widget.imageBuilder,
+                          onLinkPressed: widget.onLinkPressed,
+                          topInset: widget.showModeSwitcher
+                              ? t.sizeHitTarget + t.spaceSmallInset
+                              : t.spaceMediumInset,
+                        ),
+                      ],
+                    ),
                   ),
                   if ((widget.showFixedToolbar ||
                           widget.dictationState != null) &&
@@ -374,11 +391,17 @@ class _MarkdownPreview extends StatelessWidget {
     required this.markdown,
     required this.semanticLabel,
     required this.topInset,
+    this.contentMaxWidth,
+    this.imageBuilder,
+    this.onLinkPressed,
   });
 
   final String markdown;
   final String semanticLabel;
   final double topInset;
+  final double? contentMaxWidth;
+  final Widget Function(Uri uri, String? alt, String? title)? imageBuilder;
+  final ValueChanged<String>? onLinkPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -392,49 +415,75 @@ class _MarkdownPreview extends StatelessWidget {
           border: Border.all(color: t.colorBorderDefault),
           borderRadius: BorderRadius.circular(t.radiusCard),
         ),
-        child: Markdown(
-          data: markdown,
-          selectable: true,
-          padding: EdgeInsets.fromLTRB(
-            t.spaceMediumInset,
-            topInset,
-            t.spaceMediumInset,
-            t.spaceMediumInset,
-          ),
-          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-            p: TextStyle(
-              color: t.colorTextPrimary,
-              fontFamily: t.fontFamily,
-              fontSize: t.fontBodySize,
-              height: t.fontBodyLineHeight / t.fontBodySize,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: contentMaxWidth ?? double.infinity,
             ),
-            h1: TextStyle(
-              color: t.colorSyntaxHeading,
-              fontFamily: t.fontFamily,
-              fontSize: t.fontHeading2Size,
-              fontWeight: t.fontHeadingWeight,
-            ),
-            h2: TextStyle(
-              color: t.colorSyntaxHeading,
-              fontFamily: t.fontFamily,
-              fontSize: t.fontHeading3Size,
-              fontWeight: t.fontHeadingWeight,
-            ),
-            code: TextStyle(
-              color: t.colorSyntaxCode,
-              backgroundColor: t.colorSurfaceSubtle,
-              fontFamily: 'monospace',
-            ),
-            blockquoteDecoration: BoxDecoration(
-              color: t.colorSurfaceSubtle,
-              border: Border(
-                left: BorderSide(
-                  color: t.colorSyntaxMarkup,
-                  width: t.borderWidthStrong,
+            child: SizedBox.expand(
+              child: Markdown(
+                data: markdown,
+                imageBuilder: imageBuilder == null
+                    ? null
+                    : (uri, title, alt) => imageBuilder!(uri, alt, title),
+                onTapLink: (text, href, title) {
+                  if (href == null) return;
+                  final uri = Uri.tryParse(href);
+                  if (uri != null &&
+                      (uri.scheme.isEmpty ||
+                          const [
+                            'https',
+                            'http',
+                            'mailto',
+                          ].contains(uri.scheme))) {
+                    onLinkPressed?.call(href);
+                  }
+                },
+                selectable: true,
+                padding: EdgeInsets.fromLTRB(
+                  t.spaceMediumInset,
+                  topInset,
+                  t.spaceMediumInset,
+                  t.spaceMediumInset,
                 ),
+                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                    .copyWith(
+                      p: TextStyle(
+                        color: t.colorTextPrimary,
+                        fontFamily: t.fontFamily,
+                        fontSize: t.fontBodySize,
+                        height: t.fontBodyLineHeight / t.fontBodySize,
+                      ),
+                      h1: TextStyle(
+                        color: t.colorSyntaxHeading,
+                        fontFamily: t.fontFamily,
+                        fontSize: t.fontHeading2Size,
+                        fontWeight: t.fontHeadingWeight,
+                      ),
+                      h2: TextStyle(
+                        color: t.colorSyntaxHeading,
+                        fontFamily: t.fontFamily,
+                        fontSize: t.fontHeading3Size,
+                        fontWeight: t.fontHeadingWeight,
+                      ),
+                      code: TextStyle(
+                        color: t.colorSyntaxCode,
+                        backgroundColor: t.colorSurfaceSubtle,
+                        fontFamily: 'monospace',
+                      ),
+                      blockquoteDecoration: BoxDecoration(
+                        color: t.colorSurfaceSubtle,
+                        border: Border(
+                          left: BorderSide(
+                            color: t.colorSyntaxMarkup,
+                            width: t.borderWidthStrong,
+                          ),
+                        ),
+                      ),
+                      a: TextStyle(color: t.colorSyntaxLink),
+                    ),
               ),
             ),
-            a: TextStyle(color: t.colorSyntaxLink),
           ),
         ),
       ),

@@ -63,6 +63,7 @@ class KAppShell extends StatelessWidget {
     this.semanticLabel = 'Primary navigation',
     this.tabBarLabelVisibility = KMobileAppBarLabelVisibility.always,
     this.primaryActionPlacement = KPrimaryActionPlacement.auto,
+    this.showPageHeader = true,
     super.key,
   });
 
@@ -88,6 +89,9 @@ class KAppShell extends StatelessWidget {
   /// Phones: where a page's primary action goes. `auto` uses the extended
   /// floating action button for Material and the top bar for Apple.
   final KPrimaryActionPlacement primaryActionPlacement;
+
+  /// Whether the compact destination uses the shell's scrolling header.
+  final bool showPageHeader;
 
   void _select(BuildContext context, String id) {
     if (id == selectedId) return;
@@ -147,6 +151,7 @@ class KAppShell extends StatelessWidget {
           // takes the page title (Decision 0015).
           final page = KScrollTopBar(
             placement: primaryActionPlacement,
+            enabled: showPageHeader,
             child: child,
           );
           if (style != KStyle.apple) {

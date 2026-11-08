@@ -275,10 +275,14 @@ class KScrollTopBar extends StatefulWidget {
   const KScrollTopBar({
     required this.child,
     this.placement = KPrimaryActionPlacement.auto,
+    this.enabled = true,
     super.key,
   });
   final Widget child;
   final KPrimaryActionPlacement placement;
+
+  /// Hide the header and its insets while preserving the page subtree.
+  final bool enabled;
 
   @override
   State<KScrollTopBar> createState() => _KScrollTopBarState();
@@ -315,6 +319,7 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
   }
 
   bool _onScroll(ScrollNotification notification) {
+    if (!widget.enabled) return false;
     if (notification.depth == 0 && notification.metrics.axis == Axis.vertical) {
       final scrolled =
           notification.metrics.pixels > notification.metrics.minScrollExtent;
@@ -397,9 +402,10 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
     );
     // The bar row takes space only when it holds controls; a top-level
     // screen keeps its large title right under the status bar.
-    final hasControls = back != null || split.bar.isNotEmpty;
+    final hasControls =
+        widget.enabled && (back != null || split.bar.isNotEmpty);
     final barHeight = t.componentTopBarHeight;
-    final fab = split.primary;
+    final fab = widget.enabled ? split.primary : null;
     final fabReserve = fab == null
         ? 0.0
         : t.componentFabHeight + t.spaceLayoutGutter;
@@ -510,7 +516,7 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
               ),
             ),
           ),
-          Positioned(top: 0, left: 0, right: 0, child: bar),
+          if (widget.enabled) Positioned(top: 0, left: 0, right: 0, child: bar),
           if (fab case final action?)
             PositionedDirectional(
               end: t.spaceLayoutGutter + media.padding.right,

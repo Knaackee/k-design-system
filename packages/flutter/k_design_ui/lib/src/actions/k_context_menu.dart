@@ -8,6 +8,16 @@ import 'k_menu_surface.dart';
 import 'k_menu_item_content.dart';
 import 'k_menu_button.dart';
 
+/// Dismisses the focused menu before its host handles platform Back.
+bool kDismissFocusedMenu() {
+  final context = FocusManager.instance.primaryFocus?.context;
+  if (context == null || !context.mounted) return false;
+  final menu = MenuController.maybeOf(context);
+  if (menu == null || !menu.isOpen) return false;
+  menu.close();
+  return true;
+}
+
 class KContextMenu extends StatefulWidget {
   const KContextMenu({
     required this.label,

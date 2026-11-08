@@ -20,9 +20,10 @@
 import { createServer } from "node:http";
 import { createRequire } from "node:module";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { extname, join, normalize, resolve } from "node:path";
+import { extname, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("..", import.meta.url).pathname);
+const root = fileURLToPath(new URL("..", import.meta.url));
 const staticDir = join(root, "apps/storybook/storybook-static");
 const args = process.argv.slice(2);
 const filter = args.includes("--filter")

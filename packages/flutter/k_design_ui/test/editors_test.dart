@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
+import 'package:re_editor/re_editor.dart';
 
 void main() {
+  testWidgets('Markdown preview and source share the content width', (
+    tester,
+  ) async {
+    for (final contentMaxWidth in <double?>[400, null]) {
+      Widget shell(KEditorMode mode) => _Shell(
+        width: 700,
+        child: KMarkdownEditor(
+          markdown: '# Preview',
+          contentMaxWidth: contentMaxWidth,
+          mode: mode,
+        ),
+      );
+
+      await tester.pumpWidget(shell(KEditorMode.source));
+      final source = tester.getRect(find.byType(CodeEditor));
+      await tester.pumpWidget(shell(KEditorMode.read));
+      final preview = tester.getRect(find.byType(Markdown));
+
+      expect(preview.width, contentMaxWidth ?? 700);
+      expect(preview.width, source.width);
+      expect(preview.center.dx, source.center.dx);
+    }
+  });
+
   testWidgets(
     'dictation leads the bottom format actions on compact and wide editors',
     (tester) async {
@@ -296,6 +322,43 @@ void main() {
     await tester.pump();
     expect(find.text('Remote update'), findsOneWidget);
   });
+
+  testWidgets(
+    'preview renders tables and delegates relative images, retaining source state',
+    (tester) async {
+      final images = <String>[];
+      await tester.pumpWidget(
+        _Shell(
+          child: KMarkdownEditor(
+            markdown:
+                '| Name | Value |\n| --- | --- |\n| first | second |\n\n![Local](./picture.png)',
+            defaultMode: KEditorMode.read,
+            imageBuilder: (uri, alt, title) {
+              images.add(uri.toString());
+              return Text('Image: $alt');
+            },
+          ),
+        ),
+      );
+      expect(find.text('first'), findsOneWidget);
+      expect(find.text('Image: Local'), findsOneWidget);
+      expect(
+        images,
+        contains('picture.png'),
+      ); // Uri normalizes the redundant ./ prefix.
+      final before = tester.state(
+        find.byType(KCodeEditor, skipOffstage: false),
+      );
+      await tester.tap(find.bySemanticsLabel('Markdown'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.bySemanticsLabel('Preview'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.state(find.byType(KCodeEditor, skipOffstage: false)),
+        same(before),
+      );
+    },
+  );
 
   testWidgets('markdown formatting emits a controlled transaction', (
     tester,
