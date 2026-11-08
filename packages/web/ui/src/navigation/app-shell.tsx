@@ -183,6 +183,18 @@ export function KAppShell({
     });
     return () => observer.disconnect();
   }, [compact, resolveEntry]);
+  // Each tab keeps its own scroll position, as on iOS and Android; the bar
+  // then follows the page now shown, not the one scrolled before.
+  const scrollPositions = useRef(new Map<string, number>());
+  const shownId = useRef(selectedId);
+  useLayoutEffect(() => {
+    const scroller = content.current;
+    if (!scroller || shownId.current === selectedId) return;
+    scrollPositions.current.set(shownId.current, scroller.scrollTop);
+    shownId.current = selectedId;
+    scroller.scrollTop = scrollPositions.current.get(selectedId) ?? 0;
+    scroller.dispatchEvent(new Event("scroll"));
+  }, [selectedId]);
   const { messages } = useKLocalization();
   // Phones: a bar covers the status bar once content scrolls under it and
   // takes the page title when the large title has scrolled away (0015).

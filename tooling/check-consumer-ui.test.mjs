@@ -137,3 +137,12 @@ test("refresh-button", () => {
   );
   assert.deepEqual(rules("KPage(onRefresh: load, children: [])", ".dart"), []);
 });
+
+test("safe-area-shell", () => {
+  const rules = (source, ext) => findings(source, ext).map((f) => f.rule);
+  assert.deepEqual(
+    rules("SafeArea(child: KAppShell(destinations: d))", ".dart"),
+    ["safe-area-shell"],
+  );
+  assert.deepEqual(rules("KAppShell(destinations: d)", ".dart"), []);
+});

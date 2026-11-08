@@ -343,6 +343,16 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
     if (!mounted) return;
     final anchor = _controller.anchor?.currentContext?.findRenderObject();
     final bar = _bar.currentContext?.findRenderObject();
+    // Each tab keeps its own scroll position: after a tab switch the bar
+    // follows the page now shown, not the one scrolled before.
+    final anchorContext = _controller.anchor?.currentContext;
+    final position = anchorContext == null
+        ? null
+        : Scrollable.maybeOf(anchorContext)?.position;
+    if (position != null && position.hasPixels) {
+      final scrolled = position.pixels > position.minScrollExtent;
+      if (scrolled != _scrolled) setState(() => _scrolled = scrolled);
+    }
     var shown = false;
     if (_scrolled &&
         anchor is RenderBox &&

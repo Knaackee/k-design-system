@@ -149,6 +149,11 @@ assertions. The others are review rules.
   on phones they sit at the start of the top bar (Gmail, ChatGPT), wider
   before the title. Never as an icon button at the top of the content
   (`check-consumer-ui` › content-nav-button).
+- Every tab starts with `KPageHeader(title:)` (one heading, no hero line
+  above or below it); account avatar or menu go in `leading`. Never a
+  hand-built title row, own `AppBar` or `SafeArea` around `KAppShell`
+  (`check-consumer-ui` › safe-area-shell): the shell's bar covers the
+  status bar, stays clear at rest and keeps `leading` while scrolled.
 - Content refreshes on its own (open, return to the tab, after changes) and
   by pulling: `KPage(onRefresh:)`. Never a refresh button in the page
   actions (`check-consumer-ui` › refresh-button); desktops may offer
