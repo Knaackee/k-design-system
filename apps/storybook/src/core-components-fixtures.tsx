@@ -270,9 +270,11 @@ function ShellPage({ id, label }: { id: string; label: string }) {
 export function AppShellFixture({
   initial = "settings",
   customSidebar = false,
+  iconOnlyTabs = false,
 }: {
   initial?: string;
   customSidebar?: boolean;
+  iconOnlyTabs?: boolean;
 }) {
   const [selected, setSelected] = useState(initial);
   return (
@@ -281,6 +283,7 @@ export function AppShellFixture({
         destinations={destinations}
         selectedId={selected}
         onSelectedChange={setSelected}
+        tabBarLabelVisibility={iconOnlyTabs ? "never" : "always"}
         sidebarContent={
           customSidebar ? (
             <>

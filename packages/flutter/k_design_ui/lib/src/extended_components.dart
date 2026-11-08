@@ -192,12 +192,16 @@ class KSpinner extends StatelessWidget {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return Semantics(
       label: label,
-      child: SizedBox.square(
-        dimension: size ?? t.componentSpinnerDefaultSize,
-        child: CircularProgressIndicator(
-          strokeWidth: t.componentSpinnerStrokeWidth,
-          color: t.colorActionPrimaryBackground,
-          backgroundColor: t.colorBorderDefault,
+      child: Align(
+        widthFactor: 1,
+        heightFactor: 1,
+        child: SizedBox.square(
+          dimension: size ?? t.componentSpinnerDefaultSize,
+          child: CircularProgressIndicator(
+            strokeWidth: t.componentSpinnerStrokeWidth,
+            color: t.colorActionPrimaryBackground,
+            backgroundColor: t.colorBorderDefault,
+          ),
         ),
       ),
     );

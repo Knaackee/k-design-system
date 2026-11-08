@@ -109,6 +109,25 @@ test("app shell renders a tab bar without a window (server)", () => {
   assert.match(html, /k-mobile-app-bar/);
   assert.doesNotMatch(html, /k-sidebar/);
   assert.match(html, /<main>Content<\/main>/);
+  assert.match(html, /class="k-mobile-app-bar__label">Search</);
+});
+
+test("app shell icon-only tabs retain accessible names and use larger icons", () => {
+  const html = renderToStaticMarkup(
+    h(KAppShell, {
+      selectedId: "home",
+      onSelectedChange: () => {},
+      tabBarLabelVisibility: "never",
+      destinations: [
+        { id: "home", label: "Home", icon: "house" },
+        { id: "search", label: "Search", icon: "search" },
+      ],
+    }),
+  );
+  assert.match(html, /aria-current="page" aria-label="Home"/);
+  assert.match(html, /aria-label="Search"/);
+  assert.doesNotMatch(html, /k-mobile-app-bar__label/);
+  assert.equal(html.match(/width:32px;height:32px/g).length, 2);
 });
 
 test("app shell custom expanded body preserves rail and phone destinations", () => {

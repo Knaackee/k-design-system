@@ -226,15 +226,19 @@ void main() {
       ),
     ];
 
-    Widget shell(ValueChanged<String> onSelected) => SizedBox.expand(
-      child: KAppShell(
-        destinations: destinations,
-        selectedId: 'home',
-        onSelected: onSelected,
-        sidebarHeader: const KText('Assetry'),
-        child: const Center(child: KText('Content')),
-      ),
-    );
+    Widget shell(ValueChanged<String> onSelected, {bool iconOnly = false}) =>
+        SizedBox.expand(
+          child: KAppShell(
+            destinations: destinations,
+            selectedId: 'home',
+            onSelected: onSelected,
+            tabBarLabelVisibility: iconOnly
+                ? KMobileAppBarLabelVisibility.never
+                : KMobileAppBarLabelVisibility.always,
+            sidebarHeader: const KText('Assetry'),
+            child: const Center(child: KText('Content')),
+          ),
+        );
 
     testWidgets('compact uses a tab bar', (tester) async {
       String? selected;
@@ -245,6 +249,94 @@ void main() {
       await tester.pump();
       expect(selected, 'search');
     });
+
+    testWidgets('icon-only tabs keep names and use larger icons', (
+      tester,
+    ) async {
+      String? selected;
+      await tester.pumpWidget(
+        _app(shell((id) => selected = id, iconOnly: true)),
+      );
+      expect(find.text('Search'), findsNothing);
+      expect(find.bySemanticsLabel('Search'), findsOneWidget);
+      final icon = find.byWidgetPredicate(
+        (widget) => widget is KIcon && widget.name == KIconName.search,
+      );
+      expect(tester.getSize(icon), const Size.square(32));
+      await tester.tap(find.byTooltip('Search'));
+      expect(selected, 'search');
+    });
+
+    testWidgets('bottom navigation does not reserve the top status inset', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          MediaQuery(
+            data: const MediaQueryData(
+              padding: EdgeInsets.only(top: 60, bottom: 24),
+            ),
+            child: shell((_) {}, iconOnly: true),
+          ),
+        ),
+      );
+      final bar = find.byType(KMobileAppBar);
+      final surface = find.descendant(
+        of: bar,
+        matching: find.byType(AnimatedSlide),
+      );
+      expect(tester.getTopLeft(surface).dy, tester.getTopLeft(bar).dy);
+    });
+
+    for (final width in [360.0, 393.0]) {
+      testWidgets(
+        'icon-only Apple tab bar reserves its actual height at $width',
+        (tester) async {
+          const height = 852.0;
+          tester.view.physicalSize = Size(width, height);
+          tester.view.padding = const FakeViewPadding(bottom: 34);
+          addTearDown(tester.view.resetPadding);
+          double? reserved;
+          await tester.pumpWidget(
+            MaterialApp(
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(3)),
+                child: KAdaptiveTheme(
+                  overrides: const KAdaptiveOverrides(style: KStyle.apple),
+                  child: child!,
+                ),
+              ),
+              home: Scaffold(
+                body: KAppShell(
+                  destinations: destinations,
+                  selectedId: 'home',
+                  onSelected: (_) {},
+                  tabBarLabelVisibility: KMobileAppBarLabelVisibility.never,
+                  child: Builder(
+                    builder: (context) {
+                      reserved = MediaQuery.paddingOf(context).bottom;
+                      return const SizedBox.expand();
+                    },
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          final barSurface = find.descendant(
+            of: find.byType(KMobileAppBar),
+            matching: find.byType(AnimatedSlide),
+          );
+          expect(height - reserved!, tester.getTopLeft(barSurface).dy);
+          expect(
+            tester.getSize(find.byTooltip('Search')).height,
+            greaterThanOrEqualTo(44),
+          );
+        },
+      );
+    }
 
     testWidgets('medium uses a rail, expanded a full sidebar', (tester) async {
       await tester.pumpWidget(_app(shell((_) {}), width: 700));

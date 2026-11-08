@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
@@ -59,6 +61,7 @@ class KAppShell extends StatelessWidget {
     this.sidebarFooter,
     this.sidebarSections = const [],
     this.semanticLabel = 'Primary navigation',
+    this.tabBarLabelVisibility = KMobileAppBarLabelVisibility.always,
     this.primaryActionPlacement = KPrimaryActionPlacement.auto,
     super.key,
   });
@@ -78,6 +81,9 @@ class KAppShell extends StatelessWidget {
   /// Tablets and desktops: further destinations in labelled groups.
   final List<KAppSidebarSection> sidebarSections;
   final String semanticLabel;
+
+  /// Phones: visible tab labels. All tabs keep their accessible names.
+  final KMobileAppBarLabelVisibility tabBarLabelVisibility;
 
   /// Phones: where a page's primary action goes. `auto` uses the extended
   /// floating action button for Material and the top bar for Apple.
@@ -102,15 +108,17 @@ class KAppShell extends StatelessWidget {
         final windowClass = kWindowClassForWidth(constraints.maxWidth);
         if (windowClass == KWindowClass.compact) {
           final style = KAdaptive.maybeOf(context)?.style;
+          final iconOnly =
+              tabBarLabelVisibility == KMobileAppBarLabelVisibility.never;
           final bar = KMobileAppBar(
             // Apple style: the iOS 26 floating glass tab bar.
-            variant: switch (KAdaptive.maybeOf(context)?.style) {
+            variant: switch (style) {
               KStyle.apple => KMobileAppBarVariant.floatingGlass,
               // Material 3 navigation bar with pill indicator.
               KStyle.material => KMobileAppBarVariant.labeled,
               _ => KMobileAppBarVariant.fixed,
             },
-            labelVisibility: KMobileAppBarLabelVisibility.always,
+            labelVisibility: tabBarLabelVisibility,
             visibility: KMobileAppBarVisibility.always,
             semanticLabel: semanticLabel,
             selectedId: selectedId,
@@ -124,7 +132,7 @@ class KAppShell extends StatelessWidget {
                     destination.id == selectedId
                         ? destination.selectedIcon ?? destination.icon
                         : destination.icon,
-                    size: 24,
+                    size: iconOnly ? 32 : 24,
                     color: destination.id == selectedId
                         ? t.colorTextPrimary
                         : t.colorTextMuted,
@@ -152,17 +160,27 @@ class KAppShell extends StatelessWidget {
           // iOS 26: content scrolls under the floating glass tab bar; the
           // bar's height is reported as bottom padding so lists end above it.
           final media = MediaQuery.of(context);
-          final reserve =
-              t.componentMobileAppBarContainerMinHeight +
-              2 * t.componentMobileAppBarContainerBottomInset;
+          final bottom = iconOnly
+              ? math.max(
+                      t.componentMobileAppBarContainerMinHeight,
+                      t.componentMobileAppBarDestinationMinHeight +
+                          2 *
+                              (t.componentMobileAppBarContainerPaddingBlock +
+                                  t.borderWidthDefault),
+                    ) +
+                    math.max(
+                      media.padding.bottom,
+                      t.componentMobileAppBarContainerBottomInset,
+                    )
+              : media.padding.bottom +
+                    t.componentMobileAppBarContainerMinHeight +
+                    2 * t.componentMobileAppBarContainerBottomInset;
           return Stack(
             children: [
               Positioned.fill(
                 child: MediaQuery(
                   data: media.copyWith(
-                    padding: media.padding.copyWith(
-                      bottom: media.padding.bottom + reserve,
-                    ),
+                    padding: media.padding.copyWith(bottom: bottom),
                   ),
                   child: page,
                 ),

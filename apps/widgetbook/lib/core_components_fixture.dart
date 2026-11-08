@@ -255,8 +255,13 @@ class PageHeaderFixture extends StatelessWidget {
 }
 
 class AppShellFixture extends StatefulWidget {
-  const AppShellFixture({this.initial = 'settings', super.key});
+  const AppShellFixture({
+    this.initial = 'settings',
+    this.iconOnlyTabs = false,
+    super.key,
+  });
   final String initial;
+  final bool iconOnlyTabs;
   @override
   State<AppShellFixture> createState() => _AppShellFixtureState();
 }
@@ -362,6 +367,9 @@ class _AppShellFixtureState extends State<AppShellFixture> {
     destinations: destinations,
     selectedId: selected,
     onSelected: (id) => setState(() => selected = id),
+    tabBarLabelVisibility: widget.iconOnlyTabs
+        ? KMobileAppBarLabelVisibility.never
+        : KMobileAppBarLabelVisibility.always,
     sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
     // Tabs stay alive, as in most apps; only the shown page fills the top
     // bar (Decision 0015).

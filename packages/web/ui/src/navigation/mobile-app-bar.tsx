@@ -189,6 +189,7 @@ export function KMobileAppBar({
       className={["k-mobile-app-bar", className].filter(Boolean).join(" ")}
       data-visibility={visibility}
       data-variant={variant}
+      data-label-visibility={labelVisibility}
       data-collapsed={collapsed || undefined}
       {...props}
     >

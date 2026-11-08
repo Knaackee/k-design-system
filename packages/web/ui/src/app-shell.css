@@ -48,6 +48,31 @@
   );
 }
 
+.k-app-shell[data-overlay-bar]:has(
+    > .k-mobile-app-bar[data-label-visibility="never"]
+  ) {
+  --k-app-shell-tab-bar-bottom: max(
+    var(--k-component-mobile-app-bar-container-bottom-inset),
+    env(safe-area-inset-bottom, 0px)
+  );
+}
+.k-app-shell[data-overlay-bar]
+  > .k-mobile-app-bar[data-label-visibility="never"] {
+  bottom: var(--k-app-shell-tab-bar-bottom);
+}
+.k-app-shell[data-overlay-bar]:has(
+    > .k-mobile-app-bar[data-label-visibility="never"]
+  )
+  > .k-app-shell__content {
+  padding-block-end: calc(
+    var(
+        --k-app-shell-tab-bar-height,
+        var(--k-component-mobile-app-bar-container-min-height)
+      ) +
+      var(--k-app-shell-tab-bar-bottom)
+  );
+}
+
 /* Phones (Decision 0015): a bar fades in over content scrolled under the
    status bar and takes the page title once the large title has scrolled
    away (iOS navigation bar, Material 3 top app bar on scroll). */

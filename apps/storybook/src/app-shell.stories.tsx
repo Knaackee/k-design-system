@@ -29,3 +29,9 @@ export const ReviewCustomSidebar: StoryObj = {
   parameters: { fixtureId: "app-shell-custom-sidebar" },
   render: () => <AppShellFixture initial="home" customSidebar />,
 };
+
+export const ReviewIconOnly: StoryObj = {
+  name: "app-shell-icon-only",
+  parameters: { fixtureId: "app-shell-icon-only" },
+  render: () => <AppShellFixture iconOnlyTabs />,
+};

@@ -11,7 +11,10 @@ import { kWindowClassForWidth, type KWindowClass } from "../adaptive.js";
 import { KBadge } from "../basic-components.js";
 import { useOptionalKHaptics } from "../feedback/haptics.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
-import { KMobileAppBar } from "./mobile-app-bar.js";
+import {
+  KMobileAppBar,
+  type KMobileAppBarLabelVisibility,
+} from "./mobile-app-bar.js";
 import { KBackButton } from "./back-button.js";
 import { KText } from "../primitives/text.js";
 import {
@@ -67,6 +70,8 @@ export interface KAppShellProps extends Omit<
   /** Tablets and desktops: further destinations in labelled groups. */
   sidebarSections?: readonly KAppSidebarSection[];
   label?: string;
+  /** Phones: choose which tab labels are visible. All tabs keep their accessible names. */
+  tabBarLabelVisibility?: KMobileAppBarLabelVisibility;
   /**
    * Phones: where a page's primary action goes. `auto` uses the extended
    * floating action button for Material and the top bar for Apple.
@@ -90,6 +95,7 @@ export function KAppShell({
   sidebarFooter,
   sidebarSections = [],
   label = "Primary navigation",
+  tabBarLabelVisibility = "always",
   primaryActionPlacement = "auto",
   className,
   ...props
@@ -122,6 +128,7 @@ export function KAppShell({
     console.error(
       'KAppShell: a tab bar holds 2 to 5 destinations (Apple HIG); group the rest inside an existing tab (no "More" tab).',
     );
+  const tabIconSize = tabBarLabelVisibility === "never" ? 32 : 24;
   const select = (id: string) => {
     if (id === selectedId) return;
     haptics?.perform("selection");
@@ -386,7 +393,7 @@ export function KAppShell({
                 ? "labeled"
                 : "fixed"
           }
-          labelVisibility="always"
+          labelVisibility={tabBarLabelVisibility}
           visibility="always"
           label={label}
           selectedId={selectedId}
@@ -394,9 +401,9 @@ export function KAppShell({
           items={destinations.map((destination) => ({
             id: destination.id,
             label: destination.label,
-            icon: <KIcon name={destination.icon} size={24} />,
+            icon: <KIcon name={destination.icon} size={tabIconSize} />,
             selectedIcon: destination.selectedIcon ? (
-              <KIcon name={destination.selectedIcon} size={24} />
+              <KIcon name={destination.selectedIcon} size={tabIconSize} />
             ) : undefined,
             badge: destination.badge,
           }))}

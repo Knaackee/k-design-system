@@ -198,7 +198,9 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
     );
     final content = Container(
       constraints: BoxConstraints(
-        minHeight: widget.variant == KMobileAppBarVariant.labeled
+        minHeight:
+            widget.variant == KMobileAppBarVariant.labeled &&
+                widget.labelVisibility != KMobileAppBarLabelVisibility.never
             ? tokens.componentMobileAppBarContainerLabeledMinHeight
             : isDock
             ? tokens.sizeAppBarFixed
@@ -281,6 +283,7 @@ class _KMobileAppBarState extends State<KMobileAppBar> {
       container: true,
       label: widget.semanticLabel,
       child: SafeArea(
+        top: false,
         bottom: !isFixed,
         minimum: isFixed
             ? EdgeInsets.zero
