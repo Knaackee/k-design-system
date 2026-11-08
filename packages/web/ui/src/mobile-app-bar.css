@@ -330,8 +330,16 @@
 [data-style="material"]
   .k-mobile-app-bar[data-variant="labeled"]
   .k-mobile-app-bar__icon {
+  box-sizing: border-box;
   width: var(--k-component-mobile-app-bar-destination-indicator-width);
-  height: var(--k-component-mobile-app-bar-destination-indicator-height);
+  min-height: var(--k-component-mobile-app-bar-destination-indicator-height);
+  padding-block: calc(
+    (
+        var(--k-component-mobile-app-bar-destination-indicator-height) -
+          var(--k-component-mobile-app-bar-destination-icon-size)
+      ) /
+      2
+  );
   border-radius: var(--k-radius-full);
   transition: background var(--k-motion-control-settle)
     var(--k-motion-control-easing);

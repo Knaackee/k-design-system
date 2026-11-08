@@ -658,16 +658,6 @@
   border-radius: calc(var(--k-size-control) / 2);
 }
 
-.k-chat-composer__tools .k-icon {
-  /* Override KIcon's inline default only within the composer action slots. */
-  width: calc(
-    var(--k-space-control-gap) * 3 - var(--k-border-width-default) * 2
-  ) !important;
-  height: calc(
-    var(--k-space-control-gap) * 3 - var(--k-border-width-default) * 2
-  ) !important;
-}
-
 .k-chat-composer textarea[data-empty="true"] {
   field-sizing: fixed;
   height: var(--k-chat-composer-target);

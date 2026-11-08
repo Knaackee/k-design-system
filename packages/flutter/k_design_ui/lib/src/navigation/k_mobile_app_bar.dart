@@ -427,7 +427,7 @@ class _Destination extends StatelessWidget {
   final KMobileAppBarItemBuilder? itemBuilder;
   final bool lineIndicator;
 
-  /// Material 3: a 64×32 pill behind the icon marks the selection.
+  /// Material 3: the selection pill preserves padding around larger icons.
   final bool pillIndicator;
   final VoidCallback onTap;
 
@@ -438,7 +438,15 @@ class _Destination extends StatelessWidget {
       duration: motion.settle,
       curve: motion.curve,
       width: tokens.componentMobileAppBarDestinationIndicatorWidth,
-      height: tokens.componentMobileAppBarDestinationIndicatorHeight,
+      constraints: BoxConstraints(
+        minHeight: tokens.componentMobileAppBarDestinationIndicatorHeight,
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical:
+            (tokens.componentMobileAppBarDestinationIndicatorHeight -
+                tokens.componentMobileAppBarDestinationIconSize) /
+            2,
+      ),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: selected

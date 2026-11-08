@@ -152,6 +152,8 @@ version is tagged.
 - Flutter spinners retain their square indicator size inside stretched page or column layouts instead of becoming a page-wide ellipse.
 - App shells can opt into an icon-only phone tab bar through `tabBarLabelVisibility`, preserving accessible destination names and the existing labelled default. Icon-only bars use larger system icons without reserving label space.
 
+- Icon-only Material navigation preserves vertical padding around larger glyphs. Web chat composer icons retain the preset stroke and intrinsic size instead of magnifying their stroke; button hit areas are unchanged.
+
 ## 1.0.0-rc.1 - 2026-09-25
 
 - Established public Web and Flutter package boundaries for the first release

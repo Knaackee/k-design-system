@@ -267,6 +267,31 @@ void main() {
       expect(selected, 'search');
     });
 
+    testWidgets('Material pill keeps padding around icon-only glyphs', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: KAdaptiveTheme(
+            overrides: const KAdaptiveOverrides(style: KStyle.material),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(width: 393, child: shell((_) {}, iconOnly: true)),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final pill = find.descendant(
+        of: find.byTooltip('Search'),
+        matching: find.byType(AnimatedContainer),
+      );
+      final glyph = find.descendant(of: pill, matching: find.byType(KIcon));
+      expect(tester.getSize(pill), const Size(64, 40));
+      expect(tester.getSize(glyph), const Size(32, 32));
+      expect(tester.getCenter(pill), tester.getCenter(glyph));
+    });
+
     testWidgets('bottom navigation does not reserve the top status inset', (
       tester,
     ) async {
