@@ -12,6 +12,7 @@ import {
 } from "react";
 import { KIcon } from "../primitives/icon.js";
 import type { KMenuAction } from "./menu-button.js";
+import { MenuActionContext } from "./menu-button.js";
 
 export interface KContextMenuProps {
   label: string;
@@ -24,7 +25,7 @@ export interface KContextMenuProps {
 function enabledItems(level: HTMLElement) {
   return Array.from(
     level.querySelectorAll<HTMLElement>(
-      ":scope > .k-context-menu__entry > :is([role=menuitem], [role=menuitemradio]):not(:disabled)",
+      ":scope > .k-context-menu__entry > :is([role=menuitem], [role=menuitemradio]):not(:disabled), :scope > .k-context-menu__entry > .k-context-menu__target > :is([role=menuitem], [role=menuitemradio]):not(:disabled)",
     ),
   );
 }
@@ -86,6 +87,7 @@ export function MenuLevel({
     return () => window.removeEventListener("resize", reposition);
   }, [openId]);
   function navigate(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.defaultPrevented) return;
     const items = enabledItems(event.currentTarget);
     const current = items.indexOf(document.activeElement as HTMLElement);
     let next: number | undefined;
@@ -136,63 +138,65 @@ export function MenuLevel({
               onPointerEnter={() => hasChildren && openSubmenu(action.id)}
               onPointerLeave={() => hasChildren && setOpenId(undefined)}
             >
-              <Item
-                {...(action.href && !action.disabled && !hasChildren
-                  ? { href: action.href }
-                  : { type: "button" as const, disabled: action.disabled })}
-                role={
-                  action.checked === undefined ? "menuitem" : "menuitemradio"
-                }
-                aria-checked={action.checked}
-                tabIndex={-1}
-                className="k-menu__item"
-                data-destructive={action.destructive || undefined}
-                aria-haspopup={hasChildren ? "menu" : undefined}
-                aria-expanded={hasChildren ? openId === action.id : undefined}
-                onFocus={() => {
-                  if (!hasChildren) setOpenId(undefined);
-                }}
-                onClick={(event) => {
-                  if (
-                    action.href &&
-                    !hasChildren &&
-                    (event.metaKey ||
-                      event.ctrlKey ||
-                      event.shiftKey ||
-                      event.altKey ||
-                      event.button !== 0)
-                  )
-                    return;
-                  if (hasChildren) {
-                    openSubmenu(action.id, true);
-                    return;
+              <MenuActionContext action={action} close={close}>
+                <Item
+                  {...(action.href && !action.disabled && !hasChildren
+                    ? { href: action.href }
+                    : { type: "button" as const, disabled: action.disabled })}
+                  role={
+                    action.checked === undefined ? "menuitem" : "menuitemradio"
                   }
-                  close();
-                  action.onSelect?.();
-                }}
-                onKeyDown={(event) => {
-                  if (hasChildren && event.key === "ArrowRight") {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    openSubmenu(action.id, true);
-                  }
-                }}
-              >
-                <span className="k-menu__icon">
-                  {action.iconContent ??
-                    (action.icon ? (
-                      <KIcon name={action.icon} color="currentColor" />
-                    ) : null)}
-                </span>
-                <span className="k-menu__label">{action.label}</span>
-                <span className="k-menu__trailing" aria-hidden="true">
-                  {hasChildren ? (
-                    <KIcon name="chevron-right" color="currentColor" />
-                  ) : action.checked ? (
-                    <KIcon name="check" color="currentColor" />
-                  ) : null}
-                </span>
-              </Item>
+                  aria-checked={action.checked}
+                  tabIndex={-1}
+                  className="k-menu__item"
+                  data-destructive={action.destructive || undefined}
+                  aria-haspopup={hasChildren ? "menu" : undefined}
+                  aria-expanded={hasChildren ? openId === action.id : undefined}
+                  onFocus={() => {
+                    if (!hasChildren) setOpenId(undefined);
+                  }}
+                  onClick={(event) => {
+                    if (
+                      action.href &&
+                      !hasChildren &&
+                      (event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey ||
+                        event.button !== 0)
+                    )
+                      return;
+                    if (hasChildren) {
+                      openSubmenu(action.id, true);
+                      return;
+                    }
+                    close();
+                    action.onSelect?.();
+                  }}
+                  onKeyDown={(event) => {
+                    if (hasChildren && event.key === "ArrowRight") {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      openSubmenu(action.id, true);
+                    }
+                  }}
+                >
+                  <span className="k-menu__icon">
+                    {action.iconContent ??
+                      (action.icon ? (
+                        <KIcon name={action.icon} color="currentColor" />
+                      ) : null)}
+                  </span>
+                  <span className="k-menu__label">{action.label}</span>
+                  <span className="k-menu__trailing" aria-hidden="true">
+                    {hasChildren ? (
+                      <KIcon name="chevron-right" color="currentColor" />
+                    ) : action.checked ? (
+                      <KIcon name="check" color="currentColor" />
+                    ) : null}
+                  </span>
+                </Item>
+              </MenuActionContext>
               {hasChildren ? (
                 <div data-context-submenu={action.id}>
                   <MenuLevel actions={action.children!} close={close} nested />

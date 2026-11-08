@@ -175,7 +175,7 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
                       ),
                     ],
                     child: KMenuItemContent(action: action, width: width),
-                  )
+                  ).withMenuItemContext(action)
                 else
                   MenuItemButton(
                     key: ValueKey(action.id),
@@ -201,7 +201,7 @@ class _KMenuSurfaceState extends State<KMenuSurface> {
                             action.onSelect?.call();
                           },
                     child: KMenuItemContent(action: action, width: width),
-                  ),
+                  ).withMenuItemContext(action),
               ],
             ],
           ),

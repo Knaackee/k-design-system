@@ -134,6 +134,16 @@ class _KTabStripState extends State<KTabStrip> {
                   label: item.label,
                   iconContent: item.icon,
                   onSelect: () => onSelect(item.id),
+                  contextActions:
+                      menuActions?.call(item, true) ??
+                      [
+                        if (onClose != null)
+                          KMenuAction(
+                            id: 'close',
+                            label: 'Schließen',
+                            onSelect: () => onClose(item.id),
+                          ),
+                      ],
                 ),
               if (current != null)
                 for (final (index, action)
@@ -146,6 +156,7 @@ class _KTabStripState extends State<KTabStrip> {
                     icon: action.icon,
                     iconContent: action.iconContent,
                     children: action.children,
+                    contextActions: action.contextActions,
                     disabled: action.disabled,
                     destructive: action.destructive,
                     separatorBefore: index == 0 || action.separatorBefore,

@@ -1,4 +1,4 @@
-import { MenuLevel } from "./context-menu.js";
+import { MenuLevel, KContextMenu } from "./context-menu.js";
 import {
   Fragment,
   useEffect,
@@ -25,6 +25,37 @@ export interface KMenuAction {
   separatorBefore?: boolean;
   onSelect?: () => void;
   children?: readonly KMenuAction[];
+  /** Secondary actions on long press, right click, or the context-menu key. */
+  contextActions?: readonly KMenuAction[];
+}
+
+export function MenuActionContext({
+  action,
+  close,
+  children,
+}: {
+  action: KMenuAction;
+  close: () => void;
+  children: ReactNode;
+}) {
+  if (action.disabled || !action.contextActions?.length) return <>{children}</>;
+  const bind = (items: readonly KMenuAction[]): KMenuAction[] =>
+    items.map((item) => ({
+      ...item,
+      children: item.children ? bind(item.children) : undefined,
+      onSelect: () => {
+        close();
+        item.onSelect?.();
+      },
+    }));
+  return (
+    <KContextMenu
+      label={typeof action.label === "string" ? action.label : "Aktionen"}
+      actions={bind(action.contextActions)}
+    >
+      {children}
+    </KContextMenu>
+  );
 }
 export interface KMenuButtonProps {
   label: string;
@@ -67,6 +98,12 @@ export function KMenuButton({
       menu.current?.querySelectorAll<HTMLElement>(
         '[role="menuitem"]:not(:disabled), [role="menuitemradio"]:not(:disabled)',
       ) ?? [],
+    ).filter(
+      (item) =>
+        item.closest('[role="menu"]') ===
+        (nested
+          ? menu.current?.querySelector(":scope > .k-context-menu__level")
+          : menu.current),
     );
   function close(restore = true) {
     menu.current?.hidePopover();
@@ -148,6 +185,7 @@ export function KMenuButton({
         aria-controls={id}
         onClick={() => (open ? close() : show())}
         onKeyDown={(event) => {
+          if (event.defaultPrevented) return;
           if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             event.preventDefault();
             event.stopPropagation();
@@ -179,6 +217,7 @@ export function KMenuButton({
           onOpenChange?.(next);
         }}
         onKeyDown={(event) => {
+          if (event.defaultPrevented) return;
           if (nested && event.key !== "Tab") return;
           event.stopPropagation();
           const buttons = items();
@@ -259,42 +298,46 @@ export function KMenuButton({
                 {index > 0 && action.separatorBefore ? (
                   <div role="separator" className="k-menu__separator" />
                 ) : null}
-                <Item
-                  {...(action.href && !action.disabled
-                    ? { href: action.href }
-                    : { type: "button" as const, disabled: action.disabled })}
-                  role={
-                    action.checked === undefined ? "menuitem" : "menuitemradio"
-                  }
-                  aria-checked={action.checked}
-                  tabIndex={-1}
-                  className="k-menu__item"
-                  data-destructive={action.destructive || undefined}
-                  onClick={(event) => {
-                    if (
-                      action.href &&
-                      (event.metaKey ||
-                        event.ctrlKey ||
-                        event.shiftKey ||
-                        event.altKey ||
-                        event.button !== 0)
-                    )
-                      return;
-                    close();
-                    action.onSelect?.();
-                  }}
-                >
-                  <span className="k-menu__icon">
-                    {action.iconContent ??
-                      (action.icon ? (
-                        <KIcon name={action.icon} color="currentColor" />
-                      ) : null)}
-                  </span>
-                  <span className="k-menu__label">{action.label}</span>
-                  <span className="k-menu__trailing" aria-hidden="true">
-                    {action.checked ? <KIcon name="check" size={16} /> : null}
-                  </span>
-                </Item>
+                <MenuActionContext action={action} close={close}>
+                  <Item
+                    {...(action.href && !action.disabled
+                      ? { href: action.href }
+                      : { type: "button" as const, disabled: action.disabled })}
+                    role={
+                      action.checked === undefined
+                        ? "menuitem"
+                        : "menuitemradio"
+                    }
+                    aria-checked={action.checked}
+                    tabIndex={-1}
+                    className="k-menu__item"
+                    data-destructive={action.destructive || undefined}
+                    onClick={(event) => {
+                      if (
+                        action.href &&
+                        (event.metaKey ||
+                          event.ctrlKey ||
+                          event.shiftKey ||
+                          event.altKey ||
+                          event.button !== 0)
+                      )
+                        return;
+                      close();
+                      action.onSelect?.();
+                    }}
+                  >
+                    <span className="k-menu__icon">
+                      {action.iconContent ??
+                        (action.icon ? (
+                          <KIcon name={action.icon} color="currentColor" />
+                        ) : null)}
+                    </span>
+                    <span className="k-menu__label">{action.label}</span>
+                    <span className="k-menu__trailing" aria-hidden="true">
+                      {action.checked ? <KIcon name="check" size={16} /> : null}
+                    </span>
+                  </Item>
+                </MenuActionContext>
               </Fragment>
             );
           })

@@ -16,6 +16,7 @@ class KMenuAction {
     required this.label,
     this.onSelect,
     this.children = const [],
+    this.contextActions = const [],
     this.icon,
     this.iconContent,
     this.disabled = false,
@@ -27,6 +28,9 @@ class KMenuAction {
   final String label;
   final VoidCallback? onSelect;
   final List<KMenuAction> children;
+
+  /// Secondary actions opened from this row by a long press or context click.
+  final List<KMenuAction> contextActions;
   final KIconName? icon;
   final Widget? iconContent;
   final bool disabled;
@@ -422,7 +426,7 @@ class _KMenuButtonState extends State<KMenuButton> {
                                 action: action,
                                 width: width,
                               ),
-                            ),
+                            ).withMenuItemContext(action),
                           ),
                         ],
                       ],

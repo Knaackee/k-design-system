@@ -43,7 +43,8 @@ class _KContextMenuState extends State<KContextMenu> {
 
   void _open(Offset localPosition) {
     if (!_enabled) return;
-    _focus.requestFocus();
+    // Moving focus away from a menu item closes its child menus.
+    if (MenuController.maybeOf(context) == null) _focus.requestFocus();
     _controller.open(position: localPosition);
   }
 
@@ -88,6 +89,7 @@ class _KContextMenuState extends State<KContextMenu> {
       ],
       builder: (context, controller, child) => Focus(
         focusNode: _focus,
+        skipTraversal: MenuController.maybeOf(this.context) != null,
         onKeyEvent: (_, event) {
           if (!_enabled || event is! KeyDownEvent) {
             return KeyEventResult.ignored;

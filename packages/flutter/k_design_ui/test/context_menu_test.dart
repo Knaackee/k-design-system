@@ -74,6 +74,60 @@ void main() {
     expect(find.text('Copy link'), findsOneWidget);
   });
 
+  for (final nested in [false, true]) {
+    testWidgets('menu row keeps tap and has context actions (nested=$nested)', (
+      tester,
+    ) async {
+      var selected = 0;
+      var closed = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: Scaffold(
+            body: KMenuButton(
+              label: 'Open files',
+              actions: [
+                KMenuAction(
+                  id: 'open',
+                  label: 'Notes',
+                  onSelect: () => selected++,
+                  contextActions: [
+                    KMenuAction(
+                      id: 'close',
+                      label: 'Close Notes',
+                      onSelect: () => closed++,
+                    ),
+                  ],
+                ),
+                if (nested)
+                  const KMenuAction(
+                    id: 'move',
+                    label: 'Move',
+                    children: [KMenuAction(id: 'root', label: 'Root')],
+                  ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open files'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Notes'));
+      await tester.pumpAndSettle();
+      expect(selected, 1);
+
+      await tester.tap(find.text('Open files'));
+      await tester.pumpAndSettle();
+      await tester.longPress(find.text('Notes'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Close Notes'));
+      await tester.pumpAndSettle();
+      expect(closed, 1);
+      expect(selected, 1);
+    });
+  }
+
   testWidgets('hovering another root action closes an open submenu', (
     tester,
   ) async {

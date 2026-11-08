@@ -190,6 +190,18 @@ export function KTabStrip({
                 label: item.label,
                 iconContent: item.icon,
                 onSelect: () => onSelect(item.id),
+                checked: item.id === selectedId,
+                contextActions:
+                  menuActions?.(item, "dropdown") ??
+                  (onClose && item.closable !== false
+                    ? [
+                        {
+                          id: `close-${item.id}`,
+                          label: closeLabel(item),
+                          onSelect: () => onClose(item.id),
+                        },
+                      ]
+                    : []),
               })),
               ...dropdownActions.map((action, index) => ({
                 ...action,

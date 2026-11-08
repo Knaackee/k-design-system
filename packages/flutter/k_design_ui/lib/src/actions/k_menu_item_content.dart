@@ -2,7 +2,19 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_icon.dart';
+import 'k_context_menu.dart';
 import 'k_menu_button.dart';
+
+extension KMenuItemContext on Widget {
+  Widget withMenuItemContext(KMenuAction action) =>
+      action.disabled || action.contextActions.isEmpty
+      ? this
+      : KContextMenu(
+          label: action.label,
+          actions: action.contextActions,
+          child: this,
+        );
+}
 
 // Material reserves this gap even when SubmenuButton's native arrow is empty.
 // Reserve it in every row so labels and our trailing indicators share one grid.

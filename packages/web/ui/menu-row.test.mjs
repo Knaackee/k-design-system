@@ -15,6 +15,26 @@ const actions = [
   { id: "other", label: "Niedrig", checked: false },
   { id: "plain", label: "Issue-ID kopieren" },
 ];
+test("context actions keep selection as the primary item and expose a separate menu", () => {
+  const html = renderToStaticMarkup(
+    React.createElement(KMenuButton, {
+      label: "Files",
+      actions: [
+        {
+          id: "file",
+          label: "Note.md",
+          checked: true,
+          onSelect() {},
+          contextActions: [{ id: "close", label: "Close file", onSelect() {} }],
+        },
+      ],
+    }),
+  );
+  assert.match(html, /role="menuitemradio" aria-checked="true"/);
+  assert.match(html, /class="k-context-menu__target"/);
+  assert.match(html, /aria-label="Note.md"/);
+  assert.match(html, /Close file/);
+});
 for (const [name, render] of [
   ["nested", () => React.createElement(MenuLevel, { actions, close() {} })],
   [
