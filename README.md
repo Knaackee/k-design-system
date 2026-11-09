@@ -19,6 +19,9 @@ consumer boundary.
 - Storybook and Widgetbook fixtures for interaction and visual acceptance.
 - Consumer examples that verify installation outside the gallery applications.
 
+For Markdown rendering, editing, streaming and the consumer-owned collaboration
+boundary, see the [Markdown integration guide](docs/markdown.md).
+
 ## Cross-platform consumer example
 
 The runnable examples use the same settings composition and interaction model on

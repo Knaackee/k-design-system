@@ -1,4 +1,5 @@
 @import "./editors/map-zone-editor.css";
+@import "./assets/fonts/jetbrains-mono.css";
 
 .k-markdown-editor,
 .k-code-editor {
@@ -144,7 +145,8 @@
 .k-markdown-editor[data-has-mode-switcher="true"]
   .k-markdown-editor-source
   .cm-content,
-.k-markdown-editor[data-has-mode-switcher="true"] .k-markdown-editor-content {
+.k-markdown-editor[data-has-mode-switcher="true"]
+  :is(.k-markdown-editor-content, .k-markdown-editor-preview) {
   padding-inline-end: calc(
     var(--k-size-hit-target) + (2 * var(--k-space-control-gap))
   );
@@ -230,7 +232,7 @@
   z-index: 30;
 }
 
-.k-markdown-editor-content {
+:is(.k-markdown-editor-content, .k-markdown-editor-preview) {
   box-sizing: border-box;
   max-width: var(--k-editor-content-max-width, none);
   margin-inline: auto;
@@ -362,7 +364,8 @@
   pointer-events: none;
 }
 
-.k-markdown-editor-surface[data-readonly="true"] .k-markdown-editor-content {
+.k-markdown-editor-surface[data-readonly="true"]
+  :is(.k-markdown-editor-content, .k-markdown-editor-preview) {
   cursor: default;
 }
 .k-code-editor-toolbar {
@@ -403,6 +406,13 @@
 .k-code-editor .cm-content {
   padding-block: var(--k-space-control-inset-inline);
   caret-color: var(--k-editor-accent);
+}
+
+.k-markdown-editor[data-has-content-width="true"] .cm-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--k-editor-content-max-width);
+  margin-inline: auto;
 }
 
 .k-code-editor .cm-panels {
@@ -678,13 +688,14 @@
     height: 100%;
     min-height: 0;
   }
-  .k-markdown-editor-content {
+  :is(.k-markdown-editor-content, .k-markdown-editor-preview) {
     padding: var(--k-space-control-inset-inline);
   }
   .k-markdown-editor[data-has-mode-switcher="true"]
     .k-markdown-editor-source
     .cm-content,
-  .k-markdown-editor[data-has-mode-switcher="true"] .k-markdown-editor-content {
+  .k-markdown-editor[data-has-mode-switcher="true"]
+    :is(.k-markdown-editor-content, .k-markdown-editor-preview) {
     padding-block-start: calc(
       var(--k-size-hit-target) + var(--k-space-control-gap)
     );
@@ -756,12 +767,33 @@
     animation: none;
   }
 }
-@font-face {
-  font-family: "KDesignMono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./assets/fonts/JetBrainsMono-Regular.ttf") format("truetype");
+
+.k-markdown-editor:is(
+  [data-has-mode-switcher="true"],
+  :has(> .k-markdown-editor-source > [data-has-search-button="true"])
+) {
+  & > .k-markdown-editor-source .cm-content {
+    padding-block-start: calc(
+      var(--k-size-hit-target) + var(--k-space-control-gap)
+    );
+    padding-inline: var(--k-space-medium-inset);
+    font-family: var(
+      --k-font-family-mono,
+      "KDesignMono",
+      ui-monospace,
+      monospace
+    );
+    font-size: var(--k-font-body-size);
+    line-height: var(--k-font-relaxed-height);
+  }
+
+  & .cm-line:not(.k-markdown-line--quote, .k-markdown-line--code) {
+    padding-inline: 0;
+  }
+
+  & .cm-line :is(.k-syntax-heading-1, .k-syntax-heading-2) {
+    font-size: inherit;
+  }
 }
 
 /* Compact floating dock; microphone remains before the scrollable tools. */

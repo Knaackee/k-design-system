@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 const _markdownSample = '''# Collaborative release notes
@@ -41,12 +42,14 @@ class EditorFixture extends StatefulWidget {
     required this.markdown,
     this.mobile = false,
     this.dictation = false,
+    this.readOnly = false,
     super.key,
   });
 
   final bool markdown;
   final bool mobile;
   final bool dictation;
+  final bool readOnly;
 
   @override
   State<EditorFixture> createState() => _EditorFixtureState();
@@ -57,6 +60,7 @@ class _EditorFixtureState extends State<EditorFixture> {
   KEditorMode _mode = KEditorMode.source;
   final _markdownKey = GlobalKey<KMarkdownEditorState>();
   KDictationState _dictationState = KDictationState.ready;
+  int _dictationAttempt = 0;
 
   Future<void> _dictate() async {
     if (_dictationState == KDictationState.ready) {
@@ -64,9 +68,15 @@ class _EditorFixtureState extends State<EditorFixture> {
       return;
     }
     setState(() => _dictationState = KDictationState.processing);
+    final attempt = ++_dictationAttempt;
     await Future<void>.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
+    if (!mounted || attempt != _dictationAttempt) return;
     _markdownKey.currentState?.insertDictation('Dictated release update. ');
+    setState(() => _dictationState = KDictationState.ready);
+  }
+
+  void _cancelDictation() {
+    _dictationAttempt++;
     setState(() => _dictationState = KDictationState.ready);
   }
 
@@ -91,23 +101,39 @@ class _EditorFixtureState extends State<EditorFixture> {
         : const <KCodeDiagnostic>[];
     return SizedBox.expand(
       child: widget.markdown
-          ? KMarkdownEditor(
-              key: _markdownKey,
-              dictationState: widget.dictation ? _dictationState : null,
-              dictationLabel: _dictationState == KDictationState.recording
-                  ? 'Finish dictation'
-                  : 'Start dictation',
-              onDictationPressed: widget.dictation ? _dictate : null,
-              markdown: _value,
-              onChanged: (value, _) => setState(() => _value = value),
-              mode: _mode,
-              onModeChanged: (mode) => setState(() => _mode = mode),
-              showFixedToolbar: true,
-              showFloatingToolbar: true,
-              showModeSwitcher: true,
-              semanticLabel: widget.mobile
-                  ? 'Mobile Markdown editor'
-                  : 'Markdown editor',
+          ? KStack(
+              align: KLayoutAlign.stretch,
+              children: [
+                if (widget.dictation &&
+                    _dictationState != KDictationState.ready)
+                  KButton(
+                    label: 'Cancel dictation',
+                    variant: KButtonVariant.secondary,
+                    onPressed: _cancelDictation,
+                  ),
+                Expanded(
+                  child: KMarkdownEditor(
+                    key: _markdownKey,
+                    dictationState: widget.dictation ? _dictationState : null,
+                    dictationLabel: _dictationState == KDictationState.recording
+                        ? 'Finish dictation'
+                        : 'Start dictation',
+                    onDictationPressed: widget.dictation ? _dictate : null,
+                    markdown: _value,
+                    readOnly: widget.readOnly,
+                    onChanged: (value, _) => setState(() => _value = value),
+                    mode: _mode,
+                    onModeChanged: (mode) => setState(() => _mode = mode),
+                    imageBuilder: (uri, alt, title) =>
+                        uri.toString() == 'assets/image-cropper/jordan.png'
+                        ? Image.asset(uri.toString(), semanticLabel: alt)
+                        : KText(alt ?? 'Image unavailable'),
+                    semanticLabel: widget.mobile
+                        ? 'Mobile Markdown editor'
+                        : 'Markdown editor',
+                  ),
+                ),
+              ],
             )
           : KCodeEditor(
               value: _value,
@@ -135,4 +161,158 @@ class _EditorFixtureState extends State<EditorFixture> {
             ),
     );
   }
+}
+
+class EditorCollaborationFixture extends StatefulWidget {
+  const EditorCollaborationFixture({super.key});
+
+  @override
+  State<EditorCollaborationFixture> createState() =>
+      _EditorCollaborationFixtureState();
+}
+
+class _EditorCollaborationFixtureState
+    extends State<EditorCollaborationFixture> {
+  final _selections = [
+    const KEditorSelection(anchor: 48, head: 48),
+    const KEditorSelection(anchor: 20, head: 34),
+  ];
+  late final _adapters = [
+    for (var index = 0; index < _selections.length; index++)
+      _FixtureSnapshotAdapter((transaction) => _publish(index, transaction)),
+  ];
+  var _connected = true;
+  var _document = _markdownSample;
+
+  KEditorParticipant _participant(int index) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    return index == 0
+        ? KEditorParticipant(
+            id: 'dennis',
+            name: 'Dennis',
+            color: t.colorBrandPrimaryAccent,
+          )
+        : KEditorParticipant(
+            id: 'alex',
+            name: 'Alex',
+            color: t.colorBrandSecondaryAccent,
+          );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _sync(0);
+    if (_connected) _sync(1);
+  }
+
+  void _sync(int index) {
+    final peer = 1 - index;
+    final participant = _participant(peer);
+    _adapters[index].snapshot.value = KEditorCollaborationSnapshot(
+      value: _document,
+      selection: _selections[index],
+      participants: _connected ? [participant] : const [],
+      remoteSelections: _connected
+          ? [
+              KRemoteSelection(
+                anchor: _selections[peer].anchor.clamp(0, _document.length),
+                head: _selections[peer].head.clamp(0, _document.length),
+                participant: participant,
+              ),
+            ]
+          : const [],
+    );
+  }
+
+  void _publish(int index, KEditorTransaction transaction) {
+    _document = transaction.value;
+    _selections[index] = transaction.selection;
+    _sync(index);
+    if (_connected) _sync(1 - index);
+  }
+
+  void _select(int index, KEditorSelection selection) {
+    _selections[index] = selection;
+    if (_connected) _sync(1 - index);
+  }
+
+  void _toggleConnection() {
+    setState(() => _connected = !_connected);
+    _sync(0);
+    if (_connected) _sync(1);
+  }
+
+  @override
+  void dispose() {
+    for (final adapter in _adapters) {
+      adapter.snapshot.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget editor(int index) {
+      final participant = _participant(index);
+      return KStack(
+        align: KLayoutAlign.stretch,
+        children: [
+          KText(participant.name, variant: KTextVariant.heading3),
+          KMarkdownEditor(
+            markdown: _document,
+            readOnly: index == 1 && !_connected,
+            collaborationAdapter: _adapters[index],
+            showFixedToolbar: false,
+            onSelectionChanged: (selection) => _select(index, selection),
+            semanticLabel: '${participant.name} Markdown editor',
+          ),
+        ],
+      );
+    }
+
+    return KPage(
+      children: [
+        const KText(
+          'Snapshot demo. Edits sync in this gallery. Reconnecting loads the latest shared text.',
+        ),
+        KButton(
+          label: _connected ? 'Disconnect Alex' : 'Reconnect Alex',
+          variant: KButtonVariant.secondary,
+          onPressed: _toggleConnection,
+        ),
+        LayoutBuilder(
+          builder: (context, constraints) =>
+              kWindowClassForWidth(constraints.maxWidth) == KWindowClass.compact
+              ? KStack(
+                  gap: KLayoutGap.section,
+                  align: KLayoutAlign.stretch,
+                  children: [editor(0), editor(1)],
+                )
+              : KInline(
+                  gap: KLayoutGap.section,
+                  children: [
+                    Expanded(child: editor(0)),
+                    Expanded(child: editor(1)),
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FixtureSnapshotAdapter implements KEditorCollaborationAdapter {
+  _FixtureSnapshotAdapter(this._publish);
+
+  final ValueChanged<KEditorTransaction> _publish;
+
+  @override
+  final ValueNotifier<KEditorCollaborationSnapshot> snapshot = ValueNotifier(
+    const KEditorCollaborationSnapshot(value: ''),
+  );
+
+  @override
+  void applyLocalTransaction(KEditorTransaction transaction) =>
+      _publish(transaction);
 }

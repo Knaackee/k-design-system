@@ -1,6 +1,7 @@
 export { KMarkdownEditor } from "./markdown-editor.js";
 
 export type { KMarkdownEditorProps } from "./markdown-editor.js";
+export type { KMarkdownLinkLabels } from "./markdown-link-dialog.js";
 
 export {
   KEditorDictationExtension,

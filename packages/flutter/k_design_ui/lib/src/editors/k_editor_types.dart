@@ -97,10 +97,12 @@ class KEditorCollaborationSnapshot {
   final List<KEditorParticipant> participants;
 }
 
-/// Transport-neutral bridge for Yjs, Automerge or a consumer-owned CRDT.
+/// Bridge to a consumer-owned collaboration engine and transport.
 ///
-/// Durable document updates travel through [applyLocalTransaction]. Ephemeral
-/// cursors and presence remain in [snapshot] and are never persisted by the UI.
+/// Apply [applyLocalTransaction] to the shared document and publish the current
+/// value, mapped local selection and peer presence through [snapshot]. Snapshot
+/// replacements reset local whole-document undo history. Merge, reconnect and
+/// collaborative undo belong to the engine behind this adapter.
 abstract interface class KEditorCollaborationAdapter {
   ValueListenable<KEditorCollaborationSnapshot> get snapshot;
 
@@ -134,6 +136,12 @@ class KEditorLabels {
     this.strike = 'Strikethrough',
     this.code = 'Inline code',
     this.link = 'Link',
+    this.linkDialogTitle = 'Insert link',
+    this.linkUrl = 'Link URL',
+    this.linkCancel = 'Cancel',
+    this.linkSubmit = 'Insert link',
+    this.linkInvalidUrl = 'Enter a valid link URL.',
+    this.linkClose = 'Close',
     this.bulletList = 'Bullet list',
     this.orderedList = 'Numbered list',
     this.taskList = 'Task list',
@@ -166,6 +174,12 @@ class KEditorLabels {
   final String strike;
   final String code;
   final String link;
+  final String linkDialogTitle;
+  final String linkUrl;
+  final String linkCancel;
+  final String linkSubmit;
+  final String linkInvalidUrl;
+  final String linkClose;
   final String bulletList;
   final String orderedList;
   final String taskList;

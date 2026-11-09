@@ -1,4 +1,5 @@
 import 'user_dashboard_review.dart';
+import 'markdown_fixtures.dart';
 import 'onzeit_overhaul_gallery.dart';
 import 'booking_page_management_fixture.dart';
 import 'offer_overview_fixture.dart';
@@ -498,6 +499,50 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
   WidgetbookCategory(
     name: 'Data display',
     children: [
+      WidgetbookFolder(
+        name: 'Markdown',
+        children: [
+          WidgetbookUseCase(
+            name: 'editor-integration',
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: MarkdownIntegrationFixture(),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'chat-integration',
+            builder: (_) => const MarkdownIntegrationFixture(chat: true),
+          ),
+          WidgetbookUseCase(
+            name: 'streaming',
+            builder: (_) => const MarkdownStreamingFixture(),
+          ),
+          WidgetbookUseCase(
+            name: 'renderer-document',
+            builder: (_) => const MarkdownFixture(),
+          ),
+          WidgetbookUseCase(
+            name: 'renderer-chat',
+            builder: (_) =>
+                const MarkdownFixture(fixture: 'chat-reply', chat: true),
+          ),
+          WidgetbookUseCase(
+            name: 'preview',
+            builder: (_) =>
+                const MarkdownFixture(fixture: 'long-document', preview: true),
+          ),
+          for (final fixture in [
+            'tables',
+            'code',
+            'alerts',
+            'images',
+            'edge-cases',
+          ])
+            WidgetbookUseCase(
+              name: fixture,
+              builder: (_) => MarkdownFixture(fixture: fixture),
+            ),
+        ],
+      ),
       WidgetbookFolder(
         name: 'List',
         children: [
@@ -1151,22 +1196,34 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         name: 'Editors',
         children: [
           WidgetbookUseCase(
-            name: 'markdown',
-            builder: (_) =>
-                const EditorFixture(markdown: true, dictation: true),
+            name: 'markdown-editor',
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: EditorFixture(markdown: true),
+            ),
           ),
           WidgetbookUseCase(
-            name: 'markdown-mobile',
-            builder: (_) => const EditorFixture(
-              markdown: true,
-              mobile: true,
-              dictation: true,
+            name: 'markdown-editor-mobile',
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: EditorFixture(markdown: true, mobile: true),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'markdown-editor-read-only',
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: EditorFixture(markdown: true, readOnly: true),
             ),
           ),
           WidgetbookUseCase(
             name: 'markdown-editor-dictation',
-            builder: (_) =>
-                const EditorFixture(markdown: true, dictation: true),
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: EditorFixture(markdown: true, dictation: true),
+            ),
+          ),
+          WidgetbookUseCase(
+            name: 'editor-collaboration',
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: EditorCollaborationFixture(),
+            ),
           ),
           WidgetbookUseCase(
             name: 'code',

@@ -1,82 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import '../markdown/k_markdown_renderer.dart';
+import '../markdown/k_markdown_options.dart';
 
+/// Chat composition of the shared renderer; the host owns actions and images.
 class KChatMarkdown extends StatelessWidget {
   const KChatMarkdown({
     required this.text,
     this.streaming = false,
     this.onLinkActivate,
+    this.markdownOptions = const KMarkdownOptions(),
+    this.allowedElements,
     super.key,
   });
 
   final String text;
   final bool streaming;
   final ValueChanged<Uri>? onLinkActivate;
+  final KMarkdownOptions markdownOptions;
+  final Set<String>? allowedElements;
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    final body = TextStyle(
-      color: t.colorTextPrimary,
-      fontFamily: t.fontFamily,
-      fontSize: KDesignTokenVariants.typeScaleCompactFontBodySize,
-      height:
-          KDesignTokenVariants.typeScaleCompactFontBodyLineHeight /
-          KDesignTokenVariants.typeScaleCompactFontBodySize,
-    );
-    return Semantics(
-      liveRegion: streaming,
-      child: MarkdownBody(
-        data: text,
-        // In phone layouts dragging a message scrolls the conversation.
-        // SelectableText otherwise captures mouse drags in compact previews.
-        selectable: MediaQuery.sizeOf(context).width > 600,
-        softLineBreak: true,
-        styleSheet: MarkdownStyleSheet(
-          p: body,
-          h1: body.copyWith(
-            fontSize: t.fontHeading2Size,
-            fontWeight: t.fontHeadingWeight,
-          ),
-          h2: body.copyWith(
-            fontSize: t.fontHeading3Size,
-            fontWeight: t.fontHeadingWeight,
-          ),
-          h3: body.copyWith(
-            fontSize: t.fontHeading4Size,
-            fontWeight: t.fontHeadingWeight,
-          ),
-          strong: body.copyWith(fontWeight: t.fontLabelWeight),
-          code: body.copyWith(
-            fontFamily: t.fontFamily,
-            fontSize: t.fontBodySmallSize,
-            backgroundColor: t.colorSurfaceSubtle,
-          ),
-          codeblockDecoration: BoxDecoration(
-            color: t.colorSurfaceSubtle,
-            border: Border.all(color: t.colorBorderDefault),
-            borderRadius: BorderRadius.circular(t.radiusControl),
-          ),
-          codeblockPadding: EdgeInsets.all(t.spaceControlInsetInline),
-          blockquoteDecoration: BoxDecoration(
-            color: t.colorSurfaceSubtle,
-            border: BorderDirectional(
-              start: BorderSide(color: t.colorBorderStrong),
-            ),
-          ),
-          tableBorder: TableBorder.all(color: t.colorBorderDefault),
-          tableCellsPadding: EdgeInsets.all(t.spaceControlGap),
-          a: body.copyWith(
-            color: t.colorActionPrimaryBackground,
-            decoration: TextDecoration.underline,
-          ),
-        ),
-        onTapLink: (_, href, _) {
-          final uri = href == null ? null : Uri.tryParse(href);
-          if (uri != null) onLinkActivate?.call(uri);
-        },
-      ),
+    final inputMode =
+        KAdaptive.maybeOf(context)?.inputMode ??
+        resolveKAdaptiveConfiguration(
+          width: MediaQuery.sizeOf(context).width,
+          platform: Theme.of(context).platform,
+        ).inputMode;
+    return KMarkdownRenderer(
+      content: text,
+      profile: KMarkdownProfile.chat,
+      streaming: streaming,
+      onLinkActivate: onLinkActivate ?? markdownOptions.onLinkActivate,
+      imageBuilder: markdownOptions.imageBuilder,
+      allowedElements: allowedElements ?? markdownOptions.allowedElements,
+      // Keep one-finger drag available to the parent chat on touch.
+      selectable: markdownOptions.selectable ?? inputMode == KInputMode.pointer,
+      onCopy: markdownOptions.onCopy,
+      copyLabel: markdownOptions.copyLabel,
+      tableLabel: markdownOptions.tableLabel,
+      completedTaskLabel: markdownOptions.completedTaskLabel,
+      incompleteTaskLabel: markdownOptions.incompleteTaskLabel,
+      alertLabels: markdownOptions.alertLabels,
     );
   }
 }

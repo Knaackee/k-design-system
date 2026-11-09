@@ -1,0 +1,260 @@
+@import "./assets/fonts/jetbrains-mono.css";
+
+.k-markdown {
+  --k-markdown-block-gap: var(--k-space-medium-inset);
+  --k-markdown-heading-gap: var(--k-space-layout-section-gap);
+  --k-markdown-body-scale: min(
+    var(--k-text-scale, 1),
+    var(--k-text-scale-max-body)
+  );
+  --k-markdown-heading-scale: min(
+    var(--k-text-scale, 1),
+    var(--k-text-scale-max-heading)
+  );
+  min-width: 0;
+  max-width: 100%;
+  color: var(--k-color-text-primary);
+  font-family: var(--k-font-family);
+  font-size: calc(var(--k-font-body-size) * var(--k-markdown-body-scale));
+  font-weight: var(--k-font-body-weight);
+  line-height: calc(
+    var(--k-font-body-line-height) * var(--k-markdown-body-scale)
+  );
+  overflow-wrap: anywhere;
+}
+.k-markdown[data-profile="chat"] {
+  --k-markdown-block-gap: var(--k-space-control-inset-inline);
+  --k-markdown-heading-gap: var(--k-space-medium-inset);
+}
+.k-markdown[data-selectable="false"] {
+  user-select: none;
+}
+.k-markdown__streaming-tail {
+  white-space: pre-wrap;
+}
+.k-markdown-preview {
+  min-width: 0;
+  width: 100%;
+  margin-inline: auto;
+}
+.k-markdown
+  :where(
+    p,
+    ul,
+    ol,
+    blockquote,
+    pre,
+    .k-markdown__table,
+    .k-markdown__code-block,
+    .k-alert
+  ) {
+  margin-block: 0 var(--k-markdown-block-gap);
+}
+.k-markdown :where(h1, h2, h3, h4, h5, h6) {
+  margin-block: var(--k-markdown-heading-gap) var(--k-space-control-gap);
+  color: var(--k-color-text-primary);
+  font-weight: var(--k-font-heading-weight);
+  overflow-wrap: anywhere;
+}
+.k-markdown h1 {
+  font-size: calc(
+    var(--k-font-heading2-size) * var(--k-markdown-heading-scale)
+  );
+  line-height: calc(
+    var(--k-font-heading2-line-height) * var(--k-markdown-heading-scale)
+  );
+  letter-spacing: var(--k-font-heading2-letter-spacing);
+}
+.k-markdown h2 {
+  font-size: calc(
+    var(--k-font-heading3-size) * var(--k-markdown-heading-scale)
+  );
+  line-height: calc(
+    var(--k-font-heading3-line-height) * var(--k-markdown-heading-scale)
+  );
+  letter-spacing: var(--k-font-heading3-letter-spacing);
+}
+.k-markdown :where(h3, h4, h5, h6),
+.k-markdown[data-profile="chat"] :where(h1, h2) {
+  font-size: calc(
+    var(--k-font-heading4-size) * var(--k-markdown-heading-scale)
+  );
+  line-height: calc(
+    var(--k-font-heading4-line-height) * var(--k-markdown-heading-scale)
+  );
+  letter-spacing: var(--k-font-heading4-letter-spacing);
+}
+.k-markdown strong {
+  font-weight: var(--k-font-heading-weight);
+}
+.k-markdown :where(ul, ol) {
+  padding-inline-start: var(--k-space-layout-section-gap);
+}
+.k-markdown li {
+  padding-block: var(--k-space-tight);
+}
+.k-markdown li :where(ul, ol, p) {
+  margin-block-end: 0;
+}
+.k-markdown ul.contains-task-list {
+  list-style: none;
+  padding-inline-start: 0;
+}
+.k-markdown .k-checkbox {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-inline-end: var(--k-space-control-gap);
+}
+.k-markdown .k-markdown__task {
+  /* Read-only document marker, not an interactive touch target. */
+  min-height: calc(
+    var(--k-font-body-line-height) * var(--k-markdown-body-scale)
+  );
+  padding-block: 0;
+  margin-inline-end: 0;
+  gap: 0;
+}
+.k-markdown li.task-list-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--k-space-control-gap);
+}
+.k-markdown .k-link {
+  display: inline;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.k-markdown img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--k-radius-card);
+}
+.k-markdown blockquote {
+  margin-inline: 0;
+  border-inline-start: var(--k-border-width-strong) solid
+    var(--k-color-border-strong);
+  padding-inline-start: var(--k-space-medium-inset);
+  color: var(--k-color-text-muted);
+}
+.k-markdown blockquote > :last-child {
+  margin-block-end: 0;
+}
+.k-markdown hr {
+  border: 0;
+  border-block-start: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  margin-block: var(--k-markdown-heading-gap);
+}
+.k-markdown :where(code, pre) {
+  font-family: var(
+    --k-font-family-mono,
+    "KDesignMono",
+    ui-monospace,
+    monospace
+  );
+  font-size: calc(var(--k-font-body-small-size) * var(--k-markdown-body-scale));
+  line-height: calc(
+    var(--k-font-body-small-line-height) * var(--k-markdown-body-scale)
+  );
+}
+.k-markdown code {
+  color: var(--k-color-syntax-code);
+  background: var(--k-color-surface-subtle);
+  border-radius: var(--k-radius-small);
+  padding-inline: var(--k-space-control-gap);
+}
+.k-markdown__code-block {
+  background: var(--k-color-surface-subtle);
+  border-radius: var(--k-radius-card);
+  overflow: hidden;
+}
+.k-markdown__code-header,
+.k-markdown__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--k-space-control-gap);
+}
+.k-markdown__code-header {
+  padding: var(--k-space-control-gap) var(--k-space-medium-inset);
+  color: var(--k-color-text-muted);
+  font-size: calc(var(--k-font-caption-size) * var(--k-markdown-body-scale));
+  line-height: calc(
+    var(--k-font-caption-line-height) * var(--k-markdown-body-scale)
+  );
+}
+.k-markdown__actions {
+  justify-content: end;
+}
+.k-markdown pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: var(--k-space-medium-inset);
+  margin: 0;
+  white-space: pre;
+  overscroll-behavior-inline: contain;
+}
+.k-markdown pre code {
+  color: var(--k-color-text-primary);
+  padding: 0;
+  background: none;
+}
+.k-markdown :where(pre, .k-markdown__table-scroll):focus-visible {
+  outline: var(--k-border-width-strong) solid
+    var(--k-color-action-primary-background);
+  outline-offset: calc(-1 * var(--k-border-width-strong));
+}
+.k-markdown .tok-keyword {
+  color: var(--k-color-syntax-keyword);
+}
+.k-markdown .tok-string {
+  color: var(--k-color-syntax-string);
+}
+.k-markdown .tok-number,
+.k-markdown .tok-bool,
+.k-markdown .tok-null {
+  color: var(--k-color-syntax-number);
+}
+.k-markdown .tok-comment {
+  color: var(--k-color-syntax-comment);
+}
+.k-markdown .tok-invalid {
+  color: var(--k-color-syntax-invalid);
+}
+.k-markdown__table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+.k-markdown table {
+  font: inherit;
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.k-markdown :where(th, td) {
+  padding: var(--k-space-control-inset-inline) var(--k-space-medium-inset);
+  border: 0;
+  border-block-end: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  text-align: start;
+  vertical-align: top;
+}
+.k-markdown th {
+  color: var(--k-color-text-muted);
+  font-size: calc(var(--k-font-body-small-size) * var(--k-markdown-body-scale));
+  line-height: calc(
+    var(--k-font-body-small-line-height) * var(--k-markdown-body-scale)
+  );
+  font-weight: var(--k-font-body-weight);
+}
+.k-markdown[data-profile="chat"] :where(th, td) {
+  padding-block: var(--k-space-control-gap);
+}
+.k-markdown > div > :first-child {
+  margin-block-start: 0;
+}
+.k-markdown > div > :last-child {
+  margin-block-end: 0;
+}

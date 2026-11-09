@@ -1,6 +1,6 @@
 name: k_design_ui
 description: Cross-platform Flutter primitives and components for K Design System.
-version: 1.0.0-rc.1
+version: 1.0.0-rc.2
 publish_to: none
 
 environment:
@@ -25,6 +25,7 @@ dependencies:
   maplibre: 0.3.6
   pointer_interceptor: 0.10.1+3
   flutter_markdown_plus: ^1.0.12
+  markdown: 7.3.1
   re_editor: 0.10.0
   re_highlight: 0.0.3
   dicebear_core: 10.7.0

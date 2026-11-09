@@ -38,7 +38,9 @@ KMarkdownSourceChange _prefixLines(
   KEditorSelection selection,
   String Function(int index) prefix,
 ) {
-  final lineStart = source.lastIndexOf('\n', selection.start - 1) + 1;
+  final lineStart = selection.start == 0
+      ? 0
+      : source.lastIndexOf('\n', selection.start - 1) + 1;
   final nextBreak = source.indexOf('\n', selection.end);
   final lineEnd = nextBreak < 0 ? source.length : nextBreak;
   final insert = source
@@ -71,16 +73,7 @@ KMarkdownSourceChange kMarkdownSourceChange(
   KMarkdownFormatAction.italic => _wrap(source, selection, '_'),
   KMarkdownFormatAction.strike => _wrap(source, selection, '~~'),
   KMarkdownFormatAction.code => _wrap(source, selection, '`'),
-  KMarkdownFormatAction.link => KMarkdownSourceChange(
-    from: selection.start,
-    to: selection.end,
-    insert:
-        '[${source.substring(selection.start, selection.end)}](${href ?? 'https://'})',
-    selection: KEditorSelection(
-      anchor: selection.start + 1,
-      head: selection.end + 1,
-    ),
-  ),
+  KMarkdownFormatAction.link => _link(source, selection, href!),
   KMarkdownFormatAction.bulletList => _prefixLines(
     source,
     selection,
@@ -99,3 +92,26 @@ KMarkdownSourceChange kMarkdownSourceChange(
   KMarkdownFormatAction.quote => _prefixLines(source, selection, (_) => '> '),
   KMarkdownFormatAction.codeBlock => _wrap(source, selection, '```\n', '\n```'),
 };
+
+KMarkdownSourceChange _link(
+  String source,
+  KEditorSelection selection,
+  String href,
+) {
+  final label = source
+      .substring(selection.start, selection.end)
+      .replaceAllMapped(RegExp(r'[\\\[\]]'), (match) => '\\${match[0]}');
+  final destination = href.replaceAllMapped(
+    RegExp(r'[\\()]'),
+    (match) => '\\${match[0]}',
+  );
+  return KMarkdownSourceChange(
+    from: selection.start,
+    to: selection.end,
+    insert: '[$label]($destination)',
+    selection: KEditorSelection(
+      anchor: selection.start + 1,
+      head: selection.start + 1 + label.length,
+    ),
+  );
+}

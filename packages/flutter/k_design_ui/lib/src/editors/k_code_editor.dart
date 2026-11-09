@@ -54,6 +54,9 @@ class KCodeEditor extends StatefulWidget {
   });
 
   final String value;
+
+  /// Observes local edits and incoming document snapshots. External [value]
+  /// replacements and presence-only updates do not emit transactions.
   final void Function(String value, KEditorTransaction transaction)? onChanged;
   final ValueChanged<KEditorSelection>? onSelectionChanged;
   final KCodeLanguage language;
@@ -93,6 +96,8 @@ class KCodeEditorState extends State<KCodeEditor> {
   late CodeFindController _findController;
   late FocusNode _focusNode;
   KEditorSelection _selection = const KEditorSelection(anchor: 0, head: 0);
+  late KEditorSelection _lastNotifiedSelection;
+  KEditorSelection? _snapshotSelection;
   bool _searchOpen = false;
   bool _applyingExternal = false;
   late String _lastControllerText;
@@ -111,6 +116,12 @@ class KCodeEditorState extends State<KCodeEditor> {
     _controller = CodeLineEditingController(
       codeLines: CodeLines.fromText(_source.rendered),
     );
+    _snapshotSelection = widget.collaborationAdapter?.snapshot.value.selection;
+    if (_snapshotSelection case final selection?) {
+      _replaceValue(_source.raw, selection);
+      _controller.clearHistory();
+    }
+    _lastNotifiedSelection = _selection;
     _lastControllerText = _controller.text;
     _findController = CodeFindController(_controller);
     _focusNode = FocusNode()..addListener(_handleFocus);
@@ -138,17 +149,24 @@ class KCodeEditorState extends State<KCodeEditor> {
   @override
   void didUpdateWidget(covariant KCodeEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.collaborationAdapter != widget.collaborationAdapter) {
+    final adapterChanged =
+        oldWidget.collaborationAdapter != widget.collaborationAdapter;
+    if (adapterChanged) {
       oldWidget.collaborationAdapter?.snapshot.removeListener(
         _handleCollaboration,
       );
       widget.collaborationAdapter?.snapshot.addListener(_handleCollaboration);
+      _snapshotSelection =
+          widget.collaborationAdapter?.snapshot.value.selection;
     }
     if (_effectiveValue != _source.raw) {
-      _replaceExternalValue(_effectiveValue);
+      _replaceSnapshot(_effectiveValue, _snapshotSelection);
+    } else if (adapterChanged && _snapshotSelection != null) {
+      _replaceSnapshot(_effectiveValue, _snapshotSelection);
     } else if (oldWidget.remoteSelections != widget.remoteSelections) {
       _controller.forceRepaint();
     }
+    if (adapterChanged) _controller.clearHistory();
   }
 
   @override
@@ -170,9 +188,20 @@ class KCodeEditorState extends State<KCodeEditor> {
   /// Opens document search from a consumer-owned toolbar.
   void openSearch() => setState(() => _searchOpen = true);
 
-  void undo() => _controller.undo();
+  void undo() {
+    if (!widget.readOnly) _controller.undo();
+  }
 
-  void redo() => _controller.redo();
+  void redo() {
+    if (!widget.readOnly) _controller.redo();
+  }
+
+  /// Changes the selection without editing the document or requesting focus.
+  void setSelection(KEditorSelection selection) {
+    if (_selection == selection) return;
+    _replaceValue(_source.raw, selection);
+    _notifySelection();
+  }
 
   void replaceRange(
     int from,
@@ -180,6 +209,7 @@ class KCodeEditorState extends State<KCodeEditor> {
     String insert, {
     KEditorSelection? selection,
   }) {
+    if (widget.readOnly) return;
     final source = _source.raw;
     final safeFrom = from.clamp(0, source.length);
     final safeTo = to.clamp(safeFrom, source.length);
@@ -190,9 +220,12 @@ class KCodeEditorState extends State<KCodeEditor> {
           anchor: safeFrom + insert.length,
           head: safeFrom + insert.length,
         );
-    _replaceExternalValue(next, nextSelection);
-    _emitLocalTransaction();
-    widget.onSelectionChanged?.call(_selection);
+    if (next != source) {
+      _controller.runRevocableOp(() => _replaceValue(next, nextSelection));
+      _emitLocalTransaction();
+    } else {
+      setSelection(nextSelection);
+    }
     focus();
   }
 
@@ -207,20 +240,39 @@ class KCodeEditorState extends State<KCodeEditor> {
   void _handleCollaboration() {
     final snapshot = widget.collaborationAdapter?.snapshot.value;
     if (snapshot == null) return;
-    if (snapshot.value != _source.raw) {
-      _replaceExternalValue(snapshot.value, snapshot.selection);
-      if (mounted) setState(() {});
-    } else if (mounted) {
+    final textChanged = snapshot.value != _source.raw;
+    final selectionChanged = snapshot.selection != _snapshotSelection;
+    _snapshotSelection = snapshot.selection;
+    if (textChanged || selectionChanged && snapshot.selection != _selection) {
+      _replaceSnapshot(snapshot.value, snapshot.selection);
+    } else {
       _controller.forceRepaint();
-      setState(() {});
+    }
+    if (mounted) setState(() {});
+    if (textChanged) {
+      widget.onChanged?.call(
+        _source.raw,
+        KEditorTransaction(
+          value: _source.raw,
+          selection: _selection,
+          origin: KEditorTransactionOrigin.remote,
+        ),
+      );
     }
   }
 
-  void _replaceExternalValue(String next, [KEditorSelection? nextSelection]) {
+  void _replaceSnapshot(String next, KEditorSelection? selection) {
+    final textChanged = next != _source.raw;
+    _replaceValue(next, selection ?? _selection);
+    _lastNotifiedSelection = _selection;
+    // re_editor stores entire values. Older undo entries can erase remote text.
+    if (textChanged) _controller.clearHistory();
+  }
+
+  void _replaceValue(String next, KEditorSelection nextSelection) {
     _applyingExternal = true;
     _source.raw = next;
-    final rawSelection =
-        nextSelection ?? _clampSelection(_selection, next.length);
+    final rawSelection = _clampSelection(nextSelection, next.length);
     _selection = rawSelection;
     _controller.value = _editingValue(
       _source.rendered,
@@ -235,7 +287,9 @@ class KCodeEditorState extends State<KCodeEditor> {
 
   void _handleController() {
     final textChanged = _controller.text != _lastControllerText;
-    if (!_applyingExternal) _source.acceptRendered(_controller.text);
+    if (!_applyingExternal && textChanged) {
+      _source.acceptRendered(_controller.text);
+    }
     final rendered = _globalSelection(_controller);
     final nextSelection = KEditorSelection(
       anchor: _source.toRaw(rendered.anchor),
@@ -244,7 +298,7 @@ class KCodeEditorState extends State<KCodeEditor> {
     if (nextSelection != _selection) {
       _selection = nextSelection;
       if (!_applyingExternal && !textChanged) {
-        widget.onSelectionChanged?.call(nextSelection);
+        _notifySelection();
       }
     }
   }
@@ -259,6 +313,11 @@ class KCodeEditorState extends State<KCodeEditor> {
       head: _source.toRaw(rendered.head),
     );
     _emitLocalTransaction();
+  }
+
+  void _notifySelection() {
+    if (_lastNotifiedSelection == _selection) return;
+    _lastNotifiedSelection = _selection;
     widget.onSelectionChanged?.call(_selection);
   }
 
@@ -269,6 +328,7 @@ class KCodeEditorState extends State<KCodeEditor> {
       origin: KEditorTransactionOrigin.local,
     );
     widget.onChanged?.call(transaction.value, transaction);
+    _notifySelection();
     widget.collaborationAdapter?.applyLocalTransaction(transaction);
   }
 

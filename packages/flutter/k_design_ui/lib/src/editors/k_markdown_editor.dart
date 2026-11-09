@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import '../markdown/k_markdown_preview.dart';
+import '../markdown/k_markdown_options.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:re_editor/re_editor.dart';
 
@@ -10,7 +11,10 @@ import 'k_code_editor.dart';
 import 'k_editor_format_bar.dart';
 import 'k_editor_types.dart';
 import 'k_markdown_dictation_overlay.dart';
+import 'k_markdown_link_dialog.dart';
 import 'k_markdown_source_formatting.dart';
+
+part 'k_markdown_editor_preview.dart';
 
 typedef KEditorLinkRequest =
     Future<String?> Function(KEditorSelection selection);
@@ -38,6 +42,7 @@ class KMarkdownEditor extends StatefulWidget {
     this.onLinkRequested,
     this.imageBuilder,
     this.onLinkPressed,
+    this.markdownOptions = const KMarkdownOptions(),
     this.minHeight = 280,
     this.formatBarMinimumItemExtent,
     this.dictationState,
@@ -51,6 +56,9 @@ class KMarkdownEditor extends StatefulWidget {
   });
 
   final String markdown;
+
+  /// Observes local edits and incoming document snapshots. Inspect the
+  /// transaction origin when forwarding edits to an external system.
   final void Function(String value, KEditorTransaction transaction)? onChanged;
   final KEditorMode? mode;
   final KEditorMode defaultMode;
@@ -68,11 +76,14 @@ class KMarkdownEditor extends StatefulWidget {
   final List<KRemoteSelection> remoteSelections;
   final KEditorCollaborationAdapter? collaborationAdapter;
   final String semanticLabel;
+
+  /// Overrides the built-in link form. Return null to cancel insertion.
   final KEditorLinkRequest? onLinkRequested;
 
   /// Host-owned resolution of relative or protected Markdown images.
   final Widget Function(Uri uri, String? alt, String? title)? imageBuilder;
   final ValueChanged<String>? onLinkPressed;
+  final KMarkdownOptions markdownOptions;
   final double minHeight;
 
   /// Optional minimum size for every formatting action. When omitted, the
@@ -103,15 +114,22 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   KEditorSelection? _dictationSelection;
   late KEditorMode _internalMode;
   late String _draft;
-  KEditorSelection _selection = const KEditorSelection(anchor: 0, head: 0);
+  bool _linkPending = false;
+  (String, KEditorSelection)? _previewSelection;
 
   KEditorMode get _mode => widget.mode ?? _internalMode;
   String get _effectiveDraft =>
       widget.collaborationAdapter?.snapshot.value.value ?? _draft;
 
-  KEditorSelection get selection => _selection;
+  /// The mounted K source editor for consumer-owned toolbars and commands.
+  KCodeEditorState? get sourceEditor => _editorKey.currentState;
 
-  void openSearch() => _editorKey.currentState?.openSearch();
+  KEditorSelection get selection =>
+      sourceEditor?.selection ??
+      widget.collaborationAdapter?.snapshot.value.selection ??
+      const KEditorSelection(anchor: 0, head: 0);
+
+  void openSearch() => sourceEditor?.openSearch();
 
   /// Inserts a completed result through the source editor's undo/CRDT path.
   /// A collaborative host can supply its mapped saved selection.
@@ -119,7 +137,7 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
     if (widget.readOnly || _mode != KEditorMode.source || text.isEmpty) {
       return false;
     }
-    final target = selection ?? _dictationSelection ?? _selection;
+    final target = selection ?? _dictationSelection ?? this.selection;
     final editor = _editorKey.currentState;
     if (editor == null) return false;
     editor.replaceRange(target.start, target.end, text);
@@ -129,7 +147,7 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
 
   void _dictate() {
     if (widget.dictationState != KDictationState.recording) {
-      _dictationSelection = _selection;
+      _dictationSelection = selection;
     }
     widget.onDictationPressed?.call();
   }
@@ -145,7 +163,11 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   @override
   void didUpdateWidget(covariant KMarkdownEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if ((oldWidget.mode ?? _internalMode) != _mode) {
+      _switchSourceVisibility(_mode);
+    }
     if (oldWidget.collaborationAdapter != widget.collaborationAdapter) {
+      _previewSelection = null;
       oldWidget.collaborationAdapter?.snapshot.removeListener(
         _handleCollaboration,
       );
@@ -153,6 +175,11 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
     }
     if (widget.markdown != oldWidget.markdown && widget.markdown != _draft) {
       _draft = widget.markdown;
+    }
+    if (widget.dictationState != oldWidget.dictationState &&
+        (widget.dictationState == KDictationState.ready ||
+            widget.dictationState == null)) {
+      _dictationSelection = null;
     }
   }
 
@@ -171,8 +198,28 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   }
 
   void _changeMode(KEditorMode mode) {
-    if (widget.mode == null) setState(() => _internalMode = mode);
+    if (widget.mode == null) {
+      _switchSourceVisibility(mode);
+      setState(() => _internalMode = mode);
+    }
     widget.onModeChanged?.call(mode);
+  }
+
+  void _switchSourceVisibility(KEditorMode next) {
+    final editor = sourceEditor;
+    if (editor == null || widget.collaborationAdapter != null) return;
+    if (next == KEditorMode.read) {
+      _previewSelection = (editor.value, editor.selection);
+    } else if (_previewSelection case final saved?) {
+      _previewSelection = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted &&
+            _mode == KEditorMode.source &&
+            editor.value == saved.$1) {
+          editor.setSelection(saved.$2);
+        }
+      });
+    }
   }
 
   void _changeSource(String value, KEditorTransaction transaction) {
@@ -181,34 +228,63 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   }
 
   void _updateSelection(KEditorSelection value) {
-    setState(() => _selection = value);
+    setState(() {});
     widget.onSelectionChanged?.call(value);
   }
 
   Future<void> _applyFormat(KMarkdownFormatAction action) async {
-    if (widget.readOnly) return;
+    final editor = _editorKey.currentState;
+    if (widget.readOnly || _mode != KEditorMode.source || editor == null) {
+      return;
+    }
     if (action == KMarkdownFormatAction.undo) {
-      _editorKey.currentState?.undo();
+      editor.undo();
       return;
     }
     if (action == KMarkdownFormatAction.redo) {
-      _editorKey.currentState?.redo();
+      editor.redo();
       return;
     }
+    final source = editor.value;
+    final target = editor.selection;
     String? href;
     if (action == KMarkdownFormatAction.link) {
-      href = widget.onLinkRequested == null
-          ? 'https://'
-          : await widget.onLinkRequested!.call(_selection);
-      if (!mounted || href == null) return;
+      if (_linkPending) return;
+      _linkPending = true;
+      final request = widget.onLinkRequested;
+      final adapter = widget.collaborationAdapter;
+      String? result;
+      try {
+        result = await (request == null
+            ? showKMarkdownLinkDialog(context, widget.labels)
+            : request(target));
+      } finally {
+        _linkPending = false;
+      }
+      if (!mounted ||
+          widget.readOnly ||
+          _mode != KEditorMode.source ||
+          adapter != widget.collaborationAdapter ||
+          source != editor.value) {
+        return;
+      }
+      if (result == null) {
+        // Mobile editors collapse a selection when the modal takes focus.
+        if (request == null) {
+          editor.replaceRange(
+            target.start,
+            target.start,
+            '',
+            selection: target,
+          );
+        }
+        return;
+      }
+      href = kMarkdownLinkUrl(result);
+      if (href == null) return;
     }
-    final change = kMarkdownSourceChange(
-      _effectiveDraft,
-      _selection,
-      action,
-      href: href,
-    );
-    _editorKey.currentState?.replaceRange(
+    final change = kMarkdownSourceChange(source, target, action, href: href);
+    editor.replaceRange(
       change.from,
       change.to,
       change.insert,
@@ -224,269 +300,175 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final editing = _mode == KEditorMode.source;
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: IndexedStack(
-                      index: editing ? 0 : 1,
-                      sizing: StackFit.expand,
-                      children: [
-                        ExcludeFocus(
-                          excluding: !editing,
-                          child: KMarkdownSourceGeometry(
-                            scrollController: _scrollController,
-                            paragraphs: _paragraphs,
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: KCodeEditor(
-                                    key: _editorKey,
-                                    value: _effectiveDraft,
-                                    onChanged: _changeSource,
-                                    onSelectionChanged: _updateSelection,
-                                    language: KCodeLanguage.markdown,
-                                    readOnly: widget.readOnly,
-                                    placeholder: widget.placeholder,
-                                    showLineNumbers: false,
-                                    lineWrapping: true,
-                                    showSearchButton: widget.showSearchButton,
-                                    contentMaxWidth: widget.contentMaxWidth,
-                                    searchButtonEndInset:
-                                        widget.showModeSwitcher
-                                        ? t.sizeHitTarget +
-                                              t.spaceControlGap * 2
-                                        : null,
-                                    labels: widget.labels,
-                                    remoteSelections: widget.remoteSelections,
-                                    collaborationAdapter:
-                                        widget.collaborationAdapter,
-                                    semanticLabel: widget.semanticLabel,
-                                    minHeight: widget.minHeight,
-                                    onFocus: widget.onFocus,
-                                    onBlur: widget.onBlur,
-                                  ),
-                                ),
-                                if (!widget.readOnly &&
-                                    (widget.dictationState ==
-                                            KDictationState.recording ||
-                                        widget.dictationState ==
-                                            KDictationState.processing))
+        return SizedBox(
+          height: constraints.hasBoundedHeight
+              ? constraints.maxHeight
+              : widget.minHeight,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: IndexedStack(
+                        index: editing ? 0 : 1,
+                        sizing: StackFit.expand,
+                        children: [
+                          ExcludeFocus(
+                            excluding: !editing,
+                            child: KMarkdownSourceGeometry(
+                              scrollController: _scrollController,
+                              paragraphs: _paragraphs,
+                              child: Stack(
+                                children: [
                                   Positioned.fill(
-                                    child: IgnorePointer(
-                                      child: KMarkdownDictationOverlay(
-                                        scrollController: _scrollController,
-                                        paragraphs: _paragraphs,
-                                        source: _effectiveDraft,
-                                        offset:
-                                            widget.dictationOffset ??
-                                            _dictationSelection?.start ??
-                                            _selection.start,
-                                        state: widget.dictationState!,
-                                      ),
+                                    child: KCodeEditor(
+                                      key: _editorKey,
+                                      value: _effectiveDraft,
+                                      onChanged: _changeSource,
+                                      onSelectionChanged: _updateSelection,
+                                      language: KCodeLanguage.markdown,
+                                      readOnly: widget.readOnly,
+                                      placeholder: widget.placeholder,
+                                      showLineNumbers: false,
+                                      lineWrapping: true,
+                                      showSearchButton: widget.showSearchButton,
+                                      contentMaxWidth: widget.contentMaxWidth,
+                                      searchButtonEndInset:
+                                          widget.showModeSwitcher
+                                          ? t.sizeHitTarget +
+                                                t.spaceControlGap * 2
+                                          : null,
+                                      labels: widget.labels,
+                                      remoteSelections: widget.remoteSelections,
+                                      collaborationAdapter:
+                                          widget.collaborationAdapter,
+                                      semanticLabel: widget.semanticLabel,
+                                      minHeight: widget.minHeight,
+                                      onFocus: widget.onFocus,
+                                      onBlur: widget.onBlur,
                                     ),
                                   ),
-                              ],
+                                  if (!widget.readOnly &&
+                                      (widget.dictationState ==
+                                              KDictationState.recording ||
+                                          widget.dictationState ==
+                                              KDictationState.processing))
+                                    Positioned.fill(
+                                      child: IgnorePointer(
+                                        child: KMarkdownDictationOverlay(
+                                          scrollController: _scrollController,
+                                          paragraphs: _paragraphs,
+                                          source: _effectiveDraft,
+                                          offset:
+                                              widget.dictationOffset ??
+                                              _dictationSelection?.start ??
+                                              selection.start,
+                                          state: widget.dictationState!,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        _MarkdownPreview(
-                          markdown: _effectiveDraft,
-                          semanticLabel: '${widget.semanticLabel} preview',
-                          contentMaxWidth: widget.contentMaxWidth,
-                          imageBuilder: widget.imageBuilder,
-                          onLinkPressed: widget.onLinkPressed,
-                          topInset: widget.showModeSwitcher
-                              ? t.sizeHitTarget + t.spaceSmallInset
-                              : t.spaceMediumInset,
-                        ),
-                      ],
-                    ),
-                  ),
-                  if ((widget.showFixedToolbar ||
-                          widget.dictationState != null) &&
-                      editing &&
-                      !widget.readOnly)
-                    SafeArea(
-                      top: false,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          t.spaceControlGap,
-                          t.spaceControlGap,
-                          t.spaceControlGap,
-                          t.spaceControlGap,
-                        ),
-                        child: KEditorFormatBar(
-                          labels: widget.labels,
-                          actions: widget.showFixedToolbar
-                              ? widget.formatActions
-                              : const [],
-                          onAction: _applyFormat,
-                          floating: true,
-                          minimumItemExtent: widget.formatBarMinimumItemExtent,
-                          leadingAction: widget.dictationState == null
-                              ? null
-                              : KDictationAction(
-                                  state: widget.dictationState!,
-                                  audioLevel: widget.dictationAudioLevel,
-                                  label: widget.dictationLabel,
-                                  onPressed: widget.onDictationPressed == null
-                                      ? null
-                                      : _dictate,
-                                ),
-                        ),
+                          _MarkdownPreview(
+                            markdown: _effectiveDraft,
+                            semanticLabel: '${widget.semanticLabel} preview',
+                            contentMaxWidth: widget.contentMaxWidth,
+                            imageBuilder: widget.imageBuilder,
+                            markdownOptions: widget.markdownOptions,
+                            onLinkPressed: widget.onLinkPressed,
+                            topInset: widget.showModeSwitcher
+                                ? t.sizeHitTarget + t.spaceSmallInset
+                                : t.spaceMediumInset,
+                          ),
+                        ],
                       ),
                     ),
-                ],
-              ),
-            ),
-            if (widget.showModeSwitcher)
-              PositionedDirectional(
-                top: t.spaceControlGap,
-                end: t.spaceControlGap,
-                child: KIconButton(
-                  label: editing ? widget.labels.read : widget.labels.source,
-                  icon: editing ? KIconName.eye : KIconName.pen,
-                  selected: !editing,
-                  onPressed: () => _changeMode(
-                    editing ? KEditorMode.read : KEditorMode.source,
-                  ),
-                ),
-              ),
-            if (widget.showFloatingToolbar &&
-                editing &&
-                !widget.readOnly &&
-                !_selection.isCollapsed)
-              PositionedDirectional(
-                top: t.sizeHitTarget + t.spaceSmallInset,
-                start: t.spaceSmallInset,
-                end: t.spaceSmallInset,
-                child: Align(
-                  alignment: AlignmentDirectional.topCenter,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: t.componentBottomSheetMaxWidth,
-                    ),
-                    child: KEditorFormatBar(
-                      labels: widget.labels,
-                      actions: widget.formatActions,
-                      onAction: _applyFormat,
-                      floating: true,
-                      minimumItemExtent: widget.formatBarMinimumItemExtent,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _MarkdownPreview extends StatelessWidget {
-  const _MarkdownPreview({
-    required this.markdown,
-    required this.semanticLabel,
-    required this.topInset,
-    this.contentMaxWidth,
-    this.imageBuilder,
-    this.onLinkPressed,
-  });
-
-  final String markdown;
-  final String semanticLabel;
-  final double topInset;
-  final double? contentMaxWidth;
-  final Widget Function(Uri uri, String? alt, String? title)? imageBuilder;
-  final ValueChanged<String>? onLinkPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    return Semantics(
-      label: semanticLabel,
-      readOnly: true,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: t.colorSurfaceCanvas,
-          border: Border.all(color: t.colorBorderDefault),
-          borderRadius: BorderRadius.circular(t.radiusCard),
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: contentMaxWidth ?? double.infinity,
-            ),
-            child: SizedBox.expand(
-              child: Markdown(
-                data: markdown,
-                imageBuilder: imageBuilder == null
-                    ? null
-                    : (uri, title, alt) => imageBuilder!(uri, alt, title),
-                onTapLink: (text, href, title) {
-                  if (href == null) return;
-                  final uri = Uri.tryParse(href);
-                  if (uri != null &&
-                      (uri.scheme.isEmpty ||
-                          const [
-                            'https',
-                            'http',
-                            'mailto',
-                          ].contains(uri.scheme))) {
-                    onLinkPressed?.call(href);
-                  }
-                },
-                selectable: true,
-                padding: EdgeInsets.fromLTRB(
-                  t.spaceMediumInset,
-                  topInset,
-                  t.spaceMediumInset,
-                  t.spaceMediumInset,
-                ),
-                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                    .copyWith(
-                      p: TextStyle(
-                        color: t.colorTextPrimary,
-                        fontFamily: t.fontFamily,
-                        fontSize: t.fontBodySize,
-                        height: t.fontBodyLineHeight / t.fontBodySize,
-                      ),
-                      h1: TextStyle(
-                        color: t.colorSyntaxHeading,
-                        fontFamily: t.fontFamily,
-                        fontSize: t.fontHeading2Size,
-                        fontWeight: t.fontHeadingWeight,
-                      ),
-                      h2: TextStyle(
-                        color: t.colorSyntaxHeading,
-                        fontFamily: t.fontFamily,
-                        fontSize: t.fontHeading3Size,
-                        fontWeight: t.fontHeadingWeight,
-                      ),
-                      code: TextStyle(
-                        color: t.colorSyntaxCode,
-                        backgroundColor: t.colorSurfaceSubtle,
-                        fontFamily: 'monospace',
-                      ),
-                      blockquoteDecoration: BoxDecoration(
-                        color: t.colorSurfaceSubtle,
-                        border: Border(
-                          left: BorderSide(
-                            color: t.colorSyntaxMarkup,
-                            width: t.borderWidthStrong,
+                    if ((widget.showFixedToolbar ||
+                            widget.dictationState != null) &&
+                        editing &&
+                        !widget.readOnly)
+                      SafeArea(
+                        top: false,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(
+                            t.spaceControlGap,
+                            t.spaceControlGap,
+                            t.spaceControlGap,
+                            t.spaceControlGap,
+                          ),
+                          child: KEditorFormatBar(
+                            labels: widget.labels,
+                            actions: widget.showFixedToolbar
+                                ? widget.formatActions
+                                : const [],
+                            onAction: _applyFormat,
+                            floating: true,
+                            minimumItemExtent:
+                                widget.formatBarMinimumItemExtent,
+                            leadingAction: widget.dictationState == null
+                                ? null
+                                : KDictationAction(
+                                    state: widget.dictationState!,
+                                    audioLevel: widget.dictationAudioLevel,
+                                    label: widget.dictationLabel,
+                                    onPressed: widget.onDictationPressed == null
+                                        ? null
+                                        : _dictate,
+                                  ),
                           ),
                         ),
                       ),
-                      a: TextStyle(color: t.colorSyntaxLink),
-                    ),
+                  ],
+                ),
               ),
-            ),
+              if (widget.showModeSwitcher)
+                PositionedDirectional(
+                  top: t.spaceControlGap,
+                  end: t.spaceControlGap,
+                  child: CodeEditorTapRegion(
+                    child: KIconButton(
+                      label: editing
+                          ? widget.labels.read
+                          : widget.labels.source,
+                      icon: editing ? KIconName.eye : KIconName.pen,
+                      selected: !editing,
+                      onPressed: () => _changeMode(
+                        editing ? KEditorMode.read : KEditorMode.source,
+                      ),
+                    ),
+                  ),
+                ),
+              if (widget.showFloatingToolbar &&
+                  editing &&
+                  !widget.readOnly &&
+                  !selection.isCollapsed)
+                PositionedDirectional(
+                  top: t.sizeHitTarget + t.spaceSmallInset,
+                  start: t.spaceSmallInset,
+                  end: t.spaceSmallInset,
+                  child: Align(
+                    alignment: AlignmentDirectional.topCenter,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: t.componentBottomSheetMaxWidth,
+                      ),
+                      child: KEditorFormatBar(
+                        labels: widget.labels,
+                        actions: widget.formatActions,
+                        onAction: _applyFormat,
+                        floating: true,
+                        minimumItemExtent: widget.formatBarMinimumItemExtent,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

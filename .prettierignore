@@ -34,3 +34,11 @@ docs/adr/evidence/
 
 **/flutter/ephemeral/
 packages/flutter/k_design_ui/test/fixtures/map-style-parity.json
+
+# Intentionally incomplete Markdown for streaming parser tests.
+fixtures/markdown/streaming-partial.md
+# Approved plan; keep accepted document bytes unchanged during implementation.
+docs/plans/markdown-optimization.md
+
+# Flutter-generated copies of the canonical root Markdown fixtures.
+apps/widgetbook/fixtures/markdown/

@@ -2,12 +2,13 @@ import {
   KCodeEditor,
   KMarkdownEditor,
   createKEditorCollaborationDocument,
+  createKEditorCollaborationTransport,
   type KCodeCompletion,
   type KEditorMode,
+  type KEditorSelection,
 } from "@k-design-system/ui/editors";
-import { useMemo, useState } from "react";
-import { useRef } from "react";
-import { KDictationState } from "@k-design-system/ui";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { KButton, KDictationState, KInline, KText } from "@k-design-system/ui";
 import "./editor-fixture.css";
 
 const initialMarkdown = `# Collaborative release notes
@@ -42,11 +43,6 @@ const initialCode = `type EditorParticipant = {
 export function participantLabel(user: EditorParticipant) {
   return user.name.trim() || "Anonymous";
 }`;
-
-const sharedMarkdown = createKEditorCollaborationDocument({
-  id: "editor-demo-markdown",
-  kind: "text",
-});
 
 const codeCompletions: KCodeCompletion[] = [
   {
@@ -88,62 +84,87 @@ const dennisSelection = [
 ];
 
 export function MarkdownEditorFixture() {
-  return <MarkdownEditorDictationFixture showModeSwitcher />;
+  return <MarkdownEditorDemo />;
 }
 
 /** Deterministic capture simulation; galleries never access a microphone. */
-export function MarkdownEditorDictationFixture({
+export function MarkdownEditorDictationFixture() {
+  return <MarkdownEditorDemo dictation />;
+}
+
+function MarkdownEditorDemo({
   mobile = false,
-  showModeSwitcher = false,
-}: { mobile?: boolean; showModeSwitcher?: boolean } = {}) {
+  readOnly = false,
+  dictation = false,
+}: {
+  mobile?: boolean;
+  readOnly?: boolean;
+  dictation?: boolean;
+}) {
   const [markdown, setMarkdown] = useState(initialMarkdown);
+  const [mode, setMode] = useState<KEditorMode>("source");
   const [state, setState] = useState(KDictationState.ready);
   const insertion = useRef<((text: string) => boolean) | null>(null);
   const cancel = useRef<(() => void) | null>(null);
   return (
     <div className={`editor-demo${mobile ? " editor-demo--mobile" : ""}`}>
-      <div className="editor-demo-shell">
-        <KMarkdownEditor
-          markdown={markdown}
-          onChange={setMarkdown}
-          showModeSwitcher={showModeSwitcher}
-          placeholder="Write release notes…"
-          labels={{ source: "Markdown", read: "Preview" }}
-          dictation={{
-            state,
-            label:
-              state === KDictationState.recording
-                ? "Stop dictation"
-                : "Start dictation",
-            onStart: (insert, stop) => {
-              insertion.current = insert;
-              cancel.current = stop;
-              setState(KDictationState.recording);
-            },
-            onStop: () => {
-              insertion.current?.("Dictated text");
-              insertion.current = null;
-              setState(KDictationState.ready);
-            },
-          }}
-        />
+      <div
+        className={`editor-demo-shell${state === KDictationState.recording ? " editor-demo-shell--with-actions" : ""}`}
+      >
         {state === KDictationState.recording && (
-          <button
+          <KButton
+            variant="secondary"
             onClick={() => {
               cancel.current?.();
+              insertion.current = null;
               setState(KDictationState.ready);
             }}
           >
             Cancel dictation
-          </button>
+          </KButton>
         )}
+        <KMarkdownEditor
+          markdown={markdown}
+          onChange={setMarkdown}
+          mode={mode}
+          onModeChange={setMode}
+          readOnly={readOnly}
+          ariaLabel={mobile ? "Mobile Markdown editor" : "Markdown editor"}
+          placeholder="Write release notes…"
+          labels={{ source: "Markdown", read: "Preview" }}
+          dictation={
+            dictation
+              ? {
+                  state,
+                  label:
+                    state === KDictationState.recording
+                      ? "Finish dictation"
+                      : "Start dictation",
+                  onStart: (insert, stop) => {
+                    insertion.current = insert;
+                    cancel.current = stop;
+                    setState(KDictationState.recording);
+                  },
+                  onStop: () => {
+                    insertion.current?.("Dictated release update. ");
+                    insertion.current = null;
+                    setState(KDictationState.ready);
+                  },
+                }
+              : undefined
+          }
+        />
       </div>
     </div>
   );
 }
 
 export function MarkdownEditorMobileFixture() {
-  return <MarkdownEditorDictationFixture mobile showModeSwitcher />;
+  return <MarkdownEditorDemo mobile />;
+}
+
+export function MarkdownEditorReadOnlyFixture() {
+  return <MarkdownEditorDemo readOnly />;
 }
 
 export function CodeEditorFixture() {
@@ -195,9 +216,69 @@ export function CodeEditorMobileFixture() {
 }
 
 export function EditorCollaborationFixture() {
+  const [{ first, second, firstTransport, secondTransport }] = useState(() => {
+    const first = createKEditorCollaborationDocument({
+      id: "editor-demo-markdown",
+      kind: "text",
+      initialText: initialMarkdown,
+    });
+    const second = createKEditorCollaborationDocument({
+      id: first.id,
+      kind: "text",
+    });
+    const firstTransport = createKEditorCollaborationTransport(first);
+    const secondTransport = createKEditorCollaborationTransport(second);
+    secondTransport.applyUpdate(firstTransport.encodeUpdate());
+    return { first, second, firstTransport, secondTransport };
+  });
+  const [connected, setConnected] = useState(true);
+  const online = useRef(true);
+  const [alex, setAlex] = useState(alexSelection);
+  const [dennis, setDennis] = useState(dennisSelection);
+  useEffect(() => {
+    const stopFirst = firstTransport.subscribe((update) => {
+      if (online.current) secondTransport.applyUpdate(update);
+    });
+    const stopSecond = secondTransport.subscribe((update) => {
+      if (online.current) firstTransport.applyUpdate(update);
+    });
+    return () => {
+      stopFirst();
+      stopSecond();
+    };
+  }, [firstTransport, secondTransport]);
+
+  function toggleConnection() {
+    online.current = !online.current;
+    setConnected(online.current);
+    if (online.current) {
+      const fromDennis = firstTransport.encodeUpdate(
+        secondTransport.encodeStateVector(),
+      );
+      const fromAlex = secondTransport.encodeUpdate(
+        firstTransport.encodeStateVector(),
+      );
+      secondTransport.applyUpdate(fromDennis);
+      firstTransport.applyUpdate(fromAlex);
+    }
+  }
+
   return (
     <div className="editor-demo">
-      <div className="editor-demo-shell">
+      <div className="editor-demo-shell editor-demo-shell--with-actions">
+        <KInline
+          gap="action"
+          wrap
+          className="editor-demo-collaboration-actions"
+        >
+          <KButton variant="secondary" onClick={toggleConnection}>
+            {connected ? "Disconnect Alex" : "Reconnect Alex"}
+          </KButton>
+          <KText variant="caption">
+            Yjs demo. Each editor keeps its own replica. Reconnect merges
+            offline edits.
+          </KText>
+        </KInline>
         <div className="editor-demo-grid">
           <div className="editor-demo-pane">
             <header>
@@ -205,10 +286,19 @@ export function EditorCollaborationFixture() {
               <span>Desktop</span>
             </header>
             <KMarkdownEditor
-              markdown={initialMarkdown}
-              collaborationDocument={sharedMarkdown}
+              markdown=""
+              collaborationDocument={first}
               showFixedToolbar={false}
-              remoteSelections={alexSelection}
+              remoteSelections={connected ? alex : undefined}
+              onSelectionChange={(selection: KEditorSelection) =>
+                setDennis([
+                  {
+                    ...selection,
+                    participant: dennisSelection[0]!.participant,
+                  },
+                ])
+              }
+              ariaLabel="Dennis Markdown editor"
             />
           </div>
           <div className="editor-demo-pane">
@@ -217,10 +307,16 @@ export function EditorCollaborationFixture() {
               <span>Second client</span>
             </header>
             <KMarkdownEditor
-              markdown={initialMarkdown}
-              collaborationDocument={sharedMarkdown}
+              markdown=""
+              collaborationDocument={second}
               showFixedToolbar={false}
-              remoteSelections={dennisSelection}
+              remoteSelections={connected ? dennis : undefined}
+              onSelectionChange={(selection: KEditorSelection) =>
+                setAlex([
+                  { ...selection, participant: alexSelection[0]!.participant },
+                ])
+              }
+              ariaLabel="Alex Markdown editor"
             />
           </div>
         </div>

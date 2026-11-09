@@ -30,8 +30,8 @@ export function KEditorSearchPanel({
   const [showReplace, setShowReplace] = useState(false);
 
   useEffect(() => {
-    if (!externalQuery.eq(query)) setQuery(externalQuery);
-  }, [externalQuery, query]);
+    setQuery(externalQuery);
+  }, [externalQuery]);
 
   const updateQuery = (change: Partial<SearchQuery>) => {
     const next = new SearchQuery({
@@ -211,6 +211,7 @@ export function createKEditorSearchPanel(
         if (
           update.docChanged ||
           update.selectionSet ||
+          update.startState.readOnly !== update.state.readOnly ||
           update.transactions.some((transaction) =>
             transaction.effects.some((effect) => effect.is(setSearchQuery)),
           )

@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
@@ -23,7 +24,14 @@ void main() {
       await tester.pumpWidget(shell(KEditorMode.source));
       final source = tester.getRect(find.byType(CodeEditor));
       await tester.pumpWidget(shell(KEditorMode.read));
-      final preview = tester.getRect(find.byType(Markdown));
+      final preview = tester.getRect(
+        find
+            .ancestor(
+              of: find.byType(KMarkdownPreview),
+              matching: find.byType(SingleChildScrollView),
+            )
+            .first,
+      );
 
       expect(preview.width, contentMaxWidth ?? 700);
       expect(preview.width, source.width);
@@ -205,7 +213,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('code editor emits local transactions and accepts remote state', (
+  testWidgets('code editor labels changes and protects remote text from undo', (
     tester,
   ) async {
     final key = GlobalKey<KCodeEditorState>();
@@ -235,11 +243,222 @@ void main() {
     await tester.pump();
 
     expect(key.currentState?.value, 'const ready = "remote";');
-    expect(changes, hasLength(1));
+    expect(changes, hasLength(2));
+    expect(changes.last.origin, KEditorTransactionOrigin.remote);
+    expect(adapter.localTransactions, hasLength(1));
+
+    key.currentState?.undo();
+    await tester.pump();
+    expect(key.currentState?.value, 'const ready = "remote";');
+    expect(changes, hasLength(2));
+
+    key.currentState?.replaceRange(0, 0, '// ');
+    key.currentState?.undo();
+    await tester.pump();
+    expect(key.currentState?.value, 'const ready = "remote";');
+    expect(changes, hasLength(4));
+    expect(adapter.localTransactions, hasLength(3));
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pump(const Duration(milliseconds: 120));
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets(
+    'Markdown formatting follows snapshot selection after reconnect',
+    (tester) async {
+      final key = GlobalKey<KMarkdownEditorState>();
+      final adapter = _TestAdapter(
+        'Alpha beta',
+        selection: const KEditorSelection(anchor: 5, head: 0),
+      );
+      final reconnect = _TestAdapter(
+        'Zulu alpha',
+        selection: const KEditorSelection(anchor: 100, head: 5),
+      );
+      final changes = <KEditorTransaction>[];
+      Widget editor(KEditorCollaborationAdapter value) => _Shell(
+        child: KMarkdownEditor(
+          key: key,
+          markdown: '',
+          collaborationAdapter: value,
+          showFloatingToolbar: false,
+          onChanged: (_, transaction) => changes.add(transaction),
+        ),
+      );
+
+      await tester.pumpWidget(editor(adapter));
+      expect(
+        key.currentState!.selection,
+        const KEditorSelection(anchor: 5, head: 0),
+      );
+      adapter.remote(
+        'Alpha beta',
+        selection: const KEditorSelection(anchor: 6, head: 10),
+      );
+      await tester.pump();
+      expect(
+        key.currentState!.selection,
+        const KEditorSelection(anchor: 6, head: 10),
+      );
+      expect(changes, isEmpty);
+
+      await tester.pumpWidget(editor(reconnect));
+      expect(
+        key.currentState!.selection,
+        const KEditorSelection(anchor: 10, head: 5),
+      );
+      expect(changes, isEmpty);
+      adapter.remote('Ignore the detached adapter');
+      await tester.pump();
+      await tester.tap(find.byTooltip('Bold'));
+      await tester.pump();
+      expect(changes.single.value, 'Zulu **alpha**');
+      expect(reconnect.localTransactions.single.value, 'Zulu **alpha**');
+      expect(adapter.localTransactions, isEmpty);
+
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump(const Duration(milliseconds: 120));
+      await tester.pumpWidget(const SizedBox.shrink());
+      adapter.dispose();
+      reconnect.dispose();
+    },
+  );
+
+  testWidgets(
+    'Markdown link dialog validates, cancels and inserts selected text',
+    (tester) async {
+      tester.view.physicalSize = const Size(900, 740);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final changes = <KEditorTransaction>[];
+      const frame = ValueKey('phone viewport');
+      const frameSize = Size(390, 620);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: Scaffold(
+            body: Center(
+              child: SizedBox.fromSize(
+                key: frame,
+                size: frameSize,
+                child: Builder(
+                  builder: (context) => MediaQuery(
+                    data: MediaQuery.of(context).copyWith(size: frameSize),
+                    child: Navigator(
+                      pages: [
+                        MaterialPage<void>(
+                          child: KMarkdownEditor(
+                            markdown: 'A [label]',
+                            showFloatingToolbar: false,
+                            labels: const KEditorLabels(
+                              linkDialogTitle: 'Link hinzufügen',
+                              linkUrl: 'Zieladresse',
+                              linkSubmit: 'Einfügen',
+                              linkCancel: 'Abbrechen',
+                              linkInvalidUrl: 'Adresse prüfen',
+                            ),
+                            onChanged: (_, transaction) =>
+                                changes.add(transaction),
+                          ),
+                        ),
+                      ],
+                      onDidRemovePage: (_) {},
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      final source = tester.state<KCodeEditorState>(find.byType(KCodeEditor));
+      source.replaceRange(
+        0,
+        0,
+        '',
+        selection: const KEditorSelection(anchor: 2, head: 9),
+      );
+      await tester.pump();
+
+      await tester.tap(find.byTooltip('Link'));
+      await tester.pumpAndSettle();
+      expect(
+        find.descendant(
+          of: find.byKey(frame),
+          matching: find.byType(KBottomSheet),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Zieladresse'), findsOneWidget);
+      for (final invalid in ['javascript:alert(1)', 'mailto:', r'\host\path']) {
+        await tester.enterText(find.byType(KInput), invalid);
+        await tester.tap(find.widgetWithText(KButton, 'Einfügen'));
+        await tester.pump();
+        expect(find.text('Adresse prüfen'), findsOneWidget);
+      }
+      await tester.tap(find.widgetWithText(KButton, 'Abbrechen'));
+      await tester.pumpAndSettle();
+      expect(changes, isEmpty);
+      expect(source.value, 'A [label]');
+      expect(source.selection, const KEditorSelection(anchor: 2, head: 9));
+
+      await tester.tap(find.byTooltip('Link'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(KInput), 'https://example.org/a(b)');
+      await tester.tap(find.widgetWithText(KButton, 'Einfügen'));
+      await tester.pumpAndSettle();
+      expect(
+        changes.single.value,
+        r'A [\[label\]](https://example.org/a\(b\))',
+      );
+
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump(const Duration(milliseconds: 120));
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'host link hook cannot apply a stale request after an external update',
+    (tester) async {
+      final request = Completer<String?>();
+      final changes = <String>[];
+      var markdown = 'Initial';
+      KEditorSelection? requested;
+      late StateSetter update;
+      await tester.pumpWidget(
+        _Shell(
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              update = setState;
+              return KMarkdownEditor(
+                markdown: markdown,
+                onChanged: (value, _) => changes.add(value),
+                onLinkRequested: (selection) {
+                  requested = selection;
+                  return request.future;
+                },
+              );
+            },
+          ),
+        ),
+      );
+      await tester.tap(find.byTooltip('Link'));
+      await tester.pump();
+      expect(find.byType(KAdaptiveDialog), findsNothing);
+      expect(requested, const KEditorSelection(anchor: 0, head: 0));
+      update(() => markdown = 'Replacement');
+      await tester.pump();
+      request.complete('https://example.org');
+      await tester.pump();
+      expect(changes, isEmpty);
+      expect(
+        tester.state<KCodeEditorState>(find.byType(KCodeEditor)).value,
+        'Replacement',
+      );
+    },
+  );
 
   testWidgets(
     'code editor shows dictation dots at the supplied insertion offset',
@@ -281,6 +500,30 @@ void main() {
     expect(mode, KEditorMode.read);
     expect(find.text('Release'), findsOneWidget);
     expect(find.bySemanticsLabel('Markdown'), findsOneWidget);
+  });
+
+  testWidgets('preview round-trip retains source selection on touch', (
+    tester,
+  ) async {
+    final key = GlobalKey<KMarkdownEditorState>();
+    await tester.pumpWidget(
+      _Shell(
+        child: KMarkdownEditor(key: key, markdown: 'Release notes'),
+      ),
+    );
+    const selected = KEditorSelection(anchor: 7, head: 0);
+    final source = key.currentState!.sourceEditor!;
+    source.focus();
+    source.setSelection(selected);
+    await tester.pump();
+
+    await tester.tap(find.bySemanticsLabel('Preview'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Markdown'));
+    await tester.pumpAndSettle();
+
+    expect(key.currentState!.sourceEditor, same(source));
+    expect(key.currentState!.selection, selected);
   });
 
   testWidgets('search action toggles the design-system search panel', (
@@ -426,8 +669,12 @@ class _Shell extends StatelessWidget {
 }
 
 class _TestAdapter implements KEditorCollaborationAdapter {
-  _TestAdapter(String value)
-    : _snapshot = ValueNotifier(KEditorCollaborationSnapshot(value: value));
+  _TestAdapter(
+    String value, {
+    KEditorSelection selection = const KEditorSelection(anchor: 0, head: 0),
+  }) : _snapshot = ValueNotifier(
+         KEditorCollaborationSnapshot(value: value, selection: selection),
+       );
 
   final ValueNotifier<KEditorCollaborationSnapshot> _snapshot;
   final List<KEditorTransaction> localTransactions = [];
@@ -446,10 +693,13 @@ class _TestAdapter implements KEditorCollaborationAdapter {
 
   void dispose() => _snapshot.dispose();
 
-  void remote(String value) {
+  void remote(
+    String value, {
+    KEditorSelection selection = const KEditorSelection(anchor: 0, head: 0),
+  }) {
     _snapshot.value = KEditorCollaborationSnapshot(
       value: value,
-      selection: const KEditorSelection(anchor: 0, head: 0),
+      selection: selection,
     );
   }
 }

@@ -1,8 +1,7 @@
 import { EditorContent } from "@tiptap/react";
 import { KMarkdownPreview } from "./markdown-preview.js";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, ReactNode, Ref } from "react";
-import type { Editor } from "@tiptap/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import {
   KDictationAction,
   KDictationAnchor,
@@ -16,7 +15,7 @@ import {
 import { KIconButton } from "../actions/icon-button.js";
 import {
   resolveKEditorCollaborationDocument,
-  type KEditorCollaborationDocument,
+  seedKEditorCollaborationText,
 } from "./collaboration.js";
 import {
   KEditorFormatBar,
@@ -24,145 +23,39 @@ import {
   type KMarkdownFormatAction,
 } from "./format-bar.js";
 import { KCodeEditor, type KCodeEditorHandle } from "./code-editor.js";
+import { renderedSource } from "./code-source-map.js";
+import {
+  MarkdownLinkDialog,
+  defaultMarkdownLinkLabels,
+  markdownLinkUrl,
+} from "./markdown-link-dialog.js";
 import {
   kDefaultEditorLabels,
-  type KEditorLabels,
   type KEditorMode,
-  type KEditorParticipant,
   type KEditorSelection,
   type KEditorTransaction,
   type KRemoteSelection,
 } from "./types.js";
 
-export interface KMarkdownEditorProps {
-  markdown: string;
-  /** Resolve private or relative image sources in the host, without rewriting the document. */
-  renderImage?: (image: {
-    src: string;
-    alt?: string;
-    title?: string;
-  }) => ReactNode;
-  onChange?: (markdown: string, transaction: KEditorTransaction) => void;
-  mode?: KEditorMode;
-  defaultMode?: KEditorMode;
-  onModeChange?: (mode: KEditorMode) => void;
-  onSelectionChange?: (selection: KEditorSelection) => void;
-  readOnly?: boolean;
-  placeholder?: string;
-  labels?: Partial<KEditorLabels>;
-  formatActions?: KMarkdownFormatAction[];
-  showFixedToolbar?: boolean;
-  showFloatingToolbar?: boolean;
-  showModeSwitcher?: boolean;
-  showSearchButton?: boolean;
-  remoteSelections?: KRemoteSelection[];
-  collaborationDocument?: KEditorCollaborationDocument;
-  participants?: KEditorParticipant[];
-  sourceEditorRef?: Ref<KCodeEditorHandle>;
-  onFocus?: () => void;
-  onBlur?: () => void;
-  ariaLabel?: string;
-  className?: string;
-  /** Host-owned rich editor: preserves its CRDT document, history and presence. */
-  richEditor?: Editor | null;
-  richToolbar?: ReactNode | ((dictationAction: ReactNode) => ReactNode);
-  richOverlay?: ReactNode;
-  /** Optional capture UI; microphone and transcription remain with the host. */
-  dictation?: {
-    state: KDictationState;
-    audioLevel?: number;
-    label: string;
-    onStart: (insert: (text: string) => boolean, cancel: () => void) => void;
-    onStop: () => void;
-  };
-}
+import type { KMarkdownEditorProps } from "./markdown-editor-types.js";
+import { markdownChange, type MarkdownChange } from "./markdown-formatting.js";
 
-interface MarkdownChange {
-  from: number;
-  to: number;
-  insert: string;
+export type { KMarkdownEditorProps } from "./markdown-editor-types.js";
+
+interface LinkRequest {
+  value: string;
   selection: KEditorSelection;
+  editor: KCodeEditorHandle;
 }
 
 const emptyRemoteSelections: KRemoteSelection[] = [];
 
-function wrapSelection(
-  markdown: string,
-  selection: KEditorSelection,
-  before: string,
-  after = before,
-): MarkdownChange {
-  const from = Math.min(selection.anchor, selection.head);
-  const to = Math.max(selection.anchor, selection.head);
-  const selected = markdown.slice(from, to);
-  const insert = `${before}${selected}${after}`;
-  const anchor = from + before.length;
-  return {
-    from,
-    to,
-    insert,
-    selection: { anchor, head: anchor + selected.length },
-  };
-}
-
-function prefixLines(
-  markdown: string,
-  selection: KEditorSelection,
-  prefix: string | ((index: number) => string),
-): MarkdownChange {
-  const from = Math.min(selection.anchor, selection.head);
-  const to = Math.max(selection.anchor, selection.head);
-  const lineStart = markdown.lastIndexOf("\n", Math.max(0, from - 1)) + 1;
-  const nextBreak = markdown.indexOf("\n", to);
-  const lineEnd = nextBreak < 0 ? markdown.length : nextBreak;
-  const selected = markdown.slice(lineStart, lineEnd);
-  const insert = selected
-    .split("\n")
-    .map(
-      (line, index) =>
-        `${typeof prefix === "function" ? prefix(index) : prefix}${line}`,
-    )
-    .join("\n");
-  return {
-    from: lineStart,
-    to: lineEnd,
-    insert,
-    selection: { anchor: lineStart, head: lineStart + insert.length },
-  };
-}
-
-function markdownChange(
-  markdown: string,
-  selection: KEditorSelection,
-  action: KMarkdownFormatAction,
-  href?: string,
-): MarkdownChange {
-  if (action === "bold") return wrapSelection(markdown, selection, "**");
-  if (action === "italic") return wrapSelection(markdown, selection, "_");
-  if (action === "strike") return wrapSelection(markdown, selection, "~~");
-  if (action === "code") return wrapSelection(markdown, selection, "`");
-  if (action === "link") {
-    const from = Math.min(selection.anchor, selection.head);
-    const to = Math.max(selection.anchor, selection.head);
-    const selected = markdown.slice(from, to);
-    const destination = href?.trim() || "https://";
-    return {
-      from,
-      to,
-      insert: `[${selected}](${destination})`,
-      selection: { anchor: from + 1, head: from + 1 + selected.length },
-    };
-  }
-  if (action === "bulletList") return prefixLines(markdown, selection, "- ");
-  if (action === "orderedList")
-    return prefixLines(markdown, selection, (index) => `${index + 1}. `);
-  if (action === "taskList") return prefixLines(markdown, selection, "- [ ] ");
-  if (action === "quote") return prefixLines(markdown, selection, "> ");
-  return wrapSelection(markdown, selection, "```\n", "\n```");
-}
-
 export function KMarkdownEditor({
   markdown,
+  markdownOptions,
+  onLinkActivate,
+  onLinkRequested,
+  linkLabels,
   renderImage,
   onChange,
   mode: controlledMode,
@@ -171,6 +64,8 @@ export function KMarkdownEditor({
   onSelectionChange,
   readOnly = false,
   placeholder = "Write something…",
+  contentMaxWidth,
+  minHeight,
   labels: labelOverrides,
   formatActions = kDefaultMarkdownFormatActions,
   showFixedToolbar = true,
@@ -194,23 +89,50 @@ export function KMarkdownEditor({
   const mode = controlledMode ?? internalMode;
   const sourceVisited = useRef(mode === "source");
   if (mode === "source") sourceVisited.current = true;
-  const [sourceDraft, setSourceDraft] = useState(markdown);
+  const [draft, setDraft] = useState({
+    markdown,
+    collaborationDocument,
+    value: markdown,
+  });
+  if (
+    draft.collaborationDocument !== collaborationDocument ||
+    (!collaborationDocument && draft.markdown !== markdown)
+  ) {
+    setDraft({ markdown, collaborationDocument, value: markdown });
+  }
+  const sourceDraft = draft.value;
+  const sourceValue = useRef(sourceDraft);
+  sourceValue.current = sourceDraft;
   const [selection, setSelection] = useState<KEditorSelection>({
     anchor: 0,
     head: 0,
   });
   const [floatingPosition, setFloatingPosition] = useState<CSSProperties>();
+  useEffect(() => {
+    setSelection({ anchor: 0, head: 0 });
+    setFloatingPosition(undefined);
+  }, [collaborationDocument]);
   const sourceRef = useRef<KCodeEditorHandle>(null);
-  const dictationWritable = useRef(false);
-  dictationWritable.current = !readOnly && mode === "source";
-  useEffect(
-    () => () => {
-      dictationWritable.current = false;
+  const sourceWritable = useRef(false);
+  sourceWritable.current =
+    !readOnly && mode === "source" && richEditor === undefined;
+  const setSourceRef = useCallback(
+    (editor: KCodeEditorHandle | null) => {
+      sourceRef.current = editor;
+      if (typeof sourceEditorRef === "function") {
+        const cleanup = sourceEditorRef(editor);
+        if (cleanup)
+          return () => {
+            sourceRef.current = null;
+            cleanup();
+          };
+      } else if (sourceEditorRef) sourceEditorRef.current = editor;
     },
-    [],
+    [sourceEditorRef],
   );
   const sourceShellRef = useRef<HTMLDivElement>(null);
-  const lastEmitted = useRef(markdown);
+  const [linkRequest, setLinkRequest] = useState<LinkRequest>();
+  const requestInProgress = useRef(false);
   const [dictationRect, setDictationRect] = useState<CSSProperties>();
   const labelKey = JSON.stringify(
     Object.entries(labelOverrides ?? {}).sort(([left], [right]) =>
@@ -226,26 +148,32 @@ export function KMarkdownEditor({
   );
 
   useEffect(() => {
-    if (collaborationDocument) return;
-    if (markdown === lastEmitted.current) return;
-    setSourceDraft(markdown);
-  }, [markdown, collaborationDocument]);
-
-  useEffect(() => {
-    if (!collaborationDocument) return;
-    const text = resolveKEditorCollaborationDocument(
+    if (!collaborationDocument || richEditor !== undefined) return;
+    const document = resolveKEditorCollaborationDocument(
       collaborationDocument,
       "text",
-    ).getText("content");
+    );
+    seedKEditorCollaborationText(document, markdown);
+    const text = document.getText("content");
     const update = () => {
       const value = text.toString();
-      lastEmitted.current = value;
-      setSourceDraft(value);
+      sourceValue.current = value;
+      setDraft({ markdown, collaborationDocument, value });
     };
     text.observe(update);
     update();
     return () => text.unobserve(update);
-  }, [collaborationDocument]);
+  }, [collaborationDocument, markdown, richEditor]);
+
+  const linkIsCurrent = Boolean(
+    linkRequest &&
+    sourceWritable.current &&
+    linkRequest.value === sourceDraft &&
+    linkRequest.editor === sourceRef.current,
+  );
+  useEffect(() => {
+    if (linkRequest && !linkIsCurrent) setLinkRequest(undefined);
+  }, [linkRequest, linkIsCurrent]);
 
   function changeMode(next: KEditorMode) {
     if (controlledMode === undefined) setInternalMode(next);
@@ -253,8 +181,8 @@ export function KMarkdownEditor({
   }
 
   function changeSource(next: string, transaction: KEditorTransaction) {
-    setSourceDraft(next);
-    lastEmitted.current = next;
+    sourceValue.current = next;
+    setDraft({ markdown, collaborationDocument, value: next });
     onChange?.(next, transaction);
   }
 
@@ -276,7 +204,67 @@ export function KMarkdownEditor({
     });
   }
 
+  function applyChange(change: MarkdownChange, editor = sourceRef.current) {
+    editor?.replaceRange(
+      change.from,
+      change.to,
+      change.insert,
+      change.selection,
+    );
+  }
+
+  function applyLink(request: LinkRequest, result: string | null | undefined) {
+    const href = result && markdownLinkUrl(result);
+    if (
+      !href ||
+      !sourceWritable.current ||
+      request.value !== sourceValue.current ||
+      request.editor !== sourceRef.current
+    )
+      return;
+    applyChange(
+      markdownChange(
+        renderedSource(request.value),
+        request.selection,
+        "link",
+        href,
+      ),
+      request.editor,
+    );
+  }
+
+  function closeLink(request: LinkRequest, result?: string) {
+    setLinkRequest(undefined);
+    applyLink(request, result);
+    requestAnimationFrame(() => {
+      if (sourceWritable.current && request.editor === sourceRef.current)
+        request.editor.focus();
+    });
+  }
+
+  async function requestLink() {
+    if (requestInProgress.current || linkRequest || !sourceRef.current) return;
+    const request = {
+      value: sourceValue.current,
+      selection,
+      editor: sourceRef.current,
+    };
+    if (!onLinkRequested) {
+      setLinkRequest(request);
+      return;
+    }
+    requestInProgress.current = true;
+    try {
+      applyLink(request, await onLinkRequested(request.selection));
+    } catch {
+      // A failed consumer request leaves the source unchanged.
+    } finally {
+      requestInProgress.current = false;
+    }
+  }
+
   function applyFormat(action: KMarkdownFormatAction) {
+    if (!sourceWritable.current) return;
     if (action === "undo") {
       sourceRef.current?.undo();
       return;
@@ -285,18 +273,12 @@ export function KMarkdownEditor({
       sourceRef.current?.redo();
       return;
     }
-    let href: string | undefined;
     if (action === "link") {
-      const answer = window.prompt("Link URL", "https://");
-      if (answer === null) return;
-      href = answer;
+      void requestLink();
+      return;
     }
-    const change = markdownChange(sourceDraft, selection, action, href);
-    sourceRef.current?.replaceRange(
-      change.from,
-      change.to,
-      change.insert,
-      change.selection,
+    applyChange(
+      markdownChange(renderedSource(sourceValue.current), selection, action),
     );
   }
 
@@ -305,6 +287,15 @@ export function KMarkdownEditor({
       className={`k-markdown-editor ${className}`}
       data-mode={mode}
       data-has-mode-switcher={showModeSwitcher || undefined}
+      data-has-content-width={contentMaxWidth !== undefined || undefined}
+      style={
+        {
+          "--k-editor-content-max-width":
+            typeof contentMaxWidth === "number"
+              ? `${contentMaxWidth}px`
+              : contentMaxWidth,
+        } as CSSProperties
+      }
     >
       {richEditor !== undefined ? (
         <>
@@ -349,7 +340,7 @@ export function KMarkdownEditor({
             </div>
           )}
 
-          {sourceVisited.current && (
+          {(sourceVisited.current || collaborationDocument) && (
             <div
               ref={sourceShellRef}
               className="k-markdown-editor-source"
@@ -373,18 +364,15 @@ export function KMarkdownEditor({
                   </div>
                 )}
               <KCodeEditor
-                ref={(editor) => {
-                  sourceRef.current = editor;
-                  if (typeof sourceEditorRef === "function")
-                    sourceEditorRef(editor);
-                  else if (sourceEditorRef) sourceEditorRef.current = editor;
-                }}
+                ref={setSourceRef}
                 value={sourceDraft}
                 onChange={changeSource}
                 onSelectionChange={updateSelection}
                 language="markdown"
                 readOnly={readOnly}
                 placeholder={placeholder}
+                minHeight={minHeight}
+                labels={labelOverrides}
                 showToolbar={false}
                 showSearchButton={showSearchButton}
                 lineNumbers={false}
@@ -409,14 +397,20 @@ export function KMarkdownEditor({
           <div
             className="k-markdown-editor-surface"
             data-readonly="true"
-            style={mode === "read" ? undefined : { display: "none" }}
+            style={mode === "read" ? { minHeight } : { display: "none" }}
             inert={mode !== "read"}
           >
-            <KMarkdownPreview
-              markdown={sourceDraft}
-              ariaLabel={`${ariaLabel} preview`}
-              renderImage={renderImage}
-            />
+            {mode === "read" && (
+              <KMarkdownPreview
+                {...markdownOptions}
+                markdown={sourceDraft}
+                ariaLabel={`${ariaLabel} preview`}
+                renderImage={renderImage ?? markdownOptions?.renderImage}
+                onLinkActivate={
+                  onLinkActivate ?? markdownOptions?.onLinkActivate
+                }
+              />
+            )}
           </div>
           {(showFixedToolbar || dictation) &&
             mode === "source" &&
@@ -424,7 +418,7 @@ export function KMarkdownEditor({
               <div className="k-markdown-editor-dictation">
                 <KEditorFormatBar
                   labels={labels}
-                  actions={formatActions}
+                  actions={showFixedToolbar ? formatActions : []}
                   onAction={applyFormat}
                   floating
                   leadingAction={
@@ -449,25 +443,33 @@ export function KMarkdownEditor({
                             });
                           const snapshot = sourceDraft;
                           const target = { ...selection };
+                          const editor = sourceRef.current;
+                          let pending = true;
                           dictation.onStart(
                             (text) => {
+                              if (!pending) return false;
+                              pending = false;
                               setDictationRect(undefined);
                               if (
-                                !dictationWritable.current ||
-                                !sourceRef.current ||
-                                lastEmitted.current !== snapshot ||
+                                !sourceWritable.current ||
+                                !editor ||
+                                sourceRef.current !== editor ||
+                                sourceValue.current !== snapshot ||
                                 !text.trim()
                               )
                                 return false;
                               const from = Math.min(target.anchor, target.head),
                                 to = Math.max(target.anchor, target.head);
-                              sourceRef.current.replaceRange(from, to, text, {
+                              editor.replaceRange(from, to, text, {
                                 anchor: from + text.length,
                                 head: from + text.length,
                               });
                               return true;
                             },
-                            () => setDictationRect(undefined),
+                            () => {
+                              pending = false;
+                              setDictationRect(undefined);
+                            },
                           );
                         }}
                       />
@@ -477,6 +479,13 @@ export function KMarkdownEditor({
               </div>
             )}
         </>
+      )}
+      {linkRequest && linkIsCurrent && (
+        <MarkdownLinkDialog
+          labels={{ ...defaultMarkdownLinkLabels, ...linkLabels }}
+          onCancel={() => closeLink(linkRequest)}
+          onInsert={(url) => closeLink(linkRequest, url)}
+        />
       )}
     </section>
   );

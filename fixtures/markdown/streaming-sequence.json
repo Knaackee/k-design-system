@@ -1,0 +1,52 @@
+[
+  {
+    "id": "intro",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n",
+    "streaming": true
+  },
+  {
+    "id": "open-emphasis",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis",
+    "streaming": true
+  },
+  {
+    "id": "closed-emphasis",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n",
+    "streaming": true
+  },
+  {
+    "id": "open-link",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/d",
+    "streaming": true
+  },
+  {
+    "id": "closed-link",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/docs)\n\n",
+    "streaming": true
+  },
+  {
+    "id": "open-code",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/docs)\n\n```typescript\nconst status = \"be",
+    "streaming": true
+  },
+  {
+    "id": "closed-code",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/docs)\n\n```typescript\nconst status = \"bereit\";\n```\n\n",
+    "streaming": true
+  },
+  {
+    "id": "open-table",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/docs)\n\n```typescript\nconst status = \"bereit\";\n```\n\n| Plattform | Status |\n| --- | --- |\n| Web |",
+    "streaming": true
+  },
+  {
+    "id": "closed-table",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/docs)\n\n```typescript\nconst status = \"bereit\";\n```\n\n| Plattform | Status |\n| --- | --- |\n| Web | Bereit |\n| Flutter | Bereit |\n\n",
+    "streaming": true
+  },
+  {
+    "id": "complete",
+    "content": "## Live-Bericht\n\nDie Prüfung startet.\n\n**Ergebnis:** alles bereit.\n\n[Dokumentation](https://example.org/docs)\n\n```typescript\nconst status = \"bereit\";\n```\n\n| Plattform | Status |\n| --- | --- |\n| Web | Bereit |\n| Flutter | Bereit |\n\nAbgeschlossen.",
+    "streaming": false
+  }
+]

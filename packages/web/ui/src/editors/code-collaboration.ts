@@ -29,6 +29,7 @@ export class RawTextSync {
   constructor(
     private view: EditorView,
     private text: Y.Text,
+    private undoManager: Y.UndoManager,
   ) {
     this.config = view.state.facet(ySyncFacet);
     this.config.toYPos = (pos, assoc = 0) =>
@@ -62,7 +63,7 @@ export class RawTextSync {
       selection: this.config.fromYRange(this.range),
       annotations: [
         ySyncAnnotation.of(this.config),
-        Transaction.remote.of(true),
+        Transaction.remote.of(transaction.origin !== this.undoManager),
         Transaction.addToHistory.of(false),
       ],
     });
@@ -92,6 +93,7 @@ export class RawTextSync {
   }
   destroy() {
     this.text.unobserve(this.changed);
+    this.undoManager.destroy();
   }
 }
 export function collaborativeUndo(view: EditorView) {
@@ -109,11 +111,11 @@ export const collaborativeHistoryKeymap = [
   { key: "Mod-y", mac: "Mod-Shift-z", run: collaborativeRedo },
   { key: "Mod-Shift-z", run: collaborativeRedo },
 ];
-export function rawTextCollaboration(
-  text: Y.Text,
-  undoManager = new Y.UndoManager(text),
-): Extension {
-  const sync = ViewPlugin.define((view) => new RawTextSync(view, text));
+export function rawTextCollaboration(text: Y.Text): Extension {
+  const undoManager = new Y.UndoManager(text, { trackedOrigins: new Set() });
+  const sync = ViewPlugin.define(
+    (view) => new RawTextSync(view, text, undoManager),
+  );
   return [
     Prec.highest(
       EditorView.domEventHandlers({
