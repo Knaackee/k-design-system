@@ -209,20 +209,37 @@ export function PortfolioList() {
 
 export function AppShellFixture({
   initial = "settings",
+  brandNavigation = false,
 }: {
   initial?: string;
+  brandNavigation?: boolean;
 }) {
   const [selected, setSelected] = useState(initial);
   const current = destinations.find((item) => item.id === selected)!;
   return (
     <div className="cc-shell">
       <KAppShell
-        destinations={destinations}
+        mobileLabelVisibility={brandNavigation ? "never" : "always"}
+        destinations={destinations.map((destination) => ({
+          ...destination,
+          renderMobileIcon:
+            brandNavigation && destination.id === "inbox"
+              ? (active: boolean) => (
+                  <svg viewBox="0 0 100 100" aria-hidden="true">
+                    <path
+                      d="M50 0 100 50 50 100 0 50Z"
+                      fill="currentColor"
+                      opacity={active ? 1 : 0.6}
+                    />
+                  </svg>
+                )
+              : undefined,
+        }))}
         selectedId={selected}
         onSelectedChange={setSelected}
         sidebarHeader={
           <KText as="span" variant="label">
-            Assetry
+            {brandNavigation ? "Example" : "Assetry"}
           </KText>
         }
       >

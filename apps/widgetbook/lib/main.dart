@@ -980,6 +980,11 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
             name: 'app-shell-portfolios',
             builder: (_) => const AppShellFixture(initial: 'portfolios'),
           ),
+          WidgetbookUseCase(
+            name: 'app-shell-brand-navigation',
+            builder: (_) =>
+                const AppShellFixture(initial: 'inbox', brandNavigation: true),
+          ),
         ],
       ),
       WidgetbookFolder(

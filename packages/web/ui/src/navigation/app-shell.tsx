@@ -9,7 +9,10 @@ import { kWindowClassForWidth, type KWindowClass } from "../adaptive.js";
 import { KBadge } from "../basic-components.js";
 import { useOptionalKHaptics } from "../feedback/haptics.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
-import { KMobileAppBar } from "./mobile-app-bar.js";
+import {
+  KMobileAppBar,
+  type KMobileAppBarLabelVisibility,
+} from "./mobile-app-bar.js";
 import { KBackButton } from "./back-button.js";
 import { KText } from "../primitives/text.js";
 import {
@@ -32,6 +35,8 @@ export interface KAppDestination {
   label: string;
   icon: KIconName;
   selectedIcon?: KIconName;
+  /** Decorative compact-only visual; shell owns fitting and accessible name. */
+  renderMobileIcon?: (selected: boolean) => ReactNode;
   /** Short count or marker ("2", "99+"): tab bar badge, sidebar KBadge. */
   badge?: string;
 }
@@ -54,6 +59,7 @@ export interface KAppShellProps extends Omit<
    * floating action button for Material and the top bar for Apple.
    */
   primaryActionPlacement?: KPrimaryActionPlacement;
+  mobileLabelVisibility?: KMobileAppBarLabelVisibility;
 }
 
 /**
@@ -71,6 +77,7 @@ export function KAppShell({
   sidebarFooter,
   label = "Primary navigation",
   primaryActionPlacement = "auto",
+  mobileLabelVisibility = "always",
   className,
   ...props
 }: KAppShellProps) {
@@ -286,7 +293,7 @@ export function KAppShell({
                 ? "labeled"
                 : "fixed"
           }
-          labelVisibility="always"
+          labelVisibility={mobileLabelVisibility}
           visibility="always"
           label={label}
           selectedId={selectedId}
@@ -294,10 +301,17 @@ export function KAppShell({
           items={destinations.map((destination) => ({
             id: destination.id,
             label: destination.label,
-            icon: <KIcon name={destination.icon} size={24} />,
-            selectedIcon: destination.selectedIcon ? (
-              <KIcon name={destination.selectedIcon} size={24} />
-            ) : undefined,
+            icon: destination.renderMobileIcon ? (
+              <span className="k-app-shell__mobile-icon" aria-hidden="true">
+                {destination.renderMobileIcon(destination.id === selectedId)}
+              </span>
+            ) : (
+              <KIcon name={destination.icon} size={24} />
+            ),
+            selectedIcon:
+              !destination.renderMobileIcon && destination.selectedIcon ? (
+                <KIcon name={destination.selectedIcon} size={24} />
+              ) : undefined,
             badge: destination.badge,
           }))}
         />

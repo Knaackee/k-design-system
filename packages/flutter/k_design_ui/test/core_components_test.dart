@@ -240,6 +240,12 @@ void main() {
       String? selected;
       await tester.pumpWidget(_app(shell((id) => selected = id)));
       expect(find.byType(KMobileAppBar), findsOneWidget);
+      expect(
+        tester
+            .widget<KMobileAppBar>(find.byType(KMobileAppBar))
+            .labelVisibility,
+        KMobileAppBarLabelVisibility.always,
+      );
       expect(find.byType(KSidebar), findsNothing);
       await tester.tap(find.text('Search'));
       await tester.pump();

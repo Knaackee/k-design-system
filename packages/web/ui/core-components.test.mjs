@@ -110,3 +110,53 @@ test("app shell renders a tab bar without a window (server)", () => {
   assert.doesNotMatch(html, /k-sidebar/);
   assert.match(html, /<main>Content<\/main>/);
 });
+
+for (const width of [360, 393, 599, 600, 839, 840]) {
+  test(`brand shell at ${width}: compact-only builder and semantic labels`, () => {
+    const previous = globalThis.window;
+    globalThis.window = { innerWidth: width };
+    const states = [];
+    try {
+      for (const selectedId of ["home", "messages"]) {
+        states.length = 0;
+        const html = renderToStaticMarkup(
+          h(KAppShell, {
+            selectedId,
+            onSelectedChange() {},
+            mobileLabelVisibility: "never",
+            destinations: [
+              { id: "home", label: "Home", icon: "house" },
+              {
+                id: "messages",
+                label: "Messages",
+                icon: "inbox",
+                renderMobileIcon(selected) {
+                  states.push(selected);
+                  return h("svg", {
+                    "data-brand": true,
+                    viewBox: "0 0 100 100",
+                  });
+                },
+              },
+            ],
+            children: "Content",
+          }),
+        );
+        if (width < 600) {
+          assert.deepEqual(states, [selectedId === "messages"]);
+          assert.match(html, /aria-label="Messages"/);
+          assert.match(html, /k-app-shell__mobile-icon" aria-hidden="true"/);
+          assert.doesNotMatch(html, /k-mobile-app-bar__label/);
+        } else {
+          assert.deepEqual(states, []);
+          assert.doesNotMatch(html, /data-brand/);
+          assert.match(html, /k-sidebar/);
+          assert.match(html, /Messages/);
+        }
+      }
+    } finally {
+      if (previous === undefined) delete globalThis.window;
+      else globalThis.window = previous;
+    }
+  });
+}

@@ -255,8 +255,13 @@ class PageHeaderFixture extends StatelessWidget {
 }
 
 class AppShellFixture extends StatefulWidget {
-  const AppShellFixture({this.initial = 'settings', super.key});
+  const AppShellFixture({
+    this.initial = 'settings',
+    this.brandNavigation = false,
+    super.key,
+  });
   final String initial;
+  final bool brandNavigation;
   @override
   State<AppShellFixture> createState() => _AppShellFixtureState();
 }
@@ -287,10 +292,36 @@ class _AppShellFixtureState extends State<AppShellFixture> {
   Widget build(BuildContext context) {
     final current = destinations.firstWhere((item) => item.id == selected);
     return KAppShell(
-      destinations: destinations,
+      mobileLabelVisibility: widget.brandNavigation
+          ? KMobileAppBarLabelVisibility.never
+          : KMobileAppBarLabelVisibility.always,
+      destinations: [
+        for (final destination in destinations)
+          KAppDestination(
+            id: destination.id,
+            label: destination.label,
+            icon: destination.icon,
+            badge: destination.badge,
+            mobileIconBuilder:
+                widget.brandNavigation && destination.id == 'inbox'
+                ? (context, active) => CustomPaint(
+                    size: const Size.square(100),
+                    painter: _BrandDiamondPainter(
+                      Theme.of(context)
+                          .extension<KDesignTokens>()!
+                          .colorTextPrimary
+                          .withValues(alpha: active ? 1 : 0.6),
+                    ),
+                  )
+                : null,
+          ),
+      ],
       selectedId: selected,
       onSelected: (id) => setState(() => selected = id),
-      sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
+      sidebarHeader: KText(
+        widget.brandNavigation ? 'Example' : 'Assetry',
+        variant: KTextVariant.label,
+      ),
       // Bottom padding from the shell keeps the last row above the tab bar.
       child: SingleChildScrollView(
         padding: _pad(context).copyWith(
@@ -363,4 +394,23 @@ class OnboardingFixture extends StatelessWidget {
         ),
     ],
   );
+}
+
+class _BrandDiamondPainter extends CustomPainter {
+  const _BrandDiamondPainter(this.color);
+  final Color color;
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(size.width, size.height / 2)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(0, size.height / 2)
+      ..close();
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_BrandDiamondPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

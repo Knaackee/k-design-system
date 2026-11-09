@@ -15,12 +15,17 @@ class KAppDestination {
     required this.label,
     required this.icon,
     this.selectedIcon,
+    this.mobileIconBuilder,
     this.badge,
   });
   final String id;
   final String label;
   final KIconName icon;
   final KIconName? selectedIcon;
+
+  /// Decorative compact-navigation visual. The shell owns its 24 px fitted
+  /// slot and destination semantics; rail/sidebar keep [icon]/[selectedIcon].
+  final Widget Function(BuildContext context, bool selected)? mobileIconBuilder;
 
   /// Short count or marker ("2", "99+"); a tab bar badge and a sidebar
   /// [KBadge].
@@ -49,6 +54,7 @@ class KAppShell extends StatelessWidget {
     this.sidebarFooter,
     this.semanticLabel = 'Primary navigation',
     this.primaryActionPlacement = KPrimaryActionPlacement.auto,
+    this.mobileLabelVisibility = KMobileAppBarLabelVisibility.always,
     super.key,
   });
 
@@ -64,6 +70,7 @@ class KAppShell extends StatelessWidget {
   /// Shown below the destinations in the expanded sidebar (settings, help).
   final Widget? sidebarFooter;
   final String semanticLabel;
+  final KMobileAppBarLabelVisibility mobileLabelVisibility;
 
   /// Phones: where a page's primary action goes. `auto` uses the extended
   /// floating action button for Material and the top bar for Apple.
@@ -96,7 +103,7 @@ class KAppShell extends StatelessWidget {
               KStyle.material => KMobileAppBarVariant.labeled,
               _ => KMobileAppBarVariant.fixed,
             },
-            labelVisibility: KMobileAppBarLabelVisibility.always,
+            labelVisibility: mobileLabelVisibility,
             visibility: KMobileAppBarVisibility.always,
             semanticLabel: semanticLabel,
             selectedId: selectedId,
@@ -106,15 +113,29 @@ class KAppShell extends StatelessWidget {
                 KMobileAppBarItem(
                   id: destination.id,
                   label: destination.label,
-                  icon: KIcon(
-                    destination.id == selectedId
-                        ? destination.selectedIcon ?? destination.icon
-                        : destination.icon,
-                    size: 24,
-                    color: destination.id == selectedId
-                        ? t.colorTextPrimary
-                        : t.colorTextMuted,
-                  ),
+                  icon: destination.mobileIconBuilder != null
+                      ? ExcludeSemantics(
+                          child: SizedBox.square(
+                            dimension:
+                                t.componentMobileAppBarDestinationIconSize,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: destination.mobileIconBuilder!(
+                                context,
+                                destination.id == selectedId,
+                              ),
+                            ),
+                          ),
+                        )
+                      : KIcon(
+                          destination.id == selectedId
+                              ? destination.selectedIcon ?? destination.icon
+                              : destination.icon,
+                          size: 24,
+                          color: destination.id == selectedId
+                              ? t.colorTextPrimary
+                              : t.colorTextMuted,
+                        ),
                   badge: destination.badge == null
                       ? null
                       : Text(destination.badge!),

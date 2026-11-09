@@ -1,4 +1,18 @@
 /* KAppShell (Decision 0012). Mirrors k_app_shell.dart. */
+.k-app-shell__mobile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--k-component-mobile-app-bar-destination-icon-size);
+  height: var(--k-component-mobile-app-bar-destination-icon-size);
+  overflow: hidden;
+}
+.k-app-shell__mobile-icon > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .k-app-shell {
   display: flex;
   box-sizing: border-box;
