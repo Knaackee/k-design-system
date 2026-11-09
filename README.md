@@ -191,6 +191,11 @@ updating this repository alone does not update installed harness copies.
 ## Status and licensing
 
 Package versions remain pre-release until the release checklist is complete.
-Do not infer stability from a gallery fixture alone. Third-party asset licenses
-are kept beside the affected package assets. A repository-wide distribution
-license must be present before a public release.
+Do not infer stability from a gallery fixture alone.
+
+Original K Design System code is available under the [MIT License](LICENSE).
+Copyright (c) 2026 Denis Knaack.
+
+Third-party code, icons, fonts and other assets retain their respective licenses
+and attribution requirements. Their license notices are kept beside the affected
+package assets; the repository MIT license does not replace those terms.
