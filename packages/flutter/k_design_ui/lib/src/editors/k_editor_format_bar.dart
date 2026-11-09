@@ -3,6 +3,7 @@ import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
+import 'package:re_editor/re_editor.dart';
 
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
@@ -77,75 +78,77 @@ class KEditorFormatBar extends StatelessWidget {
       minimumItemExtent ?? 0,
       math.max(t.sizeHitTarget, t.sizeControl),
     );
-    return Semantics(
-      container: true,
-      label: 'Text formatting',
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: floating ? t.colorSurfaceRaised : Colors.transparent,
-          border: floating ? Border.all(color: t.colorBorderDefault) : null,
-          borderRadius: BorderRadius.circular(t.radiusOverlay),
-          boxShadow: floating ? t.elevationOverlay : const [],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(floating ? t.spaceControlGap : 0),
-          child: SizedBox(
-            height: itemExtent,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ?leadingAction,
-                Flexible(
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context).copyWith(
-                      dragDevices: const {
-                        PointerDeviceKind.touch,
-                        PointerDeviceKind.mouse,
-                        PointerDeviceKind.stylus,
-                        PointerDeviceKind.trackpad,
-                      },
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const ClampingScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: t.spaceTight),
-                      child: Row(
-                        children: [
-                          for (final action in actions)
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: t.spaceHairline / 2,
-                              ),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minWidth: itemExtent,
-                                  minHeight: itemExtent,
+    return CodeEditorTapRegion(
+      child: Semantics(
+        container: true,
+        label: 'Text formatting',
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: floating ? t.colorSurfaceRaised : Colors.transparent,
+            border: floating ? Border.all(color: t.colorBorderDefault) : null,
+            borderRadius: BorderRadius.circular(t.radiusOverlay),
+            boxShadow: floating ? t.elevationOverlay : const [],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(floating ? t.spaceControlGap : 0),
+            child: SizedBox(
+              height: itemExtent,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ?leadingAction,
+                  Flexible(
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: const {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse,
+                          PointerDeviceKind.stylus,
+                          PointerDeviceKind.trackpad,
+                        },
+                      ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const ClampingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: t.spaceTight),
+                        child: Row(
+                          children: [
+                            for (final action in actions)
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: t.spaceHairline / 2,
                                 ),
-                                child: KIconButton(
-                                  label: _label(action),
-                                  icon: _glyphs[action]!,
-                                  selected: activeActions.contains(action),
-                                  onPressed: () => onAction(action),
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    minWidth: itemExtent,
+                                    minHeight: itemExtent,
+                                  ),
+                                  child: KIconButton(
+                                    label: _label(action),
+                                    icon: _glyphs[action]!,
+                                    selected: activeActions.contains(action),
+                                    onPressed: () => onAction(action),
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (trailingAction != null)
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(end: t.spaceTight),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: itemExtent,
-                        minHeight: itemExtent,
+                  if (trailingAction != null)
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(end: t.spaceTight),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: itemExtent,
+                          minHeight: itemExtent,
+                        ),
+                        child: trailingAction!,
                       ),
-                      child: trailingAction!,
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -14,3 +14,6 @@ build/
 .vscode/
 *.iml
 *.log
+
+# Flutter materializes external Markdown gallery assets here during builds.
+/apps/widgetbook/fixtures/markdown/

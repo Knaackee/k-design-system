@@ -236,6 +236,7 @@
   position: absolute;
   top: var(--k-component-mobile-app-bar-badge-offset-block);
   left: calc(50% + var(--k-component-mobile-app-bar-badge-offset-inline));
+  transform: translateX(-50%);
   display: grid;
   place-items: center;
   min-width: var(--k-component-mobile-app-bar-badge-size);

@@ -18,6 +18,7 @@ export type {
   KImageCropRect,
 } from "./data-display/image-cropper.js";
 export { KButton } from "./primitives/button.js";
+export * from "./markdown/index.js";
 export type { KButtonProps, KButtonVariant } from "./primitives/button.js";
 export { KLink } from "./primitives/link.js";
 export type { KLinkProps, KLinkVariant } from "./primitives/link.js";

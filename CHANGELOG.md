@@ -6,6 +6,19 @@ version is tagged.
 
 ## Unreleased
 
+No additional changes.
+
+## 1.0.0-rc.2 - 2026-11-09
+
+- Add shared Markdown rendering, preview and streaming fixtures for Web and Flutter.
+- Harden editor link insertion, readonly behavior, history, remote events and consumer-owned collaboration adapters.
+- Align Markdown typography, table sizing, editor insets and chat gutters; add matching gallery review cases.
+- Verification: pnpm verify passed; Web phone gate checked 482 stories with no overflow/load failures (40 skips). Flutter phone gate: 433 cases, no overflow, 39 skips and 22 non-layout errors outside Markdown.
+- Known limitations: native Android/Windows smoke builds remain blocked by MapLibre Gradle and audioplayers_windows/MSVC failures. Flutter collaboration demonstrates an engine-neutral adapter, not built-in Yjs convergence.
+- License original library code under MIT, Copyright (c) 2026 Denis Knaack. Third-party licenses remain unchanged. This pre-release is a review candidate, not a native platform certification.
+
+### Other changes since rc.1
+
 - Platform-native defaults reach every component (Decision 0015): touch
   heights (Apple 44 pt controls, 50 pt full-width buttons with a centred
   label; Material 40 dp buttons and 56 dp fields), one icon stroke per style

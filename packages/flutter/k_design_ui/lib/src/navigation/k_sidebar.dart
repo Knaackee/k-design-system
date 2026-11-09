@@ -12,11 +12,14 @@ class KSidebar extends StatelessWidget {
     required this.mode,
     required this.child,
     this.onModeChanged,
-    this.expandedWidth = 248,
-    this.railWidth = 52,
+    this.expandedWidth = defaultExpandedWidth,
+    this.railWidth = defaultRailWidth,
     this.semanticLabel = 'Sidebar',
     super.key,
   });
+
+  static const double defaultExpandedWidth = 248;
+  static const double defaultRailWidth = 52;
 
   final KSidebarMode mode;
   final ValueChanged<KSidebarMode>? onModeChanged;
@@ -71,8 +74,10 @@ class _KSidebarScope extends InheritedWidget {
   final KSidebarMode mode;
   final ValueChanged<KSidebarMode>? onModeChanged;
 
-  static _KSidebarScope of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<_KSidebarScope>()!;
+  static _KSidebarScope of(BuildContext context) => maybeOf(context)!;
+
+  static _KSidebarScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_KSidebarScope>();
 
   @override
   bool updateShouldNotify(_KSidebarScope oldWidget) =>
@@ -85,11 +90,12 @@ class KSidebarHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final rail = _KSidebarScope.maybeOf(context)?.mode == KSidebarMode.rail;
     return Padding(
       padding: EdgeInsets.fromLTRB(
+        rail ? 0 : t.spaceControlGap,
         t.spaceControlGap,
-        t.spaceControlGap,
-        t.spaceControlGap,
+        rail ? 0 : t.spaceControlGap,
         t.spaceTight,
       ),
       child: child,

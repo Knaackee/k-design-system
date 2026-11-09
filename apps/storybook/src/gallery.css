@@ -10,6 +10,32 @@ body {
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);
 }
+.k-gallery:has(.k-markdown-fixture) {
+  padding: 0;
+}
+.k-markdown-integration-fixture {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.k-markdown-integration-fixture__surface {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.k-markdown-fixture__actions {
+  padding: var(--k-space-layout-gutter);
+}
+.k-markdown-integration-fixture__surface > .k-markdown-editor {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
 .k-gallery {
   width: 100%;
   box-sizing: border-box;

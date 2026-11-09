@@ -11,6 +11,9 @@ enum KPageWidth {
   /// Lists, details and dashboards (`layout.pageWidth`, 960).
   content,
 
+  /// Uses the available width for calendars, tables and broad workspaces.
+  fluid,
+
   /// Sign-in, onboarding steps and other single forms (`layout.formWidth`,
   /// 520). The form is centred vertically when it is shorter than the
   /// screen, as on iOS and Android sign-in screens.
@@ -60,7 +63,11 @@ class KPage extends StatelessWidget {
         alignment: form ? Alignment.center : Alignment.topCenter,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: form ? t.layoutFormWidth : t.layoutPageWidth,
+            maxWidth: switch (width) {
+              KPageWidth.form => t.layoutFormWidth,
+              KPageWidth.content => t.layoutPageWidth,
+              KPageWidth.fluid => double.infinity,
+            },
           ),
           child: KStack(
             gap: KLayoutGap.section,

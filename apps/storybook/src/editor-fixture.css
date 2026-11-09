@@ -22,7 +22,16 @@
   min-height: 0;
 }
 
+.editor-demo-shell--with-actions {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.editor-demo-collaboration-actions {
+  padding: var(--k-space-layout-gutter);
+}
+
 .editor-demo-grid {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   height: 100%;
@@ -105,6 +114,7 @@
 @media (max-width: 720px) {
   .editor-demo-grid {
     grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
   }
 }
 

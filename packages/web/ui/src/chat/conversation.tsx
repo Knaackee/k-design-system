@@ -7,7 +7,10 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { Streamdown } from "streamdown";
+import {
+  KMarkdownRenderer,
+  type KMarkdownRendererProps,
+} from "../markdown/markdown-renderer.js";
 import { KAvatar } from "../basic-components.js";
 import { KButton } from "../primitives/button.js";
 import { KIcon } from "../primitives/icon.js";
@@ -86,6 +89,13 @@ export interface KChatConversationProps
   renderMessageActions?: (message: KChatMessageValue) => ReactNode;
   toolRenderers?: Readonly<Record<string, KAgentToolRenderer>>;
   onLinkActivate?: (url: string) => void;
+  /** Consumer-owned copy/image actions and labels for all text parts. */
+  markdownOptions?: Omit<
+    KMarkdownRendererProps,
+    "content" | "profile" | "streaming" | "className" | "ariaLabel"
+  >;
+  /** Optional element policy for user messages, overriding the shared allowlist. */
+  userMarkdownAllowedElements?: KMarkdownRendererProps["allowedElements"];
   metadataMode?: KChatMessageMetadataMode;
   metadataByRole?: Partial<
     Record<KChatMessageValue["role"], KChatMessageMetadataMode>
@@ -106,6 +116,8 @@ export function KChatConversation({
   renderMessageActions,
   toolRenderers,
   onLinkActivate,
+  markdownOptions,
+  userMarkdownAllowedElements,
   metadataMode = "always",
   metadataByRole,
   showTimestamps = true,
@@ -126,6 +138,11 @@ export function KChatConversation({
   const dimensions = useRef({ height: 0, viewport: 0 });
   const following = useRef(true);
   const [showNewest, setShowNewest] = useState(false);
+  const isStreaming =
+    runState === "streaming" ||
+    messages.some((message) =>
+      message.parts.some((part) => part.type === "text" && part.streaming),
+    );
   const lastMessage = messages.at(-1);
   const streamMarker = `${lastMessage?.id ?? ""}:${lastMessage?.parts
     .map((part) => (part.type === "text" ? part.text.length : part.id))
@@ -195,9 +212,7 @@ export function KChatConversation({
     <section
       {...props}
       className={["k-chat-conversation", className].filter(Boolean).join(" ")}
-      aria-busy={
-        runState === "submitted" || runState === "streaming" || undefined
-      }
+      aria-busy={runState === "submitted" || isStreaming || undefined}
     >
       <div
         ref={scrollRef}
@@ -206,6 +221,7 @@ export function KChatConversation({
         role="log"
         aria-live="polite"
         aria-relevant="additions text"
+        aria-busy={isStreaming || undefined}
       >
         {hasOlder ? (
           <div className="k-chat-conversation__older">
@@ -227,6 +243,13 @@ export function KChatConversation({
               </div>
             ))
           : messages.map((message, index) => {
+              const messageMarkdownOptions =
+                message.role === "user" && userMarkdownAllowedElements
+                  ? {
+                      ...markdownOptions,
+                      allowedElements: userMarkdownAllowedElements,
+                    }
+                  : markdownOptions;
               const mode = metadataByRole?.[message.role] ?? metadataMode;
               const previous = messages[index - 1];
               const author = message.authorLabel ?? labels[message.role];
@@ -294,6 +317,7 @@ export function KChatConversation({
                               : undefined
                           }
                           onLinkActivate={onLinkActivate}
+                          markdownOptions={messageMarkdownOptions}
                           approvalNoteLabel={labels.approvalNote}
                           onApprovalResponse={onApprovalResponse}
                           onQuestionResponse={onQuestionResponse}
@@ -389,39 +413,26 @@ function KChatPart({
   part,
   toolRenderer,
   onLinkActivate,
+  markdownOptions,
   approvalNoteLabel,
   ...actions
 }: {
   part: KChatMessagePart;
   toolRenderer?: KAgentToolRenderer;
   onLinkActivate?: (url: string) => void;
+  markdownOptions?: KChatConversationProps["markdownOptions"];
   approvalNoteLabel?: string;
 } & KAgentPartActions) {
   if (part.type === "text") {
     return (
-      <Streamdown
+      <KMarkdownRenderer
+        {...markdownOptions}
         className="k-chat-markdown"
-        mode={part.streaming ? "streaming" : "static"}
-        skipHtml
-        controls={{ code: { copy: true }, table: { copy: true } }}
-        components={{
-          a: ({ href, children, ...props }) => (
-            <a
-              {...props}
-              href={href}
-              onClick={(event) => {
-                if (!href || !onLinkActivate) return;
-                event.preventDefault();
-                onLinkActivate(href);
-              }}
-            >
-              {children}
-            </a>
-          ),
-        }}
-      >
-        {part.text}
-      </Streamdown>
+        profile="chat"
+        content={part.text}
+        streaming={part.streaming}
+        onLinkActivate={onLinkActivate ?? markdownOptions?.onLinkActivate}
+      />
     );
   }
   if (part.type === "attachment")

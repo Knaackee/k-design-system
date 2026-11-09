@@ -16,11 +16,12 @@ export interface KEditorCollaborationTransport {
   destroy(): void;
 }
 
+const remoteOrigin = Symbol.for("k-design-system.editor.transport-remote");
+
 export function createKEditorCollaborationTransport(
   handle: KEditorCollaborationDocument,
 ): KEditorCollaborationTransport {
   const document = resolveKEditorCollaborationDocument(handle, handle.kind);
-  const remoteOrigin = Symbol("transport-remote");
   return {
     applyUpdate: (update) => Y.applyUpdate(document, update, remoteOrigin),
     encodeStateVector: () => Y.encodeStateVector(document),
@@ -37,6 +38,12 @@ export function createKEditorCollaborationTransport(
       documents.delete(handle);
     },
   };
+}
+
+/** Legacy editor seeding applies only to a document with no prior edits. */
+export function seedKEditorCollaborationText(document: Y.Doc, value: string) {
+  if (value && Y.decodeStateVector(Y.encodeStateVector(document)).size === 0)
+    document.getText("content").insert(0, value);
 }
 
 const documents = new WeakMap<KEditorCollaborationDocument, Y.Doc>();

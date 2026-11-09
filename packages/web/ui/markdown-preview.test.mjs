@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { KMarkdownPreview } from "./dist/editors/markdown-preview.js";
+import { KMarkdownEditor } from "./dist/editors/markdown-editor.js";
+import { KChatConversation } from "./dist/chat/conversation.js";
 
 const render = (markdown, props = {}) =>
   renderToStaticMarkup(
@@ -20,7 +22,7 @@ test("preview renders GFM tables, images and code without modifying source", () 
   assert.match(html, /<table/);
   assert.match(html, /<strong>second<\/strong>/);
   assert.match(html, /alt="Diagram"/);
-  assert.match(html, /const answer = 42/);
+  assert.match(html.replace(/<[^>]*>/g, ""), /const answer = 42/);
 });
 
 test("preview omits raw HTML and executable URLs", () => {
@@ -42,4 +44,91 @@ test("host resolves relative images without replacing the Markdown document", ()
   assert.equal(images[0].src, "./picture.png");
   assert.equal(images[0].alt, "Local");
   assert.match(html, /<span>Local<\/span>/);
+});
+
+test("editor preview uses shared document rendering and consumer options", () => {
+  const images = [];
+  const html = renderToStaticMarkup(
+    React.createElement(KMarkdownEditor, {
+      markdown:
+        "# Preview\n\n![Private](./private.png)\n\n```js\nconst x = 1;\n```",
+      defaultMode: "read",
+      markdownOptions: {
+        onCopy: () => {},
+        copyLabel: "Quelltext kopieren",
+        renderImage: (image) => {
+          images.push(image.src);
+          return React.createElement("span", null, image.alt);
+        },
+      },
+    }),
+  );
+  assert.match(html, /class="k-markdown" data-profile="document"/);
+  assert.match(html, /Quelltext kopieren/);
+  assert.deepEqual(images, ["./private.png"]);
+});
+
+test("chat shares rendering and streaming state without changing message metadata", () => {
+  const images = [];
+  const html = renderToStaticMarkup(
+    React.createElement(KChatConversation, {
+      messages: [
+        {
+          id: "answer",
+          role: "assistant",
+          timestamp: "09:42",
+          parts: [
+            {
+              id: "text",
+              type: "text",
+              streaming: true,
+              text: "![Private](./private.png)\n\n```js\nconst x = 1;\n```\n",
+            },
+          ],
+        },
+      ],
+      markdownOptions: {
+        selectable: false,
+        onCopy: () => {},
+        copyLabel: "Quelltext kopieren",
+        renderImage: (image) => {
+          images.push(image.src);
+          return React.createElement("span", null, image.alt);
+        },
+      },
+    }),
+  );
+  assert.match(
+    html,
+    /data-profile="chat" data-selectable="false" data-streaming="true"/,
+  );
+  assert.match(html, /<time>09:42<\/time>/);
+  assert.match(html, /role="log"[^>]+aria-busy="true"/);
+  assert.match(html, /Quelltext kopieren/);
+  assert.deepEqual(images, ["./private.png"]);
+});
+
+test("user message element policy leaves assistant Markdown and text intact", () => {
+  const messages = ["user", "assistant"].map((role) => ({
+    id: role,
+    role,
+    parts: [
+      {
+        id: `${role}-text`,
+        type: "text",
+        text: `# ${role} title\n\n**${role} body**`,
+      },
+    ],
+  }));
+  const html = renderToStaticMarkup(
+    React.createElement(KChatConversation, {
+      messages,
+      userMarkdownAllowedElements: ["p"],
+    }),
+  );
+  assert.match(html, /user title/);
+  assert.match(html, /user body/);
+  assert.doesNotMatch(html, /<h1\b[^>]*>user title|<strong>user body/);
+  assert.match(html, /<h1\b[^>]*>assistant title/);
+  assert.match(html, /<strong>assistant body/);
 });

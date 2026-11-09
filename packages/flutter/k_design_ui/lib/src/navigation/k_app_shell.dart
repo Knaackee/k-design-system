@@ -6,6 +6,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import '../basic_display.dart';
 import '../feedback/k_haptics.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_page.dart';
 import 'k_mobile_app_bar.dart';
 import 'k_scroll_top_bar.dart';
 import 'k_sidebar.dart';
@@ -57,6 +58,9 @@ class KAppShell extends StatelessWidget {
     required this.selectedId,
     required this.onSelected,
     required this.child,
+    this.sidebarMode,
+    this.onSidebarModeChanged,
+    this.sidebarContent,
     this.sidebarHeader,
     this.sidebarFooter,
     this.sidebarSections = const [],
@@ -64,6 +68,7 @@ class KAppShell extends StatelessWidget {
     this.tabBarLabelVisibility = KMobileAppBarLabelVisibility.always,
     this.primaryActionPlacement = KPrimaryActionPlacement.auto,
     this.showPageHeader = true,
+    this.contentWidth = KPageWidth.content,
     super.key,
   });
 
@@ -71,6 +76,19 @@ class KAppShell extends StatelessWidget {
   final String selectedId;
   final ValueChanged<String> onSelected;
   final Widget child;
+
+  /// Desktop content constraint. Fluid lets each child page choose its width.
+  /// Compact layout is unaffected.
+  final KPageWidth contentWidth;
+
+  /// Overrides adaptive sidebar presentation on non-compact windows.
+  /// Null preserves the automatic mode; phones always retain their tab bar.
+  final KSidebarMode? sidebarMode;
+  final ValueChanged<KSidebarMode>? onSidebarModeChanged;
+
+  /// Replaces the sidebar body. Compose with [KSidebarBody]. Custom content
+  /// and header/footer remain mounted in explicitly controlled rail mode.
+  final Widget? sidebarContent;
 
   /// Shown above the destinations in the expanded sidebar (app name,
   /// account switcher).
@@ -196,10 +214,15 @@ class KAppShell extends StatelessWidget {
         }
         // iPadOS and Android tablets show labelled destinations; the
         // icon-only rail stays for the productivity style (Decision 0015).
-        final rail =
+        final automaticRail =
             windowClass == KWindowClass.medium &&
             (KAdaptive.maybeOf(context)?.style ?? KStyle.linear) ==
                 KStyle.linear;
+        final mode =
+            sidebarMode ??
+            (automaticRail ? KSidebarMode.rail : KSidebarMode.expanded);
+        final rail = mode == KSidebarMode.rail;
+        final showChrome = !rail || sidebarMode != null;
         Widget sidebarItem(KAppDestination destination) => Padding(
           padding: EdgeInsets.only(bottom: t.spaceMicro),
           child: KSidebarItem(
@@ -224,28 +247,35 @@ class KAppShell extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             KSidebar(
-              mode: rail ? KSidebarMode.rail : KSidebarMode.expanded,
+              mode: mode,
+              expandedWidth: sidebarMode == null
+                  ? KSidebar.defaultExpandedWidth
+                  : t.layoutPanelWidth,
+              onModeChanged: onSidebarModeChanged,
               semanticLabel: semanticLabel,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (sidebarHeader case final header? when !rail)
+                  if (sidebarHeader case final header? when showChrome)
                     KSidebarHeader(child: header),
-                  KSidebarBody(
-                    children: [
-                      for (final destination in destinations)
-                        sidebarItem(destination),
-                      for (final section in sidebarSections)
-                        KSidebarGroup(
-                          label: rail ? null : section.label,
-                          children: [
-                            for (final destination in section.destinations)
-                              sidebarItem(destination),
-                          ],
-                        ),
-                    ],
-                  ),
-                  if (sidebarFooter case final footer? when !rail)
+                  if (sidebarContent case final content? when showChrome)
+                    content
+                  else
+                    KSidebarBody(
+                      children: [
+                        for (final destination in destinations)
+                          sidebarItem(destination),
+                        for (final section in sidebarSections)
+                          KSidebarGroup(
+                            label: rail ? null : section.label,
+                            children: [
+                              for (final destination in section.destinations)
+                                sidebarItem(destination),
+                            ],
+                          ),
+                      ],
+                    ),
+                  if (sidebarFooter case final footer? when showChrome)
                     Padding(
                       padding: EdgeInsets.all(t.spaceControlGap),
                       child: footer,
@@ -258,7 +288,13 @@ class KAppShell extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: t.layoutPageWidth),
+                  constraints: BoxConstraints(
+                    maxWidth: switch (contentWidth) {
+                      KPageWidth.content => t.layoutPageWidth,
+                      KPageWidth.form => t.layoutFormWidth,
+                      KPageWidth.fluid => double.infinity,
+                    },
+                  ),
                   child: child,
                 ),
               ),

@@ -5,6 +5,80 @@ import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
   for (final variant in [
+    KMobileAppBarVariant.floatingGlass,
+    KMobileAppBarVariant.labeled,
+  ]) {
+    for (final (count, layoutAware) in [
+      ('1', false),
+      ('10', false),
+      ('99+', false),
+      ('99+', true),
+    ]) {
+      testWidgets(
+        '$variant keeps ${layoutAware ? 'layout-aware ' : ''}badge $count '
+        'inside its destination without clipping',
+        (tester) async {
+          tester.view.physicalSize = const Size(360, 640);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          final countBadge = Text(count, key: const ValueKey('count'));
+          final badgeWidget = layoutAware
+              ? LayoutBuilder(builder: (_, _) => countBadge)
+              : countBadge;
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: kDesignTheme(),
+              home: Scaffold(
+                body: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: KMobileAppBar(
+                    variant: variant,
+                    quality: KGlassQuality.solid,
+                    labelVisibility: KMobileAppBarLabelVisibility.never,
+                    selectedId: 'inbox',
+                    onSelectionChanged: (_) {},
+                    items: [
+                      for (final id in [
+                        'home',
+                        'calendar',
+                        'inbox',
+                        'customers',
+                        'settings',
+                      ])
+                        KMobileAppBarItem(
+                          id: id,
+                          label: id,
+                          icon: const Icon(Icons.home),
+                          badge: id == 'inbox' ? badgeWidget : null,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          final text = find.byKey(const ValueKey('count'));
+          final badge = find
+              .ancestor(of: text, matching: find.byType(Container))
+              .first;
+          final rect = tester.getRect(badge);
+          final destination = tester.getRect(find.byTooltip('inbox'));
+          expect(rect.left, greaterThanOrEqualTo(destination.left));
+          expect(rect.right, lessThanOrEqualTo(destination.right));
+          expect(rect.top, greaterThanOrEqualTo(destination.top));
+          expect(rect.bottom, lessThanOrEqualTo(destination.bottom));
+          final material = tester.widget<Material>(
+            find.ancestor(of: text, matching: find.byType(Material)).first,
+          );
+          expect(material.clipBehavior, Clip.none);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
+  for (final variant in [
     KMobileAppBarVariant.fixed,
     KMobileAppBarVariant.fixedLine,
     KMobileAppBarVariant.floatingDock,

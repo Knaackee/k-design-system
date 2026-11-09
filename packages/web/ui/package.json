@@ -1,7 +1,8 @@
 {
   "name": "@k-design-system/ui",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -18,6 +19,11 @@
       "types": "./dist/editors/index.d.ts",
       "import": "./dist/editors/index.js"
     },
+    "./markdown": {
+      "types": "./dist/markdown/index.d.ts",
+      "import": "./dist/markdown/index.js"
+    },
+    "./markdown.css": "./src/markdown.css",
     "./primitives/*": {
       "types": "./dist/primitives/*.d.ts",
       "import": "./dist/primitives/*.js"

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../navigation/k_sidebar.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import '../primitives/k_text.dart';
@@ -15,6 +16,8 @@ class KSettingsPage extends StatelessWidget {
   const KSettingsPage({
     required this.navigation,
     required this.content,
+    this.navigationMode,
+    this.compactBreakpoint = breakpoint,
     this.detailVisible = false,
     this.onBack,
     this.backLabel = 'Settings',
@@ -29,7 +32,14 @@ class KSettingsPage extends StatelessWidget {
 
   static const double breakpoint = 700;
 
+  /// Width below which navigation and detail are separate views.
+  final double compactBreakpoint;
+
   final Widget navigation;
+
+  /// Uses the panel token and standard rail width for controlled navigation.
+  /// Null preserves the settings panel width. Compact navigation stays full width.
+  final KSidebarMode? navigationMode;
   final Widget content;
   final bool detailVisible;
   final VoidCallback? onBack;
@@ -55,7 +65,7 @@ class KSettingsPage extends StatelessWidget {
       color: tokens.colorSurfaceCanvas,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final compact = constraints.maxWidth < breakpoint;
+          final compact = constraints.maxWidth < compactBreakpoint;
           final navigationPane = ColoredBox(
             color: tokens.colorSurfaceRaised,
             child: SafeArea(child: navigation),
@@ -67,7 +77,17 @@ class KSettingsPage extends StatelessWidget {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(width: tokens.layoutPanelWidth, child: navigationPane),
+                SizedBox(
+                  width: switch (navigationMode) {
+                    KSidebarMode.expanded => tokens.layoutPanelWidth,
+                    KSidebarMode.rail => KSidebar.defaultRailWidth,
+                    KSidebarMode.hidden => 0,
+                    null => tokens.layoutPanelWidth,
+                  },
+                  child: navigationMode == KSidebarMode.hidden
+                      ? const SizedBox.shrink()
+                      : navigationPane,
+                ),
                 Expanded(child: contentPane),
               ],
             );

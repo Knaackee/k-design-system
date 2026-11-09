@@ -147,3 +147,6 @@ export 'src/patterns/k_offer_overview.dart';
 export 'src/patterns/k_booking_page_management.dart';
 
 export 'src/patterns/k_booking_flow_choice.dart';
+export 'src/markdown/k_markdown_renderer.dart';
+export 'src/markdown/k_markdown_options.dart';
+export 'src/markdown/k_markdown_preview.dart';

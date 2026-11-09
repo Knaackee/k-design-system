@@ -482,7 +482,9 @@ class _Destination extends StatelessWidget {
             borderRadius: BorderRadius.circular(
               tokens.componentMobileAppBarDestinationRadiusDefault,
             ),
-            clipBehavior: Clip.antiAlias,
+            // Badges may cross the rounded destination background. InkWell
+            // retains its own stadium splash boundary.
+            clipBehavior: Clip.none,
             child: InkWell(
               onTap: item.enabled ? onTap : null,
               customBorder: const StadiumBorder(),
@@ -577,47 +579,56 @@ class _Destination extends StatelessWidget {
                               Positioned(
                                 top: tokens
                                     .componentMobileAppBarBadgeOffsetBlock,
-                                left:
-                                    constraints.maxWidth / 2 +
+                                left: 0,
+                                right: 0,
+                                height: tokens.componentMobileAppBarBadgeSize,
+                                child: CustomSingleChildLayout(
+                                  delegate: _BadgePosition(
                                     tokens
                                         .componentMobileAppBarBadgeOffsetInline,
-                                child: Container(
-                                  constraints: BoxConstraints(
-                                    minWidth:
+                                  ),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      minWidth:
+                                          tokens.componentMobileAppBarBadgeSize,
+                                      minHeight:
+                                          tokens.componentMobileAppBarBadgeSize,
+                                    ),
+                                    height:
                                         tokens.componentMobileAppBarBadgeSize,
-                                    minHeight:
-                                        tokens.componentMobileAppBarBadgeSize,
-                                  ),
-                                  height: tokens.componentMobileAppBarBadgeSize,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: tokens
-                                        .componentMobileAppBarBadgePaddingInline,
-                                  ),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: tokens.colorStatusErrorAccent,
-                                    border: Border.all(
-                                      color: tokens.colorSurfaceRaised,
-                                      width: tokens
-                                          .componentMobileAppBarBadgeStrokeWidth,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: tokens
+                                          .componentMobileAppBarBadgePaddingInline,
                                     ),
-                                    borderRadius: BorderRadius.circular(
-                                      tokens.componentMobileAppBarBadgeRadius,
+                                    decoration: BoxDecoration(
+                                      color: tokens.colorStatusErrorAccent,
+                                      border: Border.all(
+                                        color: tokens.colorSurfaceRaised,
+                                        width: tokens
+                                            .componentMobileAppBarBadgeStrokeWidth,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        tokens.componentMobileAppBarBadgeRadius,
+                                      ),
                                     ),
-                                  ),
-                                  child: DefaultTextStyle(
-                                    style: TextStyle(
-                                      color: tokens.colorStatusErrorForeground,
-                                      fontFamily: tokens.fontFamily,
-                                      fontSize: tokens
-                                          .componentMobileAppBarLabelFontSize,
-                                      fontWeight: FontWeight.w700,
-                                      height: tokens.fontTightHeight,
-                                    ),
-                                    // Fixed like the label, so a count
-                                    // never outgrows its badge.
-                                    child: MediaQuery.withNoTextScaling(
-                                      child: item.badge!,
+                                    child: Center(
+                                      widthFactor: 1,
+                                      child: DefaultTextStyle(
+                                        style: TextStyle(
+                                          color:
+                                              tokens.colorStatusErrorForeground,
+                                          fontFamily: tokens.fontFamily,
+                                          fontSize: tokens
+                                              .componentMobileAppBarLabelFontSize,
+                                          fontWeight: FontWeight.w700,
+                                          height: tokens.fontTightHeight,
+                                        ),
+                                        // Fixed like the label, so a count
+                                        // never outgrows its badge.
+                                        child: MediaQuery.withNoTextScaling(
+                                          child: item.badge!,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -632,4 +643,27 @@ class _Destination extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Keeps wider counts inside their destination while retaining the icon anchor.
+class _BadgePosition extends SingleChildLayoutDelegate {
+  const _BadgePosition(this.offset);
+  final double offset;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      BoxConstraints.loose(constraints.biggest);
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) => Offset(
+    (size.width / 2 + offset - childSize.width / 2).clamp(
+      0.0,
+      (size.width - childSize.width).clamp(0.0, double.infinity),
+    ),
+    0,
+  );
+
+  @override
+  bool shouldRelayout(_BadgePosition oldDelegate) =>
+      offset != oldDelegate.offset;
 }

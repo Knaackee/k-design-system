@@ -25,10 +25,12 @@ import {
   searchKeymap,
 } from "@codemirror/search";
 import {
+  Annotation,
   Compartment,
   EditorSelection,
   EditorState,
   Extension,
+  Transaction,
 } from "@codemirror/state";
 import {
   Decoration,
@@ -43,6 +45,7 @@ import {
 } from "@codemirror/view";
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -55,7 +58,7 @@ import {
   collaborativeRedo,
   collaborativeHistoryKeymap,
 } from "./code-collaboration.js";
-import { renderedSource } from "./code-source-map.js";
+import { renderedChange, renderedSource } from "./code-source-map.js";
 import { KIconButton } from "../actions/icon-button.js";
 import {
   createKDictationAnchor,
@@ -63,6 +66,7 @@ import {
 } from "../forms/dictation-action.js";
 import {
   resolveKEditorCollaborationDocument,
+  seedKEditorCollaborationText,
   type KEditorCollaborationDocument,
 } from "./collaboration.js";
 import { createKEditorSearchPanel } from "./editor-search-panel.js";
@@ -83,6 +87,7 @@ export type KCodeLanguage =
 const emptyDiagnostics: KCodeDiagnostic[] = [];
 const emptyCompletions: KCodeCompletion[] = [];
 const emptyRemoteSelections: KRemoteSelection[] = [];
+const controlledValue = Annotation.define<boolean>();
 
 const kEditorHighlightStyle = HighlightStyle.define([
   { tag: tags.heading1, class: "k-syntax-heading k-syntax-heading-1" },
@@ -338,9 +343,10 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
     const host = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
     const [searchOpen, setSearchOpen] = useState(false);
-    const valueRef = useRef(value);
     const changeRef = useRef(onChange);
     const selectionRef = useRef(onSelectionChange);
+    const reportedSelection = useRef<KEditorSelection>(undefined);
+    const configurationCompartment = useRef(new Compartment());
     const presenceCompartment = useRef(new Compartment());
     const dictationCompartment = useRef(new Compartment());
     const labelKey = JSON.stringify(
@@ -358,6 +364,13 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
 
     changeRef.current = onChange;
     selectionRef.current = onSelectionChange;
+    const reportSelection = useCallback((anchor: number, head: number) => {
+      const previous = reportedSelection.current;
+      if (anchor === previous?.anchor && head === previous?.head) return;
+      const selection = { anchor, head };
+      reportedSelection.current = selection;
+      selectionRef.current?.(selection);
+    }, []);
 
     useImperativeHandle(
       forwardedRef,
@@ -371,7 +384,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         },
         undo() {
           const view = viewRef.current;
-          if (!view) return false;
+          if (!view || view.state.readOnly) return false;
           view.focus();
           return collaborationDocument
             ? collaborativeUndo(view)
@@ -379,7 +392,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         },
         redo() {
           const view = viewRef.current;
-          if (!view) return false;
+          if (!view || view.state.readOnly) return false;
           view.focus();
           return collaborationDocument
             ? collaborativeRedo(view)
@@ -387,7 +400,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         },
         replaceRange(from, to, insert, selection) {
           const view = viewRef.current;
-          if (!view) return;
+          if (!view || view.state.readOnly) return;
           view.dispatch({
             changes: { from, to, insert },
             selection: selection
@@ -416,14 +429,6 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
 
     const configuration = useMemo(() => {
       const extensions: Extension[] = [
-        ...(collaborationDocument ? [] : [history()]),
-        keymap.of([
-          ...(collaborationDocument
-            ? collaborativeHistoryKeymap
-            : historyKeymap),
-          ...defaultKeymap,
-          ...searchKeymap,
-        ]),
         search({
           top: true,
           createPanel: createKEditorSearchPanel(labels, setSearchOpen),
@@ -442,7 +447,13 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           ".cm-content, .cm-gutter": { minHeight: `${minHeight}px` },
         }),
         EditorView.updateListener.of((update) => {
-          if (update.docChanged) {
+          const selection = update.state.selection.main;
+          const previous = update.startState.selection.main;
+          const { anchor, head } = selection;
+          if (
+            update.docChanged &&
+            !update.transactions.some((tr) => tr.annotation(controlledValue))
+          ) {
             const next = collaborationDocument
               ? resolveKEditorCollaborationDocument(
                   collaborationDocument,
@@ -451,35 +462,19 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
                   .getText("content")
                   .toString()
               : update.state.doc.toString();
-            valueRef.current = next;
-            const selection = {
-              anchor: update.state.selection.main.anchor,
-              head: update.state.selection.main.head,
-            };
             changeRef.current?.(next, {
               value: next,
-              selection,
-              origin: "local",
+              selection: { anchor, head },
+              origin: update.transactions.some((tr) =>
+                tr.annotation(Transaction.remote),
+              )
+                ? "remote"
+                : "local",
             });
           }
-          // A remote edit maps the focused local caret too. Publish awareness
-          // for that position without creating another text transaction.
-          if (
-            update.view.hasFocus &&
-            (update.selectionSet || update.docChanged)
-          ) {
-            selectionRef.current?.({
-              anchor: update.state.selection.main.anchor,
-              head: update.state.selection.main.head,
-            });
-          }
+          if (anchor !== previous.anchor || head !== previous.head)
+            reportSelection(anchor, head);
         }),
-        presenceCompartment.current.of(
-          remoteSelectionPlugin(emptyRemoteSelections),
-        ),
-        dictationCompartment.current.of(
-          dictationAnchorExtension(undefined, undefined),
-        ),
       ];
       if (showDiagnosticGutter) extensions.push(lintGutter());
       if (showLineNumbers) extensions.push(lineNumbers());
@@ -501,13 +496,6 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           }),
         );
       }
-      if (collaborationDocument) {
-        const doc = resolveKEditorCollaborationDocument(
-          collaborationDocument,
-          "text",
-        );
-        extensions.push(rawTextCollaboration(doc.getText("content")));
-      }
       return extensions;
     }, [
       ariaLabel,
@@ -519,43 +507,67 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
       minHeight,
       placeholder,
       readOnly,
+      reportSelection,
       showDiagnosticGutter,
       showLineNumbers,
     ]);
+    const initial = useRef({ configuration, value, diagnosticItems });
+    initial.current = { configuration, value, diagnosticItems };
 
     useEffect(() => {
       if (!host.current) return;
-      if (collaborationDocument) {
-        const document = resolveKEditorCollaborationDocument(
-          collaborationDocument,
-          "text",
-        );
-        const text = document.getText("content");
-        if (text.length === 0 && value) text.insert(0, value);
-      }
+      reportedSelection.current = undefined;
+      const document = collaborationDocument
+        ? resolveKEditorCollaborationDocument(collaborationDocument, "text")
+        : undefined;
+      if (document)
+        seedKEditorCollaborationText(document, initial.current.value);
+      const text = document?.getText("content");
       const view = new EditorView({
         state: EditorState.create({
-          doc: collaborationDocument
-            ? renderedSource(
-                resolveKEditorCollaborationDocument(
-                  collaborationDocument,
-                  "text",
-                )
-                  .getText("content")
-                  .toString(),
-              )
-            : value,
-          extensions: configuration,
+          doc: renderedSource(text?.toString() ?? initial.current.value),
+          extensions: [
+            text ? rawTextCollaboration(text) : history(),
+            keymap.of([
+              ...(text ? collaborativeHistoryKeymap : historyKeymap),
+              ...defaultKeymap,
+              ...searchKeymap,
+            ]),
+            configurationCompartment.current.of(initial.current.configuration),
+            presenceCompartment.current.of(
+              remoteSelectionPlugin(emptyRemoteSelections),
+            ),
+            dictationCompartment.current.of(
+              dictationAnchorExtension(undefined, undefined),
+            ),
+          ],
         }),
         parent: host.current,
       });
       viewRef.current = view;
-      view.dispatch(setDiagnostics(view.state, diagnostics(diagnosticItems)));
+      view.dispatch(
+        setDiagnostics(
+          view.state,
+          diagnostics(initial.current.diagnosticItems),
+        ),
+      );
       return () => {
         view.destroy();
         viewRef.current = null;
       };
-    }, [configuration, collaborationDocument]);
+    }, [collaborationDocument]);
+
+    useEffect(() => {
+      const view = viewRef.current;
+      if (
+        !view ||
+        configurationCompartment.current.get(view.state) === configuration
+      )
+        return;
+      view.dispatch({
+        effects: configurationCompartment.current.reconfigure(configuration),
+      });
+    }, [configuration]);
 
     useEffect(() => {
       viewRef.current?.dispatch({
@@ -563,7 +575,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           remoteSelectionPlugin(remoteSelections),
         ),
       });
-    }, [configuration, remoteSelections]);
+    }, [collaborationDocument, remoteSelections]);
 
     useEffect(() => {
       viewRef.current?.dispatch({
@@ -571,14 +583,20 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
           dictationAnchorExtension(dictationState, dictationOffset),
         ),
       });
-    }, [configuration, dictationOffset, dictationState]);
+    }, [collaborationDocument, dictationOffset, dictationState]);
 
     useEffect(() => {
       const view = viewRef.current;
-      if (!view || collaborationDocument || value === view.state.doc.toString())
-        return;
+      if (!view || collaborationDocument) return;
+      const before = view.state.doc.toString();
+      const next = renderedSource(value);
+      if (before === next) return;
       view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: value },
+        changes: renderedChange(before, next),
+        annotations: [
+          controlledValue.of(true),
+          Transaction.addToHistory.of(false),
+        ],
       });
     }, [collaborationDocument, value]);
 
@@ -628,16 +646,15 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         <div
           ref={host}
           className="k-code-editor-host"
-          onFocus={() => {
+          onFocus={(event) => {
+            if (event.currentTarget.contains(event.relatedTarget)) return;
             onFocus?.();
             const selection = viewRef.current?.state.selection.main;
-            if (selection)
-              selectionRef.current?.({
-                anchor: selection.anchor,
-                head: selection.head,
-              });
+            if (selection) reportSelection(selection.anchor, selection.head);
           }}
-          onBlur={onBlur}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) onBlur?.();
+          }}
         />
         {(participants.length > 0 || remoteSelections.length > 0) && (
           <div className="k-code-editor-presence" aria-label="Aktive Personen">

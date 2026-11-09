@@ -43,9 +43,10 @@ callback must not imply persistence, notifications or authentication that it lac
 Web `KAppShell.sidebarContent` replaces the expanded sidebar body when a host
 needs contextual rows beside its primary navigation. Compose it with public
 `KSidebarItem` controls and put persistent secondary actions in `sidebarFooter`.
-The rail and phone retain the supplied `destinations`; the host keeps selected
-state and routing consistent. This Web composition slot does not change Flutter
-navigation behavior. Reference: `navigation-appshell--review-custom-sidebar`.
+When no explicit sidebar mode is supplied, the rail and phone retain the supplied `destinations`; the host keeps selected
+state and routing consistent. Flutter exposes the equivalent sidebarContent slot. Reference: `navigation-appshell--review-custom-sidebar`.
+
+Both shells accept a controlled sidebar mode and keep custom header, body and footer in an explicitly selected rail. Phone tab bars remain unchanged. Flutter KSettingsPage.navigationMode reserves the same token-based panel width or rail width. KPageWidth.fluid and KAppShell.contentWidth allow wide workspaces while form pages retain their readable width. Reference: navigation-appshell--review-collapsible / app-shell-collapsible.
 
 ### Observable acceptance checklist
 

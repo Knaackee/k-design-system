@@ -1,6 +1,6 @@
 name: k_design_liquid_glass
 description: Native liquid-glass renderer adapter for K Design System Flutter components.
-version: 1.0.0-rc.1
+version: 1.0.0-rc.2
 publish_to: none
 
 environment:

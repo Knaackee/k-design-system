@@ -257,17 +257,20 @@ class PageHeaderFixture extends StatelessWidget {
 class AppShellFixture extends StatefulWidget {
   const AppShellFixture({
     this.initial = 'settings',
+    this.collapsible = false,
     this.iconOnlyTabs = false,
     super.key,
   });
   final String initial;
   final bool iconOnlyTabs;
+  final bool collapsible;
   @override
   State<AppShellFixture> createState() => _AppShellFixtureState();
 }
 
 class _AppShellFixtureState extends State<AppShellFixture> {
   late String selected = widget.initial;
+  KSidebarMode sidebarMode = KSidebarMode.expanded;
   static const destinations = [
     KAppDestination(id: 'home', label: 'Home', icon: KIconName.house),
     KAppDestination(
@@ -370,7 +373,34 @@ class _AppShellFixtureState extends State<AppShellFixture> {
     tabBarLabelVisibility: widget.iconOnlyTabs
         ? KMobileAppBarLabelVisibility.never
         : KMobileAppBarLabelVisibility.always,
-    sidebarHeader: const KText('Assetry', variant: KTextVariant.label),
+    sidebarMode: widget.collapsible ? sidebarMode : null,
+    onSidebarModeChanged: (mode) => setState(() => sidebarMode = mode),
+    sidebarHeader: widget.collapsible
+        ? const KSidebarToggle(
+            expandedContent: KText('Workspace'),
+            railContent: KIcon(KIconName.menu),
+          )
+        : const KText('Assetry', variant: KTextVariant.label),
+    sidebarContent: widget.collapsible
+        ? KSidebarBody(
+            children: [
+              for (final destination in destinations)
+                KSidebarItem(
+                  label: destination.label,
+                  leading: KIcon(destination.icon),
+                  active: selected == destination.id,
+                  onPressed: () => setState(() => selected = destination.id),
+                ),
+            ],
+          )
+        : null,
+    sidebarFooter: widget.collapsible
+        ? KSidebarItem(
+            label: 'Help',
+            leading: const KIcon(KIconName.circleAlert),
+            onPressed: () => setState(() => selected = 'inbox'),
+          )
+        : null,
     // Tabs stay alive, as in most apps; only the shown page fills the top
     // bar (Decision 0015).
     child: IndexedStack(

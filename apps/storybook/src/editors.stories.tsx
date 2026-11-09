@@ -6,6 +6,7 @@ import {
   MarkdownEditorFixture,
   MarkdownEditorMobileFixture,
   MarkdownEditorDictationFixture,
+  MarkdownEditorReadOnlyFixture,
 } from "./editor-fixture.js";
 
 const mobileGlobals = {
@@ -46,6 +47,12 @@ export const Dictation: Story = {
   name: "markdown-editor-dictation",
   render: () => <MarkdownEditorDictationFixture />,
   parameters: { fixtureId: "markdown-editor-dictation" },
+};
+
+export const MarkdownReadOnly: Story = {
+  name: "markdown-editor-read-only",
+  render: () => <MarkdownEditorReadOnlyFixture />,
+  parameters: { fixtureId: "markdown-editor-read-only" },
 };
 
 export const Code: Story = {

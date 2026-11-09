@@ -24,6 +24,7 @@ class _KDictationFieldOverlayState extends State<KDictationFieldOverlay> {
   final _stackKey = GlobalKey();
   RenderEditable? _editable;
   Rect? _caret;
+  bool _measurementScheduled = false;
   bool get _active =>
       widget.state == KDictationState.recording ||
       widget.state == KDictationState.processing;
@@ -43,8 +44,13 @@ class _KDictationFieldOverlayState extends State<KDictationFieldOverlay> {
   }
 
   void _schedule() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
-    if (mounted) setState(() {});
+    if (!mounted || !_active || _measurementScheduled) return;
+    _measurementScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _measurementScheduled = false;
+      _measure();
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
   }
 
   void _measure() {

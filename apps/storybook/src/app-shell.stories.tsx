@@ -15,37 +15,38 @@ function CollapsibleShell() {
   const [mode, setMode] = useState<"expanded" | "rail">("expanded");
   const [selected, setSelected] = useState("home");
   return (
-    <KAppShell
-      destinations={[
-        { id: "home", label: "Home", icon: "house" },
-        { id: "settings", label: "Settings", icon: "settings" },
-      ]}
-      selectedId={selected}
-      onSelectedChange={setSelected}
-      sidebarMode={mode}
-      onSidebarModeChange={setMode}
-      sidebarHeader={
-        <>
-          <KSidebarExpandedContent>Workspace</KSidebarExpandedContent>
-          <KSidebarToggle
-            expandedContent={<KIcon name="menu" />}
-            railContent={<KIcon name="menu" />}
+    <div className="cc-shell">
+      <KAppShell
+        destinations={[
+          { id: "home", label: "Home", icon: "house" },
+          { id: "settings", label: "Settings", icon: "settings" },
+        ]}
+        selectedId={selected}
+        onSelectedChange={setSelected}
+        sidebarMode={mode}
+        onSidebarModeChange={setMode}
+        sidebarHeader={
+          <>
+            <KSidebarExpandedContent>Workspace</KSidebarExpandedContent>
+            <KSidebarToggle
+              expandedContent={<KIcon name="menu" />}
+              railContent={<KIcon name="menu" />}
+            />
+          </>
+        }
+        sidebarContent={
+          <KSidebarItem
+            label="Additional destination"
+            leading={<KIcon name="calendar" />}
+            onSelect={() => setSelected("calendar")}
           />
-        </>
-      }
-      sidebarContent={
-        <KSidebarItem
-          label="Additional destination"
-          leading={<KIcon name="calendar" />}
-          onSelect={() => setSelected("calendar")}
-        />
-      }
-      style={{ height: "100dvh" }}
-    >
-      <KPage>
-        <KPageHeader title={selected} />
-      </KPage>
-    </KAppShell>
+        }
+      >
+        <KPage>
+          <KPageHeader title={selected} />
+        </KPage>
+      </KAppShell>
+    </div>
   );
 }
 

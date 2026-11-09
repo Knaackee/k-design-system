@@ -45,6 +45,7 @@
 @import "./link.css";
 @import "./ask-tools.css";
 @import "./editors.css";
+@import "./markdown.css";
 @import "./command-palette.css";
 @import "vis-timeline/styles/vis-timeline-graph2d.css";
 @import "@svar-ui/react-gantt/all.css";

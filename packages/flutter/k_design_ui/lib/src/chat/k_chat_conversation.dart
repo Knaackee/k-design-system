@@ -10,6 +10,7 @@ import '../primitives/k_icon.dart';
 import 'k_agent_parts.dart';
 import 'k_agent_ask_tools.dart';
 import 'k_chat_markdown.dart';
+import '../markdown/k_markdown_options.dart';
 import 'k_chat_types.dart';
 
 typedef KChatPartRenderer =
@@ -69,6 +70,8 @@ class KChatConversation extends StatefulWidget {
     this.renderMessageActions,
     this.toolRenderers = const {},
     this.onLinkActivate,
+    this.markdownOptions = const KMarkdownOptions(),
+    this.userMarkdownAllowedElements,
     this.onApprovalResponse,
     this.onQuestionResponse,
     this.onFormResponse,
@@ -100,6 +103,10 @@ class KChatConversation extends StatefulWidget {
   renderMessageActions;
   final Map<String, KAgentToolRenderer> toolRenderers;
   final ValueChanged<Uri>? onLinkActivate;
+  final KMarkdownOptions markdownOptions;
+
+  /// Overrides the allowed Markdown elements for user text parts only.
+  final Set<String>? userMarkdownAllowedElements;
   final ValueChanged<KAgentApprovalResponse>? onApprovalResponse;
   final ValueChanged<KAgentQuestionResponse>? onQuestionResponse;
   final ValueChanged<KAgentFormResponse>? onFormResponse;
@@ -470,19 +477,27 @@ class _KChatConversationState extends State<KChatConversation> {
           child:
               content ??
               widget.renderPart?.call(context, part, message) ??
-              _buildPart(context, part),
+              _buildPart(context, part, message.role),
         ),
       );
     }
     return children;
   }
 
-  Widget _buildPart(BuildContext context, KChatMessagePart part) {
+  Widget _buildPart(
+    BuildContext context,
+    KChatMessagePart part,
+    KChatRole role,
+  ) {
     if (part is KChatTextPart) {
       return KChatMarkdown(
         text: part.text,
         streaming: part.streaming,
         onLinkActivate: widget.onLinkActivate,
+        markdownOptions: widget.markdownOptions,
+        allowedElements: role == KChatRole.user
+            ? widget.userMarkdownAllowedElements
+            : null,
       );
     }
     if (part is KChatAttachmentPart) {
