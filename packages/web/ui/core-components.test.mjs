@@ -7,6 +7,42 @@ import { KSegmentedControl } from "./dist/navigation/segmented-control.js";
 import { KPageHeader } from "./dist/navigation/page-header.js";
 import { KAppShell } from "./dist/navigation/app-shell.js";
 
+test("controlled shell rail retains toggle and custom navigation; phones retain tabs", () => {
+  const previous = globalThis.window;
+  const render = (width, mode) => {
+    globalThis.window = { innerWidth: width };
+    return renderToStaticMarkup(
+      h(KAppShell, {
+        destinations: [
+          { id: "home", label: "Home", icon: "house" },
+          { id: "jobs", label: "Jobs", icon: "calendar" },
+        ],
+        selectedId: "home",
+        onSelectedChange: () => {},
+        sidebarMode: mode,
+        onSidebarModeChange: () => {},
+        sidebarHeader: h("span", null, "Toggle slot"),
+        sidebarContent: h("span", null, "Custom destinations"),
+        sidebarFooter: h("span", null, "Account slot"),
+        children: h("main", null, "Page"),
+      }),
+    );
+  };
+  try {
+    const rail = render(1200, "rail");
+    assert.match(rail, /data-layout="rail"/);
+    for (const text of ["Toggle slot", "Custom destinations", "Account slot"])
+      assert.ok(rail.includes(text));
+    assert.match(render(700, "expanded"), /data-layout="sidebar"/);
+    const phone = render(393, "rail");
+    assert.match(phone, /data-layout="tab-bar"/);
+    assert.doesNotMatch(phone, /Toggle slot|Custom destinations|Account slot/);
+  } finally {
+    if (previous === undefined) delete globalThis.window;
+    else globalThis.window = previous;
+  }
+});
+
 test("list: rows are list items; buttons and links get a chevron", () => {
   const html = renderToStaticMarkup(
     h(

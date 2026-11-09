@@ -1,5 +1,58 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AppShellFixture } from "./core-components-fixtures.js";
+import { useState } from "react";
+import {
+  KAppShell,
+  KSidebarToggle,
+  KSidebarExpandedContent,
+  KSidebarItem,
+  KIcon,
+  KPage,
+  KPageHeader,
+} from "@k-design-system/ui";
+
+function CollapsibleShell() {
+  const [mode, setMode] = useState<"expanded" | "rail">("expanded");
+  const [selected, setSelected] = useState("home");
+  return (
+    <KAppShell
+      destinations={[
+        { id: "home", label: "Home", icon: "house" },
+        { id: "settings", label: "Settings", icon: "settings" },
+      ]}
+      selectedId={selected}
+      onSelectedChange={setSelected}
+      sidebarMode={mode}
+      onSidebarModeChange={setMode}
+      sidebarHeader={
+        <>
+          <KSidebarExpandedContent>Workspace</KSidebarExpandedContent>
+          <KSidebarToggle
+            expandedContent={<KIcon name="menu" />}
+            railContent={<KIcon name="menu" />}
+          />
+        </>
+      }
+      sidebarContent={
+        <KSidebarItem
+          label="Additional destination"
+          leading={<KIcon name="calendar" />}
+          onSelect={() => setSelected("calendar")}
+        />
+      }
+      style={{ height: "100dvh" }}
+    >
+      <KPage>
+        <KPageHeader title={selected} />
+      </KPage>
+    </KAppShell>
+  );
+}
+
+export const ReviewCollapsible: StoryObj = {
+  name: "app-shell-collapsible",
+  render: () => <CollapsibleShell />,
+};
 
 export default {
   title: "Navigation/AppShell",

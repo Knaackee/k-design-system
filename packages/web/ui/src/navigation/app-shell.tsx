@@ -69,6 +69,10 @@ export interface KAppShellProps extends Omit<
   sidebarFooter?: ReactNode;
   /** Tablets and desktops: further destinations in labelled groups. */
   sidebarSections?: readonly KAppSidebarSection[];
+  /** Optional user preference for non-phone navigation. Phones retain tabs. */
+  sidebarMode?: "expanded" | "rail";
+  /** Enables a composed KSidebarToggle; persistence belongs to the host. */
+  onSidebarModeChange?: (mode: "expanded" | "rail") => void;
   label?: string;
   /** Phones: choose which tab labels are visible. All tabs keep their accessible names. */
   tabBarLabelVisibility?: KMobileAppBarLabelVisibility;
@@ -94,6 +98,8 @@ export function KAppShell({
   sidebarContent,
   sidebarFooter,
   sidebarSections = [],
+  sidebarMode,
+  onSidebarModeChange,
   label = "Primary navigation",
   tabBarLabelVisibility = "always",
   primaryActionPlacement = "auto",
@@ -237,7 +243,9 @@ export function KAppShell({
   const appleStyle = style === "apple";
   // iPadOS and Android tablets show labelled destinations; the icon-only
   // rail stays for the productivity style (Decision 0015).
-  const rail = windowClass === "medium" && style === "linear";
+  const rail = sidebarMode
+    ? sidebarMode === "rail"
+    : windowClass === "medium" && style === "linear";
   const placement =
     primaryActionPlacement === "auto"
       ? style === "material"
@@ -307,12 +315,22 @@ export function KAppShell({
       {...props}
     >
       {compact ? null : (
-        <KSidebar mode={rail ? "rail" : "expanded"} label={label}>
-          {sidebarHeader && !rail ? (
+        <KSidebar
+          mode={rail ? "rail" : "expanded"}
+          label={label}
+          onModeChange={
+            onSidebarModeChange
+              ? (mode) => {
+                  if (mode !== "hidden") onSidebarModeChange(mode);
+                }
+              : undefined
+          }
+        >
+          {sidebarHeader && (!rail || sidebarMode !== undefined) ? (
             <KSidebarHeader>{sidebarHeader}</KSidebarHeader>
           ) : null}
           <KSidebarBody>
-            {!rail && sidebarContent != null ? (
+            {(!rail || sidebarMode !== undefined) && sidebarContent != null ? (
               sidebarContent
             ) : (
               <>
@@ -328,7 +346,7 @@ export function KAppShell({
               </>
             )}
           </KSidebarBody>
-          {sidebarFooter && !rail ? (
+          {sidebarFooter && (!rail || sidebarMode !== undefined) ? (
             <KSidebarFooter>{sidebarFooter}</KSidebarFooter>
           ) : null}
         </KSidebar>
