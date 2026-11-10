@@ -35,6 +35,13 @@ Keep folders visible for single-fixture families. New entries use the categories
 above. Existing Primitives/Button and Primitives/Card URLs remain until a separate
 coordinated migration; this document does not silently relocate existing stories.
 
+RobotHead recovery (10 November 2026): `KRobotHead` is restored from the preserved
+local working state and exported for Web and Flutter. Four shapes, nine states,
+consumer tracking/reaction events and optional audio input are available. See the
+[RobotHead contract](components/robot-head.md) and matching `Data display/RobotHead`
+gallery fixtures. Native performance optimization and renewed visual acceptance
+are separate from restoring the existing component.
+
 ## Delivery sequence
 
 1. IconButton, flat MenuButton/OverflowMenu and wrapping Toolbar. Shared menu data

@@ -8,6 +8,11 @@ version is tagged.
 
 No additional changes.
 
+- Restore KRobotHead for React and Flutter, including public exports, interactive
+  Storybook/Widgetbook galleries, audio-driven animation fixtures, regression tests
+  and the preserved native performance benchmark. Native performance acceptance
+  remains open; see docs/components/robot-head.md.
+
 ## 1.0.0-rc.2 - 2026-11-09
 
 - Add shared Markdown rendering, preview and streaming fixtures for Web and Flutter.

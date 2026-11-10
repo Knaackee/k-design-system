@@ -113,6 +113,7 @@ import 'map_day_fixture.dart';
 import 'map_location_picker_fixture.dart';
 import 'map_overlays_fixture.dart';
 import 'map_zone_editor_fixture.dart';
+import 'robot_head_fixture.dart';
 
 export 'foundation_fixtures.dart' show buildCardVariants, buildSurfaceTones;
 export 'configuration_addon.dart';
@@ -547,6 +548,27 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         name: 'List',
         children: [
           WidgetbookUseCase(name: 'list', builder: (_) => const ListFixture()),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'RobotHead',
+        children: [
+          WidgetbookUseCase(
+            name: 'robot-head-playground',
+            builder: buildRobotHeadPlayground,
+          ),
+          WidgetbookUseCase(
+            name: 'robot-head-states',
+            builder: buildRobotHeadStates,
+          ),
+          WidgetbookUseCase(
+            name: 'robot-head-shapes',
+            builder: buildRobotHeadShapes,
+          ),
+          WidgetbookUseCase(
+            name: 'robot-head-audio',
+            builder: buildRobotHeadAudio,
+          ),
         ],
       ),
       WidgetbookFolder(

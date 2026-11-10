@@ -656,3 +656,19 @@ export type {
   KTypeScale,
   KWindowClass,
 } from "./adaptive.js";
+export {
+  KRobotHead,
+  kRobotHeadShapes,
+  kRobotHeadStates,
+} from "./data-display/robot-head.js";
+export type {
+  KRobotHeadProps,
+  KRobotHeadHandle,
+  KRobotHeadShape,
+  KRobotHeadState,
+} from "./data-display/robot-head.js";
+export { createKRobotHeadAudioReader } from "./data-display/robot-head-audio.js";
+export type {
+  KRobotHeadAudioFrame,
+  KRobotHeadAudioSource,
+} from "./data-display/robot-head-audio.js";

@@ -116,7 +116,8 @@
     "src/**/*.css",
     "src/assets",
     "LICENSE.twemoji",
-    "LICENSE.gemoji"
+    "LICENSE.gemoji",
+    "LICENSE.robot-heads"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

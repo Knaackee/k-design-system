@@ -1,0 +1,10 @@
+.k-robot-head {
+  vertical-align: middle;
+  border-radius: var(--k-radius-control);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.k-robot-head:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-space-control-gap);
+}

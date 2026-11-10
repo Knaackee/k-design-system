@@ -358,14 +358,14 @@ packages:
       path: "../../packages/flutter/k_design_tokens"
       relative: true
     source: path
-    version: "1.0.0-rc.1"
+    version: "1.0.0-rc.2"
   k_design_ui:
     dependency: "direct main"
     description:
       path: "../../packages/flutter/k_design_ui"
       relative: true
     source: path
-    version: "1.0.0-rc.1"
+    version: "1.0.0-rc.2"
   leak_tracker:
     dependency: transitive
     description:
