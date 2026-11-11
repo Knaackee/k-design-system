@@ -350,6 +350,10 @@ class _KCardBorderEffectState extends State<_KCardBorderEffect>
         dashGap: t.componentCardBorderDashGap,
         glow: true,
         reduced: reduced,
+        glowSpin: t.componentCardBorderGlowOpacitySpin,
+        glowAurora: t.componentCardBorderGlowOpacityAurora,
+        glowFlameLow: t.componentCardBorderGlowOpacityFlameLow,
+        glowFlameHigh: t.componentCardBorderGlowOpacityFlameHigh,
       ),
       foregroundPainter: _KCardBorderPainter(
         repaint: _controller,
@@ -364,6 +368,10 @@ class _KCardBorderEffectState extends State<_KCardBorderEffect>
         dashGap: t.componentCardBorderDashGap,
         glow: false,
         reduced: reduced,
+        glowSpin: t.componentCardBorderGlowOpacitySpin,
+        glowAurora: t.componentCardBorderGlowOpacityAurora,
+        glowFlameLow: t.componentCardBorderGlowOpacityFlameLow,
+        glowFlameHigh: t.componentCardBorderGlowOpacityFlameHigh,
       ),
       child: widget.child,
     );
@@ -384,7 +392,16 @@ class _KCardBorderPainter extends CustomPainter {
     required this.dashGap,
     required this.glow,
     required this.reduced,
+    required this.glowSpin,
+    required this.glowAurora,
+    required this.glowFlameLow,
+    required this.glowFlameHigh,
   }) : super(repaint: repaint);
+
+  final double glowSpin;
+  final double glowAurora;
+  final double glowFlameLow;
+  final double glowFlameHigh;
 
   final AnimationController repaint;
   final KCardBorder border;
@@ -438,28 +455,40 @@ class _KCardBorderPainter extends CustomPainter {
         }
         canvas.drawRRect(ring, stroke..color = color);
       case KCardBorder.spin:
-        if (glow) return;
-        canvas.drawRRect(
-          ring,
-          stroke
-            ..shader = SweepGradient(
-              colors: [
-                color.withValues(alpha: 0),
-                color.withValues(alpha: 0),
-                color,
-                color.withValues(alpha: 0),
-              ],
-              stops: const [0, 0.6, 0.88, 1],
-              transform: GradientRotation(reduced ? 0 : v * 2 * math.pi),
-            ).createShader(rect),
-        );
+        final tail = SweepGradient(
+          colors: [
+            color.withValues(alpha: 0),
+            color.withValues(alpha: 0),
+            color.withValues(alpha: 0.4),
+            color,
+            color.withValues(alpha: 0),
+          ],
+          stops: const [0, 0.44, 0.72, 0.97, 1],
+          transform: GradientRotation(reduced ? 0 : v * 2 * math.pi),
+        ).createShader(rect);
+        if (glow) {
+          canvas.drawRRect(
+            ring,
+            Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = width * 3
+              ..shader = tail
+              ..maskFilter = MaskFilter.blur(BlurStyle.outer, glowBlur / 2)
+              ..color = Colors.white.withValues(alpha: glowSpin),
+          );
+          return;
+        }
+        canvas.drawRRect(ring, stroke..shader = tail);
+        return;
       case KCardBorder.aurora:
       case KCardBorder.flame:
         if (glow) {
-          // Flame flickers in four steps per third of a cycle.
+          // The flame breathes slowly instead of flickering.
           final flicker = border == KCardBorder.flame
-              ? const [0.55, 0.8, 0.5, 0.75][((v * 12).floor()) % 4]
-              : 0.5;
+              ? glowFlameLow +
+                    (glowFlameHigh - glowFlameLow) *
+                        (0.5 + 0.5 * math.sin(v * 4 * math.pi))
+              : glowAurora;
           canvas.drawRRect(
             ring,
             Paint()

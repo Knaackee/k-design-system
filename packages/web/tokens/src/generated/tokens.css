@@ -645,7 +645,7 @@
   --k-component-card-border-width: var(--k-border-width-strong);
   --k-component-card-border-glow-blur: 12px;
   --k-component-card-border-pulse-spread: 8px;
-  --k-component-card-border-color: var(--k-color-action-primary-background);
+  --k-component-card-border-color: var(--k-color-status-info-accent);
   --k-component-card-border-success-color: var(--k-color-status-success-accent);
   --k-component-card-border-aurora1: #ddd6fe;
   --k-component-card-border-aurora2: #bfdbfe;
@@ -663,6 +663,10 @@
   --k-component-card-border-success-duration: 900ms;
   --k-component-card-border-dash-length: 8px;
   --k-component-card-border-dash-gap: 4px;
+  --k-component-card-border-glow-opacity-spin: 0.45;
+  --k-component-card-border-glow-opacity-aurora: 0.55;
+  --k-component-card-border-glow-opacity-flame-low: 0.5;
+  --k-component-card-border-glow-opacity-flame-high: 0.75;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;
@@ -1330,7 +1334,7 @@
   --k-component-card-border-width: var(--k-border-width-strong);
   --k-component-card-border-glow-blur: 12px;
   --k-component-card-border-pulse-spread: 8px;
-  --k-component-card-border-color: var(--k-color-action-primary-background);
+  --k-component-card-border-color: var(--k-color-status-info-accent);
   --k-component-card-border-success-color: var(--k-color-status-success-accent);
   --k-component-card-border-aurora1: #ddd6fe;
   --k-component-card-border-aurora2: #bfdbfe;
@@ -1348,6 +1352,10 @@
   --k-component-card-border-success-duration: 900ms;
   --k-component-card-border-dash-length: 8px;
   --k-component-card-border-dash-gap: 4px;
+  --k-component-card-border-glow-opacity-spin: 0.45;
+  --k-component-card-border-glow-opacity-aurora: 0.55;
+  --k-component-card-border-glow-opacity-flame-low: 0.5;
+  --k-component-card-border-glow-opacity-flame-high: 0.75;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;
@@ -2015,7 +2023,7 @@
   --k-component-card-border-width: var(--k-border-width-strong);
   --k-component-card-border-glow-blur: 12px;
   --k-component-card-border-pulse-spread: 8px;
-  --k-component-card-border-color: var(--k-color-action-primary-background);
+  --k-component-card-border-color: var(--k-color-status-info-accent);
   --k-component-card-border-success-color: var(--k-color-status-success-accent);
   --k-component-card-border-aurora1: #ddd6fe;
   --k-component-card-border-aurora2: #bfdbfe;
@@ -2033,6 +2041,10 @@
   --k-component-card-border-success-duration: 900ms;
   --k-component-card-border-dash-length: 8px;
   --k-component-card-border-dash-gap: 4px;
+  --k-component-card-border-glow-opacity-spin: 0.45;
+  --k-component-card-border-glow-opacity-aurora: 0.55;
+  --k-component-card-border-glow-opacity-flame-low: 0.5;
+  --k-component-card-border-glow-opacity-flame-high: 0.75;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;
@@ -2700,7 +2712,7 @@
   --k-component-card-border-width: var(--k-border-width-strong);
   --k-component-card-border-glow-blur: 12px;
   --k-component-card-border-pulse-spread: 8px;
-  --k-component-card-border-color: var(--k-color-action-primary-background);
+  --k-component-card-border-color: var(--k-color-status-info-accent);
   --k-component-card-border-success-color: var(--k-color-status-success-accent);
   --k-component-card-border-aurora1: #ddd6fe;
   --k-component-card-border-aurora2: #bfdbfe;
@@ -2718,6 +2730,10 @@
   --k-component-card-border-success-duration: 900ms;
   --k-component-card-border-dash-length: 8px;
   --k-component-card-border-dash-gap: 4px;
+  --k-component-card-border-glow-opacity-spin: 0.45;
+  --k-component-card-border-glow-opacity-aurora: 0.55;
+  --k-component-card-border-glow-opacity-flame-low: 0.5;
+  --k-component-card-border-glow-opacity-flame-high: 0.75;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;

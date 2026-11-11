@@ -4154,7 +4154,7 @@
     },
     "component.cardBorder.color": {
       "type": "color",
-      "value": "#242428"
+      "value": "#3b82f6"
     },
     "component.cardBorder.successColor": {
       "type": "color",
@@ -4250,6 +4250,22 @@
         "value": 4,
         "unit": "px"
       }
+    },
+    "component.cardBorder.glowOpacitySpin": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.cardBorder.glowOpacityAurora": {
+      "type": "number",
+      "value": 0.55
+    },
+    "component.cardBorder.glowOpacityFlameLow": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.cardBorder.glowOpacityFlameHigh": {
+      "type": "number",
+      "value": 0.75
     },
     "component.swipeAction.width": {
       "type": "dimension",
@@ -8453,7 +8469,7 @@
     },
     "component.cardBorder.color": {
       "type": "color",
-      "value": "#e8e8eb"
+      "value": "#60a5fa"
     },
     "component.cardBorder.successColor": {
       "type": "color",
@@ -8549,6 +8565,22 @@
         "value": 4,
         "unit": "px"
       }
+    },
+    "component.cardBorder.glowOpacitySpin": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.cardBorder.glowOpacityAurora": {
+      "type": "number",
+      "value": 0.55
+    },
+    "component.cardBorder.glowOpacityFlameLow": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.cardBorder.glowOpacityFlameHigh": {
+      "type": "number",
+      "value": 0.75
     },
     "component.swipeAction.width": {
       "type": "dimension",
@@ -12752,7 +12784,7 @@
     },
     "component.cardBorder.color": {
       "type": "color",
-      "value": "#242428"
+      "value": "#0284c7"
     },
     "component.cardBorder.successColor": {
       "type": "color",
@@ -12848,6 +12880,22 @@
         "value": 4,
         "unit": "px"
       }
+    },
+    "component.cardBorder.glowOpacitySpin": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.cardBorder.glowOpacityAurora": {
+      "type": "number",
+      "value": 0.55
+    },
+    "component.cardBorder.glowOpacityFlameLow": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.cardBorder.glowOpacityFlameHigh": {
+      "type": "number",
+      "value": 0.75
     },
     "component.swipeAction.width": {
       "type": "dimension",
@@ -17051,7 +17099,7 @@
     },
     "component.cardBorder.color": {
       "type": "color",
-      "value": "#e8e8eb"
+      "value": "#38bdf8"
     },
     "component.cardBorder.successColor": {
       "type": "color",
@@ -17147,6 +17195,22 @@
         "value": 4,
         "unit": "px"
       }
+    },
+    "component.cardBorder.glowOpacitySpin": {
+      "type": "number",
+      "value": 0.45
+    },
+    "component.cardBorder.glowOpacityAurora": {
+      "type": "number",
+      "value": 0.55
+    },
+    "component.cardBorder.glowOpacityFlameLow": {
+      "type": "number",
+      "value": 0.5
+    },
+    "component.cardBorder.glowOpacityFlameHigh": {
+      "type": "number",
+      "value": 0.75
     },
     "component.swipeAction.width": {
       "type": "dimension",

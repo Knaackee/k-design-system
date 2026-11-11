@@ -260,7 +260,7 @@ class _KSwipeRowState extends State<KSwipeRow>
                 if (action.icon != null)
                   AnimatedScale(
                     scale: armed ? 1.25 : 1,
-                    duration: const Duration(milliseconds: 150),
+                    duration: t.motion(KMotionRole.control).duration,
                     child: KIcon(
                       action.icon!,
                       size: t.componentSwipeActionIconSize,
@@ -292,7 +292,7 @@ class _KSwipeRowState extends State<KSwipeRow>
         ignoring: !inlineVisible,
         child: AnimatedOpacity(
           opacity: inlineVisible ? 1 : 0,
-          duration: const Duration(milliseconds: 120),
+          duration: t.motion(KMotionRole.control).duration,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

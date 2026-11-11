@@ -3019,7 +3019,7 @@
       },
       "color": {
         "$type": "color",
-        "$value": "{color.action.primary.background}"
+        "$value": "{color.status.info.accent}"
       },
       "successColor": {
         "$type": "color",
@@ -3109,6 +3109,22 @@
       "dashGap": {
         "$type": "dimension",
         "$value": "{space.1}"
+      },
+      "glowOpacitySpin": {
+        "$type": "number",
+        "$value": 0.45
+      },
+      "glowOpacityAurora": {
+        "$type": "number",
+        "$value": 0.55
+      },
+      "glowOpacityFlameLow": {
+        "$type": "number",
+        "$value": 0.5
+      },
+      "glowOpacityFlameHigh": {
+        "$type": "number",
+        "$value": 0.75
       }
     },
     "swipeAction": {

@@ -71,7 +71,6 @@ export function KCard({
 }: KCardProps) {
   const classes = [
     "k-card",
-    border !== "none" ? `k-card--border k-card--border-${border}` : "",
     title || description || leading || menu?.length || actions
       ? "k-card--structured"
       : "",
@@ -122,7 +121,7 @@ export function KCard({
       );
   }, [nested]);
 
-  return (
+  const card = (
     <KSurface
       as="article"
       className={classes}
@@ -130,7 +129,7 @@ export function KCard({
       radius="card"
       tone={tone}
       data-nested-card={nested ? "" : undefined}
-      style={{ ...(style as CSSProperties), ...borderStyle } as CSSProperties}
+      style={style}
       {...props}
     >
       <KCardDepth.Provider value>
@@ -139,5 +138,15 @@ export function KCard({
         {actions ? <div className="k-card__actions">{actions}</div> : null}
       </KCardDepth.Provider>
     </KSurface>
+  );
+  if (border === "none") return card;
+  // The effect wraps the card: its glow sits behind it, its ring on its edge.
+  return (
+    <div
+      className={`k-card-fx k-card-fx--${border}`}
+      style={borderStyle as CSSProperties}
+    >
+      {card}
+    </div>
   );
 }

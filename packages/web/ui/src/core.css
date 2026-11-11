@@ -230,26 +230,41 @@
   padding-top: var(--k-space-control-gap);
 }
 
-/* KCard border effects (component.cardBorder). One state per screen. */
+/* KCard border effects (component.cardBorder). One state per screen.
+   The effect lives on a wrapper: its glow (::before, z-index -1) sits behind
+   the card, its ring (::after) on the card edge. Mirrors k_card.dart. */
 @property --k-card-angle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
-.k-card--border {
+.k-card-fx {
   --k-card-border-color: var(--k-component-card-border-color);
   position: relative;
   isolation: isolate;
+  display: grid;
+  min-width: 0;
+  border-radius: var(--k-radius-card);
 }
-.k-card--border::before,
-.k-card--border::after {
+/* k-ui-rules-ignore nested-card: the effect wrapper is not a card */
+.k-card-fx > .k-card {
+  min-width: 0;
+}
+.k-card-fx::before,
+.k-card-fx::after {
   content: "";
   position: absolute;
-  inset: calc(var(--k-border-width-default) * -1);
+  inset: 0;
   border-radius: inherit;
   pointer-events: none;
 }
-.k-card--border::before {
+.k-card-fx::before {
+  z-index: -1;
+  opacity: 0;
+  filter: blur(var(--k-component-card-border-glow-blur));
+}
+.k-card-fx::after {
+  z-index: 1;
   padding: var(--k-component-card-border-width);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -257,52 +272,49 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
-/* The glow stays outside the card: it is masked to the ring's outside. */
-.k-card--border::after {
-  z-index: -1;
-  inset: calc(var(--k-component-card-border-glow-blur) * -1);
-  padding: var(--k-component-card-border-glow-blur);
-  filter: blur(calc(var(--k-component-card-border-glow-blur) / 2));
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
+/* pulse and success: a solid ring with an expanding halo. */
+.k-card-fx--pulse::after,
+.k-card-fx--success::after {
+  background: var(--k-card-border-color);
 }
-.k-card--border-pulse {
-  border-color: var(--k-card-border-color);
+.k-card-fx--pulse {
+  /* k-ui-rules-ignore raw-motion: continuous loop, duration from component.cardBorder */
   animation: k-card-pulse
     var(--k-card-border-duration, var(--k-component-card-border-pulse-duration))
     ease-out infinite;
 }
+.k-card-fx--success {
+  --k-card-border-color: var(--k-component-card-border-success-color);
+  /* k-ui-rules-ignore raw-motion: one pulse, duration from component.cardBorder */
+  animation: k-card-pulse
+    var(
+      --k-card-border-duration,
+      var(--k-component-card-border-success-duration)
+    )
+    ease-out 1;
+}
 @keyframes k-card-pulse {
   from {
     box-shadow: 0 0 0 0
-      color-mix(in srgb, var(--k-card-border-color) 45%, transparent);
+      color-mix(in srgb, var(--k-card-border-color) 50%, transparent);
   }
   to {
     box-shadow: 0 0 0 var(--k-component-card-border-pulse-spread)
       color-mix(in srgb, var(--k-card-border-color) 0%, transparent);
   }
 }
-.k-card--border-spin,
-.k-card--border-aurora,
-.k-card--border-flame {
-  border-color: transparent;
-}
-.k-card--border-spin::before {
-  background: conic-gradient(
-    from var(--k-card-angle),
-    transparent 0 60%,
-    var(--k-card-border-color) 88%,
-    transparent
+/* spin, aurora, flame: a rotating gradient ring and a soft glow behind. */
+.k-card-fx--spin {
+  --k-card-border-ring:
+    transparent 0deg, transparent 160deg,
+    color-mix(in srgb, var(--k-card-border-color) 40%, transparent) 260deg,
+    var(--k-card-border-color) 350deg, transparent 360deg;
+  --k-card-border-cycle: var(
+    --k-card-border-duration,
+    var(--k-component-card-border-spin-duration)
   );
-  animation: k-card-spin
-    var(--k-card-border-duration, var(--k-component-card-border-spin-duration))
-    linear infinite;
 }
-.k-card--border-aurora {
+.k-card-fx--aurora {
   --k-card-border-ring: var(
     --k-card-border-gradient,
     var(--k-component-card-border-aurora1),
@@ -316,7 +328,7 @@
     var(--k-component-card-border-aurora-duration)
   );
 }
-.k-card--border-flame {
+.k-card-fx--flame {
   --k-card-border-ring: var(
     --k-card-border-gradient,
     var(--k-component-card-border-flame1),
@@ -330,58 +342,84 @@
     var(--k-component-card-border-flame-duration)
   );
 }
-.k-card--border-aurora::before,
-.k-card--border-aurora::after,
-.k-card--border-flame::before,
-.k-card--border-flame::after {
+.k-card-fx--spin::before,
+.k-card-fx--spin::after,
+.k-card-fx--aurora::before,
+.k-card-fx--aurora::after,
+.k-card-fx--flame::before,
+.k-card-fx--flame::after {
   background: conic-gradient(
     from var(--k-card-angle),
     var(--k-card-border-ring)
   );
   animation: k-card-spin var(--k-card-border-cycle) linear infinite;
 }
-.k-card--border-aurora::after {
-  opacity: 0.5;
+.k-card-fx--spin::before {
+  opacity: var(--k-component-card-border-glow-opacity-spin);
 }
-.k-card--border-flame::after {
-  opacity: 0.7;
+.k-card-fx--aurora::before {
+  opacity: var(--k-component-card-border-glow-opacity-aurora);
+}
+/* The flame breathes slowly instead of flickering. */
+.k-card-fx--flame::before {
+  opacity: var(--k-component-card-border-glow-opacity-flame-low);
+  /* k-ui-rules-ignore raw-motion: continuous loop, duration from component.cardBorder */
   animation:
     k-card-spin var(--k-card-border-cycle) linear infinite,
-    k-card-flicker calc(var(--k-card-border-cycle) / 3) steps(1) infinite;
+    k-card-breathe calc(var(--k-card-border-cycle) / 2) ease-in-out infinite
+      alternate;
 }
 @keyframes k-card-spin {
   to {
     --k-card-angle: 360deg;
   }
 }
-@keyframes k-card-flicker {
-  0% {
-    opacity: 0.55;
+@keyframes k-card-breathe {
+  from {
+    opacity: var(--k-component-card-border-glow-opacity-flame-low);
   }
-  25% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  75% {
-    opacity: 0.75;
+  to {
+    opacity: var(--k-component-card-border-glow-opacity-flame-high);
   }
 }
-.k-card--border-dashed {
-  border-color: transparent;
-}
-.k-card--border-dashed::before {
-  padding: var(--k-border-width-strong);
-  background: repeating-linear-gradient(
-    90deg,
-    var(--k-card-border-color) 0 var(--k-component-card-border-dash-length),
-    transparent var(--k-component-card-border-dash-length)
-      calc(
-        var(--k-component-card-border-dash-length) +
-          var(--k-component-card-border-dash-gap)
-      )
+/* dashed: marching dashes along all four edges. */
+.k-card-fx--dashed::after {
+  -webkit-mask: none;
+  mask: none;
+  padding: 0;
+  --k-card-dash: calc(
+    var(--k-component-card-border-dash-length) +
+      var(--k-component-card-border-dash-gap)
   );
+  background:
+    linear-gradient(
+        90deg,
+        var(--k-card-border-color) var(--k-component-card-border-dash-length),
+        transparent 0
+      )
+      top left / var(--k-card-dash) var(--k-component-card-border-width)
+      repeat-x,
+    linear-gradient(
+        90deg,
+        var(--k-card-border-color) var(--k-component-card-border-dash-length),
+        transparent 0
+      )
+      bottom left / var(--k-card-dash) var(--k-component-card-border-width)
+      repeat-x,
+    linear-gradient(
+        0deg,
+        var(--k-card-border-color) var(--k-component-card-border-dash-length),
+        transparent 0
+      )
+      top left / var(--k-component-card-border-width) var(--k-card-dash)
+      repeat-y,
+    linear-gradient(
+        0deg,
+        var(--k-card-border-color) var(--k-component-card-border-dash-length),
+        transparent 0
+      )
+      top right / var(--k-component-card-border-width) var(--k-card-dash)
+      repeat-y;
   animation: k-card-march
     var(
       --k-card-border-duration,
@@ -391,21 +429,24 @@
 }
 @keyframes k-card-march {
   to {
-    background-position: calc(
-        var(--k-component-card-border-dash-length) +
-          var(--k-component-card-border-dash-gap)
-      )
-      0;
+    background-position:
+      var(--k-card-dash) 0,
+      calc(var(--k-card-dash) * -1) 100%,
+      0 calc(var(--k-card-dash) * -1),
+      100% var(--k-card-dash);
   }
 }
-.k-card--border-shimmer::before {
-  background: linear-gradient(
-      110deg,
-      transparent 30%,
-      var(--k-card-border-color) 50%,
-      transparent 70%
-    )
-    0 0 / 250% 100%;
+/* shimmer: a highlight runs along the resting border. */
+.k-card-fx--shimmer::after {
+  background:
+    linear-gradient(
+        110deg,
+        transparent 35%,
+        var(--k-card-border-color) 50%,
+        transparent 65%
+      )
+      0 0 / 250% 100%,
+    var(--k-color-border-default);
   animation: k-card-shimmer
     var(
       --k-card-border-duration,
@@ -415,29 +456,23 @@
 }
 @keyframes k-card-shimmer {
   from {
-    background-position: 150% 0;
+    background-position:
+      150% 0,
+      0 0;
   }
   to {
-    background-position: -100% 0;
+    background-position:
+      -100% 0,
+      0 0;
   }
-}
-.k-card--border-success {
-  --k-card-border-color: var(--k-component-card-border-success-color);
-  border-color: var(--k-card-border-color);
-  animation: k-card-pulse
-    var(
-      --k-card-border-duration,
-      var(--k-component-card-border-success-duration)
-    )
-    ease-out 1;
 }
 @media (prefers-reduced-motion: reduce) {
-  .k-card--border,
-  .k-card--border::before,
-  .k-card--border::after {
+  .k-card-fx,
+  .k-card-fx::before,
+  .k-card-fx::after {
     animation: none !important;
   }
-  .k-card--border-pulse {
+  .k-card-fx--pulse {
     box-shadow: 0 0 0 var(--k-border-width-strong)
       color-mix(in srgb, var(--k-card-border-color) 35%, transparent);
   }
