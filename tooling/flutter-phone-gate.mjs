@@ -15,15 +15,19 @@
 import { spawnSync } from "node:child_process";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import { availableParallelism, totalmem } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("..", import.meta.url).pathname);
+const root = fileURLToPath(new URL("..", import.meta.url));
 const app = join(root, "apps/widgetbook");
 const args = process.argv.slice(2);
 const filter = args.includes("--filter")
   ? args[args.indexOf("--filter") + 1]
   : "";
 const shards = 6;
+// Windows launches Flutter through a batch file. Keep shell arguments bounded.
+if (process.platform === "win32" && /[^\w.|/-]/.test(filter))
+  throw new Error("Unsupported characters in phone gate filter on Windows.");
 const perShardBytes = 2 * 1024 ** 3; // peak plus headroom
 const jobs = Number(
   process.env.K_PHONE_GATE_JOBS ??
@@ -36,6 +40,8 @@ const jobs = Number(
       ),
     ),
 );
+if (!Number.isInteger(jobs) || jobs < 1)
+  throw new Error("K_PHONE_GATE_JOBS must be a positive integer.");
 
 for (let index = 0; index < shards; index++)
   await rm(join(app, `build/phone_gate_report.${index}.txt`), { force: true });
@@ -45,14 +51,26 @@ const run = spawnSync(
   [
     "test",
     `--concurrency=${jobs}`,
-    ...(filter ? [`--dart-define=PHONE_GATE_FILTER=${filter}`] : []),
+    ...(filter
+      ? [
+          process.platform === "win32"
+            ? `"--dart-define=PHONE_GATE_FILTER=${filter}"`
+            : `--dart-define=PHONE_GATE_FILTER=${filter}`,
+        ]
+      : []),
     ...Array.from(
       { length: shards },
       (_, index) => `test/gates/phone_gate_${index}.dart`,
     ),
   ],
-  { cwd: app, stdio: ["ignore", "ignore", "inherit"] },
+  {
+    cwd: app,
+    stdio: ["ignore", "ignore", "inherit"],
+    shell: process.platform === "win32",
+    windowsHide: true,
+  },
 );
+if (run.error) throw run.error;
 
 const lines = { OVERFLOW: [], skipped: [], NOTE: [] };
 let useCases = 0;

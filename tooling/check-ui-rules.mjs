@@ -21,7 +21,7 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { extname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = resolve(new URL("..", import.meta.url).pathname);
+const root = fileURLToPath(new URL("..", import.meta.url));
 const args = process.argv.slice(2);
 const json = args.includes("--json");
 const targets = args.filter((a) => !a.startsWith("--"));
@@ -40,7 +40,7 @@ async function* files(path) {
   if (info.isFile()) return yield path;
   for (const entry of await readdir(path)) {
     const full = join(path, entry);
-    if (skip.test(relative(root, full))) continue;
+    if (skip.test(relative(root, full).replaceAll("\\", "/"))) continue;
     yield* files(full);
   }
 }
@@ -179,7 +179,7 @@ async function main() {
       if (![".dart", ".tsx", ".css"].includes(ext)) continue;
       const source = await readFile(file, "utf8");
       const lines = source.split("\n");
-      const path = relative(root, file);
+      const path = relative(root, file).replaceAll("\\", "/");
       const library = path.startsWith("packages/");
       // A consumer app runs this script from vendor/k-design-system, so its
       // files lie outside this repository; galleries stay exempt from motion.

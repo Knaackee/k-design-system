@@ -1,9 +1,55 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { execFileSync } from "node:child_process";
+import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 import { checkDart, checkWeb } from "./check-ui-rules.mjs";
 
 const rules = (found) => found.map(([rule]) => rule);
+
+test("CLI resolves default paths and library rules across platforms", () => {
+  const root = mkdtempSync(join(tmpdir(), "k ui rules "));
+  try {
+    for (const path of [
+      "tooling",
+      "packages/flutter/k_design_ui/lib",
+      "packages/web/ui/src/stories",
+      "apps/widgetbook/lib",
+      "apps/storybook/src",
+      "examples",
+    ])
+      mkdirSync(join(root, path), { recursive: true });
+    cpSync(
+      new URL("./check-ui-rules.mjs", import.meta.url),
+      join(root, "tooling/check-ui-rules.mjs"),
+    );
+    const fixture = join(root, "packages/flutter/k_design_ui/lib/fixture.dart");
+    writeFileSync(fixture, "EdgeInsets.all(gap)");
+    writeFileSync(
+      join(root, "packages/web/ui/src/stories/ignored.tsx"),
+      "<KIcon size={18} />",
+    );
+    const run = () =>
+      execFileSync(
+        process.execPath,
+        [join(root, "tooling/check-ui-rules.mjs"), "--json"],
+        { cwd: root, encoding: "utf8" },
+      );
+    assert.deepEqual(JSON.parse(run()), []);
+    writeFileSync(fixture, "EdgeInsets.all(8)");
+    assert.throws(run, (error) => {
+      assert.equal(error.status, 1);
+      const findings = JSON.parse(error.stdout);
+      assert.equal(findings.length, 1);
+      assert.equal(findings[0].rule, "raw-spacing");
+      return true;
+    });
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
 test("flags nested Flutter cards", () => {
   assert.deepEqual(rules(checkDart("KCard(child: KCard(child: x))")), [
