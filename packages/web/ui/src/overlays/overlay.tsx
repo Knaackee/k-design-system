@@ -15,6 +15,8 @@ import {
   sheetCloseVelocity,
 } from "./use-sheet-scroll-handoff.js";
 import { usePageSheetEffect } from "./use-page-sheet-effect.js";
+import { handleOverlayPointerOutside } from "./overlay-pointer.js";
+import { OverlayLayerContext, useOverlayLayer } from "./overlay-layer.js";
 
 // Radix observes Escape in the capture phase, before a nested popover can
 // consume it. Leave dismissal to that focused child surface first.
@@ -107,16 +109,19 @@ export function KDesktopDialog({
   leading,
   bodyClassName,
   initialFocusRef,
-  zIndex = 3010,
+  zIndex,
 }: KOverlayProps) {
-  return (
+  const layer = useOverlayLayer(zIndex);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const dialog = (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay
           className="k-overlay-backdrop"
-          style={{ zIndex: zIndex - 10 }}
+          style={{ zIndex: layer - 10 }}
         />
         <Dialog.Content
+          ref={contentRef}
           className={["k-dialog", className].filter(Boolean).join(" ")}
           data-adaptive-surface="dialog"
           onOpenAutoFocus={(event) => {
@@ -125,10 +130,10 @@ export function KDesktopDialog({
               initialFocusRef.current.focus();
             }
           }}
-          style={{ zIndex }}
+          style={{ zIndex: layer }}
           onEscapeKeyDown={(event) => handleEscape(event, dismissible)}
-          onPointerDownOutside={
-            dismissible ? undefined : (event) => event.preventDefault()
+          onPointerDownOutside={(event) =>
+            handleOverlayPointerOutside(event, contentRef.current, dismissible)
           }
           aria-describedby={description ? undefined : ""}
         >
@@ -177,6 +182,11 @@ export function KDesktopDialog({
       </Dialog.Portal>
     </Dialog.Root>
   );
+  return (
+    <OverlayLayerContext.Provider value={layer}>
+      {dialog}
+    </OverlayLayerContext.Provider>
+  );
 }
 
 export type KBottomSheetProps = KOverlayProps & {
@@ -201,9 +211,10 @@ export function KBottomSheet({
   leading,
   bodyClassName,
   initialFocusRef,
-  zIndex = 3010,
+  zIndex,
   presentationRootId,
 }: KBottomSheetProps) {
+  const layer = useOverlayLayer(zIndex);
   const titleId = useId();
   const descriptionId = useId();
   const sheetRef = useRef<SheetRef>(null);
@@ -223,7 +234,7 @@ export function KBottomSheet({
   const closeRef = useRef<HTMLButtonElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
 
-  return (
+  const dialog = (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Sheet
         ref={sheetRef}
@@ -232,7 +243,7 @@ export function KBottomSheet({
         dragVelocityThreshold={sheetCloseVelocity}
         initialSnap={1}
         unstyled
-        style={{ zIndex }}
+        style={{ zIndex: layer }}
         detent={presentationRootId ? "default" : "content"}
         onCloseEnd={() => setEffectActive(false)}
         isOpen={open}
@@ -363,5 +374,10 @@ export function KBottomSheet({
         />
       </Sheet>
     </Dialog.Root>
+  );
+  return (
+    <OverlayLayerContext.Provider value={layer}>
+      {dialog}
+    </OverlayLayerContext.Provider>
   );
 }

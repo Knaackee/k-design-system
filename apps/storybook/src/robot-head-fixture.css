@@ -18,6 +18,10 @@
 .robot-demo__heading {
   margin-bottom: var(--k-space-layout-section-gap);
 }
+.robot-demo__row {
+  min-width: 0;
+  max-width: 100%;
+}
 .robot-demo__layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);

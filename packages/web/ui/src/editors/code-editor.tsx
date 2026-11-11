@@ -58,6 +58,7 @@ import {
   collaborativeRedo,
   collaborativeHistoryKeymap,
 } from "./code-collaboration.js";
+import { beginCodeDictation, codeDictationField } from "./code-dictation.js";
 import { renderedChange, renderedSource } from "./code-source-map.js";
 import { KIconButton } from "../actions/icon-button.js";
 import {
@@ -292,6 +293,11 @@ export interface KCodeEditorProps {
 }
 
 export interface KCodeEditorHandle {
+  /** Capture a presentation-only range mapped through local and remote edits. */
+  beginDictation: () => {
+    insert: (text: string) => boolean;
+    cancel: () => void;
+  } | null;
   focus: () => void;
   openSearch: () => void;
   undo: () => boolean;
@@ -375,6 +381,12 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
     useImperativeHandle(
       forwardedRef,
       () => ({
+        beginDictation() {
+          const view = viewRef.current;
+          return view && !view.state.readOnly
+            ? beginCodeDictation(view, () => viewRef.current === view)
+            : null;
+        },
         openSearch() {
           const view = viewRef.current;
           if (view) openSearchPanel(view);
@@ -527,6 +539,7 @@ export const KCodeEditor = forwardRef<KCodeEditorHandle, KCodeEditorProps>(
         state: EditorState.create({
           doc: renderedSource(text?.toString() ?? initial.current.value),
           extensions: [
+            codeDictationField,
             text ? rawTextCollaboration(text) : history(),
             keymap.of([
               ...(text ? collaborativeHistoryKeymap : historyKeymap),

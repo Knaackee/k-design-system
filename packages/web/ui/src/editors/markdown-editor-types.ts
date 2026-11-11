@@ -49,6 +49,10 @@ export interface KMarkdownEditorProps {
   showFloatingToolbar?: boolean;
   showModeSwitcher?: boolean;
   showSearchButton?: boolean;
+  /** Opt-in expansion of this editor session; source, selection and history stay mounted. */
+  showExpandButton?: boolean;
+  expandLabel?: string;
+  collapseLabel?: string;
   remoteSelections?: KRemoteSelection[];
   collaborationDocument?: KEditorCollaborationDocument;
   participants?: KEditorParticipant[];

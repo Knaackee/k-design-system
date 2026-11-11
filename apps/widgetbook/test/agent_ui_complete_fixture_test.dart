@@ -84,6 +84,34 @@ void main() {
       find.byType(KChatConversation),
     );
     final parts = conversation.messages.expand((m) => m.parts).toList();
+    final renderedQuestions = [
+      for (final message in conversation.messages)
+        for (final part in message.parts)
+          if (part is KAgentQuestionPart)
+            conversation.renderPart!(
+                  tester.element(find.byType(KChatConversation)),
+                  part,
+                  message,
+                )
+                as KAgentQuestion,
+    ];
+    expect(
+      renderedQuestions.where(
+        (question) => question.border == KCardBorder.aurora,
+      ),
+      hasLength(1),
+    );
+    expect(
+      renderedQuestions
+          .singleWhere((question) => question.border == KCardBorder.aurora)
+          .part
+          .id,
+      parts
+          .whereType<KAgentQuestionPart>()
+          .where((part) => part.state == KAgentResolutionState.pending)
+          .last
+          .id,
+    );
     expect(
       parts.whereType<KAgentQuestionPart>().map((p) => p.kind).toSet(),
       containsAll([

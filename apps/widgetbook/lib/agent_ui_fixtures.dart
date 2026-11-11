@@ -9,6 +9,7 @@ class AgentUiFixture extends StatefulWidget {
     this.kind = AgentUiFixtureKind.conversation,
     this.metadataMode = KChatMessageMetadataMode.grouped,
     this.showTimestamps = true,
+    this.questionBorder = KCardBorder.none,
     this.extraMessages,
     this.onQuestionResponse,
     this.onFormResponse,
@@ -25,6 +26,7 @@ class AgentUiFixture extends StatefulWidget {
   final AgentUiFixtureKind kind;
   final KChatMessageMetadataMode metadataMode;
   final bool showTimestamps;
+  final KCardBorder questionBorder;
 
   @override
   State<AgentUiFixture> createState() => _AgentUiFixtureState();
@@ -95,6 +97,18 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
                     ...sentMessages,
                   ],
                   runState: runState,
+                  renderPart: (context, part, message) =>
+                      part is KAgentQuestionPart
+                      ? KAgentQuestion(
+                          part: part,
+                          border: widget.questionBorder,
+                          onResponse: (response) => setState(() {
+                            answer = response;
+                            widget.onQuestionResponse?.call(response);
+                            runState = KChatRunState.idle;
+                          }),
+                        )
+                      : null,
                   labels: const KChatLabels(
                     assistant: 'Agent',
                     user: 'Du',

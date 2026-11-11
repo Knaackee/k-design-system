@@ -26,6 +26,31 @@ const releaseState = "ready";
 ```
 ''';
 
+const _compactMarkdownSample = '''# A calmer workspace
+
+## Goal
+Help people collect research, decisions, and next actions in one place. A short note should be easy to start and comfortable to expand into a longer working document.
+
+## The first release
+- Capture an idea while it is still fresh.
+- Add **context** and links to the original research.
+- Share a clear next action with the team.
+
+## Review checklist
+- [x] Describe the problem in plain language.
+- [ ] Try the small editor on a phone.
+- [ ] Expand the document and finish the longer sections.
+- [ ] Return to the original field with every edit intact.
+
+## Notes from the team
+> Keep the first interaction simple. Give longer thoughts room to grow.
+
+The compact field belongs in a larger form. Expansion provides a focused writing space for reviewing the whole brief, adding details, and refining the wording.
+
+## Next steps
+Discuss the open questions on Friday, update the checklist, and prepare a concise summary for the next review.
+''';
+
 const _codeSample = '''type EditorParticipant = {
   id: string;
   name: string;
@@ -43,6 +68,7 @@ class EditorFixture extends StatefulWidget {
     this.mobile = false,
     this.dictation = false,
     this.readOnly = false,
+    this.compact = false,
     super.key,
   });
 
@@ -50,6 +76,7 @@ class EditorFixture extends StatefulWidget {
   final bool mobile;
   final bool dictation;
   final bool readOnly;
+  final bool compact;
 
   @override
   State<EditorFixture> createState() => _EditorFixtureState();
@@ -83,11 +110,15 @@ class _EditorFixtureState extends State<EditorFixture> {
   @override
   void initState() {
     super.initState();
-    _value = widget.markdown ? _markdownSample : _codeSample;
+    _value = widget.markdown
+        ? (widget.compact ? _compactMarkdownSample : _markdownSample)
+        : _codeSample;
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    final dictationEnabled = widget.dictation;
     final fallbackStart = _value.indexOf('Anonymous');
     final diagnostics = !widget.mobile && fallbackStart >= 0
         ? [
@@ -104,33 +135,55 @@ class _EditorFixtureState extends State<EditorFixture> {
           ? KStack(
               align: KLayoutAlign.stretch,
               children: [
-                if (widget.dictation &&
+                if (widget.compact) ...[
+                  const KText(
+                    'Markdown-Eingabefeld',
+                    variant: KTextVariant.heading3,
+                  ),
+                  const KText(
+                    'Kleines bearbeitbares Feld. Maximiert mit Formatleiste und simuliertem Diktat.',
+                  ),
+                ],
+                if (!widget.compact &&
+                    dictationEnabled &&
                     _dictationState != KDictationState.ready)
                   KButton(
                     label: 'Cancel dictation',
                     variant: KButtonVariant.secondary,
                     onPressed: _cancelDictation,
                   ),
-                Expanded(
-                  child: KMarkdownEditor(
-                    key: _markdownKey,
-                    dictationState: widget.dictation ? _dictationState : null,
-                    dictationLabel: _dictationState == KDictationState.recording
-                        ? 'Finish dictation'
-                        : 'Start dictation',
-                    onDictationPressed: widget.dictation ? _dictate : null,
-                    markdown: _value,
-                    readOnly: widget.readOnly,
-                    onChanged: (value, _) => setState(() => _value = value),
-                    mode: _mode,
-                    onModeChanged: (mode) => setState(() => _mode = mode),
-                    imageBuilder: (uri, alt, title) =>
-                        uri.toString() == 'assets/image-cropper/jordan.png'
-                        ? Image.asset(uri.toString(), semanticLabel: alt)
-                        : KText(alt ?? 'Image unavailable'),
-                    semanticLabel: widget.mobile
-                        ? 'Mobile Markdown editor'
-                        : 'Markdown editor',
+                Flexible(
+                  fit: widget.compact ? FlexFit.loose : FlexFit.tight,
+                  child: SizedBox(
+                    height: widget.compact ? t.sizeHitTarget * 4 : null,
+                    child: KMarkdownEditor(
+                      key: _markdownKey,
+                      dictationState: dictationEnabled ? _dictationState : null,
+                      dictationLabel:
+                          _dictationState == KDictationState.recording
+                          ? 'Finish dictation'
+                          : _dictationState == KDictationState.processing
+                          ? 'Processing dictation'
+                          : 'Start dictation',
+                      onDictationPressed: dictationEnabled ? _dictate : null,
+                      showExpandButton: true,
+                      showFixedToolbar: !widget.compact,
+                      showFloatingToolbar: !widget.compact,
+                      showModeSwitcher: !widget.compact,
+                      showSearchButton: !widget.compact,
+                      markdown: _value,
+                      readOnly: widget.readOnly,
+                      onChanged: (value, _) => setState(() => _value = value),
+                      mode: _mode,
+                      onModeChanged: (mode) => setState(() => _mode = mode),
+                      imageBuilder: (uri, alt, title) =>
+                          uri.toString() == 'assets/image-cropper/jordan.png'
+                          ? Image.asset(uri.toString(), semanticLabel: alt)
+                          : KText(alt ?? 'Image unavailable'),
+                      semanticLabel: widget.mobile
+                          ? 'Mobile Markdown editor'
+                          : 'Markdown editor',
+                    ),
                   ),
                 ),
               ],

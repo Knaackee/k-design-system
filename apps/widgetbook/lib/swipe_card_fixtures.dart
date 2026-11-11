@@ -25,70 +25,75 @@ class _SwipeListFixtureState extends State<SwipeListFixture> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 420),
-        child: KStack(
-          gap: KLayoutGap.action,
-          align: KLayoutAlign.stretch,
-          children: [
-            KList(
+    return KPage(
+      children: [
+        Align(
+          alignment: AlignmentDirectional.topStart,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 420),
+            child: KStack(
+              gap: KLayoutGap.action,
+              align: KLayoutAlign.stretch,
               children: [
-                for (final (name, text) in _people)
-                  if (_rows.contains(name))
-                    KListItem(
-                      key: ValueKey(name),
-                      title: name,
-                      description: text,
-                      onPressed: () => setState(() => _log = 'Opened $name'),
-                      leadingActions: [
-                        KSwipeAction(
-                          id: 'read',
-                          label: 'Read',
-                          icon: KIconName.mailOpen,
-                          tone: KSwipeActionTone.info,
-                          onSelect: () =>
-                              setState(() => _log = 'Marked $name as read'),
+                KList(
+                  children: [
+                    for (final (name, text) in _people)
+                      if (_rows.contains(name))
+                        KListItem(
+                          key: ValueKey(name),
+                          title: name,
+                          description: text,
+                          onPressed: () =>
+                              setState(() => _log = 'Opened $name'),
+                          leadingActions: [
+                            KSwipeAction(
+                              id: 'read',
+                              label: 'Read',
+                              icon: KIconName.mailOpen,
+                              tone: KSwipeActionTone.info,
+                              onSelect: () =>
+                                  setState(() => _log = 'Marked $name as read'),
+                            ),
+                          ],
+                          trailingActions: [
+                            KSwipeAction(
+                              id: 'flag',
+                              label: 'Flag',
+                              icon: KIconName.flag,
+                              tone: KSwipeActionTone.warning,
+                              onSelect: () =>
+                                  setState(() => _log = 'Flagged $name'),
+                            ),
+                            KSwipeAction(
+                              id: 'delete',
+                              label: 'Delete',
+                              icon: KIconName.trash,
+                              tone: KSwipeActionTone.destructive,
+                              fullSwipe: true,
+                              onSelect: () => setState(() {
+                                _rows.remove(name);
+                                _log = 'Deleted $name';
+                              }),
+                            ),
+                          ],
                         ),
-                      ],
-                      trailingActions: [
-                        KSwipeAction(
-                          id: 'flag',
-                          label: 'Flag',
-                          icon: KIconName.flag,
-                          tone: KSwipeActionTone.warning,
-                          onSelect: () =>
-                              setState(() => _log = 'Flagged $name'),
-                        ),
-                        KSwipeAction(
-                          id: 'delete',
-                          label: 'Delete',
-                          icon: KIconName.trash,
-                          tone: KSwipeActionTone.destructive,
-                          fullSwipe: true,
-                          onSelect: () => setState(() {
-                            _rows.remove(name);
-                            _log = 'Deleted $name';
-                          }),
-                        ),
-                      ],
-                    ),
+                  ],
+                ),
+                KText(_log, variant: KTextVariant.bodySmall),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: KButton(
+                    label: 'Reset list',
+                    variant: KButtonVariant.secondary,
+                    onPressed: () =>
+                        setState(() => _rows.addAll(_people.map((p) => p.$1))),
+                  ),
+                ),
               ],
             ),
-            KText(_log, variant: KTextVariant.bodySmall),
-            Align(
-              alignment: AlignmentDirectional.centerStart,
-              child: KButton(
-                label: 'Reset list',
-                variant: KButtonVariant.secondary,
-                onPressed: () =>
-                    setState(() => _rows.addAll(_people.map((p) => p.$1))),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

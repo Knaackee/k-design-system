@@ -55,15 +55,21 @@ class KSwipeRow extends StatefulWidget {
 
 class _KSwipeRowState extends State<KSwipeRow>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _settle = AnimationController(vsync: this)
-    ..addListener(
-      () => setState(() => _offset = _settleTween.evaluate(_settle)),
-    );
+  late final AnimationController _settle;
   Tween<double> _settleTween = Tween(begin: 0, end: 0);
   double _offset = 0;
   bool _hover = false;
   bool _focus = false;
   double _width = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _settle = AnimationController(vsync: this)
+      ..addListener(
+        () => setState(() => _offset = _settleTween.evaluate(_settle)),
+      );
+  }
 
   @override
   void dispose() {

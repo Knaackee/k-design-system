@@ -7,6 +7,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import '../basic_components.dart';
 import '../extended_components.dart';
 import '../primitives/k_button.dart';
+import '../primitives/k_card.dart';
 import '../forms/k_input.dart';
 import '../forms/k_textarea.dart';
 import '../primitives/k_disclosure.dart';
@@ -219,10 +220,14 @@ class KAgentQuestion extends StatefulWidget {
     required this.part,
     this.onResponse,
     this.inputBuilder,
+    this.border = KCardBorder.none,
     super.key,
   });
   final KAgentQuestionPart part;
   final ValueChanged<KAgentQuestionResponse>? onResponse;
+
+  /// Border effect while awaiting a response; resolved questions are static.
+  final KCardBorder border;
 
   /// Builds the consumer-owned text input, using the question controller.
   ///
@@ -265,119 +270,123 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
       fontWeight: t.fontHeadingWeight,
     );
     return KChatAppearance(
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: _cardDecoration(t).copyWith(boxShadow: t.elevationLow),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (pending && part.statusLabel != null)
-              Container(
-                constraints: BoxConstraints(
-                  minHeight: t.componentChatCardHeaderHeight,
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: t.componentChatCardPadding,
-                  vertical: t.componentChatMetaGap,
-                ),
-                decoration: BoxDecoration(
-                  color: t.colorSurfaceCanvas,
-                  border: Border(
-                    bottom: BorderSide(
-                      color: t.colorBorderDefault,
-                      width: t.borderWidthDefault,
+      child: KCard.decorateBorder(
+        border: pending ? widget.border : KCardBorder.none,
+        child: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: _cardDecoration(t).copyWith(boxShadow: t.elevationLow),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (pending && part.statusLabel != null)
+                Container(
+                  constraints: BoxConstraints(
+                    minHeight: t.componentChatCardHeaderHeight,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: t.componentChatCardPadding,
+                    vertical: t.componentChatMetaGap,
+                  ),
+                  decoration: BoxDecoration(
+                    color: t.colorSurfaceCanvas,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: t.colorBorderDefault,
+                        width: t.borderWidthDefault,
+                      ),
                     ),
                   ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    KIcon(
-                      KIconName.messageCircleQuestionMark,
-                      color: t.colorTextMuted,
-                    ),
-                    SizedBox(width: t.spaceControlGap),
-                    Expanded(
-                      child: Text(
-                        part.statusLabel!,
-                        style: _captionStyle(
-                          t,
-                        ).copyWith(fontWeight: t.fontLabelWeight),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      KIcon(
+                        KIconName.messageCircleQuestionMark,
+                        color: t.colorTextMuted,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                t.componentChatCardPadding,
-                t.componentChatCardPadding,
-                t.componentChatCardPadding,
-                pending ? 0 : t.componentChatCardPadding,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(part.title, style: heading),
-                  if (part.description != null && pending) ...[
-                    SizedBox(height: t.componentChatMetaGap),
-                    Text(part.description!, style: _captionStyle(t)),
-                  ],
-                  if (!pending) ...[
-                    SizedBox(height: t.componentChatBlockGap),
-                    Text(
-                      part.answerSummary ?? _enumLabel(part.state.name),
-                      style: _bodyStyle(t),
-                    ),
-                  ],
-                  if (pending && isText) ...[
-                    SizedBox(height: t.componentChatBlockGap),
-                    widget.inputBuilder?.call(_text) ??
-                        KInput(
-                          controller: _text,
-                          placeholder: part.placeholder,
+                      SizedBox(width: t.spaceControlGap),
+                      Expanded(
+                        child: Text(
+                          part.statusLabel!,
+                          style: _captionStyle(
+                            t,
+                          ).copyWith(fontWeight: t.fontLabelWeight),
                         ),
-                  ],
-                  if (pending && part.options.isNotEmpty) ...[
-                    SizedBox(height: t.componentChatBlockGap),
-                    for (
-                      var index = 0;
-                      index < part.options.length;
-                      index++
-                    ) ...[
-                      if (index > 0) SizedBox(height: t.componentChatOptionGap),
-                      _QuestionOptionRow(
-                        option: part.options[index],
-                        selected: _selected.contains(part.options[index].id),
-                        multiple:
-                            part.kind == KAgentQuestionKind.multipleChoice,
-                        onActivate: () => _toggle(part.options[index].id),
                       ),
                     ],
-                  ],
-                ],
-              ),
-            ),
-            if (pending)
+                  ),
+                ),
               Padding(
                 padding: EdgeInsets.fromLTRB(
                   t.componentChatCardPadding,
-                  t.componentChatCardActionGap,
                   t.componentChatCardPadding,
                   t.componentChatCardPadding,
+                  pending ? 0 : t.componentChatCardPadding,
                 ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: KButton(
-                    label: part.submitLabel ?? 'Continue',
-                    leading: const KIcon(KIconName.check),
-                    onPressed: isText
-                        ? (_text.text.trim().isEmpty ? null : _submit)
-                        : (_selected.isEmpty ? null : _submit),
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(part.title, style: heading),
+                    if (part.description != null && pending) ...[
+                      SizedBox(height: t.componentChatMetaGap),
+                      Text(part.description!, style: _captionStyle(t)),
+                    ],
+                    if (!pending) ...[
+                      SizedBox(height: t.componentChatBlockGap),
+                      Text(
+                        part.answerSummary ?? _enumLabel(part.state.name),
+                        style: _bodyStyle(t),
+                      ),
+                    ],
+                    if (pending && isText) ...[
+                      SizedBox(height: t.componentChatBlockGap),
+                      widget.inputBuilder?.call(_text) ??
+                          KInput(
+                            controller: _text,
+                            placeholder: part.placeholder,
+                          ),
+                    ],
+                    if (pending && part.options.isNotEmpty) ...[
+                      SizedBox(height: t.componentChatBlockGap),
+                      for (
+                        var index = 0;
+                        index < part.options.length;
+                        index++
+                      ) ...[
+                        if (index > 0)
+                          SizedBox(height: t.componentChatOptionGap),
+                        _QuestionOptionRow(
+                          option: part.options[index],
+                          selected: _selected.contains(part.options[index].id),
+                          multiple:
+                              part.kind == KAgentQuestionKind.multipleChoice,
+                          onActivate: () => _toggle(part.options[index].id),
+                        ),
+                      ],
+                    ],
+                  ],
                 ),
               ),
-          ],
+              if (pending)
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    t.componentChatCardPadding,
+                    t.componentChatCardActionGap,
+                    t.componentChatCardPadding,
+                    t.componentChatCardPadding,
+                  ),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: KButton(
+                      label: part.submitLabel ?? 'Continue',
+                      leading: const KIcon(KIconName.check),
+                      onPressed: isText
+                          ? (_text.text.trim().isEmpty ? null : _submit)
+                          : (_selected.isEmpty ? null : _submit),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

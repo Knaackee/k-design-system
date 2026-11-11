@@ -1,4 +1,5 @@
 @import "./editors/map-zone-editor.css";
+@import "./editors/markdown-editor-fullscreen.css";
 @import "./assets/fonts/jetbrains-mono.css";
 
 .k-markdown-editor,

@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../markdown/k_markdown_preview.dart';
 import '../markdown/k_markdown_options.dart';
@@ -6,6 +9,9 @@ import 'package:re_editor/re_editor.dart';
 
 import '../actions/k_icon_button.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_button.dart';
+import '../primitives/k_text.dart';
+import '../overlays/k_overlays.dart';
 import '../forms/k_dictation_action.dart';
 import 'k_code_editor.dart';
 import 'k_editor_format_bar.dart';
@@ -15,6 +21,8 @@ import 'k_markdown_link_dialog.dart';
 import 'k_markdown_source_formatting.dart';
 
 part 'k_markdown_editor_preview.dart';
+part 'k_markdown_editor_surface.dart';
+part 'k_markdown_editor_expansion.dart';
 
 typedef KEditorLinkRequest =
     Future<String?> Function(KEditorSelection selection);
@@ -35,6 +43,9 @@ class KMarkdownEditor extends StatefulWidget {
     this.showFloatingToolbar = true,
     this.showModeSwitcher = true,
     this.showSearchButton = true,
+    this.showExpandButton = false,
+    this.expandLabel = 'Expand editor',
+    this.collapseLabel = 'Return to editor',
     this.contentMaxWidth,
     this.remoteSelections = const [],
     this.collaborationAdapter,
@@ -72,6 +83,11 @@ class KMarkdownEditor extends StatefulWidget {
   final bool showFloatingToolbar;
   final bool showModeSwitcher;
   final bool showSearchButton;
+
+  /// Offers a full-screen workspace without replacing the live editor.
+  final bool showExpandButton;
+  final String expandLabel;
+  final String collapseLabel;
   final double? contentMaxWidth;
   final List<KRemoteSelection> remoteSelections;
   final KEditorCollaborationAdapter? collaborationAdapter;
@@ -109,7 +125,12 @@ class KMarkdownEditor extends StatefulWidget {
 
 class KMarkdownEditorState extends State<KMarkdownEditor> {
   final _editorKey = GlobalKey<KCodeEditorState>();
+  final _surfaceRevision = ValueNotifier<int>(0);
+  RawDialogRoute<void>? _expandedRoute;
+  bool _expanded = false;
+  bool _movingSurface = false;
   final _scrollController = CodeScrollController();
+  double _previewScrollOffset = 0;
   final _paragraphs = ValueNotifier<CodeIndicatorValue?>(null);
   KEditorSelection? _dictationSelection;
   late KEditorMode _internalMode;
@@ -163,6 +184,12 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   @override
   void didUpdateWidget(covariant KMarkdownEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (_expanded) {
+      // The modal is a sibling route; invalidate it after the host build.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _surfaceRevision.value++;
+      });
+    }
     if ((oldWidget.mode ?? _internalMode) != _mode) {
       _switchSourceVisibility(_mode);
     }
@@ -186,21 +213,36 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   @override
   void dispose() {
     widget.collaborationAdapter?.snapshot.removeListener(_handleCollaboration);
+    final route = _expandedRoute;
+    if (route != null) {
+      // The source currently lives in this route. Remove its host before
+      // releasing the shared controllers, even if the inline owner disappears.
+      route.completed.whenComplete(_disposeEditorResources);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        route.navigator?.removeRoute(route);
+      });
+    } else {
+      _disposeEditorResources();
+    }
+    super.dispose();
+  }
+
+  void _disposeEditorResources() {
     _scrollController.verticalScroller.dispose();
     _scrollController.horizontalScroller.dispose();
     _scrollController.dispose();
     _paragraphs.dispose();
-    super.dispose();
+    _surfaceRevision.dispose();
   }
 
   void _handleCollaboration() {
-    if (mounted) setState(() {});
+    if (mounted) _rebuild(() {});
   }
 
   void _changeMode(KEditorMode mode) {
     if (widget.mode == null) {
       _switchSourceVisibility(mode);
-      setState(() => _internalMode = mode);
+      _rebuild(() => _internalMode = mode);
     }
     widget.onModeChanged?.call(mode);
   }
@@ -223,12 +265,12 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
   }
 
   void _changeSource(String value, KEditorTransaction transaction) {
-    setState(() => _draft = value);
+    _rebuild(() => _draft = value);
     widget.onChanged?.call(value, transaction);
   }
 
   void _updateSelection(KEditorSelection value) {
-    setState(() {});
+    _rebuild(() {});
     widget.onSelectionChanged?.call(value);
   }
 
@@ -292,183 +334,13 @@ class KMarkdownEditorState extends State<KMarkdownEditor> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final t =
-        Theme.of(context).extension<KDesignTokens>() ??
-        KDesignTokens.orbitLight;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final editing = _mode == KEditorMode.source;
-        return SizedBox(
-          height: constraints.hasBoundedHeight
-              ? constraints.maxHeight
-              : widget.minHeight,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: IndexedStack(
-                        index: editing ? 0 : 1,
-                        sizing: StackFit.expand,
-                        children: [
-                          ExcludeFocus(
-                            excluding: !editing,
-                            child: KMarkdownSourceGeometry(
-                              scrollController: _scrollController,
-                              paragraphs: _paragraphs,
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: KCodeEditor(
-                                      key: _editorKey,
-                                      value: _effectiveDraft,
-                                      onChanged: _changeSource,
-                                      onSelectionChanged: _updateSelection,
-                                      language: KCodeLanguage.markdown,
-                                      readOnly: widget.readOnly,
-                                      placeholder: widget.placeholder,
-                                      showLineNumbers: false,
-                                      lineWrapping: true,
-                                      showSearchButton: widget.showSearchButton,
-                                      contentMaxWidth: widget.contentMaxWidth,
-                                      searchButtonEndInset:
-                                          widget.showModeSwitcher
-                                          ? t.sizeHitTarget +
-                                                t.spaceControlGap * 2
-                                          : null,
-                                      labels: widget.labels,
-                                      remoteSelections: widget.remoteSelections,
-                                      collaborationAdapter:
-                                          widget.collaborationAdapter,
-                                      semanticLabel: widget.semanticLabel,
-                                      minHeight: widget.minHeight,
-                                      onFocus: widget.onFocus,
-                                      onBlur: widget.onBlur,
-                                    ),
-                                  ),
-                                  if (!widget.readOnly &&
-                                      (widget.dictationState ==
-                                              KDictationState.recording ||
-                                          widget.dictationState ==
-                                              KDictationState.processing))
-                                    Positioned.fill(
-                                      child: IgnorePointer(
-                                        child: KMarkdownDictationOverlay(
-                                          scrollController: _scrollController,
-                                          paragraphs: _paragraphs,
-                                          source: _effectiveDraft,
-                                          offset:
-                                              widget.dictationOffset ??
-                                              _dictationSelection?.start ??
-                                              selection.start,
-                                          state: widget.dictationState!,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          _MarkdownPreview(
-                            markdown: _effectiveDraft,
-                            semanticLabel: '${widget.semanticLabel} preview',
-                            contentMaxWidth: widget.contentMaxWidth,
-                            imageBuilder: widget.imageBuilder,
-                            markdownOptions: widget.markdownOptions,
-                            onLinkPressed: widget.onLinkPressed,
-                            topInset: widget.showModeSwitcher
-                                ? t.sizeHitTarget + t.spaceSmallInset
-                                : t.spaceMediumInset,
-                          ),
-                        ],
-                      ),
-                    ),
-                    if ((widget.showFixedToolbar ||
-                            widget.dictationState != null) &&
-                        editing &&
-                        !widget.readOnly)
-                      SafeArea(
-                        top: false,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            t.spaceControlGap,
-                            t.spaceControlGap,
-                            t.spaceControlGap,
-                            t.spaceControlGap,
-                          ),
-                          child: KEditorFormatBar(
-                            labels: widget.labels,
-                            actions: widget.showFixedToolbar
-                                ? widget.formatActions
-                                : const [],
-                            onAction: _applyFormat,
-                            floating: true,
-                            minimumItemExtent:
-                                widget.formatBarMinimumItemExtent,
-                            leadingAction: widget.dictationState == null
-                                ? null
-                                : KDictationAction(
-                                    state: widget.dictationState!,
-                                    audioLevel: widget.dictationAudioLevel,
-                                    label: widget.dictationLabel,
-                                    onPressed: widget.onDictationPressed == null
-                                        ? null
-                                        : _dictate,
-                                  ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              if (widget.showModeSwitcher)
-                PositionedDirectional(
-                  top: t.spaceControlGap,
-                  end: t.spaceControlGap,
-                  child: CodeEditorTapRegion(
-                    child: KIconButton(
-                      label: editing
-                          ? widget.labels.read
-                          : widget.labels.source,
-                      icon: editing ? KIconName.eye : KIconName.pen,
-                      selected: !editing,
-                      onPressed: () => _changeMode(
-                        editing ? KEditorMode.read : KEditorMode.source,
-                      ),
-                    ),
-                  ),
-                ),
-              if (widget.showFloatingToolbar &&
-                  editing &&
-                  !widget.readOnly &&
-                  !selection.isCollapsed)
-                PositionedDirectional(
-                  top: t.sizeHitTarget + t.spaceSmallInset,
-                  start: t.spaceSmallInset,
-                  end: t.spaceSmallInset,
-                  child: Align(
-                    alignment: AlignmentDirectional.topCenter,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: t.componentBottomSheetMaxWidth,
-                      ),
-                      child: KEditorFormatBar(
-                        labels: widget.labels,
-                        actions: widget.formatActions,
-                        onAction: _applyFormat,
-                        floating: true,
-                        minimumItemExtent: widget.formatBarMinimumItemExtent,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        );
-      },
-    );
+  void _rebuild(VoidCallback change) {
+    setState(change);
+    _surfaceRevision.value++;
   }
+
+  @override
+  Widget build(BuildContext context) => _expanded
+      ? SizedBox(height: widget.minHeight)
+      : _buildAccessibleSurface(context);
 }

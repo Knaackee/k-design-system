@@ -812,6 +812,14 @@
   gap: 0;
   box-shadow: var(--k-elevation-low);
 }
+.k-agent-question.k-card {
+  padding: 0;
+  overflow: visible;
+}
+.k-agent-question.k-card > .k-agent-question__status {
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+}
 .k-agent-question__status {
   box-sizing: border-box;
   display: grid;

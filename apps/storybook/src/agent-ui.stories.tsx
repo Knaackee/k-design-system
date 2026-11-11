@@ -65,7 +65,13 @@ export const Approval: Story = {
 
 export const Question: Story = {
   name: "agent-ui-question",
-  args: { kind: "question" },
+  args: { kind: "question", questionBorder: "aurora" },
+  argTypes: {
+    questionBorder: {
+      control: "inline-radio",
+      options: ["none", "pulse", "spin", "aurora", "flame"],
+    },
+  },
   parameters: { fixtureId: "agent-ui-question" },
 };
 

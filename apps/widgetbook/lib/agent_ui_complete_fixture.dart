@@ -85,6 +85,12 @@ class _AgentUiCompleteFixtureState extends State<AgentUiCompleteFixture> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
+    final currentMessages = messages;
+    final pendingQuestions = currentMessages
+        .expand((message) => message.parts)
+        .whereType<KAgentQuestionPart>()
+        .where((part) => part.state == KAgentResolutionState.pending);
+    final activeQuestionId = pendingQuestions.lastOrNull?.id;
     return LayoutBuilder(
       builder: (context, constraints) => ColoredBox(
         color: t.colorSurfaceCanvas,
@@ -170,7 +176,19 @@ class _AgentUiCompleteFixtureState extends State<AgentUiCompleteFixture> {
             Expanded(
               child: KChatConversation(
                 key: ValueKey(resetKey),
-                messages: messages,
+                messages: currentMessages,
+                renderPart: (context, part, message) =>
+                    part is KAgentQuestionPart
+                    ? KAgentQuestion(
+                        part: part,
+                        border: part.id == activeQuestionId
+                            ? KCardBorder.aurora
+                            : KCardBorder.none,
+                        onResponse: (r) => setState(
+                          () => responses.questions[r.questionId] = r,
+                        ),
+                      )
+                    : null,
                 runState: runState,
                 metadataMode: KChatMessageMetadataMode.grouped,
                 metadataByRole: const {

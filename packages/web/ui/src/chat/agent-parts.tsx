@@ -2,6 +2,7 @@ import { useId, useState, type ReactNode } from "react";
 import { KAlert, KAttachment, KBadge } from "../basic-components.js";
 import { KProgress } from "../extended-components.js";
 import { KButton } from "../primitives/button.js";
+import { KCard, type KCardBorder } from "../primitives/card.js";
 import { KDisclosure } from "../primitives/disclosure.js";
 import { KIcon } from "../primitives/icon.js";
 import { KInput } from "../forms/input.js";
@@ -167,10 +168,13 @@ export function KAgentQuestion({
   part,
   onResponse,
   inputRenderer,
+  border = "none",
 }: {
   part: KAgentQuestionPart;
   onResponse?: (response: KAgentQuestionResponse) => void;
   inputRenderer?: KAgentQuestionInputRenderer;
+  /** Optional emphasis while waiting for an answer. Resolved questions are static. */
+  border?: KCardBorder;
 }) {
   const [text, setText] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
@@ -201,8 +205,10 @@ export function KAgentQuestion({
     );
   const submit = () =>
     onResponse?.({ questionId: part.id, optionIds: selected, text });
+  const QuestionSurface = border === "none" ? "section" : KCard;
   return (
-    <section
+    <QuestionSurface
+      {...(border === "none" ? {} : { border })}
       className="k-agent-card k-agent-question"
       data-state={part.state}
       aria-labelledby={titleId}
@@ -269,7 +275,7 @@ export function KAgentQuestion({
           {part.submitLabel ?? "Continue"}
         </KButton>
       </div>
-    </section>
+    </QuestionSurface>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  KAgentQuestion,
   KButton,
   KChatComposer,
   KChatConversation,
@@ -92,6 +93,10 @@ function CompleteSession({
       : []),
   ];
 
+  const activeQuestionId = messages
+    .flatMap((message) => message.parts)
+    .reverse()
+    .find((part) => part.type === "question" && part.state === "pending")?.id;
   return (
     <section
       className="k-agent-ui-fixture"
@@ -154,6 +159,23 @@ function CompleteSession({
       <KChatConversation
         key={resetKey}
         messages={messages}
+        renderPart={(part) =>
+          part.type === "question" ? (
+            <KAgentQuestion
+              part={part}
+              border={part.id === activeQuestionId ? "aurora" : "none"}
+              onResponse={(response) =>
+                setResponses((current) => ({
+                  ...current,
+                  questions: {
+                    ...current.questions,
+                    [response.questionId]: response,
+                  },
+                }))
+              }
+            />
+          ) : null
+        }
         runState={runState}
         metadataMode="grouped"
         metadataByRole={{ user: "hidden", system: "hidden" }}

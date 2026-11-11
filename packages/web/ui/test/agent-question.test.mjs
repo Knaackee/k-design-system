@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { KAgentQuestion } from "../dist/chat/agent-parts.js";
+import { KAgentSingleChoice } from "../dist/chat/ask-tools.js";
 
 const question = {
   id: "question",
@@ -66,4 +67,22 @@ test("text questions retain the consumer input and multiple choice retains check
   const multiple = render({ ...question, kind: "multiple-choice" });
   assert.equal((multiple.match(/type="checkbox"/g) ?? []).length, 2);
   assert.match(multiple, /role="group"/);
+});
+
+test("single choice forwards the optional border only while awaiting an answer", () => {
+  const defaultHtml = renderToStaticMarkup(
+    h(KAgentSingleChoice, { part: question }),
+  );
+  assert.doesNotMatch(defaultHtml, /data-border=/);
+  const pendingHtml = renderToStaticMarkup(
+    h(KAgentSingleChoice, { part: question, border: "aurora" }),
+  );
+  assert.match(pendingHtml, /k-card-fx--aurora/);
+  const answeredHtml = renderToStaticMarkup(
+    h(KAgentSingleChoice, {
+      part: { ...question, state: "answered", answerSummary: "Current data" },
+      border: "aurora",
+    }),
+  );
+  assert.doesNotMatch(answeredHtml, /data-border=/);
 });

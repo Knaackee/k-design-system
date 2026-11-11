@@ -38,6 +38,9 @@
   border-radius: var(--k-component-list-group-radius);
   background: var(--k-color-surface-raised);
 }
+.k-list__group:empty {
+  display: none;
+}
 /* iOS groups have no outline. */
 [data-style="apple"] .k-list__group,
 [data-style="material"] .k-list__group {

@@ -14,6 +14,7 @@ import {
   type YRange,
 } from "y-codemirror.next";
 import * as Y from "yjs";
+import { isolateHistory } from "@codemirror/commands";
 import {
   renderedSource,
   renderedToRaw,
@@ -78,6 +79,11 @@ export class RawTextSync {
     ) {
       const source = this.text.toString();
       let adjustment = 0;
+      const isolation = update.transactions.map((transaction) =>
+        transaction.annotation(isolateHistory),
+      );
+      if (isolation.some((value) => value === "before" || value === "full"))
+        this.undoManager.stopCapturing();
       this.text.doc!.transact(() => {
         update.changes.iterChanges((from, to, _fromB, _toB, insert) => {
           const change = sourceEdit(source, from, to, insert.toString());
@@ -88,6 +94,8 @@ export class RawTextSync {
           adjustment += change.insert.length - (change.to - change.from);
         });
       }, this.config);
+      if (isolation.some((value) => value === "after" || value === "full"))
+        this.undoManager.stopCapturing();
     }
     this.range = this.config.toYRange(update.state.selection.main);
   }

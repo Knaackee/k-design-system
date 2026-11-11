@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import {
   KChatComposer,
   KChatConversation,
+  KAgentQuestion,
+  type KCardBorder,
   type KAgentApprovalResponse,
   type KAgentAttachmentRequestResponse,
   type KAgentExternalActionResponse,
@@ -31,10 +33,12 @@ export function AgentUiFixture({
   kind = "conversation",
   metadataMode = "grouped",
   showTimestamps = true,
+  questionBorder = "none",
 }: {
   kind?: AgentUiFixtureKind;
   metadataMode?: KChatMessageMetadataMode;
   showTimestamps?: boolean;
+  questionBorder?: KCardBorder;
 }) {
   const [draft, setDraft] = useState("");
   const [runState, setRunState] = useState<KChatRunState>("awaiting-input");
@@ -99,6 +103,19 @@ export function AgentUiFixture({
       <KChatConversation
         messages={messages}
         runState={runState}
+        renderPart={(part) =>
+          part.type === "question" ? (
+            <KAgentQuestion
+              key={part.id}
+              part={part}
+              border={questionBorder}
+              onResponse={(response) => {
+                setAnswer(response);
+                setRunState("idle");
+              }}
+            />
+          ) : undefined
+        }
         onApprovalResponse={(response) => {
           setApproval(response);
           setRunState("idle");

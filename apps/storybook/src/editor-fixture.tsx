@@ -8,7 +8,13 @@ import {
   type KEditorSelection,
 } from "@k-design-system/ui/editors";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { KButton, KDictationState, KInline, KText } from "@k-design-system/ui";
+import {
+  KButton,
+  KDictationState,
+  KInline,
+  KStack,
+  KText,
+} from "@k-design-system/ui";
 import "./editor-fixture.css";
 
 const initialMarkdown = `# Collaborative release notes
@@ -92,14 +98,26 @@ export function MarkdownEditorDictationFixture() {
   return <MarkdownEditorDemo dictation />;
 }
 
+export function MarkdownEditorFullscreenFixture() {
+  return <MarkdownEditorDemo dictation expandable compact />;
+}
+
+export function MarkdownEditorFullscreenWithToolbarFixture() {
+  return <MarkdownEditorDemo dictation expandable />;
+}
+
 function MarkdownEditorDemo({
   mobile = false,
   readOnly = false,
   dictation = false,
+  expandable = false,
+  compact = false,
 }: {
   mobile?: boolean;
   readOnly?: boolean;
   dictation?: boolean;
+  expandable?: boolean;
+  compact?: boolean;
 }) {
   const [markdown, setMarkdown] = useState(initialMarkdown);
   const [mode, setMode] = useState<KEditorMode>("source");
@@ -107,11 +125,22 @@ function MarkdownEditorDemo({
   const insertion = useRef<((text: string) => boolean) | null>(null);
   const cancel = useRef<(() => void) | null>(null);
   return (
-    <div className={`editor-demo${mobile ? " editor-demo--mobile" : ""}`}>
+    <div
+      className={`editor-demo${mobile ? " editor-demo--mobile" : ""}${compact ? " editor-demo--compact-field" : ""}`}
+    >
+      {compact && (
+        <KStack gap="control" align="stretch">
+          <KText variant="label">Release-Notiz</KText>
+          <KText variant="caption">
+            Kleines bearbeitbares Markdown-Feld ohne Formatleiste. Die
+            Vollansicht zeigt die Formatleiste mit simuliertem Diktat.
+          </KText>
+        </KStack>
+      )}
       <div
-        className={`editor-demo-shell${state === KDictationState.recording ? " editor-demo-shell--with-actions" : ""}`}
+        className={`editor-demo-shell${compact ? " editor-demo-compact-field" : ""}${!compact && state === KDictationState.recording ? " editor-demo-shell--with-actions" : ""}`}
       >
-        {state === KDictationState.recording && (
+        {!compact && state === KDictationState.recording && (
           <KButton
             variant="secondary"
             onClick={() => {
@@ -124,12 +153,24 @@ function MarkdownEditorDemo({
           </KButton>
         )}
         <KMarkdownEditor
+          showExpandButton={expandable}
+          minHeight={compact ? 0 : undefined}
+          showFixedToolbar={!compact}
+          showFloatingToolbar={!compact}
+          showModeSwitcher={!compact}
+          showSearchButton={!compact}
           markdown={markdown}
           onChange={setMarkdown}
           mode={mode}
           onModeChange={setMode}
           readOnly={readOnly}
-          ariaLabel={mobile ? "Mobile Markdown editor" : "Markdown editor"}
+          ariaLabel={
+            compact
+              ? "Release-Notiz"
+              : mobile
+                ? "Mobile Markdown editor"
+                : "Markdown editor"
+          }
           placeholder="Write release notes…"
           labels={{ source: "Markdown", read: "Preview" }}
           dictation={

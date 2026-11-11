@@ -415,11 +415,12 @@ class KCodeEditorState extends State<KCodeEditor> {
                                       widget.embedded
                                           ? t.spaceControlInsetInline + 2
                                           : t.spaceMediumInset,
-                                      widget.diagnostics.isEmpty
-                                          ? widget.embedded
-                                                ? t.spaceControlInsetInline
-                                                : t.spaceMediumInset
-                                          : t.sizeHitTarget,
+                                      (widget.diagnostics.isEmpty
+                                              ? widget.embedded
+                                                    ? t.spaceControlInsetInline
+                                                    : t.spaceMediumInset
+                                              : t.sizeHitTarget) +
+                                          (markdownGeometry?.bottomInset ?? 0),
                                     ),
                                     style: CodeEditorStyle(
                                       fontFamily: widget.fontFamily,

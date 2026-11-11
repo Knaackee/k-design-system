@@ -132,33 +132,34 @@ class KList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (title case final text?) aside(text, header: true),
-          _GroupClip(
-            radius: radius,
-            continuous: apple,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: t.colorSurfaceRaised,
-                borderRadius: radius,
-                // iOS groups have no outline; the productivity look does.
-                border: !outlined
-                    ? null
-                    : Border.all(
-                        color: t.colorBorderDefault,
-                        width: t.spaceHairline,
-                      ),
-              ),
-              // The outline sits around the rows, as the Web border does,
-              // instead of over their first and last pixel.
-              child: Padding(
-                padding: EdgeInsets.all(outlined ? t.spaceHairline : 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: rows,
+          if (children.isNotEmpty)
+            _GroupClip(
+              radius: radius,
+              continuous: apple,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: t.colorSurfaceRaised,
+                  borderRadius: radius,
+                  // iOS groups have no outline; the productivity look does.
+                  border: !outlined
+                      ? null
+                      : Border.all(
+                          color: t.colorBorderDefault,
+                          width: t.spaceHairline,
+                        ),
+                ),
+                // The outline sits around the rows, as the Web border does,
+                // instead of over their first and last pixel.
+                child: Padding(
+                  padding: EdgeInsets.all(outlined ? t.spaceHairline : 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: rows,
+                  ),
                 ),
               ),
             ),
-          ),
           if (footer case final text?) aside(text, header: false),
         ],
       ),

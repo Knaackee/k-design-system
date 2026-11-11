@@ -61,6 +61,15 @@ class KCard extends StatelessWidget {
   /// One animation cycle; overrides the effect's token.
   final Duration? borderDuration;
 
+  /// Internal: reuses the card border for library surfaces with their own insets.
+  /// Consumer applications should compose [KCard] instead.
+  static Widget decorateBorder({
+    required Widget child,
+    required KCardBorder border,
+  }) => border == KCardBorder.none
+      ? child
+      : _KCardBorderEffect(border: border, child: child);
+
   /// Whether [context] is inside a [KCard].
   static bool isInside(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_KCardScope>() != null;

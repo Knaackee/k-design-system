@@ -6,6 +6,8 @@ import {
   MarkdownEditorFixture,
   MarkdownEditorMobileFixture,
   MarkdownEditorDictationFixture,
+  MarkdownEditorFullscreenFixture,
+  MarkdownEditorFullscreenWithToolbarFixture,
   MarkdownEditorReadOnlyFixture,
 } from "./editor-fixture.js";
 
@@ -47,6 +49,18 @@ export const Dictation: Story = {
   name: "markdown-editor-dictation",
   render: () => <MarkdownEditorDictationFixture />,
   parameters: { fixtureId: "markdown-editor-dictation" },
+};
+
+export const MarkdownFullscreen: Story = {
+  name: "markdown-editor-fullscreen",
+  render: () => <MarkdownEditorFullscreenFixture />,
+  parameters: { fixtureId: "markdown-editor-fullscreen" },
+};
+
+export const MarkdownFullscreenWithToolbar: Story = {
+  name: "markdown-editor-fullscreen-with-toolbar",
+  render: () => <MarkdownEditorFullscreenWithToolbarFixture />,
+  parameters: { fixtureId: "markdown-editor-fullscreen-with-toolbar" },
 };
 
 export const MarkdownReadOnly: Story = {

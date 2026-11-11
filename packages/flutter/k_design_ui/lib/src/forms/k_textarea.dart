@@ -18,6 +18,8 @@ class KTextarea extends StatelessWidget {
     this.placeholder,
     this.enabled = true,
     this.readOnly = false,
+    this.autocorrect = true,
+    this.enableIMEPersonalizedLearning = true,
     this.rows = 4,
     this.maxLength,
     this.trailingAction,
@@ -35,6 +37,12 @@ class KTextarea extends StatelessWidget {
   final String? placeholder;
   final bool enabled;
   final bool readOnly;
+
+  /// Disable text correction and suggestions for literal values such as keys.
+  final bool autocorrect;
+
+  /// Whether the input method may learn from text entered in this field.
+  final bool enableIMEPersonalizedLearning;
   final int rows;
   final int? maxLength;
 
@@ -75,6 +83,15 @@ class KTextarea extends StatelessWidget {
                 autofocus: autofocus,
                 enabled: enabled,
                 readOnly: readOnly,
+                autocorrect: autocorrect,
+                enableSuggestions: autocorrect,
+                smartDashesType: autocorrect
+                    ? SmartDashesType.enabled
+                    : SmartDashesType.disabled,
+                smartQuotesType: autocorrect
+                    ? SmartQuotesType.enabled
+                    : SmartQuotesType.disabled,
+                enableIMEPersonalizedLearning: enableIMEPersonalizedLearning,
                 minLines: rows,
                 maxLines: rows,
                 maxLength: maxLength,

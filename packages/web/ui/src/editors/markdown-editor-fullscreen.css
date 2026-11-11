@@ -1,0 +1,81 @@
+.k-markdown-editor-inline,
+.k-markdown-editor-fullscreen-host,
+.k-markdown-editor-mount {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.k-markdown-editor-mount > .k-markdown-editor {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.k-markdown-editor-mount
+  > .k-markdown-editor
+  > :is(
+    .k-markdown-editor-source,
+    .k-markdown-editor-surface,
+    .k-markdown-editor-rich
+  ) {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.k-markdown-editor-fullscreen-body {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.k-markdown-editor-fullscreen .k-markdown-editor {
+  border: 0;
+  border-radius: 0;
+}
+
+.k-markdown-editor-expand-action {
+  position: absolute;
+  z-index: 1;
+  inset-block-end: var(--k-space-small-inset);
+  inset-inline-end: var(--k-space-small-inset);
+  display: flex;
+}
+
+.k-markdown-editor[data-has-expand-action="true"] {
+  --k-markdown-editor-expand-clearance: calc(
+    max(var(--k-size-control), var(--k-size-hit-target)) + 2 *
+      var(--k-space-small-inset)
+  );
+}
+
+.k-markdown-editor[data-has-expand-action="true"]
+  > :is(
+    .k-markdown-editor-source,
+    .k-markdown-editor-surface,
+    .k-markdown-editor-rich
+  ) {
+  isolation: isolate;
+}
+
+/* Clearance scrolls with the document; the viewport keeps its full height. */
+.k-markdown-editor[data-has-expand-action="true"]
+  > .k-markdown-editor-source
+  .cm-content,
+.k-markdown-editor[data-has-expand-action="true"]
+  > .k-markdown-editor-surface
+  .k-markdown-editor-preview,
+.k-markdown-editor[data-has-expand-action="true"]
+  > .k-markdown-editor-rich
+  :is(.k-markdown-editor-content, .ProseMirror) {
+  padding-block-end: var(--k-markdown-editor-expand-clearance);
+}
+
+.k-markdown-editor[data-has-expand-action="true"]
+  > :is(.k-markdown-editor-dictation, .k-markdown-editor-rich-toolbar) {
+  padding-inline-end: var(--k-markdown-editor-expand-clearance);
+}

@@ -9,9 +9,11 @@ class KMarkdownSourceGeometry extends InheritedWidget {
     required this.scrollController,
     required this.paragraphs,
     required super.child,
+    this.bottomInset = 0,
     super.key,
   });
 
+  final double bottomInset;
   final CodeScrollController scrollController;
   final ValueNotifier<CodeIndicatorValue?> paragraphs;
 
@@ -24,7 +26,8 @@ class KMarkdownSourceGeometry extends InheritedWidget {
   @override
   bool updateShouldNotify(KMarkdownSourceGeometry oldWidget) =>
       scrollController != oldWidget.scrollController ||
-      paragraphs != oldWidget.paragraphs;
+      paragraphs != oldWidget.paragraphs ||
+      bottomInset != oldWidget.bottomInset;
 }
 
 class _Capture extends StatefulWidget {
@@ -118,7 +121,11 @@ class KMarkdownDictationOverlay extends StatelessWidget {
           Positioned(
             left: position.dx,
             top: position.dy,
-            child: KDictationAnchor(state: state),
+            height: paragraph.preferredLineHeight,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: KDictationAnchor(state: state),
+            ),
           ),
         ],
       );

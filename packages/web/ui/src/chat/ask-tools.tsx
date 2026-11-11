@@ -4,6 +4,7 @@ import { KCheckbox } from "../forms/checkbox.js";
 import { KField } from "../forms/field.js";
 import { KInput } from "../forms/input.js";
 import { KSelect } from "../forms/selection.js";
+import type { KCardBorder } from "../primitives/card.js";
 import { KButton } from "../primitives/button.js";
 import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KAgentQuestion } from "./agent-parts.js";
@@ -20,6 +21,7 @@ import type {
 } from "./types.js";
 
 export type KAgentQuestionToolProps = {
+  border?: KCardBorder;
   part: KAgentQuestionPart;
   onResponse?: (response: KAgentQuestionResponse) => void;
 };

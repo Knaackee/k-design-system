@@ -7,34 +7,52 @@ import '../forms/k_field.dart';
 import '../forms/k_input.dart';
 import '../forms/k_select.dart';
 import '../primitives/k_button.dart';
+import '../primitives/k_card.dart';
 import '../primitives/k_icon.dart';
 import 'k_agent_parts.dart';
 import 'k_chat_types.dart';
 import 'k_chat_appearance.dart';
 
 class KAgentTextQuestion extends StatelessWidget {
-  const KAgentTextQuestion({required this.part, this.onResponse, super.key});
+  const KAgentTextQuestion({
+    required this.part,
+    this.onResponse,
+    this.border = KCardBorder.none,
+    super.key,
+  });
   final KAgentQuestionPart part;
+  final KCardBorder border;
   final ValueChanged<KAgentQuestionResponse>? onResponse;
   @override
   Widget build(BuildContext context) =>
-      KAgentQuestion(part: part, onResponse: onResponse);
+      KAgentQuestion(part: part, onResponse: onResponse, border: border);
 }
 
 class KAgentSingleChoice extends KAgentTextQuestion {
-  const KAgentSingleChoice({required super.part, super.onResponse, super.key});
+  const KAgentSingleChoice({
+    required super.part,
+    super.onResponse,
+    super.border,
+    super.key,
+  });
 }
 
 class KAgentMultipleChoice extends KAgentTextQuestion {
   const KAgentMultipleChoice({
     required super.part,
     super.onResponse,
+    super.border,
     super.key,
   });
 }
 
 class KAgentConfirmation extends KAgentTextQuestion {
-  const KAgentConfirmation({required super.part, super.onResponse, super.key});
+  const KAgentConfirmation({
+    required super.part,
+    super.onResponse,
+    super.border,
+    super.key,
+  });
 }
 
 class KAgentForm extends StatefulWidget {

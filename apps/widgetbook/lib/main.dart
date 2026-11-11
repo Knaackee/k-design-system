@@ -1252,6 +1252,16 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
             ),
           ),
           WidgetbookUseCase(
+            name: 'markdown-fullscreen',
+            builder: (_) => const MarkdownEditorDemoViewport(
+              child: EditorFixture(
+                markdown: true,
+                compact: true,
+                dictation: true,
+              ),
+            ),
+          ),
+          WidgetbookUseCase(
             name: 'editor-collaboration',
             builder: (_) => const MarkdownEditorDemoViewport(
               child: EditorCollaborationFixture(),
@@ -1921,8 +1931,10 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
           ),
           WidgetbookUseCase(
             name: 'agent-ui-question',
-            builder: (_) =>
-                const AgentUiFixture(kind: AgentUiFixtureKind.question),
+            builder: (_) => const AgentUiFixture(
+              kind: AgentUiFixtureKind.question,
+              questionBorder: KCardBorder.aurora,
+            ),
           ),
           WidgetbookUseCase(
             name: 'agent-ui-text-question',
