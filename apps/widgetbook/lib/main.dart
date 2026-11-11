@@ -35,6 +35,7 @@ import 'motion_fixture.dart';
 import 'back_button_fixture.dart';
 import 'geometry_parity_fixture.dart';
 import 'package:widgetbook/widgetbook.dart';
+import 'swipe_card_fixtures.dart';
 
 import 'button_fixtures.dart';
 import 'chat_bubble_fixture.dart';
@@ -549,6 +550,10 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         name: 'List',
         children: [
           WidgetbookUseCase(name: 'list', builder: (_) => const ListFixture()),
+          WidgetbookUseCase(
+            name: 'list-swipe',
+            builder: (_) => const SwipeListFixture(),
+          ),
         ],
       ),
       WidgetbookFolder(
@@ -1864,7 +1869,8 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
             name: 'agent-ui-complete',
             builder: (context) => AgentUiCompleteFixture(
               scenario: context.knobs.object.dropdown<CompleteScenario>(
-                label: 'Demo-Szenario', options: CompleteScenario.values,
+                label: 'Demo-Szenario',
+                options: CompleteScenario.values,
                 initialOption: CompleteScenario.history,
                 labelBuilder: (value) => value.name,
               ),
@@ -2486,6 +2492,12 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         name: 'Card',
         children: [
           WidgetbookUseCase(name: 'card-variants', builder: buildCardVariants),
+          WidgetbookUseCase(name: 'card-header', builder: buildCardHeader),
+          WidgetbookUseCase(name: 'card-borders', builder: buildCardBorders),
+          WidgetbookUseCase(
+            name: 'card-border-playground',
+            builder: buildCardBorderPlayground,
+          ),
         ],
       ),
     ],

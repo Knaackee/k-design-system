@@ -24,6 +24,8 @@ const kGeometryParityEntries = <String, String>{
   'checkbox': 'wh',
   'input': 'h',
   'card': 'h',
+  'card-header': 'h',
+  'list-swipe': 'h',
 };
 
 class GeometryParityFixture extends StatelessWidget {
@@ -88,6 +90,42 @@ class GeometryParityFixture extends StatelessWidget {
                 const SizedBox(
                   width: double.infinity,
                   child: KInput(label: 'Name', placeholder: 'Name'),
+                ),
+              ),
+              entry(
+                'card-header',
+                SizedBox(
+                  width: double.infinity,
+                  child: KCard(
+                    title: 'Rocky',
+                    description: 'Agent · working',
+                    menu: const [KMenuAction(id: 'edit', label: 'Edit')],
+                    actions: [KButton(label: 'Open', onPressed: () {})],
+                    child: const KText('Groups the feedback by theme.'),
+                  ),
+                ),
+              ),
+              entry(
+                'list-swipe',
+                SizedBox(
+                  width: double.infinity,
+                  child: KList(
+                    children: [
+                      KListItem(
+                        title: 'Mara Feld',
+                        description: 'Moved the appointment',
+                        onPressed: () {},
+                        trailingActions: const [
+                          KSwipeAction(
+                            id: 'delete',
+                            label: 'Delete',
+                            icon: KIconName.trash,
+                            tone: KSwipeActionTone.destructive,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               entry(

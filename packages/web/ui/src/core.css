@@ -191,6 +191,258 @@
   padding: var(--k-space-card-padding);
 }
 
+/* KCard header (leading, title, description, "…" menu) and footer actions. */
+.k-card--structured {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+}
+.k-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.k-card__heading {
+  flex: 1;
+  min-width: 0;
+}
+.k-card__title {
+  color: var(--k-color-text-primary);
+}
+.k-card__description {
+  color: var(--k-color-text-muted);
+}
+.k-card__header > .k-card__menu,
+.k-card__header > .k-button-target:has(> .k-card__menu) {
+  /* The trigger sits on the card corner, its touch area reaching into the
+     padding instead of pushing the title down. */
+  margin-block: calc(var(--k-space-control-gap) * -1);
+  margin-inline-end: calc(var(--k-space-control-gap) * -1);
+}
+.k-button-target > .k-card__menu {
+  margin: 0;
+}
+.k-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+  padding-top: var(--k-space-control-gap);
+}
+
+/* KCard border effects (component.cardBorder). One state per screen. */
+@property --k-card-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.k-card--border {
+  --k-card-border-color: var(--k-component-card-border-color);
+  position: relative;
+  isolation: isolate;
+}
+.k-card--border::before,
+.k-card--border::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--k-border-width-default) * -1);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.k-card--border::before {
+  padding: var(--k-component-card-border-width);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+/* The glow stays outside the card: it is masked to the ring's outside. */
+.k-card--border::after {
+  z-index: -1;
+  inset: calc(var(--k-component-card-border-glow-blur) * -1);
+  padding: var(--k-component-card-border-glow-blur);
+  filter: blur(calc(var(--k-component-card-border-glow-blur) / 2));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+}
+.k-card--border-pulse {
+  border-color: var(--k-card-border-color);
+  animation: k-card-pulse
+    var(--k-card-border-duration, var(--k-component-card-border-pulse-duration))
+    ease-out infinite;
+}
+@keyframes k-card-pulse {
+  from {
+    box-shadow: 0 0 0 0
+      color-mix(in srgb, var(--k-card-border-color) 45%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 var(--k-component-card-border-pulse-spread)
+      color-mix(in srgb, var(--k-card-border-color) 0%, transparent);
+  }
+}
+.k-card--border-spin,
+.k-card--border-aurora,
+.k-card--border-flame {
+  border-color: transparent;
+}
+.k-card--border-spin::before {
+  background: conic-gradient(
+    from var(--k-card-angle),
+    transparent 0 60%,
+    var(--k-card-border-color) 88%,
+    transparent
+  );
+  animation: k-card-spin
+    var(--k-card-border-duration, var(--k-component-card-border-spin-duration))
+    linear infinite;
+}
+.k-card--border-aurora {
+  --k-card-border-ring: var(
+    --k-card-border-gradient,
+    var(--k-component-card-border-aurora1),
+    var(--k-component-card-border-aurora2),
+    var(--k-component-card-border-aurora3),
+    var(--k-component-card-border-aurora4),
+    var(--k-component-card-border-aurora1)
+  );
+  --k-card-border-cycle: var(
+    --k-card-border-duration,
+    var(--k-component-card-border-aurora-duration)
+  );
+}
+.k-card--border-flame {
+  --k-card-border-ring: var(
+    --k-card-border-gradient,
+    var(--k-component-card-border-flame1),
+    var(--k-component-card-border-flame2),
+    var(--k-component-card-border-flame3),
+    var(--k-component-card-border-flame2),
+    var(--k-component-card-border-flame1)
+  );
+  --k-card-border-cycle: var(
+    --k-card-border-duration,
+    var(--k-component-card-border-flame-duration)
+  );
+}
+.k-card--border-aurora::before,
+.k-card--border-aurora::after,
+.k-card--border-flame::before,
+.k-card--border-flame::after {
+  background: conic-gradient(
+    from var(--k-card-angle),
+    var(--k-card-border-ring)
+  );
+  animation: k-card-spin var(--k-card-border-cycle) linear infinite;
+}
+.k-card--border-aurora::after {
+  opacity: 0.5;
+}
+.k-card--border-flame::after {
+  opacity: 0.7;
+  animation:
+    k-card-spin var(--k-card-border-cycle) linear infinite,
+    k-card-flicker calc(var(--k-card-border-cycle) / 3) steps(1) infinite;
+}
+@keyframes k-card-spin {
+  to {
+    --k-card-angle: 360deg;
+  }
+}
+@keyframes k-card-flicker {
+  0% {
+    opacity: 0.55;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.75;
+  }
+}
+.k-card--border-dashed {
+  border-color: transparent;
+}
+.k-card--border-dashed::before {
+  padding: var(--k-border-width-strong);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--k-card-border-color) 0 var(--k-component-card-border-dash-length),
+    transparent var(--k-component-card-border-dash-length)
+      calc(
+        var(--k-component-card-border-dash-length) +
+          var(--k-component-card-border-dash-gap)
+      )
+  );
+  animation: k-card-march
+    var(
+      --k-card-border-duration,
+      var(--k-component-card-border-dashed-duration)
+    )
+    linear infinite;
+}
+@keyframes k-card-march {
+  to {
+    background-position: calc(
+        var(--k-component-card-border-dash-length) +
+          var(--k-component-card-border-dash-gap)
+      )
+      0;
+  }
+}
+.k-card--border-shimmer::before {
+  background: linear-gradient(
+      110deg,
+      transparent 30%,
+      var(--k-card-border-color) 50%,
+      transparent 70%
+    )
+    0 0 / 250% 100%;
+  animation: k-card-shimmer
+    var(
+      --k-card-border-duration,
+      var(--k-component-card-border-shimmer-duration)
+    )
+    linear infinite;
+}
+@keyframes k-card-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.k-card--border-success {
+  --k-card-border-color: var(--k-component-card-border-success-color);
+  border-color: var(--k-card-border-color);
+  animation: k-card-pulse
+    var(
+      --k-card-border-duration,
+      var(--k-component-card-border-success-duration)
+    )
+    ease-out 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-card--border,
+  .k-card--border::before,
+  .k-card--border::after {
+    animation: none !important;
+  }
+  .k-card--border-pulse {
+    box-shadow: 0 0 0 var(--k-border-width-strong)
+      color-mix(in srgb, var(--k-card-border-color) 35%, transparent);
+  }
+}
+
 /* Implicit grid columns of library components may shrink below their
    min-content, like a Flutter Column inside a bounded parent. Without this an
    implicit `auto` column grows to its widest unbreakable child and pushes

@@ -30,6 +30,7 @@ extension KAccentTokens on KDesignTokens {
       colorBrandPrimaryBorder: Color.lerp(surface, accent, 0.35),
       componentBadgePrimaryBackground: accent,
       componentBadgePrimaryForeground: onAccent,
+      componentCardBorderColor: accent,
       componentChartSeriesPrimary: accent,
       componentFabBackground: tint,
       componentFabForeground: onTint,

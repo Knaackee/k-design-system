@@ -12,6 +12,7 @@ import { KIcon, type KIconName } from "../primitives/icon.js";
 import { KButton } from "../primitives/button.js";
 import { KIconButton } from "../actions/icon-button.js";
 import { KMenuButton, type KMenuAction } from "../actions/menu-button.js";
+import { KSwipeRow, type KSwipeAction } from "./swipe-row.js";
 import { KSwitch } from "../extended-components.js";
 import { KText } from "../primitives/text.js";
 
@@ -84,6 +85,13 @@ export interface KListItemProps extends Omit<
    * showing the current one (iOS pull-down, Android menu).
    */
   menu?: readonly KMenuAction[];
+  /**
+   * Swipe actions (Decision 0016): swipe right for `leadingActions`, left for
+   * `trailingActions`. The style decides the look; pointer and keyboard users
+   * get the same actions inline at the row end.
+   */
+  leadingActions?: readonly KSwipeAction[];
+  trailingActions?: readonly KSwipeAction[];
   /** A boolean row: a switch at the end, and the whole row toggles it. */
   switchValue?: boolean;
   onSwitchChange?: (value: boolean) => void;
@@ -125,10 +133,67 @@ export function KListItem({
   selected = false,
   disabled = false,
   titleMaxLines,
+  leadingActions,
+  trailingActions,
   className,
   style,
   ...props
 }: KListItemProps) {
+  const row = KListItemRow({
+    title,
+    description,
+    leading,
+    leadingIcon,
+    mediaIcon,
+    menu,
+    switchValue,
+    onSwitchChange,
+    trailing: trailingProp,
+    value,
+    onClick: onClickProp,
+    href,
+    disclosure,
+    selected,
+    disabled,
+    titleMaxLines,
+    className,
+    style,
+    ...props,
+  });
+  return leadingActions?.length || trailingActions?.length ? (
+    <KSwipeRow
+      leadingActions={leadingActions}
+      trailingActions={trailingActions}
+      disabled={disabled}
+    >
+      {row}
+    </KSwipeRow>
+  ) : (
+    row
+  );
+}
+
+function KListItemRow({
+  title,
+  description,
+  leading,
+  leadingIcon,
+  mediaIcon,
+  menu,
+  switchValue,
+  onSwitchChange,
+  trailing: trailingProp,
+  value,
+  onClick: onClickProp,
+  href,
+  disclosure,
+  selected = false,
+  disabled = false,
+  titleMaxLines,
+  className,
+  style,
+  ...props
+}: Omit<KListItemProps, "leadingActions" | "trailingActions">) {
   const toggle = switchValue !== undefined;
   const onClick =
     onClickProp ??

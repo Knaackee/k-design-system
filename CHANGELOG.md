@@ -8,6 +8,15 @@ version is tagged.
 
 No additional changes.
 
+- Swipe actions on `KListItem` (`leadingActions`, `trailingActions`,
+  `KSwipeAction`): iOS buttons with full swipe, Material reveal layer,
+  inline actions for pointer and keyboard (Decision 0016).
+- `KCard`: header with `title`, `description`, `leading` and a "…" `menu`,
+  footer `actions`, and animated `border` effects (pulse, spin, aurora,
+  flame, dashed, shimmer, success) with `borderColor`, `borderColors`,
+  `borderDuration`; tokens `component.cardBorder.*`,
+  `component.swipeAction.*`. Flutter outlined list groups keep their
+  hairline outside the rows, as on the Web.
 - Restore KRobotHead for React and Flutter, including public exports, interactive
   Storybook/Widgetbook galleries, audio-driven animation fixtures, regression tests
   and the preserved native performance benchmark. Native performance acceptance

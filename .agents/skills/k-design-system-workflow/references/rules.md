@@ -154,6 +154,13 @@ assertions. The others are review rules.
   hand-built title row, own `AppBar` or `SafeArea` around `KAppShell`
   (`check-consumer-ui` › safe-area-shell): the shell's bar covers the
   status bar, stays clear at rest and keeps `leading` while scrolled.
+- Swipe actions only via `KListItem(leadingActions:, trailingActions:)`;
+  never a hand-built swipe row. Destructive actions need an undo or a
+  confirmation. Card actions go in `KCard(menu:)`, not a hand-placed
+  "…" button.
+- Animated card borders (`KCard(border:)`) only for a state, at most one
+  per screen; colour and speed via `borderColor` / `borderDuration`, never
+  custom CSS or painters.
 - Content refreshes on its own (open, return to the tab, after changes) and
   by pulling: `KPage(onRefresh:)`. Never a refresh button in the page
   actions (`check-consumer-ui` › refresh-button); desktops may offer

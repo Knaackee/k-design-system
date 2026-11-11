@@ -5,6 +5,8 @@ import {
   KCard,
   KCheckbox,
   KInput,
+  KList,
+  KListItem,
   KText,
 } from "@k-design-system/ui";
 
@@ -69,6 +71,33 @@ export function GeometryParityFixture() {
         </Entry>
         <div data-parity="input" style={{ alignSelf: "stretch" }}>
           <KInput aria-label="Name" placeholder="Name" />
+        </div>
+        <div data-parity="card-header" style={{ alignSelf: "stretch" }}>
+          <KCard
+            title="Rocky"
+            description="Agent · working"
+            menu={[{ id: "edit", label: "Edit" }]}
+            actions={<KButton>Open</KButton>}
+          >
+            <KText>Groups the feedback by theme.</KText>
+          </KCard>
+        </div>
+        <div data-parity="list-swipe" style={{ alignSelf: "stretch" }}>
+          <KList>
+            <KListItem
+              title="Mara Feld"
+              description="Moved the appointment"
+              onClick={() => {}}
+              trailingActions={[
+                {
+                  id: "delete",
+                  label: "Delete",
+                  icon: "trash",
+                  tone: "destructive",
+                },
+              ]}
+            />
+          </KList>
         </div>
         <div data-parity="card" style={{ alignSelf: "stretch" }}>
           <KCard>

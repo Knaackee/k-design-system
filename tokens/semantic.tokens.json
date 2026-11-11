@@ -283,53 +283,182 @@
   },
   "map": {
     "color": {
-      "background": { "$type": "color", "$value": "#F5F5F5" },
-      "water": { "$type": "color", "$value": "#AADAFF" },
-      "waterLabel": { "$type": "color", "$value": "#4A86B8" },
-      "park": { "$type": "color", "$value": "#CEEAD6" },
-      "wood": { "$type": "color", "$value": "#C3E3CC" },
-      "grass": { "$type": "color", "$value": "#D8EFDD" },
-      "cemetery": { "$type": "color", "$value": "#DCEBDF" },
-      "landuseResidential": { "$type": "color", "$value": "#F1F1F1" },
-      "landuseIndustrial": { "$type": "color", "$value": "#ECECF0" },
-      "landuseCommercial": { "$type": "color", "$value": "#F3F0F0" },
-      "landuseHospital": { "$type": "color", "$value": "#F8E3E3" },
-      "landuseSchool": { "$type": "color", "$value": "#F4EFDF" },
-      "sand": { "$type": "color", "$value": "#F4EEDB" },
-      "aeroway": { "$type": "color", "$value": "#E4E6EA" },
-      "building": { "$type": "color", "$value": "#E9E9E9" },
-      "buildingOutline": { "$type": "color", "$value": "#DCDCDE" },
-      "road": { "$type": "color", "$value": "{color.neutral.0}" },
-      "roadCasing": { "$type": "color", "$value": "#DADCE0" },
-      "roadMinor": { "$type": "color", "$value": "{color.neutral.0}" },
-      "roadMinorCasing": { "$type": "color", "$value": "#E3E5E8" },
-      "path": { "$type": "color", "$value": "#C9CCD1" },
-      "motorway": { "$type": "color", "$value": "#FDE293" },
-      "motorwayCasing": { "$type": "color", "$value": "#F1C64B" },
-      "trunk": { "$type": "color", "$value": "#FFF1BF" },
-      "trunkCasing": { "$type": "color", "$value": "#EDCF7B" },
-      "rail": { "$type": "color", "$value": "#BDC1C6" },
-      "boundary": { "$type": "color", "$value": "#B5B8BD" },
-      "label": { "$type": "color", "$value": "#5F6368" },
-      "labelStrong": { "$type": "color", "$value": "#3C4043" },
-      "labelSubtle": { "$type": "color", "$value": "#80868B" },
-      "labelHalo": { "$type": "color", "$value": "{color.neutral.0}" },
-      "poiFood": { "$type": "color", "$value": "#E37400" },
-      "poiShop": { "$type": "color", "$value": "#3F7FDB" },
-      "poiHealth": { "$type": "color", "$value": "#D9534F" },
-      "poiEducation": { "$type": "color", "$value": "#7E63C6" },
-      "poiLeisure": { "$type": "color", "$value": "#2E8B57" },
-      "poiTransport": { "$type": "color", "$value": "#3B6FD4" },
-      "poiOther": { "$type": "color", "$value": "#7A8088" },
-      "poiStroke": { "$type": "color", "$value": "{color.neutral.0}" }
+      "background": {
+        "$type": "color",
+        "$value": "#F5F5F5"
+      },
+      "water": {
+        "$type": "color",
+        "$value": "#AADAFF"
+      },
+      "waterLabel": {
+        "$type": "color",
+        "$value": "#4A86B8"
+      },
+      "park": {
+        "$type": "color",
+        "$value": "#CEEAD6"
+      },
+      "wood": {
+        "$type": "color",
+        "$value": "#C3E3CC"
+      },
+      "grass": {
+        "$type": "color",
+        "$value": "#D8EFDD"
+      },
+      "cemetery": {
+        "$type": "color",
+        "$value": "#DCEBDF"
+      },
+      "landuseResidential": {
+        "$type": "color",
+        "$value": "#F1F1F1"
+      },
+      "landuseIndustrial": {
+        "$type": "color",
+        "$value": "#ECECF0"
+      },
+      "landuseCommercial": {
+        "$type": "color",
+        "$value": "#F3F0F0"
+      },
+      "landuseHospital": {
+        "$type": "color",
+        "$value": "#F8E3E3"
+      },
+      "landuseSchool": {
+        "$type": "color",
+        "$value": "#F4EFDF"
+      },
+      "sand": {
+        "$type": "color",
+        "$value": "#F4EEDB"
+      },
+      "aeroway": {
+        "$type": "color",
+        "$value": "#E4E6EA"
+      },
+      "building": {
+        "$type": "color",
+        "$value": "#E9E9E9"
+      },
+      "buildingOutline": {
+        "$type": "color",
+        "$value": "#DCDCDE"
+      },
+      "road": {
+        "$type": "color",
+        "$value": "{color.neutral.0}"
+      },
+      "roadCasing": {
+        "$type": "color",
+        "$value": "#DADCE0"
+      },
+      "roadMinor": {
+        "$type": "color",
+        "$value": "{color.neutral.0}"
+      },
+      "roadMinorCasing": {
+        "$type": "color",
+        "$value": "#E3E5E8"
+      },
+      "path": {
+        "$type": "color",
+        "$value": "#C9CCD1"
+      },
+      "motorway": {
+        "$type": "color",
+        "$value": "#FDE293"
+      },
+      "motorwayCasing": {
+        "$type": "color",
+        "$value": "#F1C64B"
+      },
+      "trunk": {
+        "$type": "color",
+        "$value": "#FFF1BF"
+      },
+      "trunkCasing": {
+        "$type": "color",
+        "$value": "#EDCF7B"
+      },
+      "rail": {
+        "$type": "color",
+        "$value": "#BDC1C6"
+      },
+      "boundary": {
+        "$type": "color",
+        "$value": "#B5B8BD"
+      },
+      "label": {
+        "$type": "color",
+        "$value": "#5F6368"
+      },
+      "labelStrong": {
+        "$type": "color",
+        "$value": "#3C4043"
+      },
+      "labelSubtle": {
+        "$type": "color",
+        "$value": "#80868B"
+      },
+      "labelHalo": {
+        "$type": "color",
+        "$value": "{color.neutral.0}"
+      },
+      "poiFood": {
+        "$type": "color",
+        "$value": "#E37400"
+      },
+      "poiShop": {
+        "$type": "color",
+        "$value": "#3F7FDB"
+      },
+      "poiHealth": {
+        "$type": "color",
+        "$value": "#D9534F"
+      },
+      "poiEducation": {
+        "$type": "color",
+        "$value": "#7E63C6"
+      },
+      "poiLeisure": {
+        "$type": "color",
+        "$value": "#2E8B57"
+      },
+      "poiTransport": {
+        "$type": "color",
+        "$value": "#3B6FD4"
+      },
+      "poiOther": {
+        "$type": "color",
+        "$value": "#7A8088"
+      },
+      "poiStroke": {
+        "$type": "color",
+        "$value": "{color.neutral.0}"
+      }
     },
     "opacity": {
-      "tunnel": { "$type": "number", "$value": 0.55 }
+      "tunnel": {
+        "$type": "number",
+        "$value": 0.55
+      }
     },
     "font": {
-      "regular": { "$type": "string", "$value": "Noto Sans Regular" },
-      "bold": { "$type": "string", "$value": "Noto Sans Bold" },
-      "italic": { "$type": "string", "$value": "Noto Sans Italic" }
+      "regular": {
+        "$type": "string",
+        "$value": "Noto Sans Regular"
+      },
+      "bold": {
+        "$type": "string",
+        "$value": "Noto Sans Bold"
+      },
+      "italic": {
+        "$type": "string",
+        "$value": "Noto Sans Italic"
+      }
     }
   },
   "space": {
@@ -970,7 +1099,10 @@
         "$type": "duration",
         "$value": "{motion.spring.duration.instant}"
       },
-      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.none}"
+      },
       "distance": {
         "$type": "number",
         "$value": "{motion.spring.distance.full}"
@@ -981,7 +1113,10 @@
         "$type": "duration",
         "$value": "{motion.spring.duration.medium}"
       },
-      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.none}"
+      },
       "distance": {
         "$type": "number",
         "$value": "{motion.spring.distance.full}"
@@ -992,7 +1127,10 @@
         "$type": "duration",
         "$value": "{motion.spring.duration.long}"
       },
-      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.none}"
+      },
       "distance": {
         "$type": "number",
         "$value": "{motion.spring.distance.full}"
@@ -1003,7 +1141,10 @@
         "$type": "duration",
         "$value": "{motion.spring.duration.medium}"
       },
-      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.none}"
+      },
       "distance": {
         "$type": "number",
         "$value": "{motion.spring.distance.full}"
@@ -1014,7 +1155,10 @@
         "$type": "duration",
         "$value": "{motion.spring.duration.long}"
       },
-      "bounce": { "$type": "number", "$value": "{motion.spring.bounce.none}" },
+      "bounce": {
+        "$type": "number",
+        "$value": "{motion.spring.bounce.none}"
+      },
       "distance": {
         "$type": "number",
         "$value": "{motion.spring.distance.full}"
@@ -1100,7 +1244,10 @@
       "$type": "dimension",
       "$value": "{layout.width.questionnaire}"
     },
-    "pageWidth": { "$type": "dimension", "$value": "{layout.width.page}" },
+    "pageWidth": {
+      "$type": "dimension",
+      "$value": "{layout.width.page}"
+    },
     "formWidth": {
       "$description": "Readable width of a form page (sign-in, onboarding step); KPage(width: form).",
       "$type": "dimension",
@@ -1320,25 +1467,43 @@
     "coverFlow": {
       "transitionDuration": {
         "$type": "duration",
-        "$value": { "value": 420, "unit": "ms" }
+        "$value": {
+          "value": 420,
+          "unit": "ms"
+        }
       },
       "countFontSize": {
         "$type": "dimension",
-        "$value": { "value": 0.8, "unit": "em" }
+        "$value": {
+          "value": 0.8,
+          "unit": "em"
+        }
       }
     },
     "progressDots": {
-      "inactiveOpacity": { "$type": "number", "$value": 0.35 }
+      "inactiveOpacity": {
+        "$type": "number",
+        "$value": 0.35
+      }
     },
     "browserViewer": {
       "cursorAvatarSize": {
         "$type": "dimension",
-        "$value": { "value": 32, "unit": "px" }
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
       },
-      "disconnectedOpacity": { "$type": "number", "$value": 0.9 }
+      "disconnectedOpacity": {
+        "$type": "number",
+        "$value": 0.9
+      }
     },
     "activityDot": {
-      "pulseOpacity": { "$type": "number", "$value": 0.35 }
+      "pulseOpacity": {
+        "$type": "number",
+        "$value": 0.35
+      }
     },
     "selection": {
       "background": {
@@ -1553,7 +1718,10 @@
       }
     },
     "button": {
-      "radius": { "$type": "dimension", "$value": "{radius.control}" },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.control}"
+      },
       "disabled": {
         "opacity": {
           "$type": "number",
@@ -2110,12 +2278,30 @@
         "$type": "dimension",
         "$value": "{size.scale.listRow}"
       },
-      "rowPaddingBlock": { "$type": "dimension", "$value": "{space.2}" },
-      "rowPaddingInline": { "$type": "dimension", "$value": "{space.3}" },
-      "leadingGap": { "$type": "dimension", "$value": "{space.3}" },
-      "groupRadius": { "$type": "dimension", "$value": "{radius.scale.lg}" },
-      "sectionHeaderGap": { "$type": "dimension", "$value": "{space.2}" },
-      "sectionHeaderInset": { "$type": "dimension", "$value": "{space.3}" }
+      "rowPaddingBlock": {
+        "$type": "dimension",
+        "$value": "{space.2}"
+      },
+      "rowPaddingInline": {
+        "$type": "dimension",
+        "$value": "{space.3}"
+      },
+      "leadingGap": {
+        "$type": "dimension",
+        "$value": "{space.3}"
+      },
+      "groupRadius": {
+        "$type": "dimension",
+        "$value": "{radius.scale.lg}"
+      },
+      "sectionHeaderGap": {
+        "$type": "dimension",
+        "$value": "{space.2}"
+      },
+      "sectionHeaderInset": {
+        "$type": "dimension",
+        "$value": "{space.3}"
+      }
     },
     "fab": {
       "height": {
@@ -2123,7 +2309,10 @@
         "$type": "dimension",
         "$value": "{size.control.field}"
       },
-      "radius": { "$type": "dimension", "$value": "{radius.scale.lg}" },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.scale.lg}"
+      },
       "background": {
         "$type": "color",
         "$value": "{color.brand.primary.background}"
@@ -2141,8 +2330,14 @@
       }
     },
     "pageHeader": {
-      "paddingBlockStart": { "$type": "dimension", "$value": "{space.2}" },
-      "titleGap": { "$type": "dimension", "$value": "{space.1}" }
+      "paddingBlockStart": {
+        "$type": "dimension",
+        "$value": "{space.2}"
+      },
+      "titleGap": {
+        "$type": "dimension",
+        "$value": "{space.1}"
+      }
     },
     "sidebar": {
       "activeBackground": {
@@ -2771,7 +2966,10 @@
       },
       "caretMinHeight": {
         "$type": "dimension",
-        "$value": { "value": 1.2, "unit": "em" }
+        "$value": {
+          "value": 1.2,
+          "unit": "em"
+        }
       }
     },
     "tabStrip": {
@@ -2804,13 +3002,160 @@
           }
         }
       }
+    },
+    "cardBorder": {
+      "width": {
+        "$description": "Animated KCard border (KCard border effect). Each effect conveys a state; apps may override color, colors and duration per card.",
+        "$type": "dimension",
+        "$value": "{border.width.strong}"
+      },
+      "glowBlur": {
+        "$type": "dimension",
+        "$value": "{space.3}"
+      },
+      "pulseSpread": {
+        "$type": "dimension",
+        "$value": "{space.2}"
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{color.action.primary.background}"
+      },
+      "successColor": {
+        "$type": "color",
+        "$value": "{color.status.success.accent}"
+      },
+      "aurora1": {
+        "$type": "color",
+        "$value": "{color.violet.200}"
+      },
+      "aurora2": {
+        "$type": "color",
+        "$value": "{color.blue.200}"
+      },
+      "aurora3": {
+        "$type": "color",
+        "$value": "{color.amber.200}"
+      },
+      "aurora4": {
+        "$type": "color",
+        "$value": "{color.red.200}"
+      },
+      "flame1": {
+        "$type": "color",
+        "$value": "{color.red.500}"
+      },
+      "flame2": {
+        "$type": "color",
+        "$value": "{color.amber.500}"
+      },
+      "flame3": {
+        "$type": "color",
+        "$value": "{color.red.700}"
+      },
+      "pulseDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 1800,
+          "unit": "ms"
+        }
+      },
+      "spinDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 2400,
+          "unit": "ms"
+        }
+      },
+      "auroraDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 6000,
+          "unit": "ms"
+        }
+      },
+      "flameDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 3000,
+          "unit": "ms"
+        }
+      },
+      "dashedDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 1000,
+          "unit": "ms"
+        }
+      },
+      "shimmerDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 1600,
+          "unit": "ms"
+        }
+      },
+      "successDuration": {
+        "$type": "duration",
+        "$value": {
+          "value": 900,
+          "unit": "ms"
+        }
+      },
+      "dashLength": {
+        "$type": "dimension",
+        "$value": "{space.2}"
+      },
+      "dashGap": {
+        "$type": "dimension",
+        "$value": "{space.1}"
+      }
+    },
+    "swipeAction": {
+      "width": {
+        "$description": "Swipe actions on KListItem: button width (Apple style), reveal and full-swipe thresholds as fractions of the row width.",
+        "$type": "dimension",
+        "$value": {
+          "value": 76,
+          "unit": "px"
+        }
+      },
+      "iconSize": {
+        "$type": "dimension",
+        "$value": "{size.scale.iconDefault}"
+      },
+      "revealThreshold": {
+        "$type": "number",
+        "$value": 0.35
+      },
+      "fullSwipeThreshold": {
+        "$type": "number",
+        "$value": 0.6
+      },
+      "neutralBackground": {
+        "$type": "color",
+        "$value": "{color.neutral.600}"
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.neutral.0}"
+      }
     }
   },
   "text": {
     "scaleMax": {
-      "body": { "$type": "number", "$value": 3 },
-      "heading": { "$type": "number", "$value": 2 },
-      "control": { "$type": "number", "$value": 3 },
+      "body": {
+        "$type": "number",
+        "$value": 3
+      },
+      "heading": {
+        "$type": "number",
+        "$value": 2
+      },
+      "control": {
+        "$type": "number",
+        "$value": 3
+      },
       "icon": {
         "$description": "Text-adjacent icons grow with the text up to this factor (Decision 0015).",
         "$type": "number",

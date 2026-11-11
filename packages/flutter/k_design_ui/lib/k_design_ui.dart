@@ -32,6 +32,7 @@ export 'src/actions/k_menu_button.dart';
 export 'src/actions/k_context_menu.dart';
 export 'src/actions/k_command_palette.dart';
 export 'src/data_display/k_list.dart';
+export 'src/data_display/k_swipe_row.dart';
 export 'src/navigation/k_app_shell.dart';
 export 'src/navigation/k_scroll_top_bar.dart';
 export 'src/navigation/k_onboarding.dart';

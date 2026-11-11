@@ -4131,6 +4131,156 @@
         }
       }
     },
+    "component.cardBorder.width": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.glowBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.pulseSpread": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.color": {
+      "type": "color",
+      "value": "#242428"
+    },
+    "component.cardBorder.successColor": {
+      "type": "color",
+      "value": "#10b981"
+    },
+    "component.cardBorder.aurora1": {
+      "type": "color",
+      "value": "#ddd6fe"
+    },
+    "component.cardBorder.aurora2": {
+      "type": "color",
+      "value": "#bfdbfe"
+    },
+    "component.cardBorder.aurora3": {
+      "type": "color",
+      "value": "#fde68a"
+    },
+    "component.cardBorder.aurora4": {
+      "type": "color",
+      "value": "#fecaca"
+    },
+    "component.cardBorder.flame1": {
+      "type": "color",
+      "value": "#ef4444"
+    },
+    "component.cardBorder.flame2": {
+      "type": "color",
+      "value": "#f59e0b"
+    },
+    "component.cardBorder.flame3": {
+      "type": "color",
+      "value": "#b91c1c"
+    },
+    "component.cardBorder.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.spinDuration": {
+      "type": "duration",
+      "value": {
+        "value": 2400,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.auroraDuration": {
+      "type": "duration",
+      "value": {
+        "value": 6000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.flameDuration": {
+      "type": "duration",
+      "value": {
+        "value": 3000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashedDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.shimmerDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1600,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.successDuration": {
+      "type": "duration",
+      "value": {
+        "value": 900,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.dashGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.width": {
+      "type": "dimension",
+      "value": {
+        "value": 76,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.revealThreshold": {
+      "type": "number",
+      "value": 0.35
+    },
+    "component.swipeAction.fullSwipeThreshold": {
+      "type": "number",
+      "value": 0.6
+    },
+    "component.swipeAction.neutralBackground": {
+      "type": "color",
+      "value": "#5d6472"
+    },
+    "component.swipeAction.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "text.scaleMax.body": {
       "type": "number",
       "value": 3
@@ -8279,6 +8429,156 @@
           "unit": "px"
         }
       }
+    },
+    "component.cardBorder.width": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.glowBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.pulseSpread": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.color": {
+      "type": "color",
+      "value": "#e8e8eb"
+    },
+    "component.cardBorder.successColor": {
+      "type": "color",
+      "value": "#34d399"
+    },
+    "component.cardBorder.aurora1": {
+      "type": "color",
+      "value": "#ddd6fe"
+    },
+    "component.cardBorder.aurora2": {
+      "type": "color",
+      "value": "#bfdbfe"
+    },
+    "component.cardBorder.aurora3": {
+      "type": "color",
+      "value": "#fde68a"
+    },
+    "component.cardBorder.aurora4": {
+      "type": "color",
+      "value": "#fecaca"
+    },
+    "component.cardBorder.flame1": {
+      "type": "color",
+      "value": "#ef4444"
+    },
+    "component.cardBorder.flame2": {
+      "type": "color",
+      "value": "#f59e0b"
+    },
+    "component.cardBorder.flame3": {
+      "type": "color",
+      "value": "#b91c1c"
+    },
+    "component.cardBorder.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.spinDuration": {
+      "type": "duration",
+      "value": {
+        "value": 2400,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.auroraDuration": {
+      "type": "duration",
+      "value": {
+        "value": 6000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.flameDuration": {
+      "type": "duration",
+      "value": {
+        "value": 3000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashedDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.shimmerDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1600,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.successDuration": {
+      "type": "duration",
+      "value": {
+        "value": 900,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.dashGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.width": {
+      "type": "dimension",
+      "value": {
+        "value": 76,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.revealThreshold": {
+      "type": "number",
+      "value": 0.35
+    },
+    "component.swipeAction.fullSwipeThreshold": {
+      "type": "number",
+      "value": 0.6
+    },
+    "component.swipeAction.neutralBackground": {
+      "type": "color",
+      "value": "#5d6472"
+    },
+    "component.swipeAction.foreground": {
+      "type": "color",
+      "value": "#ffffff"
     },
     "text.scaleMax.body": {
       "type": "number",
@@ -12429,6 +12729,156 @@
         }
       }
     },
+    "component.cardBorder.width": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.glowBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.pulseSpread": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.color": {
+      "type": "color",
+      "value": "#242428"
+    },
+    "component.cardBorder.successColor": {
+      "type": "color",
+      "value": "#059669"
+    },
+    "component.cardBorder.aurora1": {
+      "type": "color",
+      "value": "#ddd6fe"
+    },
+    "component.cardBorder.aurora2": {
+      "type": "color",
+      "value": "#bfdbfe"
+    },
+    "component.cardBorder.aurora3": {
+      "type": "color",
+      "value": "#fde68a"
+    },
+    "component.cardBorder.aurora4": {
+      "type": "color",
+      "value": "#fecaca"
+    },
+    "component.cardBorder.flame1": {
+      "type": "color",
+      "value": "#ef4444"
+    },
+    "component.cardBorder.flame2": {
+      "type": "color",
+      "value": "#f59e0b"
+    },
+    "component.cardBorder.flame3": {
+      "type": "color",
+      "value": "#b91c1c"
+    },
+    "component.cardBorder.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.spinDuration": {
+      "type": "duration",
+      "value": {
+        "value": 2400,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.auroraDuration": {
+      "type": "duration",
+      "value": {
+        "value": 6000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.flameDuration": {
+      "type": "duration",
+      "value": {
+        "value": 3000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashedDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.shimmerDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1600,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.successDuration": {
+      "type": "duration",
+      "value": {
+        "value": 900,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.dashGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.width": {
+      "type": "dimension",
+      "value": {
+        "value": 76,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.revealThreshold": {
+      "type": "number",
+      "value": 0.35
+    },
+    "component.swipeAction.fullSwipeThreshold": {
+      "type": "number",
+      "value": 0.6
+    },
+    "component.swipeAction.neutralBackground": {
+      "type": "color",
+      "value": "#5d6472"
+    },
+    "component.swipeAction.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "text.scaleMax.body": {
       "type": "number",
       "value": 3
@@ -16577,6 +17027,156 @@
           "unit": "px"
         }
       }
+    },
+    "component.cardBorder.width": {
+      "type": "dimension",
+      "value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.glowBlur": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.pulseSpread": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.color": {
+      "type": "color",
+      "value": "#e8e8eb"
+    },
+    "component.cardBorder.successColor": {
+      "type": "color",
+      "value": "#34d399"
+    },
+    "component.cardBorder.aurora1": {
+      "type": "color",
+      "value": "#ddd6fe"
+    },
+    "component.cardBorder.aurora2": {
+      "type": "color",
+      "value": "#bfdbfe"
+    },
+    "component.cardBorder.aurora3": {
+      "type": "color",
+      "value": "#fde68a"
+    },
+    "component.cardBorder.aurora4": {
+      "type": "color",
+      "value": "#fecaca"
+    },
+    "component.cardBorder.flame1": {
+      "type": "color",
+      "value": "#ef4444"
+    },
+    "component.cardBorder.flame2": {
+      "type": "color",
+      "value": "#f59e0b"
+    },
+    "component.cardBorder.flame3": {
+      "type": "color",
+      "value": "#b91c1c"
+    },
+    "component.cardBorder.pulseDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1800,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.spinDuration": {
+      "type": "duration",
+      "value": {
+        "value": 2400,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.auroraDuration": {
+      "type": "duration",
+      "value": {
+        "value": 6000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.flameDuration": {
+      "type": "duration",
+      "value": {
+        "value": 3000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashedDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1000,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.shimmerDuration": {
+      "type": "duration",
+      "value": {
+        "value": 1600,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.successDuration": {
+      "type": "duration",
+      "value": {
+        "value": 900,
+        "unit": "ms"
+      }
+    },
+    "component.cardBorder.dashLength": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.cardBorder.dashGap": {
+      "type": "dimension",
+      "value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.width": {
+      "type": "dimension",
+      "value": {
+        "value": 76,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.iconSize": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.swipeAction.revealThreshold": {
+      "type": "number",
+      "value": 0.35
+    },
+    "component.swipeAction.fullSwipeThreshold": {
+      "type": "number",
+      "value": 0.6
+    },
+    "component.swipeAction.neutralBackground": {
+      "type": "color",
+      "value": "#5d6472"
+    },
+    "component.swipeAction.foreground": {
+      "type": "color",
+      "value": "#ffffff"
     },
     "text.scaleMax.body": {
       "type": "number",

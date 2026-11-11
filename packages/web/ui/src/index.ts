@@ -53,6 +53,12 @@ export type {
   KLayoutAlign,
 } from "./primitives/layout.js";
 export { KCard } from "./primitives/card.js";
+export {
+  KSwipeRow,
+  type KSwipeAction,
+  type KSwipeActionTone,
+  type KSwipeRowProps,
+} from "./data-display/swipe-row.js";
 export { KMediaCard, type KMediaCardProps } from "./patterns/media-card.js";
 export {
   KAgenda,
@@ -72,7 +78,7 @@ export { KDialog, KAdaptiveDialog, KBottomSheet } from "./overlays/overlay.js";
 export { KPageSheet } from "./overlays/page-sheet.js";
 export type { KPageSheetProps } from "./overlays/page-sheet.js";
 export type { KOverlayProps, KBottomSheetProps } from "./overlays/overlay.js";
-export type { KCardProps } from "./primitives/card.js";
+export type { KCardBorder, KCardProps } from "./primitives/card.js";
 export { KDisclosure, KAccordion } from "./primitives/disclosure.js";
 export type {
   KDisclosureProps,

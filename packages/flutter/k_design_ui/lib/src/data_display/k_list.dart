@@ -1,3 +1,4 @@
+import 'k_swipe_row.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -146,10 +147,15 @@ class KList extends StatelessWidget {
                         width: t.spaceHairline,
                       ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: rows,
+              // The outline sits around the rows, as the Web border does,
+              // instead of over their first and last pixel.
+              child: Padding(
+                padding: EdgeInsets.all(outlined ? t.spaceHairline : 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: rows,
+                ),
               ),
             ),
           ),
@@ -205,6 +211,8 @@ class KListItem extends StatefulWidget {
     this.selected = false,
     this.enabled = true,
     this.titleMaxLines,
+    this.leadingActions = const [],
+    this.trailingActions = const [],
     super.key,
   });
 
@@ -244,6 +252,12 @@ class KListItem extends StatefulWidget {
   final bool enabled;
   final int? titleMaxLines;
 
+  /// Swipe actions (Decision 0016): swipe right for [leadingActions], left
+  /// for [trailingActions]. The style decides the look; pointer and keyboard
+  /// users get the same actions inline at the row end.
+  final List<KSwipeAction> leadingActions;
+  final List<KSwipeAction> trailingActions;
+
   @override
   State<KListItem> createState() => _KListItemState();
 }
@@ -253,6 +267,19 @@ class _KListItemState extends State<KListItem> {
 
   @override
   Widget build(BuildContext context) {
+    final row = _buildRow(context);
+    if (widget.leadingActions.isEmpty && widget.trailingActions.isEmpty) {
+      return row;
+    }
+    return KSwipeRow(
+      leadingActions: widget.leadingActions,
+      trailingActions: widget.trailingActions,
+      enabled: widget.enabled,
+      child: row,
+    );
+  }
+
+  Widget _buildRow(BuildContext context) {
     assert(
       widget.onPressed != null ||
           widget.menu != null ||
