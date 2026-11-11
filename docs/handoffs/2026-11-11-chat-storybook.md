@@ -3,6 +3,7 @@
 Stand: 11. November 2026. Verbindliche Anforderungsquelle: [Nutzerspezifikation](../requirements/2026-11-11-agent-chat-gumloop.md). Der Nutzer hat die Arbeit ausdrücklich auf Storybook begrenzt. Noch keine Nutzerabnahme, kein Commit, Push oder Deployment.
 
 ## Umfang und Wiederverwendung
+
 - Am 11. November hat der Nutzer den sichtbaren Storybook-Stand angenommen und den Übertrag nach Widgetbook, Assist-Web sowie Pixel und Samsung ausdrücklich beauftragt. Dieser Übertrag betrifft den angenommenen Entwurf; die darüber hinausgehenden Funktionswünsche der ursprünglichen Spezifikation bleiben separat offen.
 - Arbeitszweig der Bibliothek: `design/chat-activity-ui-20261111`, Basis `01f3b00`. Assist bleibt im bestehenden Integrationszweig. Keine Commits, Pushes oder Deployments in dieser Runde.
 - 28 gemeinsame `component.chat.*`-Tokens einschließlich `iconStroke=1.25`; Web, Flutter und Flat-Projektion mit dem offiziellen Generator aktualisiert. Die 17 variablen Flutter-Dichtewerte sind im Resolver angebunden.
@@ -11,6 +12,7 @@ Stand: 11. November 2026. Verbindliche Anforderungsquelle: [Nutzerspezifikation]
 - Assist verwendet diese Komponenten. Alte Flutter-Farbüberschreibungen des Chats entfallen. Frage folgt in beiden Apps dem zugehörigen Nachrichtentext; gruppierte Aktivität verwendet eine rahmenlose Disclosure. Web-KDisclosure unterstützt dafür additiv `presentation="compact"` und `showContentBorder`, entsprechend dem bestehenden Flutter-Vertrag. „Browser öffnen“ wurde in den App-Oberflächen zu „Browser“ gekürzt; reale Anruffehler bleiben sichtbar, der passive Nicht-verfügbar-Hinweis entfällt.
 - Bestehender gestagter Dateibaum-Fix `k_files.dart` blieb unangetastet. Keine fremden Geräte oder Entwicklungsprozesse verändert.
 - Datei-Grenze: neue handgeschriebene Dateien liegen unter 500 Zeilen (ChatAppearance 47, Composer-Teil 222, Complete-Fixture/Daten 299/356). Das bestehende Sammelmodul `k_agent_parts.dart` ist mit 959 Zeilen noch zu groß. Eng begrenzte vorübergehende Ausnahme: Der Port verwendet seine gemeinsamen privaten Renderer-/Stilhelfer; deren gleichzeitige Neuordnung während der plattformübergreifenden Sichtabnahme würde zusätzliche Verhaltensgrenzen verändern. Eine Trennung nach Komponenten ist als eigene strukturelle Arbeit vor weiteren Funktionsausbauten zu behandeln. Bestehende große Host-Chat-Dateien wurden nicht opportunistisch zerlegt.
+
 ## Prüfen
 
 - [Agent UI Complete](http://127.0.0.1:6016/?path=/story/patterns-agentui--complete), Fixture-ID `agent-ui-complete`.
@@ -47,7 +49,9 @@ Der Nutzer hat den Storybook-Entwurf angenommen und den Übertrag ausdrücklich 
 - Nachweise unter `assist/.local/ui-references/2026-11-11-chat/`: `widgetbook-question-parity.jpg`, `samsung-question.png`, `samsung-question-answered.xml`, Geräte-/Web-Endansichten. Helle Fragekarte in Widgetbook und dunkle App-Chats visuell geprüft. Umfangreiche Styles/Dichten/Textgrößen sind automatisiert geprüft; keine vollständige visuelle Matrix aller Kombinationen behaupten.
 
 Keine Commits, Pushes, Veröffentlichung oder Produktionsänderung. Nächste Aktion ist die Nutzerprüfung der laufenden Ansichten.
+
 ## Offene Schritte
+
 - Die angenommene Gestaltung ist auf Web und Flutter übertragen; die menschliche Abnahme der neuen Widgetbook-/App-Ansichten steht aus.
 - Die ursprüngliche längere Spezifikation ist damit nicht vollständig umgesetzt: eigener öffentlicher Thinking-Baustein, Inline-Formfehler, erweiterte Andere-/Ablehnen-Interaktion, beantwortete Einzeilenansicht und vollständige neue Panel-/Composer-Funktionen bleiben spätere Schritte. Vorhandenen Markdown-Renderer weiterverwenden; keinen zweiten Renderer schaffen.
 - Allein aus allgemeinen Geometrie- und Überlauftests folgt keine vollständige Pixelgleichheit jedes Chat-Zustands. Sichtprüfungen wurden für Frage, Auswahl, Antwortzustand, Composer und echte App-Chats durchgeführt; eine vollständige Kombination aller Styles, Farben, Geräte, Dichten und Textgrößen wurde nicht visuell abgenommen. Native Touch-Ziele und konfigurierte Plattformstile bleiben wirksam.
