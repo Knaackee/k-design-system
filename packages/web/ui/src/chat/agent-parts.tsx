@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { KAlert, KAttachment, KBadge } from "../basic-components.js";
 import { KProgress } from "../extended-components.js";
 import { KButton } from "../primitives/button.js";
@@ -174,17 +174,18 @@ export function KAgentQuestion({
 }) {
   const [text, setText] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
+  const titleId = useId();
+  const descriptionId = useId();
   if (part.state !== "pending") {
     return (
-      <section className="k-agent-card k-agent-question">
-        <div className="k-agent-card__heading">
-          <span className="k-agent-question__icon">
-            <KIcon name="circle-question-mark" />
-          </span>
-          <div>
-            <strong>{part.title}</strong>
-            <p>{part.answerSummary ?? resolutionLabel(part.state)}</p>
-          </div>
+      <section
+        className="k-agent-card k-agent-question"
+        data-state={part.state}
+        aria-labelledby={titleId}
+      >
+        <div className="k-agent-question__content">
+          <strong id={titleId}>{part.title}</strong>
+          <p>{part.answerSummary ?? resolutionLabel(part.state)}</p>
         </div>
       </section>
     );
@@ -201,49 +202,73 @@ export function KAgentQuestion({
   const submit = () =>
     onResponse?.({ questionId: part.id, optionIds: selected, text });
   return (
-    <section className="k-agent-card k-agent-question">
-      <div className="k-agent-card__heading">
-        <span className="k-agent-question__icon">
-          <KIcon name="circle-question-mark" />
-        </span>
-        <div>
-          <strong>{part.title}</strong>
-          {part.description ? <p>{part.description}</p> : null}
+    <section
+      className="k-agent-card k-agent-question"
+      data-state={part.state}
+      aria-labelledby={titleId}
+    >
+      {part.statusLabel ? (
+        <div className="k-agent-question__status">
+          <KIcon name="message-circle-question-mark" className="k-leading" />
+          <span>{part.statusLabel}</span>
         </div>
-      </div>
-      {part.kind === "text" ? (
-        inputRenderer ? (
-          inputRenderer({ value: text, onChange: setText })
-        ) : (
-          <KInput
-            value={text}
-            placeholder={part.placeholder}
-            onChange={(event) => setText(event.target.value)}
-          />
-        )
       ) : null}
-      <div className="k-agent-options">
-        {part.options?.map((option) => (
-          <label key={option.id} data-selected={selected.includes(option.id)}>
-            <input
-              type={multiple ? "checkbox" : "radio"}
-              name={part.id}
-              checked={selected.includes(option.id)}
-              onChange={() => toggle(option.id)}
+      <div className="k-agent-question__content">
+        <div className="k-agent-question__heading">
+          <strong id={titleId}>{part.title}</strong>
+          {part.description ? (
+            <p id={descriptionId}>{part.description}</p>
+          ) : null}
+        </div>
+        {part.kind === "text" ? (
+          inputRenderer ? (
+            inputRenderer({ value: text, onChange: setText })
+          ) : (
+            <KInput
+              value={text}
+              placeholder={part.placeholder}
+              onChange={(event) => setText(event.target.value)}
             />
-            <span>
-              <strong>{option.label}</strong>
-              {option.description ? <small>{option.description}</small> : null}
-            </span>
-          </label>
-        ))}
+          )
+        ) : null}
+        {part.options?.length ? (
+          <div
+            className="k-agent-options"
+            role={multiple ? "group" : "radiogroup"}
+            aria-labelledby={titleId}
+            aria-describedby={part.description ? descriptionId : undefined}
+          >
+            {part.options.map((option) => (
+              <label
+                key={option.id}
+                data-selected={selected.includes(option.id)}
+              >
+                <input
+                  type={multiple ? "checkbox" : "radio"}
+                  name={part.id}
+                  checked={selected.includes(option.id)}
+                  onChange={() => toggle(option.id)}
+                />
+                <span>
+                  <strong>{option.label}</strong>
+                  {option.description ? (
+                    <small>{option.description}</small>
+                  ) : null}
+                </span>
+              </label>
+            ))}
+          </div>
+        ) : null}
       </div>
-      <KButton
-        onClick={submit}
-        disabled={part.kind === "text" ? !text.trim() : selected.length === 0}
-      >
-        {part.submitLabel ?? "Continue"}
-      </KButton>
+      <div className="k-agent-question__actions">
+        <KButton
+          onClick={submit}
+          disabled={part.kind === "text" ? !text.trim() : selected.length === 0}
+        >
+          <KIcon name="check" />
+          {part.submitLabel ?? "Continue"}
+        </KButton>
+      </div>
     </section>
   );
 }

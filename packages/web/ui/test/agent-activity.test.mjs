@@ -4,6 +4,27 @@ import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { KAgentToolCall } from "../dist/chat/agent-parts.js";
 import { KChatConversation } from "../dist/chat/conversation.js";
+import { KDisclosure } from "../dist/primitives/disclosure.js";
+
+test("compact activity disclosure keeps the same accessible toggle contract", () => {
+  const html = renderToStaticMarkup(
+    h(KDisclosure, {
+      title: "Agentenaktivität",
+      presentation: "compact",
+      showContentBorder: false,
+      children: "Schritte",
+    }),
+  );
+  assert.match(html, /data-presentation="compact"/);
+  assert.match(html, /data-content-border="false"/);
+  assert.match(html, /aria-expanded="false"/);
+  assert.match(html, /aria-controls="[^"]+-panel"/);
+  const normal = renderToStaticMarkup(
+    h(KDisclosure, { title: "Details", children: "Inhalt" }),
+  );
+  assert.match(normal, /data-presentation="normal"/);
+  assert.match(normal, /data-content-border="true"/);
+});
 
 const tool = (id, state = "succeeded") => ({
   id,

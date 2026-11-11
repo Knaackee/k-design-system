@@ -70,6 +70,32 @@
   display: none;
 }
 
+.k-disclosure[data-presentation="compact"] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.k-disclosure[data-presentation="compact"]
+  > .k-disclosure__header
+  > .k-disclosure__toggle {
+  padding-inline: 0;
+  color: var(--k-color-text-muted);
+  font-size: calc(
+    var(--k-font-caption-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  line-height: calc(
+    var(--k-font-caption-line-height) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  font-weight: var(--k-font-label-weight);
+}
+
+.k-disclosure[data-content-border="false"] > .k-disclosure__panel {
+  border-top: 0;
+}
+
 .k-accordion {
   display: grid;
   gap: var(--k-space-control-gap);

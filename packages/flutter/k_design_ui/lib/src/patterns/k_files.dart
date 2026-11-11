@@ -129,9 +129,9 @@ class _FileTreeRowState extends State<_FileTreeRow> {
           child: Material(
             color: widget.selected ? t.colorSurfaceRaised : Colors.transparent,
             child: Padding(
-              padding: EdgeInsets.only(
-                left: t.spaceTight + widget.depth * 12,
-                right: t.spaceTight,
+              padding: EdgeInsetsDirectional.only(
+                start: t.spaceTight + widget.depth * t.spaceSmallInset,
+                end: t.spaceTight,
               ),
               child: Row(
                 children: [

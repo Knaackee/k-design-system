@@ -3,13 +3,13 @@
 .k-agent-attachment-request {
   display: flex;
   flex-direction: column;
-  gap: var(--k-space-content-action-gap);
+  gap: var(--k-component-chat-block-gap);
 }
 
 .k-agent-form__fields,
 .k-agent-attachment-request__files {
   display: grid;
-  gap: var(--k-space-content-action-gap);
+  gap: var(--k-component-chat-block-gap);
 }
 
 .k-agent-form__choice-group {

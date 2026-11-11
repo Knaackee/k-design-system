@@ -150,6 +150,7 @@ class KAgentQuestionPart extends KChatMessagePart {
     required this.kind,
     required this.state,
     this.description,
+    this.statusLabel,
     this.options = const [],
     this.selectedOptionIds = const [],
     this.answerSummary,
@@ -158,6 +159,7 @@ class KAgentQuestionPart extends KChatMessagePart {
   });
   final String title;
   final String? description;
+  final String? statusLabel;
   final KAgentQuestionKind kind;
   final KAgentResolutionState state;
   final List<KAgentQuestionOption> options;

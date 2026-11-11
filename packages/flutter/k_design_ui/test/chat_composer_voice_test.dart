@@ -4,7 +4,9 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
-  testWidgets('dense tablet composer keeps icons legible', (tester) async {
+  testWidgets('dense tablet composer matches the Web control icon role', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         theme: kDesignTheme(configuration: KDesignConfiguration.dashboard),
@@ -19,7 +21,7 @@ void main() {
       ),
     );
     final scope = tester.widget<KIconSizeScope>(find.byType(KIconSizeScope));
-    expect(scope.size, greaterThanOrEqualTo(20));
+    expect(scope.size, 16);
     expect(tester.takeException(), isNull);
   });
 

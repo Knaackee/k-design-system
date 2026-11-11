@@ -9,9 +9,19 @@ class AgentUiFixture extends StatefulWidget {
     this.kind = AgentUiFixtureKind.conversation,
     this.metadataMode = KChatMessageMetadataMode.grouped,
     this.showTimestamps = true,
+    this.extraMessages,
+    this.onQuestionResponse,
+    this.onFormResponse,
+    this.onExternalAction,
+    this.onAttachmentRequest,
     super.key,
   });
 
+  final List<KChatMessageValue>? extraMessages;
+  final ValueChanged<KAgentQuestionResponse>? onQuestionResponse;
+  final ValueChanged<KAgentFormResponse>? onFormResponse;
+  final ValueChanged<KAgentExternalActionResponse>? onExternalAction;
+  final ValueChanged<KAgentAttachmentRequestResponse>? onAttachmentRequest;
   final AgentUiFixtureKind kind;
   final KChatMessageMetadataMode metadataMode;
   final bool showTimestamps;
@@ -39,7 +49,7 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
         children: [
           Container(
             width: double.infinity,
-            constraints: const BoxConstraints(minHeight: 56),
+            constraints: BoxConstraints(minHeight: t.componentTopBarHeight),
             padding: EdgeInsets.symmetric(horizontal: t.spaceLayoutGutter),
             decoration: BoxDecoration(
               color: t.colorSurfaceRaised,
@@ -55,7 +65,11 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  runState == KChatRunState.streaming ? 'Antwortet…' : 'Bereit',
+                  runState == KChatRunState.streaming
+                      ? 'Antwortet…'
+                      : runState == KChatRunState.awaitingInput
+                      ? 'Wartet auf dich'
+                      : 'Bereit',
                   style: TextStyle(
                     color: t.colorTextMuted,
                     fontSize: t.fontSize * 0.86,
@@ -67,9 +81,19 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 820),
+                constraints: BoxConstraints(
+                  maxWidth: t.componentChatColumnMaxWidth,
+                ),
                 child: KChatConversation(
-                  messages: [..._messages(), ...sentMessages],
+                  messages: [
+                    if (widget.extraMessages == null)
+                      ..._messages()
+                    else ...[
+                      ..._messages().take(2),
+                      ...widget.extraMessages!,
+                    ],
+                    ...sentMessages,
+                  ],
                   runState: runState,
                   labels: const KChatLabels(
                     assistant: 'Agent',
@@ -93,8 +117,21 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
                   }),
                   onQuestionResponse: (response) => setState(() {
                     answer = response;
+                    widget.onQuestionResponse?.call(response);
                     runState = KChatRunState.idle;
                   }),
+                  onFormResponse: (response) {
+                    widget.onFormResponse?.call(response);
+                    setState(() => runState = KChatRunState.idle);
+                  },
+                  onExternalAction: (response) {
+                    widget.onExternalAction?.call(response);
+                    setState(() => runState = KChatRunState.idle);
+                  },
+                  onAttachmentRequest: (response) {
+                    widget.onAttachmentRequest?.call(response);
+                    setState(() => runState = KChatRunState.idle);
+                  },
                   onSourceActivate: (source) => _notice(source.title),
                   onArtifactActivate: (artifact) => _notice(artifact.title),
                   onLinkActivate: (uri) => _notice(uri.toString()),
@@ -107,7 +144,11 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
           ),
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 820),
+              constraints: BoxConstraints(
+                maxWidth:
+                    t.componentChatColumnMaxWidth +
+                    t.componentChatComposerOverhang * 2,
+              ),
               child: KChatComposer(
                 value: draft,
                 onValueChanged: (value) => setState(() => draft = value),
@@ -288,9 +329,9 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
       parts: [
         KAgentQuestionPart(
           id: 'density-question',
+          statusLabel: 'Wartet auf deine Eingabe',
           title: 'Welche Dichte soll die Vorschau verwenden?',
-          description:
-              'Die Antwort wird als typisiertes Event an die Anwendung übergeben.',
+          description: 'Wähle eine Option und bestätige deine Antwort.',
           kind: KAgentQuestionKind.singleChoice,
           state: answer == null
               ? KAgentResolutionState.pending
@@ -298,19 +339,19 @@ class _AgentUiFixtureState extends State<AgentUiFixture> {
           options: const [
             KAgentQuestionOption(
               id: 'dense',
-              label: 'Dense',
+              label: 'Kompakt',
               description: 'Für produktive Desktop-Oberflächen',
             ),
             KAgentQuestionOption(
               id: 'comfortable',
-              label: 'Comfortable',
+              label: 'Großzügig',
               description: 'Mehr Raum für Touch-Eingaben',
             ),
           ],
           answerSummary: answer == null
               ? null
               : 'Ausgewählt: ${answer!.optionIds.firstOrNull ?? '–'}',
-          submitLabel: 'Übernehmen',
+          submitLabel: 'Senden',
         ),
       ],
     );

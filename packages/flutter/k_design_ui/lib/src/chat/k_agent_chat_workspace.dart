@@ -9,6 +9,7 @@ import '../primitives/k_animated_icon.dart';
 import '../primitives/k_icon.dart';
 import '../overlays/k_popover.dart';
 import '../overlays/k_overlays.dart';
+import 'k_chat_appearance.dart';
 part 'k_agent_chat_identity.dart';
 part 'k_agent_chat_right_sidebar.dart';
 
@@ -453,7 +454,9 @@ class _KAgentChatWorkspaceState extends State<KAgentChatWorkspace> {
                       ? constraints.maxWidth
                       : widget.contentMaxWidth + 2 * tokens.spaceLayoutGutter,
                 ),
-                child: widget.dockBuilder!(context, constraints.maxHeight),
+                child: KChatAppearance(
+                  child: widget.dockBuilder!(context, constraints.maxHeight),
+                ),
               ),
             ),
           Offstage(

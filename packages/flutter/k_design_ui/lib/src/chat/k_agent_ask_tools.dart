@@ -10,6 +10,7 @@ import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
 import 'k_agent_parts.dart';
 import 'k_chat_types.dart';
+import 'k_chat_appearance.dart';
 
 class KAgentTextQuestion extends StatelessWidget {
   const KAgentTextQuestion({required this.part, this.onResponse, super.key});
@@ -94,7 +95,7 @@ class _KAgentFormState extends State<KAgentForm> {
       description: part.description,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: t.spaceContentActionGap,
+        spacing: t.componentChatBlockGap,
         children: [
           for (final field in part.fields) _field(context, field),
           Wrap(
@@ -329,36 +330,38 @@ class _AskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = _tokens(context);
-    return Container(
-      padding: EdgeInsets.all(t.spaceControlInsetInline),
-      decoration: BoxDecoration(
-        color: t.colorSurfaceRaised,
-        border: Border.all(color: t.colorBorderDefault),
-        borderRadius: BorderRadius.circular(t.radiusCard),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: t.spaceContentActionGap,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: t.spaceControlGap,
-            children: [
-              KIcon(icon),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: _labelStyle(t)),
-                    if (description case final value?)
-                      Text(value, style: _mutedStyle(t)),
-                  ],
+    return KChatAppearance(
+      child: Container(
+        padding: EdgeInsets.all(t.spaceControlInsetInline),
+        decoration: BoxDecoration(
+          color: t.colorSurfaceRaised,
+          border: Border.all(color: t.colorBorderDefault),
+          borderRadius: BorderRadius.circular(t.radiusCard),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: t.componentChatBlockGap,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: t.spaceControlGap,
+              children: [
+                KIcon(icon),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: _labelStyle(t)),
+                      if (description case final value?)
+                        Text(value, style: _mutedStyle(t)),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          child,
-        ],
+              ],
+            ),
+            child,
+          ],
+        ),
       ),
     );
   }
@@ -422,6 +425,6 @@ TextStyle _labelStyle(KDesignTokens t) => TextStyle(
 TextStyle _mutedStyle(KDesignTokens t) => TextStyle(
   color: t.colorTextMuted,
   fontFamily: t.fontFamily,
-  fontSize: t.fontBodySmallSize,
-  height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
+  fontSize: t.fontCaptionSize,
+  height: t.fontCaptionLineHeight / t.fontCaptionSize,
 );

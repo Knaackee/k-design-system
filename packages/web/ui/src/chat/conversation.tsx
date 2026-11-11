@@ -1,3 +1,4 @@
+import { KChatIconProvider } from "../internal/icon-token-context.js";
 import {
   useCallback,
   useLayoutEffect,
@@ -209,143 +210,148 @@ export function KChatConversation({
   };
 
   return (
-    <section
-      {...props}
-      className={["k-chat-conversation", className].filter(Boolean).join(" ")}
-      aria-busy={runState === "submitted" || isStreaming || undefined}
-    >
-      <div
-        ref={scrollRef}
-        className="k-chat-conversation__scroll"
-        onScroll={onScroll}
-        role="log"
-        aria-live="polite"
-        aria-relevant="additions text"
-        aria-busy={isStreaming || undefined}
+    <KChatIconProvider>
+      <section
+        {...props}
+        className={["k-chat-conversation", className].filter(Boolean).join(" ")}
+        aria-busy={runState === "submitted" || isStreaming || undefined}
       >
-        {hasOlder ? (
-          <div className="k-chat-conversation__older">
-            <KButton
-              variant="ghost"
-              loading={loadingOlder}
-              onClick={onLoadOlder}
-            >
-              {labels.loadOlder}
-            </KButton>
-          </div>
-        ) : null}
-        {messages.length === 0
-          ? (emptyState ?? (
-              <div className="k-chat-empty">
-                <KIcon name="info" size={32} />
-                <strong>{labels.emptyTitle}</strong>
-                <p>{labels.emptyDescription}</p>
-              </div>
-            ))
-          : messages.map((message, index) => {
-              const messageMarkdownOptions =
-                message.role === "user" && userMarkdownAllowedElements
-                  ? {
-                      ...markdownOptions,
-                      allowedElements: userMarkdownAllowedElements,
-                    }
-                  : markdownOptions;
-              const mode = metadataByRole?.[message.role] ?? metadataMode;
-              const previous = messages[index - 1];
-              const author = message.authorLabel ?? labels[message.role];
-              const previousAuthor = previous
-                ? (previous.authorLabel ?? labels[previous.role])
-                : undefined;
-              const startsGroup =
-                !previous ||
-                previous.role !== message.role ||
-                previousAuthor !== author;
-              const showMetadata =
-                mode === "always" || (mode === "grouped" && startsGroup);
-
-              return (
-                <KChatMessage
-                  key={message.id}
-                  message={message}
-                  labels={labels}
-                  showMetadata={showMetadata}
-                  showTimestamp={showTimestamps}
-                  renderAvatar={renderAvatar}
-                  actions={renderMessageActions?.(message)}
-                >
-                  {message.parts.map((part, index) => {
-                    // Only group the default renderer; custom parts keep their contract.
-                    if (
-                      !renderPart &&
-                      part.type === "tool" &&
-                      !toolRenderers?.[part.toolName]
-                    ) {
-                      const previous = message.parts[index - 1];
-                      const canGroup = (candidate: KChatMessagePart) =>
-                        candidate.type === "tool" &&
-                        candidate.toolName === part.toolName &&
-                        !candidate.error &&
-                        candidate.state !== "failed" &&
-                        candidate.state !== "approval-required";
-                      if (canGroup(part)) {
-                        if (previous && canGroup(previous)) return null;
-                        const parts = [part];
-                        for (
-                          let next = index + 1;
-                          next < message.parts.length;
-                          next++
-                        ) {
-                          const candidate = message.parts[next];
-                          if (candidate.type !== "tool" || !canGroup(candidate))
-                            break;
-                          parts.push(candidate);
-                        }
-                        if (parts.length > 1)
-                          return (
-                            <KAgentToolGroup key={part.id} parts={parts} />
-                          );
-                      }
-                    }
-                    return (
-                      renderPart?.(part, message) ?? (
-                        <KChatPart
-                          key={part.id}
-                          part={part}
-                          toolRenderer={
-                            part.type === "tool"
-                              ? toolRenderers?.[part.toolName]
-                              : undefined
-                          }
-                          onLinkActivate={onLinkActivate}
-                          markdownOptions={messageMarkdownOptions}
-                          approvalNoteLabel={labels.approvalNote}
-                          onApprovalResponse={onApprovalResponse}
-                          onQuestionResponse={onQuestionResponse}
-                          onFormResponse={onFormResponse}
-                          onExternalAction={onExternalAction}
-                          onAttachmentRequest={onAttachmentRequest}
-                          onAttachmentActivate={onAttachmentActivate}
-                          onSourceActivate={onSourceActivate}
-                          onArtifactActivate={onArtifactActivate}
-                        />
-                      )
-                    );
-                  })}
-                </KChatMessage>
-              );
-            })}
-      </div>
-      {showNewest ? (
-        <button
-          className="k-chat-conversation__newest"
-          type="button"
-          onClick={jumpToNewest}
+        <div
+          ref={scrollRef}
+          className="k-chat-conversation__scroll"
+          onScroll={onScroll}
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+          aria-busy={isStreaming || undefined}
         >
-          <KIcon name="arrow-down" />
-          {labels.newContent}
-        </button>
-      ) : null}
-    </section>
+          {hasOlder ? (
+            <div className="k-chat-conversation__older">
+              <KButton
+                variant="ghost"
+                loading={loadingOlder}
+                onClick={onLoadOlder}
+              >
+                {labels.loadOlder}
+              </KButton>
+            </div>
+          ) : null}
+          {messages.length === 0
+            ? (emptyState ?? (
+                <div className="k-chat-empty">
+                  <KIcon name="info" size={32} />
+                  <strong>{labels.emptyTitle}</strong>
+                  <p>{labels.emptyDescription}</p>
+                </div>
+              ))
+            : messages.map((message, index) => {
+                const messageMarkdownOptions =
+                  message.role === "user" && userMarkdownAllowedElements
+                    ? {
+                        ...markdownOptions,
+                        allowedElements: userMarkdownAllowedElements,
+                      }
+                    : markdownOptions;
+                const mode = metadataByRole?.[message.role] ?? metadataMode;
+                const previous = messages[index - 1];
+                const author = message.authorLabel ?? labels[message.role];
+                const previousAuthor = previous
+                  ? (previous.authorLabel ?? labels[previous.role])
+                  : undefined;
+                const startsGroup =
+                  !previous ||
+                  previous.role !== message.role ||
+                  previousAuthor !== author;
+                const showMetadata =
+                  mode === "always" || (mode === "grouped" && startsGroup);
+
+                return (
+                  <KChatMessage
+                    key={message.id}
+                    message={message}
+                    labels={labels}
+                    showMetadata={showMetadata}
+                    showTimestamp={showTimestamps}
+                    renderAvatar={renderAvatar}
+                    actions={renderMessageActions?.(message)}
+                  >
+                    {message.parts.map((part, index) => {
+                      // Only group the default renderer; custom parts keep their contract.
+                      if (
+                        !renderPart &&
+                        part.type === "tool" &&
+                        !toolRenderers?.[part.toolName]
+                      ) {
+                        const previous = message.parts[index - 1];
+                        const canGroup = (candidate: KChatMessagePart) =>
+                          candidate.type === "tool" &&
+                          candidate.toolName === part.toolName &&
+                          !candidate.error &&
+                          candidate.state !== "failed" &&
+                          candidate.state !== "approval-required";
+                        if (canGroup(part)) {
+                          if (previous && canGroup(previous)) return null;
+                          const parts = [part];
+                          for (
+                            let next = index + 1;
+                            next < message.parts.length;
+                            next++
+                          ) {
+                            const candidate = message.parts[next];
+                            if (
+                              candidate.type !== "tool" ||
+                              !canGroup(candidate)
+                            )
+                              break;
+                            parts.push(candidate);
+                          }
+                          if (parts.length > 1)
+                            return (
+                              <KAgentToolGroup key={part.id} parts={parts} />
+                            );
+                        }
+                      }
+                      return (
+                        renderPart?.(part, message) ?? (
+                          <KChatPart
+                            key={part.id}
+                            part={part}
+                            toolRenderer={
+                              part.type === "tool"
+                                ? toolRenderers?.[part.toolName]
+                                : undefined
+                            }
+                            onLinkActivate={onLinkActivate}
+                            markdownOptions={messageMarkdownOptions}
+                            approvalNoteLabel={labels.approvalNote}
+                            onApprovalResponse={onApprovalResponse}
+                            onQuestionResponse={onQuestionResponse}
+                            onFormResponse={onFormResponse}
+                            onExternalAction={onExternalAction}
+                            onAttachmentRequest={onAttachmentRequest}
+                            onAttachmentActivate={onAttachmentActivate}
+                            onSourceActivate={onSourceActivate}
+                            onArtifactActivate={onArtifactActivate}
+                          />
+                        )
+                      );
+                    })}
+                  </KChatMessage>
+                );
+              })}
+        </div>
+        {showNewest ? (
+          <button
+            className="k-chat-conversation__newest"
+            type="button"
+            onClick={jumpToNewest}
+          >
+            <KIcon name="arrow-down" />
+            {labels.newContent}
+          </button>
+        ) : null}
+      </section>
+    </KChatIconProvider>
   );
 }
 

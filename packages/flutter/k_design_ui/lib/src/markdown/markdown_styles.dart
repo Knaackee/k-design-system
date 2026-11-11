@@ -13,8 +13,10 @@ MarkdownStyleSheet markdownStyles(
   final body = TextStyle(
     color: t.colorTextPrimary,
     fontFamily: t.fontFamily,
-    fontSize: t.fontBodySize,
-    height: t.fontBodyLineHeight / t.fontBodySize,
+    fontSize: chat ? t.fontBodySmallSize : t.fontBodySize,
+    height: chat
+        ? t.fontBodySmallLineHeight / t.fontBodySmallSize
+        : t.fontBodyLineHeight / t.fontBodySize,
     fontWeight: t.fontBodyWeight,
   );
   final tableDivider = BorderSide(
@@ -29,17 +31,29 @@ MarkdownStyleSheet markdownStyles(
   return MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
     p: body,
     h1: heading(
-      chat ? t.fontHeading4Size : t.fontHeading2Size,
-      chat ? t.fontHeading4LineHeight : t.fontHeading2LineHeight,
+      chat ? t.fontLabelSize : t.fontHeading2Size,
+      chat ? t.fontLabelLineHeight : t.fontHeading2LineHeight,
     ),
     h2: heading(
-      chat ? t.fontHeading4Size : t.fontHeading3Size,
-      chat ? t.fontHeading4LineHeight : t.fontHeading3LineHeight,
+      chat ? t.fontLabelSize : t.fontHeading3Size,
+      chat ? t.fontLabelLineHeight : t.fontHeading3LineHeight,
     ),
-    h3: heading(t.fontHeading4Size, t.fontHeading4LineHeight),
-    h4: heading(t.fontHeading4Size, t.fontHeading4LineHeight),
-    h5: heading(t.fontHeading4Size, t.fontHeading4LineHeight),
-    h6: heading(t.fontHeading4Size, t.fontHeading4LineHeight),
+    h3: heading(
+      chat ? t.fontLabelSize : t.fontHeading4Size,
+      chat ? t.fontLabelLineHeight : t.fontHeading4LineHeight,
+    ),
+    h4: heading(
+      chat ? t.fontLabelSize : t.fontHeading4Size,
+      chat ? t.fontLabelLineHeight : t.fontHeading4LineHeight,
+    ),
+    h5: heading(
+      chat ? t.fontLabelSize : t.fontHeading4Size,
+      chat ? t.fontLabelLineHeight : t.fontHeading4LineHeight,
+    ),
+    h6: heading(
+      chat ? t.fontLabelSize : t.fontHeading4Size,
+      chat ? t.fontLabelLineHeight : t.fontHeading4LineHeight,
+    ),
     strong: TextStyle(fontWeight: t.fontHeadingWeight),
     em: const TextStyle(fontStyle: FontStyle.italic),
     del: const TextStyle(decoration: TextDecoration.lineThrough),
@@ -54,7 +68,7 @@ MarkdownStyleSheet markdownStyles(
       height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
       color: t.colorSyntaxCode,
     ),
-    blockSpacing: chat ? t.spaceControlInsetInline : t.spaceMediumInset,
+    blockSpacing: chat ? t.componentChatBlockGap : t.spaceMediumInset,
     listIndent: t.spaceLayoutSectionGap,
     listBullet: body,
     // The upstream builder adds bullet padding to listIndent. Keep the complete

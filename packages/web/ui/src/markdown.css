@@ -23,8 +23,12 @@
   overflow-wrap: anywhere;
 }
 .k-markdown[data-profile="chat"] {
-  --k-markdown-block-gap: var(--k-space-control-inset-inline);
-  --k-markdown-heading-gap: var(--k-space-medium-inset);
+  --k-markdown-block-gap: var(--k-component-chat-block-gap);
+  --k-markdown-heading-gap: var(--k-component-chat-block-gap);
+  font-size: calc(var(--k-font-body-small-size) * var(--k-markdown-body-scale));
+  line-height: calc(
+    var(--k-font-body-small-line-height) * var(--k-markdown-body-scale)
+  );
 }
 .k-markdown[data-selectable="false"] {
   user-select: none;
@@ -86,6 +90,14 @@
 }
 .k-markdown strong {
   font-weight: var(--k-font-heading-weight);
+}
+
+.k-markdown[data-profile="chat"] :where(h1, h2, h3, h4, h5, h6) {
+  font-size: calc(var(--k-font-label-size) * var(--k-markdown-heading-scale));
+  line-height: calc(
+    var(--k-font-label-line-height) * var(--k-markdown-heading-scale)
+  );
+  letter-spacing: var(--k-font-label-letter-spacing);
 }
 .k-markdown :where(ul, ol) {
   padding-inline-start: var(--k-space-layout-section-gap);

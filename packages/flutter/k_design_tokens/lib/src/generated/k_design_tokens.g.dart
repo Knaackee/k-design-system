@@ -186,18 +186,69 @@ abstract final class KDesignTokenVariants {
   static const densityDenseSpaceLayoutSectionGap = 16.0;
   static const densityDenseSpaceControlInsetInline = 8.0;
   static const densityDenseSizeControl = 32.0;
+  static const densityDenseComponentChatColumnGutter = 16.0;
+  static const densityDenseComponentChatTurnGap = 16.0;
+  static const densityDenseComponentChatBlockGap = 8.0;
+  static const densityDenseComponentChatMetaGap = 4.0;
+  static const densityDenseComponentChatBubblePaddingInline = 8.0;
+  static const densityDenseComponentChatBubblePaddingBlock = 6.0;
+  static const densityDenseComponentChatBubbleMaxWidth = 0.8;
+  static const densityDenseComponentChatDisclosureMinHeight = 24.0;
+  static const densityDenseComponentChatOptionGap = 4.0;
+  static const densityDenseComponentChatCodeHeaderHeight = 28.0;
+  static const densityDenseComponentChatCodePadding = 8.0;
+  static const densityDenseComponentChatComposerPadding = 12.0;
+  static const densityDenseComponentChatComposerOverhang = 12.0;
+  static const densityDenseComponentChatComposerMinHeight = 88.0;
+  static const densityDenseComponentChatComposerBottomGap = 12.0;
+  static const densityDenseComponentChatPanelWidth = 360.0;
+  static const densityDenseComponentChatHomeRowHeight = 32.0;
   static const densityStandardSpaceControlGap = 8.0;
   static const densityStandardSpaceContentActionGap = 16.0;
   static const densityStandardSpaceCardPadding = 16.0;
   static const densityStandardSpaceLayoutSectionGap = 32.0;
   static const densityStandardSpaceControlInsetInline = 12.0;
   static const densityStandardSizeControl = 36.0;
+  static const densityStandardComponentChatColumnGutter = 24.0;
+  static const densityStandardComponentChatTurnGap = 24.0;
+  static const densityStandardComponentChatBlockGap = 12.0;
+  static const densityStandardComponentChatMetaGap = 8.0;
+  static const densityStandardComponentChatBubblePaddingInline = 12.0;
+  static const densityStandardComponentChatBubblePaddingBlock = 10.0;
+  static const densityStandardComponentChatBubbleMaxWidth = 0.75;
+  static const densityStandardComponentChatDisclosureMinHeight = 28.0;
+  static const densityStandardComponentChatOptionGap = 8.0;
+  static const densityStandardComponentChatCodeHeaderHeight = 32.0;
+  static const densityStandardComponentChatCodePadding = 12.0;
+  static const densityStandardComponentChatComposerPadding = 16.0;
+  static const densityStandardComponentChatComposerOverhang = 24.0;
+  static const densityStandardComponentChatComposerMinHeight = 112.0;
+  static const densityStandardComponentChatComposerBottomGap = 16.0;
+  static const densityStandardComponentChatPanelWidth = 400.0;
+  static const densityStandardComponentChatHomeRowHeight = 40.0;
   static const densitySpaciousSpaceControlGap = 12.0;
   static const densitySpaciousSpaceContentActionGap = 24.0;
   static const densitySpaciousSpaceCardPadding = 24.0;
   static const densitySpaciousSpaceLayoutSectionGap = 48.0;
   static const densitySpaciousSpaceControlInsetInline = 16.0;
   static const densitySpaciousSizeControl = 44.0;
+  static const densitySpaciousComponentChatColumnGutter = 32.0;
+  static const densitySpaciousComponentChatTurnGap = 32.0;
+  static const densitySpaciousComponentChatBlockGap = 16.0;
+  static const densitySpaciousComponentChatMetaGap = 12.0;
+  static const densitySpaciousComponentChatBubblePaddingInline = 16.0;
+  static const densitySpaciousComponentChatBubblePaddingBlock = 12.0;
+  static const densitySpaciousComponentChatBubbleMaxWidth = 0.7;
+  static const densitySpaciousComponentChatDisclosureMinHeight = 32.0;
+  static const densitySpaciousComponentChatOptionGap = 8.0;
+  static const densitySpaciousComponentChatCodeHeaderHeight = 36.0;
+  static const densitySpaciousComponentChatCodePadding = 16.0;
+  static const densitySpaciousComponentChatComposerPadding = 20.0;
+  static const densitySpaciousComponentChatComposerOverhang = 32.0;
+  static const densitySpaciousComponentChatComposerMinHeight = 136.0;
+  static const densitySpaciousComponentChatComposerBottomGap = 24.0;
+  static const densitySpaciousComponentChatPanelWidth = 440.0;
+  static const densitySpaciousComponentChatHomeRowHeight = 48.0;
   static const inputModePointerSizeHitTarget = 24.0;
   static const inputModeTouchSizeHitTarget = 48.0;
   static const windowCompactSpaceLayoutGutter = 16.0;
@@ -571,6 +622,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.layoutContentWidth,
     required this.layoutPickerWideWidth,
     required this.layoutOverlayMaxHeight,
+    required this.componentChatIconStroke,
+    required this.componentChatColumnMaxWidth,
+    required this.componentChatColumnGutter,
+    required this.componentChatTurnGap,
+    required this.componentChatBlockGap,
+    required this.componentChatMetaGap,
+    required this.componentChatBubblePaddingInline,
+    required this.componentChatBubblePaddingBlock,
+    required this.componentChatBubbleMaxWidth,
+    required this.componentChatDisclosureMinHeight,
+    required this.componentChatCardPadding,
+    required this.componentChatCardHeaderHeight,
+    required this.componentChatCardActionGap,
+    required this.componentChatOptionMinHeight,
+    required this.componentChatOptionGap,
+    required this.componentChatOptionPaddingInline,
+    required this.componentChatAttachmentHeight,
+    required this.componentChatCodeHeaderHeight,
+    required this.componentChatCodePadding,
+    required this.componentChatComposerPadding,
+    required this.componentChatComposerOverhang,
+    required this.componentChatComposerMinHeight,
+    required this.componentChatComposerBottomGap,
+    required this.componentChatComposerRadius,
+    required this.componentChatPanelWidth,
+    required this.componentChatPanelRowHeight,
+    required this.componentChatHomeSectionGap,
+    required this.componentChatHomeRowHeight,
     required this.componentCoverFlowTransitionDuration,
     required this.componentCoverFlowCountFontSize,
     required this.componentProgressDotsInactiveOpacity,
@@ -1188,6 +1267,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double layoutContentWidth;
   final double layoutPickerWideWidth;
   final double layoutOverlayMaxHeight;
+  final double componentChatIconStroke;
+  final double componentChatColumnMaxWidth;
+  final double componentChatColumnGutter;
+  final double componentChatTurnGap;
+  final double componentChatBlockGap;
+  final double componentChatMetaGap;
+  final double componentChatBubblePaddingInline;
+  final double componentChatBubblePaddingBlock;
+  final double componentChatBubbleMaxWidth;
+  final double componentChatDisclosureMinHeight;
+  final double componentChatCardPadding;
+  final double componentChatCardHeaderHeight;
+  final double componentChatCardActionGap;
+  final double componentChatOptionMinHeight;
+  final double componentChatOptionGap;
+  final double componentChatOptionPaddingInline;
+  final double componentChatAttachmentHeight;
+  final double componentChatCodeHeaderHeight;
+  final double componentChatCodePadding;
+  final double componentChatComposerPadding;
+  final double componentChatComposerOverhang;
+  final double componentChatComposerMinHeight;
+  final double componentChatComposerBottomGap;
+  final double componentChatComposerRadius;
+  final double componentChatPanelWidth;
+  final double componentChatPanelRowHeight;
+  final double componentChatHomeSectionGap;
+  final double componentChatHomeRowHeight;
   final Duration componentCoverFlowTransitionDuration;
   final double componentCoverFlowCountFontSize;
   final double componentProgressDotsInactiveOpacity;
@@ -1805,6 +1912,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentChatIconStroke: 1.25,
+    componentChatColumnMaxWidth: 720.0,
+    componentChatColumnGutter: 24.0,
+    componentChatTurnGap: 24.0,
+    componentChatBlockGap: 12.0,
+    componentChatMetaGap: 8.0,
+    componentChatBubblePaddingInline: 12.0,
+    componentChatBubblePaddingBlock: 10.0,
+    componentChatBubbleMaxWidth: 0.75,
+    componentChatDisclosureMinHeight: 28.0,
+    componentChatCardPadding: 16.0,
+    componentChatCardHeaderHeight: 36.0,
+    componentChatCardActionGap: 16.0,
+    componentChatOptionMinHeight: 36.0,
+    componentChatOptionGap: 8.0,
+    componentChatOptionPaddingInline: 12.0,
+    componentChatAttachmentHeight: 36.0,
+    componentChatCodeHeaderHeight: 32.0,
+    componentChatCodePadding: 12.0,
+    componentChatComposerPadding: 16.0,
+    componentChatComposerOverhang: 24.0,
+    componentChatComposerMinHeight: 112.0,
+    componentChatComposerBottomGap: 16.0,
+    componentChatComposerRadius: 18.0,
+    componentChatPanelWidth: 400.0,
+    componentChatPanelRowHeight: 36.0,
+    componentChatHomeSectionGap: 32.0,
+    componentChatHomeRowHeight: 40.0,
     componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
     componentCoverFlowCountFontSize: 0.8,
     componentProgressDotsInactiveOpacity: 0.35,
@@ -2423,6 +2558,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentChatIconStroke: 1.25,
+    componentChatColumnMaxWidth: 720.0,
+    componentChatColumnGutter: 24.0,
+    componentChatTurnGap: 24.0,
+    componentChatBlockGap: 12.0,
+    componentChatMetaGap: 8.0,
+    componentChatBubblePaddingInline: 12.0,
+    componentChatBubblePaddingBlock: 10.0,
+    componentChatBubbleMaxWidth: 0.75,
+    componentChatDisclosureMinHeight: 28.0,
+    componentChatCardPadding: 16.0,
+    componentChatCardHeaderHeight: 36.0,
+    componentChatCardActionGap: 16.0,
+    componentChatOptionMinHeight: 36.0,
+    componentChatOptionGap: 8.0,
+    componentChatOptionPaddingInline: 12.0,
+    componentChatAttachmentHeight: 36.0,
+    componentChatCodeHeaderHeight: 32.0,
+    componentChatCodePadding: 12.0,
+    componentChatComposerPadding: 16.0,
+    componentChatComposerOverhang: 24.0,
+    componentChatComposerMinHeight: 112.0,
+    componentChatComposerBottomGap: 16.0,
+    componentChatComposerRadius: 18.0,
+    componentChatPanelWidth: 400.0,
+    componentChatPanelRowHeight: 36.0,
+    componentChatHomeSectionGap: 32.0,
+    componentChatHomeRowHeight: 40.0,
     componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
     componentCoverFlowCountFontSize: 0.8,
     componentProgressDotsInactiveOpacity: 0.35,
@@ -3041,6 +3204,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentChatIconStroke: 1.25,
+    componentChatColumnMaxWidth: 720.0,
+    componentChatColumnGutter: 24.0,
+    componentChatTurnGap: 24.0,
+    componentChatBlockGap: 12.0,
+    componentChatMetaGap: 8.0,
+    componentChatBubblePaddingInline: 12.0,
+    componentChatBubblePaddingBlock: 10.0,
+    componentChatBubbleMaxWidth: 0.75,
+    componentChatDisclosureMinHeight: 28.0,
+    componentChatCardPadding: 16.0,
+    componentChatCardHeaderHeight: 36.0,
+    componentChatCardActionGap: 16.0,
+    componentChatOptionMinHeight: 36.0,
+    componentChatOptionGap: 8.0,
+    componentChatOptionPaddingInline: 12.0,
+    componentChatAttachmentHeight: 36.0,
+    componentChatCodeHeaderHeight: 32.0,
+    componentChatCodePadding: 12.0,
+    componentChatComposerPadding: 16.0,
+    componentChatComposerOverhang: 24.0,
+    componentChatComposerMinHeight: 112.0,
+    componentChatComposerBottomGap: 16.0,
+    componentChatComposerRadius: 18.0,
+    componentChatPanelWidth: 400.0,
+    componentChatPanelRowHeight: 36.0,
+    componentChatHomeSectionGap: 32.0,
+    componentChatHomeRowHeight: 40.0,
     componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
     componentCoverFlowCountFontSize: 0.8,
     componentProgressDotsInactiveOpacity: 0.35,
@@ -3659,6 +3850,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     layoutContentWidth: 640.0,
     layoutPickerWideWidth: 720.0,
     layoutOverlayMaxHeight: 760.0,
+    componentChatIconStroke: 1.25,
+    componentChatColumnMaxWidth: 720.0,
+    componentChatColumnGutter: 24.0,
+    componentChatTurnGap: 24.0,
+    componentChatBlockGap: 12.0,
+    componentChatMetaGap: 8.0,
+    componentChatBubblePaddingInline: 12.0,
+    componentChatBubblePaddingBlock: 10.0,
+    componentChatBubbleMaxWidth: 0.75,
+    componentChatDisclosureMinHeight: 28.0,
+    componentChatCardPadding: 16.0,
+    componentChatCardHeaderHeight: 36.0,
+    componentChatCardActionGap: 16.0,
+    componentChatOptionMinHeight: 36.0,
+    componentChatOptionGap: 8.0,
+    componentChatOptionPaddingInline: 12.0,
+    componentChatAttachmentHeight: 36.0,
+    componentChatCodeHeaderHeight: 32.0,
+    componentChatCodePadding: 12.0,
+    componentChatComposerPadding: 16.0,
+    componentChatComposerOverhang: 24.0,
+    componentChatComposerMinHeight: 112.0,
+    componentChatComposerBottomGap: 16.0,
+    componentChatComposerRadius: 18.0,
+    componentChatPanelWidth: 400.0,
+    componentChatPanelRowHeight: 36.0,
+    componentChatHomeSectionGap: 32.0,
+    componentChatHomeRowHeight: 40.0,
     componentCoverFlowTransitionDuration: Duration(milliseconds: 420),
     componentCoverFlowCountFontSize: 0.8,
     componentProgressDotsInactiveOpacity: 0.35,
@@ -4278,6 +4497,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? layoutContentWidth,
     double? layoutPickerWideWidth,
     double? layoutOverlayMaxHeight,
+    double? componentChatIconStroke,
+    double? componentChatColumnMaxWidth,
+    double? componentChatColumnGutter,
+    double? componentChatTurnGap,
+    double? componentChatBlockGap,
+    double? componentChatMetaGap,
+    double? componentChatBubblePaddingInline,
+    double? componentChatBubblePaddingBlock,
+    double? componentChatBubbleMaxWidth,
+    double? componentChatDisclosureMinHeight,
+    double? componentChatCardPadding,
+    double? componentChatCardHeaderHeight,
+    double? componentChatCardActionGap,
+    double? componentChatOptionMinHeight,
+    double? componentChatOptionGap,
+    double? componentChatOptionPaddingInline,
+    double? componentChatAttachmentHeight,
+    double? componentChatCodeHeaderHeight,
+    double? componentChatCodePadding,
+    double? componentChatComposerPadding,
+    double? componentChatComposerOverhang,
+    double? componentChatComposerMinHeight,
+    double? componentChatComposerBottomGap,
+    double? componentChatComposerRadius,
+    double? componentChatPanelWidth,
+    double? componentChatPanelRowHeight,
+    double? componentChatHomeSectionGap,
+    double? componentChatHomeRowHeight,
     Duration? componentCoverFlowTransitionDuration,
     double? componentCoverFlowCountFontSize,
     double? componentProgressDotsInactiveOpacity,
@@ -4895,6 +5142,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutContentWidth: layoutContentWidth ?? this.layoutContentWidth,
       layoutPickerWideWidth: layoutPickerWideWidth ?? this.layoutPickerWideWidth,
       layoutOverlayMaxHeight: layoutOverlayMaxHeight ?? this.layoutOverlayMaxHeight,
+      componentChatIconStroke: componentChatIconStroke ?? this.componentChatIconStroke,
+      componentChatColumnMaxWidth: componentChatColumnMaxWidth ?? this.componentChatColumnMaxWidth,
+      componentChatColumnGutter: componentChatColumnGutter ?? this.componentChatColumnGutter,
+      componentChatTurnGap: componentChatTurnGap ?? this.componentChatTurnGap,
+      componentChatBlockGap: componentChatBlockGap ?? this.componentChatBlockGap,
+      componentChatMetaGap: componentChatMetaGap ?? this.componentChatMetaGap,
+      componentChatBubblePaddingInline: componentChatBubblePaddingInline ?? this.componentChatBubblePaddingInline,
+      componentChatBubblePaddingBlock: componentChatBubblePaddingBlock ?? this.componentChatBubblePaddingBlock,
+      componentChatBubbleMaxWidth: componentChatBubbleMaxWidth ?? this.componentChatBubbleMaxWidth,
+      componentChatDisclosureMinHeight: componentChatDisclosureMinHeight ?? this.componentChatDisclosureMinHeight,
+      componentChatCardPadding: componentChatCardPadding ?? spaceCardPadding ?? this.componentChatCardPadding,
+      componentChatCardHeaderHeight: componentChatCardHeaderHeight ?? sizeControl ?? this.componentChatCardHeaderHeight,
+      componentChatCardActionGap: componentChatCardActionGap ?? spaceContentActionGap ?? this.componentChatCardActionGap,
+      componentChatOptionMinHeight: componentChatOptionMinHeight ?? sizeControl ?? this.componentChatOptionMinHeight,
+      componentChatOptionGap: componentChatOptionGap ?? this.componentChatOptionGap,
+      componentChatOptionPaddingInline: componentChatOptionPaddingInline ?? spaceControlInsetInline ?? this.componentChatOptionPaddingInline,
+      componentChatAttachmentHeight: componentChatAttachmentHeight ?? sizeControl ?? this.componentChatAttachmentHeight,
+      componentChatCodeHeaderHeight: componentChatCodeHeaderHeight ?? this.componentChatCodeHeaderHeight,
+      componentChatCodePadding: componentChatCodePadding ?? this.componentChatCodePadding,
+      componentChatComposerPadding: componentChatComposerPadding ?? this.componentChatComposerPadding,
+      componentChatComposerOverhang: componentChatComposerOverhang ?? this.componentChatComposerOverhang,
+      componentChatComposerMinHeight: componentChatComposerMinHeight ?? this.componentChatComposerMinHeight,
+      componentChatComposerBottomGap: componentChatComposerBottomGap ?? this.componentChatComposerBottomGap,
+      componentChatComposerRadius: componentChatComposerRadius ?? this.componentChatComposerRadius,
+      componentChatPanelWidth: componentChatPanelWidth ?? this.componentChatPanelWidth,
+      componentChatPanelRowHeight: componentChatPanelRowHeight ?? sizeControl ?? this.componentChatPanelRowHeight,
+      componentChatHomeSectionGap: componentChatHomeSectionGap ?? spaceLayoutSectionGap ?? this.componentChatHomeSectionGap,
+      componentChatHomeRowHeight: componentChatHomeRowHeight ?? this.componentChatHomeRowHeight,
       componentCoverFlowTransitionDuration: componentCoverFlowTransitionDuration ?? this.componentCoverFlowTransitionDuration,
       componentCoverFlowCountFontSize: componentCoverFlowCountFontSize ?? this.componentCoverFlowCountFontSize,
       componentProgressDotsInactiveOpacity: componentProgressDotsInactiveOpacity ?? this.componentProgressDotsInactiveOpacity,
@@ -5517,6 +5792,34 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       layoutContentWidth: lerpDouble(layoutContentWidth, other.layoutContentWidth, t)!,
       layoutPickerWideWidth: lerpDouble(layoutPickerWideWidth, other.layoutPickerWideWidth, t)!,
       layoutOverlayMaxHeight: lerpDouble(layoutOverlayMaxHeight, other.layoutOverlayMaxHeight, t)!,
+      componentChatIconStroke: lerpDouble(componentChatIconStroke, other.componentChatIconStroke, t)!,
+      componentChatColumnMaxWidth: lerpDouble(componentChatColumnMaxWidth, other.componentChatColumnMaxWidth, t)!,
+      componentChatColumnGutter: lerpDouble(componentChatColumnGutter, other.componentChatColumnGutter, t)!,
+      componentChatTurnGap: lerpDouble(componentChatTurnGap, other.componentChatTurnGap, t)!,
+      componentChatBlockGap: lerpDouble(componentChatBlockGap, other.componentChatBlockGap, t)!,
+      componentChatMetaGap: lerpDouble(componentChatMetaGap, other.componentChatMetaGap, t)!,
+      componentChatBubblePaddingInline: lerpDouble(componentChatBubblePaddingInline, other.componentChatBubblePaddingInline, t)!,
+      componentChatBubblePaddingBlock: lerpDouble(componentChatBubblePaddingBlock, other.componentChatBubblePaddingBlock, t)!,
+      componentChatBubbleMaxWidth: lerpDouble(componentChatBubbleMaxWidth, other.componentChatBubbleMaxWidth, t)!,
+      componentChatDisclosureMinHeight: lerpDouble(componentChatDisclosureMinHeight, other.componentChatDisclosureMinHeight, t)!,
+      componentChatCardPadding: lerpDouble(componentChatCardPadding, other.componentChatCardPadding, t)!,
+      componentChatCardHeaderHeight: lerpDouble(componentChatCardHeaderHeight, other.componentChatCardHeaderHeight, t)!,
+      componentChatCardActionGap: lerpDouble(componentChatCardActionGap, other.componentChatCardActionGap, t)!,
+      componentChatOptionMinHeight: lerpDouble(componentChatOptionMinHeight, other.componentChatOptionMinHeight, t)!,
+      componentChatOptionGap: lerpDouble(componentChatOptionGap, other.componentChatOptionGap, t)!,
+      componentChatOptionPaddingInline: lerpDouble(componentChatOptionPaddingInline, other.componentChatOptionPaddingInline, t)!,
+      componentChatAttachmentHeight: lerpDouble(componentChatAttachmentHeight, other.componentChatAttachmentHeight, t)!,
+      componentChatCodeHeaderHeight: lerpDouble(componentChatCodeHeaderHeight, other.componentChatCodeHeaderHeight, t)!,
+      componentChatCodePadding: lerpDouble(componentChatCodePadding, other.componentChatCodePadding, t)!,
+      componentChatComposerPadding: lerpDouble(componentChatComposerPadding, other.componentChatComposerPadding, t)!,
+      componentChatComposerOverhang: lerpDouble(componentChatComposerOverhang, other.componentChatComposerOverhang, t)!,
+      componentChatComposerMinHeight: lerpDouble(componentChatComposerMinHeight, other.componentChatComposerMinHeight, t)!,
+      componentChatComposerBottomGap: lerpDouble(componentChatComposerBottomGap, other.componentChatComposerBottomGap, t)!,
+      componentChatComposerRadius: lerpDouble(componentChatComposerRadius, other.componentChatComposerRadius, t)!,
+      componentChatPanelWidth: lerpDouble(componentChatPanelWidth, other.componentChatPanelWidth, t)!,
+      componentChatPanelRowHeight: lerpDouble(componentChatPanelRowHeight, other.componentChatPanelRowHeight, t)!,
+      componentChatHomeSectionGap: lerpDouble(componentChatHomeSectionGap, other.componentChatHomeSectionGap, t)!,
+      componentChatHomeRowHeight: lerpDouble(componentChatHomeRowHeight, other.componentChatHomeRowHeight, t)!,
       componentCoverFlowTransitionDuration: t < 0.5 ? componentCoverFlowTransitionDuration : other.componentCoverFlowTransitionDuration,
       componentCoverFlowCountFontSize: lerpDouble(componentCoverFlowCountFontSize, other.componentCoverFlowCountFontSize, t)!,
       componentProgressDotsInactiveOpacity: lerpDouble(componentProgressDotsInactiveOpacity, other.componentProgressDotsInactiveOpacity, t)!,

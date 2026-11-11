@@ -82,12 +82,12 @@ void main() {
     },
   );
 
-  testWidgets('assistant with a visible avatar keeps the standard Web bubble', (
+  testWidgets('assistant remains borderless with a visible avatar', (
     tester,
   ) async {
     await mount(tester, omitAvatars: false);
     expect(find.byType(KAvatar), findsNWidgets(2));
-    expect(bubbles(), findsNWidgets(2));
+    expect(bubbles(), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -124,7 +124,7 @@ void main() {
     expect(
       tester.getSize(bubbles()).height,
       closeTo(
-        KDesignTokenVariants.typeScaleCompactFontBodyLineHeight +
+        tokens.fontBodySmallLineHeight +
             2 * tokens.spaceControlGap +
             2 * tokens.borderWidthDefault,
         0.1,
@@ -146,7 +146,7 @@ void main() {
     expect(
       tester.getSize(bubbles()).height,
       closeTo(
-        2 * KDesignTokenVariants.typeScaleCompactFontBodyLineHeight +
+        2 * tokens.fontBodySmallLineHeight +
             2 * tokens.spaceControlGap +
             2 * tokens.borderWidthDefault,
         0.1,

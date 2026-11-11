@@ -23,6 +23,8 @@ export interface KDisclosureProps extends Omit<
   scrollOnOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
+  presentation?: "normal" | "compact";
+  showContentBorder?: boolean;
 }
 
 export function KDisclosure({
@@ -36,6 +38,8 @@ export function KDisclosure({
   scrollOnOpen = false,
   onOpenChange,
   disabled = false,
+  presentation = "normal",
+  showContentBorder = true,
   className,
   ...props
 }: KDisclosureProps) {
@@ -85,6 +89,8 @@ export function KDisclosure({
     <section
       ref={root}
       className={["k-disclosure", className].filter(Boolean).join(" ")}
+      data-presentation={presentation}
+      data-content-border={showContentBorder}
       {...props}
     >
       <div className="k-disclosure__header">

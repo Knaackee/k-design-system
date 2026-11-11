@@ -87,6 +87,8 @@ export interface KAgentQuestionOption {
 export interface KAgentQuestionPart {
   id: string;
   type: "question";
+  /** Optional consumer-localized caption above the question. */
+  statusLabel?: string;
   title: string;
   description?: string;
   kind: KAgentQuestionKind;

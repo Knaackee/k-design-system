@@ -84,6 +84,7 @@ import 'management_overview_fixture.dart';
 import 'avatar_editor_fixture.dart';
 import 'usage_details_fixture.dart';
 import 'agent_ui_fixtures.dart';
+import 'agent_ui_complete_fixture.dart';
 import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
 import 'agent_chat_switcher_fixture.dart';
@@ -1858,6 +1859,16 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
           WidgetbookUseCase(
             name: 'chat-composer-compact-voice-mobile',
             builder: (_) => const VoiceComposerFixture(mobile: true),
+          ),
+          WidgetbookUseCase(
+            name: 'agent-ui-complete',
+            builder: (context) => AgentUiCompleteFixture(
+              scenario: context.knobs.object.dropdown<CompleteScenario>(
+                label: 'Demo-Szenario', options: CompleteScenario.values,
+                initialOption: CompleteScenario.history,
+                labelBuilder: (value) => value.name,
+              ),
+            ),
           ),
           WidgetbookUseCase(
             name: 'agent-ui-conversation',

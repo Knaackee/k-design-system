@@ -87,7 +87,13 @@ export function AgentUiFixture({
       <header className="k-agent-ui-fixture__header">
         <div>
           <strong>Design-System Agent</strong>
-          <span>{runState === "streaming" ? "Antwortet…" : "Bereit"}</span>
+          <span>
+            {runState === "streaming"
+              ? "Antwortet…"
+              : runState === "awaiting-input"
+                ? "Wartet auf dich"
+                : "Bereit"}
+          </span>
         </div>
       </header>
       <KChatConversation
@@ -297,27 +303,27 @@ function fixtureMessages(
       {
         id: "density-question",
         type: "question",
+        statusLabel: "Wartet auf deine Eingabe",
         title: "Welche Dichte soll die Vorschau verwenden?",
-        description:
-          "Die Antwort wird als typisiertes Event an die Anwendung übergeben.",
+        description: "Wähle eine Option und bestätige deine Antwort.",
         kind: "single-choice",
         state: answer ? "answered" : "pending",
         options: [
           {
             id: "dense",
-            label: "Dense",
+            label: "Kompakt",
             description: "Für produktive Desktop-Oberflächen",
           },
           {
             id: "comfortable",
-            label: "Comfortable",
+            label: "Großzügig",
             description: "Mehr Raum für Touch-Eingaben",
           },
         ],
         answerSummary: answer
           ? `Ausgewählt: ${answer.optionIds?.[0] ?? "–"}`
           : undefined,
-        submitLabel: "Übernehmen",
+        submitLabel: "Senden",
       },
     ],
   };
@@ -325,6 +331,7 @@ function fixtureMessages(
   const textQuestion = askMessage({
     id: "release-note-question",
     type: "question",
+    statusLabel: "Wartet auf deine Eingabe",
     title: "Wie soll die Änderung beschrieben werden?",
     description: "Eine freie Rückfrage mit typisiertem Antwort-Event.",
     kind: "text",
@@ -336,6 +343,7 @@ function fixtureMessages(
   const multipleChoice = askMessage({
     id: "checks-question",
     type: "question",
+    statusLabel: "Wartet auf deine Eingabe",
     title: "Welche Prüfungen sollen ausgeführt werden?",
     kind: "multiple-choice",
     state: answer ? "answered" : "pending",
@@ -360,6 +368,7 @@ function fixtureMessages(
   const confirmation = askMessage({
     id: "replace-confirmation",
     type: "question",
+    statusLabel: "Bitte bestätigen",
     title: "Bestehende Vorschau ersetzen?",
     description:
       "Diese fachliche Bestätigung führt noch keine Tool-Aktion aus.",

@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AgentUiFixture } from "./agent-ui-fixture.js";
 import { AgentQuestionDictationFixture } from "./agent-question-dictation-fixture.js";
+import {
+  AgentUiCompleteFixture,
+  type CompleteScenario,
+} from "./agent-ui-complete-fixture.js";
 
 const meta = {
   title: "Patterns/AgentUI",
@@ -10,6 +14,19 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Complete: StoryObj<{ scenario: CompleteScenario }> = {
+  name: "agent-ui-complete",
+  args: { scenario: "history" },
+  argTypes: {
+    scenario: {
+      control: "inline-radio",
+      options: ["empty", "history", "streaming"],
+    },
+  },
+  render: (args) => <AgentUiCompleteFixture {...args} />,
+  parameters: { fixtureId: "agent-ui-complete" },
+};
 
 export const Conversation: Story = {
   name: "agent-ui-conversation",

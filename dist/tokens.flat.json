@@ -1804,6 +1804,196 @@
         "unit": "px"
       }
     },
+    "component.chat.iconStroke": {
+      "type": "number",
+      "value": 1.25
+    },
+    "component.chat.column.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.chat.column.gutter": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.turn.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.block.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.meta.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.maxWidth": {
+      "type": "number",
+      "value": 0.75
+    },
+    "component.chat.disclosure.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.actionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.attachment.height": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.overhang": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 112,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.bottomGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "component.coverFlow.transitionDuration": {
       "type": "duration",
       "value": {
@@ -5760,6 +5950,196 @@
       "type": "dimension",
       "value": {
         "value": 760,
+        "unit": "px"
+      }
+    },
+    "component.chat.iconStroke": {
+      "type": "number",
+      "value": 1.25
+    },
+    "component.chat.column.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.chat.column.gutter": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.turn.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.block.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.meta.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.maxWidth": {
+      "type": "number",
+      "value": 0.75
+    },
+    "component.chat.disclosure.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.actionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.attachment.height": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.overhang": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 112,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.bottomGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
         "unit": "px"
       }
     },
@@ -9722,6 +10102,196 @@
         "unit": "px"
       }
     },
+    "component.chat.iconStroke": {
+      "type": "number",
+      "value": 1.25
+    },
+    "component.chat.column.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.chat.column.gutter": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.turn.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.block.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.meta.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.maxWidth": {
+      "type": "number",
+      "value": 0.75
+    },
+    "component.chat.disclosure.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.actionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.attachment.height": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.overhang": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 112,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.bottomGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "component.coverFlow.transitionDuration": {
       "type": "duration",
       "value": {
@@ -13681,6 +14251,196 @@
         "unit": "px"
       }
     },
+    "component.chat.iconStroke": {
+      "type": "number",
+      "value": 1.25
+    },
+    "component.chat.column.maxWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 720,
+        "unit": "px"
+      }
+    },
+    "component.chat.column.gutter": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.turn.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.block.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.meta.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.paddingBlock": {
+      "type": "dimension",
+      "value": {
+        "value": 10,
+        "unit": "px"
+      }
+    },
+    "component.chat.bubble.maxWidth": {
+      "type": "number",
+      "value": 0.75
+    },
+    "component.chat.disclosure.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.card.actionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.gap": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.chat.option.paddingInline": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.attachment.height": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.headerHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.code.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.padding": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.overhang": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.minHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 112,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.bottomGap": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.chat.composer.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 18,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.width": {
+      "type": "dimension",
+      "value": {
+        "value": 400,
+        "unit": "px"
+      }
+    },
+    "component.chat.panel.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 36,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.sectionGap": {
+      "type": "dimension",
+      "value": {
+        "value": 32,
+        "unit": "px"
+      }
+    },
+    "component.chat.home.rowHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 40,
+        "unit": "px"
+      }
+    },
     "component.coverFlow.transitionDuration": {
       "type": "duration",
       "value": {
@@ -17020,6 +17780,122 @@
           "value": 32,
           "unit": "px"
         }
+      },
+      "component.chat.column.gutter": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.turn.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.block.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.chat.meta.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.paddingInline": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.paddingBlock": {
+        "type": "dimension",
+        "value": {
+          "value": 6,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.maxWidth": {
+        "type": "number",
+        "value": 0.8
+      },
+      "component.chat.disclosure.minHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "component.chat.option.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "component.chat.code.headerHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 28,
+          "unit": "px"
+        }
+      },
+      "component.chat.code.padding": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.padding": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.overhang": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.minHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 88,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.bottomGap": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.panel.width": {
+        "type": "dimension",
+        "value": {
+          "value": 360,
+          "unit": "px"
+        }
+      },
+      "component.chat.home.rowHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
       }
     },
     "densityStandard": {
@@ -17064,6 +17940,122 @@
           "value": 36,
           "unit": "px"
         }
+      },
+      "component.chat.column.gutter": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "component.chat.turn.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "component.chat.block.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.meta.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.paddingInline": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.paddingBlock": {
+        "type": "dimension",
+        "value": {
+          "value": 10,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.maxWidth": {
+        "type": "number",
+        "value": 0.75
+      },
+      "component.chat.disclosure.minHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 28,
+          "unit": "px"
+        }
+      },
+      "component.chat.option.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.chat.code.headerHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "component.chat.code.padding": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.padding": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.overhang": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.minHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 112,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.bottomGap": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.panel.width": {
+        "type": "dimension",
+        "value": {
+          "value": 400,
+          "unit": "px"
+        }
+      },
+      "component.chat.home.rowHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 40,
+          "unit": "px"
+        }
       }
     },
     "densitySpacious": {
@@ -17106,6 +18098,122 @@
         "type": "dimension",
         "value": {
           "value": 44,
+          "unit": "px"
+        }
+      },
+      "component.chat.column.gutter": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "component.chat.turn.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "component.chat.block.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.meta.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.paddingInline": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.paddingBlock": {
+        "type": "dimension",
+        "value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "component.chat.bubble.maxWidth": {
+        "type": "number",
+        "value": 0.7
+      },
+      "component.chat.disclosure.minHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "component.chat.option.gap": {
+        "type": "dimension",
+        "value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "component.chat.code.headerHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 36,
+          "unit": "px"
+        }
+      },
+      "component.chat.code.padding": {
+        "type": "dimension",
+        "value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.padding": {
+        "type": "dimension",
+        "value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.overhang": {
+        "type": "dimension",
+        "value": {
+          "value": 32,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.minHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 136,
+          "unit": "px"
+        }
+      },
+      "component.chat.composer.bottomGap": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "component.chat.panel.width": {
+        "type": "dimension",
+        "value": {
+          "value": 440,
+          "unit": "px"
+        }
+      },
+      "component.chat.home.rowHeight": {
+        "type": "dimension",
+        "value": {
+          "value": 48,
           "unit": "px"
         }
       }

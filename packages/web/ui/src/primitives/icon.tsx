@@ -1,5 +1,6 @@
-import { type HTMLAttributes, useSyncExternalStore } from "react";
+import { type HTMLAttributes, useContext, useSyncExternalStore } from "react";
 import { iconSvg, type KIconName } from "../generated/icons.js";
+import { KIconStrokeTokenContext } from "../internal/icon-token-context.js";
 export type { KIconName } from "../generated/icons.js";
 export interface KIconProps extends Omit<
   HTMLAttributes<HTMLSpanElement>,
@@ -20,12 +21,10 @@ export interface KIconProps extends Omit<
 /** Fallback before styles load and during server rendering (linear). */
 const kDefaultIconStroke = 1.5;
 
-function readIconStroke(): number {
+export function readIconStroke(tokenName = "--k-size-icon-stroke"): number {
   if (typeof document === "undefined") return kDefaultIconStroke;
   const value = parseFloat(
-    getComputedStyle(document.documentElement).getPropertyValue(
-      "--k-size-icon-stroke",
-    ),
+    getComputedStyle(document.documentElement).getPropertyValue(tokenName),
   );
   return Number.isFinite(value) && value > 0 ? value : kDefaultIconStroke;
 }
@@ -58,9 +57,10 @@ export function KIcon({
     (!Number.isFinite(strokeWidth) || strokeWidth <= 0)
   )
     throw new RangeError("KIcon strokeWidth must be positive and finite");
+  const strokeTokenName = useContext(KIconStrokeTokenContext);
   const tokenStroke = useSyncExternalStore(
     subscribeIconStroke,
-    readIconStroke,
+    () => readIconStroke(strokeTokenName),
     () => kDefaultIconStroke,
   );
   // Absolute stroke: the token is in screen pixels, the SVG grid is 24.

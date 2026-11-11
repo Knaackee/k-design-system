@@ -12,6 +12,7 @@ import '../forms/k_textarea.dart';
 import '../primitives/k_disclosure.dart';
 import '../primitives/k_icon.dart';
 import 'k_chat_types.dart';
+import 'k_chat_appearance.dart';
 
 typedef KAgentToolRenderer =
     Widget Function(BuildContext context, KAgentToolPart part);
@@ -32,37 +33,38 @@ class KAgentToolCall extends StatelessWidget {
   Widget build(BuildContext context) {
     if (renderer case final custom?) return custom(context, part);
     final t = _tokens(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        KDisclosure(
-          title: part.title,
-          titleLineHeight:
-              KDesignTokenVariants.typeScaleCompactFontBodyLineHeight,
-          titleWidget: _AgentDisclosureTitle(
+    return KChatAppearance(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          KDisclosure(
             title: part.title,
-            wrap: wrapTitle,
-            running: part.state == KAgentToolState.running,
+            titleLineHeight: t.fontCaptionLineHeight,
+            titleWidget: _AgentDisclosureTitle(
+              title: part.title,
+              wrap: wrapTitle,
+              running: part.state == KAgentToolState.running,
+            ),
+            presentation: KDisclosurePresentation.compact,
+            showContentBorder: showContentBorder,
+            leadingIcon: _StateIcon(state: part.state),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (part.description case final description?) Text(description),
+                if (part.arguments != null)
+                  _AgentData(label: 'Arguments', value: part.arguments),
+                if (part.result != null)
+                  _AgentData(label: 'Result', value: part.result),
+              ],
+            ),
           ),
-          presentation: KDisclosurePresentation.compact,
-          showContentBorder: showContentBorder,
-          leadingIcon: _StateIcon(state: part.state),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (part.description case final description?) Text(description),
-              if (part.arguments != null)
-                _AgentData(label: 'Arguments', value: part.arguments),
-              if (part.result != null)
-                _AgentData(label: 'Result', value: part.result),
-            ],
-          ),
-        ),
-        if (part.error case final error?) ...[
-          SizedBox(height: t.spaceControlGap),
-          KAlert(tone: KStatusTone.error, title: Text(error)),
+          if (part.error case final error?) ...[
+            SizedBox(height: t.spaceControlGap),
+            KAlert(tone: KStatusTone.error, title: Text(error)),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -77,17 +79,19 @@ class KAgentToolGroup extends StatelessWidget {
     assert(parts.isNotEmpty, 'KAgentToolGroup requires at least one part.');
     final state = _groupState(parts);
     final title = '${parts.first.title} · ${parts.length}×';
-    return KDisclosure(
-      title: title,
-      titleWidget: _AgentDisclosureTitle(
+    return KChatAppearance(
+      child: KDisclosure(
         title: title,
-        running: state == KAgentToolState.running,
-      ),
-      presentation: KDisclosurePresentation.compact,
-      leadingIcon: _StateIcon(state: state),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [for (final part in parts) KAgentToolCall(part: part)],
+        titleWidget: _AgentDisclosureTitle(
+          title: title,
+          running: state == KAgentToolState.running,
+        ),
+        presentation: KDisclosurePresentation.compact,
+        leadingIcon: _StateIcon(state: state),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [for (final part in parts) KAgentToolCall(part: part)],
+        ),
       ),
     );
   }
@@ -119,86 +123,91 @@ class _KAgentApprovalState extends State<KAgentApproval> {
   Widget build(BuildContext context) {
     final t = _tokens(context);
     final part = widget.part;
-    return Semantics(
-      liveRegion: true,
-      child: Container(
-        padding: EdgeInsets.all(t.spaceControlGap),
-        decoration: _cardDecoration(t),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const KIcon(KIconName.lock),
-                SizedBox(width: t.spaceControlGap),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(part.title, style: _heading5Style(t)),
-                      if (part.description case final description?)
-                        Padding(
-                          padding: EdgeInsets.only(top: t.spaceControlGap),
-                          child: Text(description, style: _bodyStyle(t)),
+    return KChatAppearance(
+      child: Semantics(
+        liveRegion: true,
+        child: Container(
+          padding: EdgeInsets.all(t.spaceControlInsetInline),
+          decoration: _cardDecoration(t),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const KIcon(KIconName.lock),
+                  SizedBox(width: t.spaceControlGap),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(part.title, style: _heading5Style(t)),
+                        if (part.description case final description?)
+                          Padding(
+                            padding: EdgeInsets.only(top: t.spaceControlGap),
+                            child: Text(description, style: _captionStyle(t)),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (part.detail case final detail?)
+                _AgentData(label: '', value: detail),
+              if (part.state == KAgentResolutionState.pending) ...[
+                SizedBox(height: t.spaceControlInsetInline),
+                KDisclosure(
+                  title: widget.reasonLabel,
+                  presentation: KDisclosurePresentation.compact,
+                  titleWidget: Text(
+                    widget.reasonLabel,
+                    style: _captionStyle(t),
+                  ),
+                  child: KTextarea(
+                    controller: _reason,
+                    label: widget.reasonLabel,
+                    rows: 2,
+                  ),
+                ),
+                SizedBox(height: t.spaceContentActionGap),
+                Wrap(
+                  spacing: t.spaceControlGap,
+                  runSpacing: t.spaceControlGap,
+                  children: [
+                    for (final option in part.options)
+                      KButton(
+                        label: option.label,
+                        variant: option.primary
+                            ? KButtonVariant.primary
+                            : KButtonVariant.secondary,
+                        onPressed: () => widget.onResponse?.call(
+                          KAgentApprovalResponse(
+                            approvalId: part.id,
+                            optionId: option.id,
+                            reason: _reason.text.trim().isEmpty
+                                ? null
+                                : _reason.text.trim(),
+                          ),
                         ),
-                    ],
+                      ),
+                  ],
+                ),
+              ] else ...[
+                SizedBox(height: t.spaceControlGap),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: KBadge(
+                    variant: part.state == KAgentResolutionState.rejected
+                        ? KBadgeVariant.destructive
+                        : KBadgeVariant.outline,
+                    child: Text(
+                      part.responseSummary ?? _enumLabel(part.state.name),
+                    ),
                   ),
                 ),
               ],
-            ),
-            if (part.detail case final detail?)
-              _AgentData(label: '', value: detail),
-            if (part.state == KAgentResolutionState.pending) ...[
-              SizedBox(height: t.spaceControlInsetInline),
-              KDisclosure(
-                title: widget.reasonLabel,
-                presentation: KDisclosurePresentation.compact,
-                titleWidget: Text(widget.reasonLabel, style: _captionStyle(t)),
-                child: KTextarea(
-                  controller: _reason,
-                  label: widget.reasonLabel,
-                  rows: 2,
-                ),
-              ),
-              SizedBox(height: t.spaceContentActionGap),
-              Wrap(
-                spacing: t.spaceControlGap,
-                runSpacing: t.spaceControlGap,
-                children: [
-                  for (final option in part.options)
-                    KButton(
-                      label: option.label,
-                      variant: option.primary
-                          ? KButtonVariant.primary
-                          : KButtonVariant.secondary,
-                      onPressed: () => widget.onResponse?.call(
-                        KAgentApprovalResponse(
-                          approvalId: part.id,
-                          optionId: option.id,
-                          reason: _reason.text.trim().isEmpty
-                              ? null
-                              : _reason.text.trim(),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ] else ...[
-              SizedBox(height: t.spaceControlGap),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: KBadge(
-                  variant: part.state == KAgentResolutionState.rejected
-                      ? KBadgeVariant.destructive
-                      : KBadgeVariant.outline,
-                  child: Text(
-                    part.responseSummary ?? _enumLabel(part.state.name),
-                  ),
-                ),
-              ),
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -246,93 +255,130 @@ class _KAgentQuestionState extends State<KAgentQuestion> {
   Widget build(BuildContext context) {
     final t = _tokens(context);
     final part = widget.part;
-    final headingStyle = _heading5Style(t);
-    final questionIcon = SizedBox(
-      height:
-          MediaQuery.textScalerOf(context).scale(headingStyle.fontSize!) *
-          headingStyle.height!,
-      child: const Center(child: KIcon(KIconName.circleQuestionMark)),
-    );
-    if (part.state != KAgentResolutionState.pending) {
-      return Container(
-        padding: EdgeInsets.all(t.spaceControlGap),
-        decoration: _cardDecoration(t),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            questionIcon,
-            SizedBox(width: t.spaceControlGap),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(part.title, style: _heading5Style(t)),
-                  Text(
-                    part.answerSummary ?? _enumLabel(part.state.name),
-                    style: _bodyStyle(t),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    final pending = part.state == KAgentResolutionState.pending;
     final isText = part.kind == KAgentQuestionKind.text;
-    return Container(
-      padding: EdgeInsets.all(t.spaceControlGap),
-      decoration: _cardDecoration(t),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              questionIcon,
-              SizedBox(width: t.spaceControlGap),
-              Expanded(
-                child: Column(
+    final heading = TextStyle(
+      color: t.colorTextPrimary,
+      fontFamily: t.fontFamily,
+      fontSize: t.fontLabelSize,
+      height: t.fontLabelLineHeight / t.fontLabelSize,
+      fontWeight: t.fontHeadingWeight,
+    );
+    return KChatAppearance(
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: _cardDecoration(t).copyWith(boxShadow: t.elevationLow),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (pending && part.statusLabel != null)
+              Container(
+                constraints: BoxConstraints(
+                  minHeight: t.componentChatCardHeaderHeight,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: t.componentChatCardPadding,
+                  vertical: t.componentChatMetaGap,
+                ),
+                decoration: BoxDecoration(
+                  color: t.colorSurfaceCanvas,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: t.colorBorderDefault,
+                      width: t.borderWidthDefault,
+                    ),
+                  ),
+                ),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(part.title, style: _heading5Style(t)),
-                    if (part.description case final description?)
-                      Padding(
-                        padding: EdgeInsets.only(top: t.spaceControlGap),
-                        child: Text(description, style: _bodyStyle(t)),
+                    KIcon(
+                      KIconName.messageCircleQuestionMark,
+                      color: t.colorTextMuted,
+                    ),
+                    SizedBox(width: t.spaceControlGap),
+                    Expanded(
+                      child: Text(
+                        part.statusLabel!,
+                        style: _captionStyle(
+                          t,
+                        ).copyWith(fontWeight: t.fontLabelWeight),
                       ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-          if (isText) ...[
-            SizedBox(height: t.spaceControlGap),
-            widget.inputBuilder?.call(_text) ??
-                KInput(controller: _text, placeholder: part.placeholder),
-          ],
-          if (part.options.isNotEmpty) ...[
-            SizedBox(height: t.spaceControlInsetInline),
-            for (var index = 0; index < part.options.length; index++) ...[
-              if (index > 0) SizedBox(height: t.spaceControlGap),
-              _QuestionOptionRow(
-                option: part.options[index],
-                selected: _selected.contains(part.options[index].id),
-                multiple: part.kind == KAgentQuestionKind.multipleChoice,
-                onActivate: () => _toggle(part.options[index].id),
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                t.componentChatCardPadding,
+                t.componentChatCardPadding,
+                t.componentChatCardPadding,
+                pending ? 0 : t.componentChatCardPadding,
               ),
-            ],
-          ],
-          SizedBox(height: t.spaceContentActionGap),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: KButton(
-              label: part.submitLabel ?? 'Continue',
-              onPressed: isText
-                  ? (_text.text.trim().isEmpty ? null : _submit)
-                  : (_selected.isEmpty ? null : _submit),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(part.title, style: heading),
+                  if (part.description != null && pending) ...[
+                    SizedBox(height: t.componentChatMetaGap),
+                    Text(part.description!, style: _captionStyle(t)),
+                  ],
+                  if (!pending) ...[
+                    SizedBox(height: t.componentChatBlockGap),
+                    Text(
+                      part.answerSummary ?? _enumLabel(part.state.name),
+                      style: _bodyStyle(t),
+                    ),
+                  ],
+                  if (pending && isText) ...[
+                    SizedBox(height: t.componentChatBlockGap),
+                    widget.inputBuilder?.call(_text) ??
+                        KInput(
+                          controller: _text,
+                          placeholder: part.placeholder,
+                        ),
+                  ],
+                  if (pending && part.options.isNotEmpty) ...[
+                    SizedBox(height: t.componentChatBlockGap),
+                    for (
+                      var index = 0;
+                      index < part.options.length;
+                      index++
+                    ) ...[
+                      if (index > 0) SizedBox(height: t.componentChatOptionGap),
+                      _QuestionOptionRow(
+                        option: part.options[index],
+                        selected: _selected.contains(part.options[index].id),
+                        multiple:
+                            part.kind == KAgentQuestionKind.multipleChoice,
+                        onActivate: () => _toggle(part.options[index].id),
+                      ),
+                    ],
+                  ],
+                ],
+              ),
             ),
-          ),
-        ],
+            if (pending)
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  t.componentChatCardPadding,
+                  t.componentChatCardActionGap,
+                  t.componentChatCardPadding,
+                  t.componentChatCardPadding,
+                ),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: KButton(
+                    label: part.submitLabel ?? 'Continue',
+                    leading: const KIcon(KIconName.check),
+                    onPressed: isText
+                        ? (_text.text.trim().isEmpty ? null : _submit)
+                        : (_selected.isEmpty ? null : _submit),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -365,44 +411,46 @@ class KAgentTaskGroup extends StatelessWidget {
     final completed = part.items
         .where((item) => item.state == KAgentTaskState.completed)
         .length;
-    return KDisclosure(
-      title: part.title,
-      defaultOpen: true,
-      actions: KBadge(
-        variant: KBadgeVariant.outline,
-        child: Text('$completed/${part.items.length}'),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          KProgress(
-            value: completed.toDouble(),
-            max: part.items.length.toDouble(),
-            label: Text(part.title),
-          ),
-          SizedBox(height: t.spaceControlGap),
-          for (final item in part.items)
-            Padding(
-              padding: EdgeInsets.only(top: t.spaceControlGap),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _StateIcon(state: _toolState(item.state)),
-                  SizedBox(width: t.spaceControlGap),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.title, style: _labelStyle(t)),
-                        if (item.description case final description?)
-                          Text(description, style: _mutedStyle(t)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+    return KChatAppearance(
+      child: KDisclosure(
+        title: part.title,
+        defaultOpen: true,
+        actions: KBadge(
+          variant: KBadgeVariant.outline,
+          child: Text('$completed/${part.items.length}'),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            KProgress(
+              value: completed.toDouble(),
+              max: part.items.length.toDouble(),
+              label: Text(part.title),
             ),
-        ],
+            SizedBox(height: t.spaceControlGap),
+            for (final item in part.items)
+              Padding(
+                padding: EdgeInsets.only(top: t.spaceControlGap),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _StateIcon(state: _toolState(item.state)),
+                    SizedBox(width: t.spaceControlGap),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(item.title, style: _labelStyle(t)),
+                          if (item.description case final description?)
+                            Text(description, style: _mutedStyle(t)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -412,14 +460,21 @@ class KAgentActivity extends StatelessWidget {
   const KAgentActivity({required this.part, super.key});
   final KAgentActivityPart part;
   @override
-  Widget build(BuildContext context) => KDisclosure(
-    title: part.title,
-    titleWidget: _AgentDisclosureTitle(title: part.title, running: part.active),
-    presentation: KDisclosurePresentation.compact,
-    leadingIcon: _StateIcon(
-      state: part.active ? KAgentToolState.running : KAgentToolState.succeeded,
+  Widget build(BuildContext context) => KChatAppearance(
+    child: KDisclosure(
+      title: part.title,
+      titleWidget: _AgentDisclosureTitle(
+        title: part.title,
+        running: part.active,
+      ),
+      presentation: KDisclosurePresentation.compact,
+      leadingIcon: _StateIcon(
+        state: part.active
+            ? KAgentToolState.running
+            : KAgentToolState.succeeded,
+      ),
+      child: Text(part.summary),
     ),
-    child: Text(part.summary),
   );
 }
 
@@ -429,16 +484,18 @@ class KAgentStatus extends StatelessWidget {
   final KAgentStatusPart part;
 
   @override
-  Widget build(BuildContext context) => KAlert(
-    title: Text(part.title),
-    description: part.description == null ? null : Text(part.description!),
-    tone: switch (part.tone) {
-      KAgentStatusTone.neutral => KStatusTone.neutral,
-      KAgentStatusTone.info => KStatusTone.info,
-      KAgentStatusTone.success => KStatusTone.success,
-      KAgentStatusTone.warning => KStatusTone.warning,
-      KAgentStatusTone.error => KStatusTone.error,
-    },
+  Widget build(BuildContext context) => KChatAppearance(
+    child: KAlert(
+      title: Text(part.title),
+      description: part.description == null ? null : Text(part.description!),
+      tone: switch (part.tone) {
+        KAgentStatusTone.neutral => KStatusTone.neutral,
+        KAgentStatusTone.info => KStatusTone.info,
+        KAgentStatusTone.success => KStatusTone.success,
+        KAgentStatusTone.warning => KStatusTone.warning,
+        KAgentStatusTone.error => KStatusTone.error,
+      },
+    ),
   );
 }
 
@@ -457,32 +514,34 @@ class KAgentReference extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = _tokens(context);
-    return Semantics(
-      button: true,
-      child: InkWell(
-        onTap: onActivate,
-        borderRadius: BorderRadius.circular(t.radiusControl),
-        child: Container(
-          constraints: BoxConstraints(minHeight: t.sizeHitTarget),
-          padding: EdgeInsets.all(t.spaceControlGap),
-          decoration: _cardDecoration(t),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              KIcon(artifact ? KIconName.file : KIconName.externalLink),
-              SizedBox(width: t.spaceControlGap),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: _labelStyle(t)),
-                    if (description case final value?)
-                      Text(value, style: _mutedStyle(t)),
-                  ],
+    return KChatAppearance(
+      child: Semantics(
+        button: true,
+        child: InkWell(
+          onTap: onActivate,
+          borderRadius: BorderRadius.circular(t.radiusControl),
+          child: Container(
+            constraints: BoxConstraints(minHeight: t.sizeHitTarget),
+            padding: EdgeInsets.all(t.spaceControlGap),
+            decoration: _cardDecoration(t),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                KIcon(artifact ? KIconName.file : KIconName.externalLink),
+                SizedBox(width: t.spaceControlGap),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: _labelStyle(t)),
+                      if (description case final value?)
+                        Text(value, style: _mutedStyle(t)),
+                    ],
+                  ),
                 ),
-              ),
-              const KIcon(KIconName.chevronRight),
-            ],
+                const KIcon(KIconName.chevronRight),
+              ],
+            ),
           ),
         ),
       ),
@@ -598,12 +657,24 @@ class _QuestionOptionRowState extends State<_QuestionOptionRow> {
           onTap: _activate,
           child: AnimatedContainer(
             duration: t.motionStandard,
-            constraints: BoxConstraints(minHeight: t.sizeHitTarget),
-            padding: EdgeInsets.all(t.spaceControlGap),
+            constraints: BoxConstraints(
+              minHeight:
+                  (KAdaptive.maybeOf(context)?.inputMode == KInputMode.touch)
+                  ? [
+                      t.componentChatOptionMinHeight,
+                      t.sizeControlTouch,
+                      t.sizeHitTarget,
+                    ].reduce((a, b) => a > b ? a : b)
+                  : t.componentChatOptionMinHeight,
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: t.componentChatOptionPaddingInline,
+              vertical: t.spaceControlGap / 2,
+            ),
             decoration: BoxDecoration(
               color: widget.selected || _hovered
                   ? t.colorActionGhostHover
-                  : Colors.transparent,
+                  : t.colorSurfaceCanvas,
               border: Border.all(
                 color: widget.selected || _focused
                     ? t.colorBorderFocus
@@ -613,12 +684,8 @@ class _QuestionOptionRowState extends State<_QuestionOptionRow> {
               borderRadius: BorderRadius.circular(t.radiusControl),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _QuestionSelectionIndicator(
-                  selected: widget.selected,
-                  multiple: widget.multiple,
-                ),
-                SizedBox(width: t.spaceControlInsetInline),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -626,10 +693,25 @@ class _QuestionOptionRowState extends State<_QuestionOptionRow> {
                       Text(widget.option.label, style: _bodyStyle(t)),
                       if (widget.option.description
                           case final description?) ...[
-                        SizedBox(height: t.spaceControlGap),
+                        SizedBox(height: t.spaceControlGap / 2),
                         Text(description, style: _captionStyle(t)),
                       ],
                     ],
+                  ),
+                ),
+                SizedBox(width: t.spaceControlInsetInline),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top:
+                        (MediaQuery.textScalerOf(
+                              context,
+                            ).scale(t.fontBodySmallLineHeight) -
+                            t.componentRadioSize) /
+                        2,
+                  ),
+                  child: _QuestionSelectionIndicator(
+                    selected: widget.selected,
+                    multiple: widget.multiple,
                   ),
                 ),
               ],
@@ -682,13 +764,10 @@ class _QuestionSelectionIndicator extends StatelessWidget {
       height: t.componentRadioSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: selected
-            ? t.componentSelectionSelectedBackground
-            : t.componentSelectionBackground,
+        color: Colors.transparent,
         border: Border.all(
-          color: selected
-              ? t.componentSelectionSelectedBorder
-              : t.componentSelectionBorder,
+          color: selected ? t.colorBorderFocus : t.colorTextMuted,
+          width: t.borderWidthDefault,
         ),
       ),
       child: selected
@@ -698,7 +777,7 @@ class _QuestionSelectionIndicator extends StatelessWidget {
                 height: t.componentRadioDotSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: t.componentSelectionSelectedForeground,
+                  color: t.colorActionPrimaryBackground,
                 ),
               ),
             )
@@ -765,7 +844,7 @@ class _AgentDisclosureTitleState extends State<_AgentDisclosureTitle>
       widget.title,
       maxLines: widget.wrap ? null : 1,
       overflow: widget.wrap ? TextOverflow.visible : TextOverflow.ellipsis,
-      style: _bodyStyle(t).copyWith(color: t.colorTextMuted),
+      style: _captionStyle(t).copyWith(fontWeight: t.fontLabelWeight),
     );
     if (!widget.running || MediaQuery.disableAnimationsOf(context)) return text;
     return AnimatedBuilder(
@@ -846,21 +925,16 @@ TextStyle _labelStyle(KDesignTokens t) => TextStyle(
 TextStyle _heading5Style(KDesignTokens t) => TextStyle(
   color: t.colorTextPrimary,
   fontFamily: t.fontFamily,
-  fontSize: KDesignTokenVariants.typeScaleCompactFontHeading5Size,
-  fontWeight: t.fontLabelWeight,
-  height:
-      KDesignTokenVariants.typeScaleCompactFontHeading5LineHeight /
-      KDesignTokenVariants.typeScaleCompactFontHeading5Size,
-  letterSpacing: t.fontHeading5LetterSpacing,
+  fontSize: t.fontLabelSize,
+  fontWeight: t.fontHeadingWeight,
+  height: t.fontLabelLineHeight / t.fontLabelSize,
 );
 TextStyle _bodyStyle(KDesignTokens t) => TextStyle(
   color: t.colorTextPrimary,
   fontFamily: t.fontFamily,
-  fontSize: KDesignTokenVariants.typeScaleCompactFontBodySize,
+  fontSize: t.fontBodySmallSize,
   fontWeight: t.fontBodyWeight,
-  height:
-      KDesignTokenVariants.typeScaleCompactFontBodyLineHeight /
-      KDesignTokenVariants.typeScaleCompactFontBodySize,
+  height: t.fontBodySmallLineHeight / t.fontBodySmallSize,
   letterSpacing: t.fontBodyLetterSpacing,
 );
 TextStyle _captionStyle(KDesignTokens t) => TextStyle(

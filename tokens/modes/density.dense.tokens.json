@@ -8,5 +8,150 @@
   },
   "size": {
     "control": { "$type": "dimension", "$value": "{size.control.sm}" }
+  },
+  "component": {
+    "chat": {
+      "column": {
+        "gutter": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        }
+      },
+      "turn": {
+        "gap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          }
+        }
+      },
+      "block": {
+        "gap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        }
+      },
+      "meta": {
+        "gap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        }
+      },
+      "bubble": {
+        "paddingInline": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        },
+        "paddingBlock": {
+          "$type": "dimension",
+          "$value": {
+            "value": 6,
+            "unit": "px"
+          }
+        },
+        "maxWidth": {
+          "$type": "number",
+          "$value": 0.8,
+          "$description": "Maximum user-bubble width as a fraction of the conversation column (0–1); multiply by the available column width on Web and Flutter."
+        }
+      },
+      "disclosure": {
+        "minHeight": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          }
+        }
+      },
+      "option": {
+        "gap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          }
+        }
+      },
+      "code": {
+        "headerHeight": {
+          "$type": "dimension",
+          "$value": {
+            "value": 28,
+            "unit": "px"
+          },
+          "$description": "Minimum code-header height; content and text scaling may increase the height."
+        },
+        "padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          }
+        }
+      },
+      "composer": {
+        "padding": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "overhang": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": {
+            "value": 88,
+            "unit": "px"
+          }
+        },
+        "bottomGap": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          }
+        }
+      },
+      "panel": {
+        "width": {
+          "$type": "dimension",
+          "$value": {
+            "value": 360,
+            "unit": "px"
+          }
+        }
+      },
+      "home": {
+        "rowHeight": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$description": "Minimum home-list row height; content and text scaling may increase the height."
+        }
+      }
+    }
   }
 }

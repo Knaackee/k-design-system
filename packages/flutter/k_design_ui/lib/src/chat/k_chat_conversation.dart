@@ -12,6 +12,7 @@ import 'k_agent_ask_tools.dart';
 import 'k_chat_markdown.dart';
 import '../markdown/k_markdown_options.dart';
 import 'k_chat_types.dart';
+import 'k_chat_appearance.dart';
 
 typedef KChatPartRenderer =
     Widget? Function(
@@ -296,140 +297,145 @@ class _KChatConversationState extends State<KChatConversation> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final entries = widget.messages.length + (widget.hasOlder ? 1 : 0);
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Semantics(
-            liveRegion: true,
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(
-                dragDevices: const {
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.mouse,
-                  PointerDeviceKind.stylus,
-                  PointerDeviceKind.invertedStylus,
-                  PointerDeviceKind.trackpad,
-                },
-              ),
-              child: widget.messages.isEmpty && !widget.hasOlder
-                  ? LayoutBuilder(
-                      builder: (context, constraints) => SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(t.spaceLayoutGutter),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                widget.emptyState ??
-                                    _EmptyState(labels: widget.labels),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : NotificationListener<ScrollMetricsNotification>(
-                      onNotification: _onMetrics,
-                      child: NotificationListener<ScrollNotification>(
-                        onNotification: _onScrollNotification,
-                        child: ListView.builder(
-                          controller: _scroll,
-                          padding:
-                              widget.contentPadding ??
-                              EdgeInsets.all(t.spaceLayoutGutter),
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: entries,
-                          itemBuilder: (context, index) {
-                            if (widget.hasOlder && index == 0) {
-                              return Align(
-                                child: KButton(
-                                  label: widget.labels.loadOlder,
-                                  loading: widget.loadingOlder,
-                                  variant: KButtonVariant.ghost,
-                                  onPressed: widget.onLoadOlder,
+    return KChatAppearance(
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Semantics(
+              liveRegion: true,
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  dragDevices: const {
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.mouse,
+                    PointerDeviceKind.stylus,
+                    PointerDeviceKind.invertedStylus,
+                    PointerDeviceKind.trackpad,
+                  },
+                ),
+                child: widget.messages.isEmpty && !widget.hasOlder
+                    ? LayoutBuilder(
+                        builder: (context, constraints) =>
+                            SingleChildScrollView(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: constraints.maxHeight,
                                 ),
-                              );
-                            }
-                            final messageIndex =
-                                index - (widget.hasOlder ? 1 : 0);
-                            final message = widget.messages[messageIndex];
-                            final previous = messageIndex > 0
-                                ? widget.messages[messageIndex - 1]
-                                : null;
-                            final author = _authorFor(message);
-                            final startsGroup =
-                                previous == null ||
-                                previous.role != message.role ||
-                                _authorFor(previous) != author;
-                            final metadataMode =
-                                widget.metadataByRole[message.role] ??
-                                widget.metadataMode;
-                            final showMetadata =
-                                metadataMode ==
-                                    KChatMessageMetadataMode.always ||
-                                (metadataMode ==
-                                        KChatMessageMetadataMode.grouped &&
-                                    startsGroup);
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                bottom: t.spaceLayoutSectionGap,
-                              ),
-                              child: _Message(
-                                message: message,
-                                labels: widget.labels,
-                                author: author,
-                                showMetadata: showMetadata,
-                                showTimestamp: widget.showTimestamps,
-                                avatarBuilder: widget.avatarBuilder,
-                                formatTimestamp: widget.formatTimestamp,
-                                actions: widget.renderMessageActions?.call(
-                                  context,
-                                  widget.messages[messageIndex],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      message.parts.every(
-                                        (part) => part is KChatTextPart,
-                                      )
-                                      ? CrossAxisAlignment.start
-                                      : CrossAxisAlignment.stretch,
-                                  children: _buildMessageParts(
-                                    context,
-                                    widget.messages[messageIndex],
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                    t.componentChatColumnGutter,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      widget.emptyState ??
+                                          _EmptyState(labels: widget.labels),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                      )
+                    : NotificationListener<ScrollMetricsNotification>(
+                        onNotification: _onMetrics,
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: _onScrollNotification,
+                          child: ListView.builder(
+                            controller: _scroll,
+                            padding:
+                                widget.contentPadding ??
+                                EdgeInsets.all(t.componentChatColumnGutter),
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            itemCount: entries,
+                            itemBuilder: (context, index) {
+                              if (widget.hasOlder && index == 0) {
+                                return Align(
+                                  child: KButton(
+                                    label: widget.labels.loadOlder,
+                                    loading: widget.loadingOlder,
+                                    variant: KButtonVariant.ghost,
+                                    onPressed: widget.onLoadOlder,
+                                  ),
+                                );
+                              }
+                              final messageIndex =
+                                  index - (widget.hasOlder ? 1 : 0);
+                              final message = widget.messages[messageIndex];
+                              final previous = messageIndex > 0
+                                  ? widget.messages[messageIndex - 1]
+                                  : null;
+                              final author = _authorFor(message);
+                              final startsGroup =
+                                  previous == null ||
+                                  previous.role != message.role ||
+                                  _authorFor(previous) != author;
+                              final metadataMode =
+                                  widget.metadataByRole[message.role] ??
+                                  widget.metadataMode;
+                              final showMetadata =
+                                  metadataMode ==
+                                      KChatMessageMetadataMode.always ||
+                                  (metadataMode ==
+                                          KChatMessageMetadataMode.grouped &&
+                                      startsGroup);
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: t.componentChatTurnGap,
+                                ),
+                                child: _Message(
+                                  message: message,
+                                  labels: widget.labels,
+                                  author: author,
+                                  showMetadata: showMetadata,
+                                  showTimestamp: widget.showTimestamps,
+                                  avatarBuilder: widget.avatarBuilder,
+                                  formatTimestamp: widget.formatTimestamp,
+                                  actions: widget.renderMessageActions?.call(
+                                    context,
+                                    widget.messages[messageIndex],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        message.parts.every(
+                                          (part) => part is KChatTextPart,
+                                        )
+                                        ? CrossAxisAlignment.start
+                                        : CrossAxisAlignment.stretch,
+                                    children: _buildMessageParts(
+                                      context,
+                                      widget.messages[messageIndex],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-            ),
-          ),
-        ),
-        if (_showNewest)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Padding(
-              padding: EdgeInsets.all(t.spaceControlGap),
-              child: Center(
-                child: KButton(
-                  label: widget.labels.newContent,
-                  leading: const KIcon(KIconName.arrowDown),
-                  variant: KButtonVariant.secondary,
-                  onPressed: _jumpToEnd,
-                ),
               ),
             ),
           ),
-      ],
+          if (_showNewest)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Padding(
+                padding: EdgeInsets.all(t.spaceControlGap),
+                child: Center(
+                  child: KButton(
+                    label: widget.labels.newContent,
+                    leading: const KIcon(KIconName.arrowDown),
+                    variant: KButtonVariant.secondary,
+                    onPressed: _jumpToEnd,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -472,7 +478,9 @@ class _KChatConversationState extends State<KChatConversation> {
         Padding(
           key: ValueKey(part.id),
           padding: EdgeInsets.only(
-            bottom: index < message.parts.length - 1 ? t.spaceControlGap : 0,
+            bottom: index < message.parts.length - 1
+                ? t.componentChatBlockGap
+                : 0,
           ),
           child:
               content ??
@@ -625,6 +633,7 @@ class _Message extends StatelessWidget {
                   author,
                   style: TextStyle(
                     fontWeight: t.fontLabelWeight,
+                    color: t.colorTextMuted,
                     fontSize: t.fontCaptionSize,
                   ),
                 ),
@@ -643,9 +652,9 @@ class _Message extends StatelessWidget {
               ],
             ],
           ),
-          SizedBox(height: t.spaceControlGap),
+          SizedBox(height: t.componentChatMetaGap),
         ],
-        if (textOnly && (message.role != KChatRole.assistant || avatar != null))
+        if (textOnly && message.role != KChatRole.assistant)
           LayoutBuilder(
             builder: (context, constraints) => Align(
               alignment: message.role == KChatRole.user
@@ -661,7 +670,10 @@ class _Message extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: t.colorSurfaceRaised,
-                  border: Border.all(color: t.colorBorderDefault),
+                  border: Border.all(
+                    color: t.colorBorderDefault,
+                    width: t.borderWidthDefault,
+                  ),
                   borderRadius: BorderRadius.circular(t.radiusCard),
                 ),
                 child: DefaultTextStyle.merge(
@@ -693,26 +705,38 @@ class _Message extends StatelessWidget {
         if (actions != null) ...[SizedBox(height: t.spaceControlGap), actions!],
       ],
     );
-    return Semantics(
-      label: author,
-      container: true,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: message.role == KChatRole.user
-            ? [
-                Expanded(child: body),
-                if (avatar != null) ...[
-                  SizedBox(width: t.spaceControlGap),
-                  avatar,
-                ],
-              ]
-            : [
-                if (avatar != null) ...[
-                  avatar,
-                  SizedBox(width: t.spaceControlGap),
-                ],
-                Expanded(child: body),
-              ],
+    return Align(
+      alignment: message.role == KChatRole.user
+          ? AlignmentDirectional.centerEnd
+          : Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: message.role == KChatRole.user
+              ? t.componentChatColumnMaxWidth
+              : t.componentChatColumnMaxWidth,
+        ),
+        child: Semantics(
+          label: author,
+          container: true,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: message.role == KChatRole.user
+                ? [
+                    Expanded(child: body),
+                    if (avatar != null) ...[
+                      SizedBox(width: t.spaceControlGap),
+                      avatar,
+                    ],
+                  ]
+                : [
+                    if (avatar != null) ...[
+                      avatar,
+                      SizedBox(width: t.spaceControlGap),
+                    ],
+                    Expanded(child: body),
+                  ],
+          ),
+        ),
       ),
     );
   }

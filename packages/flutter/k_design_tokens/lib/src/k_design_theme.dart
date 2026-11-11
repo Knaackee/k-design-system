@@ -237,7 +237,7 @@ KDesignTokens resolveKDesignTokens(
   final touch = configuration.inputMode == KInputMode.touch;
   double raised(double touchSize) =>
       touch && touchSize > controlSize ? touchSize : controlSize;
-  final resolved = styled.copyWith(
+  final resolved = _withChatDensity(styled, configuration.density).copyWith(
     spaceControlGap: controlGap,
     spaceControlInsetInline: controlInsetInline,
     sizeControl: raised(styled.sizeControlTouch),
@@ -456,3 +456,116 @@ ThemeData kDesignTheme({
     extensions: <ThemeExtension<dynamic>>[tokens],
   );
 }
+
+// Chat-specific density values are projections of the shared token modes.
+KDesignTokens _withChatDensity(
+  KDesignTokens tokens,
+  KDensity density,
+) => switch (density) {
+  KDensity.dense => tokens.copyWith(
+    componentChatColumnGutter:
+        KDesignTokenVariants.densityDenseComponentChatColumnGutter,
+    componentChatTurnGap: KDesignTokenVariants.densityDenseComponentChatTurnGap,
+    componentChatBlockGap:
+        KDesignTokenVariants.densityDenseComponentChatBlockGap,
+    componentChatMetaGap: KDesignTokenVariants.densityDenseComponentChatMetaGap,
+    componentChatBubblePaddingInline:
+        KDesignTokenVariants.densityDenseComponentChatBubblePaddingInline,
+    componentChatBubblePaddingBlock:
+        KDesignTokenVariants.densityDenseComponentChatBubblePaddingBlock,
+    componentChatBubbleMaxWidth:
+        KDesignTokenVariants.densityDenseComponentChatBubbleMaxWidth,
+    componentChatDisclosureMinHeight:
+        KDesignTokenVariants.densityDenseComponentChatDisclosureMinHeight,
+    componentChatOptionGap:
+        KDesignTokenVariants.densityDenseComponentChatOptionGap,
+    componentChatCodeHeaderHeight:
+        KDesignTokenVariants.densityDenseComponentChatCodeHeaderHeight,
+    componentChatCodePadding:
+        KDesignTokenVariants.densityDenseComponentChatCodePadding,
+    componentChatComposerPadding:
+        KDesignTokenVariants.densityDenseComponentChatComposerPadding,
+    componentChatComposerOverhang:
+        KDesignTokenVariants.densityDenseComponentChatComposerOverhang,
+    componentChatComposerMinHeight:
+        KDesignTokenVariants.densityDenseComponentChatComposerMinHeight,
+    componentChatComposerBottomGap:
+        KDesignTokenVariants.densityDenseComponentChatComposerBottomGap,
+    componentChatPanelWidth:
+        KDesignTokenVariants.densityDenseComponentChatPanelWidth,
+    componentChatHomeRowHeight:
+        KDesignTokenVariants.densityDenseComponentChatHomeRowHeight,
+  ),
+  KDensity.standard => tokens.copyWith(
+    componentChatColumnGutter:
+        KDesignTokenVariants.densityStandardComponentChatColumnGutter,
+    componentChatTurnGap:
+        KDesignTokenVariants.densityStandardComponentChatTurnGap,
+    componentChatBlockGap:
+        KDesignTokenVariants.densityStandardComponentChatBlockGap,
+    componentChatMetaGap:
+        KDesignTokenVariants.densityStandardComponentChatMetaGap,
+    componentChatBubblePaddingInline:
+        KDesignTokenVariants.densityStandardComponentChatBubblePaddingInline,
+    componentChatBubblePaddingBlock:
+        KDesignTokenVariants.densityStandardComponentChatBubblePaddingBlock,
+    componentChatBubbleMaxWidth:
+        KDesignTokenVariants.densityStandardComponentChatBubbleMaxWidth,
+    componentChatDisclosureMinHeight:
+        KDesignTokenVariants.densityStandardComponentChatDisclosureMinHeight,
+    componentChatOptionGap:
+        KDesignTokenVariants.densityStandardComponentChatOptionGap,
+    componentChatCodeHeaderHeight:
+        KDesignTokenVariants.densityStandardComponentChatCodeHeaderHeight,
+    componentChatCodePadding:
+        KDesignTokenVariants.densityStandardComponentChatCodePadding,
+    componentChatComposerPadding:
+        KDesignTokenVariants.densityStandardComponentChatComposerPadding,
+    componentChatComposerOverhang:
+        KDesignTokenVariants.densityStandardComponentChatComposerOverhang,
+    componentChatComposerMinHeight:
+        KDesignTokenVariants.densityStandardComponentChatComposerMinHeight,
+    componentChatComposerBottomGap:
+        KDesignTokenVariants.densityStandardComponentChatComposerBottomGap,
+    componentChatPanelWidth:
+        KDesignTokenVariants.densityStandardComponentChatPanelWidth,
+    componentChatHomeRowHeight:
+        KDesignTokenVariants.densityStandardComponentChatHomeRowHeight,
+  ),
+  KDensity.spacious => tokens.copyWith(
+    componentChatColumnGutter:
+        KDesignTokenVariants.densitySpaciousComponentChatColumnGutter,
+    componentChatTurnGap:
+        KDesignTokenVariants.densitySpaciousComponentChatTurnGap,
+    componentChatBlockGap:
+        KDesignTokenVariants.densitySpaciousComponentChatBlockGap,
+    componentChatMetaGap:
+        KDesignTokenVariants.densitySpaciousComponentChatMetaGap,
+    componentChatBubblePaddingInline:
+        KDesignTokenVariants.densitySpaciousComponentChatBubblePaddingInline,
+    componentChatBubblePaddingBlock:
+        KDesignTokenVariants.densitySpaciousComponentChatBubblePaddingBlock,
+    componentChatBubbleMaxWidth:
+        KDesignTokenVariants.densitySpaciousComponentChatBubbleMaxWidth,
+    componentChatDisclosureMinHeight:
+        KDesignTokenVariants.densitySpaciousComponentChatDisclosureMinHeight,
+    componentChatOptionGap:
+        KDesignTokenVariants.densitySpaciousComponentChatOptionGap,
+    componentChatCodeHeaderHeight:
+        KDesignTokenVariants.densitySpaciousComponentChatCodeHeaderHeight,
+    componentChatCodePadding:
+        KDesignTokenVariants.densitySpaciousComponentChatCodePadding,
+    componentChatComposerPadding:
+        KDesignTokenVariants.densitySpaciousComponentChatComposerPadding,
+    componentChatComposerOverhang:
+        KDesignTokenVariants.densitySpaciousComponentChatComposerOverhang,
+    componentChatComposerMinHeight:
+        KDesignTokenVariants.densitySpaciousComponentChatComposerMinHeight,
+    componentChatComposerBottomGap:
+        KDesignTokenVariants.densitySpaciousComponentChatComposerBottomGap,
+    componentChatPanelWidth:
+        KDesignTokenVariants.densitySpaciousComponentChatPanelWidth,
+    componentChatHomeRowHeight:
+        KDesignTokenVariants.densitySpaciousComponentChatHomeRowHeight,
+  ),
+};

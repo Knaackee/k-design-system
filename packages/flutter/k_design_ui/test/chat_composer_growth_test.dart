@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_ui/k_design_ui.dart';
@@ -7,10 +5,9 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 
 void main() {
   for (final width in [375.0, 1100.0]) {
-    testWidgets('composer grows and caps text height at width $width', (
+    testWidgets('two-row composer grows to eight lines at width $width', (
       tester,
     ) async {
-      KDesignTokens? scopedTokens;
       tester.view.physicalSize = Size(width, 800);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -26,16 +23,6 @@ void main() {
                 onSubmit: (_) {},
                 onAttach: () {},
                 onVoiceInput: () {},
-                leadingTools: [
-                  Builder(
-                    builder: (context) {
-                      scopedTokens = Theme.of(
-                        context,
-                      ).extension<KDesignTokens>();
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                ],
               ),
             ),
           ),
@@ -45,100 +32,35 @@ void main() {
       final attach = find.byTooltip('Attach files');
       final voice = find.byTooltip('Start voice input');
       final send = find.byTooltip('Send message');
+      final tokens = Theme.of(
+        tester.element(field),
+      ).extension<KDesignTokens>()!;
+      final input = tester.widget<TextField>(field);
+      expect(input.minLines, 2);
+      expect(input.maxLines, 8);
+      expect(input.style?.fontSize, tokens.fontBodySmallSize);
+      expect(
+        tester.getRect(field).bottom,
+        lessThanOrEqualTo(tester.getRect(attach).top),
+      );
+      expect(tester.getCenter(attach).dy, tester.getCenter(voice).dy);
+      expect(tester.getCenter(voice).dy, tester.getCenter(send).dy);
       final initial = tester.getSize(field).height;
-      final tokens = KDesignTokens.orbitLight;
-      final expectedGap = tokens.spaceControlGap / 2;
-      final expectedTarget = math.max(tokens.sizeControl, tokens.sizeHitTarget);
-      final expectedVisual = math.min(
-        expectedTarget,
-        tokens.spaceControlGap * 4.5,
-      );
-      final expectedIcon = math.min(
-        expectedVisual,
-        tokens.spaceControlGap * 3 - tokens.borderWidthDefault * 2,
-      );
-      if (width == 375) {
-        final composer = find.byType(KChatComposer);
-        final material = tester.widget<Material>(
-          find.descendant(of: composer, matching: find.byType(Material)).first,
-        );
-        final outerPadding = tester.widget<Padding>(
-          find.descendant(of: composer, matching: find.byType(Padding)).first,
-        );
-        final surfaceFinder = find
-            .descendant(of: composer, matching: find.byType(DecoratedBox))
-            .first;
-        final surface =
-            tester.widget<DecoratedBox>(surfaceFinder).decoration
-                as BoxDecoration;
-        expect(material.color, tokens.colorSurfaceCanvas);
-        expect(
-          outerPadding.padding,
-          EdgeInsets.symmetric(
-            horizontal: tokens.spaceControlInsetInline,
-            vertical: expectedGap,
-          ),
-        );
-        expect(surface.border, Border.all(color: tokens.colorBorderDefault));
-        expect(
-          surface.borderRadius,
-          BorderRadius.circular(expectedTarget / 2 + expectedGap),
-        );
-        expect(surface.boxShadow, tokens.elevationLow);
-        expect(
-          tester.getSize(surfaceFinder).height,
-          expectedTarget + expectedGap * 2,
-        );
-      }
-      expect(scopedTokens?.spaceControlGap, expectedGap);
-      expect(scopedTokens?.sizeControl, expectedVisual);
-      expect(scopedTokens?.sizeHitTarget, expectedTarget);
-      expect(scopedTokens?.radiusControl, expectedVisual / 2);
-      expect(scopedTokens?.fontBodySize, tokens.fontBodySize);
-      expect(
-        tester.widget<TextField>(field).style?.fontSize,
-        tokens.fontBodySize,
-      );
-      for (final icon
-          in find
-              .descendant(
-                of: find.byType(KChatComposer),
-                matching: find.byType(KIcon),
-              )
-              .evaluate()) {
-        expect(
-          tester.getSize(find.byElementPredicate((e) => e == icon)),
-          Size.square(expectedIcon),
-        );
-      }
-      expect(
-        tester.getRect(attach).right,
-        lessThan(tester.getRect(field).left),
-      );
-      expect(tester.getRect(field).right, lessThan(tester.getRect(voice).left));
-      expect(tester.getRect(voice).right, lessThan(tester.getRect(send).left));
-      expect(tester.getSize(field).height, tester.getSize(attach).height);
-      expect(tester.getCenter(field).dy, tester.getCenter(attach).dy);
-      expect(tester.getCenter(field).dy, tester.getCenter(voice).dy);
-      expect(tester.getCenter(field).dy, tester.getCenter(send).dy);
-      expect(tester.getRect(attach).bottom, tester.getRect(field).bottom);
-      expect(tester.getRect(voice).bottom, tester.getRect(field).bottom);
-      expect(tester.getRect(send).bottom, tester.getRect(field).bottom);
       await tester.enterText(
         field,
         List.filled(4, 'A longer message').join('\n'),
       );
       await tester.pump();
       expect(tester.getSize(field).height, greaterThan(initial));
-      expect(tester.getRect(attach).bottom, tester.getRect(field).bottom);
-      expect(tester.getRect(voice).bottom, tester.getRect(field).bottom);
-      expect(tester.getRect(send).bottom, tester.getRect(field).bottom);
       await tester.enterText(
         field,
         List.filled(40, 'A longer message').join('\n'),
       );
       await tester.pump();
-      expect(tester.getSize(field).height, lessThanOrEqualTo(200));
+      expect(
+        tester.getSize(field).height,
+        closeTo(tokens.fontBodySmallLineHeight * 8, 1),
+      );
       expect(tester.takeException(), isNull);
     });
   }
@@ -284,7 +206,7 @@ void main() {
           matching: find.byType(KIcon),
         ),
       ),
-      const Size.square(22),
+      const Size.square(16),
     );
     for (final visual
         in find.byKey(const ValueKey('k-action-control-visual')).evaluate()) {

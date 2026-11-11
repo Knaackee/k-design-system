@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
+import 'agent_ui_fixtures.dart';
+
 enum AskToolsFixtureKind {
   textQuestion,
   singleChoice,
@@ -20,17 +22,16 @@ class AskToolsFixture extends StatefulWidget {
 }
 
 class _AskToolsFixtureState extends State<AskToolsFixture> {
-  KAgentQuestionResponse? question;
+  final questions = <String, KAgentQuestionResponse>{};
   KAgentFormResponse? form;
   KAgentExternalActionResponse? external;
   KAgentAttachmentRequestResponse? attachment;
 
   @override
-  Widget build(BuildContext context) => KChatConversation(
-    messages: _messages(),
-    runState: KChatRunState.awaitingInput,
-    metadataMode: KChatMessageMetadataMode.hidden,
-    onQuestionResponse: (value) => setState(() => question = value),
+  Widget build(BuildContext context) => AgentUiFixture(
+    extraMessages: _messages(),
+    onQuestionResponse: (value) =>
+        setState(() => questions[value.questionId] = value),
     onFormResponse: (value) => setState(() => form = value),
     onExternalAction: (value) => setState(() => external = value),
     onAttachmentRequest: (value) => setState(() => attachment = value),
@@ -40,61 +41,89 @@ class _AskToolsFixtureState extends State<AskToolsFixture> {
     final parts = <AskToolsFixtureKind, KChatMessagePart>{
       AskToolsFixtureKind.textQuestion: KAgentQuestionPart(
         id: 'release-note-question',
+        statusLabel: 'Wartet auf deine Eingabe',
         title: 'Wie soll die Änderung beschrieben werden?',
         description: 'Eine freie Rückfrage mit typisiertem Antwort-Event.',
         kind: KAgentQuestionKind.text,
-        state: _questionState,
+        state: _questionState('release-note-question'),
         placeholder: 'Kurze Beschreibung…',
         submitLabel: 'Antworten',
-        answerSummary: question?.text,
+        answerSummary: questions['release-note-question']?.text,
       ),
       AskToolsFixtureKind.singleChoice: KAgentQuestionPart(
         id: 'density-question',
+        statusLabel: 'Wartet auf deine Eingabe',
         title: 'Welche Dichte soll die Vorschau verwenden?',
+        description: 'Wähle eine Option und bestätige deine Antwort.',
         kind: KAgentQuestionKind.singleChoice,
-        state: _questionState,
+        state: _questionState('density-question'),
         options: const [
-          KAgentQuestionOption(id: 'dense', label: 'Dense'),
-          KAgentQuestionOption(id: 'comfortable', label: 'Comfortable'),
+          KAgentQuestionOption(
+            id: 'dense',
+            label: 'Kompakt',
+            description: 'Für produktive Desktop-Oberflächen',
+          ),
+          KAgentQuestionOption(
+            id: 'comfortable',
+            label: 'Großzügig',
+            description: 'Mehr Raum für Touch-Eingaben',
+          ),
         ],
-        submitLabel: 'Übernehmen',
-        answerSummary: question == null
+        submitLabel: 'Senden',
+        answerSummary: questions['density-question'] == null
             ? null
-            : 'Ausgewählt: ${question!.optionIds.firstOrNull ?? '–'}',
+            : 'Ausgewählt: ${questions['density-question']!.optionIds.firstOrNull ?? '–'}',
       ),
       AskToolsFixtureKind.multipleChoice: KAgentQuestionPart(
         id: 'checks-question',
+        statusLabel: 'Wartet auf deine Eingabe',
         title: 'Welche Prüfungen sollen ausgeführt werden?',
         kind: KAgentQuestionKind.multipleChoice,
-        state: _questionState,
+        state: _questionState('checks-question'),
         options: const [
-          KAgentQuestionOption(id: 'web', label: 'Web'),
-          KAgentQuestionOption(id: 'flutter', label: 'Flutter'),
-          KAgentQuestionOption(id: 'a11y', label: 'Accessibility'),
+          KAgentQuestionOption(
+            id: 'web',
+            label: 'Web',
+            description: 'Typecheck und Storybook',
+          ),
+          KAgentQuestionOption(
+            id: 'flutter',
+            label: 'Flutter',
+            description: 'Analyze und Widgetbook',
+          ),
+          KAgentQuestionOption(
+            id: 'a11y',
+            label: 'Accessibility',
+            description: 'Semantik und Kontrast',
+          ),
         ],
         submitLabel: 'Prüfungen starten',
-        answerSummary: question == null
+        answerSummary: questions['checks-question'] == null
             ? null
-            : '${question!.optionIds.length} ausgewählt',
+            : '${questions['checks-question']!.optionIds.length} ausgewählt',
       ),
       AskToolsFixtureKind.confirmation: KAgentQuestionPart(
         id: 'replace-confirmation',
+        statusLabel: 'Bitte bestätigen',
         title: 'Bestehende Vorschau ersetzen?',
+        description:
+            'Diese fachliche Bestätigung führt noch keine Tool-Aktion aus.',
         kind: KAgentQuestionKind.confirmation,
-        state: _questionState,
+        state: _questionState('replace-confirmation'),
         options: const [
-          KAgentQuestionOption(id: 'keep', label: 'Behalten'),
+          KAgentQuestionOption(id: 'cancel', label: 'Behalten'),
           KAgentQuestionOption(id: 'replace', label: 'Ersetzen'),
         ],
         submitLabel: 'Übernehmen',
-        answerSummary: question == null
+        answerSummary: questions['replace-confirmation'] == null
             ? null
-            : 'Antwort: ${question!.optionIds.firstOrNull ?? '–'}',
+            : 'Antwort: ${questions['replace-confirmation']!.optionIds.firstOrNull ?? '–'}',
       ),
       AskToolsFixtureKind.form: KAgentFormPart(
         id: 'release-form',
         title: 'Release konfigurieren',
-        description: 'Mehrere schemaorientierte Felder gemeinsam beantworten.',
+        description:
+            'Mehrere schemaorientierte Felder werden gemeinsam beantwortet.',
         state: form == null
             ? KAgentResolutionState.pending
             : form!.submit
@@ -187,7 +216,15 @@ class _AskToolsFixtureState extends State<AskToolsFixture> {
       ),
     };
     final visible = widget.kind == AskToolsFixtureKind.all
-        ? parts.values
+        ? [
+            parts[AskToolsFixtureKind.singleChoice]!,
+            parts[AskToolsFixtureKind.textQuestion]!,
+            parts[AskToolsFixtureKind.multipleChoice]!,
+            parts[AskToolsFixtureKind.confirmation]!,
+            parts[AskToolsFixtureKind.form]!,
+            parts[AskToolsFixtureKind.externalAction]!,
+            parts[AskToolsFixtureKind.attachmentRequest]!,
+          ]
         : [parts[widget.kind]!];
     return [
       for (final part in visible)
@@ -200,7 +237,7 @@ class _AskToolsFixtureState extends State<AskToolsFixture> {
     ];
   }
 
-  KAgentResolutionState get _questionState => question == null
+  KAgentResolutionState _questionState(String id) => questions[id] == null
       ? KAgentResolutionState.pending
       : KAgentResolutionState.answered;
 }
