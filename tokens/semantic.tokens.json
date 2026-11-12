@@ -3125,6 +3125,10 @@
       "glowOpacityFlameHigh": {
         "$type": "number",
         "$value": 0.75
+      },
+      "sheenOpacity": {
+        "$type": "number",
+        "$value": 0.12
       }
     },
     "swipeAction": {

@@ -667,6 +667,7 @@
   --k-component-card-border-glow-opacity-aurora: 0.55;
   --k-component-card-border-glow-opacity-flame-low: 0.5;
   --k-component-card-border-glow-opacity-flame-high: 0.75;
+  --k-component-card-border-sheen-opacity: 0.12;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;
@@ -1356,6 +1357,7 @@
   --k-component-card-border-glow-opacity-aurora: 0.55;
   --k-component-card-border-glow-opacity-flame-low: 0.5;
   --k-component-card-border-glow-opacity-flame-high: 0.75;
+  --k-component-card-border-sheen-opacity: 0.12;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;
@@ -2045,6 +2047,7 @@
   --k-component-card-border-glow-opacity-aurora: 0.55;
   --k-component-card-border-glow-opacity-flame-low: 0.5;
   --k-component-card-border-glow-opacity-flame-high: 0.75;
+  --k-component-card-border-sheen-opacity: 0.12;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;
@@ -2734,6 +2737,7 @@
   --k-component-card-border-glow-opacity-aurora: 0.55;
   --k-component-card-border-glow-opacity-flame-low: 0.5;
   --k-component-card-border-glow-opacity-flame-high: 0.75;
+  --k-component-card-border-sheen-opacity: 0.12;
   --k-component-swipe-action-width: 76px;
   --k-component-swipe-action-icon-size: 24px;
   --k-component-swipe-action-reveal-threshold: 0.35;

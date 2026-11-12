@@ -997,6 +997,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentCardBorderGlowOpacityAurora,
     required this.componentCardBorderGlowOpacityFlameLow,
     required this.componentCardBorderGlowOpacityFlameHigh,
+    required this.componentCardBorderSheenOpacity,
     required this.componentSwipeActionWidth,
     required this.componentSwipeActionIconSize,
     required this.componentSwipeActionRevealThreshold,
@@ -1673,6 +1674,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentCardBorderGlowOpacityAurora;
   final double componentCardBorderGlowOpacityFlameLow;
   final double componentCardBorderGlowOpacityFlameHigh;
+  final double componentCardBorderSheenOpacity;
   final double componentSwipeActionWidth;
   final double componentSwipeActionIconSize;
   final double componentSwipeActionRevealThreshold;
@@ -2349,6 +2351,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentCardBorderGlowOpacityAurora: 0.55,
     componentCardBorderGlowOpacityFlameLow: 0.5,
     componentCardBorderGlowOpacityFlameHigh: 0.75,
+    componentCardBorderSheenOpacity: 0.12,
     componentSwipeActionWidth: 76.0,
     componentSwipeActionIconSize: 24.0,
     componentSwipeActionRevealThreshold: 0.35,
@@ -3026,6 +3029,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentCardBorderGlowOpacityAurora: 0.55,
     componentCardBorderGlowOpacityFlameLow: 0.5,
     componentCardBorderGlowOpacityFlameHigh: 0.75,
+    componentCardBorderSheenOpacity: 0.12,
     componentSwipeActionWidth: 76.0,
     componentSwipeActionIconSize: 24.0,
     componentSwipeActionRevealThreshold: 0.35,
@@ -3703,6 +3707,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentCardBorderGlowOpacityAurora: 0.55,
     componentCardBorderGlowOpacityFlameLow: 0.5,
     componentCardBorderGlowOpacityFlameHigh: 0.75,
+    componentCardBorderSheenOpacity: 0.12,
     componentSwipeActionWidth: 76.0,
     componentSwipeActionIconSize: 24.0,
     componentSwipeActionRevealThreshold: 0.35,
@@ -4380,6 +4385,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentCardBorderGlowOpacityAurora: 0.55,
     componentCardBorderGlowOpacityFlameLow: 0.5,
     componentCardBorderGlowOpacityFlameHigh: 0.75,
+    componentCardBorderSheenOpacity: 0.12,
     componentSwipeActionWidth: 76.0,
     componentSwipeActionIconSize: 24.0,
     componentSwipeActionRevealThreshold: 0.35,
@@ -5058,6 +5064,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentCardBorderGlowOpacityAurora,
     double? componentCardBorderGlowOpacityFlameLow,
     double? componentCardBorderGlowOpacityFlameHigh,
+    double? componentCardBorderSheenOpacity,
     double? componentSwipeActionWidth,
     double? componentSwipeActionIconSize,
     double? componentSwipeActionRevealThreshold,
@@ -5734,6 +5741,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentCardBorderGlowOpacityAurora: componentCardBorderGlowOpacityAurora ?? this.componentCardBorderGlowOpacityAurora,
       componentCardBorderGlowOpacityFlameLow: componentCardBorderGlowOpacityFlameLow ?? this.componentCardBorderGlowOpacityFlameLow,
       componentCardBorderGlowOpacityFlameHigh: componentCardBorderGlowOpacityFlameHigh ?? this.componentCardBorderGlowOpacityFlameHigh,
+      componentCardBorderSheenOpacity: componentCardBorderSheenOpacity ?? this.componentCardBorderSheenOpacity,
       componentSwipeActionWidth: componentSwipeActionWidth ?? this.componentSwipeActionWidth,
       componentSwipeActionIconSize: componentSwipeActionIconSize ?? this.componentSwipeActionIconSize,
       componentSwipeActionRevealThreshold: componentSwipeActionRevealThreshold ?? this.componentSwipeActionRevealThreshold,
@@ -6415,6 +6423,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentCardBorderGlowOpacityAurora: lerpDouble(componentCardBorderGlowOpacityAurora, other.componentCardBorderGlowOpacityAurora, t)!,
       componentCardBorderGlowOpacityFlameLow: lerpDouble(componentCardBorderGlowOpacityFlameLow, other.componentCardBorderGlowOpacityFlameLow, t)!,
       componentCardBorderGlowOpacityFlameHigh: lerpDouble(componentCardBorderGlowOpacityFlameHigh, other.componentCardBorderGlowOpacityFlameHigh, t)!,
+      componentCardBorderSheenOpacity: lerpDouble(componentCardBorderSheenOpacity, other.componentCardBorderSheenOpacity, t)!,
       componentSwipeActionWidth: lerpDouble(componentSwipeActionWidth, other.componentSwipeActionWidth, t)!,
       componentSwipeActionIconSize: lerpDouble(componentSwipeActionIconSize, other.componentSwipeActionIconSize, t)!,
       componentSwipeActionRevealThreshold: lerpDouble(componentSwipeActionRevealThreshold, other.componentSwipeActionRevealThreshold, t)!,

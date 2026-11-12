@@ -147,6 +147,13 @@ class KCard extends StatelessWidget {
         ),
       );
     }
+    if (border == KCardBorder.shimmer) {
+      content = _KCardSheen(
+        color: borderColor ?? t.componentCardBorderColor,
+        duration: borderDuration ?? t.componentCardBorderShimmerDuration,
+        child: content,
+      );
+    }
     Widget card = KSurface(
       tone: tone,
       radius: KSurfaceRadius.card,
@@ -237,6 +244,126 @@ class _RenderKCardCornerAction extends RenderProxyBox {
   @override
   void applyPaintTransform(RenderBox child, Matrix4 transform) =>
       transform.translateByDouble(_childOffset.dx, _childOffset.dy, 0, 1);
+}
+
+/// The shimmer band: a 110° stripe (CSS angle) on a box three times the
+/// card's width, moved from `t = 0` (left of the card) to `t = 1` (right),
+/// exactly as the Web `background-position` 100% → 0% on a 300% box.
+Shader kCardSweepShader(Size size, double t, Color color, {double alpha = 1}) {
+  const angle = 110 * math.pi / 180;
+  final dir = Offset(math.sin(angle), -math.cos(angle));
+  final boxWidth = size.width * 3;
+  final length = (boxWidth * dir.dx).abs() + (size.height * dir.dy).abs();
+  final center = Offset(-size.width / 2 + 2 * size.width * t, size.height / 2);
+  final half = dir * (length / 2);
+  final c = color.withValues(alpha: color.a * alpha);
+  return ui.Gradient.linear(
+    center - half,
+    center + half,
+    [
+      c.withValues(alpha: 0),
+      c.withValues(alpha: 0),
+      c,
+      c.withValues(alpha: 0),
+      c.withValues(alpha: 0),
+    ],
+    const [0, 0.4, 0.5, 0.6, 1],
+  );
+}
+
+/// The faint sheen that crosses the card surface with the shimmer border.
+class _KCardSheen extends StatefulWidget {
+  const _KCardSheen({
+    required this.color,
+    required this.duration,
+    required this.child,
+  });
+
+  final Color color;
+  final Duration duration;
+  final Widget child;
+
+  @override
+  State<_KCardSheen> createState() => _KCardSheenState();
+}
+
+class _KCardSheenState extends State<_KCardSheen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: widget.duration,
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final reduced = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    if (reduced) {
+      _controller.stop();
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void didUpdateWidget(_KCardSheen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.duration != widget.duration) {
+      _controller
+        ..duration = widget.duration
+        ..repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    final reduced = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    return CustomPaint(
+      painter: reduced
+          ? null
+          : _KCardSheenPainter(
+              repaint: _controller,
+              color: widget.color,
+              alpha: t.componentCardBorderSheenOpacity,
+              radius: t.radiusCard,
+            ),
+      child: widget.child,
+    );
+  }
+}
+
+class _KCardSheenPainter extends CustomPainter {
+  _KCardSheenPainter({
+    required this.repaint,
+    required this.color,
+    required this.alpha,
+    required this.radius,
+  }) : super(repaint: repaint);
+
+  final AnimationController repaint;
+  final Color color;
+  final double alpha;
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final v = Curves.easeInOut.transform(repaint.value);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(radius)),
+      Paint()..shader = kCardSweepShader(size, v, color, alpha: alpha),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_KCardSheenPainter old) =>
+      old.color != color || old.alpha != alpha;
 }
 
 class _KCardScope extends InheritedWidget {
@@ -359,6 +486,7 @@ class _KCardBorderEffectState extends State<_KCardBorderEffect>
         dashGap: t.componentCardBorderDashGap,
         glow: true,
         reduced: reduced,
+        restColor: t.colorBorderDefault,
         glowSpin: t.componentCardBorderGlowOpacitySpin,
         glowAurora: t.componentCardBorderGlowOpacityAurora,
         glowFlameLow: t.componentCardBorderGlowOpacityFlameLow,
@@ -377,6 +505,7 @@ class _KCardBorderEffectState extends State<_KCardBorderEffect>
         dashGap: t.componentCardBorderDashGap,
         glow: false,
         reduced: reduced,
+        restColor: t.colorBorderDefault,
         glowSpin: t.componentCardBorderGlowOpacitySpin,
         glowAurora: t.componentCardBorderGlowOpacityAurora,
         glowFlameLow: t.componentCardBorderGlowOpacityFlameLow,
@@ -401,12 +530,14 @@ class _KCardBorderPainter extends CustomPainter {
     required this.dashGap,
     required this.glow,
     required this.reduced,
+    required this.restColor,
     required this.glowSpin,
     required this.glowAurora,
     required this.glowFlameLow,
     required this.glowFlameHigh,
   }) : super(repaint: repaint);
 
+  final Color restColor;
   final double glowSpin;
   final double glowAurora;
   final double glowFlameLow;
@@ -527,16 +658,23 @@ class _KCardBorderPainter extends CustomPainter {
         }
         canvas.drawPath(dashes, stroke..color = color);
       case KCardBorder.shimmer:
-        if (glow || reduced) return;
-        final x = size.width * (2.5 * (1 - v) - 1);
+        if (glow) return;
+        // The resting border, lit where the sweep crosses it.
+        canvas.drawRRect(
+          ring,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = width
+            ..color = restColor,
+        );
+        if (reduced) return;
         canvas.drawRRect(
           ring,
           stroke
-            ..shader = ui.Gradient.linear(
-              Offset(x - size.width * 0.4, 0),
-              Offset(x + size.width * 0.4, size.height * 0.3),
-              [color.withValues(alpha: 0), color, color.withValues(alpha: 0)],
-              [0, 0.5, 1],
+            ..shader = kCardSweepShader(
+              size,
+              Curves.easeInOut.transform(v),
+              color,
             ),
         );
       case KCardBorder.none:

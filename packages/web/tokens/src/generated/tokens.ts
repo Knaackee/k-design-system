@@ -664,6 +664,7 @@ export const tokenNames = [
   "component.cardBorder.glowOpacityAurora",
   "component.cardBorder.glowOpacityFlameLow",
   "component.cardBorder.glowOpacityFlameHigh",
+  "component.cardBorder.sheenOpacity",
   "component.swipeAction.width",
   "component.swipeAction.iconSize",
   "component.swipeAction.revealThreshold",

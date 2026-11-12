@@ -4267,6 +4267,10 @@
       "type": "number",
       "value": 0.75
     },
+    "component.cardBorder.sheenOpacity": {
+      "type": "number",
+      "value": 0.12
+    },
     "component.swipeAction.width": {
       "type": "dimension",
       "value": {
@@ -8581,6 +8585,10 @@
     "component.cardBorder.glowOpacityFlameHigh": {
       "type": "number",
       "value": 0.75
+    },
+    "component.cardBorder.sheenOpacity": {
+      "type": "number",
+      "value": 0.12
     },
     "component.swipeAction.width": {
       "type": "dimension",
@@ -12897,6 +12905,10 @@
       "type": "number",
       "value": 0.75
     },
+    "component.cardBorder.sheenOpacity": {
+      "type": "number",
+      "value": 0.12
+    },
     "component.swipeAction.width": {
       "type": "dimension",
       "value": {
@@ -17211,6 +17223,10 @@
     "component.cardBorder.glowOpacityFlameHigh": {
       "type": "number",
       "value": 0.75
+    },
+    "component.cardBorder.sheenOpacity": {
+      "type": "number",
+      "value": 0.12
     },
     "component.swipeAction.width": {
       "type": "dimension",

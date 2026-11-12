@@ -436,40 +436,64 @@
       100% var(--k-card-dash);
   }
 }
-/* shimmer: a highlight runs along the resting border. */
+/* shimmer: one band of light sweeps across the card. The border lights up
+   where the band crosses it and a faint sheen crosses the surface, both
+   on the same box, size and timing, so they read as one pass of light. */
+.k-card-fx--shimmer {
+  --k-card-sheen: linear-gradient(
+    110deg,
+    transparent 40%,
+    var(--k-card-border-color) 50%,
+    transparent 60%
+  );
+  --k-card-border-cycle: var(
+    --k-card-border-duration,
+    var(--k-component-card-border-shimmer-duration)
+  );
+}
 .k-card-fx--shimmer::after {
   background:
-    linear-gradient(
-        110deg,
-        transparent 35%,
-        var(--k-card-border-color) 50%,
-        transparent 65%
-      )
-      0 0 / 250% 100%,
+    var(--k-card-sheen) 0 0 / 300% 100%,
     var(--k-color-border-default);
-  animation: k-card-shimmer
-    var(
-      --k-card-border-duration,
-      var(--k-component-card-border-shimmer-duration)
-    )
-    linear infinite;
+  /* k-ui-rules-ignore raw-motion: continuous loop, duration from component.cardBorder */
+  animation: k-card-sweep var(--k-card-border-cycle) ease-in-out infinite;
 }
-@keyframes k-card-shimmer {
+/* k-ui-rules-ignore nested-card: the effect wrapper is not a card */
+.k-card-fx--shimmer > .k-card {
+  background-image: linear-gradient(
+    110deg,
+    transparent 40%,
+    color-mix(
+        in srgb,
+        var(--k-card-border-color)
+          calc(var(--k-component-card-border-sheen-opacity) * 100%),
+        transparent
+      )
+      50%,
+    transparent 60%
+  );
+  background-size: 300% 100%;
+  /* k-ui-rules-ignore raw-motion: continuous loop, duration from component.cardBorder */
+  animation: k-card-sweep var(--k-card-border-cycle) ease-in-out infinite;
+}
+@keyframes k-card-sweep {
   from {
     background-position:
-      150% 0,
+      100% 0,
       0 0;
   }
   to {
     background-position:
-      -100% 0,
+      0% 0,
       0 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .k-card-fx,
   .k-card-fx::before,
-  .k-card-fx::after {
+  .k-card-fx::after,
+  /* k-ui-rules-ignore nested-card: the effect wrapper is not a card */
+  .k-card-fx--shimmer > .k-card {
     animation: none !important;
   }
   .k-card-fx--pulse {
