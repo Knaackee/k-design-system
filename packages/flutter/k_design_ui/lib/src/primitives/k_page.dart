@@ -55,9 +55,10 @@ class KPage extends StatelessWidget {
     final gutter = t.spaceLayoutGutter;
     // Below a top bar row with controls the row already separates the page
     // from the status bar: the title follows it closely, as on iOS.
+    // Beside a sidebar the page starts on the line of the sidebar header.
     final topGap = KTopBarTitleScope.barControlsOf(context)
         ? t.spaceTight
-        : gutter;
+        : KPageTopGap.maybeOf(context) ?? gutter;
     final insets = EdgeInsets.fromLTRB(
       gutter + padding.left,
       topGap + padding.top,
@@ -134,4 +135,18 @@ class _KPageScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_KPageScope oldWidget) => false;
+}
+
+/// Overrides the top gap of the [KPage]s below it. [KAppShell] uses it so
+/// a page beside the sidebar starts on the line of the sidebar header.
+class KPageTopGap extends InheritedWidget {
+  const KPageTopGap({required this.gap, required super.child, super.key});
+
+  final double gap;
+
+  static double? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<KPageTopGap>()?.gap;
+
+  @override
+  bool updateShouldNotify(KPageTopGap oldWidget) => gap != oldWidget.gap;
 }

@@ -264,3 +264,15 @@
 .k-app-shell[data-top-controls] > .k-app-shell__content .k-page-header {
   padding-block-start: 0;
 }
+
+/* Material top-level pages: the bar's actions sit at the end of the large
+   title's line instead of a row of their own (Decision 0015). */
+.k-app-shell[data-inline-actions] > .k-app-shell__content .k-page-header {
+  padding-inline-end: calc(
+    var(--k-app-shell-top-actions-width, 0px) + var(--k-space-tight)
+  );
+}
+/* Beside the sidebar the page starts on the line of the sidebar header. */
+.k-app-shell:not([data-layout="tab-bar"]) > .k-app-shell__content {
+  --k-page-top-gap: var(--k-space-control-gap);
+}

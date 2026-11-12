@@ -123,7 +123,17 @@ class KPageHeader extends StatelessWidget {
         // (KScrollTopBar); the header shows only the large title (0015).
         final inBar = compact && KTopBarTitleScope.maybeOf(context) != null;
         if (inBar) {
-          children.add(copy);
+          // Material top-level pages: the bar's actions sit at the end of
+          // the title's line.
+          final inset = KTopBarTitleScope.actionsInsetOf(context);
+          children.add(
+            inset > 0
+                ? Padding(
+                    padding: EdgeInsetsDirectional.only(end: inset),
+                    child: copy,
+                  )
+                : copy,
+          );
         } else if (compact) {
           final inlineActions = !largeText ? actionBar : null;
           if (back != null || inlineActions != null) {

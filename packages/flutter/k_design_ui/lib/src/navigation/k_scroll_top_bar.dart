@@ -19,6 +19,7 @@ class KTopBarTitleScope extends InheritedWidget {
     required this.controller,
     required super.child,
     this.barControls = false,
+    this.actionsInset = 0,
     super.key,
   });
 
@@ -28,6 +29,17 @@ class KTopBarTitleScope extends InheritedWidget {
   /// row then separates the large title from the status bar, so the
   /// header drops its own top padding.
   final bool barControls;
+
+  /// Width the bar's actions cover at the end of the title row: top-level
+  /// Material pages keep their actions on the large title's line instead
+  /// of a row of their own (Decision 0015).
+  final double actionsInset;
+
+  static double actionsInsetOf(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<KTopBarTitleScope>()
+          ?.actionsInset ??
+      0;
 
   static bool barControlsOf(BuildContext context) =>
       context
@@ -42,7 +54,8 @@ class KTopBarTitleScope extends InheritedWidget {
   @override
   bool updateShouldNotify(KTopBarTitleScope oldWidget) =>
       controller != oldWidget.controller ||
-      barControls != oldWidget.barControls;
+      barControls != oldWidget.barControls ||
+      actionsInset != oldWidget.actionsInset;
 }
 
 /// The page title and where it is on screen.
@@ -291,6 +304,8 @@ class KScrollTopBar extends StatefulWidget {
 class _KScrollTopBarState extends State<KScrollTopBar> {
   final _controller = KTopBarTitleController();
   final _bar = GlobalKey();
+  final _actions = GlobalKey();
+  double _actionsWidth = 0;
   bool _scrolled = false;
   bool _titleShown = false;
   bool _fabExtended = true;
@@ -378,7 +393,11 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
   Widget build(BuildContext context) {
     // A tab switch changes which header is shown only after layout.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _controller.resolve();
+      if (!mounted) return;
+      _controller.resolve();
+      final box = _actions.currentContext?.findRenderObject();
+      final width = box is RenderBox && box.hasSize ? box.size.width : 0.0;
+      if (width != _actionsWidth) setState(() => _actionsWidth = width);
     });
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final style = KAdaptive.maybeOf(context)?.style ?? KStyle.linear;
@@ -401,9 +420,13 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
       fab: placement == KPrimaryActionPlacement.fab,
     );
     // The bar row takes space only when it holds controls; a top-level
-    // screen keeps its large title right under the status bar.
+    // screen keeps its large title right under the status bar. Material
+    // top-level pages put their actions on the title's line, as Google's
+    // apps do; iOS keeps them in the navigation bar row.
+    final inlineActions = !apple && back == null && split.bar.isNotEmpty;
     final hasControls =
-        widget.enabled && (back != null || split.bar.isNotEmpty);
+        widget.enabled &&
+        (back != null || (split.bar.isNotEmpty && !inlineActions));
     final barHeight = t.componentTopBarHeight;
     final fab = widget.enabled ? split.primary : null;
     final fabReserve = fab == null
@@ -439,7 +462,11 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
               ),
             ),
           ),
-          ...split.bar,
+          if (split.bar.isNotEmpty)
+            KeyedSubtree(
+              key: _actions,
+              child: Row(mainAxisSize: MainAxisSize.min, children: split.bar),
+            ),
         ],
       ),
     );
@@ -498,6 +525,9 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
     return KTopBarTitleScope(
       controller: _controller,
       barControls: hasControls,
+      actionsInset: widget.enabled && inlineActions
+          ? _actionsWidth + t.spaceTight
+          : 0,
       child: Stack(
         children: [
           Positioned.fill(

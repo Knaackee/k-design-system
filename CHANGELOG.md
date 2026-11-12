@@ -4,6 +4,11 @@ All notable changes to supported K Design System releases will be documented in
 this file. The project follows semantic versioning once the first supported
 version is tagged.
 
+## Unreleased: less space above the title on Android and tablets
+
+- Material top-level pages (no back button) put their bar actions at the end of the large title's line instead of a row of their own: the title moves up by one bar height. iOS keeps the navigation bar row.
+- Beside the sidebar (tablet, desktop) the page starts on the line of the sidebar header (`space.controlGap`), so title and logo line up. Flutter: `KPageTopGap`; Web: `--k-page-top-gap` on the shell content.
+
 ## Unreleased
 
 No additional changes.

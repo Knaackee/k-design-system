@@ -295,7 +295,7 @@ class KAppShell extends StatelessWidget {
                       KPageWidth.fluid => double.infinity,
                     },
                   ),
-                  child: child,
+                  child: KPageTopGap(gap: t.spaceControlGap, child: child),
                 ),
               ),
             ),

@@ -275,8 +275,31 @@ export function KAppShell({
     return () => observer.disconnect();
   }, [compact]);
   // The bar row takes space only when it holds controls (Decision 0015).
-  const topControls =
-    Boolean(entry?.backLabel || entry?.leading) || split.bar.length > 0;
+  // Material top-level pages put their actions on the large title's line,
+  // as Google's apps do; iOS keeps them in the navigation bar row.
+  const backOrLeading = Boolean(entry?.backLabel || entry?.leading);
+  const inlineActions = !appleStyle && !backOrLeading && split.bar.length > 0;
+  const topControls = backOrLeading || (split.bar.length > 0 && !inlineActions);
+  const topActions = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const shell = ref.current;
+    const actions = topActions.current;
+    if (!shell) return;
+    if (!compact || !inlineActions || !actions) {
+      shell.style.removeProperty("--k-app-shell-top-actions-width");
+      return;
+    }
+    const measure = () =>
+      shell.style.setProperty(
+        "--k-app-shell-top-actions-width",
+        `${actions.getBoundingClientRect().width}px`,
+      );
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(actions);
+    return () => observer.disconnect();
+  }, [compact, inlineActions]);
   const sidebarItem = (destination: KAppDestination) => {
     const active = destination.id === selectedId;
     return (
@@ -311,6 +334,7 @@ export function KAppShell({
       data-layout={compact ? "tab-bar" : rail ? "rail" : "sidebar"}
       data-overlay-bar={compact && appleStyle ? true : undefined}
       data-top-controls={compact && topControls ? true : undefined}
+      data-inline-actions={compact && inlineActions ? true : undefined}
       data-fab={compact && split.primary ? true : undefined}
       {...props}
     >
@@ -376,7 +400,9 @@ export function KAppShell({
             {topTitle}
           </span>
           {split.bar.length ? (
-            <span className="k-app-shell__top-actions">{split.bar}</span>
+            <span ref={topActions} className="k-app-shell__top-actions">
+              {split.bar}
+            </span>
           ) : null}
         </div>
       ) : null}
