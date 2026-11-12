@@ -4,6 +4,14 @@ All notable changes to supported K Design System releases will be documented in
 this file. The project follows semantic versioning once the first supported
 version is tagged.
 
+## Unreleased: settings dialog (Decision 0017)
+
+- `KSettingsDialog` (Flutter, Web; Web also `KSettingsDialogPanel`): one object's settings as a dialog with a section sidebar on tablets and desktops and as a bottom sheet with a section list and detail pages on phones. Sections carry group, icon, summary, status and an unsaved marker.
+- `KSaveBar`: unsaved-change count with Discard and Save for the whole dialog or form.
+- `KAvatarPicker`: shape tiles and colour swatches; the app supplies the shape icons.
+- `KSettingsRow` inside a `KList` takes the list's row inset. Web `KSettingsRow` bounds its control to 360 px like Flutter.
+- Tokens `component.settingsDialog.*`, `component.avatarPicker.*`; locale keys `settingsBack`, `save`, `discard`, `allSaved`, `unsavedChange`, `unsavedChanges`, `avatarShape`, `avatarColor`.
+
 ## Unreleased: less space above the title on Android and tablets
 
 - Material top-level pages (no back button) put their bar actions at the end of the large title's line instead of a row of their own: the title moves up by one bar height. iOS keeps the navigation bar row.

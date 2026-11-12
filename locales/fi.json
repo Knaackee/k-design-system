@@ -33,7 +33,15 @@
     "options": "Vaihtoehdot",
     "noResults": "Ei tuloksia",
     "resetAll": "Nollaa kaikki",
-    "remove": "Poista {label}"
+    "remove": "Poista {label}",
+    "settingsBack": "Takaisin",
+    "save": "Tallenna",
+    "discard": "Hylkää",
+    "allSaved": "Kaikki tallennettu",
+    "unsavedChange": "1 tallentamaton muutos",
+    "unsavedChanges": "{count} tallentamatonta muutosta",
+    "avatarShape": "Muoto",
+    "avatarColor": "Väri"
   },
   "months": [
     "tammikuu",

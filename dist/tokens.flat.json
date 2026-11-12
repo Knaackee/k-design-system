@@ -4301,6 +4301,48 @@
       "type": "color",
       "value": "#ffffff"
     },
+    "component.settingsDialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 820,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.height": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.navWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 208,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.contentPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.tileWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.swatchSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
     "text.scaleMax.body": {
       "type": "number",
       "value": 3
@@ -8619,6 +8661,48 @@
     "component.swipeAction.foreground": {
       "type": "color",
       "value": "#ffffff"
+    },
+    "component.settingsDialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 820,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.height": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.navWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 208,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.contentPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.tileWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.swatchSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
     },
     "text.scaleMax.body": {
       "type": "number",
@@ -12939,6 +13023,48 @@
       "type": "color",
       "value": "#ffffff"
     },
+    "component.settingsDialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 820,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.height": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.navWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 208,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.contentPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.tileWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.swatchSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
     "text.scaleMax.body": {
       "type": "number",
       "value": 3
@@ -17257,6 +17383,48 @@
     "component.swipeAction.foreground": {
       "type": "color",
       "value": "#ffffff"
+    },
+    "component.settingsDialog.width": {
+      "type": "dimension",
+      "value": {
+        "value": 820,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.height": {
+      "type": "dimension",
+      "value": {
+        "value": 640,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.navWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 208,
+        "unit": "px"
+      }
+    },
+    "component.settingsDialog.contentPadding": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.tileWidth": {
+      "type": "dimension",
+      "value": {
+        "value": 64,
+        "unit": "px"
+      }
+    },
+    "component.avatarPicker.swatchSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
     },
     "text.scaleMax.body": {
       "type": "number",

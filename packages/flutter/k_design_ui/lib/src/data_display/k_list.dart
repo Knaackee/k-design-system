@@ -71,6 +71,11 @@ class KList extends StatelessWidget {
   /// Draws a hairline between rows.
   final bool separated;
 
+  /// Whether [context] is a row of a [KList]: rows that are not a
+  /// [KListItem] (for example `KSettingsRow`) take the list's row inset.
+  static bool isRow(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_KListRowScope>() != null;
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
@@ -96,7 +101,7 @@ class KList extends StatelessWidget {
     final rows = <Widget>[];
     for (var index = 0; index < children.length; index++) {
       final child = children[index];
-      rows.add(child);
+      rows.add(_KListRowScope(child: child));
       if (separated && index < children.length - 1) {
         final leading =
             child is KListItem &&
@@ -518,4 +523,10 @@ class _KListItemState extends State<KListItem> {
       ),
     );
   }
+}
+
+class _KListRowScope extends InheritedWidget {
+  const _KListRowScope({required super.child});
+  @override
+  bool updateShouldNotify(_KListRowScope oldWidget) => false;
 }

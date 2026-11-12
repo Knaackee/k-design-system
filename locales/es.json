@@ -33,7 +33,15 @@
     "options": "Opciones",
     "noResults": "Sin resultados",
     "resetAll": "Restablecer todo",
-    "remove": "Eliminar {label}"
+    "remove": "Eliminar {label}",
+    "settingsBack": "Atrás",
+    "save": "Guardar",
+    "discard": "Descartar",
+    "allSaved": "Todo guardado",
+    "unsavedChange": "1 cambio sin guardar",
+    "unsavedChanges": "{count} cambios sin guardar",
+    "avatarShape": "Forma",
+    "avatarColor": "Color"
   },
   "months": [
     "enero",

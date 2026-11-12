@@ -1,12 +1,16 @@
 import type { ReactNode } from "react";
 import {
+  KAvatarPicker,
   KBadge,
   KButton,
   KCard,
   KCheckbox,
+  KIcon,
   KInput,
   KList,
   KListItem,
+  KSaveBar,
+  KSettingsRow,
   KText,
 } from "@k-design-system/ui";
 
@@ -81,6 +85,43 @@ export function GeometryParityFixture() {
           >
             <KText>Groups the feedback by theme.</KText>
           </KCard>
+        </div>
+        <div data-parity="save-bar" style={{ alignSelf: "stretch" }}>
+          <KSaveBar changes={2} onSave={() => {}} onDiscard={() => {}} />
+        </div>
+        <div data-parity="avatar-picker" style={{ alignSelf: "stretch" }}>
+          <KAvatarPicker
+            shapes={[
+              { id: "circle", label: "Circle", icon: <KIcon name="circle" /> },
+              { id: "star", label: "Star", icon: <KIcon name="star" /> },
+              { id: "drop", label: "Drop", icon: <KIcon name="droplet" /> },
+              { id: "heart", label: "Heart", icon: <KIcon name="heart" /> },
+              { id: "cloud", label: "Cloud", icon: <KIcon name="cloud" /> },
+            ]}
+            colors={[
+              { value: "#f43f5e", label: "Rose" },
+              { value: "#22d3ee", label: "Cyan" },
+              { value: "#8b5cf6", label: "Violet" },
+            ]}
+            shape="drop"
+            color="#22d3ee"
+            onShapeChange={() => {}}
+            onColorChange={() => {}}
+          />
+        </div>
+        <div data-parity="settings-group" style={{ alignSelf: "stretch" }}>
+          <KList title="Network">
+            <KSettingsRow
+              title="Browser permissions"
+              description="None yet."
+              control={<KButton variant="secondary">Refresh</KButton>}
+            />
+            <KSettingsRow
+              title="Memories"
+              description="What Rocky remembers."
+              control={<KButton variant="secondary">Open</KButton>}
+            />
+          </KList>
         </div>
         <div data-parity="list-swipe" style={{ alignSelf: "stretch" }}>
           <KList>

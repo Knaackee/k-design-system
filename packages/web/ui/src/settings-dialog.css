@@ -1,0 +1,258 @@
+/* KSettingsDialog, KSaveBar, KAvatarPicker (Decision 0017). Geometry
+   matches Flutter k_settings_dialog.dart / k_avatar_picker.dart. */
+.k-settings-dialog {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--k-color-text-primary);
+  background: var(--k-color-surface-raised);
+  border: var(--k-border-width-default) solid var(--k-color-border-default);
+  border-radius: var(--k-radius-overlay);
+}
+.k-settings-dialog[data-layout="stack"] {
+  border-radius: var(--k-radius-overlay) var(--k-radius-overlay) 0 0;
+}
+/* In the overlay the dialog or sheet draws the frame. */
+.k-settings-dialog-surface .k-settings-dialog {
+  border: 0;
+  border-radius: 0;
+}
+.k-settings-dialog__grip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--k-component-bottom-sheet-grip-area-min-height) / 2);
+}
+.k-settings-dialog__header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--k-space-control-inset-inline);
+  padding: var(--k-space-control-inset-inline) var(--k-space-small-inset)
+    var(--k-space-control-inset-inline) var(--k-space-layout-gutter);
+  border-bottom: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+}
+.k-settings-dialog__header[data-back] {
+  padding-inline-start: var(--k-space-tight);
+}
+.k-settings-dialog__heading {
+  flex: 1;
+  min-width: 0;
+}
+.k-settings-dialog__title,
+.k-settings-dialog__subtitle {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.k-settings-dialog__subtitle,
+.k-settings-dialog__description {
+  color: var(--k-color-text-muted);
+}
+.k-settings-dialog__main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.k-settings-dialog__main > .k-sidebar {
+  --k-sidebar-width: var(--k-component-settings-dialog-nav-width);
+  flex: none;
+  height: auto;
+  padding-block: 0;
+}
+.k-settings-dialog__content {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: var(--k-component-settings-dialog-content-padding);
+}
+.k-settings-dialog[data-layout="stack"] .k-settings-dialog__content {
+  padding: var(--k-space-layout-gutter);
+}
+.k-settings-dialog__content h3 {
+  margin: 0;
+}
+.k-settings-dialog__description {
+  margin: 0;
+}
+.k-settings-dialog__content h3 + .k-settings-dialog__description {
+  margin-top: var(--k-space-tight);
+}
+.k-settings-dialog__content section > :is(h3, p) + .k-settings-dialog__body {
+  margin-top: var(--k-space-layout-gutter);
+}
+.k-settings-dialog__list {
+  display: grid;
+  gap: var(--k-space-layout-gutter);
+}
+.k-settings-dialog__footer {
+  flex: none;
+  border-top: var(--k-border-width-default) solid var(--k-color-border-default);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.k-settings-dialog[data-layout="split"] .k-settings-dialog__footer {
+  padding-bottom: 0;
+}
+.k-settings-dialog__marker {
+  display: inline-block;
+  flex: none;
+  width: var(--k-space-small-inset);
+  height: var(--k-space-small-inset);
+  border-radius: var(--k-radius-full);
+  background: var(--k-color-status-info-accent);
+}
+.k-settings-dialog__marker[data-tone="dirty"] {
+  background: var(--k-color-action-primary-background);
+}
+.k-settings-dialog__marker[data-tone="warning"] {
+  background: var(--k-color-status-warning-accent);
+}
+.k-settings-dialog__marker[data-tone="error"] {
+  background: var(--k-color-status-error-accent);
+}
+.k-settings-dialog__marker[data-tone="success"] {
+  background: var(--k-color-status-success-accent);
+}
+/* The overlay: fixed size on tablets and desktops, 90 % tall sheet. */
+.k-dialog.k-settings-dialog-surface {
+  width: min(
+    var(--k-component-settings-dialog-width),
+    calc(100vw - 2 * var(--k-component-dialog-viewport-inset))
+  );
+  height: min(
+    var(--k-component-settings-dialog-height),
+    calc(100vh - 2 * var(--k-component-dialog-viewport-inset))
+  );
+  max-height: none;
+}
+.k-bottom-sheet.k-settings-dialog-surface {
+  height: 90dvh;
+}
+.k-settings-dialog-surface .k-overlay-body {
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* In a KList a settings row takes the list's row inset. */
+.k-list__row > .k-settings-row {
+  padding-inline: var(--k-component-list-row-padding-inline);
+}
+
+.k-save-bar-container {
+  container-type: inline-size;
+}
+.k-save-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-control-inset-inline) var(--k-space-layout-gutter);
+}
+.k-save-bar__state {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--k-color-text-muted);
+}
+.k-save-bar[data-dirty] .k-save-bar__state {
+  color: var(--k-color-text-primary);
+}
+
+.k-avatar-picker {
+  display: flex;
+  flex-direction: column;
+}
+.k-avatar-picker > .k-avatar-picker__label {
+  margin: 0 0 var(--k-space-control-gap);
+  color: var(--k-color-text-muted);
+}
+.k-avatar-picker__shapes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-tight);
+  margin-bottom: var(--k-space-content-action-gap);
+}
+.k-avatar-picker__shape {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--k-space-micro);
+  width: var(--k-component-avatar-picker-tile-width);
+  padding: var(--k-space-tight) 0;
+  border: var(--k-border-width-default) solid transparent;
+  border-radius: var(--k-radius-control);
+  background: none;
+  color: var(--k-color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+.k-avatar-picker__shape > span:last-child {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.k-avatar-picker__shape:hover {
+  background: var(--k-color-surface-subtle);
+}
+.k-avatar-picker__shape[aria-pressed="true"] {
+  border-color: var(--k-color-action-primary-background);
+  background: var(--k-color-surface-subtle);
+}
+.k-avatar-picker__icon {
+  display: grid;
+  place-items: center;
+  width: var(--k-size-icon-default);
+  height: var(--k-size-icon-default);
+}
+.k-avatar-picker__icon > svg {
+  width: 100%;
+  height: 100%;
+}
+.k-avatar-picker__colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+}
+.k-avatar-picker__color {
+  width: var(--k-component-avatar-picker-swatch-size);
+  height: var(--k-component-avatar-picker-swatch-size);
+  padding: 0;
+  border: 0;
+  border-radius: var(--k-radius-full);
+  cursor: pointer;
+}
+.k-avatar-picker__color[aria-pressed="true"] {
+  outline: var(--k-border-width-strong) solid var(--k-color-text-primary);
+  outline-offset: 0;
+}
+:is(.k-avatar-picker__shape, .k-avatar-picker__color):focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+  outline-offset: var(--k-space-micro);
+}
+/* Narrow: the state above the buttons (Flutter: below 360 px or large text). */
+@container (max-width: 359.98px) {
+  .k-save-bar {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .k-save-bar__state {
+    flex-basis: 100%;
+  }
+}
+[data-text-large] .k-save-bar {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+[data-text-large] .k-save-bar__state {
+  flex-basis: 100%;
+}

@@ -1,3 +1,4 @@
+import { KText } from "../primitives/text.js";
 import type { HTMLAttributes, ReactNode } from "react";
 import { KButton } from "../primitives/button.js";
 import { KIcon } from "../primitives/icon.js";
@@ -138,9 +139,18 @@ export function KSettingsRow({
     >
       <div className="k-settings-row__layout">
         <div className="k-settings-row__copy">
-          <div className="k-settings-row__title">{title}</div>
+          {/* KText: the copy follows the text scale like Flutter's KText. */}
+          <KText as="div" variant="label" className="k-settings-row__title">
+            {title}
+          </KText>
           {description ? (
-            <div className="k-settings-row__description">{description}</div>
+            <KText
+              as="div"
+              variant="bodySmall"
+              className="k-settings-row__description"
+            >
+              {description}
+            </KText>
           ) : null}
         </div>
         <div className="k-settings-row__control">{control}</div>

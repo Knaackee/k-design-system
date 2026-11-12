@@ -109,6 +109,7 @@
     "packages/web/ui/src/plan-picker.css|dimension|min-width: 8em;": 1,
     "packages/web/ui/src/plan-picker.css|dimension|min-width: min(100%, 240px);": 1,
     "packages/web/ui/src/plan-picker.css|dimension|width: 1px;": 2,
+    "packages/web/ui/src/settings-page.css|dimension|max-width: 360px;": 1,
     "packages/web/ui/src/showcase-grid.css|dimension|min-height: 32rem;": 1,
     "packages/web/ui/src/table.css|dimension|height: 1em;": 1,
     "packages/web/ui/src/table.css|dimension|height: 1px;": 1,

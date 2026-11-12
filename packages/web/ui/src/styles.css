@@ -38,6 +38,7 @@
 @import "./sidebar.css";
 @import "./mobile-app-bar.css";
 @import "./settings-page.css";
+@import "./settings-dialog.css";
 @import "./chat.css";
 @import "./chat/agent-switcher.css";
 @import "./chat/agent-chat-workspace.css";

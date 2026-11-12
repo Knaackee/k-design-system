@@ -26,6 +26,9 @@ const kGeometryParityEntries = <String, String>{
   'card': 'h',
   'card-header': 'h',
   'list-swipe': 'h',
+  'save-bar': 'h',
+  'avatar-picker': 'h',
+  'settings-group': 'h',
 };
 
 class GeometryParityFixture extends StatelessWidget {
@@ -123,6 +126,86 @@ class GeometryParityFixture extends StatelessWidget {
                             tone: KSwipeActionTone.destructive,
                           ),
                         ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              entry(
+                'save-bar',
+                SizedBox(
+                  width: double.infinity,
+                  child: KSaveBar(changes: 2, onSave: () {}, onDiscard: () {}),
+                ),
+              ),
+              entry(
+                'avatar-picker',
+                SizedBox(
+                  width: double.infinity,
+                  child: KAvatarPicker(
+                    shapes: const [
+                      KAvatarShape(
+                        id: 'circle',
+                        label: 'Circle',
+                        icon: KIcon(KIconName.circle),
+                      ),
+                      KAvatarShape(
+                        id: 'star',
+                        label: 'Star',
+                        icon: KIcon(KIconName.star),
+                      ),
+                      KAvatarShape(
+                        id: 'drop',
+                        label: 'Drop',
+                        icon: KIcon(KIconName.droplet),
+                      ),
+                      KAvatarShape(
+                        id: 'heart',
+                        label: 'Heart',
+                        icon: KIcon(KIconName.heart),
+                      ),
+                      KAvatarShape(
+                        id: 'cloud',
+                        label: 'Cloud',
+                        icon: KIcon(KIconName.cloud),
+                      ),
+                    ],
+                    colors: const [
+                      KAvatarColor(value: Color(0xFFF43F5E), label: 'Rose'),
+                      KAvatarColor(value: Color(0xFF22D3EE), label: 'Cyan'),
+                      KAvatarColor(value: Color(0xFF8B5CF6), label: 'Violet'),
+                    ],
+                    shape: 'drop',
+                    color: const Color(0xFF22D3EE),
+                    onShapeChanged: (_) {},
+                    onColorChanged: (_) {},
+                  ),
+                ),
+              ),
+              entry(
+                'settings-group',
+                SizedBox(
+                  width: double.infinity,
+                  child: KList(
+                    title: 'Network',
+                    children: [
+                      KSettingsRow(
+                        title: 'Browser permissions',
+                        description: 'None yet.',
+                        control: KButton(
+                          label: 'Refresh',
+                          variant: KButtonVariant.secondary,
+                          onPressed: () {},
+                        ),
+                      ),
+                      KSettingsRow(
+                        title: 'Memories',
+                        description: 'What Rocky remembers.',
+                        control: KButton(
+                          label: 'Open',
+                          variant: KButtonVariant.secondary,
+                          onPressed: () {},
+                        ),
                       ),
                     ],
                   ),

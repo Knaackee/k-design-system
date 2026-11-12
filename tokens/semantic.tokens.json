@@ -3160,6 +3160,54 @@
         "$type": "color",
         "$value": "{color.neutral.0}"
       }
+    },
+    "settingsDialog": {
+      "width": {
+        "$description": "KSettingsDialog (Decision 0017): dialog size on tablet and desktop, width of the section navigation and the content padding. Phones show a bottom sheet with a section list.",
+        "$type": "dimension",
+        "$value": {
+          "value": 820,
+          "unit": "px"
+        }
+      },
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 640,
+          "unit": "px"
+        }
+      },
+      "navWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 208,
+          "unit": "px"
+        }
+      },
+      "contentPadding": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      }
+    },
+    "avatarPicker": {
+      "tileWidth": {
+        "$description": "KAvatarPicker: width of a shape tile and size of a colour swatch.",
+        "$type": "dimension",
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        }
+      },
+      "swatchSize": {
+        "$type": "dimension",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        }
+      }
     }
   },
   "text": {

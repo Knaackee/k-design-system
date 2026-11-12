@@ -33,7 +33,15 @@
     "options": "Opcje",
     "noResults": "Brak wyników",
     "resetAll": "Resetuj wszystko",
-    "remove": "Usuń {label}"
+    "remove": "Usuń {label}",
+    "settingsBack": "Wstecz",
+    "save": "Zapisz",
+    "discard": "Odrzuć",
+    "allSaved": "Wszystko zapisane",
+    "unsavedChange": "1 niezapisana zmiana",
+    "unsavedChanges": "Niezapisane zmiany: {count}",
+    "avatarShape": "Kształt",
+    "avatarColor": "Kolor"
   },
   "months": [
     "styczeń",

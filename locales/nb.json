@@ -33,7 +33,15 @@
     "options": "Alternativer",
     "noResults": "Ingen resultater",
     "resetAll": "Tilbakestill alle",
-    "remove": "Fjern {label}"
+    "remove": "Fjern {label}",
+    "settingsBack": "Tilbake",
+    "save": "Lagre",
+    "discard": "Forkast",
+    "allSaved": "Alt er lagret",
+    "unsavedChange": "1 endring er ikke lagret",
+    "unsavedChanges": "{count} endringer er ikke lagret",
+    "avatarShape": "Form",
+    "avatarColor": "Farge"
   },
   "months": [
     "januar",

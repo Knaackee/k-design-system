@@ -33,7 +33,15 @@
     "options": "Alternativ",
     "noResults": "Inga resultat",
     "resetAll": "Återställ alla",
-    "remove": "Ta bort {label}"
+    "remove": "Ta bort {label}",
+    "settingsBack": "Tillbaka",
+    "save": "Spara",
+    "discard": "Ignorera",
+    "allSaved": "Allt är sparat",
+    "unsavedChange": "1 ändring har inte sparats",
+    "unsavedChanges": "{count} ändringar har inte sparats",
+    "avatarShape": "Form",
+    "avatarColor": "Färg"
   },
   "months": [
     "januari",

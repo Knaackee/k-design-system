@@ -147,20 +147,15 @@
   padding-block: var(--k-space-control-inset-inline);
 }
 
-.k-settings-row__title {
-  font-size: var(--k-font-label-size);
-  font-weight: var(--k-font-label-weight);
-  letter-spacing: var(--k-font-label-letter-spacing);
-  line-height: var(--k-font-label-line-height);
-}
-
-.k-settings-row__description {
-  margin-top: var(--k-space-tight);
-  font-size: var(--k-font-body-small-size);
+.k-settings-row__copy {
+  display: grid;
+  gap: var(--k-space-tight);
 }
 
 .k-settings-row__control {
   min-width: 0;
+  /* Same bound as Flutter KSettingsRow. */
+  max-width: 360px;
 }
 
 .k-settings-row[data-layout="full-width"] .k-settings-row__layout {

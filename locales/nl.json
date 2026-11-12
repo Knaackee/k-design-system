@@ -33,7 +33,15 @@
     "options": "Opties",
     "noResults": "Geen resultaten",
     "resetAll": "Alles resetten",
-    "remove": "{label} verwijderen"
+    "remove": "{label} verwijderen",
+    "settingsBack": "Terug",
+    "save": "Opslaan",
+    "discard": "Verwerpen",
+    "allSaved": "Alles opgeslagen",
+    "unsavedChange": "1 niet-opgeslagen wijziging",
+    "unsavedChanges": "{count} niet-opgeslagen wijzigingen",
+    "avatarShape": "Vorm",
+    "avatarColor": "Kleur"
   },
   "months": [
     "januari",

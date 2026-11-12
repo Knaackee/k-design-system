@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_widgetbook/core_components_fixture.dart';
+import 'package:k_design_widgetbook/settings_dialog_fixtures.dart';
 
 const _story = String.fromEnvironment('K_SCREENSHOTS');
 const _out = String.fromEnvironment(
@@ -27,6 +28,7 @@ final _stories = <String, Widget Function()>{
   'list': () => const ListFixture(),
   'page-header': () => const PageHeaderFixture(),
   'segmented-control': () => const SegmentedControlFixture(),
+  'settings-dialog': () => const AgentSettings(),
 };
 const _shots = [
   (Size(393, 852), TargetPlatform.iOS, 1.0),

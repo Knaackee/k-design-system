@@ -43,6 +43,8 @@ export 'src/navigation/k_sidebar.dart';
 export 'src/navigation/k_mobile_app_bar.dart';
 export 'src/patterns/k_toolbar.dart';
 export 'src/patterns/k_browser_viewer.dart';
+export 'src/patterns/k_avatar_picker.dart';
+export 'src/patterns/k_settings_dialog.dart';
 export 'src/patterns/k_settings_page.dart';
 export 'src/patterns/k_usage_details.dart';
 export 'src/patterns/k_kanban.dart';

@@ -33,7 +33,15 @@
     "options": "Možnosti",
     "noResults": "Žádné výsledky",
     "resetAll": "Obnovit vše",
-    "remove": "Odebrat {label}"
+    "remove": "Odebrat {label}",
+    "settingsBack": "Zpět",
+    "save": "Uložit",
+    "discard": "Zahodit",
+    "allSaved": "Vše uloženo",
+    "unsavedChange": "1 neuložená změna",
+    "unsavedChanges": "Neuložené změny: {count}",
+    "avatarShape": "Tvar",
+    "avatarColor": "Barva"
   },
   "months": [
     "leden",

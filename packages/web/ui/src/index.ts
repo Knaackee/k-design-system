@@ -146,6 +146,23 @@ export type {
   KSettingsRowProps,
   KSettingsRowLayout,
 } from "./patterns/settings-page.js";
+export {
+  KSettingsDialog,
+  KSettingsDialogPanel,
+  KSaveBar,
+} from "./patterns/settings-dialog.js";
+export type {
+  KSettingsDialogProps,
+  KSettingsDialogPanelProps,
+  KSettingsDialogSection,
+  KSaveBarProps,
+} from "./patterns/settings-dialog.js";
+export { KAvatarPicker } from "./patterns/avatar-picker.js";
+export type {
+  KAvatarPickerProps,
+  KAvatarShape,
+  KAvatarColor,
+} from "./patterns/avatar-picker.js";
 export { KKanban } from "./patterns/kanban.js";
 export type {
   KKanbanProps,

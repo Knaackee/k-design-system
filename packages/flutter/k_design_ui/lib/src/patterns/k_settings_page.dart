@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../data_display/k_list.dart';
 import '../navigation/k_sidebar.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
@@ -258,6 +259,7 @@ class KSettingsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokens = Theme.of(context).extension<KDesignTokens>()!;
+    final inList = KList.isRow(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         final stacked = switch (layout) {
@@ -293,7 +295,9 @@ class KSettingsRow extends StatelessWidget {
         return Semantics(
           container: true,
           child: Padding(
+            // In a KList the row takes the list's inline inset.
             padding: EdgeInsets.symmetric(
+              horizontal: inList ? tokens.componentListRowPaddingInline : 0,
               vertical: tokens.spaceControlInsetInline,
             ),
             child: stacked

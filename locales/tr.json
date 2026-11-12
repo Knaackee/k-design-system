@@ -33,7 +33,15 @@
     "options": "Seçenekler",
     "noResults": "Sonuç bulunamadı",
     "resetAll": "Tümünü sıfırla",
-    "remove": "{label} kaldır"
+    "remove": "{label} kaldır",
+    "settingsBack": "Geri",
+    "save": "Kaydet",
+    "discard": "Vazgeç",
+    "allSaved": "Tümü kaydedildi",
+    "unsavedChange": "1 kaydedilmemiş değişiklik",
+    "unsavedChanges": "{count} kaydedilmemiş değişiklik",
+    "avatarShape": "Şekil",
+    "avatarColor": "Renk"
   },
   "months": [
     "Ocak",

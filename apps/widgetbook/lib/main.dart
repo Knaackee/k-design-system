@@ -35,6 +35,7 @@ import 'motion_fixture.dart';
 import 'back_button_fixture.dart';
 import 'geometry_parity_fixture.dart';
 import 'package:widgetbook/widgetbook.dart';
+import 'settings_dialog_fixtures.dart';
 import 'swipe_card_fixtures.dart';
 
 import 'button_fixtures.dart';
@@ -2497,6 +2498,19 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
           WidgetbookUseCase(
             name: 'layout-composition',
             builder: buildLayoutComposition,
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'Settings dialog',
+        children: [
+          WidgetbookUseCase(
+            name: 'settings-dialog',
+            builder: (_) => const AgentSettings(),
+          ),
+          WidgetbookUseCase(
+            name: 'settings-dialog-overlay',
+            builder: (_) => const AgentSettings(overlay: true),
           ),
         ],
       ),

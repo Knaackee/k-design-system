@@ -161,6 +161,11 @@ assertions. The others are review rules.
 - Animated card borders (`KCard(border:)`) only for a state, at most one
   per screen; colour and speed via `borderColor` / `borderDuration`, never
   custom CSS or painters.
+- Settings of one object (agent, resource, workspace) use `KSettingsDialog`
+  with sections and one `KSaveBar` footer (Decision 0017): no tab rows,
+  no save button per section, no dialog on top of the dialog. Rows are
+  `KSettingsRow` in a `KList`, problems a `KAlert` with action, avatars
+  `KAvatarPicker`.
 - Content refreshes on its own (open, return to the tab, after changes) and
   by pulling: `KPage(onRefresh:)`. Never a refresh button in the page
   actions (`check-consumer-ui` › refresh-button); desktops may offer

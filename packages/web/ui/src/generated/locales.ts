@@ -35,7 +35,15 @@ export const kLocaleCatalog = {
       "options": "Možnosti",
       "noResults": "Žádné výsledky",
       "resetAll": "Obnovit vše",
-      "remove": "Odebrat {label}"
+      "remove": "Odebrat {label}",
+      "settingsBack": "Zpět",
+      "save": "Uložit",
+      "discard": "Zahodit",
+      "allSaved": "Vše uloženo",
+      "unsavedChange": "1 neuložená změna",
+      "unsavedChanges": "Neuložené změny: {count}",
+      "avatarShape": "Tvar",
+      "avatarColor": "Barva"
     },
     "months": [
       "leden",
@@ -97,7 +105,15 @@ export const kLocaleCatalog = {
       "options": "Valgmuligheder",
       "noResults": "Ingen resultater",
       "resetAll": "Nulstil alle",
-      "remove": "Fjern {label}"
+      "remove": "Fjern {label}",
+      "settingsBack": "Tilbage",
+      "save": "Gem",
+      "discard": "Kassér",
+      "allSaved": "Alt er gemt",
+      "unsavedChange": "1 ændring er ikke gemt",
+      "unsavedChanges": "{count} ændringer er ikke gemt",
+      "avatarShape": "Form",
+      "avatarColor": "Farve"
     },
     "months": [
       "januar",
@@ -159,7 +175,15 @@ export const kLocaleCatalog = {
       "options": "Optionen",
       "noResults": "Keine Ergebnisse",
       "resetAll": "Alle zurücksetzen",
-      "remove": "{label} entfernen"
+      "remove": "{label} entfernen",
+      "settingsBack": "Zurück",
+      "save": "Speichern",
+      "discard": "Verwerfen",
+      "allSaved": "Alles gespeichert",
+      "unsavedChange": "1 Änderung nicht gespeichert",
+      "unsavedChanges": "{count} Änderungen nicht gespeichert",
+      "avatarShape": "Form",
+      "avatarColor": "Farbe"
     },
     "months": [
       "Januar",
@@ -221,7 +245,15 @@ export const kLocaleCatalog = {
       "options": "Options",
       "noResults": "No results",
       "resetAll": "Reset all",
-      "remove": "Remove {label}"
+      "remove": "Remove {label}",
+      "settingsBack": "Back",
+      "save": "Save",
+      "discard": "Discard",
+      "allSaved": "All changes saved",
+      "unsavedChange": "1 unsaved change",
+      "unsavedChanges": "{count} unsaved changes",
+      "avatarShape": "Shape",
+      "avatarColor": "Colour"
     },
     "months": [
       "January",
@@ -283,7 +315,15 @@ export const kLocaleCatalog = {
       "options": "Opciones",
       "noResults": "Sin resultados",
       "resetAll": "Restablecer todo",
-      "remove": "Eliminar {label}"
+      "remove": "Eliminar {label}",
+      "settingsBack": "Atrás",
+      "save": "Guardar",
+      "discard": "Descartar",
+      "allSaved": "Todo guardado",
+      "unsavedChange": "1 cambio sin guardar",
+      "unsavedChanges": "{count} cambios sin guardar",
+      "avatarShape": "Forma",
+      "avatarColor": "Color"
     },
     "months": [
       "enero",
@@ -345,7 +385,15 @@ export const kLocaleCatalog = {
       "options": "Vaihtoehdot",
       "noResults": "Ei tuloksia",
       "resetAll": "Nollaa kaikki",
-      "remove": "Poista {label}"
+      "remove": "Poista {label}",
+      "settingsBack": "Takaisin",
+      "save": "Tallenna",
+      "discard": "Hylkää",
+      "allSaved": "Kaikki tallennettu",
+      "unsavedChange": "1 tallentamaton muutos",
+      "unsavedChanges": "{count} tallentamatonta muutosta",
+      "avatarShape": "Muoto",
+      "avatarColor": "Väri"
     },
     "months": [
       "tammikuu",
@@ -407,7 +455,15 @@ export const kLocaleCatalog = {
       "options": "Options",
       "noResults": "Aucun résultat",
       "resetAll": "Tout réinitialiser",
-      "remove": "Supprimer {label}"
+      "remove": "Supprimer {label}",
+      "settingsBack": "Retour",
+      "save": "Enregistrer",
+      "discard": "Annuler les modifications",
+      "allSaved": "Tout est enregistré",
+      "unsavedChange": "1 modification non enregistrée",
+      "unsavedChanges": "{count} modifications non enregistrées",
+      "avatarShape": "Forme",
+      "avatarColor": "Couleur"
     },
     "months": [
       "janvier",
@@ -469,7 +525,15 @@ export const kLocaleCatalog = {
       "options": "Opzioni",
       "noResults": "Nessun risultato",
       "resetAll": "Reimposta tutto",
-      "remove": "Rimuovi {label}"
+      "remove": "Rimuovi {label}",
+      "settingsBack": "Indietro",
+      "save": "Salva",
+      "discard": "Scarta",
+      "allSaved": "Tutto salvato",
+      "unsavedChange": "1 modifica non salvata",
+      "unsavedChanges": "{count} modifiche non salvate",
+      "avatarShape": "Forma",
+      "avatarColor": "Colore"
     },
     "months": [
       "gennaio",
@@ -531,7 +595,15 @@ export const kLocaleCatalog = {
       "options": "Alternativer",
       "noResults": "Ingen resultater",
       "resetAll": "Tilbakestill alle",
-      "remove": "Fjern {label}"
+      "remove": "Fjern {label}",
+      "settingsBack": "Tilbake",
+      "save": "Lagre",
+      "discard": "Forkast",
+      "allSaved": "Alt er lagret",
+      "unsavedChange": "1 endring er ikke lagret",
+      "unsavedChanges": "{count} endringer er ikke lagret",
+      "avatarShape": "Form",
+      "avatarColor": "Farge"
     },
     "months": [
       "januar",
@@ -593,7 +665,15 @@ export const kLocaleCatalog = {
       "options": "Opties",
       "noResults": "Geen resultaten",
       "resetAll": "Alles resetten",
-      "remove": "{label} verwijderen"
+      "remove": "{label} verwijderen",
+      "settingsBack": "Terug",
+      "save": "Opslaan",
+      "discard": "Verwerpen",
+      "allSaved": "Alles opgeslagen",
+      "unsavedChange": "1 niet-opgeslagen wijziging",
+      "unsavedChanges": "{count} niet-opgeslagen wijzigingen",
+      "avatarShape": "Vorm",
+      "avatarColor": "Kleur"
     },
     "months": [
       "januari",
@@ -655,7 +735,15 @@ export const kLocaleCatalog = {
       "options": "Opcje",
       "noResults": "Brak wyników",
       "resetAll": "Resetuj wszystko",
-      "remove": "Usuń {label}"
+      "remove": "Usuń {label}",
+      "settingsBack": "Wstecz",
+      "save": "Zapisz",
+      "discard": "Odrzuć",
+      "allSaved": "Wszystko zapisane",
+      "unsavedChange": "1 niezapisana zmiana",
+      "unsavedChanges": "Niezapisane zmiany: {count}",
+      "avatarShape": "Kształt",
+      "avatarColor": "Kolor"
     },
     "months": [
       "styczeń",
@@ -717,7 +805,15 @@ export const kLocaleCatalog = {
       "options": "Opções",
       "noResults": "Sem resultados",
       "resetAll": "Repor tudo",
-      "remove": "Remover {label}"
+      "remove": "Remover {label}",
+      "settingsBack": "Voltar",
+      "save": "Guardar",
+      "discard": "Descartar",
+      "allSaved": "Tudo guardado",
+      "unsavedChange": "1 alteração não guardada",
+      "unsavedChanges": "{count} alterações não guardadas",
+      "avatarShape": "Forma",
+      "avatarColor": "Cor"
     },
     "months": [
       "janeiro",
@@ -779,7 +875,15 @@ export const kLocaleCatalog = {
       "options": "Alternativ",
       "noResults": "Inga resultat",
       "resetAll": "Återställ alla",
-      "remove": "Ta bort {label}"
+      "remove": "Ta bort {label}",
+      "settingsBack": "Tillbaka",
+      "save": "Spara",
+      "discard": "Ignorera",
+      "allSaved": "Allt är sparat",
+      "unsavedChange": "1 ändring har inte sparats",
+      "unsavedChanges": "{count} ändringar har inte sparats",
+      "avatarShape": "Form",
+      "avatarColor": "Färg"
     },
     "months": [
       "januari",
@@ -841,7 +945,15 @@ export const kLocaleCatalog = {
       "options": "Seçenekler",
       "noResults": "Sonuç bulunamadı",
       "resetAll": "Tümünü sıfırla",
-      "remove": "{label} kaldır"
+      "remove": "{label} kaldır",
+      "settingsBack": "Geri",
+      "save": "Kaydet",
+      "discard": "Vazgeç",
+      "allSaved": "Tümü kaydedildi",
+      "unsavedChange": "1 kaydedilmemiş değişiklik",
+      "unsavedChanges": "{count} kaydedilmemiş değişiklik",
+      "avatarShape": "Şekil",
+      "avatarColor": "Renk"
     },
     "months": [
       "Ocak",

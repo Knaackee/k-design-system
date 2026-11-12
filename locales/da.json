@@ -33,7 +33,15 @@
     "options": "Valgmuligheder",
     "noResults": "Ingen resultater",
     "resetAll": "Nulstil alle",
-    "remove": "Fjern {label}"
+    "remove": "Fjern {label}",
+    "settingsBack": "Tilbage",
+    "save": "Gem",
+    "discard": "Kassér",
+    "allSaved": "Alt er gemt",
+    "unsavedChange": "1 ændring er ikke gemt",
+    "unsavedChanges": "{count} ændringer er ikke gemt",
+    "avatarShape": "Form",
+    "avatarColor": "Farve"
   },
   "months": [
     "januar",
