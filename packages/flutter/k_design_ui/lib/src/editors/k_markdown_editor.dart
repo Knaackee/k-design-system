@@ -36,6 +36,7 @@ class KMarkdownEditor extends StatefulWidget {
     this.onModeChanged,
     this.onSelectionChanged,
     this.readOnly = false,
+    this.inline = false,
     this.placeholder = 'Write something…',
     this.labels = const KEditorLabels(),
     this.formatActions = kDefaultMarkdownFormatActions,
@@ -76,6 +77,9 @@ class KMarkdownEditor extends StatefulWidget {
   final ValueChanged<KEditorMode>? onModeChanged;
   final ValueChanged<KEditorSelection>? onSelectionChanged;
   final bool readOnly;
+
+  /// Unboxed prose composition inline; expanded workspaces retain editor defaults.
+  final bool inline;
   final String placeholder;
   final KEditorLabels labels;
   final List<KMarkdownFormatAction> formatActions;

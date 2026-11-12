@@ -42,3 +42,6 @@ docs/plans/markdown-optimization.md
 
 # Flutter-generated copies of the canonical root Markdown fixtures.
 apps/widgetbook/fixtures/markdown/
+
+# Local gallery builds and review evidence are generated artifacts.
+.local/

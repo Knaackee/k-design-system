@@ -30,6 +30,7 @@ class KCodeEditor extends StatefulWidget {
     this.showSearchButton = true,
     this.contentMaxWidth,
     this.embedded = false,
+    this.prose = false,
     this.searchButtonEndInset,
     this.fontFamily = 'packages/k_design_ui/KDesignMono',
     this.fontFamilyFallback = const [
@@ -69,6 +70,9 @@ class KCodeEditor extends StatefulWidget {
 
   /// Flat, compact editor inside a workspace that owns its toolbar.
   final bool embedded;
+
+  /// Body typography and a transparent surface for composed prose fields.
+  final bool prose;
   final double? searchButtonEndInset;
   final String? fontFamily;
   final List<String>? fontFamilyFallback;
@@ -353,7 +357,7 @@ class KCodeEditorState extends State<KCodeEditor> {
             height: height,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: t.colorSurfaceCanvas,
+                color: widget.prose ? Colors.transparent : t.colorSurfaceCanvas,
                 border: widget.embedded
                     ? null
                     : Border.all(color: t.colorBorderDefault),
@@ -399,34 +403,51 @@ class KCodeEditorState extends State<KCodeEditor> {
                                     wordWrap: widget.lineWrapping,
                                     hint: widget.placeholder,
                                     autofocus: false,
-                                    padding: EdgeInsets.fromLTRB(
-                                      widget.embedded
-                                          ? t.spaceControlInsetInline + 6
-                                          : t.spaceMediumInset,
-                                      widget.showSearchButton
-                                          ? t.sizeHitTarget + t.spaceSmallInset
-                                          : widget.embedded
-                                          ? t.spaceControlInsetInline +
-                                                (widget.language ==
-                                                        KCodeLanguage.markdown
-                                                    ? 4
-                                                    : 0)
-                                          : t.spaceMediumInset,
-                                      widget.embedded
-                                          ? t.spaceControlInsetInline + 2
-                                          : t.spaceMediumInset,
-                                      (widget.diagnostics.isEmpty
-                                              ? widget.embedded
-                                                    ? t.spaceControlInsetInline
-                                                    : t.spaceMediumInset
-                                              : t.sizeHitTarget) +
-                                          (markdownGeometry?.bottomInset ?? 0),
-                                    ),
+                                    padding: widget.prose
+                                        ? EdgeInsets.only(
+                                            top: t.spaceControlGap,
+                                            bottom:
+                                                t.spaceControlGap +
+                                                (markdownGeometry
+                                                        ?.bottomInset ??
+                                                    0),
+                                          )
+                                        : EdgeInsets.fromLTRB(
+                                            widget.embedded
+                                                ? t.spaceControlInsetInline + 6
+                                                : t.spaceMediumInset,
+                                            widget.showSearchButton
+                                                ? t.sizeHitTarget +
+                                                      t.spaceSmallInset
+                                                : widget.embedded
+                                                ? t.spaceControlInsetInline +
+                                                      (widget.language ==
+                                                              KCodeLanguage
+                                                                  .markdown
+                                                          ? 4
+                                                          : 0)
+                                                : t.spaceMediumInset,
+                                            widget.embedded
+                                                ? t.spaceControlInsetInline + 2
+                                                : t.spaceMediumInset,
+                                            (widget.diagnostics.isEmpty
+                                                    ? widget.embedded
+                                                          ? t.spaceControlInsetInline
+                                                          : t.spaceMediumInset
+                                                    : t.sizeHitTarget) +
+                                                (markdownGeometry
+                                                        ?.bottomInset ??
+                                                    0),
+                                          ),
                                     style: CodeEditorStyle(
                                       fontFamily: widget.fontFamily,
                                       fontFamilyFallback:
                                           widget.fontFamilyFallback,
-                                      fontSize: widget.embedded
+                                      fontSize: widget.prose
+                                          ? MediaQuery.textScalerOf(context)
+                                                .clamp(maxScaleFactor: 3)
+                                                .scale(t.fontControlSize)
+                                          : widget.embedded
                                           ? t.fontBodySmallSize
                                           : t.fontBodySize,
                                       fontHeight: widget.embedded
@@ -435,7 +456,9 @@ class KCodeEditorState extends State<KCodeEditor> {
                                           : t.fontRelaxedHeight,
                                       textColor: t.colorTextPrimary,
                                       hintTextColor: t.colorTextMuted,
-                                      backgroundColor: t.colorSurfaceCanvas,
+                                      backgroundColor: widget.prose
+                                          ? Colors.transparent
+                                          : t.colorSurfaceCanvas,
                                       cursorColor: t.colorBorderFocus,
                                       selectionColor:
                                           t.colorBrandPrimaryBackground,

@@ -148,6 +148,8 @@ function Review({
           <KPresentationFile
             openLabel="Öffnen"
             downloadLabel="Herunterladen"
+            saveLabel="In Dateien speichern"
+            onSave={() => open("Kopie im persönlichen Zielordner speichern")}
             name="Wochenende.md"
             meta="Markdown · 2,4 KB"
             onOpen={() => open("Wochenende.md")}
@@ -315,6 +317,8 @@ function Review({
             <KPresentationFile
               openLabel="Öffnen"
               downloadLabel="Herunterladen"
+              saveLabel="In Dateien speichern"
+              onSave={() => open("Kopie im persönlichen Zielordner speichern")}
               name="Wochenende.md"
               meta="Markdown · 2,4 KB"
               onOpen={() => open("Wochenende.md")}

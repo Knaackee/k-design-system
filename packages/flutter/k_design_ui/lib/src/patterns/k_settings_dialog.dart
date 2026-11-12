@@ -237,10 +237,7 @@ class _KSettingsDialogState extends State<KSettingsDialog> {
     child: Row(
       spacing: t.spaceControlInsetInline,
       children: [
-        if (back != null)
-          back
-        else if (widget.leading case final leading?)
-          leading,
+        ?(back ?? widget.leading),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

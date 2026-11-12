@@ -1,0 +1,84 @@
+.k-agent-email-draft.k-card {
+  min-width: 0;
+  padding: var(--k-component-chat-card-padding);
+  overflow-wrap: anywhere;
+}
+.k-agent-email-draft__heading {
+  flex-wrap: wrap;
+}
+.k-agent-email-draft__muted {
+  color: var(--k-color-text-muted);
+}
+.k-agent-email-draft__field > .k-field {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-agent-email-draft__field .k-field__label {
+  color: var(--k-color-text-muted);
+  font-weight: var(--k-font-body-weight);
+}
+.k-agent-email-draft__field .k-field__description {
+  grid-column: 1 / -1;
+}
+.k-agent-email-draft__metadata > .k-agent-email-draft__field {
+  border-block-end: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+}
+.k-agent-email-draft__field .k-agent-email-draft__input {
+  padding-inline: 0;
+  border-color: transparent;
+  border-radius: 0;
+  background: transparent;
+  font-weight: var(--k-font-body-weight);
+}
+.k-agent-email-draft__field .k-agent-email-draft__input:focus-visible {
+  outline: var(--k-border-width-focus) solid var(--k-color-focus-ring);
+  outline-offset: calc(-1 * var(--k-border-width-focus));
+}
+.k-agent-email-draft__subject .k-field__label {
+  position: absolute;
+  clip-path: inset(50%);
+  overflow: hidden;
+  inline-size: var(--k-border-width-default);
+  block-size: var(--k-border-width-default);
+}
+.k-agent-email-draft__subject > .k-field {
+  grid-template-columns: minmax(0, 1fr);
+}
+.k-agent-email-draft__subject .k-agent-email-draft__input {
+  font-size: calc(
+    var(--k-font-heading5-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-heading))
+  );
+  font-weight: var(--k-font-heading-weight);
+}
+/* Inline email composition uses the existing editor; its fullscreen portal retains editor defaults. */
+.k-agent-email-draft .k-agent-email-draft__editor {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.k-agent-email-draft .k-agent-email-draft__editor .k-code-editor {
+  --k-editor-background: transparent;
+}
+.k-agent-email-draft .k-agent-email-draft__editor .cm-editor {
+  font-family: var(--k-font-family);
+  font-size: calc(
+    var(--k-font-control-size) *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+  line-height: var(--k-font-relaxed-height);
+}
+.k-agent-email-draft .k-agent-email-draft__editor .cm-content {
+  min-height: var(--k-size-hit-target);
+  padding-inline: 0;
+}
+.k-agent-email-draft .k-attachment {
+  max-width: 100%;
+  min-width: 0;
+}
+.k-agent-email-draft__actions {
+  justify-content: flex-end;
+}
