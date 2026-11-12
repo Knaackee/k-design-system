@@ -107,3 +107,8 @@
     margin-block-start: 0;
   }
 }
+
+/* In a KPage the page gutter already separates the header from the top. */
+.k-page__body > .k-page-header {
+  padding-block-start: 0;
+}

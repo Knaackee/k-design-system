@@ -113,6 +113,7 @@
 }
 /* Content starts below the bar's controls and ends above the FAB. */
 .k-app-shell[data-top-controls] > .k-app-shell__content {
+  --k-page-top-gap: var(--k-space-tight);
   --k-safe-top: calc(
     env(safe-area-inset-top, 0px) + var(--k-component-top-bar-height)
   );

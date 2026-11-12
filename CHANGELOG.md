@@ -8,6 +8,11 @@ version is tagged.
 
 No additional changes.
 
+- Less space above the large title: a `KPageHeader` inside `KPage` adds no
+  top padding of its own (the page gutter already separates it), and
+  below a phone top bar row with controls the page starts `space.tight`
+  under the row instead of a full gutter. Phones and tablets gain 16 px
+  before scrolling; Web and Flutter alike.
 - Swipe actions on `KListItem` (`leadingActions`, `trailingActions`,
   `KSwipeAction`): iOS buttons with full swipe, Material reveal layer,
   inline actions for pointer and keyboard (Decision 0016).

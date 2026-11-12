@@ -911,8 +911,9 @@
   min-height: 100%;
   /* Inside the shell on phones --k-safe-top includes the top bar and
      --k-safe-bottom-extra the floating action button (Decision 0015). */
+  /* Below a top bar row with controls the page follows it closely. */
   padding: calc(
-      var(--k-space-layout-gutter) +
+      var(--k-page-top-gap, var(--k-space-layout-gutter)) +
         var(--k-safe-top, env(safe-area-inset-top, 0px))
     )
     calc(var(--k-space-layout-gutter) + env(safe-area-inset-right, 0px))

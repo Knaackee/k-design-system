@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../primitives/k_page.dart';
+
 import '../primitives/k_text.dart';
 import '../actions/k_menu_button.dart';
 import 'k_back_button.dart';
@@ -178,12 +180,13 @@ class KPageHeader extends StatelessWidget {
               );
           }
         }
-        // Below a bar row with controls the row already separates the
-        // title from the status bar, as in iOS and Material top bars.
+        // In a KPage the page gutter, and below a bar row with controls
+        // the row, already separate the title from the top.
         final barRow = inBar && KTopBarTitleScope.barControlsOf(context);
+        final spaced = barRow || KPage.isInside(context);
         return Padding(
           padding: EdgeInsets.only(
-            top: barRow ? 0 : t.componentPageHeaderPaddingBlockStart,
+            top: spaced ? 0 : t.componentPageHeaderPaddingBlockStart,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

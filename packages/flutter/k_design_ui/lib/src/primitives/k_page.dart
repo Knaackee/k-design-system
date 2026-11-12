@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
+import '../navigation/k_scroll_top_bar.dart';
 import 'k_layout.dart';
 
 /// Readable width of a [KPage].
@@ -41,15 +42,25 @@ class KPage extends StatelessWidget {
   /// Never add a refresh button to the page actions.
   final Future<void> Function()? onRefresh;
 
+  /// Whether [context] is inside a [KPage]: the page's gutter already
+  /// separates its content from the top, so a [KPageHeader] adds none.
+  static bool isInside(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_KPageScope>() != null;
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final padding = MediaQuery.paddingOf(context);
     final form = width == KPageWidth.form;
     final gutter = t.spaceLayoutGutter;
+    // Below a top bar row with controls the row already separates the page
+    // from the status bar: the title follows it closely, as on iOS.
+    final topGap = KTopBarTitleScope.barControlsOf(context)
+        ? t.spaceTight
+        : gutter;
     final insets = EdgeInsets.fromLTRB(
       gutter + padding.left,
-      gutter + padding.top,
+      topGap + padding.top,
       gutter + padding.right,
       gutter + padding.bottom,
     );
@@ -69,10 +80,12 @@ class KPage extends StatelessWidget {
               KPageWidth.fluid => double.infinity,
             },
           ),
-          child: KStack(
-            gap: KLayoutGap.section,
-            align: KLayoutAlign.stretch,
-            children: children,
+          child: _KPageScope(
+            child: KStack(
+              gap: KLayoutGap.section,
+              align: KLayoutAlign.stretch,
+              children: children,
+            ),
           ),
         ),
       ),
@@ -114,4 +127,11 @@ class KPage extends StatelessWidget {
       child: scroll,
     );
   }
+}
+
+class _KPageScope extends InheritedWidget {
+  const _KPageScope({required super.child});
+
+  @override
+  bool updateShouldNotify(_KPageScope oldWidget) => false;
 }
