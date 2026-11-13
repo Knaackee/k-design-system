@@ -331,6 +331,7 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
       setState(() {});
       _update();
     });
+    WidgetsBinding.instance.ensureVisualUpdate();
   }
 
   bool _onScroll(ScrollNotification notification) {

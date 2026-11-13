@@ -65,7 +65,11 @@ class KPageHeader extends StatelessWidget {
         ? leading
         : KBackButton(
             label: backLabel!,
-            onPressed: onBack,
+            onPressed:
+                onBack ??
+                () {
+                  if (context.mounted) Navigator.maybePop(context);
+                },
             history: backHistory,
           );
     final actionBar = actions.isEmpty

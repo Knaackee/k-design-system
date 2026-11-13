@@ -4,6 +4,44 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  testWidgets('a header resolved after the frame renders its back control', (
+    tester,
+  ) async {
+    final anchor = GlobalKey();
+    late KTopBarTitleController controller;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: KAdaptiveTheme(
+          child: Scaffold(
+            body: KScrollTopBar(
+              child: Builder(
+                builder: (context) {
+                  controller = KTopBarTitleScope.maybeOf(context)!;
+                  return SizedBox(key: anchor);
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.register(
+        'Detail',
+        anchor,
+        back: const KBackButton(label: 'Back to home'),
+      );
+    });
+    tester.binding.scheduleFrame();
+    await tester.pumpAndSettle();
+    expect(
+      find.byWidgetPredicate(
+        (widget) => widget is KBackButton && widget.label == 'Back to home',
+      ),
+      findsOneWidget,
+    );
+  });
   testWidgets(
     'bottom sheet preserves background header and content positions',
     (tester) async {
@@ -126,14 +164,30 @@ void main() {
       expect(find.byTooltip('Dashboard action'), findsOneWidget);
       navigator.currentState!.push(
         MaterialPageRoute<void>(
-          builder: (_) =>
-              const KPage(children: [KPageHeader(title: 'Second page')]),
+          builder: (_) => const KPage(
+            children: [
+              KPageHeader(title: 'Second page', backLabel: 'Back to dashboard'),
+            ],
+          ),
         ),
       );
       await tester.pumpAndSettle();
       expect(find.byTooltip('Dashboard action'), findsNothing);
-      navigator.currentState!.pop();
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is KBackButton && widget.label == 'Back to dashboard',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is KBackButton && widget.label == 'Back to dashboard',
+        ),
+      );
       await tester.pumpAndSettle();
+      expect(navigator.currentState!.canPop(), isFalse);
       expect(find.byTooltip('Dashboard action'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
