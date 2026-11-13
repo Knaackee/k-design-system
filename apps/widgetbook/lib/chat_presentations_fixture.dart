@@ -307,19 +307,35 @@ class _ChatPresentationsFixtureState extends State<ChatPresentationsFixture> {
       ]),
       _section('05', 'Zwei Seiten, ein Ergebnis', [
         const KPresentationComparison(
-          label: 'Freundschaftsspiel · Beendet',
+          label: 'Nationalteams · Vorschau',
           left: KPresentationParty(
-            name: 'Nord',
-            image: 'https://flagcdn.com/de.svg',
+            name: 'Serbien',
+            image:
+                'https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg',
             detail: 'Heim',
           ),
           right: KPresentationParty(
-            name: 'Süd',
-            image: 'https://flagcdn.com/at.svg',
+            name: 'Deutschland',
+            image:
+                'https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg',
+            detail: 'Gast',
+          ),
+          value: '20:45',
+          detail: 'Geplant · Beispiel für eine Spielankündigung',
+        ),
+        const KPresentationComparison(
+          label: 'Bundesliga · Beendet',
+          left: KPresentationParty(
+            name: 'Borussia Mönchengladbach',
+            detail: 'Heim',
+          ),
+          right: KPresentationParty(
+            name: 'Eintracht Frankfurt',
             detail: 'Gast',
           ),
           value: '2 : 1',
-          detail: 'Endstand',
+          detail:
+              'Endstand nach Verlängerung · Borussia gewinnt das Heimspiel und zieht in die nächste Runde ein.',
         ),
       ]),
       _section('06', 'Das Wichtigste auf einen Blick', [

@@ -34,3 +34,21 @@
 .k-link > .k-icon {
   flex: none;
 }
+
+.k-link--subtle {
+  max-inline-size: 100%;
+  align-items: flex-start;
+  color: var(--k-color-text-muted);
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.k-link--subtle:hover {
+  color: var(--k-color-text-primary);
+  text-decoration: none;
+}
+
+.k-link--subtle > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}

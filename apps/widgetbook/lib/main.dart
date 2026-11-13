@@ -2440,36 +2440,44 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         children: [
           WidgetbookUseCase(
             name: 'link-variants',
-            builder: (_) => Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const KText('Links', variant: KTextVariant.heading4),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      const Text('Read the '),
-                      KLink(label: 'component documentation', onPressed: () {}),
-                      const Text(' for details.'),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  KLink(
-                    label: 'Standalone action',
-                    variant: KLinkVariant.standalone,
-                    onPressed: () {},
-                  ),
-                  KLink(
-                    label: 'External resource',
-                    variant: KLinkVariant.standalone,
-                    external: true,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
+            builder: (_) => KPage(
+              children: [
+                KStack(
+                  gap: KLayoutGap.control,
+                  children: [
+                    const KText('Links', variant: KTextVariant.heading4),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        const Text('Read the '),
+                        KLink(
+                          label: 'component documentation',
+                          onPressed: () {},
+                        ),
+                        const Text(' for details.'),
+                      ],
+                    ),
+                    KLink(
+                      label: 'Standalone action',
+                      variant: KLinkVariant.standalone,
+                      onPressed: () {},
+                    ),
+                    KLink(
+                      label: 'External resource',
+                      variant: KLinkVariant.standalone,
+                      external: true,
+                      onPressed: () {},
+                    ),
+                    KLink(
+                      label:
+                          'Verified source with a long descriptive title that wraps on narrow screens',
+                      appearance: KLinkAppearance.subtle,
+                      leading: const KIcon(KIconName.link),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

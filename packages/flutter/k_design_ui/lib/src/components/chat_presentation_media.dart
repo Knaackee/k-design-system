@@ -36,7 +36,7 @@ class KPresentationGallery extends StatefulWidget {
 
 class _KPresentationGalleryState extends State<KPresentationGallery> {
   final _revision = ValueNotifier<int>(0);
-  BuildContext? _dialogContext;
+  ModalRoute<void>? _dialogRoute;
   bool _opening = false;
   bool get _valid =>
       widget.selectedIndex != null &&
@@ -51,15 +51,16 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
   @override
   void didUpdateWidget(KPresentationGallery oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _revision.value++;
     _syncDialog();
   }
 
   void _syncDialog() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
+      // The dialog belongs to another route; notify after the host build ends.
+      _revision.value++;
       if (!_valid) {
-        if (_dialogContext != null) Navigator.of(_dialogContext!).pop();
+        _closeDialog();
         return;
       }
       if (_opening) return;
@@ -67,15 +68,19 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
       await KAdaptiveDialog.show<void>(
         context: context,
         builder: (routeContext) {
-          _dialogContext = routeContext;
+          _dialogRoute = ModalRoute.of<void>(routeContext);
+          if (!mounted) {
+            _removeDialogAfterFrame();
+            return const SizedBox.shrink();
+          }
           return ValueListenableBuilder<int>(
             valueListenable: _revision,
             builder: (context, _, child) {
-              if (!_valid) return const SizedBox.shrink();
+              if (!mounted || !_valid) return const SizedBox.shrink();
               final index = widget.selectedIndex!;
               final image = widget.images[index];
               final tokens = _tokens(context);
-              void close() => Navigator.of(routeContext).pop();
+              void close() => _closeDialog();
               return KAdaptiveDialog(
                 title: Text(image.caption ?? widget.title),
                 closeLabel: widget.closeLabel,
@@ -125,8 +130,7 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
                               variant: KButtonVariant.ghost,
                               onPressed: index == 0
                                   ? null
-                                  : () =>
-                                        widget.onSelectedIndexChange(index - 1),
+                                  : () => _select(index - 1),
                             ),
                             Semantics(
                               liveRegion: true,
@@ -141,8 +145,7 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
                               variant: KButtonVariant.ghost,
                               onPressed: index == widget.images.length - 1
                                   ? null
-                                  : () =>
-                                        widget.onSelectedIndexChange(index + 1),
+                                  : () => _select(index + 1),
                             ),
                           ],
                         ),
@@ -154,7 +157,7 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
           );
         },
       );
-      _dialogContext = null;
+      _dialogRoute = null;
       _opening = false;
       if (mounted && widget.selectedIndex != null) {
         widget.onSelectedIndexChange(null);
@@ -162,8 +165,34 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
     });
   }
 
+  void _select(int? index) {
+    if (mounted) widget.onSelectedIndexChange(index);
+  }
+
+  void _closeDialog() {
+    final route = _dialogRoute;
+    final navigator = route?.navigator;
+    if (route == null || navigator == null || !route.isActive) return;
+    if (route.isCurrent) {
+      navigator.pop();
+    } else {
+      navigator.removeRoute(route);
+    }
+  }
+
+  void _removeDialogAfterFrame() {
+    final route = _dialogRoute;
+    if (route == null) return;
+    // A host can disappear during a build while another route covers its modal.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final navigator = route.navigator;
+      if (navigator != null && route.isActive) navigator.removeRoute(route);
+    });
+  }
+
   @override
   void dispose() {
+    _removeDialogAfterFrame();
     _revision.dispose();
     super.dispose();
   }
@@ -228,7 +257,7 @@ class _KPresentationGalleryState extends State<KPresentationGallery> {
         borderRadius: BorderRadius.circular(tokens.radiusControl),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => widget.onSelectedIndexChange(index),
+          onTap: () => _select(index),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

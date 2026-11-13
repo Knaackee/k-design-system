@@ -6,6 +6,8 @@ import 'k_icon.dart';
 
 enum KLinkVariant { inline, standalone }
 
+enum KLinkAppearance { defaultAppearance, subtle }
+
 class KLink extends StatefulWidget {
   const KLink({
     required this.label,
@@ -14,6 +16,7 @@ class KLink extends StatefulWidget {
     this.trailing,
     this.external = false,
     this.variant = KLinkVariant.inline,
+    this.appearance = KLinkAppearance.defaultAppearance,
     super.key,
   });
 
@@ -23,6 +26,7 @@ class KLink extends StatefulWidget {
   final Widget? trailing;
   final bool external;
   final KLinkVariant variant;
+  final KLinkAppearance appearance;
 
   @override
   State<KLink> createState() => _KLinkState();
@@ -37,8 +41,11 @@ class _KLinkState extends State<KLink> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final enabled = widget.onPressed != null;
+    final subtle = widget.appearance == KLinkAppearance.subtle;
     final color = !enabled
         ? t.colorTextMuted
+        : subtle
+        ? (_hovered || _pressed ? t.colorTextPrimary : t.colorTextMuted)
         : _pressed
         ? t.colorActionPrimaryPressed
         : _hovered
@@ -97,21 +104,29 @@ class _KLinkState extends State<KLink> {
                   color: color,
                   fontFamily: t.fontFamily,
                   fontSize: t.fontBodySmallSize,
-                  fontWeight: t.fontLabelWeight,
-                  decoration: TextDecoration.underline,
+                  fontWeight: subtle ? t.fontBodyWeight : t.fontLabelWeight,
+                  decoration: subtle
+                      ? TextDecoration.none
+                      : TextDecoration.underline,
                   decorationThickness: _hovered ? 2 : 1,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: subtle
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.center,
                   children: [
                     if (widget.leading != null) ...[
-                      widget.leading!,
+                      _coloredIcon(widget.leading!, color),
                       SizedBox(width: t.spaceTight),
                     ],
                     Flexible(child: Text(widget.label)),
                     if (widget.trailing != null || widget.external) ...[
                       SizedBox(width: t.spaceTight),
-                      widget.trailing ?? const KIcon(KIconName.externalLink),
+                      _coloredIcon(
+                        widget.trailing ?? const KIcon(KIconName.externalLink),
+                        color,
+                      ),
                     ],
                   ],
                 ),
@@ -122,4 +137,15 @@ class _KLinkState extends State<KLink> {
       ),
     );
   }
+
+  Widget _coloredIcon(Widget icon, Color color) =>
+      widget.appearance == KLinkAppearance.subtle && icon is KIcon
+      ? KIcon(
+          icon.name,
+          size: icon.size,
+          strokeWidth: icon.strokeWidth,
+          color: icon.color ?? color,
+          label: icon.label,
+        )
+      : icon;
 }

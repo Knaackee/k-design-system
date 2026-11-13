@@ -182,10 +182,12 @@ export function KPresentationComparison({
         {party(left)}
         <div className="k-presentation-comparison__score">
           <strong>{value}</strong>
-          {detail && <small>{detail}</small>}
         </div>
         {party(right)}
       </div>
+      {detail && (
+        <small className="k-presentation-comparison__detail">{detail}</small>
+      )}
     </KCard>
   );
 }

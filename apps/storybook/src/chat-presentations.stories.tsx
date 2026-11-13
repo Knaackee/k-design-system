@@ -233,19 +233,28 @@ function Review({
           </Section>
           <Section id="05" title="Zwei Seiten, ein Ergebnis">
             <KPresentationComparison
-              label="Freundschaftsspiel · Beendet"
+              label="Nationalteams · Vorschau"
               left={{
-                name: "Nord",
-                image: "https://flagcdn.com/de.svg",
+                name: "Serbien",
+                image:
+                  "https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg",
                 detail: "Heim",
               }}
               right={{
-                name: "Süd",
-                image: "https://flagcdn.com/at.svg",
+                name: "Deutschland",
+                image:
+                  "https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg",
                 detail: "Gast",
               }}
+              value="20:45"
+              detail="Geplant · Beispiel für eine Spielankündigung"
+            />
+            <KPresentationComparison
+              label="Bundesliga · Beendet"
+              left={{ name: "Borussia Mönchengladbach", detail: "Heim" }}
+              right={{ name: "Eintracht Frankfurt", detail: "Gast" }}
               value="2 : 1"
-              detail="Endstand"
+              detail="Endstand nach Verlängerung · Borussia gewinnt das Heimspiel und zieht in die nächste Runde ein."
             />
           </Section>
           <Section id="06" title="Das Wichtigste auf einen Blick">

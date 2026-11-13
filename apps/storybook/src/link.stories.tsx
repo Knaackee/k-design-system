@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { KContainer, KLink, KStack, KText } from "@k-design-system/ui";
+import { KContainer, KIcon, KLink, KStack, KText } from "@k-design-system/ui";
 
 const meta = {
   title: "Primitives/Link",
@@ -25,6 +25,14 @@ export const Variants: Story = {
           </KLink>
           <KLink href="https://example.com" external variant="standalone">
             External resource
+          </KLink>
+          <KLink
+            href="https://example.com/source"
+            appearance="subtle"
+            leading={<KIcon name="link" />}
+          >
+            Verified source with a long descriptive title that wraps on narrow
+            screens
           </KLink>
         </KStack>
       </KContainer>

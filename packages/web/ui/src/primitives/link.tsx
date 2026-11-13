@@ -2,6 +2,7 @@ import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { KIcon } from "./icon.js";
 
 export type KLinkVariant = "inline" | "standalone";
+export type KLinkAppearance = "default" | "subtle";
 
 export interface KLinkProps extends Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -12,6 +13,7 @@ export interface KLinkProps extends Omit<
   trailing?: ReactNode;
   external?: boolean;
   variant?: KLinkVariant;
+  appearance?: KLinkAppearance;
 }
 
 export const KLink = forwardRef<HTMLAnchorElement, KLinkProps>(function KLink(
@@ -24,6 +26,7 @@ export const KLink = forwardRef<HTMLAnchorElement, KLinkProps>(function KLink(
     target,
     trailing,
     variant = "inline",
+    appearance = "default",
     ...props
   },
   ref,
@@ -36,7 +39,12 @@ export const KLink = forwardRef<HTMLAnchorElement, KLinkProps>(function KLink(
     <a
       {...props}
       ref={ref}
-      className={["k-link", `k-link--${variant}`, className]
+      className={[
+        "k-link",
+        `k-link--${variant}`,
+        appearance === "subtle" && "k-link--subtle",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       target={resolvedTarget}

@@ -312,27 +312,28 @@ class KPresentationComparison extends StatelessWidget {
           _meta(label, t),
           Padding(
             padding: EdgeInsets.symmetric(vertical: gap * 2),
-            child: Row(
-              children: [
-                Expanded(child: party(left)),
-                SizedBox(width: gap),
-                Flexible(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _value(value, t),
-                      if (detail != null) ...[
-                        SizedBox(height: gap),
-                        _meta(detail!, t, align: TextAlign.center),
-                      ],
-                    ],
+            child: LayoutBuilder(
+              builder: (context, constraints) => Row(
+                children: [
+                  Expanded(child: party(left)),
+                  SizedBox(width: gap),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: (constraints.maxWidth - gap * 2) / 2,
+                    ),
+                    child: IntrinsicWidth(child: _value(value, t)),
                   ),
-                ),
-                SizedBox(width: gap),
-                Expanded(child: party(right)),
-              ],
+                  SizedBox(width: gap),
+                  Expanded(child: party(right)),
+                ],
+              ),
             ),
           ),
+          if (detail != null)
+            SizedBox(
+              width: double.infinity,
+              child: _meta(detail!, t, align: TextAlign.center),
+            ),
         ],
       ),
     );
