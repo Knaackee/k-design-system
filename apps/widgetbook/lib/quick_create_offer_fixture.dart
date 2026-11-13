@@ -27,7 +27,6 @@ class _QuickCreateOfferFixtureState extends State<QuickCreateOfferFixture> {
       ? KFab(
           label: 'Neu erstellen',
           showLabels: true,
-          child: const KIcon(KIconName.plus),
           items: [
             for (final option in _options)
               KFabItem(
@@ -37,6 +36,7 @@ class _QuickCreateOfferFixtureState extends State<QuickCreateOfferFixture> {
                 onSelected: () => _select(option.$1),
               ),
           ],
+          child: const KIcon(KIconName.plus),
         )
       : KMenuButton(
           label: 'Neu erstellen',

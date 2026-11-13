@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
-import '../lib/quick_create_offer_fixture.dart';
+import 'package:k_design_widgetbook/quick_create_offer_fixture.dart';
 
 void main() {
   testWidgets('quick create gallery opens all five UI-only options', (
