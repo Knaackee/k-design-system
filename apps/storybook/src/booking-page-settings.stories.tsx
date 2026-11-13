@@ -26,11 +26,30 @@ function SettingsControls() {
         preview={<p>Preview: {theme}</p>}
       >
         <KStack gap="section" align="stretch">
-          <KList><KListItem title="Online" description="example.test/u/business"/><KBookingPageActions previewAction={<KButton fullWidth variant="secondary"><KIcon name="eye"/>Vorschau</KButton>}>
-            <KButton fullWidth><KIcon name="share"/>Teilen</KButton>
-            <KButton fullWidth variant="secondary"><KIcon name="copy"/>Kopieren</KButton>
-            <KButton fullWidth variant="secondary"><KIcon name="qr-code"/>QR-Code</KButton>
-          </KBookingPageActions></KList>
+          <KList>
+            <KListItem title="Online" description="example.test/u/business" />
+            <KBookingPageActions
+              previewAction={
+                <KButton fullWidth variant="secondary">
+                  <KIcon name="eye" />
+                  Vorschau
+                </KButton>
+              }
+            >
+              <KButton fullWidth>
+                <KIcon name="share" />
+                Teilen
+              </KButton>
+              <KButton fullWidth variant="secondary">
+                <KIcon name="copy" />
+                Kopieren
+              </KButton>
+              <KButton fullWidth variant="secondary">
+                <KIcon name="qr-code" />
+                QR-Code
+              </KButton>
+            </KBookingPageActions>
+          </KList>
           <KBookingThemePicker
             layout="carousel"
             value={theme}

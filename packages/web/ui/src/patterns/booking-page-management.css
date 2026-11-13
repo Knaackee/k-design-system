@@ -425,12 +425,7 @@
   button[aria-pressed="true"]
   img {
   outline-color: var(--k-color-action-primary-background);
-  box-shadow: 0 0 0 var(--k-space-tight)
-    color-mix(
-      in srgb,
-      var(--k-color-action-primary-background) 24%,
-      transparent
-    );
+  box-shadow: 0 0 0 var(--k-space-tight) var(--k-color-surface-subtle);
 }
 .k-booking-page-actions {
   display: grid;

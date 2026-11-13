@@ -4,7 +4,8 @@ import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { KColorSwatches } from "./dist/patterns/color-swatches.js";
 import {
-  KBookingPageLayout, KBookingPageActions,
+  KBookingPageLayout,
+  KBookingPageActions,
   KBookingThemePicker,
 } from "./dist/patterns/booking-page-management.js";
 import { KSegmentedControl } from "./dist/navigation/segmented-control.js";
@@ -84,7 +85,16 @@ test("settings preview is opt-in and retains supplied live renderer", () => {
 });
 
 test("status actions retain four complete labels in the shared mobile pattern", () => {
-  const html=renderToStaticMarkup(h(KBookingPageActions,{previewAction:h('button',null,'Vorschau')},['Teilen','Kopieren','QR-Code'].map(label=>h('button',{key:label},label))));
-  assert.equal((html.match(/<button/g) ?? []).length,4);
-  for (const label of ['Teilen','Kopieren','QR-Code','Vorschau']) assert.ok(html.includes(label));
+  const html = renderToStaticMarkup(
+    h(
+      KBookingPageActions,
+      { previewAction: h("button", null, "Vorschau") },
+      ["Teilen", "Kopieren", "QR-Code"].map((label) =>
+        h("button", { key: label }, label),
+      ),
+    ),
+  );
+  assert.equal((html.match(/<button/g) ?? []).length, 4);
+  for (const label of ["Teilen", "Kopieren", "QR-Code", "Vorschau"])
+    assert.ok(html.includes(label));
 });

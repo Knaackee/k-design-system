@@ -18,6 +18,7 @@ version is tagged.
 - Beside the sidebar (tablet, desktop) the page starts on the line of the sidebar header (`space.controlGap`), so title and logo line up. Flutter: `KPageTopGap`; Web: `--k-page-top-gap` on the shell content.
 
 ## Unreleased
+
 - Flutter shell accepts public `KFab` page actions using the standard FAB and icon size; button-derived FAB defaults stay unchanged. `KFab.showLabels` optionally shows names beside action bubbles (default false); Back, Escape and outside taps dismiss the menu and restore trigger focus.
 
 - Flutter `KOfferOverview.headerAction` optionally replaces its default creation menu; existing callers keep the previous menu.
@@ -55,7 +56,7 @@ version is tagged.
 
 - Refine the new metric-card slots: reserve the visual, two description lines
   and comparison-badge minimum so short/missing content aligns in a dashboard.
-  
+
   Compact chart height is 96 px after the dashboard review.
 
 ### Embedded map media
@@ -68,10 +69,10 @@ version is tagged.
 - Axis-free compact bar charts no longer reserve empty axis gutters in Web and Flutter. Their maximum value uses the full compact plotting height; labelled charts retain their existing layout. Flutter hit testing and rendering share the same inset resolution.
 - Regression coverage checks full-height bars and selection near the top edge, plus default/axis-free Web markup.
 
-
 ### Single-column list surfaces
 
 - Web single-column data lists now inherit their enclosing surface, matching Flutter. Multi-column tables retain their existing canvas background.
+
 ## 1.0.0-rc.2 - 2026-11-09
 
 - Add shared Markdown rendering, preview and streaming fixtures for Web and Flutter.

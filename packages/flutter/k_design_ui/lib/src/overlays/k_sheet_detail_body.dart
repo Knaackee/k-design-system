@@ -176,7 +176,7 @@ class _FloatingSurface extends StatelessWidget {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colorSurfaceRaised.withValues(alpha: .88),
+        color: t.colorSurfaceRaised.withValues(alpha: 1 - t.opacityFaint),
         borderRadius: BorderRadius.circular(t.radiusFull),
       ),
       child: child,

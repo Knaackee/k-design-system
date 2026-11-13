@@ -4,5 +4,7 @@
   height: 90dvh;
 }
 @media (max-width: 599px) {
-  .booking-details-fixture { grid-template-columns: minmax(0, 1fr); }
+  .booking-details-fixture {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

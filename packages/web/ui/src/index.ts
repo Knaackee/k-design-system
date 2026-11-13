@@ -709,4 +709,8 @@ export {
   type KMetricCardProps,
 } from "./data-display/metric-card.js";
 
-export { KColorSwatches, type KColorSwatch, type KColorSwatchesProps } from './patterns/color-swatches.js';
+export {
+  KColorSwatches,
+  type KColorSwatch,
+  type KColorSwatchesProps,
+} from "./patterns/color-swatches.js";
