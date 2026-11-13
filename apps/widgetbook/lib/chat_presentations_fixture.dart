@@ -102,6 +102,8 @@ class _ChatPresentationsFixtureState extends State<ChatPresentationsFixture> {
     meta: Text(meta),
     openLabel: 'Öffnen',
     downloadLabel: 'Herunterladen',
+    saveLabel: 'In Dateien speichern',
+    onSave: () => _open('Kopie im persönlichen Zielordner speichern'),
     onOpen: () => _open(name),
     onDownload: download ? _download : null,
   );

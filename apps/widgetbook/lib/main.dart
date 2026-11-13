@@ -90,6 +90,7 @@ import 'management_overview_fixture.dart';
 import 'avatar_editor_fixture.dart';
 import 'usage_details_fixture.dart';
 import 'agent_ui_fixtures.dart';
+import 'agent_email_draft_fixture.dart';
 import 'agent_ui_complete_fixture.dart';
 import 'agent_question_dictation_fixture.dart';
 import 'chat_composer_fixture.dart';
@@ -1862,6 +1863,24 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
       WidgetbookFolder(
         name: 'AgentUI',
         children: [
+          for (final scenario in [
+            'pending',
+            'validation',
+            'submitting',
+            'sent',
+            'discarded',
+          ])
+            WidgetbookUseCase(
+              name: switch (scenario) {
+                'pending' => 'agent-email-draft',
+                'submitting' => 'agent-email-draft-sending',
+                _ => 'agent-email-draft-$scenario',
+              },
+              builder: (_) => AgentEmailDraftFixture(
+                key: ValueKey(scenario),
+                scenario: scenario,
+              ),
+            ),
           WidgetbookUseCase(
             name: 'agent-chat-switcher',
             builder: (_) => const AgentChatSwitcherFixture(),

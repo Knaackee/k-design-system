@@ -1,3 +1,11 @@
+export { KAgentEmailDraft } from "./chat/agent-email-draft.js";
+export type {
+  KAgentEmailDraftProps,
+  KAgentEmailDraftValue,
+  KAgentEmailDraftAttachment,
+  KAgentEmailDraftStatus,
+  KAgentEmailDraftLabels,
+} from "./chat/agent-email-draft.js";
 export { KTextShimmer } from "./feedback/text-shimmer.js";
 export { KAvatarEditor } from "./patterns/avatar-editor.js";
 export type {

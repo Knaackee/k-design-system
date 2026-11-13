@@ -7,7 +7,6 @@ Widget presentationMediaPlayer(
   bool audio = false,
   bool youtube = false,
   String? poster,
-}) => const SizedBox(
-  height: 54,
-  child: Center(child: Text('Media playback is available in the web preview.')),
+}) => const Center(
+  child: Text('Media playback is available in the web preview.'),
 );

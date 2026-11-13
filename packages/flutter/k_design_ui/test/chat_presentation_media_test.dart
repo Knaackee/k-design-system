@@ -96,6 +96,7 @@ void main() {
   testWidgets('file actions remain usable in a narrow surface', (tester) async {
     var opened = false;
     var downloaded = false;
+    var saved = false;
     await tester.pumpWidget(
       harness(
         SizedBox(
@@ -104,12 +105,15 @@ void main() {
             name: 'long-file-name-for-a-presentation.pdf',
             onOpen: () => opened = true,
             onDownload: () => downloaded = true,
+            onSave: () => saved = true,
           ),
         ),
       ),
     );
     await tester.tap(find.text('Open'));
     await tester.tap(find.text('Download'));
+    await tester.tap(find.text('Save to Files'));
+    expect(saved, isTrue);
     expect(opened, isTrue);
     expect(downloaded, isTrue);
     expect(tester.takeException(), isNull);

@@ -1,5 +1,7 @@
 library;
 
+export 'src/chat/k_agent_email_draft.dart';
+
 export 'src/patterns/k_catalog_editor.dart';
 export 'src/data_display/k_qr_code.dart';
 

@@ -57,7 +57,12 @@ class KAttachment extends StatelessWidget {
         borderRadius: BorderRadius.circular(t.radiusCard),
         child: Container(
           constraints: BoxConstraints(minHeight: t.sizeHitTarget),
-          padding: EdgeInsets.all(padding),
+          padding: size == KAttachmentSize.compact
+              ? EdgeInsets.symmetric(
+                  vertical: padding,
+                  horizontal: t.spaceControlGap,
+                )
+              : EdgeInsets.all(padding),
           decoration: BoxDecoration(
             color: error ? t.colorStatusErrorBackground : t.colorSurfaceRaised,
             border: Border.all(

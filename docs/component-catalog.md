@@ -42,6 +42,8 @@ consumer tracking/reaction events and optional audio input are available. See th
 gallery fixtures. Native performance optimization and renewed visual acceptance
 are separate from restoring the existing component.
 
+Email draft review (12 November 2026): Web and Flutter export the controlled, directly editable `KAgentEmailDraft` for sender, recipients, subject, Markdown and attachments. It emits host callbacks and performs no provider operation. `draftId` scopes disclosure state; delivery, validation, attachment source selection and upload remain host-owned. Storybook and Widgetbook share fixture IDs `agent-email-draft`, `agent-email-draft-validation`, `agent-email-draft-sending`, `agent-email-draft-sent` and `agent-email-draft-discarded`. The Web composition is accepted; Widgetbook visual parity is under active review. There is no preview/edit mode switch. Existing input and editor defaults are preserved by opt-in inline/prose variants. Targeted contract, editing and layout tests cover both implementations; final gallery evidence is recorded in the consuming Assist phase plan. Consumer integration, real sending and publication remain pending separate acceptance.
+
 ## Delivery sequence
 
 1. IconButton, flat MenuButton/OverflowMenu and wrapping Toolbar. Shared menu data

@@ -10,6 +10,7 @@ export interface KPresentationImage {
   alt: string;
   thumbnailSrc?: string;
   caption?: string;
+  fit?: "cover" | "contain";
 }
 
 export interface KPresentationGalleryProps {
@@ -60,6 +61,7 @@ export function KPresentationGallery({
             <KPresentationPicture
               src={image.thumbnailSrc || image.src}
               alt={image.alt}
+              style={{ objectFit: image.fit ?? "cover" }}
               loading="lazy"
             />
             {image.caption && <span>{image.caption}</span>}
@@ -226,6 +228,8 @@ export interface KPresentationFileProps {
   icon?: KIconName;
   onOpen?: () => void;
   onDownload?: () => void;
+  onSave?: () => void;
+  saveLabel?: string;
   openLabel?: string;
   downloadLabel?: string;
 }
@@ -236,6 +240,8 @@ export function KPresentationFile({
   icon = "file",
   onOpen,
   onDownload,
+  onSave,
+  saveLabel = "Save to Files",
   openLabel = "Open",
   downloadLabel = "Download",
 }: KPresentationFileProps) {
@@ -252,7 +258,7 @@ export function KPresentationFile({
           {meta && <div className="k-presentation-media__meta">{meta}</div>}
         </div>
       </div>
-      {(onOpen || onDownload) && (
+      {(onOpen || onDownload || onSave) && (
         <div className="k-presentation-file__actions">
           {onOpen && (
             <KButton
@@ -272,6 +278,16 @@ export function KPresentationFile({
             >
               <KIcon name="download" />
               {downloadLabel}
+            </KButton>
+          )}
+          {onSave && (
+            <KButton
+              variant="ghost"
+              aria-label={`${saveLabel}: ${name}`}
+              onClick={onSave}
+            >
+              <KIcon name="folder-input" />
+              {saveLabel}
             </KButton>
           )}
         </div>

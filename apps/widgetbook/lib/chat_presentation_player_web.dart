@@ -83,6 +83,6 @@ class _BrowserPlayerState extends State<_BrowserPlayer> {
         }
       },
     );
-    return widget.audio ? SizedBox(height: 54, child: player) : player;
+    return player;
   }
 }

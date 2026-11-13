@@ -9,6 +9,8 @@ import 'form_style.dart';
 import 'k_field.dart';
 import 'form_clear.dart';
 
+enum KInputAppearance { outlined, inline, inlineHeading }
+
 class KInput extends StatefulWidget {
   const KInput({
     this.controller,
@@ -21,6 +23,7 @@ class KInput extends StatefulWidget {
     this.placeholder,
     this.leading,
     this.pill = false,
+    this.appearance = KInputAppearance.outlined,
     this.enabled = true,
     this.readOnly = false,
     this.obscureText = false,
@@ -46,6 +49,9 @@ class KInput extends StatefulWidget {
   final String? placeholder;
   final Widget? leading;
   final bool pill;
+
+  /// Flat composition fields keep focus indication and native editing semantics.
+  final KInputAppearance appearance;
   final bool enabled;
   final bool readOnly;
 
@@ -164,7 +170,26 @@ class _KInputState extends State<KInput> {
         ),
       );
     }
-    return KDictationFieldOverlay(
+    final inline = widget.appearance != KInputAppearance.outlined;
+    if (inline) {
+      final focusBorder = UnderlineInputBorder(
+        borderSide: BorderSide(
+          color: t.colorBorderFocus,
+          width: t.borderWidthStrong,
+        ),
+      );
+      appearance = appearance.copyWith(
+        filled: false,
+        contentPadding: EdgeInsets.symmetric(vertical: t.spaceControlGap),
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedBorder: focusBorder,
+        focusedErrorBorder: focusBorder,
+      );
+    }
+    final result = KDictationFieldOverlay(
       controller: _controller,
       state: widget.enabled && !widget.readOnly && !widget.obscureText
           ? widget.dictationState
@@ -213,8 +238,44 @@ class _KInputState extends State<KInput> {
                       autocorrect: widget.autocorrect && !widget.obscureText,
                       enableSuggestions:
                           widget.autocorrect && !widget.obscureText,
-                      textAlignVertical: formInputAlignment(appearance),
-                      style: formTextStyle(context),
+                      textAlignVertical: inline
+                          ? TextAlignVertical.center
+                          : formInputAlignment(appearance),
+                      style: inline
+                          ? formTextStyle(context).copyWith(
+                              fontSize:
+                                  widget.appearance ==
+                                      KInputAppearance.inlineHeading
+                                  ? t.fontHeading5Size
+                                  : t.fontControlSize,
+                              fontWeight:
+                                  widget.appearance ==
+                                      KInputAppearance.inlineHeading
+                                  ? t.fontHeadingWeight
+                                  : t.fontBodyWeight,
+                              color: t.colorTextPrimary,
+                              fontVariations: [
+                                FontVariation.weight(
+                                  (widget.appearance ==
+                                              KInputAppearance.inlineHeading
+                                          ? t.fontHeadingWeight
+                                          : t.fontBodyWeight)
+                                      .value
+                                      .toDouble(),
+                                ),
+                                FontVariation.opticalSize(
+                                  MediaQuery.textScalerOf(context)
+                                      .scale(
+                                        widget.appearance ==
+                                                KInputAppearance.inlineHeading
+                                            ? t.fontHeading5Size
+                                            : t.fontControlSize,
+                                      )
+                                      .clamp(14, 32),
+                                ),
+                              ],
+                            )
+                          : formTextStyle(context),
                       cursorColor: t.colorBorderFocus,
                       decoration: appearance,
                     ),
@@ -231,6 +292,14 @@ class _KInputState extends State<KInput> {
         ],
       ),
     );
+    return inline
+        ? MediaQuery.withClampedTextScaling(
+            maxScaleFactor: widget.appearance == KInputAppearance.inlineHeading
+                ? 2
+                : 3,
+            child: result,
+          )
+        : result;
   }
 }
 

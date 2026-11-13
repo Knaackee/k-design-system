@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 /// Drag-to-dismiss for every bottom sheet (Decision 0015).
@@ -38,6 +39,7 @@ class _KSheetDragState extends State<KSheetDrag>
 
   late final AnimationController _offset;
   bool _closing = false;
+  bool _settling = false;
 
   double get offset => _offset.value;
 
@@ -69,7 +71,16 @@ class _KSheetDragState extends State<KSheetDrag>
   /// Ends a drag with [velocity] in logical pixels per second (positive is
   /// down).
   Future<void> release(double velocity) async {
-    if (_closing || _offset.value <= 0) return;
+    if (_closing || _settling || _offset.value <= 0) return;
+    // Scroll dimensions can request a ballistic simulation during layout.
+    // Read the surface and start its animation only after that layout ends.
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) release(velocity);
+      });
+      return;
+    }
     final height = context.size?.height ?? 1;
     final dismiss =
         velocity > _flingVelocity ||
@@ -84,14 +95,17 @@ class _KSheetDragState extends State<KSheetDrag>
       }
       if (!mounted) return;
       // Popping: keep the offset so the exit continues from the finger.
-      if (route != null && !route.isCurrent) return;
+      if (route != null && !route.isActive) return;
       // Held back (unsaved changes): settle back below.
       _closing = false;
     }
     final motion = Theme.of(
       context,
     ).extension<KDesignTokens>()!.motion(KMotionRole.control);
-    await _offset.animateTo(0, duration: motion.settle, curve: motion.curve);
+    _settling = true;
+    _offset
+        .animateTo(0, duration: motion.settle, curve: motion.curve)
+        .whenCompleteOrCancel(() => _settling = false);
   }
 
   @override

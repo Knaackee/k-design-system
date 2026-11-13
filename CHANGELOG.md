@@ -22,6 +22,10 @@ version is tagged.
 
 - Flutter `KOfferOverview.headerAction` optionally replaces its default creation menu; existing callers keep the previous menu.
 - Flutter shell FABs preserve `KButton.content` and its accessible label, including icon-only creation actions. Matching quick-create gallery compositions demonstrate five UI-only options on Web and Flutter.
+- Add controlled `KAgentEmailDraft` for Web and Flutter: directly editable recipients, subject and Markdown body, attachment callbacks, validation and explicit Send/Discard states. Optional host-owned subject dictation and a maximizable body editor preserve the draft; sending and transcription remain consumer-owned.
+- Flutter `KInput` adds inline/inline-heading appearances; `KMarkdownEditor.inline` and `KCodeEditor.prose` support flat composed prose fields while retaining their existing defaults.
+- `KPresentationFile` adds optional `onSave`/`saveLabel` actions on Web and Flutter. The host chooses the destination and performs the copy.
+- Web gallery `KPresentationImage.fit` accepts `cover` or `contain` per thumbnail, matching Flutter and preserving `cover` as the default for photos.
 
 - Less space above the large title: a `KPageHeader` inside `KPage` adds no
   top padding of its own (the page gutter already separates it), and

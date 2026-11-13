@@ -58,6 +58,24 @@ extension _MarkdownEditorSurface on KMarkdownEditorState {
                                             onSelectionChanged:
                                                 _updateSelection,
                                             language: KCodeLanguage.markdown,
+                                            embedded:
+                                                widget.inline && !_expanded,
+                                            prose: widget.inline && !_expanded,
+                                            fontFamily:
+                                                widget.inline && !_expanded
+                                                ? t.fontFamily
+                                                : 'packages/k_design_ui/KDesignMono',
+                                            // Inline prose must not inherit the code editor's
+                                            // monospace fallbacks when a brand font is unavailable.
+                                            fontFamilyFallback:
+                                                widget.inline && !_expanded
+                                                ? const ['sans-serif']
+                                                : const [
+                                                    'Cascadia Mono',
+                                                    'Consolas',
+                                                    'Roboto Mono',
+                                                    'monospace',
+                                                  ],
                                             readOnly: widget.readOnly,
                                             placeholder: widget.placeholder,
                                             showLineNumbers: false,
