@@ -493,7 +493,7 @@ class KSaveBar extends StatelessWidget {
           vertical: t.spaceControlInsetInline,
         ),
         child:
-            constraints.maxWidth < 360 ||
+            constraints.maxWidth < KSettingsDialog.breakpoint ||
                 MediaQuery.textScalerOf(context).scale(1) >= 1.3
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

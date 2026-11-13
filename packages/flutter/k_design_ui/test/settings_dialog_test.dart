@@ -90,6 +90,43 @@ void main() {
     expect(find.text('Drop'), findsOneWidget);
   });
 
+  for (final detail in [false, true]) {
+    testWidgets('phone drag from ${detail ? 'detail' : 'list'} dismisses', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        app(
+          Builder(
+            builder: (context) => TextButton(
+              onPressed: () => KSettingsDialog.show<void>(
+                context: context,
+                builder: (_) =>
+                    KSettingsDialog(title: 'Rocky', sections: sections()),
+              ),
+              child: const Text('Open settings'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open settings'));
+      await tester.pumpAndSettle();
+      if (detail) {
+        await tester.tap(find.byKey(const ValueKey('k-settings-row:profile')));
+        await tester.pumpAndSettle();
+      }
+      await tester.fling(
+        find.text(detail ? 'Profile body' : 'Drop'),
+        const Offset(0, 400),
+        1500,
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(KSettingsDialog), findsNothing);
+    });
+  }
+
   testWidgets('save bar counts changes and saves', (tester) async {
     final log = <String>[];
     Future<void> pump(int changes) => tester.pumpWidget(
@@ -112,6 +149,24 @@ void main() {
     await tester.tap(find.text('Save'));
     expect(log, ['discard', 'save']);
   });
+
+  for (final width in [360.0, 393.0, 412.0]) {
+    testWidgets('German save bar fits phone width $width', (tester) async {
+      await tester.pumpWidget(
+        app(
+          KLocalization(
+            locale: 'de',
+            child: KSaveBar(changes: 0, onSave: () {}, onDiscard: () {}),
+          ),
+          size: Size(width, 200),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      final state = tester.getRect(find.text('Alles gespeichert'));
+      final save = tester.getRect(find.text('Speichern'));
+      expect(state.bottom, lessThanOrEqualTo(save.top));
+    });
+  }
 
   testWidgets('avatar picker reports shape and colour', (tester) async {
     String? shape;

@@ -35,4 +35,61 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('a confirmation above the sheet lets its drag settle back', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: kDesignTheme(),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              child: const Text('Open'),
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                enableDrag: false,
+                builder: (sheetContext) => KSheetDrag(
+                  onDismiss: () => showDialog<void>(
+                    context: sheetContext,
+                    builder: (dialogContext) => AlertDialog(
+                      title: const Text('Discard draft?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(dialogContext).pop(),
+                          child: const Text('Keep editing'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  child: const SizedBox(
+                    height: 600,
+                    child: SingleChildScrollView(
+                      child: SizedBox(height: 900, child: Text('Draft body')),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    final before = tester.getTopLeft(find.text('Draft body'));
+    for (var attempt = 0; attempt < 2; attempt++) {
+      await tester.fling(find.text('Draft body'), const Offset(0, 400), 1500);
+      await tester.pumpAndSettle();
+      expect(find.text('Discard draft?'), findsOneWidget);
+      expect(tester.getTopLeft(find.text('Draft body')), before);
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.text('Keep editing'));
+      await tester.pumpAndSettle();
+    }
+  });
 }
