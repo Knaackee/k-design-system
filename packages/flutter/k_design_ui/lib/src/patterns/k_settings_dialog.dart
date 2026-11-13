@@ -487,15 +487,14 @@ class KSaveBar extends StatelessWidget {
         onPressed: dirty && !saving ? onSave : null,
       ),
     ];
-    // Narrow or large text: the state above the buttons (Web: container
-    // query on the bar's outer width).
-    return LayoutBuilder(
-      builder: (context, constraints) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: t.spaceLayoutGutter,
-          vertical: t.spaceControlInsetInline,
-        ),
-        child:
+    // Measure the space available to content, after the bar's insets.
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: t.spaceLayoutGutter,
+        vertical: t.spaceControlInsetInline,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) =>
             constraints.maxWidth < 360 ||
                 MediaQuery.textScalerOf(context).scale(1) >= 1.3
             ? Column(

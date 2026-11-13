@@ -1,5 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { KMap } from "./dist/patterns/map.js";
 import { overlayCoordinates, routeParts } from "./dist/maps/map-overlays.js";
 import { edgePanVelocity, resolvePinDrag } from "./dist/maps/map-pin-drag.js";
 
@@ -11,6 +14,21 @@ const route = {
     [14, 53],
   ],
 };
+
+test("embedded maps opt into a shared outer surface without changing standalone defaults", () => {
+  const render = (embedded) =>
+    renderToStaticMarkup(
+      React.createElement(KMap, {
+        mapStyle: { version: 8, sources: {}, layers: [] },
+        center: [13, 52],
+        embedded,
+      }),
+    );
+  assert.doesNotMatch(render(), /data-embedded/);
+  assert.doesNotMatch(render(false), /data-embedded/);
+  assert.match(render(true), /<section class="k-map" data-embedded="true"/);
+  assert.match(render(true), /k-map__controls/);
+});
 
 test("edge pan stays still inside the safe area and accelerates toward bounds", () => {
   assert.deepEqual(

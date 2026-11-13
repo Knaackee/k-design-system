@@ -15,6 +15,7 @@ import fixture from "../../../fixtures/chart-families.json";
 
 type Variant =
   | "bar"
+  | "bar-compact"
   | "bar-horizontal"
   | "bar-stacked"
   | "area"
@@ -44,7 +45,8 @@ function ChartFamilyFixture({
   const title = circular ? "Task distribution" : "Workspace activity";
   const formatCategory = (x: number) => fixture.categories[x] ?? "";
   const props = {
-    series: fixture.series,
+    series:
+      variant === "bar-compact" ? fixture.series.slice(0, 1) : fixture.series,
     xAxis: {
       min: variant.startsWith("bar") ? -0.5 : 0,
       max: variant.startsWith("bar") ? 5.5 : 5,
@@ -61,7 +63,7 @@ function ChartFamilyFixture({
     selectedPoint: selection,
     onSelectionChange: setSelection,
     visibleSeriesIds: visible,
-    onVisibleSeriesChange: setVisible,
+    onVisibleSeriesChange: variant === "bar-compact" ? undefined : setVisible,
     stacked,
   };
   return (
@@ -117,6 +119,7 @@ function ChartFamilyFixture({
       ) : (
         <KBarChart
           {...props}
+          compact={variant === "bar-compact"}
           orientation={variant === "bar-horizontal" ? "horizontal" : "vertical"}
         />
       )}
@@ -177,6 +180,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Bar: Story = { name: "chart-bar" };
+export const CompactBar: Story = {
+  name: "chart-bar-compact",
+  args: { variant: "bar-compact", showTableButton: false },
+  parameters: { fixtureId: "chart-bar-compact" },
+};
 export const HorizontalBar: Story = {
   name: "chart-bar-horizontal",
   args: { variant: "bar-horizontal" },

@@ -27,10 +27,12 @@ abstract final class KDesignTokenVariants {
   static const styleAppleComponentPageHeaderPaddingBlockStart = 16.0;
   static const styleAppleComponentPageHeaderTitleGap = 4.0;
   static const styleAppleComponentButtonRadius = 999.0;
+  static const styleAppleComponentMetricCardRadius = 24.0;
   static const styleAppleSizeControlTouch = 44.0;
   static const styleAppleSizeFieldTouch = 44.0;
   static const styleAppleSizeProminentTouch = 50.0;
   static const styleAppleSizeIconStroke = 1.5;
+  static const styleAppleRadiusCard = 24.0;
   static const styleMaterialComponentTopBarHeight = 64.0;
   static const styleMaterialComponentListRowMinHeight = 56.0;
   static const styleMaterialComponentListRowPaddingBlock = 16.0;
@@ -42,10 +44,12 @@ abstract final class KDesignTokenVariants {
   static const styleMaterialComponentPageHeaderPaddingBlockStart = 16.0;
   static const styleMaterialComponentPageHeaderTitleGap = 4.0;
   static const styleMaterialComponentButtonRadius = 999.0;
+  static const styleMaterialComponentMetricCardRadius = 24.0;
   static const styleMaterialSizeControlTouch = 40.0;
   static const styleMaterialSizeFieldTouch = 56.0;
   static const styleMaterialSizeProminentTouch = 48.0;
   static const styleMaterialSizeIconStroke = 1.75;
+  static const styleMaterialRadiusCard = 24.0;
   static const motionAppleMotionFeedbackDuration = Duration(milliseconds: 100);
   static const motionAppleMotionFeedbackBounce = 0.0;
   static const motionAppleMotionFeedbackDistance = 1.0;
@@ -284,10 +288,12 @@ abstract final class KDesignTokenVariants {
     componentPageHeaderPaddingBlockStart: styleAppleComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleAppleComponentPageHeaderTitleGap,
     componentButtonRadius: styleAppleComponentButtonRadius,
+    componentMetricCardRadius: styleAppleComponentMetricCardRadius,
     sizeControlTouch: styleAppleSizeControlTouch,
     sizeFieldTouch: styleAppleSizeFieldTouch,
     sizeProminentTouch: styleAppleSizeProminentTouch,
     sizeIconStroke: styleAppleSizeIconStroke,
+    radiusCard: styleAppleRadiusCard,
   );
   static KDesignTokens applyStyleMaterial(KDesignTokens t) => t.copyWith(
     componentTopBarHeight: styleMaterialComponentTopBarHeight,
@@ -301,10 +307,12 @@ abstract final class KDesignTokenVariants {
     componentPageHeaderPaddingBlockStart: styleMaterialComponentPageHeaderPaddingBlockStart,
     componentPageHeaderTitleGap: styleMaterialComponentPageHeaderTitleGap,
     componentButtonRadius: styleMaterialComponentButtonRadius,
+    componentMetricCardRadius: styleMaterialComponentMetricCardRadius,
     sizeControlTouch: styleMaterialSizeControlTouch,
     sizeFieldTouch: styleMaterialSizeFieldTouch,
     sizeProminentTouch: styleMaterialSizeProminentTouch,
     sizeIconStroke: styleMaterialSizeIconStroke,
+    radiusCard: styleMaterialRadiusCard,
   );
   static KDesignTokens applyTypeScaleApple(KDesignTokens t) => t.copyWith(
     fontSize: typeScaleAppleFontSize,
@@ -675,6 +683,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentChartSeriesPrimary,
     required this.componentChartSeriesSecondary,
     required this.componentChartGridColor,
+    required this.componentChartCompactHeight,
     required this.componentOrbitTrackColor,
     required this.componentOrbitTrackLineWidth,
     required this.componentOrbitTrackOpacity,
@@ -934,6 +943,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentMobileAppBarBadgeOffsetInline,
     required this.componentMobileAppBarBadgePaddingInline,
     required this.componentMobileAppBarBadgeStrokeWidth,
+    required this.componentMobileAppBarBadgeForeground,
     required this.componentMobileAppBarLabelFontSize,
     required this.componentMobileAppBarOpacityGlassLiquid,
     required this.componentMobileAppBarOpacityGlassFrosted,
@@ -1010,6 +1020,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     required this.componentSettingsDialogContentPadding,
     required this.componentAvatarPickerTileWidth,
     required this.componentAvatarPickerSwatchSize,
+    required this.componentPagePaddingBlockStart,
+    required this.componentMetricCardRadius,
+    required this.componentMetricCardValueSize,
+    required this.componentMetricCardValueLineHeight,
+    required this.componentMetricCardTrendHeight,
+    required this.componentMetricCardTrendColor,
     required this.textScaleMaxBody,
     required this.textScaleMaxHeading,
     required this.textScaleMaxControl,
@@ -1358,6 +1374,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final Color componentChartSeriesPrimary;
   final Color componentChartSeriesSecondary;
   final Color componentChartGridColor;
+  final double componentChartCompactHeight;
   final Color componentOrbitTrackColor;
   final double componentOrbitTrackLineWidth;
   final double componentOrbitTrackOpacity;
@@ -1617,6 +1634,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentMobileAppBarBadgeOffsetInline;
   final double componentMobileAppBarBadgePaddingInline;
   final double componentMobileAppBarBadgeStrokeWidth;
+  final Color componentMobileAppBarBadgeForeground;
   final double componentMobileAppBarLabelFontSize;
   final double componentMobileAppBarOpacityGlassLiquid;
   final double componentMobileAppBarOpacityGlassFrosted;
@@ -1693,6 +1711,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
   final double componentSettingsDialogContentPadding;
   final double componentAvatarPickerTileWidth;
   final double componentAvatarPickerSwatchSize;
+  final double componentPagePaddingBlockStart;
+  final double componentMetricCardRadius;
+  final double componentMetricCardValueSize;
+  final double componentMetricCardValueLineHeight;
+  final double componentMetricCardTrendHeight;
+  final Color componentMetricCardTrendColor;
   final double textScaleMaxBody;
   final double textScaleMaxHeading;
   final double textScaleMaxControl;
@@ -2041,6 +2065,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentChartSeriesPrimary: Color(0xFF242428),
     componentChartSeriesSecondary: Color(0xFF064E3B),
     componentChartGridColor: Color(0xFFE2E2E4),
+    componentChartCompactHeight: 96.0,
     componentOrbitTrackColor: Color(0xFFC17E47),
     componentOrbitTrackLineWidth: 1.0,
     componentOrbitTrackOpacity: 0.28,
@@ -2300,6 +2325,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarBadgeOffsetInline: 8.0,
     componentMobileAppBarBadgePaddingInline: 4.0,
     componentMobileAppBarBadgeStrokeWidth: 2.0,
+    componentMobileAppBarBadgeForeground: Color(0xFFFFFFFF),
     componentMobileAppBarLabelFontSize: 11.0,
     componentMobileAppBarOpacityGlassLiquid: 0.2,
     componentMobileAppBarOpacityGlassFrosted: 0.74,
@@ -2376,6 +2402,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSettingsDialogContentPadding: 24.0,
     componentAvatarPickerTileWidth: 64.0,
     componentAvatarPickerSwatchSize: 28.0,
+    componentPagePaddingBlockStart: 16.0,
+    componentMetricCardRadius: 8.0,
+    componentMetricCardValueSize: 28.0,
+    componentMetricCardValueLineHeight: 30.0,
+    componentMetricCardTrendHeight: 24.0,
+    componentMetricCardTrendColor: Color(0xFF242428),
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
@@ -2725,6 +2757,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentChartSeriesPrimary: Color(0xFFE8E8EB),
     componentChartSeriesSecondary: Color(0xFFD1FAE5),
     componentChartGridColor: Color(0xFF303033),
+    componentChartCompactHeight: 96.0,
     componentOrbitTrackColor: Color(0xFFC17E47),
     componentOrbitTrackLineWidth: 1.0,
     componentOrbitTrackOpacity: 0.28,
@@ -2984,6 +3017,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarBadgeOffsetInline: 8.0,
     componentMobileAppBarBadgePaddingInline: 4.0,
     componentMobileAppBarBadgeStrokeWidth: 2.0,
+    componentMobileAppBarBadgeForeground: Color(0xFFFFFFFF),
     componentMobileAppBarLabelFontSize: 11.0,
     componentMobileAppBarOpacityGlassLiquid: 0.2,
     componentMobileAppBarOpacityGlassFrosted: 0.74,
@@ -3060,6 +3094,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSettingsDialogContentPadding: 24.0,
     componentAvatarPickerTileWidth: 64.0,
     componentAvatarPickerSwatchSize: 28.0,
+    componentPagePaddingBlockStart: 16.0,
+    componentMetricCardRadius: 8.0,
+    componentMetricCardValueSize: 28.0,
+    componentMetricCardValueLineHeight: 30.0,
+    componentMetricCardTrendHeight: 24.0,
+    componentMetricCardTrendColor: Color(0xFFE8E8EB),
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
@@ -3409,6 +3449,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentChartSeriesPrimary: Color(0xFF242428),
     componentChartSeriesSecondary: Color(0xFF065F46),
     componentChartGridColor: Color(0xFF99D5CD),
+    componentChartCompactHeight: 96.0,
     componentOrbitTrackColor: Color(0xFFC17E47),
     componentOrbitTrackLineWidth: 1.0,
     componentOrbitTrackOpacity: 0.28,
@@ -3668,6 +3709,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarBadgeOffsetInline: 8.0,
     componentMobileAppBarBadgePaddingInline: 4.0,
     componentMobileAppBarBadgeStrokeWidth: 2.0,
+    componentMobileAppBarBadgeForeground: Color(0xFFFFFFFF),
     componentMobileAppBarLabelFontSize: 11.0,
     componentMobileAppBarOpacityGlassLiquid: 0.2,
     componentMobileAppBarOpacityGlassFrosted: 0.74,
@@ -3744,6 +3786,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSettingsDialogContentPadding: 24.0,
     componentAvatarPickerTileWidth: 64.0,
     componentAvatarPickerSwatchSize: 28.0,
+    componentPagePaddingBlockStart: 16.0,
+    componentMetricCardRadius: 8.0,
+    componentMetricCardValueSize: 28.0,
+    componentMetricCardValueLineHeight: 30.0,
+    componentMetricCardTrendHeight: 24.0,
+    componentMetricCardTrendColor: Color(0xFF242428),
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
@@ -4093,6 +4141,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentChartSeriesPrimary: Color(0xFFE8E8EB),
     componentChartSeriesSecondary: Color(0xFFD1FAE5),
     componentChartGridColor: Color(0xFF23544E),
+    componentChartCompactHeight: 96.0,
     componentOrbitTrackColor: Color(0xFFC17E47),
     componentOrbitTrackLineWidth: 1.0,
     componentOrbitTrackOpacity: 0.28,
@@ -4352,6 +4401,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentMobileAppBarBadgeOffsetInline: 8.0,
     componentMobileAppBarBadgePaddingInline: 4.0,
     componentMobileAppBarBadgeStrokeWidth: 2.0,
+    componentMobileAppBarBadgeForeground: Color(0xFFFFFFFF),
     componentMobileAppBarLabelFontSize: 11.0,
     componentMobileAppBarOpacityGlassLiquid: 0.2,
     componentMobileAppBarOpacityGlassFrosted: 0.74,
@@ -4428,6 +4478,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     componentSettingsDialogContentPadding: 24.0,
     componentAvatarPickerTileWidth: 64.0,
     componentAvatarPickerSwatchSize: 28.0,
+    componentPagePaddingBlockStart: 16.0,
+    componentMetricCardRadius: 8.0,
+    componentMetricCardValueSize: 28.0,
+    componentMetricCardValueLineHeight: 30.0,
+    componentMetricCardTrendHeight: 24.0,
+    componentMetricCardTrendColor: Color(0xFFE8E8EB),
     textScaleMaxBody: 3.0,
     textScaleMaxHeading: 2.0,
     textScaleMaxControl: 3.0,
@@ -4778,6 +4834,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     Color? componentChartSeriesPrimary,
     Color? componentChartSeriesSecondary,
     Color? componentChartGridColor,
+    double? componentChartCompactHeight,
     Color? componentOrbitTrackColor,
     double? componentOrbitTrackLineWidth,
     double? componentOrbitTrackOpacity,
@@ -5037,6 +5094,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentMobileAppBarBadgeOffsetInline,
     double? componentMobileAppBarBadgePaddingInline,
     double? componentMobileAppBarBadgeStrokeWidth,
+    Color? componentMobileAppBarBadgeForeground,
     double? componentMobileAppBarLabelFontSize,
     double? componentMobileAppBarOpacityGlassLiquid,
     double? componentMobileAppBarOpacityGlassFrosted,
@@ -5113,6 +5171,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
     double? componentSettingsDialogContentPadding,
     double? componentAvatarPickerTileWidth,
     double? componentAvatarPickerSwatchSize,
+    double? componentPagePaddingBlockStart,
+    double? componentMetricCardRadius,
+    double? componentMetricCardValueSize,
+    double? componentMetricCardValueLineHeight,
+    double? componentMetricCardTrendHeight,
+    Color? componentMetricCardTrendColor,
     double? textScaleMaxBody,
     double? textScaleMaxHeading,
     double? textScaleMaxControl,
@@ -5461,6 +5525,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentChartSeriesPrimary: componentChartSeriesPrimary ?? colorActionPrimaryBackground ?? this.componentChartSeriesPrimary,
       componentChartSeriesSecondary: componentChartSeriesSecondary ?? colorStatusSuccessForeground ?? this.componentChartSeriesSecondary,
       componentChartGridColor: componentChartGridColor ?? colorBorderDefault ?? this.componentChartGridColor,
+      componentChartCompactHeight: componentChartCompactHeight ?? this.componentChartCompactHeight,
       componentOrbitTrackColor: componentOrbitTrackColor ?? this.componentOrbitTrackColor,
       componentOrbitTrackLineWidth: componentOrbitTrackLineWidth ?? borderWidthDefault ?? this.componentOrbitTrackLineWidth,
       componentOrbitTrackOpacity: componentOrbitTrackOpacity ?? opacityMedium ?? this.componentOrbitTrackOpacity,
@@ -5720,6 +5785,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentMobileAppBarBadgeOffsetInline: componentMobileAppBarBadgeOffsetInline ?? spaceSmallInset ?? this.componentMobileAppBarBadgeOffsetInline,
       componentMobileAppBarBadgePaddingInline: componentMobileAppBarBadgePaddingInline ?? spaceTight ?? this.componentMobileAppBarBadgePaddingInline,
       componentMobileAppBarBadgeStrokeWidth: componentMobileAppBarBadgeStrokeWidth ?? borderWidthStrong ?? this.componentMobileAppBarBadgeStrokeWidth,
+      componentMobileAppBarBadgeForeground: componentMobileAppBarBadgeForeground ?? this.componentMobileAppBarBadgeForeground,
       componentMobileAppBarLabelFontSize: componentMobileAppBarLabelFontSize ?? fontAvatarSmallSize ?? this.componentMobileAppBarLabelFontSize,
       componentMobileAppBarOpacityGlassLiquid: componentMobileAppBarOpacityGlassLiquid ?? opacityGlassLiquid ?? this.componentMobileAppBarOpacityGlassLiquid,
       componentMobileAppBarOpacityGlassFrosted: componentMobileAppBarOpacityGlassFrosted ?? opacityGlassFrosted ?? this.componentMobileAppBarOpacityGlassFrosted,
@@ -5796,6 +5862,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentSettingsDialogContentPadding: componentSettingsDialogContentPadding ?? this.componentSettingsDialogContentPadding,
       componentAvatarPickerTileWidth: componentAvatarPickerTileWidth ?? this.componentAvatarPickerTileWidth,
       componentAvatarPickerSwatchSize: componentAvatarPickerSwatchSize ?? this.componentAvatarPickerSwatchSize,
+      componentPagePaddingBlockStart: componentPagePaddingBlockStart ?? this.componentPagePaddingBlockStart,
+      componentMetricCardRadius: componentMetricCardRadius ?? radiusCard ?? this.componentMetricCardRadius,
+      componentMetricCardValueSize: componentMetricCardValueSize ?? this.componentMetricCardValueSize,
+      componentMetricCardValueLineHeight: componentMetricCardValueLineHeight ?? this.componentMetricCardValueLineHeight,
+      componentMetricCardTrendHeight: componentMetricCardTrendHeight ?? this.componentMetricCardTrendHeight,
+      componentMetricCardTrendColor: componentMetricCardTrendColor ?? componentChartSeriesPrimary ?? this.componentMetricCardTrendColor,
       textScaleMaxBody: textScaleMaxBody ?? this.textScaleMaxBody,
       textScaleMaxHeading: textScaleMaxHeading ?? this.textScaleMaxHeading,
       textScaleMaxControl: textScaleMaxControl ?? this.textScaleMaxControl,
@@ -6149,6 +6221,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentChartSeriesPrimary: Color.lerp(componentChartSeriesPrimary, other.componentChartSeriesPrimary, t)!,
       componentChartSeriesSecondary: Color.lerp(componentChartSeriesSecondary, other.componentChartSeriesSecondary, t)!,
       componentChartGridColor: Color.lerp(componentChartGridColor, other.componentChartGridColor, t)!,
+      componentChartCompactHeight: lerpDouble(componentChartCompactHeight, other.componentChartCompactHeight, t)!,
       componentOrbitTrackColor: Color.lerp(componentOrbitTrackColor, other.componentOrbitTrackColor, t)!,
       componentOrbitTrackLineWidth: lerpDouble(componentOrbitTrackLineWidth, other.componentOrbitTrackLineWidth, t)!,
       componentOrbitTrackOpacity: lerpDouble(componentOrbitTrackOpacity, other.componentOrbitTrackOpacity, t)!,
@@ -6408,6 +6481,7 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentMobileAppBarBadgeOffsetInline: lerpDouble(componentMobileAppBarBadgeOffsetInline, other.componentMobileAppBarBadgeOffsetInline, t)!,
       componentMobileAppBarBadgePaddingInline: lerpDouble(componentMobileAppBarBadgePaddingInline, other.componentMobileAppBarBadgePaddingInline, t)!,
       componentMobileAppBarBadgeStrokeWidth: lerpDouble(componentMobileAppBarBadgeStrokeWidth, other.componentMobileAppBarBadgeStrokeWidth, t)!,
+      componentMobileAppBarBadgeForeground: Color.lerp(componentMobileAppBarBadgeForeground, other.componentMobileAppBarBadgeForeground, t)!,
       componentMobileAppBarLabelFontSize: lerpDouble(componentMobileAppBarLabelFontSize, other.componentMobileAppBarLabelFontSize, t)!,
       componentMobileAppBarOpacityGlassLiquid: lerpDouble(componentMobileAppBarOpacityGlassLiquid, other.componentMobileAppBarOpacityGlassLiquid, t)!,
       componentMobileAppBarOpacityGlassFrosted: lerpDouble(componentMobileAppBarOpacityGlassFrosted, other.componentMobileAppBarOpacityGlassFrosted, t)!,
@@ -6484,6 +6558,12 @@ class KDesignTokens extends ThemeExtension<KDesignTokens> {
       componentSettingsDialogContentPadding: lerpDouble(componentSettingsDialogContentPadding, other.componentSettingsDialogContentPadding, t)!,
       componentAvatarPickerTileWidth: lerpDouble(componentAvatarPickerTileWidth, other.componentAvatarPickerTileWidth, t)!,
       componentAvatarPickerSwatchSize: lerpDouble(componentAvatarPickerSwatchSize, other.componentAvatarPickerSwatchSize, t)!,
+      componentPagePaddingBlockStart: lerpDouble(componentPagePaddingBlockStart, other.componentPagePaddingBlockStart, t)!,
+      componentMetricCardRadius: lerpDouble(componentMetricCardRadius, other.componentMetricCardRadius, t)!,
+      componentMetricCardValueSize: lerpDouble(componentMetricCardValueSize, other.componentMetricCardValueSize, t)!,
+      componentMetricCardValueLineHeight: lerpDouble(componentMetricCardValueLineHeight, other.componentMetricCardValueLineHeight, t)!,
+      componentMetricCardTrendHeight: lerpDouble(componentMetricCardTrendHeight, other.componentMetricCardTrendHeight, t)!,
+      componentMetricCardTrendColor: Color.lerp(componentMetricCardTrendColor, other.componentMetricCardTrendColor, t)!,
       textScaleMaxBody: lerpDouble(textScaleMaxBody, other.textScaleMaxBody, t)!,
       textScaleMaxHeading: lerpDouble(textScaleMaxHeading, other.textScaleMaxHeading, t)!,
       textScaleMaxControl: lerpDouble(textScaleMaxControl, other.textScaleMaxControl, t)!,

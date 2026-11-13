@@ -15,6 +15,8 @@ export interface KButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   /** Semantic visual role. */
   variant?: KButtonVariant;
+  /** Destructive confirmation; preserves the variant's shape and target size. */
+  tone?: "default" | "destructive";
   children: ReactNode;
 }
 
@@ -27,6 +29,7 @@ export const KButton = forwardRef<HTMLButtonElement, KButtonProps>(
       loading = false,
       fullWidth = false,
       variant = "primary",
+      tone = "default",
       type = "button",
       ...props
     },
@@ -46,6 +49,7 @@ export const KButton = forwardRef<HTMLButtonElement, KButtonProps>(
           type={type}
           className={classes}
           data-variant={variant}
+          data-tone={tone === "default" ? undefined : tone}
           disabled={disabled || loading}
           aria-busy={loading || undefined}
         >

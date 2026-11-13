@@ -345,6 +345,7 @@
   --k-component-chart-series-primary: var(--k-color-action-primary-background);
   --k-component-chart-series-secondary: var(--k-color-status-success-foreground);
   --k-component-chart-grid-color: var(--k-color-border-default);
+  --k-component-chart-compact-height: 96px;
   --k-component-orbit-track-color: #c17e47;
   --k-component-orbit-track-line-width: var(--k-border-width-default);
   --k-component-orbit-track-opacity: var(--k-opacity-medium);
@@ -604,6 +605,7 @@
   --k-component-mobile-app-bar-badge-offset-inline: var(--k-space-small-inset);
   --k-component-mobile-app-bar-badge-padding-inline: var(--k-space-tight);
   --k-component-mobile-app-bar-badge-stroke-width: var(--k-border-width-strong);
+  --k-component-mobile-app-bar-badge-foreground: #ffffff;
   --k-component-mobile-app-bar-label-font-size: var(--k-font-avatar-small-size);
   --k-component-mobile-app-bar-opacity-glass-liquid: var(--k-opacity-glass-liquid);
   --k-component-mobile-app-bar-opacity-glass-frosted: var(--k-opacity-glass-frosted);
@@ -680,6 +682,12 @@
   --k-component-settings-dialog-content-padding: 24px;
   --k-component-avatar-picker-tile-width: 64px;
   --k-component-avatar-picker-swatch-size: 28px;
+  --k-component-page-padding-block-start: 16px;
+  --k-component-metric-card-radius: var(--k-radius-card);
+  --k-component-metric-card-value-size: 28px;
+  --k-component-metric-card-value-line-height: 30px;
+  --k-component-metric-card-trend-height: 24px;
+  --k-component-metric-card-trend-color: var(--k-component-chart-series-primary);
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
@@ -1041,6 +1049,7 @@
   --k-component-chart-series-primary: var(--k-color-action-primary-background);
   --k-component-chart-series-secondary: var(--k-color-status-success-foreground);
   --k-component-chart-grid-color: var(--k-color-border-default);
+  --k-component-chart-compact-height: 96px;
   --k-component-orbit-track-color: #c17e47;
   --k-component-orbit-track-line-width: var(--k-border-width-default);
   --k-component-orbit-track-opacity: var(--k-opacity-medium);
@@ -1300,6 +1309,7 @@
   --k-component-mobile-app-bar-badge-offset-inline: var(--k-space-small-inset);
   --k-component-mobile-app-bar-badge-padding-inline: var(--k-space-tight);
   --k-component-mobile-app-bar-badge-stroke-width: var(--k-border-width-strong);
+  --k-component-mobile-app-bar-badge-foreground: #ffffff;
   --k-component-mobile-app-bar-label-font-size: var(--k-font-avatar-small-size);
   --k-component-mobile-app-bar-opacity-glass-liquid: var(--k-opacity-glass-liquid);
   --k-component-mobile-app-bar-opacity-glass-frosted: var(--k-opacity-glass-frosted);
@@ -1376,6 +1386,12 @@
   --k-component-settings-dialog-content-padding: 24px;
   --k-component-avatar-picker-tile-width: 64px;
   --k-component-avatar-picker-swatch-size: 28px;
+  --k-component-page-padding-block-start: 16px;
+  --k-component-metric-card-radius: var(--k-radius-card);
+  --k-component-metric-card-value-size: 28px;
+  --k-component-metric-card-value-line-height: 30px;
+  --k-component-metric-card-trend-height: 24px;
+  --k-component-metric-card-trend-color: var(--k-component-chart-series-primary);
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
@@ -1737,6 +1753,7 @@
   --k-component-chart-series-primary: var(--k-color-action-primary-background);
   --k-component-chart-series-secondary: var(--k-color-status-success-foreground);
   --k-component-chart-grid-color: var(--k-color-border-default);
+  --k-component-chart-compact-height: 96px;
   --k-component-orbit-track-color: #c17e47;
   --k-component-orbit-track-line-width: var(--k-border-width-default);
   --k-component-orbit-track-opacity: var(--k-opacity-medium);
@@ -1996,6 +2013,7 @@
   --k-component-mobile-app-bar-badge-offset-inline: var(--k-space-small-inset);
   --k-component-mobile-app-bar-badge-padding-inline: var(--k-space-tight);
   --k-component-mobile-app-bar-badge-stroke-width: var(--k-border-width-strong);
+  --k-component-mobile-app-bar-badge-foreground: #ffffff;
   --k-component-mobile-app-bar-label-font-size: var(--k-font-avatar-small-size);
   --k-component-mobile-app-bar-opacity-glass-liquid: var(--k-opacity-glass-liquid);
   --k-component-mobile-app-bar-opacity-glass-frosted: var(--k-opacity-glass-frosted);
@@ -2072,6 +2090,12 @@
   --k-component-settings-dialog-content-padding: 24px;
   --k-component-avatar-picker-tile-width: 64px;
   --k-component-avatar-picker-swatch-size: 28px;
+  --k-component-page-padding-block-start: 16px;
+  --k-component-metric-card-radius: var(--k-radius-card);
+  --k-component-metric-card-value-size: 28px;
+  --k-component-metric-card-value-line-height: 30px;
+  --k-component-metric-card-trend-height: 24px;
+  --k-component-metric-card-trend-color: var(--k-component-chart-series-primary);
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
@@ -2433,6 +2457,7 @@
   --k-component-chart-series-primary: var(--k-color-action-primary-background);
   --k-component-chart-series-secondary: var(--k-color-status-success-foreground);
   --k-component-chart-grid-color: var(--k-color-border-default);
+  --k-component-chart-compact-height: 96px;
   --k-component-orbit-track-color: #c17e47;
   --k-component-orbit-track-line-width: var(--k-border-width-default);
   --k-component-orbit-track-opacity: var(--k-opacity-medium);
@@ -2692,6 +2717,7 @@
   --k-component-mobile-app-bar-badge-offset-inline: var(--k-space-small-inset);
   --k-component-mobile-app-bar-badge-padding-inline: var(--k-space-tight);
   --k-component-mobile-app-bar-badge-stroke-width: var(--k-border-width-strong);
+  --k-component-mobile-app-bar-badge-foreground: #ffffff;
   --k-component-mobile-app-bar-label-font-size: var(--k-font-avatar-small-size);
   --k-component-mobile-app-bar-opacity-glass-liquid: var(--k-opacity-glass-liquid);
   --k-component-mobile-app-bar-opacity-glass-frosted: var(--k-opacity-glass-frosted);
@@ -2768,6 +2794,12 @@
   --k-component-settings-dialog-content-padding: 24px;
   --k-component-avatar-picker-tile-width: 64px;
   --k-component-avatar-picker-swatch-size: 28px;
+  --k-component-page-padding-block-start: 16px;
+  --k-component-metric-card-radius: var(--k-radius-card);
+  --k-component-metric-card-value-size: 28px;
+  --k-component-metric-card-value-line-height: 30px;
+  --k-component-metric-card-trend-height: 24px;
+  --k-component-metric-card-trend-color: var(--k-component-chart-series-primary);
   --k-text-scale-max-body: 3;
   --k-text-scale-max-heading: 2;
   --k-text-scale-max-control: 3;
@@ -2816,10 +2848,12 @@
   --k-component-page-header-padding-block-start: 16px;
   --k-component-page-header-title-gap: 4px;
   --k-component-button-radius: 999px;
+  --k-component-metric-card-radius: 24px;
   --k-size-control-touch: 44px;
   --k-size-field-touch: 44px;
   --k-size-prominent-touch: 50px;
   --k-size-icon-stroke: 1.5;
+  --k-radius-card: 24px;
 }
 
 [data-style="material"] {
@@ -2834,10 +2868,12 @@
   --k-component-page-header-padding-block-start: 16px;
   --k-component-page-header-title-gap: 4px;
   --k-component-button-radius: 999px;
+  --k-component-metric-card-radius: 24px;
   --k-size-control-touch: 40px;
   --k-size-field-touch: 56px;
   --k-size-prominent-touch: 48px;
   --k-size-icon-stroke: 1.75;
+  --k-radius-card: 24px;
 }
 
 [data-motion="apple"] {

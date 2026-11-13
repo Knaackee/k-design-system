@@ -6,6 +6,8 @@ enum KMapDayItemKind { stop, travel }
 
 enum KMapDayPresentation { auto, sidebar, sheet }
 
+enum KMapDayPanelLayout { floating, docked }
+
 enum KMapDayPanelState { compact, medium, expanded }
 
 extension KMapDayPanelStateStep on KMapDayPanelState {
@@ -133,3 +135,24 @@ typedef KMapDayMapBuilder =
 typedef KMapDayItemBuilder =
     Widget Function(BuildContext context, KMapDayItem item);
 typedef KMapDayTimeFormatter = String Function(int minutes);
+
+/// Product content inside the library-owned scrolling panel and draggable sheet.
+@immutable
+class KMapDayPanelContext {
+  const KMapDayPanelContext({
+    required this.isSheet,
+    required this.expanded,
+    required this.toggleExpanded,
+    required this.selectedItemId,
+    required this.onItemTap,
+  });
+  final bool isSheet, expanded;
+  final VoidCallback toggleExpanded;
+  final String? selectedItemId;
+  final ValueChanged<String> onItemTap;
+}
+
+typedef KMapDayPanelHeaderBuilder =
+    Widget? Function(BuildContext context, KMapDayPanelContext panel);
+typedef KMapDayPanelBodyBuilder =
+    Widget Function(BuildContext context, KMapDayPanelContext panel);

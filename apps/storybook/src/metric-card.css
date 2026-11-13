@@ -1,0 +1,18 @@
+.k-gallery:has(.metric-card-review) {
+  padding: 0;
+  justify-items: stretch;
+}
+.metric-card-review {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--k-space-layout-gutter);
+}
+.metric-card-review__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--k-space-content-action-gap);
+  max-width: calc(var(--k-space-card-padding) * 24);
+}
+[data-text-large] .metric-card-review__grid {
+  grid-template-columns: minmax(0, 1fr);
+}

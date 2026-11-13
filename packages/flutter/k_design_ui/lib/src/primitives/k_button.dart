@@ -6,6 +6,8 @@ import 'k_overflow_text.dart';
 
 enum KButtonVariant { primary, secondary, ghost }
 
+enum KButtonTone { standard, destructive }
+
 class KButton extends StatelessWidget {
   const KButton({
     required this.label,
@@ -17,6 +19,7 @@ class KButton extends StatelessWidget {
     this.trailing,
     this.paddingInline,
     this.variant = KButtonVariant.primary,
+    this.tone = KButtonTone.standard,
     super.key,
   });
 
@@ -34,6 +37,7 @@ class KButton extends StatelessWidget {
   /// controlled by a parent layout, such as a table column.
   final double? paddingInline;
   final KButtonVariant variant;
+  final KButtonTone tone;
 
   @override
   Widget build(BuildContext context) {
@@ -41,29 +45,51 @@ class KButton extends StatelessWidget {
     final tokens =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
-    final (background, hover, pressed, foreground, border) = switch (variant) {
-      KButtonVariant.primary => (
-        tokens.colorActionPrimaryBackground,
-        tokens.colorActionPrimaryHover,
-        tokens.colorActionPrimaryPressed,
-        tokens.colorActionPrimaryForeground,
-        Colors.transparent,
-      ),
-      KButtonVariant.secondary => (
-        tokens.colorActionSecondaryBackground,
-        tokens.colorActionSecondaryHover,
-        tokens.colorActionSecondaryPressed,
-        tokens.colorActionSecondaryForeground,
-        tokens.colorActionSecondaryBorder,
-      ),
-      KButtonVariant.ghost => (
-        tokens.colorActionGhostBackground,
-        tokens.colorActionGhostHover,
-        tokens.colorActionGhostPressed,
-        tokens.colorActionGhostForeground,
-        tokens.colorActionGhostBorder,
-      ),
-    };
+    final (
+      background,
+      hover,
+      pressed,
+      foreground,
+      border,
+    ) = tone == KButtonTone.destructive
+        ? (
+            tokens.colorStatusErrorAccent,
+            Color.lerp(
+              tokens.colorStatusErrorAccent,
+              tokens.colorTextPrimary,
+              .12,
+            )!,
+            Color.lerp(
+              tokens.colorStatusErrorAccent,
+              tokens.colorTextPrimary,
+              .24,
+            )!,
+            tokens.colorActionPrimaryForeground,
+            tokens.colorStatusErrorAccent,
+          )
+        : switch (variant) {
+            KButtonVariant.primary => (
+              tokens.colorActionPrimaryBackground,
+              tokens.colorActionPrimaryHover,
+              tokens.colorActionPrimaryPressed,
+              tokens.colorActionPrimaryForeground,
+              Colors.transparent,
+            ),
+            KButtonVariant.secondary => (
+              tokens.colorActionSecondaryBackground,
+              tokens.colorActionSecondaryHover,
+              tokens.colorActionSecondaryPressed,
+              tokens.colorActionSecondaryForeground,
+              tokens.colorActionSecondaryBorder,
+            ),
+            KButtonVariant.ghost => (
+              tokens.colorActionGhostBackground,
+              tokens.colorActionGhostHover,
+              tokens.colorActionGhostPressed,
+              tokens.colorActionGhostForeground,
+              tokens.colorActionGhostBorder,
+            ),
+          };
 
     final button = SizedBox(
       width: fullWidth ? double.infinity : null,

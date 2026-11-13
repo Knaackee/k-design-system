@@ -268,6 +268,7 @@ export function applyKAccent(
     "--k-color-brand-primary-foreground": onTint,
     "--k-color-brand-primary-border": `color-mix(in srgb, ${accent} 35%, ${surface})`,
     "--k-component-card-border-color": accent,
+    "--k-component-metric-card-trend-color": accent,
   };
   for (const [name, value] of Object.entries(values))
     element.style.setProperty(name, value);

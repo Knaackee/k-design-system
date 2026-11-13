@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart'
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../actions/k_icon_button.dart';
+import '../actions/k_fab.dart';
 import '../actions/k_menu_button.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
@@ -224,10 +225,9 @@ class _KTopBarTitleAnchorState extends State<KTopBarTitleAnchor>
   void _register() {
     final controller = _controller;
     if (controller == null) return;
-    // Hidden routes and tabs pause their tickers; they leave the bar.
-    final visible =
-        TickerMode.valuesOf(context).enabled &&
-        (ModalRoute.of(context)?.isCurrent ?? true);
+    // Opaque routes pause their tickers; transparent popups keep the page
+    // visible and must preserve its bar controls and content insets.
+    final visible = TickerMode.valuesOf(context).enabled;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (visible) {
@@ -427,6 +427,7 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
     final hasControls =
         widget.enabled &&
         (back != null || (split.bar.isNotEmpty && !inlineActions));
+    final inlineTopGap = inlineActions ? t.spaceLayoutSectionGap : 0.0;
     final barHeight = t.componentTopBarHeight;
     final fab = widget.enabled ? split.primary : null;
     final fabReserve = fab == null
@@ -506,13 +507,13 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
     final bar = KeyedSubtree(
       key: _bar,
       child: SizedBox(
-        height: top + barHeight,
+        height: top + inlineTopGap + barHeight,
         child: Stack(
           children: [
             Positioned.fill(child: IgnorePointer(child: background)),
             Padding(
               padding: EdgeInsets.only(
-                top: top,
+                top: top + inlineTopGap,
                 left: t.spaceLayoutGutter + media.padding.left,
                 right: t.spaceLayoutGutter + media.padding.right,
               ),
@@ -551,7 +552,9 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
             PositionedDirectional(
               end: t.spaceLayoutGutter + media.padding.right,
               bottom: t.spaceLayoutGutter + media.padding.bottom,
-              child: _KExtendedFab(action: action, extended: _fabExtended),
+              child: action.fab != null
+                  ? _shellFab(action.fab!, t)
+                  : _KExtendedFab(action: action, extended: _fabExtended),
             ),
         ],
       ),
@@ -561,8 +564,16 @@ class _KScrollTopBarState extends State<KScrollTopBar> {
 
 /// A page action converted for the bar or the FAB.
 class _BarAction {
-  const _BarAction({required this.label, required this.onPressed, this.icon});
+  const _BarAction({
+    required this.label,
+    required this.onPressed,
+    this.icon,
+    this.content,
+    this.fab,
+  });
+  final KFab? fab;
   final String label;
+  final Widget? content;
   final KIconName? icon;
   final VoidCallback? onPressed;
 }
@@ -592,6 +603,14 @@ _SplitActions _splitActions(
   KIconName? iconOf(KButton button) =>
       button.leading is KIcon ? (button.leading! as KIcon).name : null;
   for (final (index, action) in actions.indexed) {
+    if (fab && primary == null && action is KFab) {
+      primary = _BarAction(
+        label: action.label,
+        onPressed: action.onPressed,
+        fab: action,
+      );
+      continue;
+    }
     if (action is KButton &&
         primary == null &&
         action.variant == KButtonVariant.primary) {
@@ -599,6 +618,7 @@ _SplitActions _splitActions(
       if (fab) {
         primary = _BarAction(
           label: action.label,
+          content: action.content,
           icon: icon,
           onPressed: action.onPressed,
         );
@@ -664,7 +684,8 @@ class _KExtendedFab extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     final motion = t.motion(KMotionRole.control);
-    final showLabel = extended || action.icon == null;
+    final showLabel =
+        action.content == null && (extended || action.icon == null);
     return Semantics(
       button: true,
       label: action.label,
@@ -692,23 +713,47 @@ class _KExtendedFab extends StatelessWidget {
                   padding: EdgeInsets.symmetric(
                     horizontal: showLabel ? t.spaceLayoutGutter : 0,
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (action.icon case final icon?)
-                        KIcon(icon, color: t.componentFabForeground),
-                      if (showLabel) ...[
-                        if (action.icon != null) SizedBox(width: t.spaceTight),
-                        KText(
-                          action.label,
-                          variant: KTextVariant.label,
-                          maxLines: 1,
+                  child: action.content != null
+                      ? DefaultTextStyle.merge(
                           style: TextStyle(color: t.componentFabForeground),
+                          child: IconTheme.merge(
+                            data: IconThemeData(
+                              color: t.componentFabForeground,
+                            ),
+                            child: action.content is KIcon
+                                ? KIcon(
+                                    (action.content! as KIcon).name,
+                                    size: (action.content! as KIcon).size,
+                                    strokeWidth:
+                                        (action.content! as KIcon).strokeWidth,
+                                    label: (action.content! as KIcon).label,
+                                    color:
+                                        (action.content! as KIcon).color ??
+                                        t.componentFabForeground,
+                                  )
+                                : action.content!,
+                          ),
+                        )
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (action.icon case final icon?)
+                              KIcon(icon, color: t.componentFabForeground),
+                            if (showLabel) ...[
+                              if (action.icon != null)
+                                SizedBox(width: t.spaceTight),
+                              KText(
+                                action.label,
+                                variant: KTextVariant.label,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: t.componentFabForeground,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
-                      ],
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -718,3 +763,44 @@ class _KExtendedFab extends StatelessWidget {
     );
   }
 }
+
+/// Shell placement uses its standard FAB geometry; all interaction stays in KFab.
+Widget _shellFab(KFab action, KDesignTokens t) => KIconFixedScope(
+  child: KIconSizeScope(
+    size: t.sizeIconDefault,
+    child: KFab(
+      key: action.key,
+      label: action.label,
+      items: action.items,
+      activation: action.activation,
+      showLabels: action.showLabels,
+      onPressed: action.onPressed,
+      open: action.open,
+      onOpenChanged: action.onOpenChanged,
+      visible: action.visible,
+      size: t.componentFabHeight,
+      clipBehavior: action.clipBehavior,
+      itemGap: action.itemGap,
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(t.componentFabBackground),
+        foregroundColor: WidgetStatePropertyAll(t.componentFabForeground),
+        side: const WidgetStatePropertyAll(BorderSide.none),
+      ).merge(action.style),
+      attention: action.attention,
+      attentionShowDuration: action.attentionShowDuration,
+      attentionPauseDuration: action.attentionPauseDuration,
+      attentionPeekFraction: action.attentionPeekFraction,
+      attentionHoldDuration: action.attentionHoldDuration,
+      onAttentionSelect: action.onAttentionSelect,
+      child: action.child is KIcon
+          ? KIcon(
+              (action.child as KIcon).name,
+              size: (action.child as KIcon).size,
+              strokeWidth: (action.child as KIcon).strokeWidth,
+              label: (action.child as KIcon).label,
+              color: (action.child as KIcon).color ?? t.componentFabForeground,
+            )
+          : action.child,
+    ),
+  ),
+);

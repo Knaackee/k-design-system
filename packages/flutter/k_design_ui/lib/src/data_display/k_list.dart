@@ -189,13 +189,17 @@ class _GroupClip extends StatelessWidget {
       : ClipRRect(borderRadius: radius, child: child);
 }
 
+/// Semantic intent; default rows retain their existing appearance.
+enum KListItemTone { neutral, destructive }
+
 /// One row of a [KList]: optional leading icon, title, optional description,
 /// optional trailing value, and a chevron when it navigates.
 ///
 /// - Leading icon, chevron and a non-text trailing (badge, dot) sit on the
 ///   first title line (Decision 0010); text trailing shares the title line.
 ///   Every row of the same content therefore has the same height.
-/// - Title and description wrap; set [titleMaxLines] to truncate with "…".
+/// - Title and description wrap; set [titleMaxLines] or [descriptionMaxLines]
+///   to truncate with "…" while preserving the full accessible text.
 /// - The trailing part takes at most half the row and moves under the title
 ///   from 1.3× text.
 /// - With [onPressed] the whole row is one button; it then takes no
@@ -215,8 +219,10 @@ class KListItem extends StatefulWidget {
     this.onPressed,
     this.disclosure,
     this.selected = false,
+    this.tone = KListItemTone.neutral,
     this.enabled = true,
     this.titleMaxLines,
+    this.descriptionMaxLines,
     this.leadingActions = const [],
     this.trailingActions = const [],
     super.key,
@@ -255,8 +261,12 @@ class KListItem extends StatefulWidget {
   /// Shows the chevron. Defaults to true when [onPressed] is set.
   final bool? disclosure;
   final bool selected;
+  final KListItemTone tone;
   final bool enabled;
   final int? titleMaxLines;
+
+  /// Limits visible supporting text; null preserves its default wrapping.
+  final int? descriptionMaxLines;
 
   /// Swipe actions (Decision 0016): swipe right for [leadingActions], left
   /// for [trailingActions]. The style decides the look; pointer and keyboard
@@ -351,6 +361,9 @@ class _KListItemState extends State<KListItem> {
               child: child,
             ),
           );
+    final destructive =
+        widget.enabled && widget.tone == KListItemTone.destructive;
+    final actionColor = destructive ? t.colorStatusErrorAccent : null;
     final muted = TextStyle(color: t.colorTextMuted);
     final leading =
         widget.leading ??
@@ -369,7 +382,7 @@ class _KListItemState extends State<KListItem> {
                     child: KIcon(
                       widget.mediaIcon!,
                       size: t.sizeIconDefault,
-                      color: t.componentListMediaForeground,
+                      color: actionColor ?? t.componentListMediaForeground,
                     ),
                   ),
                 ),
@@ -380,7 +393,7 @@ class _KListItemState extends State<KListItem> {
             : KIcon(
                 widget.leadingIcon!,
                 size: t.sizeIconDefault,
-                color: t.colorTextMuted,
+                color: actionColor ?? t.colorTextMuted,
               ));
     final value = widget.value == null
         ? null
@@ -397,13 +410,21 @@ class _KListItemState extends State<KListItem> {
       variant: roles.title,
       maxLines: widget.titleMaxLines,
       overflow: widget.titleMaxLines == null ? null : TextOverflow.ellipsis,
-      style: widget.enabled ? null : muted,
+      style: !widget.enabled
+          ? muted
+          : destructive
+          ? TextStyle(color: actionColor)
+          : null,
     );
     final description = widget.description == null
         ? null
         : KText(
             widget.description!,
             variant: KTextVariant.bodySmall,
+            maxLines: widget.descriptionMaxLines,
+            overflow: widget.descriptionMaxLines == null
+                ? null
+                : TextOverflow.ellipsis,
             style: muted,
           );
     final chevron = disclosure

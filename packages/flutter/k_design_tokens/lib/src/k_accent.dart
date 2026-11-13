@@ -31,6 +31,7 @@ extension KAccentTokens on KDesignTokens {
       componentBadgePrimaryBackground: accent,
       componentBadgePrimaryForeground: onAccent,
       componentCardBorderColor: accent,
+      componentMetricCardTrendColor: accent,
       componentChartSeriesPrimary: accent,
       componentFabBackground: tint,
       componentFabForeground: onTint,

@@ -32,6 +32,7 @@ class KCartesianChart extends StatefulWidget {
     this.loadingContent,
     this.errorContent,
     this.height,
+    this.compact = false,
     super.key,
   });
   final List<KChartSeries> series;
@@ -55,6 +56,7 @@ class KCartesianChart extends StatefulWidget {
   final Widget? loadingContent;
   final Widget? errorContent;
   final double? height;
+  final bool compact;
   @override
   State<KCartesianChart> createState() => _KCartesianChartState();
 }
@@ -202,7 +204,20 @@ class _KCartesianChartState extends State<KCartesianChart> {
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
+    final inheritedTheme = Theme.of(context);
+    final original = inheritedTheme.extension<KDesignTokens>()!;
+    final axisFree =
+        widget.compact &&
+        widget.xAxis.ticks.isEmpty &&
+        widget.yAxis.ticks.isEmpty;
+    final t = axisFree
+        ? original.copyWith(
+            componentChartInsetTop: 0,
+            componentChartInsetRight: 0,
+            componentChartInsetBottom: 0,
+            componentChartInsetLeft: 0,
+          )
+        : original;
     final active = _resolve(_hover) ?? _resolve(widget.selectedPoint);
     final message = widget.loading
         ? widget.loadingContent ?? const KSpinner(label: 'Loading chart')
@@ -211,7 +226,7 @@ class _KCartesianChartState extends State<KCartesianChart> {
         : _points.isEmpty
         ? widget.emptyContent ?? const KText('No data to display')
         : null;
-    return TapRegion(
+    final content = TapRegion(
       onTapOutside: (_) {
         _select(null);
         if (_hover != null) setState(() => _hover = null);
@@ -220,45 +235,53 @@ class _KCartesianChartState extends State<KCartesianChart> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            spacing: t.spaceControlGap,
-            runSpacing: t.spaceControlGap,
-            children: [
-              for (final s in widget.series)
-                Semantics(
-                  toggled: _visible.any((v) => v.id == s.id),
-                  child: Opacity(
-                    opacity: _visible.any((v) => v.id == s.id)
-                        ? 1
-                        : t.opacityDisabled,
-                    child: KButton(
-                      label: s.label,
-                      variant: KButtonVariant.ghost,
-                      leading: Container(
-                        width: t.componentChartPointRadius * 2,
-                        height: t.componentChartPointRadius * 2,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: familyColor(t, s.colorIndex),
+          if (!widget.compact ||
+              widget.series.length != 1 ||
+              widget.onVisibleSeriesChange != null) ...[
+            Wrap(
+              spacing: t.spaceControlGap,
+              runSpacing: t.spaceControlGap,
+              children: [
+                for (final s in widget.series)
+                  Semantics(
+                    toggled: _visible.any((v) => v.id == s.id),
+                    child: Opacity(
+                      opacity: _visible.any((v) => v.id == s.id)
+                          ? 1
+                          : t.opacityDisabled,
+                      child: KButton(
+                        label: s.label,
+                        variant: KButtonVariant.ghost,
+                        leading: Container(
+                          width: t.componentChartPointRadius * 2,
+                          height: t.componentChartPointRadius * 2,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: familyColor(t, s.colorIndex),
+                          ),
                         ),
+                        onPressed: widget.onVisibleSeriesChange == null
+                            ? null
+                            : () {
+                                final ids = _visible.map((v) => v.id).toList();
+                                ids.contains(s.id)
+                                    ? ids.remove(s.id)
+                                    : ids.add(s.id);
+                                widget.onVisibleSeriesChange!(ids);
+                              },
                       ),
-                      onPressed: widget.onVisibleSeriesChange == null
-                          ? null
-                          : () {
-                              final ids = _visible.map((v) => v.id).toList();
-                              ids.contains(s.id)
-                                  ? ids.remove(s.id)
-                                  : ids.add(s.id);
-                              widget.onVisibleSeriesChange!(ids);
-                            },
                     ),
                   ),
-                ),
-            ],
-          ),
-          SizedBox(height: t.spaceContentActionGap),
+              ],
+            ),
+            SizedBox(height: t.spaceContentActionGap),
+          ],
           SizedBox(
-            height: widget.height ?? t.componentChartHeight,
+            height:
+                widget.height ??
+                (widget.compact
+                    ? t.componentChartCompactHeight
+                    : t.componentChartHeight),
             child: message != null
                 ? Center(child: message)
                 : LayoutBuilder(
@@ -347,5 +370,17 @@ class _KCartesianChartState extends State<KCartesianChart> {
         ],
       ),
     );
+    return axisFree
+        ? Theme(
+            data: inheritedTheme.copyWith(
+              extensions: [
+                for (final extension in inheritedTheme.extensions.values)
+                  if (extension is! KDesignTokens) extension,
+                t,
+              ],
+            ),
+            child: content,
+          )
+        : content;
   }
 }

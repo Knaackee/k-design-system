@@ -176,7 +176,10 @@ class _ChartFamilyFixtureState extends State<ChartFamilyFixture> {
                   );
                 } else {
                   chart = KBarChart(
-                    series: series,
+                    series: widget.variant == 'bar-compact'
+                        ? series.take(1).toList()
+                        : series,
+                    compact: widget.variant == 'bar-compact',
                     xAxis: xAxis,
                     yAxis: yAxis,
                     label: title,
@@ -188,8 +191,9 @@ class _ChartFamilyFixtureState extends State<ChartFamilyFixture> {
                     onSelectionChange: (value) =>
                         setState(() => _selection = value),
                     visibleSeriesIds: _visible,
-                    onVisibleSeriesChange: (value) =>
-                        setState(() => _visible = value),
+                    onVisibleSeriesChange: widget.variant == 'bar-compact'
+                        ? null
+                        : (value) => setState(() => _visible = value),
                   );
                 }
                 return Column(

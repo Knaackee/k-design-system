@@ -138,3 +138,110 @@ class _BookingPageManagementFixtureState
   @override
   Widget build(BuildContext context) => buildView(context);
 }
+
+/// Matching Web booking settings controls, using the gallery's own image assets.
+class BookingPageSettingsFixture extends StatefulWidget {
+  const BookingPageSettingsFixture({super.key});
+  @override
+  State<BookingPageSettingsFixture> createState() =>
+      _BookingPageSettingsFixtureState();
+}
+
+class _BookingPageSettingsFixtureState
+    extends State<BookingPageSettingsFixture> {
+  String design = 'handwritten', color = 'blue';
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context).extension<KDesignTokens>()!;
+    final compact = MediaQuery.sizeOf(context).width < 700;
+    return KPage(
+      width: KPageWidth.fluid,
+      children: [
+        KBookingPageLayout(
+          settings: true,
+          previewHelp: '',
+          preview: Image.asset(
+            'assets/booking-themes/$design.webp',
+            fit: BoxFit.cover,
+          ),
+          child: KStack(
+            gap: KLayoutGap.section,
+            align: KLayoutAlign.stretch,
+            children: [
+              KList(
+                children: [
+                  const KListItem(
+                    title: 'Online',
+                    description: 'example.test/u/mila',
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(t.componentListRowPaddingInline),
+                    child: KBookingPageActions(
+                      compact: compact,
+                      actions: [
+                        KBookingPageAction(
+                          label: 'Teilen',
+                          icon: KIconName.share,
+                          onPressed: () {},
+                          primary: true,
+                        ),
+                        KBookingPageAction(
+                          label: 'Kopieren',
+                          icon: KIconName.copy,
+                          onPressed: () {},
+                        ),
+                        KBookingPageAction(
+                          label: 'QR-Code',
+                          icon: KIconName.qrCode,
+                          onPressed: () {},
+                        ),
+                      ],
+                      previewAction: KBookingPageAction(
+                        label: 'Vorschau',
+                        icon: KIconName.eye,
+                        onPressed: () {},
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              KBookingThemePicker(
+                carousel: true,
+                value: design,
+                onChanged: (v) => setState(() => design = v),
+                options: [
+                  for (final entry in _designNames.entries)
+                    KBookingThemeChoice(
+                      id: entry.key,
+                      label: entry.value,
+                      image: Image.asset(
+                        'assets/booking-themes/${entry.key}.webp',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                ],
+                footer: KColorSwatches(
+                  label: 'Farbe',
+                  value: color,
+                  onChanged: (v) => setState(() => color = v),
+                  options: [
+                    KColorSwatch(
+                      value: 'blue',
+                      label: 'Marke',
+                      color: t.colorActionPrimaryBackground,
+                    ),
+                    KColorSwatch(
+                      value: 'red',
+                      label: 'Rot',
+                      color: t.colorStatusErrorForeground,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

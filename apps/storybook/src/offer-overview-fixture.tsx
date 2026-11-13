@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useOfferDrag } from "./offer-overview-drag.js";
 import { useOfferOverview } from "./offer-overview-state.js";
 import {
@@ -28,9 +29,11 @@ import "./offer-overview-responsive.css";
 export function OfferOverview({
   initialFilter = "all",
   empty = false,
+  headerAction,
 }: {
   initialFilter?: OfferFilter;
   empty?: boolean;
+  headerAction?: ReactNode;
 }) {
   const {
     categories,
@@ -112,10 +115,12 @@ export function OfferOverview({
                   {categories.length} Kategorien
                 </p>
               </div>
-              <KButton onClick={() => add()}>
-                <KIcon name="plus" size={20} />
-                Neu
-              </KButton>
+              {headerAction ?? (
+                <KButton onClick={() => add()}>
+                  <KIcon name="plus" size={20} />
+                  Neu
+                </KButton>
+              )}
             </header>
             <div className="of-search">
               <KSearchField

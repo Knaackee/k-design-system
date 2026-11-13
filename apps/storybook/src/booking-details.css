@@ -1,0 +1,8 @@
+.booking-details-fixture {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--k-layout-drawer-width));
+  height: 90dvh;
+}
+@media (max-width: 599px) {
+  .booking-details-fixture { grid-template-columns: minmax(0, 1fr); }
+}

@@ -48,16 +48,14 @@ class KBookingFlowChoice extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: mode == 'guided'
                               ? const [
-                                  KIcon(KIconName.square),
+                                  KIcon(KIconName.square, size: 16),
                                   KIcon(KIconName.arrowRight, size: 16),
-                                  KIcon(KIconName.square),
-                                  KIcon(KIconName.arrowRight, size: 16),
-                                  KIcon(KIconName.square),
+                                  KIcon(KIconName.square, size: 16),
                                 ]
                               : const [
-                                  KIcon(KIconName.layoutGrid, size: 32),
-                                  KIcon(KIconName.arrowRight, size: 20),
-                                  KIcon(KIconName.shoppingCart, size: 32),
+                                  KIcon(KIconName.layoutGrid, size: 16),
+                                  KIcon(KIconName.arrowRight, size: 16),
+                                  KIcon(KIconName.shoppingCart, size: 16),
                                 ],
                         ),
                       ),

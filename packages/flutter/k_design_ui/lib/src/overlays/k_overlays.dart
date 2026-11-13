@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 
 import 'k_sheet_drag.dart';
+import 'k_sheet_detail_body.dart';
 
 import '../primitives/k_surface.dart';
 import '../actions/k_icon_button.dart';
@@ -121,6 +122,10 @@ class KBottomSheet extends StatelessWidget {
     required this.child,
     this.description,
     this.actions,
+    this.hero,
+    this.floatingActions,
+    this.heroOverlays,
+    this.footer,
     this.onClose,
     this.closeLabel,
     this.maxWidth = 640,
@@ -132,6 +137,12 @@ class KBottomSheet extends StatelessWidget {
 
   final Widget title;
   final Widget? description;
+
+  /// Full-bleed media replaces the visible title and overlays the grip.
+  final Widget? hero;
+  final Widget? floatingActions;
+  final Widget? heroOverlays;
+  final Widget? footer;
   final Widget child;
   final Widget? actions;
   final VoidCallback? onClose;
@@ -147,6 +158,10 @@ class KBottomSheet extends StatelessWidget {
     required Widget child,
     Widget? description,
     Widget? actions,
+    Widget? hero,
+    Widget? floatingActions,
+    Widget? heroOverlays,
+    Widget? footer,
     String? closeLabel,
     double maxWidth = 640,
     bool dismissible = true,
@@ -174,6 +189,10 @@ class KBottomSheet extends StatelessWidget {
           title: title,
           description: description,
           actions: actions,
+          hero: hero,
+          floatingActions: floatingActions,
+          heroOverlays: heroOverlays,
+          footer: footer,
           closeLabel: closeLabel,
           // maybePop: a PopScope in the sheet (unsaved changes) can ask first.
           onClose: dismissible
@@ -211,60 +230,73 @@ class KBottomSheet extends StatelessWidget {
             ),
           ),
           clipBehavior: Clip.antiAlias,
-          child: SafeArea(
-            top: false,
-            child: Column(
-              mainAxisSize: expandBody ? MainAxisSize.max : MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onVerticalDragUpdate: onDragUpdate,
-                  onVerticalDragEnd: onDragEnd,
-                  child: SizedBox(
-                    height: t.componentBottomSheetGripAreaMinHeight,
-                    child: Center(
-                      child: Container(
-                        width: t.componentBottomSheetGripWidth,
-                        height: t.componentBottomSheetGripHeight,
-                        decoration: BoxDecoration(
-                          color: t.colorBorderStrong,
-                          borderRadius: BorderRadius.circular(
-                            t.radiusExtraSmall,
+          child: hero != null
+              ? KSheetDetailBody(
+                  hero: hero!,
+                  floatingActions: floatingActions,
+                  heroOverlays: heroOverlays,
+                  footer: footer ?? actions,
+                  onClose: onClose,
+                  closeLabel: closeLabel,
+                  showGrip: true,
+                  child: child,
+                )
+              : SafeArea(
+                  top: false,
+                  child: Column(
+                    mainAxisSize: expandBody
+                        ? MainAxisSize.max
+                        : MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onVerticalDragUpdate: onDragUpdate,
+                        onVerticalDragEnd: onDragEnd,
+                        child: SizedBox(
+                          height: t.componentBottomSheetGripAreaMinHeight,
+                          child: Center(
+                            child: Container(
+                              width: t.componentBottomSheetGripWidth,
+                              height: t.componentBottomSheetGripHeight,
+                              decoration: BoxDecoration(
+                                color: t.colorBorderStrong,
+                                borderRadius: BorderRadius.circular(
+                                  t.radiusExtraSmall,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      if (expandBody)
+                        Expanded(
+                          child: _OverlayBody(
+                            title: title,
+                            description: description,
+                            actions: actions,
+                            onClose: onClose,
+                            closeLabel: closeLabel,
+                            padding: t.spaceLayoutGutter,
+                            expandBody: true,
+                            child: child,
+                          ),
+                        )
+                      else
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: _OverlayBody(
+                            title: title,
+                            description: description,
+                            actions: actions,
+                            onClose: onClose,
+                            closeLabel: closeLabel,
+                            padding: t.spaceLayoutGutter,
+                            child: child,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-                if (expandBody)
-                  Expanded(
-                    child: _OverlayBody(
-                      title: title,
-                      description: description,
-                      actions: actions,
-                      onClose: onClose,
-                      closeLabel: closeLabel,
-                      padding: t.spaceLayoutGutter,
-                      expandBody: true,
-                      child: child,
-                    ),
-                  )
-                else
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: _OverlayBody(
-                      title: title,
-                      description: description,
-                      actions: actions,
-                      onClose: onClose,
-                      closeLabel: closeLabel,
-                      padding: t.spaceLayoutGutter,
-                      child: child,
-                    ),
-                  ),
-              ],
-            ),
-          ),
         ),
       ),
     );

@@ -260,6 +260,11 @@ button.k-editable-cell:focus-visible {
 .k-table-viewport[data-display-mode="singleColumn"] td {
   padding: 0;
 }
+/* A single-column list shares its enclosing surface, as in Flutter. */
+.k-table-viewport[data-display-mode="singleColumn"] .k-table,
+.k-virtual-table[data-display-mode="singleColumn"] {
+  background: transparent;
+}
 .k-virtual-table[data-display-mode="singleColumn"] .k-virtual-cell {
   padding-inline: 0;
 }

@@ -18,8 +18,10 @@ version is tagged.
 - Beside the sidebar (tablet, desktop) the page starts on the line of the sidebar header (`space.controlGap`), so title and logo line up. Flutter: `KPageTopGap`; Web: `--k-page-top-gap` on the shell content.
 
 ## Unreleased
+- Flutter shell accepts public `KFab` page actions using the standard FAB and icon size; button-derived FAB defaults stay unchanged. `KFab.showLabels` optionally shows names beside action bubbles (default false); Back, Escape and outside taps dismiss the menu and restore trigger focus.
 
-No additional changes.
+- Flutter `KOfferOverview.headerAction` optionally replaces its default creation menu; existing callers keep the previous menu.
+- Flutter shell FABs preserve `KButton.content` and its accessible label, including icon-only creation actions. Matching quick-create gallery compositions demonstrate five UI-only options on Web and Flutter.
 
 - Less space above the large title: a `KPageHeader` inside `KPage` adds no
   top padding of its own (the page gutter already separates it), and
@@ -40,6 +42,32 @@ No additional changes.
   and the preserved native performance benchmark. Native performance acceptance
   remains open; see docs/components/robot-head.md.
 
+- `KBarChart.compact`: tokenized compact plot height and no redundant legend for
+  a single non-toggleable series; matching Storybook/Widgetbook fixtures.
+- Apple and Material cards, metric cards and list groups share `radius.card`;
+  other style profiles retain their card radius role.
+- Flutter `KSwipeRow`: initialize its animation controller in `initState` so an
+  untouched row can be disposed without an inherited-widget lookup failure.
+
+- Refine the new metric-card slots: reserve the visual, two description lines
+  and comparison-badge minimum so short/missing content aligns in a dashboard.
+  
+  Compact chart height is 96 px after the dashboard review.
+
+### Embedded map media
+
+- Web and Flutter `KMap` accept `embedded` (default `false`). Embedded maps leave the outer corners to the containing list/card, so media joins following content without lower corner rounding. Standalone maps and overlay controls keep their existing appearance.
+- Matching `map-embedded` examples in Storybook (`patterns-map-embedded--review`) and Widgetbook (`Maps / Map / map-embedded`), plus default/embedded contract tests.
+
+### Compact chart plot area
+
+- Axis-free compact bar charts no longer reserve empty axis gutters in Web and Flutter. Their maximum value uses the full compact plotting height; labelled charts retain their existing layout. Flutter hit testing and rendering share the same inset resolution.
+- Regression coverage checks full-height bars and selection near the top edge, plus default/axis-free Web markup.
+
+
+### Single-column list surfaces
+
+- Web single-column data lists now inherit their enclosing surface, matching Flutter. Multi-column tables retain their existing canvas background.
 ## 1.0.0-rc.2 - 2026-11-09
 
 - Add shared Markdown rendering, preview and streaming fixtures for Web and Flutter.

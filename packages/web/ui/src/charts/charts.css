@@ -6,6 +6,15 @@
   font-size: var(--k-font-body-small-size);
   line-height: var(--k-font-body-small-line-height);
 }
+.k-cartesian-chart[data-compact] {
+  --k-component-chart-height: var(--k-component-chart-compact-height);
+}
+.k-cartesian-chart[data-compact][data-axis-free] {
+  --k-component-chart-inset-top: 0px;
+  --k-component-chart-inset-right: 0px;
+  --k-component-chart-inset-bottom: 0px;
+  --k-component-chart-inset-left: 0px;
+}
 .k-line-chart__legend {
   display: flex;
   flex-wrap: wrap;

@@ -5,6 +5,38 @@ import 'package:k_design_ui/k_map.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  for (final embedded in [false, true]) {
+    testWidgets(
+      'map embedded=$embedded leaves only the outer radius to its parent',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(extensions: const [KDesignTokens.orbitLight]),
+            home: SizedBox(
+              width: 400,
+              height: 200,
+              child: KMap(
+                mapStyle: 'not-json',
+                center: const KMapCenter(longitude: 13.388, latitude: 52.517),
+                embedded: embedded,
+              ),
+            ),
+          ),
+        );
+        final viewport = find.byKey(const ValueKey('k-map-pointer-signals'));
+        final clip = tester.widget<ClipRRect>(
+          find.descendant(of: viewport, matching: find.byType(ClipRRect)).first,
+        );
+        expect(
+          clip.borderRadius,
+          embedded
+              ? BorderRadius.zero
+              : BorderRadius.circular(KDesignTokens.orbitLight.radiusCard),
+        );
+        expect(find.text('Erneut versuchen'), findsOneWidget);
+      },
+    );
+  }
   testWidgets('shows a retryable error for invalid style JSON', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

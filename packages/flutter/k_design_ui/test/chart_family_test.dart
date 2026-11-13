@@ -43,6 +43,91 @@ void main() {
       home: Scaffold(body: SizedBox(width: 375, child: chart)),
     ),
   );
+  testWidgets(
+    'axis-free compact bars use the full plot height and retain selection',
+    (tester) async {
+      KChartSelection? selected;
+      await mount(
+        tester,
+        KBarChart(
+          compact: true,
+          label: 'Daily bookings',
+          series: [
+            KChartSeries(
+              id: 'bookings',
+              label: 'Bookings',
+              points: const [
+                KChartPoint(id: 'small', x: 0, y: 1),
+                KChartPoint(id: 'peak', x: 1, y: 5),
+              ],
+            ),
+          ],
+          xAxis: KChartAxis(
+            min: -.5,
+            max: 1.5,
+            ticks: const [],
+            format: (v) => '$v',
+          ),
+          yAxis: KChartAxis(
+            min: 0,
+            max: 5,
+            ticks: const [],
+            format: (v) => '$v',
+          ),
+          onSelectionChange: (value) => selected = value,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final chart = find.byType(KBarChart);
+      final bars = find.byType(BarChart);
+      final tokens = Theme.of(
+        tester.element(chart),
+      ).extension<KDesignTokens>()!;
+      expect(
+        tester.getSize(bars.last).height,
+        tokens.componentChartCompactHeight,
+      );
+      final peak = tester.widget<BarChart>(bars.last);
+      expect(peak.data.maxY, 5);
+      expect(peak.data.barGroups.single.barRods.single.toY, 5);
+      await tester.tapAt(
+        tester.getTopLeft(bars.last) +
+            Offset(tester.getSize(bars.last).width / 2, 1),
+      );
+      await tester.pump();
+      expect(selected?.pointId, 'peak');
+      expect(tester.takeException(), isNull);
+    },
+  );
+  testWidgets(
+    'compact bars retain an accessible plot without duplicate legend',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        Widget chart({bool compact = false}) => KBarChart(
+          series: [series.first],
+          xAxis: x,
+          yAxis: y,
+          label: 'Summary',
+          compact: compact,
+        );
+        await mount(tester, chart());
+        final standard = tester.getSize(find.byType(KBarChart)).height;
+        expect(find.text('Alpha'), findsOneWidget);
+        await mount(tester, chart(compact: true));
+        await tester.pumpAndSettle();
+        expect(
+          tester.getSize(find.byType(KBarChart)).height,
+          lessThan(standard / 2),
+        );
+        expect(find.text('Alpha'), findsNothing);
+        expect(find.bySemanticsLabel(RegExp('Summary')), findsWidgets);
+        expect(tester.takeException(), isNull);
+      } finally {
+        semantics.dispose();
+      }
+    },
+  );
   testWidgets('grouped bars retain slots when a peer has missing data', (
     tester,
   ) async {

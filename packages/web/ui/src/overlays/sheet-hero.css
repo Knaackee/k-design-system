@@ -1,0 +1,165 @@
+.k-sheet-hero {
+  position: relative;
+  flex: none;
+  height: var(--k-component-sheet-hero-height, var(--k-layout-menu-width));
+  overflow: hidden;
+}
+.k-sheet-hero__media {
+  width: 100%;
+  height: 100%;
+}
+.k-sheet-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: calc(var(--k-space-card-padding) * 3);
+  background: linear-gradient(transparent, var(--k-color-surface-raised));
+  pointer-events: none;
+}
+.k-sheet-hero__floating {
+  position: absolute;
+  z-index: 2;
+  top: var(--k-space-control-inset-inline);
+  right: var(--k-space-control-inset-inline);
+  display: flex;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-sheet-hero__floating .k-button {
+  border-radius: var(--k-radius-full);
+  background: color-mix(
+    in srgb,
+    var(--k-color-surface-raised) 88%,
+    transparent
+  );
+  backdrop-filter: blur(var(--k-space-small-inset));
+  box-shadow: var(--k-elevation-popover);
+}
+.k-sheet-hero__overlays {
+  position: absolute;
+  z-index: 1;
+  inset: auto var(--k-space-control-inset-inline)
+    var(--k-space-content-action-gap);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--k-space-control-gap);
+}
+.k-sheet-detail-body {
+  padding: var(--k-space-tight) var(--k-space-card-padding)
+    var(--k-space-card-padding);
+}
+.k-sheet-detail-body.k-overlay-body--flush {
+  padding: 0;
+}
+.k-sheet-detail-footer {
+  flex-shrink: 0;
+  max-height: 50%;
+  overflow-y: auto;
+  padding: var(--k-space-control-inset-inline) var(--k-space-card-padding);
+  border-top: var(--k-border-width-default) solid var(--k-color-border-default);
+}
+.k-bottom-sheet.k-sheet--hero {
+  overflow: hidden;
+}
+.k-sheet--hero > .k-bottom-sheet-handle {
+  position: absolute;
+  z-index: 3;
+  inset: 0 auto auto 50%;
+  width: calc(
+    var(--k-component-bottom-sheet-grip-width) + 2 * var(--k-space-card-padding)
+  );
+  transform: translateX(-50%);
+}
+.k-sheet--hero .k-bottom-sheet-content {
+  flex: 1;
+}
+.k-bottom-sheet-detent-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: var(--k-size-hit-target);
+  padding: var(--k-space-control-gap);
+  border: 0;
+  border-radius: var(--k-radius-control);
+  background: transparent;
+  cursor: pointer;
+}
+.k-bottom-sheet-detent-toggle:focus-visible {
+  outline: var(--k-border-width-strong) solid var(--k-color-border-focus);
+}
+.k-sheet--hero[data-hero-collapsed] .k-sheet-hero {
+  height: var(--k-size-app-bar-fixed);
+}
+.k-sheet--hero[data-hero-collapsed] .k-sheet-hero__overlays {
+  visibility: hidden;
+}
+.k-sheet--hero[data-hero-collapsed] .k-sheet-hero__media {
+  height: var(--k-component-sheet-hero-height, var(--k-layout-menu-width));
+}
+.k-sheet--hero[data-has-detents] .k-sheet-hero {
+  transition: height var(--k-motion-control-settle)
+    var(--k-motion-control-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .k-sheet--hero[data-has-detents] .k-sheet-hero {
+    transition: none;
+  }
+}
+.k-inline-side-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--k-color-surface-raised);
+  color: var(--k-color-text-primary);
+  border-inline-start: var(--k-border-width-default) solid
+    var(--k-color-border-default);
+  box-shadow: var(--k-elevation-overlay);
+}
+.k-inline-side-sheet__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.k-dialog.k-responsive-drawer.k-sheet--hero {
+  display: flex;
+}
+.k-dialog.k-responsive-drawer.k-sheet--hero > .k-overlay-body {
+  flex: 1;
+}
+.k-button[data-tone="destructive"] {
+  --k-button-background: var(--k-color-status-error-accent);
+  --k-button-background-hover: color-mix(
+    in srgb,
+    var(--k-color-status-error-accent) 88%,
+    var(--k-color-text-primary)
+  );
+  --k-button-background-pressed: color-mix(
+    in srgb,
+    var(--k-color-status-error-accent) 76%,
+    var(--k-color-text-primary)
+  );
+  --k-button-foreground: var(--k-color-action-primary-foreground);
+  --k-button-border: var(--k-color-status-error-accent);
+}
+@media (max-width: 599px) {
+  .k-sheet-detail-footer {
+    padding-bottom: max(
+      var(--k-space-card-padding),
+      env(safe-area-inset-bottom)
+    );
+  }
+  .k-sheet-detail-body {
+    padding-bottom: max(
+      var(--k-space-card-padding),
+      env(safe-area-inset-bottom)
+    );
+  }
+}

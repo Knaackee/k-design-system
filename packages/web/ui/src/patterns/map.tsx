@@ -101,6 +101,8 @@ export interface KMapProps extends KMapOverlayProps {
   label?: string;
   showZoomControls?: boolean;
   interactive?: boolean;
+  /** Remove the viewport radius when an enclosing surface owns its shape. */
+  embedded?: boolean;
   /** Camera movement when center/zoom changes. Zero preserves immediate updates. */
   cameraTransitionMs?: number;
   onViewChange?: (view: KMapView) => void;
@@ -116,6 +118,7 @@ export function KMap({
   label = "Karte",
   showZoomControls = true,
   interactive = true,
+  embedded = false,
   cameraTransitionMs = 0,
   onViewChange,
   onMapClick,
@@ -255,7 +258,11 @@ export function KMap({
   }, [interactive, attempt]);
 
   return (
-    <section className="k-map" aria-label={label}>
+    <section
+      className="k-map"
+      data-embedded={embedded || undefined}
+      aria-label={label}
+    >
       <div ref={canvas} className="k-map__canvas" />
       <MapOverlays map={instance} {...overlays} />
       {showZoomControls && (

@@ -3,6 +3,7 @@ import { Sheet, type SheetRef } from "react-modal-sheet";
 import {
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -17,6 +18,8 @@ import {
 import { usePageSheetEffect } from "./use-page-sheet-effect.js";
 import { handleOverlayPointerOutside } from "./overlay-pointer.js";
 import { OverlayLayerContext, useOverlayLayer } from "./overlay-layer.js";
+import { SheetHero, type KSheetHeroProps } from "./sheet-hero.js";
+import { sheetDetentConfiguration } from "./sheet-detents.js";
 
 // Radix observes Escape in the capture phase, before a nested popover can
 // consume it. Leave dismissal to that focused child surface first.
@@ -30,7 +33,7 @@ function handleEscape(event: KeyboardEvent, dismissible: boolean) {
   }
 }
 
-export type KOverlayProps = {
+export type KOverlayProps = KSheetHeroProps & {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: ReactNode;
@@ -100,6 +103,10 @@ export function KDesktopDialog({
   children,
   actions,
   headerActions,
+  hero,
+  floatingActions,
+  heroOverlays,
+  footer,
   dismissible = true,
   closeLabel = "Close",
   className,
@@ -122,7 +129,9 @@ export function KDesktopDialog({
         />
         <Dialog.Content
           ref={contentRef}
-          className={["k-dialog", className].filter(Boolean).join(" ")}
+          className={["k-dialog", hero ? "k-sheet--hero" : null, className]
+            .filter(Boolean)
+            .join(" ")}
           data-adaptive-surface="dialog"
           onOpenAutoFocus={(event) => {
             if (initialFocusRef?.current) {
@@ -139,7 +148,7 @@ export function KDesktopDialog({
         >
           <header
             className={
-              headerless
+              headerless || hero
                 ? "k-overlay-header k-overlay-header--hidden"
                 : "k-overlay-header"
             }
@@ -156,7 +165,7 @@ export function KDesktopDialog({
             {headerActions && (
               <div className="k-overlay-header-actions">{headerActions}</div>
             )}
-            {dismissible && showClose && (
+            {dismissible && showClose && !hero && (
               <Dialog.Close asChild>
                 <KIconButton
                   icon="x"
@@ -169,15 +178,49 @@ export function KDesktopDialog({
           <div
             className={[
               "k-overlay-body",
-              contentInset ? null : "k-overlay-body--flush",
-              bodyClassName,
+              hero || !contentInset ? "k-overlay-body--flush" : null,
+              hero ? null : bodyClassName,
             ]
               .filter(Boolean)
               .join(" ")}
           >
-            {children}
+            {hero ? (
+              <>
+                <SheetHero
+                  hero={hero}
+                  floatingActions={floatingActions}
+                  heroOverlays={heroOverlays}
+                  dismissible={dismissible && showClose}
+                  closeLabel={closeLabel}
+                  onClose={() => onOpenChange(false)}
+                />
+                <div
+                  className={[
+                    "k-sheet-detail-body",
+                    contentInset ? null : "k-overlay-body--flush",
+                    bodyClassName,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {children}
+                </div>
+              </>
+            ) : (
+              children
+            )}
           </div>
-          {actions && <footer className="k-overlay-actions">{actions}</footer>}
+          {(footer ?? actions) && (
+            <footer
+              className={
+                hero
+                  ? "k-overlay-actions k-sheet-detail-footer"
+                  : "k-overlay-actions"
+              }
+            >
+              {footer ?? actions}
+            </footer>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
@@ -202,6 +245,10 @@ export function KBottomSheet({
   children,
   actions,
   headerActions,
+  hero,
+  floatingActions,
+  heroOverlays,
+  footer,
   dismissible = true,
   closeLabel = "Close",
   className,
@@ -213,7 +260,21 @@ export function KBottomSheet({
   initialFocusRef,
   zIndex,
   presentationRootId,
+  detents,
+  initialDetent,
 }: KBottomSheetProps) {
+  const configuration = useMemo(
+    () => sheetDetentConfiguration(detents, initialDetent),
+    [detents, initialDetent],
+  );
+  const [activeSnap, setActiveSnap] = useState(configuration.initialSnap);
+  const handoffDetents = useMemo(
+    () =>
+      configuration.enabled
+        ? { points: configuration.points, active: activeSnap }
+        : undefined,
+    [configuration, activeSnap],
+  );
   const layer = useOverlayLayer(zIndex);
   const titleId = useId();
   const descriptionId = useId();
@@ -222,11 +283,20 @@ export function KBottomSheet({
   const [scrollElement, setScrollElement] = useState<HTMLDivElement | null>(
     null,
   );
-  useSheetScrollHandoff(scrollElement, sheetRef, open, dismissible);
+  useSheetScrollHandoff(
+    scrollElement,
+    sheetRef,
+    open,
+    dismissible,
+    handoffDetents,
+  );
   const [effectActive, setEffectActive] = useState(open);
   useEffect(() => {
-    if (open) setEffectActive(true);
-  }, [open]);
+    if (open) {
+      setEffectActive(true);
+      setActiveSnap(configuration.initialSnap);
+    }
+  }, [open, configuration.initialSnap]);
   usePageSheetEffect(sheetRef, presentationRootId, effectActive);
   const latestOpen = useRef(open);
   latestOpen.current = open;
@@ -238,20 +308,24 @@ export function KBottomSheet({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Sheet
         ref={sheetRef}
-        snapPoints={[0, 1]}
+        snapPoints={configuration.points}
         dragCloseThreshold={sheetCloseThreshold}
         dragVelocityThreshold={sheetCloseVelocity}
-        initialSnap={1}
+        initialSnap={configuration.initialSnap}
+        onSnap={setActiveSnap}
         unstyled
         style={{ zIndex: layer }}
-        detent={presentationRootId ? "default" : "content"}
+        detent={
+          presentationRootId || configuration.enabled ? "default" : "content"
+        }
         onCloseEnd={() => setEffectActive(false)}
         isOpen={open}
         onClose={() => {
           if (dismissible) onOpenChange(false);
           // A controlled dirty/busy guard may reject dismissal after the drag.
           requestAnimationFrame(() => {
-            if (latestOpen.current) sheetRef.current?.snapTo(1);
+            if (latestOpen.current)
+              sheetRef.current?.snapTo(activeSnap || configuration.initialSnap);
           });
         }}
         disableDismiss={!dismissible}
@@ -303,15 +377,50 @@ export function KBottomSheet({
             aria-label={typeof title === "string" ? title : undefined}
             aria-labelledby={titleId}
             aria-describedby={description ? descriptionId : undefined}
-            className={["k-bottom-sheet", className].filter(Boolean).join(" ")}
+            className={[
+              "k-bottom-sheet",
+              hero ? "k-sheet--hero" : null,
+              className,
+            ]
+              .filter(Boolean)
+              .join(" ")}
             data-adaptive-surface={presentationRootId ? "page-sheet" : "sheet"}
+            data-has-detents={configuration.enabled || undefined}
+            data-hero-collapsed={
+              (hero &&
+                configuration.enabled &&
+                activeSnap === configuration.points.length - 1) ||
+              undefined
+            }
           >
             <Sheet.Header className="k-bottom-sheet-handle">
-              <span className="k-bottom-sheet-grip" />
+              {configuration.enabled && configuration.points.length > 2 ? (
+                <button
+                  type="button"
+                  className="k-bottom-sheet-detent-toggle"
+                  aria-label={
+                    activeSnap === configuration.points.length - 1
+                      ? "Collapse sheet"
+                      : "Expand sheet"
+                  }
+                  aria-expanded={activeSnap === configuration.points.length - 1}
+                  onClick={() =>
+                    sheetRef.current?.snapTo(
+                      activeSnap === configuration.points.length - 1
+                        ? 1
+                        : configuration.points.length - 1,
+                    )
+                  }
+                >
+                  <span className="k-bottom-sheet-grip" />
+                </button>
+              ) : (
+                <span className="k-bottom-sheet-grip" />
+              )}
             </Sheet.Header>
             <header
               className={
-                headerless
+                headerless || hero
                   ? "k-overlay-header k-overlay-header--hidden"
                   : "k-overlay-header"
               }
@@ -333,7 +442,7 @@ export function KBottomSheet({
               {headerActions && (
                 <div className="k-overlay-header-actions">{headerActions}</div>
               )}
-              {dismissible && showClose && (
+              {dismissible && showClose && !hero && (
                 <Dialog.Close asChild>
                   <KIconButton
                     ref={closeRef}
@@ -347,12 +456,29 @@ export function KBottomSheet({
             <Sheet.Content
               className="k-bottom-sheet-content"
               scrollRef={scrollRef}
-              scrollClassName="k-overlay-body"
+              scrollClassName={
+                hero ? "k-overlay-body k-overlay-body--flush" : "k-overlay-body"
+              }
               scrollStyle={{ overscrollBehavior: "contain" }}
             >
+              {hero && (
+                <SheetHero
+                  hero={hero}
+                  floatingActions={floatingActions}
+                  heroOverlays={heroOverlays}
+                  dismissible={dismissible && showClose}
+                  closeLabel={closeLabel}
+                  closeRef={closeRef}
+                  collapsed={
+                    configuration.enabled &&
+                    activeSnap === configuration.points.length - 1
+                  }
+                  onClose={() => onOpenChange(false)}
+                />
+              )}
               <div
                 className={[
-                  "k-bottom-sheet-body",
+                  hero ? "k-sheet-detail-body" : "k-bottom-sheet-body",
                   contentInset ? null : "k-overlay-body--flush",
                   bodyClassName,
                 ]
@@ -362,8 +488,16 @@ export function KBottomSheet({
                 {children}
               </div>
             </Sheet.Content>
-            {actions && (
-              <footer className="k-overlay-actions">{actions}</footer>
+            {(footer ?? actions) && (
+              <footer
+                className={
+                  hero
+                    ? "k-overlay-actions k-sheet-detail-footer"
+                    : "k-overlay-actions"
+                }
+              >
+                {footer ?? actions}
+              </footer>
             )}
           </Sheet.Container>
         </Dialog.Content>

@@ -615,8 +615,8 @@ class _Destination extends StatelessWidget {
                                       widthFactor: 1,
                                       child: DefaultTextStyle(
                                         style: TextStyle(
-                                          color:
-                                              tokens.colorStatusErrorForeground,
+                                          color: tokens
+                                              .componentMobileAppBarBadgeForeground,
                                           fontFamily: tokens.fontFamily,
                                           fontSize: tokens
                                               .componentMobileAppBarLabelFontSize,

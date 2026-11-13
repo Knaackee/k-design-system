@@ -22,6 +22,7 @@ import {
 } from "./chart-parts.js";
 
 export interface KBarChartProps extends KLineChartProps {
+  compact?: boolean;
   orientation?: "vertical" | "horizontal";
   stacked?: boolean;
 }
@@ -38,6 +39,7 @@ function CartesianChart({
   kind,
   orientation = "vertical",
   stacked = false,
+  compact = false,
   series,
   xAxis,
   yAxis,
@@ -210,13 +212,23 @@ function CartesianChart({
     ),
   ].sort((a, b) => a - b);
   return (
-    <div ref={root} className="k-line-chart k-cartesian-chart">
-      <ChartLegend
-        items={series}
-        visible={visible.map((s) => s.id)}
-        onChange={onVisibleSeriesChange}
-        label={label}
-      />
+    <div
+      ref={root}
+      className="k-line-chart k-cartesian-chart"
+      data-compact={compact || undefined}
+      data-axis-free={
+        (compact && xAxis.ticks.length === 0 && yAxis.ticks.length === 0) ||
+        undefined
+      }
+    >
+      {(!compact || series.length !== 1 || onVisibleSeriesChange) && (
+        <ChartLegend
+          items={series}
+          visible={visible.map((s) => s.id)}
+          onChange={onVisibleSeriesChange}
+          label={label}
+        />
+      )}
       <div
         className="k-line-chart__canvas"
         style={height ? { height } : undefined}

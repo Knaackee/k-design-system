@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from "react";
+import { Children, useId, useState, type ReactNode } from "react";
 
 import { KButton } from "../primitives/button.js";
 
@@ -12,15 +12,18 @@ export function KBookingPageLayout({
   previewTitle = "Vorschau",
   previewAction,
   previewHelp,
+  presentation = "default",
 }: {
   children: ReactNode;
   preview: ReactNode;
   previewTitle?: string;
   previewAction?: ReactNode;
   previewHelp?: string;
+  /** Settings composition: preview remains visible beside a tablet form. */
+  presentation?: "default" | "settings";
 }) {
   return (
-    <div className="k-booking-page-layout">
+    <div className="k-booking-page-layout" data-presentation={presentation}>
       <div className="k-booking-page-main">{children}</div>
       <aside className="k-booking-page-aside">
         <div className="k-booking-page-preview-heading">
@@ -128,6 +131,24 @@ export function KBookingPageStatus({
   );
 }
 
+/** Four fully labelled phone actions; the preview moves to the tablet side pane. */
+export function KBookingPageActions({
+  children,
+  previewAction,
+}: {
+  children: ReactNode;
+  previewAction: ReactNode;
+}) {
+  return (
+    <div className="k-booking-page-actions">
+      {Children.toArray(children).map((child, index) => (
+        <div key={index}>{child}</div>
+      ))}
+      <div className="k-booking-page-actions-preview">{previewAction}</div>
+    </div>
+  );
+}
+
 export interface KBookingThemeChoice {
   id: string;
   label: string;
@@ -139,11 +160,18 @@ export function KBookingThemePicker({
   value,
   onChange,
   disabled = false,
+  layout = "grid",
+  title,
+  footer,
 }: {
   options: readonly KBookingThemeChoice[];
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  layout?: "grid" | "carousel";
+  title?: string;
+  /** Optional related settings under the thumbnails, within the carousel group. */
+  footer?: ReactNode;
 }) {
   const [expanded, setExpanded] = useState(false);
   const selected = options.find((o) => o.id === value);
@@ -152,22 +180,40 @@ export function KBookingThemePicker({
   const visible = expanded ? options : first;
 
   return (
-    <div>
-      <div className="k-booking-theme-picker" role="group" aria-label="Design">
-        {visible.map((option) => (
-          <button
-            type="button"
-            key={option.id}
-            aria-pressed={option.id === value}
-            disabled={disabled}
-            onClick={() => onChange(option.id)}
-          >
-            <img src={option.image} alt="" loading="lazy" />
-            <span>{option.label}</span>
-          </button>
-        ))}
+    <div className="k-booking-theme-control" data-layout={layout}>
+      {layout === "carousel" && (
+        <div className="k-booking-theme-heading">
+          <strong>{title ?? "Design"}</strong>
+          {options.length > 4 && (
+            <KButton variant="ghost" onClick={() => setExpanded(!expanded)}>
+              {expanded ? "Weniger anzeigen" : `Alle ${options.length} ansehen`}
+            </KButton>
+          )}
+        </div>
+      )}
+      <div className="k-booking-theme-body">
+        <div
+          className="k-booking-theme-picker"
+          role="group"
+          aria-label={title ?? "Design"}
+          data-expanded={expanded || undefined}
+        >
+          {(layout === "carousel" ? options : visible).map((option) => (
+            <button
+              type="button"
+              key={option.id}
+              aria-pressed={option.id === value}
+              disabled={disabled}
+              onClick={() => onChange(option.id)}
+            >
+              <img src={option.image} alt="" loading="lazy" />
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+        {footer}
       </div>
-      {options.length > 4 && (
+      {layout === "grid" && options.length > 4 && (
         <KButton variant="ghost" onClick={() => setExpanded(!expanded)}>
           {expanded
             ? "Weniger Designs"

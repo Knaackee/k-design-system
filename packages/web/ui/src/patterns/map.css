@@ -10,6 +10,9 @@
   color: var(--k-color-text-primary);
   font-family: var(--k-font-family);
 }
+.k-map[data-embedded] {
+  border-radius: 0;
+}
 .k-map > .k-map__canvas {
   position: absolute;
   inset: 0;

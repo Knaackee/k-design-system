@@ -194,9 +194,14 @@ class KPageHeader extends StatelessWidget {
         // the row, already separate the title from the top.
         final barRow = inBar && KTopBarTitleScope.barControlsOf(context);
         final spaced = barRow || KPage.isInside(context);
+        final pageGap = KPageTopGap.maybeOf(context);
         return Padding(
           padding: EdgeInsets.only(
-            top: spaced ? 0 : t.componentPageHeaderPaddingBlockStart,
+            top: spaced
+                ? 0
+                : pageGap != null
+                ? MediaQuery.paddingOf(context).top + pageGap
+                : t.componentPageHeaderPaddingBlockStart,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

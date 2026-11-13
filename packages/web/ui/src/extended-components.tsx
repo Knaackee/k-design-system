@@ -13,6 +13,7 @@ import {
   type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
+import { KInlineSideSheet } from "./overlays/inline-side-sheet.js";
 import { KIcon, type KIconName } from "./primitives/icon.js";
 import { KButton } from "./primitives/button.js";
 import { KIconButton } from "./actions/icon-button.js";
@@ -771,10 +772,13 @@ export interface KResponsiveDrawerProps extends KOverlayProps {
   /** Width below which detail content becomes a sheet. Use 0 for persistent side presentation (e.g. app navigation). */
   breakpoint?: number;
   side?: "left" | "right";
+  /** Reserve a non-modal side pane in the host layout instead of covering it. */
+  inline?: boolean;
 }
 export function KResponsiveDrawer({
   breakpoint = 600,
   side = "right",
+  inline = false,
   className,
   ...props
 }: KResponsiveDrawerProps) {
@@ -790,6 +794,8 @@ export function KResponsiveDrawer({
   }, [breakpoint]);
   return compact ? (
     <KBottomSheet {...props} className={className} />
+  ) : inline ? (
+    <KInlineSideSheet {...props} className={className} />
   ) : (
     <KDesktopDialog
       {...props}

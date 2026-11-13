@@ -240,6 +240,8 @@ void main() {
     WidgetTester tester, {
     required KStyle style,
     KPrimaryActionPlacement placement = KPrimaryActionPlacement.auto,
+    Widget? primaryContent,
+    VoidCallback? onPrimary,
   }) async {
     tester.view.physicalSize = const Size(393, 852);
     tester.view.devicePixelRatio = 1;
@@ -267,8 +269,9 @@ void main() {
                     actions: [
                       KButton(
                         label: 'Portfolio',
+                        content: primaryContent,
                         leading: const KIcon(KIconName.plus),
-                        onPressed: () {},
+                        onPressed: onPrimary ?? () {},
                       ),
                       KMenuButton(
                         label: 'Options',
@@ -321,6 +324,32 @@ void main() {
       placement: KPrimaryActionPlacement.bar,
     );
     expect(find.byTooltip('Portfolio'), findsOneWidget);
+  });
+
+  testWidgets('material FAB preserves icon-only content and accessible label', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+
+    var presses = 0;
+    await pumpShell(
+      tester,
+      style: KStyle.material,
+      primaryContent: const KIcon(KIconName.plus),
+      onPrimary: () => presses++,
+    );
+    expect(find.text('Portfolio'), findsNothing);
+    final fab = find.bySemanticsLabel('Portfolio');
+    expect(fab, findsOneWidget);
+    final icon = find.descendant(of: fab, matching: find.byType(KIcon));
+    expect(icon, findsOneWidget);
+    final tokens = Theme.of(tester.element(icon)).extension<KDesignTokens>()!;
+    expect(tester.widget<KIcon>(icon).color, tokens.componentFabForeground);
+    expect(tester.getSize(fab).width, tokens.componentFabHeight);
+    await tester.tap(fab);
+    expect(presses, 1);
+    expect(tester.takeException(), isNull);
+    semantics.dispose();
   });
 
   testWidgets('onboarding footer stays put on every step', (tester) async {

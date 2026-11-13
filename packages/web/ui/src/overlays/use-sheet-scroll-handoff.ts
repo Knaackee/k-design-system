@@ -1,5 +1,6 @@
 import { useEffect, type RefObject } from "react";
 import type { SheetRef } from "react-modal-sheet";
+import { sheetHandoffSnap } from "./sheet-detents.js";
 
 // Keep header dragging and scroll handoff on the same dismissal policy.
 export const sheetCloseThreshold = 0.25;
@@ -11,6 +12,7 @@ export function useSheetScrollHandoff(
   sheetRef: RefObject<SheetRef | null>,
   open: boolean,
   dismissible: boolean,
+  detents?: { points: readonly number[]; active: number },
 ) {
   useEffect(() => {
     if (!open || !scroller) return;
@@ -61,7 +63,23 @@ export function useSheetScrollHandoff(
             (offset > 24 &&
               event.timeStamp - previousTime < 100 &&
               velocity > sheetCloseVelocity / 1000));
-        sheetRef.current.snapTo(dismiss ? 0 : 1);
+        sheetRef.current.snapTo(
+          detents
+            ? sheetHandoffSnap(
+                offset,
+                height,
+                detents.points,
+                detents.active,
+                offset > 24 &&
+                  event.timeStamp - previousTime < 100 &&
+                  velocity > sheetCloseVelocity / 1000,
+                dismissible,
+                event.type === "touchcancel",
+              )
+            : dismiss
+              ? 0
+              : 1,
+        );
       }
       eligible = dragging = false;
     };
@@ -75,5 +93,5 @@ export function useSheetScrollHandoff(
       scroller.removeEventListener("touchend", finish);
       scroller.removeEventListener("touchcancel", finish);
     };
-  }, [open, dismissible, scroller, sheetRef]);
+  }, [open, dismissible, scroller, sheetRef, detents]);
 }

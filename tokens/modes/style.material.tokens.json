@@ -25,7 +25,7 @@
       },
       "groupRadius": {
         "$type": "dimension",
-        "$value": "{radius.scale.3xl}"
+        "$value": "{radius.card}"
       },
       "sectionHeaderGap": {
         "$type": "dimension",
@@ -51,6 +51,12 @@
         "$type": "dimension",
         "$value": "{radius.scale.full}"
       }
+    },
+    "metricCard": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.card}"
+      }
     }
   },
   "size": {
@@ -58,11 +64,23 @@
       "$type": "dimension",
       "$value": "{size.control.comfortable}"
     },
-    "fieldTouch": { "$type": "dimension", "$value": "{size.control.field}" },
+    "fieldTouch": {
+      "$type": "dimension",
+      "$value": "{size.control.field}"
+    },
     "prominentTouch": {
       "$type": "dimension",
       "$value": "{size.control.tall}"
     },
-    "iconStroke": { "$type": "number", "$value": "{size.iconStroke.regular}" }
+    "iconStroke": {
+      "$type": "number",
+      "$value": "{size.iconStroke.regular}"
+    }
+  },
+  "radius": {
+    "card": {
+      "$type": "dimension",
+      "$value": "{radius.scale.3xl}"
+    }
   }
 }

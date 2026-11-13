@@ -51,6 +51,7 @@ class KOfferOverview extends StatefulWidget {
     this.onReorderEntries,
     this.onMoveEntry,
     this.translate,
+    this.headerAction,
     this.footer,
     this.settings,
     this.enabled = true,
@@ -65,6 +66,9 @@ class KOfferOverview extends StatefulWidget {
   final void Function(String itemId, String categoryId, String? beforeId)?
   onMoveEntry;
   final String Function(String source)? translate;
+
+  /// Replaces the default creation menu while preserving all other controls.
+  final Widget? headerAction;
   final Widget? footer, settings;
   final bool enabled;
   @override
@@ -130,7 +134,7 @@ class _KOfferOverviewState extends State<KOfferOverview> {
                 ],
               ),
             ),
-            _newButton(t),
+            widget.headerAction ?? _newButton(t),
           ],
         ),
         SizedBox(height: t.spaceControlInsetInline),

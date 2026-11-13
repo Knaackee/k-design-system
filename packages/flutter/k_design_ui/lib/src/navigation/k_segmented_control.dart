@@ -27,6 +27,7 @@ class KSegmentedControl<T> extends StatelessWidget {
     required this.value,
     required this.onChanged,
     required this.label,
+    this.showLabels = true,
     super.key,
   });
 
@@ -38,6 +39,9 @@ class KSegmentedControl<T> extends StatelessWidget {
 
   /// Accessible name of the group (for example "Period").
   final String label;
+
+  /// Hide visual labels while retaining their semantic names.
+  final bool showLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +85,7 @@ class KSegmentedControl<T> extends StatelessWidget {
       enabled: onChanged != null,
       radius: innerRadius,
       check: material,
+      showLabel: showLabels,
       decoration: vertical && i == index ? thumbDecoration : null,
       onPressed: () {
         if (i == index) return;
@@ -168,6 +173,7 @@ class _KSegmentButton<T> extends StatelessWidget {
     required this.radius,
     required this.onPressed,
     this.check = false,
+    this.showLabel = true,
     this.decoration,
   });
 
@@ -180,6 +186,7 @@ class _KSegmentButton<T> extends StatelessWidget {
 
   /// Material: a selected segment without an icon shows a check mark.
   final bool check;
+  final bool showLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -222,18 +229,19 @@ class _KSegmentButton<T> extends StatelessWidget {
                 if (segment.icon ?? (check && selected ? KIconName.check : null)
                     case final icon?) ...[
                   KIcon(icon, size: 16, color: color),
-                  SizedBox(width: t.spaceTight),
+                  if (showLabel) SizedBox(width: t.spaceTight),
                 ],
-                Flexible(
-                  child: ExcludeSemantics(
-                    child: KText(
-                      segment.label,
-                      variant: KTextVariant.label,
-                      align: TextAlign.center,
-                      style: TextStyle(color: color),
+                if (showLabel)
+                  Flexible(
+                    child: ExcludeSemantics(
+                      child: KText(
+                        segment.label,
+                        variant: KTextVariant.label,
+                        align: TextAlign.center,
+                        style: TextStyle(color: color),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

@@ -272,7 +272,9 @@
     var(--k-app-shell-top-actions-width, 0px) + var(--k-space-tight)
   );
 }
-/* Beside the sidebar the page starts on the line of the sidebar header. */
+/* Wide browser pages have no status bar; keep one shared content start. */
 .k-app-shell:not([data-layout="tab-bar"]) > .k-app-shell__content {
-  --k-page-top-gap: var(--k-space-control-gap);
+  --k-page-top-gap: calc(
+    var(--k-space-layout-section-gap) + var(--k-space-control-gap)
+  );
 }

@@ -58,7 +58,11 @@ class KPage extends StatelessWidget {
     // Beside a sidebar the page starts on the line of the sidebar header.
     final topGap = KTopBarTitleScope.barControlsOf(context)
         ? t.spaceTight
-        : KPageTopGap.maybeOf(context) ?? gutter;
+        : KPageTopGap.maybeOf(context) ??
+              (KTopBarTitleScope.maybeOf(context) != null &&
+                      KAdaptive.maybeOf(context)?.style == KStyle.material
+                  ? gutter + t.spaceLayoutSectionGap
+                  : gutter);
     final insets = EdgeInsets.fromLTRB(
       gutter + padding.left,
       topGap + padding.top,

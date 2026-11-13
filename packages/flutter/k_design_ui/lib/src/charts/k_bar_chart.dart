@@ -20,6 +20,7 @@ class KBarChart extends KCartesianChart {
     super.loadingContent,
     super.errorContent,
     super.height,
+    super.compact,
     super.key,
     super.stacked,
     super.orientation,

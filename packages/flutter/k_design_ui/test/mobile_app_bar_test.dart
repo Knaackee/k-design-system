@@ -4,6 +4,52 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  for (final brightness in Brightness.values) {
+    for (final variant in [
+      KMobileAppBarVariant.floatingGlass,
+      KMobileAppBarVariant.labeled,
+    ]) {
+      testWidgets('$variant badge text stays white in $brightness', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(brightness: brightness),
+            home: Scaffold(
+              body: KMobileAppBar(
+                variant: variant,
+                quality: KGlassQuality.solid,
+                visibility: KMobileAppBarVisibility.always,
+                selectedId: 'inbox',
+                onSelectionChanged: (_) {},
+                items: const [
+                  KMobileAppBarItem(
+                    id: 'inbox',
+                    label: 'Inbox',
+                    icon: Icon(Icons.inbox),
+                    badge: Text('10', key: ValueKey('badge-text')),
+                  ),
+                  KMobileAppBarItem(
+                    id: 'settings',
+                    label: 'Settings',
+                    icon: Icon(Icons.settings),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          DefaultTextStyle.of(
+            tester.element(find.byKey(const ValueKey('badge-text'))),
+          ).style.color,
+          Colors.white,
+        );
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
   for (final variant in [
     KMobileAppBarVariant.floatingGlass,
     KMobileAppBarVariant.labeled,

@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../chat/k_chat_bubble.dart';
 import 'k_fab_attention.dart';
+import '../primitives/k_text.dart';
+import '../primitives/k_surface.dart';
 
 enum KFabActivation { press, longPress }
 
@@ -26,6 +28,7 @@ class KFab extends StatefulWidget {
     required this.child,
     required this.items,
     this.activation = KFabActivation.press,
+    this.showLabels = false,
     this.onPressed,
     this.open,
     this.onOpenChanged,
@@ -45,6 +48,9 @@ class KFab extends StatefulWidget {
   final String label;
   final Widget child;
   final List<KFabItem> items;
+
+  /// Shows action names beside smaller bubbles; icon-only remains the default.
+  final bool showLabels;
   final KFabActivation activation;
   final VoidCallback? onPressed;
   final bool? open;
@@ -68,6 +74,10 @@ class _KFabState extends State<KFab> {
   final _anchor = GlobalKey();
   final _link = LayerLink();
   final _portal = OverlayPortalController();
+  final _triggerFocus = FocusScopeNode();
+  final _menuFocus = FocusScopeNode();
+  LocalHistoryEntry? _historyEntry;
+  bool _wasOpen = false;
   bool _localOpen = false;
   bool _measureRetryPending = false;
   bool get _open =>
@@ -75,6 +85,45 @@ class _KFabState extends State<KFab> {
   void _change(bool value) {
     setState(() => _localOpen = value);
     widget.onOpenChanged?.call(value);
+  }
+
+  void _syncOpen() {
+    if (_open == _wasOpen) return;
+    _wasOpen = _open;
+    if (_open) {
+      final route = ModalRoute.of(context);
+      if (route != null) {
+        late LocalHistoryEntry entry;
+        entry = LocalHistoryEntry(
+          onRemove: () {
+            if (!mounted || _historyEntry != entry) return;
+            _historyEntry = null;
+            _change(false);
+          },
+        );
+        _historyEntry = entry;
+        route.addLocalHistoryEntry(entry);
+      }
+      _menuFocus.requestFocus();
+    } else {
+      final entry = _historyEntry;
+      _historyEntry = null;
+      entry?.remove();
+      if (ModalRoute.of(context)?.isCurrent ?? true) {
+        final trigger = _triggerFocus.traversalDescendants.firstOrNull;
+        trigger?.requestFocus();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    final entry = _historyEntry;
+    _historyEntry = null;
+    entry?.remove();
+    _menuFocus.dispose();
+    _triggerFocus.dispose();
+    super.dispose();
   }
 
   bool _canMeasure(RenderObject anchor, RenderObject overlay) {
@@ -120,7 +169,10 @@ class _KFabState extends State<KFab> {
         ? (widget.itemGap < 0 ? 0.0 : widget.itemGap)
         : 8.0;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _portal.show();
+      if (mounted) {
+        _portal.show();
+        _syncOpen();
+      }
     });
     return OverlayPortal(
       controller: _portal,
@@ -173,7 +225,8 @@ class _KFabState extends State<KFab> {
                             ): () =>
                                 _change(false),
                           },
-                          child: Focus(
+                          child: FocusScope(
+                            node: _menuFocus,
                             autofocus: _open,
                             child: TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0, end: _open ? 1 : 0),
@@ -188,12 +241,18 @@ class _KFabState extends State<KFab> {
                                 ),
                               ),
                               child: SizedBox(
-                                width:
-                                    math.max(
-                                      widget.size,
-                                      tokens.sizeHitTarget,
-                                    ) +
-                                    2 * tokens.spaceLayoutGutter,
+                                width: widget.showLabels
+                                    ? math.min(
+                                        MediaQuery.sizeOf(context).width -
+                                            2 * tokens.spaceLayoutGutter,
+                                        tokens.layoutMenuWidth +
+                                            2 * tokens.spaceLayoutGutter,
+                                      )
+                                    : math.max(
+                                            widget.size,
+                                            tokens.sizeHitTarget,
+                                          ) +
+                                          2 * tokens.spaceLayoutGutter,
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxHeight: math.max(
@@ -214,38 +273,44 @@ class _KFabState extends State<KFab> {
                                           i++
                                         ) ...[
                                           if (i > 0) SizedBox(height: itemGap),
-                                          KChatBubble(
-                                            key: ValueKey(widget.items[i].id),
-                                            label: widget.items[i].label,
-                                            size: widget.size,
-                                            clipBehavior: widget.clipBehavior,
-                                            style:
-                                                widget.attention.any(
-                                                  (notice) =>
-                                                      notice.itemId ==
-                                                      widget.items[i].id,
-                                                )
-                                                ? ButtonStyle(
-                                                    side: WidgetStatePropertyAll(
-                                                      BorderSide(
-                                                        color: tokens
-                                                            .colorBorderFocus,
-                                                      ),
-                                                    ),
+                                          if (widget.showLabels)
+                                            _labeledItem(
+                                              widget.items[i],
+                                              tokens,
+                                            )
+                                          else
+                                            KChatBubble(
+                                              key: ValueKey(widget.items[i].id),
+                                              label: widget.items[i].label,
+                                              size: widget.size,
+                                              clipBehavior: widget.clipBehavior,
+                                              style:
+                                                  widget.attention.any(
+                                                    (notice) =>
+                                                        notice.itemId ==
+                                                        widget.items[i].id,
                                                   )
-                                                : null,
-                                            onPressed:
-                                                widget.items[i].onSelected ==
-                                                    null
-                                                ? null
-                                                : () {
-                                                    _change(false);
-                                                    widget
-                                                        .items[i]
-                                                        .onSelected!();
-                                                  },
-                                            child: widget.items[i].child,
-                                          ),
+                                                  ? ButtonStyle(
+                                                      side: WidgetStatePropertyAll(
+                                                        BorderSide(
+                                                          color: tokens
+                                                              .colorBorderFocus,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : null,
+                                              onPressed:
+                                                  widget.items[i].onSelected ==
+                                                      null
+                                                  ? null
+                                                  : () {
+                                                      _change(false);
+                                                      widget
+                                                          .items[i]
+                                                          .onSelected!();
+                                                    },
+                                              child: widget.items[i].child,
+                                            ),
                                         ],
                                       ],
                                     ),
@@ -296,46 +361,115 @@ class _KFabState extends State<KFab> {
                     : () => _change(!_open),
                 child: CompositedTransformTarget(
                   link: _link,
-                  child: CallbackShortcuts(
-                    bindings: {
-                      const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
-                          _change(true),
-                      const SingleActivator(
-                        LogicalKeyboardKey.f10,
-                        shift: true,
-                      ): () =>
-                          _change(true),
-                      const SingleActivator(LogicalKeyboardKey.escape): () =>
-                          _change(false),
-                    },
-                    child: KChatBubble(
-                      key: _anchor,
-                      label: widget.label,
-                      size: widget.size,
-                      clipBehavior: widget.clipBehavior,
-                      visible: widget.visible,
-                      style: widget.style,
-                      onPressed: () {
-                        if (widget.activation == KFabActivation.press &&
-                            widget.items.isNotEmpty) {
-                          _change(!_open);
-                        } else {
-                          _change(false);
-                          widget.onPressed?.call();
-                        }
+                  child: FocusScope(
+                    node: _triggerFocus,
+                    child: CallbackShortcuts(
+                      bindings: {
+                        const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
+                            _change(true),
+                        const SingleActivator(
+                          LogicalKeyboardKey.f10,
+                          shift: true,
+                        ): () =>
+                            _change(true),
+                        const SingleActivator(LogicalKeyboardKey.escape): () =>
+                            _change(false),
                       },
-                      onLongPress:
-                          widget.activation == KFabActivation.longPress &&
-                              widget.items.isNotEmpty
-                          ? () => _change(!_open)
-                          : null,
-                      child: widget.child,
+                      child: KChatBubble(
+                        key: _anchor,
+                        label: widget.label,
+                        size: widget.size,
+                        clipBehavior: widget.clipBehavior,
+                        visible: widget.visible,
+                        style: widget.style,
+                        onPressed: () {
+                          if (widget.activation == KFabActivation.press &&
+                              widget.items.isNotEmpty) {
+                            _change(!_open);
+                          } else {
+                            _change(false);
+                            widget.onPressed?.call();
+                          }
+                        },
+                        onLongPress:
+                            widget.activation == KFabActivation.longPress &&
+                                widget.items.isNotEmpty
+                            ? () => _change(!_open)
+                            : null,
+                        child: widget.child,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _labeledItem(KFabItem item, KDesignTokens tokens) {
+    void select() {
+      _change(false);
+      item.onSelected?.call();
+    }
+
+    return Semantics(
+      label: item.label,
+      button: true,
+      enabled: item.onSelected != null,
+      onTap: item.onSelected == null ? null : select,
+      child: ExcludeSemantics(
+        child: TextButton(
+          key: ValueKey(item.id),
+          onPressed: item.onSelected == null ? null : select,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size(0, tokens.sizeHitTarget),
+            foregroundColor: tokens.colorTextPrimary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(tokens.radiusControl),
+            ),
+          ),
+          child: Opacity(
+            opacity: item.onSelected == null
+                ? tokens.componentButtonDisabledOpacity
+                : 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: KSurface(
+                    border: KSurfaceBorder.none,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: tokens.spaceControlInsetInline,
+                        vertical: tokens.spaceControlGap,
+                      ),
+                      child: KText(
+                        item.label,
+                        variant: KTextVariant.label,
+                        align: TextAlign.end,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: tokens.spaceControlGap),
+                ExcludeFocus(
+                  child: IgnorePointer(
+                    child: KChatBubble(
+                      label: item.label,
+                      size: tokens.sizeHitTarget,
+                      clipBehavior: widget.clipBehavior,
+                      onPressed: item.onSelected == null ? null : select,
+                      child: item.child,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -34,6 +34,7 @@ class KMap extends StatefulWidget {
     required this.center,
     this.zoom = 13,
     this.interactive = true,
+    this.embedded = false,
     this.showZoomControls = true,
     this.label = 'Karte',
     this.onViewChange,
@@ -83,6 +84,10 @@ class KMap extends StatefulWidget {
   final KMapCenter center;
   final double zoom;
   final bool interactive;
+
+  /// Embedded media lets the surrounding list or card own its outer corners.
+  /// Standalone maps retain the standard card radius.
+  final bool embedded;
   final bool showZoomControls;
   final String label;
   final KMapViewChangeCallback? onViewChange;
@@ -447,7 +452,9 @@ class _KMapState extends State<KMap> {
     final tokens =
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
-    final radius = BorderRadius.circular(tokens.radiusCard);
+    final radius = widget.embedded
+        ? BorderRadius.zero
+        : BorderRadius.circular(tokens.radiusCard);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // The map can leave the tree before the frame ends (navigation, a

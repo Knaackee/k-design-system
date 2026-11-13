@@ -6,6 +6,29 @@ import { KList, KListItem } from "./dist/data-display/list.js";
 import { KSegmentedControl } from "./dist/navigation/segmented-control.js";
 import { KPageHeader } from "./dist/navigation/page-header.js";
 import { KAppShell } from "./dist/navigation/app-shell.js";
+import { KBarChart } from "./dist/charts/cartesian-chart.js";
+
+test("compact plots reserve no axis gutters only when both axes are hidden", () => {
+  const render = (compact, ticks) =>
+    renderToStaticMarkup(
+      h(KBarChart, {
+        compact,
+        label: "Bookings",
+        series: [
+          {
+            id: "bookings",
+            label: "Bookings",
+            points: [{ id: "peak", x: 0, y: 5 }],
+          },
+        ],
+        xAxis: { min: -0.5, max: 0.5, ticks, format: String },
+        yAxis: { min: 0, max: 5, ticks, format: String },
+      }),
+    );
+  assert.match(render(true, []), /data-axis-free="true"/);
+  assert.doesNotMatch(render(false, []), /data-axis-free/);
+  assert.doesNotMatch(render(true, [0]), /data-axis-free/);
+});
 
 test("controlled shell rail retains toggle and custom navigation; phones retain tabs", () => {
   const previous = globalThis.window;

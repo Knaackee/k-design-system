@@ -16,6 +16,13 @@ import {
 } from "./map-day-sheet-controller.js";
 
 export { KMapDaySheetController, type KMapDayPanelState };
+export interface KMapDayPanelContext {
+  isSheet: boolean;
+  expanded: boolean;
+  toggleExpanded: () => void;
+  selectedItemId: string | null;
+  onItemClick: (itemId: string) => void;
+}
 export interface KMapDayItem {
   id: string;
   /** Minutes from midnight on the consumer's displayed day. */
@@ -71,6 +78,12 @@ export interface KMapDayViewProps {
   }>;
   formatForecast?: (item: KMapDayItem) => ReactNode;
   renderItemDetails?: (item: KMapDayItem) => ReactNode;
+  /** Product-specific header; return null to omit it on a sidebar. */
+  renderPanelHeader?: (context: KMapDayPanelContext) => ReactNode;
+  /** Replaces itinerary content, retaining the accessible sheet and scroll area. */
+  renderPanelBody?: (context: KMapDayPanelContext) => ReactNode;
+  /** Docked sidebars meet the content edges; floating remains the default. */
+  panelLayout?: "floating" | "docked";
   onSelectionChange?: (itemId: string) => void;
   onItemClick?: (itemId: string) => void;
   onMapItemClick?: (itemId: string) => void;
@@ -114,6 +127,9 @@ export function KMapDayView({
   labels,
   formatForecast,
   renderItemDetails,
+  renderPanelHeader,
+  renderPanelBody,
+  panelLayout = "floating",
   onSelectionChange,
   onItemClick,
   onMapItemClick,
@@ -195,11 +211,24 @@ export function KMapDayView({
     if (source === "map") onMapItemClick?.(id);
     else onItemClick?.(id);
   };
+  const panelContext: KMapDayPanelContext = {
+    isSheet: sheet.isSheet,
+    expanded: sheet.fraction >= panelHeights[2] / 100 - 0.01,
+    toggleExpanded: () => {
+      void sheet.snapTo(sheet.fraction >= panelHeights[2] / 100 - 0.01 ? 1 : 2);
+    },
+    selectedItemId: selected,
+    onItemClick: (id) => select(id, "list"),
+  };
+  const customHeader = renderPanelHeader?.(panelContext);
   return (
     <div
       className={`k-day-map ${className}`}
       ref={root}
       data-presentation={presentation}
+      data-panel-layout={panelLayout}
+      data-custom-panel={!!renderPanelBody || undefined}
+      data-sheet={sheet.isSheet || undefined}
       data-sheet-moving={sheet.moving || undefined}
       style={
         {
@@ -255,159 +284,174 @@ export function KMapDayView({
         >
           <span />
         </div>
-        <header className="k-day-panel__header">
-          <div className="k-day-panel__heading">
-            <div>
-              <span className="k-day-muted">{dayLabel}</span>
-              <h2>{title}</h2>
-            </div>
-            <div className="k-day-panel__sizes">
-              <KButton
-                variant="ghost"
-                aria-label={text.smaller}
-                disabled={snap === 0}
-                onClick={() =>
-                  void sheet.snapTo((snap - 1) as KMapDayPanelState)
-                }
-              >
-                <KIcon name="chevron-down" />
-              </KButton>
-              <KButton
-                variant="ghost"
-                aria-label={text.larger}
-                disabled={snap === 2}
-                onClick={() =>
-                  void sheet.snapTo((snap + 1) as KMapDayPanelState)
-                }
-              >
-                <KIcon name="chevron-up" />
-              </KButton>
-            </div>
-          </div>
-          {summary && <div className="k-day-panel__summary">{summary}</div>}
-          {showCurrentTime && (
-            <div className="k-day-now-summary">
-              <KIcon name="clock" size={16} />
-              <span>
-                <strong>
-                  {formatTime(currentTime)} · {text.now}
-                </strong>
-                <br />
-                {current?.title ?? text.outside}
-              </span>
-            </div>
-          )}
-        </header>
-        <div ref={body} className="k-day-panel__body">
-          {description && (
-            <div className="k-day-explanation">{description}</div>
-          )}
-          <ol className="k-day-timeline">
-            {items.map((item) => {
-              const active = showCurrentTime && current?.id === item.id;
-              const forecast =
-                showForecasts &&
-                item.expectedStart !== undefined &&
-                item.expectedStart !== item.start;
-              return (
-                <li
-                  key={item.id}
-                  className={`k-day-entry k-day-entry--${item.kind}`}
-                  data-past={item.end <= currentTime && !active}
-                  data-selected={selected === item.id}
-                  aria-current={active ? "step" : undefined}
+        {renderPanelHeader ? (
+          customHeader != null && (
+            <header className="k-day-panel__custom-header">
+              {customHeader}
+            </header>
+          )
+        ) : (
+          <header className="k-day-panel__header">
+            <div className="k-day-panel__heading">
+              <div>
+                <span className="k-day-muted">{dayLabel}</span>
+                <h2>{title}</h2>
+              </div>
+              <div className="k-day-panel__sizes">
+                <KButton
+                  variant="ghost"
+                  aria-label={text.smaller}
+                  disabled={snap === 0}
+                  onClick={() =>
+                    void sheet.snapTo((snap - 1) as KMapDayPanelState)
+                  }
                 >
-                  <div className="k-day-entry__rail">
-                    <span>
-                      <KIcon name={item.icon} size={20} />
-                    </span>
-                  </div>
-                  <div
-                    className="k-day-entry__main"
-                    data-route-info={!!item.routeDescription}
-                  >
-                    <button
-                      data-item-id={item.id}
-                      className="k-day-entry__content"
-                      aria-pressed={selected === item.id}
-                      onClick={() => select(item.id, "list")}
+                  <KIcon name="chevron-down" />
+                </KButton>
+                <KButton
+                  variant="ghost"
+                  aria-label={text.larger}
+                  disabled={snap === 2}
+                  onClick={() =>
+                    void sheet.snapTo((snap + 1) as KMapDayPanelState)
+                  }
+                >
+                  <KIcon name="chevron-up" />
+                </KButton>
+              </div>
+            </div>
+            {summary && <div className="k-day-panel__summary">{summary}</div>}
+            {showCurrentTime && (
+              <div className="k-day-now-summary">
+                <KIcon name="clock" size={16} />
+                <span>
+                  <strong>
+                    {formatTime(currentTime)} · {text.now}
+                  </strong>
+                  <br />
+                  {current?.title ?? text.outside}
+                </span>
+              </div>
+            )}
+          </header>
+        )}
+        <div ref={body} className="k-day-panel__body">
+          {renderPanelBody ? (
+            renderPanelBody(panelContext)
+          ) : (
+            <>
+              {description && (
+                <div className="k-day-explanation">{description}</div>
+              )}
+              <ol className="k-day-timeline">
+                {items.map((item) => {
+                  const active = showCurrentTime && current?.id === item.id;
+                  const forecast =
+                    showForecasts &&
+                    item.expectedStart !== undefined &&
+                    item.expectedStart !== item.start;
+                  return (
+                    <li
+                      key={item.id}
+                      className={`k-day-entry k-day-entry--${item.kind}`}
+                      data-past={item.end <= currentTime && !active}
+                      data-selected={selected === item.id}
+                      aria-current={active ? "step" : undefined}
                     >
-                      <span className="k-day-entry__top">
-                        <strong>{item.title}</strong>
-                        <span className="k-day-entry__time">
-                          <time>{formatTime(item.start)}</time>
+                      <div className="k-day-entry__rail">
+                        <span>
+                          <KIcon name={item.icon} size={20} />
                         </span>
-                      </span>
-                      <span className="k-day-muted">{item.detail}</span>
-                      {forecast && (
-                        <span className="k-day-delay">
-                          {formatForecast ? (
-                            formatForecast(item)
-                          ) : (
-                            <>
-                              {text.expected} {formatTime(item.expectedStart!)}{" "}
-                              · {Math.abs(item.expectedStart! - item.start)}{" "}
-                              {text.minutes}{" "}
-                              {item.expectedStart! > item.start
-                                ? text.later
-                                : text.earlier}
-                            </>
-                          )}
-                        </span>
-                      )}
-                    </button>
-                    {item.routeDescription && (
-                      <span className="k-day-entry__info">
-                        <KPopover
-                          portal
-                          align="end"
-                          label="Routendetails"
-                          trigger={
-                            <KIconButton
-                              icon="info"
-                              label={`Routendetails: ${item.title}`}
-                              variant="ghost"
-                            />
-                          }
-                        >
-                          <div className="k-day-route-info">
-                            {item.routeDescription}
-                          </div>
-                        </KPopover>
-                      </span>
-                    )}
-                    {renderItemDetails?.(item)}
-                    {item.actions?.length ? (
-                      <div className="k-day-entry__actions">
-                        {item.actions.map((action) => (
-                          <KButton
-                            key={action.id}
-                            variant="ghost"
-                            onClick={() =>
-                              onAction?.({
-                                itemId: item.id,
-                                actionId: action.id,
-                              })
-                            }
-                          >
-                            {action.icon && <KIcon name={action.icon} />}
-                            {action.label}
-                          </KButton>
-                        ))}
                       </div>
-                    ) : null}
-                  </div>
-                  {active && (
-                    <div className="k-day-time-line">
-                      <span>{formatTime(currentTime)}</span>
-                      <i />
-                      <small>{text.now}</small>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
+                      <div
+                        className="k-day-entry__main"
+                        data-route-info={!!item.routeDescription}
+                      >
+                        <button
+                          data-item-id={item.id}
+                          className="k-day-entry__content"
+                          aria-pressed={selected === item.id}
+                          onClick={() => select(item.id, "list")}
+                        >
+                          <span className="k-day-entry__top">
+                            <strong>{item.title}</strong>
+                            <span className="k-day-entry__time">
+                              <time>{formatTime(item.start)}</time>
+                            </span>
+                          </span>
+                          <span className="k-day-muted">{item.detail}</span>
+                          {forecast && (
+                            <span className="k-day-delay">
+                              {formatForecast ? (
+                                formatForecast(item)
+                              ) : (
+                                <>
+                                  {text.expected}{" "}
+                                  {formatTime(item.expectedStart!)} ·{" "}
+                                  {Math.abs(item.expectedStart! - item.start)}{" "}
+                                  {text.minutes}{" "}
+                                  {item.expectedStart! > item.start
+                                    ? text.later
+                                    : text.earlier}
+                                </>
+                              )}
+                            </span>
+                          )}
+                        </button>
+                        {item.routeDescription && (
+                          <span className="k-day-entry__info">
+                            <KPopover
+                              portal
+                              align="end"
+                              label="Routendetails"
+                              trigger={
+                                <KIconButton
+                                  icon="info"
+                                  label={`Routendetails: ${item.title}`}
+                                  variant="ghost"
+                                />
+                              }
+                            >
+                              <div className="k-day-route-info">
+                                {item.routeDescription}
+                              </div>
+                            </KPopover>
+                          </span>
+                        )}
+                        {renderItemDetails?.(item)}
+                        {item.actions?.length ? (
+                          <div className="k-day-entry__actions">
+                            {item.actions.map((action) => (
+                              <KButton
+                                key={action.id}
+                                variant="ghost"
+                                onClick={() =>
+                                  onAction?.({
+                                    itemId: item.id,
+                                    actionId: action.id,
+                                  })
+                                }
+                              >
+                                {action.icon && <KIcon name={action.icon} />}
+                                {action.label}
+                              </KButton>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                      {active && (
+                        <div className="k-day-time-line">
+                          <span>{formatTime(currentTime)}</span>
+                          <i />
+                          <small>{text.now}</small>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </>
+          )}
         </div>
         {footer && <footer className="k-day-panel__footer">{footer}</footer>}
       </section>

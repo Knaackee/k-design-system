@@ -2130,6 +2130,13 @@
       "type": "color",
       "value": "#e2e2e4"
     },
+    "component.chart.compactHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
     "component.orbit.track.color": {
       "type": "color",
       "value": "#c17e47"
@@ -3889,6 +3896,10 @@
         "unit": "px"
       }
     },
+    "component.mobileAppBar.badge.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "component.mobileAppBar.label.fontSize": {
       "type": "dimension",
       "value": {
@@ -4342,6 +4353,45 @@
         "value": 28,
         "unit": "px"
       }
+    },
+    "component.page.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendColor": {
+      "type": "color",
+      "value": "#242428"
     },
     "text.scaleMax.body": {
       "type": "number",
@@ -6491,6 +6541,13 @@
       "type": "color",
       "value": "#303033"
     },
+    "component.chart.compactHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
     "component.orbit.track.color": {
       "type": "color",
       "value": "#c17e47"
@@ -8250,6 +8307,10 @@
         "unit": "px"
       }
     },
+    "component.mobileAppBar.badge.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "component.mobileAppBar.label.fontSize": {
       "type": "dimension",
       "value": {
@@ -8703,6 +8764,45 @@
         "value": 28,
         "unit": "px"
       }
+    },
+    "component.page.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendColor": {
+      "type": "color",
+      "value": "#e8e8eb"
     },
     "text.scaleMax.body": {
       "type": "number",
@@ -10852,6 +10952,13 @@
       "type": "color",
       "value": "#99d5cd"
     },
+    "component.chart.compactHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
     "component.orbit.track.color": {
       "type": "color",
       "value": "#c17e47"
@@ -12611,6 +12718,10 @@
         "unit": "px"
       }
     },
+    "component.mobileAppBar.badge.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "component.mobileAppBar.label.fontSize": {
       "type": "dimension",
       "value": {
@@ -13064,6 +13175,45 @@
         "value": 28,
         "unit": "px"
       }
+    },
+    "component.page.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendColor": {
+      "type": "color",
+      "value": "#242428"
     },
     "text.scaleMax.body": {
       "type": "number",
@@ -15213,6 +15363,13 @@
       "type": "color",
       "value": "#23544e"
     },
+    "component.chart.compactHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 96,
+        "unit": "px"
+      }
+    },
     "component.orbit.track.color": {
       "type": "color",
       "value": "#c17e47"
@@ -16972,6 +17129,10 @@
         "unit": "px"
       }
     },
+    "component.mobileAppBar.badge.foreground": {
+      "type": "color",
+      "value": "#ffffff"
+    },
     "component.mobileAppBar.label.fontSize": {
       "type": "dimension",
       "value": {
@@ -17426,6 +17587,45 @@
         "unit": "px"
       }
     },
+    "component.page.paddingBlockStart": {
+      "type": "dimension",
+      "value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.radius": {
+      "type": "dimension",
+      "value": {
+        "value": 8,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueSize": {
+      "type": "dimension",
+      "value": {
+        "value": 28,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.valueLineHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 30,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendHeight": {
+      "type": "dimension",
+      "value": {
+        "value": 24,
+        "unit": "px"
+      }
+    },
+    "component.metricCard.trendColor": {
+      "type": "color",
+      "value": "#e8e8eb"
+    },
     "text.scaleMax.body": {
       "type": "number",
       "value": 3
@@ -17612,6 +17812,13 @@
           "unit": "px"
         }
       },
+      "component.metricCard.radius": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
       "size.controlTouch": {
         "type": "dimension",
         "value": {
@@ -17636,6 +17843,13 @@
       "size.iconStroke": {
         "type": "number",
         "value": 1.5
+      },
+      "radius.card": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
       }
     },
     "styleMaterial": {
@@ -17716,6 +17930,13 @@
           "unit": "px"
         }
       },
+      "component.metricCard.radius": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
       "size.controlTouch": {
         "type": "dimension",
         "value": {
@@ -17740,6 +17961,13 @@
       "size.iconStroke": {
         "type": "number",
         "value": 1.75
+      },
+      "radius.card": {
+        "type": "dimension",
+        "value": {
+          "value": 24,
+          "unit": "px"
+        }
       }
     },
     "motionApple": {

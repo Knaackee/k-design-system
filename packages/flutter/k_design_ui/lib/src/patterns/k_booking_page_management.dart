@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
 import '../primitives/k_icon.dart';
-import '../primitives/k_button.dart';
+export 'k_booking_theme_picker.dart';
+export 'k_booking_page_settings.dart';
 
 /// Shared booking-page editor geometry. Application owns the preview and save state.
 class KBookingPageLayout extends StatelessWidget {
@@ -9,11 +10,13 @@ class KBookingPageLayout extends StatelessWidget {
     required this.child,
     required this.preview,
     this.previewAction,
+    this.settings = false,
     this.previewHelp =
         'Änderungen sehen Kund:innen erst nach dem Veröffentlichen.',
     super.key,
   });
   final Widget child, preview;
+  final bool settings;
   final Widget? previewAction;
   final String previewHelp;
   @override
@@ -21,7 +24,7 @@ class KBookingPageLayout extends StatelessWidget {
     final t = Theme.of(context).extension<KDesignTokens>()!;
     return LayoutBuilder(
       builder: (context, c) {
-        if (c.maxWidth < 900) {
+        if (c.maxWidth < (settings ? 700 : 900)) {
           return Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: t.layoutContentWidth),
@@ -35,14 +38,14 @@ class KBookingPageLayout extends StatelessWidget {
             Expanded(child: child),
             SizedBox(width: t.spaceLayoutSectionGap),
             SizedBox(
-              width: t.layoutCompactWidth,
+              width: settings ? t.layoutPanelWidth : t.layoutCompactWidth,
               child: Column(
                 children: [
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Vorschau',
+                          settings ? 'Live-Vorschau' : 'Vorschau',
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
@@ -310,128 +313,6 @@ class KBookingPageStatus extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class KBookingThemeChoice {
-  const KBookingThemeChoice({
-    required this.id,
-    required this.label,
-    required this.image,
-  });
-  final String id, label;
-  final Widget image;
-}
-
-class KBookingThemePicker extends StatefulWidget {
-  const KBookingThemePicker({
-    required this.options,
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
-  final List<KBookingThemeChoice> options;
-  final String value;
-  final ValueChanged<String>? onChanged;
-  @override
-  State<KBookingThemePicker> createState() => _KBookingThemePickerState();
-}
-
-class _KBookingThemePickerState extends State<KBookingThemePicker> {
-  bool expanded = false;
-  List<KBookingThemeChoice> get options => widget.options;
-  String get value => widget.value;
-  ValueChanged<String>? get onChanged => widget.onChanged;
-  @override
-  Widget build(BuildContext context) {
-    final t = Theme.of(context).extension<KDesignTokens>()!;
-    final selected = options.where((o) => o.id == value).firstOrNull;
-    final first = options.take(4).toList();
-    if (selected != null &&
-        !first.any((o) => o.id == value) &&
-        first.isNotEmpty) {
-      first[first.length - 1] = selected;
-    }
-    final visible = expanded ? options : first;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        LayoutBuilder(
-          builder: (context, c) {
-            final width = (c.maxWidth - 3 * t.spaceControlGap) / 4;
-            return Wrap(
-              spacing: t.spaceControlGap,
-              runSpacing: t.spaceControlInsetInline,
-              children: [
-                for (final o in visible)
-                  SizedBox(
-                    width: width,
-                    child: Semantics(
-                      button: true,
-                      selected: o.id == value,
-                      label: o.label,
-                      child: InkWell(
-                        onTap: onChanged == null
-                            ? null
-                            : () => onChanged!(o.id),
-                        borderRadius: BorderRadius.circular(t.radiusExtraLarge),
-                        child: Column(
-                          children: [
-                            Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  t.radiusExtraLarge,
-                                ),
-                                border: Border.all(
-                                  color: o.id == value
-                                      ? t.colorActionPrimaryBackground
-                                      : t.colorBorderDefault,
-                                  width: o.id == value
-                                      ? t.borderWidthStrong
-                                      : t.borderWidthDefault,
-                                ),
-                              ),
-                              child: AspectRatio(
-                                aspectRatio: 3 / 4,
-                                child: ExcludeSemantics(child: o.image),
-                              ),
-                            ),
-                            SizedBox(height: t.spaceControlGap),
-                            Text(
-                              o.label,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: t.fontBodySmallSize,
-                                fontWeight: FontWeight.w600,
-                                color: o.id == value
-                                    ? t.colorTextPrimary
-                                    : t.colorTextMuted,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-        if (options.length > 4)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: KButton(
-              label: expanded
-                  ? 'Weniger Designs'
-                  : 'Alle ${options.length} Designs ansehen',
-              variant: KButtonVariant.ghost,
-              onPressed: () => setState(() => expanded = !expanded),
-            ),
-          ),
-      ],
     );
   }
 }

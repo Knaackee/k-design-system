@@ -5,6 +5,76 @@ import 'package:k_design_ui/k_design_ui.dart';
 import 'package:k_design_ui/k_map_day_view.dart';
 
 void main() {
+  testWidgets(
+    'custom docked slots keep selection and sheet actions owned by K',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(extensions: const [KDesignTokens.orbitLight]),
+          home: SizedBox(
+            width: 390,
+            height: 800,
+            child: KMapDayView(
+              items: _items,
+              currentTime: 615,
+              title: 'Default title',
+              dayLabel: '',
+              presentation: KMapDayPresentation.sheet,
+              panelLayout: KMapDayPanelLayout.docked,
+              panelHeaderBuilder: (context, panel) => KButton(
+                label: panel.expanded ? 'Karte zeigen' : 'Ganzer Tag',
+                onPressed: panel.toggleExpanded,
+              ),
+              panelBodyBuilder: (context, panel) => KListItem(
+                title: 'Custom stop',
+                description: panel.selectedItemId ?? 'Unselected',
+                onPressed: () => panel.onItemTap('stop'),
+              ),
+              mapBuilder: (context, mapContext) => const SizedBox.expand(),
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Default title'), findsNothing);
+      expect(find.textContaining('Jetzt laut Plan'), findsNothing);
+      await tester.tap(find.text('Custom stop'));
+      await tester.pump();
+      expect(find.text('stop'), findsOneWidget);
+      await tester.tap(find.text('Ganzer Tag'));
+      await tester.pumpAndSettle();
+      expect(find.text('Karte zeigen'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('docked sidebar meets content edges and header may be omitted', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(extensions: const [KDesignTokens.orbitLight]),
+        home: KMapDayView(
+          items: _items,
+          currentTime: 615,
+          title: 'Default title',
+          dayLabel: '',
+          presentation: KMapDayPresentation.sidebar,
+          panelLayout: KMapDayPanelLayout.docked,
+          panelHeaderBuilder: (context, panel) => null,
+          panelBodyBuilder: (context, panel) => const KText('Custom itinerary'),
+          mapBuilder: (context, mapContext) => const SizedBox.expand(),
+        ),
+      ),
+    );
+    final view = tester.getRect(find.byKey(const ValueKey('k-map-day-view')));
+    final panel = tester.getRect(find.byKey(const ValueKey('k-map-day-panel')));
+    expect(panel.top, view.top);
+    expect(panel.bottom, view.bottom);
+    expect(panel.right, view.right);
+    expect(find.text('Default title'), findsNothing);
+    expect(find.text('Custom itinerary'), findsOneWidget);
+  });
+
   testWidgets('uses a right sidebar on wide viewports', (tester) async {
     await tester.pumpWidget(_app(width: 900));
 

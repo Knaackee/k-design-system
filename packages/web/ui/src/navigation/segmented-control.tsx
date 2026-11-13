@@ -19,6 +19,8 @@ export interface KSegmentedControlProps<T extends string = string> extends Omit<
   /** Accessible name of the group (for example "Period"). */
   label: string;
   disabled?: boolean;
+  /** Keep each segment's accessible label and tooltip when only icons are shown. */
+  showLabels?: boolean;
 }
 
 /**
@@ -33,6 +35,7 @@ export function KSegmentedControl<T extends string = string>({
   onValueChange,
   label,
   disabled = false,
+  showLabels = true,
   className,
   style,
   ...props
@@ -106,6 +109,8 @@ export function KSegmentedControl<T extends string = string>({
           disabled={disabled}
           className="k-segmented-control__segment"
           data-selected={i === index || undefined}
+          aria-label={showLabels ? undefined : segment.label}
+          title={showLabels ? undefined : segment.label}
           onClick={() => select(i)}
         >
           {segment.icon ? (
@@ -117,13 +122,15 @@ export function KSegmentedControl<T extends string = string>({
               className="k-segmented-control__check"
             />
           ) : null}
-          <KText
-            as="span"
-            variant="label"
-            className="k-segmented-control__label"
-          >
-            {segment.label}
-          </KText>
+          {showLabels && (
+            <KText
+              as="span"
+              variant="label"
+              className="k-segmented-control__label"
+            >
+              {segment.label}
+            </KText>
+          )}
         </button>
       ))}
     </div>

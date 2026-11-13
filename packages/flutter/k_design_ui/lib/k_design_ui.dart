@@ -16,6 +16,7 @@ export 'src/primitives/k_card.dart';
 export 'src/overlays/k_overlays.dart';
 export 'src/overlays/k_sheet_drag.dart';
 export 'src/overlays/k_adaptive_dialog.dart';
+export 'src/overlays/k_adaptive_sheet.dart';
 export 'src/overlays/k_page_sheet.dart';
 export 'src/primitives/k_disclosure.dart';
 export 'src/primitives/k_surface.dart';
@@ -154,3 +155,5 @@ export 'src/patterns/k_booking_flow_choice.dart';
 export 'src/markdown/k_markdown_renderer.dart';
 export 'src/markdown/k_markdown_options.dart';
 export 'src/markdown/k_markdown_preview.dart';
+
+export 'src/data_display/k_metric_card.dart';

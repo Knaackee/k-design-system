@@ -695,3 +695,10 @@ export type {
   KRobotHeadAudioFrame,
   KRobotHeadAudioSource,
 } from "./data-display/robot-head-audio.js";
+
+export {
+  KMetricCard,
+  type KMetricCardProps,
+} from "./data-display/metric-card.js";
+
+export { KColorSwatches, type KColorSwatch, type KColorSwatchesProps } from './patterns/color-swatches.js';

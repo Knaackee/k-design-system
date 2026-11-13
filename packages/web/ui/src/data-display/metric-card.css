@@ -1,0 +1,55 @@
+.k-metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k-space-control-gap);
+  padding: var(--k-space-card-padding);
+  border-radius: var(--k-component-metric-card-radius);
+  min-width: 0;
+}
+.k-metric-card__label,
+.k-metric-card__description {
+  color: var(--k-color-text-muted);
+}
+.k-metric-card__reading {
+  display: flex;
+  min-height: calc(
+    var(--k-component-badge-min-height) + 2 *
+      var(--k-component-badge-padding-block) + 2 * var(--k-border-width-default)
+  );
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--k-space-control-gap);
+  min-width: 0;
+}
+.k-metric-card__value {
+  --k-text-font-size: var(--k-component-metric-card-value-size);
+  --k-text-line-height: var(--k-component-metric-card-value-line-height);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.k-metric-card__trend {
+  display: block;
+  width: 100%;
+  height: var(--k-component-metric-card-trend-height);
+  flex-shrink: 0;
+  overflow: visible;
+}
+.k-metric-card__trend path {
+  fill: none;
+  stroke: var(--k-component-metric-card-trend-color);
+  stroke-width: var(--k-component-chart-line-width);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.k-metric-card__visual {
+  display: grid;
+  align-items: center;
+  min-height: var(--k-component-metric-card-trend-height);
+}
+.k-metric-card__description {
+  margin-top: auto;
+  min-height: calc(
+    var(--k-font-body-small-line-height) * 2 *
+      min(var(--k-text-scale, 1), var(--k-text-scale-max-body))
+  );
+}

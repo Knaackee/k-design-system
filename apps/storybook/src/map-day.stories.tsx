@@ -14,6 +14,7 @@ import {
   type KMapDayPanelState,
 } from "@k-design-system/ui/patterns/map-day-view";
 import { KIcon } from "@k-design-system/ui/primitives/icon";
+import { KButton, KInline, KList, KListItem, KText } from "@k-design-system/ui";
 import {
   createMapStyle,
   LIGHT_MAP_TOKENS,
@@ -24,6 +25,7 @@ import "./map-day.css";
 setWorkerUrl(workerUrl);
 
 type Args = {
+  customPanel?: boolean;
   now: number;
   delay: number;
   title: string;
@@ -93,6 +95,38 @@ function DayExample({
         ]}
         panelWidth={args.panelWidth}
         presentation={args.presentation}
+        panelLayout={args.customPanel ? "docked" : "floating"}
+        renderPanelHeader={
+          args.customPanel
+            ? ({ isSheet, expanded, toggleExpanded }) =>
+                isSheet ? (
+                  <KInline gap="control">
+                    <KText variant="heading5">{args.dayLabel}</KText>
+                    <KButton variant="secondary" onClick={toggleExpanded}>
+                      {expanded ? "Karte zeigen" : "Ganzer Tag"}
+                    </KButton>
+                  </KInline>
+                ) : null
+            : undefined
+        }
+        renderPanelBody={
+          args.customPanel
+            ? ({ selectedItemId, onItemClick }) => (
+                <KList title="Tagesablauf">
+                  {items.map((item) => (
+                    <KListItem
+                      key={item.id}
+                      title={item.title}
+                      description={item.detail}
+                      selected={selectedItemId === item.id}
+                      onClick={() => onItemClick(item.id)}
+                      disclosure={false}
+                    />
+                  ))}
+                </KList>
+              )
+            : undefined
+        }
         showCurrentTime={args.showCurrentTime}
         showForecasts={args.showForecasts}
         sheetController={sheetController}
@@ -207,4 +241,12 @@ export const Tablet: StoryObj<typeof meta> = {
 export const Mobile: StoryObj<typeof meta> = {
   args: { frameWidth: 390, presentation: "sheet" },
   name: "Mobil · Bottom-Sheet",
+};
+export const CustomDockedPanel: StoryObj<typeof meta> = {
+  args: { customPanel: true, frameWidth: 1024, presentation: "sidebar" },
+  name: "Custom panel · docked sidebar",
+};
+export const CustomSheetPanel: StoryObj<typeof meta> = {
+  args: { customPanel: true, frameWidth: 390, presentation: "sheet" },
+  name: "Custom panel · accessible sheet",
 };

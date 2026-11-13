@@ -1,8 +1,11 @@
+import 'metric_card_fixture.dart';
+import 'map_embedded_fixture.dart';
 import 'user_dashboard_review.dart';
 import 'markdown_fixtures.dart';
 import 'onzeit_overhaul_gallery.dart';
 import 'booking_page_management_fixture.dart';
 import 'offer_overview_fixture.dart';
+import 'quick_create_offer_fixture.dart';
 import 'catalog_editor_fixture.dart';
 import 'home_overview_fixture.dart';
 import 'onboarding_navigation_fixture.dart';
@@ -61,6 +64,7 @@ import 'data_table_overflow_fixture.dart';
 import 'data_table_cells_fixture.dart';
 import 'disclosure_fixtures.dart';
 import 'overlay_fixtures.dart';
+import 'booking_details_fixture.dart';
 import 'adaptive_dialog_fixture.dart';
 import 'sheet_scroll_handoff_fixture.dart';
 import 'currency_fixtures.dart';
@@ -355,6 +359,17 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         name: 'Map',
         children: [
           WidgetbookUseCase(name: 'Map', builder: MapFixtureSession().build),
+          WidgetbookUseCase(
+            name: 'map-embedded',
+            builder: (context) => KAdaptiveTheme(
+              brightness: Theme.of(context).brightness,
+              overrides: const KAdaptiveOverrides(
+                style: KStyle.apple,
+                inputMode: KInputMode.touch,
+              ),
+              child: const MapEmbeddedFixture(),
+            ),
+          ),
         ],
       ),
     ],
@@ -476,6 +491,10 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         name: 'BottomSheet',
         children: [
           WidgetbookUseCase(
+            name: 'booking-details',
+            builder: (_) => const BookingDetailsFixture(),
+          ),
+          WidgetbookUseCase(
             name: 'bottom-sheet-scroll-handoff',
             builder: (_) => const SheetScrollHandoffFixture(),
           ),
@@ -503,6 +522,22 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
   WidgetbookCategory(
     name: 'Data display',
     children: [
+      WidgetbookFolder(
+        name: 'Metric Card',
+        children: [
+          for (final entry in const [
+            ('filled-dark', true, true),
+            ('empty-light', false, false),
+            ('filled-light', true, false),
+            ('empty-dark', false, true),
+          ])
+            WidgetbookUseCase(
+              name: entry.$1,
+              builder: (_) =>
+                  MetricCardFixture(filled: entry.$2, dark: entry.$3),
+            ),
+        ],
+      ),
       WidgetbookFolder(
         name: 'Markdown',
         children: [
@@ -715,6 +750,7 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
         children: [
           for (final variant in [
             'bar',
+            'bar-compact',
             'bar-horizontal',
             'bar-stacked',
             'area',
@@ -1990,6 +2026,10 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
       WidgetbookFolder(
         name: 'BookingPageManagement',
         children: [
+          WidgetbookUseCase(
+            name: 'settings',
+            builder: (_) => const BookingPageSettingsFixture(),
+          ),
           for (final v in ['overview', 'dark', 'mobile', 'mobile-dark'])
             WidgetbookUseCase(
               name: v,
@@ -2003,6 +2043,10 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
       WidgetbookFolder(
         name: 'OfferOverview',
         children: [
+          WidgetbookUseCase(
+            name: 'quick-create',
+            builder: (_) => const QuickCreateOfferFixture(),
+          ),
           for (final v in [
             'overview',
             'dark',

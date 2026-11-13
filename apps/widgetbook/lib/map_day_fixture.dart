@@ -47,6 +47,10 @@ Widget _buildMapDayFixture(
     label: 'Aktuelle Zeit anzeigen',
     initialValue: true,
   ),
+  customPanel: context.knobs.boolean(
+    label: 'Custom docked panel',
+    initialValue: false,
+  ),
   showForecasts: context.knobs.boolean(
     label: 'Prognosen anzeigen',
     initialValue: true,
@@ -79,6 +83,7 @@ class _MapDayFixture extends StatefulWidget {
     required this.showForecasts,
     required this.panelWidth,
     this.presentation = KMapDayPresentation.auto,
+    this.customPanel = false,
   });
 
   final double? frameWidth;
@@ -88,6 +93,7 @@ class _MapDayFixture extends StatefulWidget {
   final bool showForecasts;
   final double panelWidth;
   final KMapDayPresentation presentation;
+  final bool customPanel;
 
   @override
   State<_MapDayFixture> createState() => _MapDayFixtureState();
@@ -143,6 +149,32 @@ class _MapDayFixtureState extends State<_MapDayFixture> {
       sheetController: _sheetController,
       presentation: widget.presentation,
       panelWidth: widget.panelWidth,
+      panelLayout: widget.customPanel
+          ? KMapDayPanelLayout.docked
+          : KMapDayPanelLayout.floating,
+      panelHeaderBuilder: widget.customPanel
+          ? (context, panel) => panel.isSheet
+                ? KButton(
+                    label: panel.expanded ? 'Karte zeigen' : 'Ganzer Tag',
+                    onPressed: panel.toggleExpanded,
+                  )
+                : null
+          : null,
+      panelBodyBuilder: widget.customPanel
+          ? (context, panel) => KList(
+              title: 'Tagesablauf',
+              children: [
+                for (final item in items)
+                  KListItem(
+                    title: item.title,
+                    description: item.detail,
+                    selected: panel.selectedItemId == item.id,
+                    disclosure: false,
+                    onPressed: () => panel.onItemTap(item.id),
+                  ),
+              ],
+            )
+          : null,
       showCurrentTime: widget.showCurrentTime,
       showForecasts: widget.showForecasts,
       summary: const Wrap(

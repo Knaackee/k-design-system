@@ -74,6 +74,48 @@ test("controlled panel state wins and invalid height order is rejected", () => {
   assert.throws(() => render({ panelHeights: [60, 30, 90] }), RangeError);
 });
 
+test("custom panel slots retain controlled selection and accessible sheet ownership", () => {
+  let context;
+  const events = [];
+  const html = render({
+    presentation: "sheet",
+    panelLayout: "docked",
+    selectedItemId: "visit",
+    panelState: 2,
+    renderPanelHeader: (value) => {
+      context = value;
+      return React.createElement("h2", null, "Custom day header");
+    },
+    renderPanelBody: (value) =>
+      React.createElement(
+        "div",
+        { "data-item-id": value.selectedItemId },
+        "Custom itinerary",
+      ),
+    onItemClick: (id) => events.push(id),
+  });
+  assert.match(html, /Custom day header/);
+  assert.match(html, /Custom itinerary/);
+  assert.match(html, /role="slider"/);
+  assert.match(html, /data-panel-layout="docked"/);
+  assert.doesNotMatch(html, /k-day-timeline|k-day-now-summary/);
+  assert.equal(context.isSheet, true);
+  assert.equal(context.expanded, true);
+  assert.equal(context.selectedItemId, "visit");
+  context.onItemClick("visit");
+  context.onItemClick("missing");
+  assert.deepEqual(events, ["visit"]);
+  assert.equal(typeof context.toggleExpanded, "function");
+});
+
+test("custom header can be omitted and default floating presentation remains", () => {
+  assert.match(render(), /data-panel-layout="floating"/);
+  assert.doesNotMatch(
+    render({ renderPanelHeader: () => null }),
+    /k-day-panel__header|k-day-panel__custom-header/,
+  );
+});
+
 test("sheet controller exposes attachment state and forwards position commands", async () => {
   const controller = new KMapDaySheetController();
   assert.equal(controller.isAttached, false);

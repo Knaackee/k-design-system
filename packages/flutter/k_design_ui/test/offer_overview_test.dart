@@ -5,6 +5,7 @@ import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
   Widget fixture({
+    Widget? headerAction,
     VoidCallback? edit,
     void Function(String, String, String?)? move,
     String Function(String)? translate,
@@ -16,6 +17,7 @@ void main() {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: KOfferOverview(
+            headerAction: headerAction,
             onAddCategory: () {},
             newActions: const [],
             onReorderEntries: reorder,
@@ -66,6 +68,33 @@ void main() {
       ),
     ),
   );
+  testWidgets('header action replaces the default creation menu', (
+    tester,
+  ) async {
+    var presses = 0;
+    await tester.pumpWidget(
+      fixture(
+        headerAction: KButton(
+          label: 'Neu erstellen',
+          content: const KIcon(KIconName.plus),
+          onPressed: () => presses++,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byWidgetPredicate((w) => w is KMenuButton && w.label == 'Neu'),
+      findsNothing,
+    );
+    await tester.tap(find.byType(KButton).first);
+    expect(presses, 1);
+    await tester.pumpWidget(fixture());
+    await tester.pumpAndSettle();
+    expect(
+      find.byWidgetPredicate((w) => w is KMenuButton && w.label == 'Neu'),
+      findsOneWidget,
+    );
+  });
   testWidgets('compact list search filters and empty recovery retain hint', (
     tester,
   ) async {

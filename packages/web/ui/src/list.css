@@ -46,12 +46,7 @@
 [data-style="material"] .k-list__group {
   border-color: transparent;
 }
-/* Apple: continuous (squircle) corners where the browser supports them. */
-@supports (corner-shape: squircle) {
-  [data-style="apple"] .k-list__group {
-    corner-shape: squircle;
-  }
-}
+/* Groups share the circular card shape with KSurface and KMetricCard. */
 /* Material: body-medium values; rows navigate without a chevron. */
 [data-style="material"] .k-list {
   --k-list-value-size: var(--k-font-body-small-size);

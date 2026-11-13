@@ -36,6 +36,9 @@ class KMapDayView extends StatefulWidget {
     this.labels = const KMapDayLabels(),
     this.forecastBuilder,
     this.itemDetailsBuilder,
+    this.panelHeaderBuilder,
+    this.panelBodyBuilder,
+    this.panelLayout = KMapDayPanelLayout.floating,
     this.onSelectionChanged,
     this.onItemTap,
     this.onMapItemTap,
@@ -73,6 +76,9 @@ class KMapDayView extends StatefulWidget {
   final KMapDayLabels labels;
   final KMapDayItemBuilder? forecastBuilder;
   final KMapDayItemBuilder? itemDetailsBuilder;
+  final KMapDayPanelHeaderBuilder? panelHeaderBuilder;
+  final KMapDayPanelBodyBuilder? panelBodyBuilder;
+  final KMapDayPanelLayout panelLayout;
   final ValueChanged<String>? onSelectionChanged;
   final ValueChanged<String>? onItemTap;
   final ValueChanged<String>? onMapItemTap;
@@ -148,6 +154,9 @@ class _KMapDayViewState extends State<KMapDayView> {
             labels: widget.labels,
             forecastBuilder: widget.forecastBuilder,
             itemDetailsBuilder: widget.itemDetailsBuilder,
+            panelHeaderBuilder: widget.panelHeaderBuilder,
+            panelBodyBuilder: widget.panelBodyBuilder,
+            layout: widget.panelLayout,
             onSelect: (id) => _select(id, fromMap: false),
             onAction: widget.onAction,
             onStateChanged: _changePanel,

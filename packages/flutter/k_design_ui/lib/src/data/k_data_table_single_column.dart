@@ -27,10 +27,12 @@ class KDataTableSingleRow<T> extends StatelessWidget {
   const KDataTableSingleRow({
     required this.content,
     required this.row,
+    this.selected = false,
     super.key,
   });
   final KDataTableSingleColumn<T> content;
   final T row;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +40,10 @@ class KDataTableSingleRow<T> extends StatelessWidget {
         Theme.of(context).extension<KDesignTokens>() ??
         KDesignTokens.orbitLight;
     final large = MediaQuery.textScalerOf(context).scale(1) >= 1.3;
-    return Semantics(
+    final interactiveRow = Semantics(
       label: content.semanticsLabel(row),
       button: true,
+      selected: selected,
       excludeSemantics: true,
       child: InkWell(
         onTap: () => content.onActivate(row),
@@ -81,5 +84,11 @@ class KDataTableSingleRow<T> extends StatelessWidget {
         ),
       ),
     );
+    return selected
+        ? Material(
+            color: tokens.colorBrandPrimaryBackground,
+            child: interactiveRow,
+          )
+        : interactiveRow;
   }
 }

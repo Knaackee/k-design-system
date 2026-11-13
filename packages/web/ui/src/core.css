@@ -904,6 +904,7 @@
 
 /* KPage (Decision 0015). Mirrors k_page.dart. */
 .k-page {
+  --k-page-default-top-gap: var(--k-space-layout-gutter);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -913,7 +914,7 @@
      --k-safe-bottom-extra the floating action button (Decision 0015). */
   /* Below a top bar row with controls the page follows it closely. */
   padding: calc(
-      var(--k-page-top-gap, var(--k-space-layout-gutter)) +
+      var(--k-page-top-gap, var(--k-page-default-top-gap)) +
         var(--k-safe-top, env(safe-area-inset-top, 0px))
     )
     calc(var(--k-space-layout-gutter) + env(safe-area-inset-right, 0px))
@@ -922,6 +923,13 @@
         var(--k-safe-bottom-extra, 0px)
     )
     calc(var(--k-space-layout-gutter) + env(safe-area-inset-left, 0px));
+}
+@media (min-width: 600px) {
+  .k-page {
+    --k-page-default-top-gap: calc(
+      var(--k-space-layout-section-gap) + var(--k-space-control-gap)
+    );
+  }
 }
 .k-page__body {
   box-sizing: border-box;

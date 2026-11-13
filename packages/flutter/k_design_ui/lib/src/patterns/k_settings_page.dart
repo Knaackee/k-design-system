@@ -7,6 +7,7 @@ import '../data_display/k_list.dart';
 import '../navigation/k_sidebar.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
+import '../primitives/k_page.dart';
 import '../primitives/k_text.dart';
 
 /// Responsive settings shell shared by settings galleries and applications.
@@ -121,9 +122,7 @@ class KSettingsPage extends StatelessWidget {
             contentPadding ??
             EdgeInsets.fromLTRB(
               horizontal,
-              compact
-                  ? tokens.spaceControlInsetInline
-                  : tokens.spaceContentActionGap + tokens.spaceControlGap,
+              compact ? tokens.spaceControlInsetInline : tokens.spaceControlGap,
               horizontal,
               vertical,
             ),
@@ -180,7 +179,8 @@ class KSettingsPage extends StatelessWidget {
                         tokens.spaceContentActionGap +
                         tokens.spaceControlInsetInline,
                   ),
-                content,
+                // The pane already owns the safe area and page-start inset.
+                compact ? content : KPageTopGap(gap: 0, child: content),
               ],
             ),
           ),

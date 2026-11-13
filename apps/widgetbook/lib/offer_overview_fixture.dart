@@ -8,9 +8,12 @@ class OfferOverviewFixture extends StatefulWidget {
   const OfferOverviewFixture({
     this.dark = false,
     this.empty = false,
+    this.headerAction,
+    this.embedded = false,
     super.key,
   });
-  final bool dark, empty;
+  final bool dark, empty, embedded;
+  final Widget? headerAction;
   @override
   State<OfferOverviewFixture> createState() => _OfferOverviewFixtureState();
 }
@@ -274,7 +277,7 @@ class _OfferOverviewFixtureState extends State<OfferOverviewFixture> {
         child: LayoutBuilder(
           builder: (context, c) => Row(
             children: [
-              if (c.maxWidth >= 900)
+              if (!widget.embedded && c.maxWidth >= 900)
                 SizedBox(
                   width: 240,
                   child: KSidebar(
@@ -320,6 +323,7 @@ class _OfferOverviewFixtureState extends State<OfferOverviewFixture> {
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 880),
                       child: KOfferOverview(
+                        headerAction: widget.headerAction,
                         onMoveEntry: (id, category, before) => setState(() {
                           final item = _items.firstWhere((e) => e['id'] == id);
                           _items.remove(item);

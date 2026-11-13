@@ -245,7 +245,7 @@
   border: var(--k-component-mobile-app-bar-badge-stroke-width) solid
     var(--k-color-surface-raised);
   border-radius: var(--k-component-mobile-app-bar-badge-radius);
-  color: var(--k-color-status-error-foreground);
+  color: var(--k-component-mobile-app-bar-badge-foreground);
   background: var(--k-color-status-error-accent);
   font-family: var(--k-font-family);
   font-size: var(--k-component-mobile-app-bar-label-font-size);

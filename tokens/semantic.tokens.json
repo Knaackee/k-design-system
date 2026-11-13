@@ -1333,7 +1333,7 @@
         "maxWidth": {
           "$type": "number",
           "$value": 0.75,
-          "$description": "Maximum user-bubble width as a fraction of the conversation column (0–1); multiply by the available column width on Web and Flutter."
+          "$description": "Maximum user-bubble width as a fraction of the conversation column (0\u20131); multiply by the available column width on Web and Flutter."
         }
       },
       "disclosure": {
@@ -1585,6 +1585,14 @@
       "gridColor": {
         "$type": "color",
         "$value": "{color.border.default}"
+      },
+      "compactHeight": {
+        "$description": "Compact Cartesian plot height for dashboard summaries; the standard chart height is unchanged.",
+        "$type": "dimension",
+        "$value": {
+          "value": 96,
+          "unit": "px"
+        }
       }
     },
     "orbit": {
@@ -2757,6 +2765,10 @@
         "strokeWidth": {
           "$type": "dimension",
           "$value": "{border.width.strong}"
+        },
+        "foreground": {
+          "$type": "color",
+          "$value": "{color.neutral.0}"
         }
       },
       "label": {
@@ -3207,6 +3219,38 @@
           "value": 28,
           "unit": "px"
         }
+      }
+    },
+    "page": {
+      "paddingBlockStart": {
+        "$description": "Page start inset, independent of the wider horizontal gutters on tablets and desktops. Safe-area insets are added by the component.",
+        "$type": "dimension",
+        "$value": "{space.4}"
+      }
+    },
+    "metricCard": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.card}"
+      },
+      "valueSize": {
+        "$type": "dimension",
+        "$value": "{font.size.heading1Compact}"
+      },
+      "valueLineHeight": {
+        "$type": "dimension",
+        "$value": "{font.lineHeight.heading2Compact}"
+      },
+      "trendHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "trendColor": {
+        "$type": "color",
+        "$value": "{component.chart.seriesPrimary}"
       }
     }
   },
