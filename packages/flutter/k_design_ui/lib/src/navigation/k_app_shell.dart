@@ -18,12 +18,17 @@ class KAppDestination {
     required this.label,
     required this.icon,
     this.selectedIcon,
+    this.mobileIconBuilder,
     this.badge,
   });
   final String id;
   final String label;
   final KIconName icon;
   final KIconName? selectedIcon;
+
+  /// Decorative compact-navigation visual. The shell owns its fitted slot
+  /// and destination semantics; rail/sidebar keep [icon]/[selectedIcon].
+  final Widget Function(BuildContext context, bool selected)? mobileIconBuilder;
 
   /// Short count or marker ("2", "99+"); a tab bar badge and a sidebar
   /// [KBadge].
@@ -150,15 +155,29 @@ class KAppShell extends StatelessWidget {
                 KMobileAppBarItem(
                   id: destination.id,
                   label: destination.label,
-                  icon: KIcon(
-                    destination.id == selectedId
-                        ? destination.selectedIcon ?? destination.icon
-                        : destination.icon,
-                    size: iconOnly ? 32 : 24,
-                    color: destination.id == selectedId
-                        ? t.colorTextPrimary
-                        : t.colorTextMuted,
-                  ),
+                  icon: destination.mobileIconBuilder != null
+                      ? ExcludeSemantics(
+                          child: SizedBox.square(
+                            dimension:
+                                t.componentMobileAppBarDestinationIconSize,
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: destination.mobileIconBuilder!(
+                                context,
+                                destination.id == selectedId,
+                              ),
+                            ),
+                          ),
+                        )
+                      : KIcon(
+                          destination.id == selectedId
+                              ? destination.selectedIcon ?? destination.icon
+                              : destination.icon,
+                          size: iconOnly ? 32 : 24,
+                          color: destination.id == selectedId
+                              ? t.colorTextPrimary
+                              : t.colorTextMuted,
+                        ),
                   badge: destination.badge == null
                       ? null
                       : Text(destination.badge!),

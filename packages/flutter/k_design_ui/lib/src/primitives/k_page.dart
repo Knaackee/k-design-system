@@ -105,8 +105,23 @@ class KPage extends StatelessWidget {
             parent: BouncingScrollPhysics(),
           ),
           slivers: [
-            // The control must be the first sliver to receive the overscroll.
-            CupertinoSliverRefreshControl(onRefresh: refresh),
+            // Keep native pull distance, layout extent and animation. The
+            // viewport scrolls beneath the shell; only its indicator needs the
+            // same safe-area/action-bar offset as the page content.
+            CupertinoSliverRefreshControl(
+              onRefresh: refresh,
+              builder: (context, state, pulled, trigger, extent) =>
+                  Transform.translate(
+                    offset: Offset(0, padding.top),
+                    child: CupertinoSliverRefreshControl.buildRefreshIndicator(
+                      context,
+                      state,
+                      pulled,
+                      trigger,
+                      extent,
+                    ),
+                  ),
+            ),
             SliverPadding(
               padding: insets,
               sliver: SliverToBoxAdapter(child: body(constraints)),

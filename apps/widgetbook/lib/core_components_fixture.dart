@@ -259,10 +259,12 @@ class AppShellFixture extends StatefulWidget {
     this.initial = 'settings',
     this.collapsible = false,
     this.iconOnlyTabs = false,
+    this.brandNavigation = false,
     super.key,
   });
   final String initial;
   final bool iconOnlyTabs;
+  final bool brandNavigation;
   final bool collapsible;
   @override
   State<AppShellFixture> createState() => _AppShellFixtureState();
@@ -367,10 +369,28 @@ class _AppShellFixtureState extends State<AppShellFixture> {
 
   @override
   Widget build(BuildContext context) => KAppShell(
-    destinations: destinations,
+    destinations: [
+      for (final destination in destinations)
+        KAppDestination(
+          id: destination.id,
+          label: destination.label,
+          icon: destination.icon,
+          badge: destination.badge,
+          mobileIconBuilder: widget.brandNavigation && destination.id == 'inbox'
+              ? (context, active) => CustomPaint(
+                  size: const Size.square(100),
+                  painter: _BrandDiamondPainter(
+                    Theme.of(
+                      context,
+                    ).extension<KDesignTokens>()!.colorTextPrimary,
+                  ),
+                )
+              : null,
+        ),
+    ],
     selectedId: selected,
     onSelected: (id) => setState(() => selected = id),
-    tabBarLabelVisibility: widget.iconOnlyTabs
+    tabBarLabelVisibility: widget.iconOnlyTabs || widget.brandNavigation
         ? KMobileAppBarLabelVisibility.never
         : KMobileAppBarLabelVisibility.always,
     sidebarMode: widget.collapsible ? sidebarMode : null,
@@ -413,6 +433,25 @@ class _AppShellFixtureState extends State<AppShellFixture> {
       ],
     ),
   );
+}
+
+class _BrandDiamondPainter extends CustomPainter {
+  const _BrandDiamondPainter(this.color);
+  final Color color;
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(size.width, size.height / 2)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(0, size.height / 2)
+      ..close();
+    canvas.drawPath(path, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(_BrandDiamondPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 /// Reference onboarding: footer with Back, progress and Next on every step.

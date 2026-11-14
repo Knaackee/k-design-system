@@ -89,3 +89,9 @@ export const ReviewIconOnly: StoryObj = {
   parameters: { fixtureId: "app-shell-icon-only" },
   render: () => <AppShellFixture iconOnlyTabs />,
 };
+
+export const BrandNavigation: StoryObj = {
+  name: "app-shell-brand-navigation",
+  parameters: { fixtureId: "app-shell-brand-navigation" },
+  render: () => <AppShellFixture initial="inbox" brandNavigation />,
+};

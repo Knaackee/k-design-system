@@ -189,6 +189,47 @@ test("app shell icon-only tabs retain accessible names and use larger icons", ()
   assert.equal(html.match(/width:32px;height:32px/g).length, 2);
 });
 
+test("app shell fits a decorative mobile brand while preserving destination semantics", () => {
+  const previous = globalThis.window;
+  const selectedStates = [];
+  const render = (width, selectedId) => {
+    globalThis.window = { innerWidth: width };
+    return renderToStaticMarkup(
+      h(KAppShell, {
+        selectedId,
+        onSelectedChange() {},
+        tabBarLabelVisibility: "never",
+        destinations: [
+          { id: "home", label: "Home", icon: "house" },
+          {
+            id: "brand",
+            label: "Messages",
+            icon: "inbox",
+            renderMobileIcon: (selected) => {
+              selectedStates.push(selected);
+              return h("img", { src: "/brand.svg", alt: "Decorative brand" });
+            },
+          },
+        ],
+      }),
+    );
+  };
+  try {
+    const phone = render(393, "home");
+    assert.match(phone, /aria-label="Messages"/);
+    assert.match(phone, /class="k-app-shell__mobile-icon" aria-hidden="true"/);
+    assert.match(phone, /src="\/brand.svg"/);
+    assert.deepEqual(selectedStates, [false]);
+    render(360, "brand");
+    assert.deepEqual(selectedStates, [false, true]);
+    assert.doesNotMatch(render(840, "brand"), /src="\/brand.svg"/);
+    assert.deepEqual(selectedStates, [false, true]);
+  } finally {
+    if (previous === undefined) delete globalThis.window;
+    else globalThis.window = previous;
+  }
+});
+
 test("app shell custom expanded body preserves rail and phone destinations", () => {
   const previous = globalThis.window;
   const render = (width) => {

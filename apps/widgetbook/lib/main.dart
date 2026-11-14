@@ -1103,6 +1103,11 @@ List<WidgetbookNode> galleryDirectories() => sortGalleryNodes([
             name: 'app-shell-icon-only',
             builder: (_) => const AppShellFixture(iconOnlyTabs: true),
           ),
+          WidgetbookUseCase(
+            name: 'app-shell-brand-navigation',
+            builder: (_) =>
+                const AppShellFixture(initial: 'inbox', brandNavigation: true),
+          ),
         ],
       ),
       WidgetbookFolder(

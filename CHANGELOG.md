@@ -73,6 +73,19 @@ version is tagged.
 
 - Web single-column data lists now inherit their enclosing surface, matching Flutter. Multi-column tables retain their existing canvas background.
 
+### Branded navigation and interaction fixes
+
+- `KAppDestination.mobileIconBuilder` (Flutter) and
+  `KAppDestination.renderMobileIcon` (Web) accept decorative compact-navigation
+  visuals. The shell owns sizing, selection semantics and touch targets;
+  rail/sidebar destinations retain their regular icons. Matching gallery
+  examples and navigation regression tests cover both platforms.
+- Open Web selection menus consume Escape before their containing dialog, so
+  dismissing a menu preserves the dialog and its draft.
+- Apple `KPage` refresh indicators clear the status/navigation bar while native
+  pull distance, layout extent and animation remain unchanged. Regression tests
+  exercise phone/tablet layouts, text scaling, themes and both mobile platforms.
+
 ## 1.0.0-rc.2 - 2026-11-09
 
 - Add shared Markdown rendering, preview and streaming fixtures for Web and Flutter.
