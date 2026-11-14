@@ -271,19 +271,33 @@ export function AppShellFixture({
   initial = "settings",
   customSidebar = false,
   iconOnlyTabs = false,
+  brandNavigation = false,
 }: {
   initial?: string;
   customSidebar?: boolean;
   iconOnlyTabs?: boolean;
+  brandNavigation?: boolean;
 }) {
   const [selected, setSelected] = useState(initial);
   return (
     <div className="cc-shell">
       <KAppShell
-        destinations={destinations}
+        destinations={destinations.map((destination) => ({
+          ...destination,
+          renderMobileIcon:
+            brandNavigation && destination.id === "inbox"
+              ? () => (
+                  <svg viewBox="0 0 100 100">
+                    <path d="M50 0 100 50 50 100 0 50Z" fill="currentColor" />
+                  </svg>
+                )
+              : undefined,
+        }))}
         selectedId={selected}
         onSelectedChange={setSelected}
-        tabBarLabelVisibility={iconOnlyTabs ? "never" : "always"}
+        tabBarLabelVisibility={
+          iconOnlyTabs || brandNavigation ? "never" : "always"
+        }
         sidebarContent={
           customSidebar ? (
             <>

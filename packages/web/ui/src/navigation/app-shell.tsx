@@ -40,6 +40,8 @@ export interface KAppDestination {
   label: string;
   icon: KIconName;
   selectedIcon?: KIconName;
+  /** Decorative compact-only visual; shell owns fitting and accessible name. */
+  renderMobileIcon?: (selected: boolean) => ReactNode;
   /** Short count or marker ("2", "99+"): tab bar badge, sidebar KBadge. */
   badge?: string;
 }
@@ -445,10 +447,17 @@ export function KAppShell({
           items={destinations.map((destination) => ({
             id: destination.id,
             label: destination.label,
-            icon: <KIcon name={destination.icon} size={tabIconSize} />,
-            selectedIcon: destination.selectedIcon ? (
-              <KIcon name={destination.selectedIcon} size={tabIconSize} />
-            ) : undefined,
+            icon: destination.renderMobileIcon ? (
+              <span className="k-app-shell__mobile-icon" aria-hidden="true">
+                {destination.renderMobileIcon(destination.id === selectedId)}
+              </span>
+            ) : (
+              <KIcon name={destination.icon} size={tabIconSize} />
+            ),
+            selectedIcon:
+              !destination.renderMobileIcon && destination.selectedIcon ? (
+                <KIcon name={destination.selectedIcon} size={tabIconSize} />
+              ) : undefined,
             badge: destination.badge,
           }))}
         />

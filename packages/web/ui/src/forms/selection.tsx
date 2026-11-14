@@ -321,6 +321,7 @@ function Selection({
       className="k-selection"
       data-presentation={presentation}
       data-open={open || undefined}
+      data-k-escape-boundary={open || undefined}
       ref={target}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) close();
