@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:k_design_tokens/k_design_tokens.dart';
@@ -40,6 +43,10 @@ void main() {
           find.byWidgetPredicate((w) => w is KIconButton && w.label == label);
       final close = button('Browser schließen');
       for (final label in ['Vollbild umschalten', 'Vollbild verlassen']) {
+        if (maximized) {
+          await tester.tap(find.byTooltip('Browsersteuerung anzeigen'));
+          await tester.pump();
+        }
         final fullscreen = button(label);
         expect(tester.getSize(fullscreen), tester.getSize(close));
         expect(
@@ -65,6 +72,179 @@ void main() {
       expect(closed, 1);
       expect(tester.takeException(), isNull);
     });
+  }
+
+  for (final width in [360.0, 393.0, 840.0, 1200.0]) {
+    for (final scale in [1.0, 1.3, 2.0, 3.0]) {
+      testWidgets('floating controls preserve surface at $width / $scale', (
+        tester,
+      ) async {
+        tester.view.physicalSize = Size(width, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        const surface = ValueKey('test-browser-surface');
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(),
+            home: MediaQuery(
+              data: MediaQueryData(
+                size: Size(width, 852),
+                textScaler: TextScaler.linear(scale),
+              ),
+              child: KAdaptiveTheme(
+                child: Scaffold(
+                  body: KBrowserViewer(
+                    maximized: true,
+                    height: 740,
+                    humanControl: true,
+                    status: 'Du steuerst',
+                    onTakeControl: () {},
+                    onPause: () {},
+                    onStop: () {},
+                    onClose: () {},
+                    onMaximizedChanged: (_) {},
+                    child: const SizedBox.expand(key: surface),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        final before = tester.getRect(find.byKey(surface));
+        final toggle = find.byTooltip('Browsersteuerung anzeigen');
+        expect(tester.getSize(toggle).shortestSide, greaterThanOrEqualTo(44));
+        await tester.tap(toggle);
+        await tester.pump();
+        expect(tester.getRect(find.byKey(surface)), before);
+        expect(find.byTooltip('Browsersteuerung ausblenden'), findsOneWidget);
+        expect(
+          find
+              .byWidgetPredicate(
+                (w) => w is KIconButton && w.label == 'Browser schließen',
+              )
+              .hitTestable(),
+          findsOneWidget,
+        );
+        await tester.tap(find.byTooltip('Browsersteuerung ausblenden'));
+        await tester.pump();
+        expect(tester.getRect(find.byKey(surface)), before);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+
+  for (final maximized in [false, true]) {
+    for (final state in ['working', 'question']) {
+      testWidgets('status paint and target stay complete: $maximized/$state', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final capture = GlobalKey();
+        var navigation = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: kDesignTheme(),
+            home: KAdaptiveTheme(
+              child: Scaffold(
+                body: RepaintBoundary(
+                  key: capture,
+                  child: KBrowserViewer(
+                    maximized: maximized,
+                    transportHandlesGestures: true,
+                    height: 740,
+                    working: state == 'working',
+                    permissionPending: state == 'question',
+                    status: state,
+                    onTakeControl: () {},
+                    onPause: () {},
+                    onStop: () {},
+                    onClose: () {},
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 0,
+                          top: 48,
+                          width: 48,
+                          height: 20,
+                          child: GestureDetector(
+                            onTap: () => navigation++,
+                            behavior: HitTestBehavior.opaque,
+                            child: const SizedBox.expand(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        final dot = find.byType(KActivityDot);
+        final visual = tester.widget<KActivityDot>(dot);
+        expect(visual.animation, KActivityDotAnimation.auto);
+        expect(visual.size, greaterThan(14));
+        final paint = find.descendant(
+          of: dot,
+          matching: find.byType(CustomPaint),
+        );
+        final paintRect = tester.getRect(paint);
+        final surfaceBefore = tester.getRect(find.byType(InteractiveViewer));
+        if (maximized) {
+          final toggle = find.byTooltip('Browsersteuerung anzeigen');
+          final hitRect = tester.getRect(toggle);
+          expect(hitRect.width, greaterThanOrEqualTo(64));
+          expect(hitRect.height, 48);
+          expect(
+            hitRect.contains(paintRect.topLeft - const Offset(2, 2)),
+            isTrue,
+          );
+          expect(
+            hitRect.contains(paintRect.bottomRight + const Offset(2, 2)),
+            isTrue,
+          );
+          await tester.tapAt(const Offset(18, 54));
+          expect(
+            navigation,
+            1,
+          ); // Real Chromium Back sits below the status pill.
+          await tester.tapAt(
+            const Offset(60, 24),
+          ); // Widened edge is part of the action.
+          await tester.pump();
+          expect(find.byTooltip('Browsersteuerung ausblenden'), findsOneWidget);
+          expect(tester.getRect(paint), paintRect);
+          expect(tester.getRect(find.byType(InteractiveViewer)), surfaceBefore);
+        }
+        for (var phase = 0; phase < 4; phase++) {
+          await tester.pump(const Duration(milliseconds: 120));
+          expect(tester.getRect(paint), paintRect);
+          final captureDirectory =
+              Platform.environment['ORBIT_BROWSER_CAPTURE_DIR'];
+          if (phase == 1 && captureDirectory != null) {
+            await tester.runAsync(() async {
+              final boundary =
+                  capture.currentContext!.findRenderObject()!
+                      as RenderRepaintBoundary;
+              final image = await boundary.toImage(pixelRatio: 2);
+              final png = await image.toByteData(
+                format: ui.ImageByteFormat.png,
+              );
+              final path =
+                  '$captureDirectory/orbit-browser-$state-${maximized ? 'fullscreen' : 'dock'}.png';
+              await File(path).writeAsBytes(png!.buffer.asUint8List());
+              image.dispose();
+            });
+          }
+        }
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+      });
+    }
   }
 
   testWidgets('pending connection shows progress until a retryable failure', (
@@ -132,17 +312,17 @@ void main() {
       expect(viewer.panEnabled, false);
       await tester.tap(find.text('Local viewer gesture'));
       expect(taps, 1);
-      await tester.tap(
-        find.byWidgetPredicate(
-          (w) => w is KIconButton && w.label == 'Ansicht zurücksetzen',
-        ),
+      final resetButton = find.byWidgetPredicate(
+        (w) => w is KIconButton && w.label == 'Ansicht zurücksetzen',
       );
+      await tester.ensureVisible(resetButton);
+      await tester.tap(resetButton);
       expect(reset, 1);
-      await tester.tap(
-        find.byWidgetPredicate(
-          (w) => w is KIconButton && w.label == 'Tastatur öffnen',
-        ),
+      final keyboardButton = find.byWidgetPredicate(
+        (w) => w is KIconButton && w.label == 'Tastatur öffnen',
       );
+      await tester.ensureVisible(keyboardButton);
+      await tester.tap(keyboardButton);
       expect(keyboards, 1);
     },
   );
@@ -178,7 +358,8 @@ void main() {
     final panel = find.byKey(const ValueKey('browser-viewer'));
     expect(tester.getSize(panel).height, 360);
     update(() => permission = true);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
     expect(tester.getSize(panel).height, 180);
     expect(mounts, 1);
     await tester.tap(
@@ -186,10 +367,12 @@ void main() {
         (w) => w is KIconButton && w.label == 'Browseransicht vergrößern',
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
     expect(tester.getSize(panel).height, 360);
     update(() => permission = false);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
     expect(tester.getSize(panel).height, 360);
     expect(mounts, 1);
   });
