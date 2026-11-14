@@ -4,6 +4,99 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 import 'package:k_design_ui/k_design_ui.dart';
 
 void main() {
+  for (final width in [360.0, 393.0]) {
+    testWidgets('fullscreen and close stay fully tappable at $width', (
+      tester,
+    ) async {
+      tester.view.physicalSize = Size(width, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      bool maximized = false;
+      int closed = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: kDesignTheme(),
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) => KBrowserViewer(
+                status: 'Live verbunden',
+                humanControl: true,
+                maximized: maximized,
+                onMaximizedChanged: (value) =>
+                    setState(() => maximized = value),
+                onTakeControl: () {},
+                onPause: () {},
+                onStop: () {},
+                onKeyboard: () {},
+                onClose: () => closed++,
+                child: const SizedBox.expand(),
+              ),
+            ),
+          ),
+        ),
+      );
+      Finder button(String label) =>
+          find.byWidgetPredicate((w) => w is KIconButton && w.label == label);
+      final close = button('Browser schließen');
+      for (final label in ['Vollbild umschalten', 'Vollbild verlassen']) {
+        final fullscreen = button(label);
+        expect(tester.getSize(fullscreen), tester.getSize(close));
+        expect(
+          find.ancestor(
+            of: fullscreen,
+            matching: find.byType(SingleChildScrollView),
+          ),
+          findsNothing,
+        );
+        expect(
+          fullscreen.hitTestable(at: const Alignment(-.9, 0)),
+          findsOneWidget,
+        );
+        expect(
+          fullscreen.hitTestable(at: const Alignment(.9, 0)),
+          findsOneWidget,
+        );
+        await tester.tap(fullscreen);
+        await tester.pump();
+        expect(maximized, label == 'Vollbild umschalten');
+      }
+      await tester.tap(close);
+      expect(closed, 1);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('pending connection shows progress until a retryable failure', (
+    tester,
+  ) async {
+    Widget frame(bool pending) => MaterialApp(
+      theme: kDesignTheme(),
+      home: Scaffold(
+        body: KBrowserViewer(
+          connected: false,
+          pending: pending,
+          status: 'Connecting',
+          onTakeControl: null,
+          onPause: null,
+          onStop: null,
+          onClose: () {},
+          onReconnect: () {},
+          child: const SizedBox.expand(),
+        ),
+      ),
+    );
+    await tester.pumpWidget(frame(true));
+    expect(find.byType(KSpinner), findsOneWidget);
+    expect(find.text('Erneut verbinden'), findsNothing);
+    expect(
+      tester.widget<KActivityDot>(find.byType(KActivityDot)).state,
+      KActivityDotState.working,
+    );
+    await tester.pumpWidget(frame(false));
+    expect(find.byType(KSpinner), findsNothing);
+    expect(find.text('Erneut verbinden'), findsOneWidget);
+  });
   testWidgets(
     'native transport receives gestures and reset without outer zoom',
     (tester) async {

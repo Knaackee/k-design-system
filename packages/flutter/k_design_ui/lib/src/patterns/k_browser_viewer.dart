@@ -3,6 +3,7 @@ import 'package:k_design_tokens/k_design_tokens.dart';
 
 import '../actions/k_icon_button.dart';
 import '../feedback/k_agent_cursor.dart';
+import '../extended_components.dart' show KSpinner;
 import '../feedback/k_activity_dot.dart';
 import '../primitives/k_button.dart';
 import '../primitives/k_icon.dart';
@@ -102,8 +103,12 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: t.colorSurfaceCanvas,
-        border: Border.all(color: t.colorBorderDefault),
-        borderRadius: BorderRadius.circular(t.radiusControl),
+        border: widget.maximized
+            ? null
+            : Border.all(color: t.colorBorderDefault),
+        borderRadius: widget.maximized
+            ? null
+            : BorderRadius.circular(t.radiusControl),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -139,14 +144,18 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
                         child: KActivityDot(
                           label: widget.status,
                           animation: KActivityDotAnimation.none,
-                          state: !widget.connected
+                          state: widget.pending
+                              ? KActivityDotState.working
+                              : !widget.connected
                               ? KActivityDotState.error
                               : widget.permissionPending
                               ? KActivityDotState.question
                               : widget.working || widget.pending
                               ? KActivityDotState.working
                               : KActivityDotState.idle,
-                          dotColor: !widget.connected
+                          dotColor: widget.pending
+                              ? t.colorStatusInfoAccent
+                              : !widget.connected
                               ? t.colorStatusErrorAccent
                               : widget.permissionPending
                               ? t.colorStatusWarningAccent
@@ -231,12 +240,12 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
                           spacing: t.spaceControlGap,
                           children: [
                             indicator,
-                            ...controls.take(controls.length - 1),
+                            ...controls.take(controls.length - 2),
                           ],
                         ),
                       ),
                     ),
-                    controls.last,
+                    ...controls.skip(controls.length - 2),
                   ],
                 );
               },
@@ -301,10 +310,12 @@ class _KBrowserViewerState extends State<KBrowserViewer> {
                             alpha: t.componentBrowserViewerDisconnectedOpacity,
                           ),
                           child: Center(
-                            child: KButton(
-                              label: 'Erneut verbinden',
-                              onPressed: widget.onReconnect,
-                            ),
+                            child: widget.pending
+                                ? KSpinner(label: widget.status)
+                                : KButton(
+                                    label: 'Erneut verbinden',
+                                    onPressed: widget.onReconnect,
+                                  ),
                           ),
                         ),
                     ],

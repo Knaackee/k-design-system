@@ -61,10 +61,11 @@ String validatePresentationSvg(Uint8List bytes) {
   final styles = elements.where((e) => e.name.local == 'style').toList();
   if (styles.isEmpty) return xml;
 
-  // flutter_svg does not apply stylesheets. Support only inert class paint rules.
+  // flutter_svg does not apply stylesheets. Only inert paint rules and local
+  // clipping references are supported; external resources stay forbidden.
   final rulePattern = RegExp(r'\.([a-zA-Z_][\w-]*)\s*\{([^{}]*)\}');
   final declarationPattern = RegExp(
-    r'^(?:(?:fill|stroke):(?:#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|none)|stroke-width:(?:\d+(?:\.\d+)?|\.\d+)|stroke-linecap:(?:butt|round|square)|stroke-linejoin:(?:miter|round|bevel))$',
+    r'^(?:(?:fill|stroke):(?:#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?|none)|stroke-width:(?:\d+(?:\.\d+)?|\.\d+)|stroke-linecap:(?:butt|round|square)|stroke-linejoin:(?:miter|round|bevel)|clip-path:url\(#[a-zA-Z_][\w.-]*\))$',
   );
   final rules = <(String, String)>[];
   for (final style in styles) {

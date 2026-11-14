@@ -13,7 +13,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   // Wikimedia originals: commons/b/ba/Flag_of_Germany.svg and
   // commons/f/ff/Flag_of_Serbia.svg on https://upload.wikimedia.org/wikipedia/.
-  for (final flag in ['germany', 'serbia']) {
+  for (final flag in ['germany', 'serbia', 'werder']) {
     test('$flag SVG fixture renders its original national colors', () async {
       final source = File('test/fixtures/presentation_flags/$flag.svg');
       final normalized = validatePresentationSvg(source.readAsBytesSync());
@@ -41,7 +41,9 @@ void main() {
       for (final color
           in flag == 'germany'
               ? [0x000000, 0xdd0000, 0xffce00]
-              : [0xc6363c, 0x0c4076, 0xffffff, 0xedb92e]) {
+              : flag == 'serbia'
+              ? [0xc6363c, 0x0c4076, 0xffffff, 0xedb92e]
+              : [0x008149, 0xffffff]) {
         expect(colors[color] ?? 0, greaterThan(1000), reason: '$flag $color');
       }
       image.dispose();
@@ -146,6 +148,9 @@ void main() {
         '<svg><style>.a:hover {fill:#fff;}</style></svg>',
         '<svg><style>.a {fill:#fff!important;}</style></svg>',
         '<svg><style>.a {filter:blur(1px);}</style></svg>',
+        '<svg><style>.a {clip-path:url(https://example.com/mask.svg#x);}</style></svg>',
+        '<svg><style>.a {clip-path:url(data:image/svg+xml,x);}</style></svg>',
+        '<svg><style>.a {clip-path:url(\\23remote);}</style></svg>',
         '<svg><style>@font-face {src:url(https://example.com/x);}</style></svg>',
         '<svg><script>alert(1)</script></svg>',
         '<svg><foreignObject/></svg>',
